@@ -1,6 +1,15 @@
 # Cumes Brasil 🏞️
 
-Bem-vindo ao projeto **Cumes Brasil**! Este projeto tem como objetivo criar um aplicativo para registrar e catalogar as vias de escalada no Brasil.
+O projeto **Cumes do Brasil** tem por objetivo construir um aplicativo para Android e IOS em que o usuário possa consultar de maneira rápida e off-line informações básicas sobre as vias de escalada do país, sobretudo a graduação da via e sua extensão. Informações sobre os conquistadores, ano de conquista, bem como sua localização e croqui também são informados, quando possível.
+
+As informações disponíveis foram compiladas de diferentes fontes, que são citadas em todas as vias disponíveis. Para descrições e croquis profissionais sobre elas, recomendamos a consulta da fonte primária - livros, catálogos, websites, etc.
+
+A graduação das vias é apresentada em três escalas diferentes: brasileira, americana (*Yosemite Decimal System* ou YDS) e francesa.
+
+---
+:warning: :skull: A prática de escalada é um esporte de risco. Ao procurar uma via de escalada, você deve estar equipado com os materiais e conhecimentos necessários para a prática. No caso de vias desconhecidas, procure antes informações com pessoas que as tenham frequentado antes de você. Muitas vias podem ter proteções enferrujadas e potencialmente perigosas. Agarras antigas podem ter se soltado da parede e vegetação pode ter crescido sobre a linha da via ou mesmo sobre as proteções fixas. Saber avaliar as condições de uma via de escalada é responsabilidade integralmente sua.
+
+---
 
 ## 📖 Sobre o Projeto
 
