@@ -44,3 +44,10 @@ Tabela com as fontes de informação - livros, catálogos, sites, etc. - de onde
 
 - **source_id:** um valor inteiro único para cada entrada;
 - **fontes:** a referência bibliográfica de onde foi tirada a informação sobre a via.
+
+
+### vias_variantes
+Bridge/Link table entre a tabela **vias_main** e **variantes**. Ela tem apenas duas colunas, com os códigos identificadores de cada via e variante dessa via. A mesma via pode ter mais de uma variante.
+
+- **id:** código identificador da via na tabela **vias**.
+- **variante_id:** código identificador da variante na tabela **variantes**.
