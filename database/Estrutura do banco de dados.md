@@ -17,6 +17,7 @@ Tabela que contém as informações principais a serem exibidas aos participante
 - **mount_id:** o código identificador da montanha onde está localizada a via. Referência à tabela 'montanhas';
 - **faces_id:** o código identificador da face onde está localizada a via. Referência à tabela 'faces';
 - **source_id:** o código identificador da fonte primária onde a informação sobre a via foi localizada. Referência à tabela 'fontes';
+- **variante_id:** o código identificador da variante (se existe) da via em questão. Referência à tabela 'variantes';
 
 ### montanhas
 Tabela que contém a lista de montanhas onde as vias estão localizadas e sua altitude, em mestros.
@@ -31,6 +32,12 @@ Tabela com as faces das montanhas onde as vias estão localizadas, bem como info
 - **face_id:** um valor inteiro único para cada entrada;
 - **faces:** o nome da face onde está localizada a via bem como informações complementares entre parênteses, como rua de acesso;
 - **mount_id:** o código identificador da montanha onde a face está localizada. Referência à tabela 'montanhas'.
+
+### variantes
+Tabela com as vias variantes de outras vias.
+
+- **variante_id:** um valor inteiro único para cada entrada;
+- As demais colunas são as colunas descritivas de uma via normal (tabela **vias_main**), com excessão das colunas **mount_id** e **face_id**, que seriam redundantes (a variante de uma via só pode estar na mesma face e mesma montanha que esta via).
 
 ### fontes
 Tabela com as fontes de informação - livros, catálogos, sites, etc. - de onde foram retiradas as informações sobre as vias.
