@@ -4,7 +4,7 @@ CREATE DATABASE cumes_brasil;
 
 USE cumes_brasil;
 
--- Criar a tabela de montanhas
+-- Verificando e criando a tabela montanhas
 DROP TABLE IF EXISTS montanhas;
 CREATE TABLE montanhas (
   mount_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -20,7 +20,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
--- Criando a tabela de faces
+-- Verificando e criando a tabela faces
 DROP TABLE IF EXISTS faces;
 CREATE TABLE faces (
   face_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -37,7 +37,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
--- Criando a tabela com as variantes das vias principais
+-- Verificando e criando a tabela variantes
 DROP TABLE IF EXISTS variantes;
 CREATE TABLE variantes (
   variante_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -53,6 +53,7 @@ CREATE TABLE variantes (
   source_id INT
 );
 
+-- Importar tabela csv
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\variantes.csv'
 INTO TABLE variantes
 FIELDS TERMINATED BY ','
@@ -60,14 +61,14 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
--- Criar a tabela  com as fontes primárias
+-- Verificando e criando a tabela fontes
 DROP TABLE IF EXISTS fontes;
 CREATE TABLE fontes (
   source_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   fontes VARCHAR(200)
 );
 
--- Importar os dados da planilha csv apropriada
+-- Importar tabela csv
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\fontes.csv'
 INTO TABLE fontes
 FIELDS TERMINATED BY ','
@@ -75,7 +76,7 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
--- Criando a tabela principal
+-- Verificando e criando a tabela principal
 DROP TABLE IF EXISTS vias_main;
 CREATE TABLE vias_main (
   id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -98,9 +99,26 @@ CREATE TABLE vias_main (
   FOREIGN KEY (variante_id) REFERENCES variantes(variante_id)
 );
 
--- Importar tabela csv para o MySQL
+-- Importar tabela csv
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\vias_principal.csv'
 INTO TABLE vias_main
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+-- Verificando e criando a tabela one-to-many vias_main x variantes (bridge/link table)
+DROP TABLE IF EXISTS vias_variantes;
+CREATE TABLE vias_variantes (
+    id INT,
+    variante_id INT,
+    PRIMARY KEY (id, variante_id),
+    FOREIGN KEY (id) REFERENCES vias_main(id),
+    FOREIGN KEY (variante_id) REFERENCES variantes(variante_id)
+);
+
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\vias_variantes.csv'
+INTO TABLE vias_variantes
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
