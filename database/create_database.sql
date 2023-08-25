@@ -123,3 +123,36 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+
+-- Verificando e criando a tabela croquiteca
+DROP TABLE IF EXISTS croquiteca;
+CREATE TABLE croquiteca (
+  croqui_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  path_to_img VARCHAR(100) NOT NULL,
+  autor VARCHAR(100),
+  fonte VARCHAR(100)
+);
+
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\croquiteca.csv'
+INTO TABLE croquiteca
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+-- Verificando e criando a tabela one-to-many croquis x vias
+DROP TABLE IF EXISTS croquis_vias;
+CREATE TABLE croquis_vias (
+    croqui_id INT,
+    via_id INT,
+    PRIMARY KEY (croqui_id, via_id),
+    FOREIGN KEY (croqui_id) REFERENCES croquiteca(croqui_id),
+    FOREIGN KEY (via_id) REFERENCES vias_main(id)
+);
+
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\croquis_vias.csv'
+INTO TABLE croquis_vias
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
