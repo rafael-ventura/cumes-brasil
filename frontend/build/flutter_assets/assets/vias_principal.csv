@@ -1,0 +1,177 @@
+id,Via,Grau Geral,Grau do Crux,Grau do Artificial (Passadas),Grau de Duração,Grau de Exposição,Extensão (metros),Conquistadores,Data da Conquista,mount_id,face_id,source_id
+1,29 de dezembro,2,IIsup,,,,55,Jofre Telles;Marina Mello,05/08/2005,1,1,1
+2,Fenda do Forte,NULL,Vsup,,,,18,Ivan Cristie;Paulo Henrique 'PH' Santos,15/01/2005,1,1,1
+3,Semisonic,3,V,,,E3,130,Paulo Henrique 'PH' Santos (solo encordado),21/06/2004,1,2,1
+4,Ratos de montanha,5,VIIb,,,E2/3,105,Leandro Chen; Marcos 'Snakinho' Piffer;Marcus Vinícius Ferreira;Patrícia Duffes; Paulo Henrique 'PH' Santos,14/04/2005,1,3,1
+5,Paredão do Leme,2,III,,,,135,Alexandre Decker; Hélio Barroso; Nélson Busi,12/08/1967,1,3,1
+6,João Belamy,4,V,,,,100,Antônio 'Tonico' Magalhães; Juliano Magalhães; Felipe Barbosa,18/11/2006,1,4,1
+7,Ponto Noturno,4,VI,,,,100,Marcos Fontainha; Paulo Henrique 'PH' Santos,10/06/2005,1,4,1
+8,Variante da Laca,NULL,IIIsup,,,,35,Paulo Henrique 'PH' Santos,12/2005,1,4,1
+9,Um dia de sol,4,VIsup,,,,95,Luiz Vulcanis; Pedro Bugim,15/10/2006,1,4,1
+10,Variante Mudança climática,NULL,V,,,,30,Pedro Bugim (com auto-segurança),29/10/2006,1,4,1
+11,Um dia de sorte,NULL,VIIa,,,,25,Pedro Bugim; Rodrigo Taveira,18/03/2007,1,4,1
+12,Diedro Mar Grosso,NULL,IVsup,,,,25,Antônio 'Tonico' Magalhães; Juliano Magalhães,25/12/2004,1,4,1
+13,Tsunami,NULL,III,,,,20,André Ilha;Rodolfo Campos,29/5/2005,1,4,1
+14,Travessia Dois em um,3,V,,,,70,Antônio 'Tonico' Magalhães; Felipe Barbosa; Juliano Magalhães,14/10/2005,1,4,1
+15,Depois da tempestade,NULL,III,,,,20,Aline Garcia; Pedro Bugim,28/01/2006,1,4,1
+16,Maré negra,NULL,V,,,E3,25,André Ilha; Yuri Berezovoy,15/01/2006,1,4,1
+17,Insolação,NULL,IIIsup,,,,20,Antônio 'Tonico' Magalhães; Juliano Magalhães,23/12/2005,1,4,1
+18,Ressaca,NULL,V,,,,15,Antônio 'Tonico' Magalhães; Juliano Magalhães,23/12/2005,1,4,1
+19,Rio 40 graus,NULL,VIIa,,,,12,Antônio 'Tonico' Magalhães; Juliano Magalhães,26/12/2005,1,4,1
+20,Bicho-papão,NULL,VIIIa/b,,,,10,André Ilha; Paulo Henrique 'PH' Santos,29/01/2006,1,4,1
+21,Marola,NULL,VIIIb,,,,15,Marcos Fontainha; Paulo Henrique 'PH' Santos,08/01/2006,1,4,1
+22,Jovem Colonião,NULL,VIIa,,,,20, Paulo Henrique 'PH' Santos (solo),06/04/2005,1,5,1
+23,Arco do Triunfo,5,VIIa,,,,45,Marcus Vinícius; Paulo Henrique 'PH' Santos,03/04/2004,11,6,1
+24,Unha de gato,4,VIIc,,,E2/3,45,Paulo Henrique 'PH' Santos; Thiago Pedroso,21/03/2004,11,6,1
+25,Mundo cão,NULL,VIIIb/c,,,,30,André Ilha; Paulo Henrique 'PH' Santos; Thiago Pedroso,08/05/2004,11,6,1
+26,Zé Buscapé,2,IIIsup,,,,105,Leonardi Cupollilo; Paulo Henrique 'PH' Santos,08/08/2004,11,7,1
+27,Variante do Zé,NULL,Vsup,,,,20,Leonardi Cupollilo; Paulo Henrique 'PH' Santos,08/08/2004,11,7,1
+28,Estopim,NULL,V,,,E2,35,Patrícia Duffles; Paulo Henrique 'PH' Santos,19/03/2005,11,8,1
+29,Ascensão e Queda,5,VI,A0(3),,E2/3,110,Alfredo Neto;Flávio Abreu;Guilherme 'Piu-Piu' Fonseca,10/10/2002,2,9,1
+30,Variante João Sebastião,NULL,IV,,,,20,Alfredo Neto;Ricardo Bemvindo,29/12/2002,2,9,1
+31,Fissura do inglês,4,VIsup,,,E2/3,170,Heckel Capucci; Rodolfo Chermont,13/03/1970,2,9,1
+32,Sucata,3,IIIsup,,,E2/3,160,Álvaro Borges; Carlos Eduardo 'Cadu' Pinto; Heldo da Fonseca; Sebastião Cazeiro,16/10/1971,2,9,1
+33,Fissura São João,4,VI,,,E2/3,105,Alfredo Maciel;Arcindo Madeira;Edi Martins; Mário Arnauld,12/02/1978,2,9,1
+34,Variante Baba Roga,NULL,VI,,,,40,Marcello Ramos;Predrag Panevski; Russ Clune,1984,2,9,1
+35,Andrômeda,NULL,VIIIc,,,,30,José Marcos; Marcello Ramos; Marcelo Braga; Pascal,1986,2,9,1
+36,Sombras eternas,NULL,IXa,,,,20,Alexandre Barradas; André Luís; Eduardo Bittencourt; Márcio Lozada,1990,2,9,1
+37,Filhos do meio-fio,NULL,VIIIc,,,,30,Alexandre Portela; Luis Cláudio 'Pita' Bittencourt; Sérgio Tartari,,2,9,1
+38,Meteorito,NULL,VIIIc,,,,30,Alexandre Portela; Sérgio Tartari,,2,9,1
+39,Nebulosa,NULL,VIIIb,,,,30,Alexandre Portela; Sérgio Tartari,,2,9,1
+40,Shackleton,NULL,VI,,,,15,Alfredo Neto; Hernando Bedoya; Sérgio 'Bula' Rozencwaig,26/01/2002,3,9,1
+41,Copa do Mundo,NULL,IV,,,,45,Hildson 'Hillo' Santana; André Almeida; Robson Richers,1994,2,10,1
+42,Olhos de anjo,3,Vsup,,,E2/3,85,Ana Paula Braga; Renato Souto,20/10/1998,2,11,1
+43,São Pedro,2,IVsup,,,,110,Edi Martins; Mário Arnaud,23/02/1979,2,11,1
+44,Balança-Mas-Não-Cai,4,VIIa,,,E2/3,100,Daniel 'Goiaba' Lacerda; Eloy Corso; Hildson 'Hillo' Santana; Marcelo Moraes; Sancho Corá,,2,11,1
+45,Francesco Berardi,4,V,,,E2/3,85,Juratan Câmara; Marco Vidon,198?,2,11,1
+46,Nós e a eternidade,4,VI,,,,60,André Ilha; Marco Vidon,23/01/1988,2,11,1
+47,Sete Palmos,4,VIIb,,,,60,Juratan Câmara; Marco Vidon,03/05/1988,2,11,1
+48,Forças ocultas,3,VIIb,,,,60,André Ilha; Marco Vidon,26/04/1988,2,11,1
+49,Aristóteles contemplando o busto de Homero,NULL,,A2,,,55,Alain Villaume,196?,4,12,1
+50,Via normal,NULL,II,,,,10,,,4,13,1
+51,Chamonix,NULL,III (A1/VIIIa),,,,50,Alexandre Decker; Anselmo Pires; Jair Lourenço; Jaime Pitaluga; Juarez Trigueiro,23/01/1965,4,13,1
+52,Variante central,NULL,,,,,NULL,Etzel von Stockert; José 'Tião' Sebastião; Mauro de Andrade; Raimundo Minchetti,1961,4,13,1
+53,Passo do gigante,2,,,,,NULL,,,4,13,1
+54,Jânio Quadros,2,,,,,NULL,Carlos Cerqueira; José Schuster; Raimundo Minchetti; Rogério Santana,1963,4,13,1
+55,Variante Luis Carlos Teixeira da Silva,2,,A1,,,NULL,Ernani Soares; Frederico Lohmann; Jadyr Santiago; Jean Pierre Von Der Weid; Luis Carlos David; Marcos Teixeira,06/04/1968,4,13,1
+56,Aresta Fuligem,NULL,VI,,,E2/3,12,André 'Batata' Padrenosso; Marcus 'Kiko' Araújo; Ricardo Bastos,05/08/2007,5,14,1
+57,Bagaço da laranja,NULL,VIIc,,,,12,Júlio Campanella,1994,5,15,1
+58,Bem-Te-Vi,3,IV,,,,160,André Ilha; José 'Camelô' Lozada; Renato Souto,13/09/1990,5,16,1
+59,Encruzilhada,4,IVsup,,,E2/3,235,Júlio Campanella; Leandro Moura,22/08/2002,5,16,1
+60,Via do Beto,4,IVsup,,,E5,180,Herbert Fortes,,5,16,1
+61,Amnésia Audaciosa,4,IVsup,,,E2/3,120,André Ilha; Bóris Flegr; Carlos 'Chuchu' Arruzo; Francisco 'Playboy' Castagnaro; Ivan Azevedo; Monique Correa; Rodolfo Campos,15/04/2007,5,16,1
+62,Lagoa,3,IV,,,,245,Fernando Gusmão; Gilberto Chiarelli; José Carlos Almeida,17/10/1970,5,16,1
+63,O satânico Dr. Pow,4,IVsup,,,E2/3,215,Bruno Dias; Jean Pierre Von Der Weid; Luis Alexandre; Pedro 'Pow' Aragão; Ricardo Moraes,04/06/2004,5,16,1
+64,Cabrito Cabreiro,4,V,,,E2/3,230,André Kühner; Júlio Campanella; Nilton Campos,11/09/2000,5,16,1
+65,Variante de A fogueira das vaidades,NULL,IVsup,,,,30,,,5,16,1
+66,A fogueira das vaidades,4,V,,,E2/3,165,Arthur Solleiro; Pedro 'Pow' Aragão; Ricardo de Moraes, 04/01/2002,5,16,1
+67,Grande guerreiro,4,IV,,,E2/3,220,Frederico Noritomi; Guiderlan 'Dolly' Mantovani; Hernande Oliveira; Manuel do Rosário; Rodolfo Campos,24/03/2002,5,16,1
+68,Cabrito em chamas,4,IVsup,,,E3,170,André Kühner; Arianne Carvalhedo; Gabriela Saliba,09/2001,5,16,1
+69,Variante Diurrurru,3,IVsup,,,E2/3,80,Alexrande Aragão; Álvaro Loureiro; Felipe Assad,2002,5,16,1
+70,Os exércitos de um homem só,3,III,,,,200,Pedro 'Pow' Aragão,08/10/2001,5,16,1
+71,Carioca,2,III,,,,100,Francisco Menescal; Hudson Machado; Jarci Machado; Luiz Menescal; Ricardo Menescal,07/12/1947,5,16,1
+72,Es muerto,NULL,Vsup,,,E4/5,25,Hernande Oliveira; Rodolfo Campos,18/08/2001,5,17,1
+73,PFF2,2,II,,,,400,Ferando Fuhrkin; Paulo Favaron,1992,5,18,1
+74,Cristal acima,3,IV,,,E2/E3,135,Fábio Serfaty; Márcio Carilho,2005,5,18,1
+75,Chuva de pedra,4,VI,,,,140,Ana Cláudia 'Lila' Flosi; Ian Lima; Rodrigo Motta,13/10/2010,5,18,1
+76,Tamau,3,III,,,,280,Luiz Octávio 'Tavinho' Cardozo; Maurício Mota,1977,5,18,1
+77,Onde as ruas não têm nome,5,VI,,,E4/5,95,Alcino Falcão; Luis Cláudio 'Ralf' Cortes,,5,18,1
+78,Casa da mãe Joana,4,IVsup,,,E4,200,Alexandre Portela; Herbert Fortes; Fernando Vieira,04/02/2003,5,18,1
+79,Eram os deuses astronautas,4,IVsup,,,,150,Toti 'Pitoco' Jordan; Eduardo Luna,2003,5,18,1
+80,Padecendo no paraíso,5,VIIa,,,,90,Fernando Vieira; Juliano Lindner; Márcio Carrilho,03/02/2001,5,18,1
+81,Última opção/Opção completa,3,VI,,,,270,Alexandre Siqueira; Jacques Cardeman; Leonardo 'Leo' Siqueira; Márcio Amaral; Michel Cipolati; Guilherme 'Piu-Piu' Fonseca; Miguel Rego,28/05/1998,5,18,1
+82,Variante Opção vertical,NULL,IIIsup,,,,25,Jacques Cardeman; Leonardo 'Leo' Siqueira; Márcio Amaral,04/06/1997,5,18,1
+83,Dirceu Gouveia,2,III,,,,270,Juratan Câmara; Luciano Perez,1985,5,18,1
+84,Lilith,2,IIIsup,,,,90,Kátia Torres; Lilian White; Sílvia Fittipaldi; Valéria Conforto,10/08/1987,5,18,1
+85,Variante Eva,NULL,II,,,,25,Kátia Torres; Lilian White; Sílvia Fittipaldi; Valéria Conforto,1987,5,18,1
+86,Ferrugem,2,III,,,,270,,,5,18,1
+87,Antares,2,II,,,,320,Denise Emmer; Giuseppe Pellegrini,02/11/1977,5,18,1
+88,Variante Arcturus,NULL,IIsup,,,,30,Carlos Carrozino; Rafael Villaça,02/11/2007,5,18,1
+89,La Belle de Jour,2,Vsup,,,E3,205,Autor Desconhecido;André Araújo; Flávio Leone,2003,5,18,1
+90,Frank Justus,3,IIIsup,,,,200,Marcelo 'Pedal Verde' Silva; Ricardo Lima,200?,5,19,1
+91,Genitália,NULL,VIIIc,,,,50,Marcelo 'Pedal Verde' Silva; Ricardo Lima; Ricardo Zugliani,200?,5,19,1
+92,Lá de casa dá pra ver,4,V,,,,135,Marcelo 'Pedal Verde' Silva; Ricardo Lima,200?,5,19,1
+93,Pra galera,3,III,,,,150,Marcelo 'Pedal Verde' Silva; Ricardo Lima,200?,5,19,1
+94,Au-Au,2,II,,,,NULL,Bruno Cruz; Marcelo Ramos,1984,5,20,1
+95,Anarquista,NULL,VIIc,A1(2),,,50,Fábio da Silveira; Sérgio Tartari,1983,5,21,1
+96,Variante Socialista,NULL,VI,,,,25,Alexandre Portela; Sérgio Tartari,1983,5,21,1
+97,Variante Capitalismo Selvagem,NULL,IV,,,,20,André Ilha; Ricardo de Moraes,10/04/1989,5,21,1
+98,Chaminé Cinquentenário,4,V,C,,,110,Amauri Dantas; Jorge Poggi,08/11/1969,5,21,1
+99,Heróis dos Cabritos,3,IV,,,E3,100,Gideão 'Xaropinho' Mello; Stephany Rayol,14/12/2010,5,21,1
+100,Fazendo a cabeça,NULL,VIIa,,,,15,André 'Rato Kühner; Júlio Campanella,05/04/2002,6,22,1
+101,Veias abertas,5,VIIb/c,,,,75,Bruno Menescal; Sérgio Tartari; André Ilha; Lúcia Duarte,13/10/1991,6,22,1
+102,Lagoa Rasta,NULL,VIIc,,,,60,Júlio Campanella; Marcelo 'Pedal Verde' Silva,29/08/2000,6,22,1
+103,Variante Lagoa Rasta,NULL,VIIIa,,,,6,Gabriel Queiroz; Pedro Kerouac,13/10/2008,6,22,1
+104,Monstro da Lagoa Negra,NULL,Xa,,,,10,Luis Cláudio 'Ralf' Cortes; Marcelo Braga; Daniel Hans 'Coçada',03/2003,6,22,1
+105,Três porquinhos,NULL,VIsup,,,,7,,,6,22,1
+106,Execução penal,NULL,IXa,,,,12,Flávio Leone; André Araújo; Charles Weksler,17/08/2003,6,22,1
+107,Lagoa Rasta,NULL,VIIc,,,,60,Júlio Campanella; Marcelo 'Pedal Verde' Silva,29/08/2000,6,22,1
+108,Cristais canibais,NULL,VIIb,,,,40,André Ilha; Eduardo Cabral,29/04/1993,6,22,1
+109,Variante Renascido das Cinzas,NULL,Vsup,,,,30,Gustavo Sampaio; Márcio Menezes; Pierre Guerry; André Ilha; Kika Bradford; Gabriela Saliba,14/04/2009,6,22,1
+110,Variante Quebra-Nozes,NULL,VIIb,,,,20,André 'Batata' Padrenosso; Leandro Chen; Marcos 'Kiko' Araújo,01/05/2010,6,22,1
+111,Maldita,NULL,VIIa,,,,23,André 'Rato' Kühner; Gabriela Saliba; José Carlos 'Leleco' Leal,01/2002,6,22,1
+112,Prusquistão em casa,NULL,IVsup,,,,23,André 'Rato' Kühner; Nilton Campos,10/2003,6,22,1
+113,Melzinho da Lagoa,NULL,VIsup,,,,15,Antônio 'Tonico' Magalhães; Juliano Magalhães,01/01/2010,6,22,1
+114,Pequena Notável,NULL,VI,,,,30,André Ilha; Lúcia Duarte,24/03/1984,7,23,1
+115,O psicopata,NULL,II,,,E2/3,20,André Ilha; Christian 'Tita' Steinhauser; Rodrigo Guardatti; Daniel Toffoli,10/02/2007,8,24,1
+116,Humaitá verde,NULL,VI,,,,20,André Ilha; Christian 'Tita' Steinhauser; Rodrigo Guardatti; Daniel Toffoli,10/02/2007,8,24,1
+117,1990,4,V,,,E2/3,145,Alcino Falcão; Edilson 'Tilo' Catarino,01/1990,9,25,1
+118,Walmir de Castro,4,IVsup,,,,60,Fernando de Andrade; Hamilton Maciel; Válter Martins,16/11/1952,9,25,1
+119,A Corrida do Ouro,NULL,VIsup,,,E3/4,50,Autor desconhecido; Pedro 'Pow' Aragão; Ricardo de Moraes,28/02/2002,9,26,1
+120,Variante Sem nome,NULL,III,,,,15,,,9,26,1
+121,Variante Cigarettes,NULL,IVsup,,,,35,Gustavo Sampaio; Márcio Argolo,08/2001,9,26,1
+122,Calis,5,VI,,,E2/E3,100,Carlos Alexandre; Felis Pires; Daniel Towersey; Gustavo Sampaio,12/2000,9,26,1
+123,Chaminé do Prego,2,III,,,,55,Fritz Reuter; Haroldo Penna,22/11/1931,9,26,1
+124,El Cracatón Cracato,NULL,,A2+,,,60,Eduardo 'Barão' Ribeiro; Júlio Campanella; Arthur Esteves; Kika Bradford,05/05/2009,9,26,1
+125,Liga da Justiça,NULL,,A2+,,,30,Kika Bradford; Pedro Bugim,25/10/2008,9,26,1
+126,Variante Chaminé do Prego,NULL,VI(A0/VIIa),,,E3,25,,,9,26,1
+127,The Hole is Lower,NULL,VIIa,,,,45,Flávio 'Bagre' Carneiro; Gustavo Sampaio,15/03/2001,9,26,1
+128,Variante Gilberto Coutinho,NULL,III,,,,25,Antônio da Cunha; Etzel Von Stockert; José 'Tião' Sebastião; Raimundo Minchetti,17/07/1960,9,26,1
+129,Litle Black Fuck,NULL,VIsup,,,,20,Flávio Leone; Márcio Gonçalves,28/04/2010,9,26,1
+130,Teoria da Linha Reta,NULL,VII(3),,,,15,André Almeida; Flávio Leone,13/10/2006,9,26,1
+131,Variante Arduíno Sabóia Amorim,NULL,IVsup(A0/VI;C/VIIb),,,,35,Aluízio Borges; Gilberto D'Urso; Hélio Prefeitinho; Henry Occhioni; Jayme Moura e Silva; Jessé Ferreira; José Carlos Pinto; Mário de Castro; Oscar da Silva; Raphael de Assis,18/07/1965,9,26,1
+132,Chaminé do Morcego,NULL,IIsup,,,,45,Fritz Reuter; Haroldo Penna; Rudolph Dietrich,29/11/1931,9,26,1
+133,Porco-espinho,NULL,V,,,,20,André 'Rato' Kühner; Nilton Campos,30/01/2004,9,27,1
+134,Donos do nada,NULL,VIsup,,,,13,André 'Rato' Kühner; José Carlos 'Leleco' Leal,06/01/2004,9,27,1
+135,Variante Infiéis,NULL,VIsup,,,,20,André Ilha; Gabriel Fonseca,20/08/1994,9,27,1
+136,Porcos guerreiros,NULL,VII,,,,30,André Ilha; Pedro 'Pow' Aragão,27/01/2002,9,27,1
+137,Variante Porcos Safados,NULL,VIIb,,,,8,André 'Rato' Kühner; Luís Cláudio 'Ralf' Cortes; Nilton Campos,12/2003,9,27,1
+138,Variante Trigramps,NULL,IVsup,,,,15,Autor Desconhecido,,9,27,1
+139,Guilherme,NULL,VIIb,,,,25,Guilherme Ribeiro; José Roberto Costa; Waldemar 'Waldo' Guimarães,1965,9,27,1
+140,Chaminé do Funil,2,III,,,,50,Fritz Reuter; Haroldo Penna,22/11/1931,9,27,1
+141,Mangangá,NULL,IVsup,,,E3,40,Aline Rezende; Bruno Gandelman; Gustavo Sampaio,2000,9,27,1
+142,Alpamayo,4,VIsup,,,,75,André Ilha; Anthony 'Tony' Adler,24/02/1979,9,27,1
+143,Achados e Perdidos,NULL,V,,,,25,André 'Rato' Kühner; Fernando Sabioni; Nilton Campos,17/01/2004,9,27,1
+144,Meia-sola,NULL,IVsup,,,E3,20,Marco 'Skaninho' Piffer; Nilton Campos,24/01/2004,9,27,1
+145,Tá pronto,NULL,V,,,E2/3,30,André 'Rato' Kühner; Nilton Campos,14/01/2004,9,27,1
+146,Vertigem,NULL,Vsup,,,,40,Flávio Leone; Márcio Gonçalves,28/04/2010,9,27,1
+147,Adrenalina Mil,5,VIIa,,,,85,Luciano Perez; Luis Octávio 'Tavinho' Cardozo;Mário Arnauld;Maurício Mota; Nelson Machado,1988,9,27,1
+148,Urbanóide,4,V,,,E2/3,105,Carlos Alexandre; Giovanni Tartari; Marcelo Braga; Sérgio Tartari,29/08/1983,9,27,1
+149,Variante Direta,NULL,V,,,,20,Flávio Daflon; Márcio Carrilho,2004,9,27,1
+150,Lembranças de um passado,4,V,,,,105,Júlio Campanella; Paulo Oliveira; Felipe 'Felipinho' Assad; Lino,21/09/2001,9,27,1
+151,22 de outubro,4,V,,,,100,Leandro Chen; Rafael Wojcik,24/10/2001,9,27,1
+152,Gasparito,4,IVsup,,,,135,Cid Villar; José 'Camelô' Lozada; Jorge 'JL' Luiz; Luis Octávio 'Tavinho' Cardozo; Maurício Mota,1986,9,27,1
+153,Carlos Alexandre,3,III,,,E2/3,170,Luis Octávio 'Tavinho' Cardozo; Maurício Mota,1978,9,27,1
+154,Falcão à espreita,4,IVsup,,,E3,100,Alcino Falcão; André Kühner; Leandro Chen; Rodrigo Molina,2004,9,27,1
+155,Variante de Carlos Alexandre,NULL,III,,,,40,Luis Octávio 'Tavinho' Cardozo; Maurício Mota,1978,9,27,1
+156,Caverna de cristal,4,VI,,,,140,Fernando Vieira; Juliano Lindner; Flávia Maximo,10/08/2001,9,27,1
+157,Brilho da noite,3,IIIsup,,,,120,Fernando Vieira; Juliano Lindner,17/01/2001,9,27,1
+158,Paixão de Cris,3,IIIsup,,,,90,Dalton Chiarelli; Juratan Câmara; Marco Vidon; Pedro Caliano,1987,9,27,1
+159,Labirintite,4,IVsup,,,,100,Fábio Serfaty; Márcio Carrilho,2002,9,27,1
+160,Rumores da Algazarra,3,Vsup,,,,100,Jorge Schubert; Renato Souto,10/09/1988,9,27,1
+161,Via Láctea,2,IIIsup,,,,95,Benito Esteves; José 'Camelô' Lozada; Pedro Caliano; Renato Souto; Roberto Luiz 'Puú' Souza; Wagner Lozada,26/06/1980,9,27,1
+162,Guanabara,2,IV,,,,95,Benito Esteves; José 'Camelô' Lozada; Juratan Câmara; Renato Souto,02/02/1979,9,27,1
+163,Mandei um barro,NULL,IV,,,,10,Alexandre Faia,03/2011,10,28,2
+164,Os Amanayés,NULL,IV,,,,15,Alexandre Faia,02/2011,10,28,2
+165,Variante Boa sorte Marianne,NULL,IV,,,,5,Alexandre Faia,02/2011,10,28,2
+166,Noite e dia,NULL,VIIa,,,,20,Pedro Bugim; Maria Fernanda Patrício,15/07/2012,10,28,2
+167,Sulamita,NULL,VIsup,,,,20,Paulo 'Macaco',1997,10,28,2
+168,Livrai-me de mim mesmo,NULL,IV,,,,20,Alexandre Faia; Ricardo Almeida,04/2011,10,28,2
+169,Retinha do Graal,NULL,Vsup,,,,15,Eduardo '47',03/2011,10,28,2
+170,As bolas do Wilson,NULL,IIsup,,,,20,Pedro Bugim; Sérgio 'Garfield',21/04/2011,10,28,2
+171,23 de abril,NULL,IIIsup,,,,20,Pedro Bugim;Laura Petroni; João Pedro Vergnano,23/04/2019,10,28,2
+172,Vovô Abílio foi às compras,NULL,IVsup,,,,15,Alexandre Faia; Ricardo Almeida,03/2011,10,28,2
+173,Sônia Trote,NULL,III,,,,20,Alexandre Faia; Ricardo Almeida,03/2011,10,28,2
+174,Saidinha de banco,NULL,III,,,,20,Alexandre Faia; Ricardo Almeida,03/2011,10,28,2
+175,30 de setembro,NULL,IIIsup,,,,20,Pedro Bugim;Laura Petroni; Carlos Alberto Carrozino,30/09/2018,10,28,2
+176,13 de outubro,NULL,IVsup,,,,20,Pedro Bugim;Laura Petroni; João Pedro Vergnano,13/10/2019,10,28,2
