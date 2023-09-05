@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="Cumes Brasil Logo" src="../logo.png" width="200px" />
+    <img alt="Cumes Brasil Logo" src="logo.png" width="200px" />
     <br>
     🏞️ Cumes Brasil 🧗‍♂️
 </h1>
