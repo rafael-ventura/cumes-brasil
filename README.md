@@ -50,10 +50,6 @@ O Cumes Brasil esta sendo desenvolvido com as seguintes tecnologias:
 
 Expressamos nossa profunda gratidão a esses contribuidores por permitirem o uso dessas informações valiosas em nosso projeto.
 
-
-
-https://www.figma.com/file/n0Javq8YYiVvEXQag6dY2p?type=design
-
 ## Links do Figma
 
 1. [Tela Inicial](https://www.figma.com/file/n0Javq8YYiVvEXQag6dY2p?type=design)
