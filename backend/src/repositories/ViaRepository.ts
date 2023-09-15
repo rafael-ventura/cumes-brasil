@@ -1,20 +1,28 @@
-import { EntityRepository, Repository } from "typeorm";
-import { Via } from "../entities/Via";
+import pool from '../config/db';
+import {IVia} from "../models/IVia";
 
-@EntityRepository(Via)
-export class ViaRepository extends Repository<Via> {
-
-    // Se você precisar de operações customizadas que não são fornecidas pelo Repository do TypeORM,
-    // você pode definir aqui. Por exemplo:
-
-    async findById(id: number): Promise<Via | null> {
-        return this.findOne(id as any);
+class ViaRepository {
+    async findAll(): Promise<IVia[]> {
+        const [rows] = await pool.query<IVia[]>('SELECT * FROM vias');
+        return rows as IVia[];
     }
 
-    async findAll(take = 10, skip = 0): Promise<Via[]> {
-        return this.find({ take, skip });
+    async findById(id: number): Promise<IVia | null> {
+        const [rows] = await pool.query<IVia[]>('SELECT * FROM vias WHERE id = ?', [id]);
+        return rows[0] as IVia || null;
     }
 
-
-    // Qualquer outra operação específica relacionada a `Via` que você queira adicionar.
+    async findDetailedById(id: number): Promise<IVia | null> {
+        const query =
+            `
+            SELECT * 
+            FROM vias 
+            LEFT JOIN outra_tabela ON vias.some_id = outra_tabela.some_id
+            WHERE vias.id = ?
+        `;
+        const [rows] = await pool.query<IVia[]>(query, [id]);
+        return rows[0] as IVia || null;
+    }
 }
+
+export default new ViaRepository();
