@@ -8,13 +8,13 @@ class ViaController {
         res.json(vias);
     }
 
-    async detail(req: Request , res: Response) {
+    async findById(req: Request , res: Response) {
         const { id } = req.params;
         const via = await ViaRepository.findById(Number(id));
         res.json(via);
     }
 
-    async detailedDetail(req: Request, res: Response) {
+    async findDetailedById(req: Request, res: Response) {
         const { id } = req.params;
         const via = await ViaRepository.findDetailedById(Number(id));
         res.json(via);

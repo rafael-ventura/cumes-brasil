@@ -69,15 +69,13 @@ CREATE TABLE via
     id_face        INT,
     id_fonte       INT,
     id_variante    INT,
-    id_croqui      INT,                            -- Adicione esta linha
     FOREIGN KEY (id_montanha) REFERENCES montanha (id),
     FOREIGN KEY (id_face) REFERENCES face (id),
     FOREIGN KEY (id_fonte) REFERENCES fonte (id),
-    FOREIGN KEY (id_variante) REFERENCES via (id),
-    FOREIGN KEY (id_croqui) REFERENCES croqui (id) -- Adicione esta linha
+    FOREIGN KEY (id_variante) REFERENCES via (id)
 );
 
--- O script de carregamento fica assim:
+
 LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/database/csv/vias_ajustado.csv'
     INTO TABLE via
     FIELDS TERMINATED BY ','
@@ -92,8 +90,7 @@ LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/database/csv/vias_ajustado.csv'
         exposicao = IF(@var_exposicao = '', NULL, @var_exposicao),
         extensao = IF(@var_extensao = '', NULL, @var_extensao),
         id_face = IF(@var_id_face = '', NULL, @var_id_face),
-        id_variante = IF(@var_id_variante = '', NULL, @var_id_variante),
-        id_croqui = IF(@var_id_croqui = '', NULL, @var_id_croqui);
+        id_variante = IF(@var_id_variante = '', NULL, @var_id_variante);
 
 -- Croqui
 DROP TABLE IF EXISTS croqui;
@@ -101,12 +98,28 @@ CREATE TABLE croqui
 (
     id             INT PRIMARY KEY AUTO_INCREMENT,
     caminho_imagem VARCHAR(255) NULL,
-    autor          VARCHAR(255) NOT NULL,
-    id_via         INT,
-    FOREIGN KEY (id_via) REFERENCES via (id)
+    autor          VARCHAR(255) NOT NULL
 );
 LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/database/csv/croqui_ajustado.csv'
     INTO TABLE croqui
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 ROWS;
+
+-- Tabela de Relação vias_croqui
+DROP TABLE IF EXISTS vias_croqui;
+CREATE TABLE vias_croqui (
+    id_via INT,
+    id_croqui INT,
+    PRIMARY KEY (id_via, id_croqui),
+    FOREIGN KEY (id_via) REFERENCES via(id),
+    FOREIGN KEY (id_croqui) REFERENCES croqui(id)
+);
+
+-- Carregando dados na tabela de relação vias_croqui
+LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/database/csv/vias_croquis.csv'
+    INTO TABLE vias_croqui
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
