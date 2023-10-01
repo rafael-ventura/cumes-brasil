@@ -1,0 +1,38 @@
+import { InMemoryDocumentSessionOperations } from "../InMemoryDocumentSessionOperations";
+import { BatchCommandResult } from "./BatchCommandResult";
+import { SingleNodeBatchCommand } from "../../Commands/Batches/SingleNodeBatchCommand";
+export declare class BatchOperation {
+    private readonly _session;
+    constructor(session: InMemoryDocumentSessionOperations);
+    private _entities;
+    private _sessionCommandsCount;
+    private _allCommandsCount;
+    private _onSuccessfulRequest;
+    private _modifications;
+    createRequest(): SingleNodeBatchCommand;
+    private static _throwOnNullResults;
+    setResult(result: BatchCommandResult): void;
+    private _finalizeResults;
+    private _applyMetadataModifications;
+    private _getOrAddModifications;
+    private _handleCompareExchangePut;
+    private _handleCompareExchangeDelete;
+    private _handleCompareExchangeInternal;
+    private _handleAttachmentCopy;
+    private _handleAttachmentMove;
+    private _handleAttachmentDelete;
+    private _handleAttachmentDeleteInternal;
+    private _handleAttachmentPut;
+    private _handleAttachmentPutInternal;
+    private _handlePatch;
+    private _handleDelete;
+    private _handleDeleteInternal;
+    private _handleForceRevisionCreation;
+    private _handlePut;
+    private _handleMetadataModifications;
+    private _handleCounters;
+    private static _getStringField;
+    private static _getNumberField;
+    private static _getBooleanField;
+    private static _throwMissingField;
+}

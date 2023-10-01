@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "ravendb": "^5.4.0"
+  }
+}
