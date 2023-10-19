@@ -4,12 +4,31 @@ CREATE DATABASE cumes_brasil;
 
 USE cumes_brasil;
 
+
+DROP TABLE IF EXISTS Usuarios;
+CREATE TABLE Usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS ColecoesDosUsuarios;
+CREATE TABLE ColecoesDosUsuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    tipo_colecao VARCHAR(255) NOT NULL,
+    usuario_id INT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)
+);
+DROP DATABASE IF EXISTS cumes_brasil;
+
+CREATE DATABASE cumes_brasil;
+
+USE cumes_brasil;
+
 -- Fontes
 DROP TABLE IF EXISTS fontes;
-CREATE TABLE fontes (
-    source_id INT PRIMARY KEY,
-    fontes TEXT
-);
+
 LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/assets/fontes.csv' 
 INTO TABLE fontes 
 FIELDS TERMINATED BY ',' 
@@ -19,11 +38,7 @@ IGNORE 1 ROWS;
 
 -- Montanhas
 DROP TABLE IF EXISTS montanhas;
-CREATE TABLE montanhas (
-    mount_id INT PRIMARY KEY,
-    montanhas VARCHAR(255),
-    altitude INT
-);
+
 LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/assets/montanhas.csv' 
 INTO TABLE montanhas 
 FIELDS TERMINATED BY ',' 
@@ -33,12 +48,7 @@ IGNORE 1 ROWS;
 
 -- Faces
 DROP TABLE IF EXISTS faces;
-CREATE TABLE faces (
-    face_id INT PRIMARY KEY,
-    faces VARCHAR(255),
-    mount_id INT,
-    FOREIGN KEY (mount_id) REFERENCES montanhas(mount_id)
-);
+
 LOAD DATA LOCAL INFILE 'C:/Dev/cume-brasil/assets/faces.csv' 
 INTO TABLE faces 
 FIELDS TERMINATED BY ',' 

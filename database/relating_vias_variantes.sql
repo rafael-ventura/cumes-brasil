@@ -5,7 +5,7 @@ SELECT
     vv.variante_id,
     va.vias AS variantes
 FROM
-    vias_main v
+    Vias v
 JOIN
     vias_variantes vv ON v.id = vv.id
 JOIN

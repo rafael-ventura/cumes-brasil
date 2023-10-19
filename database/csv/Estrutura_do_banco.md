@@ -53,3 +53,36 @@ Tabela que contém os croquis das vias, que são desenhos esquemáticos mostrand
 - **caminho_imagem**: Caminho ou URL da imagem do croqui.
 - **autor**: Nome do autor ou responsável pelo croqui.
 - **id_via**: Código identificador da via associada ao croqui. Referência à tabela 'Via'.
+
+### Croqui
+
+Tabela que contém informações sobre os croquis associados às vias de escalada.
+
+- **croqui_id**: Valor inteiro único para cada croqui.
+- **path_to_img**: Caminho para a imagem do croqui.
+- **autor**: Autor do croqui.
+- **id_fonte**: Código identificador da fonte associada ao croqui. Referência à tabela 'Fonte'.
+
+### Vias-Croquis
+
+Tabela de relação que associa vias a croquis.
+
+- **via_id**: Código identificador da via. Referência à tabela 'Via'.
+- **croqui_id**: Código identificador do croqui. Referência à tabela 'Croqui'.
+
+### Usuarios
+
+Tabela que contém informações sobre os usuários.
+
+- **id**: Valor inteiro único para cada usuário.
+- **nome**: Nome do usuário.
+- **email**: E-mail do usuário.
+
+### ColecoesDosUsuarios
+
+Tabela que contém informações sobre as coleções dos usuários.
+
+- **id**: Valor inteiro único para cada coleção.
+- **nome**: Nome da coleção.
+- **tipo_colecao**: Tipo da coleção.
+- **usuario_id**: Código identificador do usuário associado à coleção. Referência à tabela 'Usuarios'.
