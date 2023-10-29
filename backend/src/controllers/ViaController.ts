@@ -1,4 +1,4 @@
-import ViaRepository from '../repositories/ViaRepository';
+/*import ViaRepository from '../repositories/ViaRepository';
 import { Request, Response } from 'express';
 
 
@@ -21,4 +21,56 @@ class ViaController {
     }
 }
 
+export default new ViaController();*/
+
+import { Request, Response } from 'express';
+import { IVia } from '../models/IVia';
+import store from '../config/db';
+import { ViaRepository } from '../repositories/ViaRepository';
+
+class ViaController {
+    private repo: ViaRepository;
+
+    constructor() {
+        this.repo = new ViaRepository(store);
+    }
+
+    createVia = async (req: Request, res: Response) => {
+        const route: IVia = req.body;
+        const result = await this.repo.create(route);
+        res.json(result);
+    };
+
+    getViaById = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const result = await this.repo.getById(id);
+        res.json(result);
+    };
+
+    getAllVia = async (_: Request, res: Response) => {
+        const result = await this.repo.getAll();
+        res.json(result);
+    };
+
+    updateVia = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const updatedRoute: IVia = req.body;
+        const result = await this.repo.update(id, updatedRoute);
+        res.json(result);
+    };
+
+    deleteVia = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        await this.repo.delete(id);
+        res.sendStatus(204);
+    };
+
+    findDetailedById(req: Request, res: Response) {
+        const { id } = req.params;
+        const via = this.repo.findDetailedById(id);
+        res.json(via);
+    }
+}
+
 export default new ViaController();
+

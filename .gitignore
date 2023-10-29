@@ -44,6 +44,8 @@ app.*.map.json
 /frontend/android/app/release
 
 
+node_modules/
+
 *.env
 ```
 /backend/node_modules/.bin/acorn
