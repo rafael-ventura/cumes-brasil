@@ -31,7 +31,7 @@ export default new ViaRepository();*/
 
 /* INIT -------------------- new via Repo  ---------------------------*/
 import { DocumentStore, IDocumentSession } from 'ravendb';
-import { IVia, Via } from '../models/IVia';
+import { IVia } from '../models/IVia';
 
 export class ViaRepository {
     private session: IDocumentSession;
@@ -69,5 +69,27 @@ export class ViaRepository {
             await this.session.delete(route);
             await this.session.saveChanges();
         }
+    }
+
+    /* TODO: Validar os dois metodos findDetaildById abaixo... */
+    /*findDetailedById(id: number): Promise<IVia | null> {
+        const query =
+            `
+            SELECT * 
+            FROM vias 
+            LEFT JOIN outra_tabela ON vias.some_id = outra_tabela.some_id
+            WHERE vias.id = ?
+        `;
+        const [rows] = pool.query<IVia[]>(query, [id]);
+        return rows[0] as IVia || null;
+    }*/
+
+    async findDetailedById(id: string): Promise<IVia | null> {
+        const route = await this.session
+            .query<IVia>({ collection: 'vias' })
+            .include('algumaPropriedade.Relacionada') // Substitua 'algumaPropriedade.Relacionada' pelo nome da propriedade que você deseja incluir
+            .whereEquals('id', id)
+            .firstOrNull();
+        return route || null;
     }
 }

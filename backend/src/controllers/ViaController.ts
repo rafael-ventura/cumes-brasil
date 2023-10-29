@@ -24,39 +24,53 @@ class ViaController {
 export default new ViaController();*/
 
 import { Request, Response } from 'express';
-import { IVia, Via } from '../models/IVia';
+import { IVia } from '../models/IVia';
 import store from '../config/db';
-import {ViaRepository} from "../repositories/ViaRepository"; // Importe sua configuração do RavenDB
+import { ViaRepository } from '../repositories/ViaRepository';
 
-const repo = new ViaRepository(store);
+class ViaController {
+    private repo: ViaRepository;
 
-export const createRoute = async (req: Request, res: Response) => {
-    const route: IVia = req.body;
-    const result = await repo.create(route);
-    res.json(result);
-};
+    constructor() {
+        this.repo = new ViaRepository(store);
+    }
 
-export const getViaById = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const result = await repo.getById(id);
-    res.json(result);
-};
+    createVia = async (req: Request, res: Response) => {
+        const route: IVia = req.body;
+        const result = await this.repo.create(route);
+        res.json(result);
+    };
 
-export const getAllVia = async (_: Request, res: Response) => {
-    const result = await repo.getAll();
-    res.json(result);
-};
+    getViaById = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const result = await this.repo.getById(id);
+        res.json(result);
+    };
 
-export const updateVia = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const updatedRoute: IVia = req.body;
-    const result = await repo.update(id, updatedRoute);
-    res.json(result);
-};
+    getAllVia = async (_: Request, res: Response) => {
+        const result = await this.repo.getAll();
+        res.json(result);
+    };
 
-export const deleteVia = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    await repo.delete(id);
-    res.sendStatus(204);
-};
+    updateVia = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const updatedRoute: IVia = req.body;
+        const result = await this.repo.update(id, updatedRoute);
+        res.json(result);
+    };
+
+    deleteVia = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        await this.repo.delete(id);
+        res.sendStatus(204);
+    };
+
+    findDetailedById(req: Request, res: Response) {
+        const { id } = req.params;
+        const via = this.repo.findDetailedById(id);
+        res.json(via);
+    }
+}
+
+export default new ViaController();
 

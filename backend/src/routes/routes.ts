@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import ViaController from '../controllers/ViaController';
+import ViaRouter from "./ViaRouter";
 
 const routes = Router();
 
-routes.get('/vias', ViaController.listAll);
-routes.get('/vias/:id', ViaController.findById);
-routes.get('/vias/detalhes/:id', ViaController.findDetailedById);
-
+routes.use('/vias', ViaRouter);
 
 export default routes;
