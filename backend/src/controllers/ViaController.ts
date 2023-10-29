@@ -1,4 +1,4 @@
-import ViaRepository from '../repositories/ViaRepository';
+/*import ViaRepository from '../repositories/ViaRepository';
 import { Request, Response } from 'express';
 
 
@@ -21,4 +21,42 @@ class ViaController {
     }
 }
 
-export default new ViaController();
+export default new ViaController();*/
+
+import { Request, Response } from 'express';
+import { IVia, Via } from '../models/IVia';
+import store from '../config/db';
+import {ViaRepository} from "../repositories/ViaRepository"; // Importe sua configuração do RavenDB
+
+const repo = new ViaRepository(store);
+
+export const createRoute = async (req: Request, res: Response) => {
+    const route: IVia = req.body;
+    const result = await repo.create(route);
+    res.json(result);
+};
+
+export const getViaById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await repo.getById(id);
+    res.json(result);
+};
+
+export const getAllVia = async (_: Request, res: Response) => {
+    const result = await repo.getAll();
+    res.json(result);
+};
+
+export const updateVia = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updatedRoute: IVia = req.body;
+    const result = await repo.update(id, updatedRoute);
+    res.json(result);
+};
+
+export const deleteVia = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    await repo.delete(id);
+    res.sendStatus(204);
+};
+

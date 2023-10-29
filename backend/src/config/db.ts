@@ -1,13 +1,9 @@
-import mysql from 'mysql2/promise';
+import { DocumentStore } from 'ravendb';
 
-const pool = mysql.createPool({
-    host: 'seu_host',
-    user: 'seu_usuario',
-    password: 'sua_senha',
-    database: 'seu_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+// Configure o seu DocumentStore com os detalhes do seu servidor RavenDB
+const store = new DocumentStore(['http://localhost:8080'], 'databasename');
+store.initialize();
 
-export default pool;
+// Agora, você pode usar 'store' para interagir com o RavenDB em seu código
+
+export default store;

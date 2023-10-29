@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "ravendb": "^5.4.0"
+    "ravendb": "^5.4.1",
+    "reflect-metadata": "^0.1.13"
   }
 }
