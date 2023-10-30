@@ -24,7 +24,6 @@ class ViaController {
 export default new ViaController();*/
 
 import { Request, Response } from 'express';
-import { IVia } from '../models/IVia';
 import store from '../config/db';
 import { ViaRepository } from '../repositories/ViaRepository';
 
@@ -35,12 +34,6 @@ class ViaController {
         this.repo = new ViaRepository(store);
     }
 
-    createVia = async (req: Request, res: Response) => {
-        const route: IVia = req.body;
-        const result = await this.repo.create(route);
-        res.json(result);
-    };
-
     getViaById = async (req: Request, res: Response) => {
         const id = req.params.id;
         const result = await this.repo.getById(id);
@@ -49,6 +42,20 @@ class ViaController {
 
     getAllVia = async (_: Request, res: Response) => {
         const result = await this.repo.getAll();
+        res.json(result);
+    };
+
+
+    findDetailedById = async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const via = await this.repo.findDetailedById(id);
+        res.json(via);
+    }
+
+    //TODO: validar necessidade
+    /*createVia = async (req: Request, res: Response) => {
+        const route: IVia = req.body;
+        const result = await this.repo.create(route);
         res.json(result);
     };
 
@@ -63,13 +70,7 @@ class ViaController {
         const id = req.params.id;
         await this.repo.delete(id);
         res.sendStatus(204);
-    };
-
-    findDetailedById(req: Request, res: Response) {
-        const { id } = req.params;
-        const via = this.repo.findDetailedById(id);
-        res.json(via);
-    }
+    };*/
 }
 
 export default new ViaController();

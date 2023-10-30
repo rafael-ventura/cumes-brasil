@@ -1,11 +1,11 @@
 import Router from 'express';
 import ViaController from '../controllers/ViaController';
 
-const router = Router();
+const ViaRouter = Router();
 
-router.get('/vias/:id', ViaController.getViaById);
-router.get('/vias', ViaController.getAllVia);
-router.get('/vias/detalhes/:id', ViaController.findDetailedById);
+ViaRouter.get('/:id', ViaController.getViaById);
+ViaRouter.get('/', ViaController.getAllVia);
+ViaRouter.get('/detalhes/:id', ViaController.findDetailedById);
 
 /* TODO: definir rota para criar, editar e deletar vias, se tiver ??:
     router.post('/', ViaController.createVia);
@@ -13,4 +13,4 @@ router.get('/vias/detalhes/:id', ViaController.findDetailedById);
     router.delete('/vias/:id', ViaController.deleteVia);
 */
 
-export default router;
+export default ViaRouter;
