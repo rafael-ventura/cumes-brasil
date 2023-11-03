@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MountainClimbCard extends StatelessWidget {
   final MountainClimb climb;
 
-  MountainClimbCard({required this.climb});
+  MountainClimbCard({required this.climb, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
