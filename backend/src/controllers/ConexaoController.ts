@@ -8,6 +8,7 @@ class ConexaoController {
             // Tentativa de obter as estatísticas do banco de dados como teste de conexão
             const session = store.openSession();
 
+            console.log("res:", res)
             // Se a conexão for bem-sucedida e as estatísticas forem obtidas
             res.status(200).json({
                 message: "Conexão com o banco de dados RavenDB foi bem-sucedida!"
