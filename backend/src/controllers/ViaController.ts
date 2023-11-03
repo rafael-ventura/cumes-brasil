@@ -1,24 +1,32 @@
-import ViaRepository from '../repositories/ViaRepository';
 import { Request, Response } from 'express';
-
+import store from '../config/db';
+import { ViaRepository } from '../repositories/ViaRepository';
 
 class ViaController {
-    async listAll(req: Request, res: Response) {
-        const vias = await ViaRepository.findAll();
-        res.json(vias);
+    private repo: ViaRepository;
+
+    constructor() {
+        this.repo = new ViaRepository(store);
     }
 
-    async findById(req: Request , res: Response) {
-        const { id } = req.params;
-        const via = await ViaRepository.findById(Number(id));
-        res.json(via);
-    }
+    getViaById = async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const result = await this.repo.getById(id);
+        res.json(result);
+    };
 
-    async findDetailedById(req: Request, res: Response) {
+    getAllVia = async (_: Request, res: Response) => {
+        const result = await this.repo.getAll();
+        res.json(result);
+    };
+
+
+    findDetailedById = async (req: Request, res: Response) => {
         const { id } = req.params;
-        const via = await ViaRepository.findDetailedById(Number(id));
+        const via = await this.repo.findDetailedById(id);
         res.json(via);
     }
 }
 
 export default new ViaController();
+
