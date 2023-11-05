@@ -11,10 +11,10 @@ export class Face implements IFace {
     nome: string;
     vias: Via[];
 
-    constructor(id: number, nome: string, descricao: string) {
+    constructor(id: number, nome: string, vias: Via[]) {
         this.id = id;
         this.nome = nome;
-        this.vias = [];
+        this.vias = vias;
     }
 
     getVias(): Via[] {

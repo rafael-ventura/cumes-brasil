@@ -7,22 +7,6 @@ import {Croqui} from "./Croqui";
  * Esta classe representa uma via de escalada com suas propriedades e métodos.
  */
 export class Via implements IVia {
-    id: number;
-    nome: string;
-    grau?: string;
-    crux?: string;
-    artificial?: boolean;
-    duracao?: number;
-    exposicao?: string;
-    extensao?: number; // Em metros.
-    conquistadores?: string[];
-    data?: Date;
-    id_montanha: number;
-    id_face?: number;
-    id_fonte?: number;
-    id_variante?: number;
-    croquis?: Croqui[];
-
     /**
      * Construtor da classe Via.
      * @param {string} nome - O nome da via.
@@ -40,30 +24,27 @@ export class Via implements IVia {
      * @param {number} [id_fonte] - O identificador da fonte da via (opcional).
      * @param {number} [id_variante] - O identificador da variante da via (opcional).
      * @param {Croqui[]} [croquis] - Os croquis da via (opcional).
-
-
      **/
     constructor(
-        nome: string,
-        id_montanha: number,
-        id: number,
-        grau?: string,
-        crux?: string,
-        artificial?: boolean,
-        duracao?: number,
-        exposicao?: string,
-        extensao?: number,
-        conquistadores?: string[],
-        data?: Date,
-        id_face?: number,
-        id_fonte?: number,
-        id_variante?: number,
-        croquis?: Croqui[],
+        public nome: string,
+        public id_montanha: number,
+        public id: number,
+        public grau?: string,
+        public crux?: string,
+        public artificial?: boolean,
+        public duracao?: number,
+        public exposicao?: string,
+        public extensao?: number,
+        public conquistadores?: string[],
+        public data?: Date,
+        public id_face?: number,
+        public id_fonte?: number,
+        public id_variante?: number,
+        public croquis?: Croqui[],
     ) {
-        this.id = id;
-        this.nome = nome;
+
+
         if (grau) this.grau = grau;
-        this.id_montanha = id_montanha;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;
         if (duracao) this.duracao = duracao;
