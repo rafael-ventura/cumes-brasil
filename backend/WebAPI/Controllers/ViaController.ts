@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import store from '../config/db';
-import { ViaRepository } from '../repositories/ViaRepository';
+import store from '../../Infrastructure/config/db';
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 
 class ViaController {
     private repo: ViaRepository;

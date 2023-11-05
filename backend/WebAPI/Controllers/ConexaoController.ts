@@ -1,6 +1,6 @@
 // HealthController.js
 import { Request, Response } from 'express';
-import store from '../config/db';
+import store from '../../Infrastructure/config/db';
 
 class ConexaoController {
     testConnection = async (req: Request, res: Response) => {

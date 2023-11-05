@@ -1,5 +1,5 @@
 import Router from 'express';
-import ViaController from '../controllers/ViaController';
+import ViaController from '../Controllers/ViaController';
 
 const ViaRouter = Router();
 

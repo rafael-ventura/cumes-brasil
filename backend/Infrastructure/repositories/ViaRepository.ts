@@ -1,6 +1,6 @@
 /* INIT -------------------- new via Repo  ---------------------------*/
 import { DocumentStore, IDocumentSession } from 'ravendb';
-import { IVia } from '../models/IVia';
+import { IVia } from '../../Domain/models/Via';
 
 export class ViaRepository {
     private session: IDocumentSession;

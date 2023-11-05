@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ViaRouter from "./ViaRouter";
-import ConexaoController from "../controllers/ConexaoController";
+import ConexaoController from "../Controllers/ConexaoController";
 
 const routes = Router();
 
