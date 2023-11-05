@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "- **Endpoint:** `/vias`\r - **Método:** `GET`",
   "main": "server.ts",
   "scripts": {
     "start": "node dist/index.js",
@@ -25,12 +25,14 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/raven": "^2.5.6",
-    "typescript": "^5.2.2",
-    "scripts": {
-      "start": "node dist/index.js",
-      "dev": "ts-node WebAPI/server.ts",
-      "build": "tsc"
-    }
-
-  }
+    "typescript": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafael-ventura/cume-brasil.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rafael-ventura/cume-brasil/issues"
+  },
+  "homepage": "https://github.com/rafael-ventura/cume-brasil#readme"
 }

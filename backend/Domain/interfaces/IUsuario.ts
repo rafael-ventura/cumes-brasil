@@ -1,12 +1,13 @@
 import {Via} from "../models/Via";
-import {ColecaoUsuario} from "../models/ColecaoDoUsuario";
+import {ColecaoDoUsuario} from "../models/ColecaoDoUsuario";
+import {ColecaoBase} from "../models/ColecaoBase";
 
 export interface IUsuario {
     id: number;
     nome: string;
     email: string;
     senha: string;
-    colecao: ColecaoUsuario;
+    colecao: ColecaoBase;
 
     getId(): number;
 

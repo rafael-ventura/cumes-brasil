@@ -1,4 +1,3 @@
-// HealthController.js
 import { Request, Response } from 'express';
 import store from '../../Infrastructure/config/db';
 
@@ -18,6 +17,7 @@ class ConexaoController {
                 message: "Falha ao conectar com o banco de dados RavenDB.",
                 error: error
             });
+
         }
     };
 }
