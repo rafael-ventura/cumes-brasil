@@ -1,6 +1,8 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import swaggerUi from 'swagger-ui-express';
+import * as express from 'express';
+import * as dotenv from 'dotenv';
+import * as swaggerUi from 'swagger-ui-express';
+// @ts-ignore
+import * as swaggerDocument from 'swagger.json';
 import routes from "./routes/routes";
 
 
@@ -14,7 +16,7 @@ const BASE_API_URL = '/api';
 app.use(express.json());
 
 // Documentação da API
-//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // Rotas

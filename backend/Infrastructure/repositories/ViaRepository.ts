@@ -1,16 +1,9 @@
 /* INIT -------------------- new via Repo  ---------------------------*/
-import {DocumentStore, IDocumentSession} from 'ravendb';
-import { IVia } from '../models/IVia';
+import { DocumentStore, IDocumentSession } from 'ravendb';
+import { IVia } from '../../Domain/interfaces/IVia';
 
 export class ViaRepository {
     private session: IDocumentSession;
-
-    // Adicione o método ao seu ViaRepository
-    // TODO- retirar esse método daqui
-    addVia = async (via: IVia): Promise<void> => {
-        await this.session.store(via);
-        await this.session.saveChanges();
-    }
 
     constructor(store: DocumentStore) {
         this.session = store.openSession();
