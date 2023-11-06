@@ -11,7 +11,7 @@ const authOptions = {
 
 // Configure o seu DocumentStore com os detalhes do seu servidor RavenDB
 const store = new DocumentStore(
-    ['https://a.free.jardineiros.ravendb.cloud/studio/index.html#databases/documents?&database=cumes_brasil'],
+    ['https://a.free.jardineiros.ravendb.cloud'],
     'cumes_brasil');
 store.initialize();
 

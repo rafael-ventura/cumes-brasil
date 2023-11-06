@@ -1,16 +1,12 @@
 import {ViaService} from "../../Application/services/ViaService";
 import {Request, Response} from 'express';
-import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
-import {DocumentStore} from "ravendb";
-import store from '../../Infrastructure/config/db';
 
-class ViaController {
+export class ViaController {
     private service: ViaService;
 
     constructor(service: ViaService) {
         this.service = service;
     }
-
 
     getViaById = async (req: Request, res: Response) => {
         const id = req.params.id;
@@ -23,14 +19,9 @@ class ViaController {
         res.json(result);
     };
 
-
     findDetailedById = async (req: Request, res: Response) => {
         const { id } = req.params;
         const via = await this.service.findDetailedById(id);
         res.json(via);
     }
 }
-
-export default new ViaController(new ViaService(new ViaRepository(store)));
-
-
