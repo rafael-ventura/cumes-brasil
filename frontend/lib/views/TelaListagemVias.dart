@@ -1,6 +1,6 @@
 // listagem_vias.dart
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/https.dart' as http;
 import 'dart:convert';
 
 import '../widgets/ViaCard.dart';

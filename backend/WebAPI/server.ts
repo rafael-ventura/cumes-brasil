@@ -15,8 +15,8 @@ const BASE_API_URL = '/api';
 
 app.use(express.json());
 
-// Documentação da API
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+/*// Documentação da API
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));*/
 
 
 // Rotas
