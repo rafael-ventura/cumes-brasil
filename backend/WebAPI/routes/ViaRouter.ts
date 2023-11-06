@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import ViaController from "../Controllers/ViaController";
+import ViaController from '../Controllers/ViaController';
+
 
 // todo: injecao de dependencia na via controlller.
 const ViaRouter = Router();

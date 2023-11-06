@@ -1,12 +1,7 @@
-import * as express from 'express';
-import * as dotenv from 'dotenv';
-import * as swaggerUi from 'swagger-ui-express';
-// @ts-ignore
-import * as swaggerDocument from 'swagger.json';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 import routes from "./routes/routes";
-
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
