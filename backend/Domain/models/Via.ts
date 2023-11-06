@@ -40,7 +40,7 @@ export class Via implements IVia {
         public id_face?: number,
         public id_fonte?: number,
         public id_variante?: number,
-        public croquis?: Croqui[],
+        public croquis: Croqui[],
     ) {
 
 

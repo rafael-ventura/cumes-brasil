@@ -1,5 +1,8 @@
 import {ViaService} from "../../Application/services/ViaService";
 import {Request, Response} from 'express';
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import {DocumentStore} from "ravendb";
+import store from '../../Infrastructure/config/db';
 
 class ViaController {
     private service: ViaService;
@@ -28,6 +31,6 @@ class ViaController {
     }
 }
 
-export default ViaController;
+export default new ViaController(new ViaService(new ViaRepository(store)));
 
 

@@ -19,7 +19,7 @@ export interface IVia {
     id_face?: number;
     id_fonte?: number;
     id_variante?: number;
-    croquis?: Croqui[];
+    croquis: Croqui[];
 
     getId(): number;
     getNome(): string;
