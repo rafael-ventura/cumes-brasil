@@ -23,7 +23,7 @@ export class Via implements IVia {
      * @param {number} [id_face] - O identificador da face da montanha à qual a via pertence (opcional).
      * @param {number} [id_fonte] - O identificador da fonte da via (opcional).
      * @param {number} [id_variante] - O identificador da variante da via (opcional).
-     * @param {Croqui[]} [croquis] - Os croquis da via (opcional).
+     * @param {Croqui[]} croquis - Os croquis da via.
      **/
     constructor(
         public nome: string,
@@ -42,8 +42,6 @@ export class Via implements IVia {
         public id_variante?: number,
         public croquis: Croqui[],
     ) {
-
-
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;
@@ -55,7 +53,6 @@ export class Via implements IVia {
         if (id_face) this.id_face = id_face;
         if (id_fonte) this.id_fonte = id_fonte;
         if (id_variante) this.id_variante = id_variante;
-        if (croquis) this.croquis = croquis;
     }
 
     // Getters e Setters para cada atributo, se necessário.
