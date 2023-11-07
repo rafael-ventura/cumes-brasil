@@ -14,5 +14,9 @@ const ViaRouter = Router();
 ViaRouter.get('/:id', viaController.getViaById);
 ViaRouter.get('/', viaController.getAllVia);
 ViaRouter.get('/detailed/:id', viaController.findDetailedById);
+ViaRouter.post('/', viaController.createVia);
+ViaRouter.put('/', viaController.updateVia);
+ViaRouter.delete('/:id', viaController.deleteVia);
+
 
 export default ViaRouter;
