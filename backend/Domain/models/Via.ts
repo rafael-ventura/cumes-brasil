@@ -9,7 +9,7 @@ import {Croqui} from "./Croqui";
 export class Via implements IVia {
     /**
      * Construtor da classe Via.
-     * @param {number} [id] - O identificador único da via (opcional).
+     * @param {number} id - O identificador único da via
      * @param {string} nome - O nome da via.
      * @param {number} id_montanha - O identificador da montanha à qual a via pertence.
      * @param {Croqui[]} croquis - Os croquis da via.
@@ -42,9 +42,9 @@ export class Via implements IVia {
         public id_fonte?: number | null | undefined,
         public id_variante?: number | null | undefined,
     ) {
+        this.id = id;
         this.nome = nome;
         this.id_montanha = id_montanha;
-        this.id = id;
         this.croquis = croquis;
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;

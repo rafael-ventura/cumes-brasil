@@ -1,38 +1,24 @@
-import { DocumentStore } from 'ravendb';
+import { DocumentStore, IAuthOptions } from 'ravendb';
 import * as fs from "fs";
 
+// Carregar os certificados e a chave privada
+const certificate = fs.readFileSync("caminho/para/o/arquivo/free.jardineiros.client.certificate.pem", "utf8");
+const privateKey = fs.readFileSync("caminho/para/o/arquivo/free.jardineiros.client.certificate.key", "utf8");
 
-// load certificate and prepare authentication options
-const authOptions = {
-    certificate: fs.readFileSync("C:\\Users\\raf4a\\Downloads\\free.jardineiros.client.certificate\\free.jardineiros.client.certificate.pfx"),
-    type: "pfx", // or "pem"
-    password: "65AED03F6B2840B3F14FBCAFBAC1319"
+// Preparar as opções de autenticação
+const authOptions: IAuthOptions = {
+    certificate: certificate + privateKey, // Concatenar certificado e chave privada
+    type: "pem",
+    // Se houver senha, descomente a linha abaixo e substitua 'sua_senha' pela senha fornecida
+    // password: "sua_senha"
 };
 
-// Configure o seu DocumentStore com os detalhes do seu servidor RavenDB
+// Configurar o DocumentStore com os detalhes do seu servidor RavenDB
 const store = new DocumentStore(
-    ['https://a.free.jardineiros.ravendb.cloud'],
-    'cumes_brasil');
+    'https://a.free.jardineiros.ravendb.cloud', // Substitua pela URL correta
+    'cumes_brasil',
+    authOptions
+);
 store.initialize();
 
-// Agora, você pode usar 'store' para interagir com o RavenDB em seu código
-
 export default store;
-
-
-/*
-* 'MySQL' oldWay
- ----------------------
-* import mysql from 'mysql2/promise';
-
-* const pool = mysql.createPool({
-    host: 'seu_host',
-    user: 'seu_usuario',
-    password: 'sua_senha',
-    database: 'seu_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-* });
-export default pool;
-*/
