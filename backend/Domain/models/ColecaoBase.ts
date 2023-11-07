@@ -1,5 +1,5 @@
 import {Via} from "./Via";
-import {IColecaoBase} from "../interfaces/IColecaoBase";
+import {IColecaoBase} from "../interfaces/models/IColecaoBase";
 
 export class ColecaoBase implements IColecaoBase {
     id: number;

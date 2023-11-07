@@ -1,4 +1,4 @@
-import {Via} from "../models/Via";
+import {Via} from "../../models/Via";
 
 export interface IMontanha {
     id: number;

@@ -1,6 +1,11 @@
 // ViaService.ts
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
-import { IVia } from '../../Domain/interfaces/IVia';
+import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+import {ViaAdapter} from '../../Infrastructure/adapters/ViaAdapter';
+import {ViaDto} from "../../../shared/contratos/ViaDto";
+import {Via} from "../../Domain/models/Via";
+import {Croqui} from "../../Domain/models/Croqui";
+
+//TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.
 
 export class ViaService {
     private repo: ViaRepository;
@@ -9,23 +14,51 @@ export class ViaService {
         this.repo = repo;
     }
 
-    async getViaById(id: string): Promise<IVia | null> {
-        // Here you can include business logic before fetching the via
-        return this.repo.getById(id);
+    async createVia(viaDTO: ViaDto): Promise<Via> {
+        // Converter ViaDTO para a entidade Via
+        const via = ViaAdapter.fromDto(viaDTO);
+        via.associarCroqui(viaDTO.croqui as any);
+        // Salvar Via
+        await this.repo.createVia(ViaAdapter.toRavenDBDocument(via));
+
+        // Caso tenha dado tudo certo, retornar a Via
+        return via;
     }
 
-    async getAllVias(): Promise<IVia[]> {
-        // Here you can include business logic before fetching all vias
-        return this.repo.getAll();
+    async updateVia(viaDTO: ViaDto): Promise<Via> {
+        // Converter ViaDTO para a entidade Via
+        const via = ViaAdapter.fromDto(viaDTO);
+        // Salvar Via
+        await this.repo.updateVia(ViaAdapter.toRavenDBDocument(via));
+        // Caso tenha dado tudo certo, retornar a Via
+        return via;
     }
 
-    async findDetailedById(id: string): Promise<IVia | null> {
-        // Here you can include business logic before fetching the detailed via
-        return this.repo.findDetailedById(id);
+    async getAll(): Promise<Via[]> {
+        // Buscar todas as Vias
+        const vias = await this.repo.getAll();
+        // Converter todas as Vias para ViaDTO e retornar
+        return vias;
     }
 
-    // Additional methods can be implemented here
-    // For example, createVia, updateVia, deleteVia, etc.
+
+    async getViaById(id: string): Promise<Via> {
+        // Buscar Via por ID
+        const via = await this.repo.getViaById(id);
+
+        return via;
+    }
+
+    async getViaDetailedById(id: string): Promise<Via> {
+        // Buscar Via por ID
+        const via = await this.repo.getViaById(id);
+
+        return via;
+    }
+
+    async deleteVia(id: string): Promise<void> {
+        // Deletar Via por ID
+        await this.repo.deleteVia(id);
+    }
+
 }
-
-// Depending on how you want to structure your application, you might have to adapt this code.

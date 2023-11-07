@@ -1,4 +1,4 @@
-import {IUsuario} from "../interfaces/IUsuario";
+import {IUsuario} from "../interfaces/models/IUsuario";
 import {Via} from "./Via";
 import {ColecaoBase} from "./ColecaoBase";
 /**

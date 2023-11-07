@@ -1,6 +1,6 @@
 import { Via } from "./Via";
 import { ColecaoBase } from "./ColecaoBase";
-import { IColecaoEscaladas } from "../interfaces/IColecaoEscaladas";
+import { IColecaoEscaladas } from "../interfaces/models/IColecaoEscaladas";
 
 export class ColecaoEscaladas extends ColecaoBase implements IColecaoEscaladas {
     private datasEscalada: Map<number, Date[]>;

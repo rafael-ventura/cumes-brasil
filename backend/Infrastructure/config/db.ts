@@ -4,7 +4,7 @@ import * as fs from "fs";
 
 // load certificate and prepare authentication options
 const authOptions = {
-    certificate: fs.readFileSync("/home/operador/Documents/free.jardineiros.client.certificate.pfx"),
+    certificate: fs.readFileSync("C:\\Users\\raf4a\\Downloads\\free.jardineiros.client.certificate\\free.jardineiros.client.certificate.pfx"),
     type: "pfx", // or "pem"
     password: "65AED03F6B2840B3F14FBCAFBAC1319"
 };

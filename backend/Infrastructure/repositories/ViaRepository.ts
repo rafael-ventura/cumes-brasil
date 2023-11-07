@@ -1,41 +1,77 @@
-/* INIT -------------------- new via Repo  ---------------------------*/
-import { DocumentStore, IDocumentSession } from 'ravendb';
-import { IVia } from '../../Domain/interfaces/IVia';
+// ViaRepository.ts
+import {DocumentStore} from 'ravendb';
+import {ViaAdapter} from '../adapters/ViaAdapter';
+import {Via} from '../../Domain/models/Via';
+import {ViaDocument} from "../documents/ViaDocument";
 
 export class ViaRepository {
-    private session: IDocumentSession;
+    private store: DocumentStore;
 
     constructor(store: DocumentStore) {
-        this.session = store.openSession();
+        this.store = store;
     }
 
-    async getById(id: string): Promise<IVia | null> {
-        return await this.session.load<IVia>(id);
+    async createVia(via: ViaDocument): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            await session.store(via);
+            await session.saveChanges();
+        } finally {
+            await session.dispose();
+        }
     }
 
-    async getAll(): Promise<IVia[]> {
-        return await this.session.query<IVia>({ collection: 'vias' }).all();
+    async updateVia(via: ViaDocument): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            await session.store(via);
+            await session.saveChanges();
+        } finally {
+            await session.dispose();
+        }
     }
 
-    /* TODO: Validar os dois metodos findDetaildById abaixo... */
-    /*findDetailedById(id: number): Promise<IVia | null> {
-        const query =
-            `
-            SELECT * 
-            FROM vias 
-            LEFT JOIN outra_tabela ON vias.some_id = outra_tabela.some_id
-            WHERE vias.id = ?
-        `;
-        const [rows] = pool.query<IVia[]>(query, [id]);
-        return rows[0] as IVia || null;
-    }*/
+    async getAll(): Promise<Via[]> {
+        const session = this.store.openSession();
+        try {
+            const documents = await session.query({collection: 'Vias'}).all();
+            if (documents.length === 0) {
+                throw new Error('Nenhuma via encontrada');
+            }
+            // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
+            const viaDocuments = documents as ViaDocument[];
+            return viaDocuments.map(viaDocument => ViaAdapter.fromRavenDBDocument(viaDocument));
+        } finally {
+            await session.dispose();
+        }
 
-    async findDetailedById(id: string): Promise<IVia | null> {
-        const route = await this.session
-            .query<IVia>({ collection: 'vias' })
-            .include('algumaPropriedade.Relacionada') // Substitua 'algumaPropriedade.Relacionada' pelo nome da propriedade que você deseja incluir
-            .whereEquals('id', id)
-            .firstOrNull();
-        return route || null;
     }
+
+    async getViaById(id: string): Promise<Via> {
+        const session = this.store.openSession();
+        try {
+            const documents = await session.query({collection: 'Vias'}).whereEquals('Id', id).all();
+            if (documents.length === 0) {
+                throw new Error('Via não encontrada');
+            }
+            // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
+            const viaDocument = documents[0] as ViaDocument;
+            return ViaAdapter.fromRavenDBDocument(viaDocument);
+        } finally {
+            await session.dispose();
+        }
+    }
+
+
+    async deleteVia(id: string): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            await session.delete(id);
+            await session.saveChanges();
+        } finally {
+            await session.dispose();
+        }
+    }
+
+
 }

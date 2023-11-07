@@ -1,6 +1,6 @@
-import {Via} from "../models/Via";
-import {ColecaoDoUsuario} from "../models/ColecaoDoUsuario";
-import {ColecaoBase} from "../models/ColecaoBase";
+import {Via} from "../../models/Via";
+import {ColecaoDoUsuario} from "../../models/ColecaoDoUsuario";
+import {ColecaoBase} from "../../models/ColecaoBase";
 
 export interface IUsuario {
     id: number;

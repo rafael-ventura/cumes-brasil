@@ -1,7 +1,8 @@
-import {Via} from "../models/Via";
+import {Via} from "../../models/Via";
 
 export interface ICroqui {
     id: number;
+    imagemUrl: string;
     autor: string;
     descricao: string;
     vias: Via[];

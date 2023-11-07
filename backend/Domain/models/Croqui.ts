@@ -1,4 +1,4 @@
-import {ICroqui} from "../interfaces/ICroqui";
+import {ICroqui} from "../interfaces/models/ICroqui";
 import {Via} from "./Via";
 
 /**
@@ -7,7 +7,7 @@ import {Via} from "./Via";
  */
 export class Croqui implements ICroqui {
     id: number;
-    private imagemUrl: string;
+    imagemUrl: string;
     autor: string;
     descricao: string;
     vias: Via[];
@@ -17,13 +17,12 @@ export class Croqui implements ICroqui {
         imagemUrl: string,
         autor: string,
         descricao: string,
-        vias: Via[]
     ) {
         this.id = id;
         this.autor = autor;
         this.imagemUrl = imagemUrl;
         this.descricao = descricao;
-        this.vias = vias;
+        this.vias = [];
         this.vias.map(via => via.associarCroqui(this));
     }
 

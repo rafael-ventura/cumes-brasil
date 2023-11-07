@@ -1,5 +1,5 @@
 // Importação da interface IVia.
-import {IVia} from "../interfaces/IVia";
+import {IVia} from "../interfaces/models/IVia";
 import {Croqui} from "./Croqui";
 
 /**
@@ -9,39 +9,43 @@ import {Croqui} from "./Croqui";
 export class Via implements IVia {
     /**
      * Construtor da classe Via.
+     * @param {number} [id] - O identificador único da via (opcional).
      * @param {string} nome - O nome da via.
      * @param {number} id_montanha - O identificador da montanha à qual a via pertence.
-     * @param {number} [id] - O identificador único da via (opcional).
-     * @param {string} [grau] - O grau de dificuldade da via (opcional).
-     * @param {string} [crux] - O crux da via (opcional).
-     * @param {boolean} [artificial] - Se a via é artificial ou não (opcional).
-     * @param {number} [duracao] - A duração da via (opcional).
-     * @param {string} [exposicao] - A exposição da via (opcional).
-     * @param {number} [extensao] - A extensão da via (opcional).
-     * @param {string[]} [conquistadores] - Os conquistadores da via (opcional).
-     * @param {Date} [data] - A data de conquista da via (opcional).
-     * @param {number} [id_face] - O identificador da face da montanha à qual a via pertence (opcional).
-     * @param {number} [id_fonte] - O identificador da fonte da via (opcional).
-     * @param {number} [id_variante] - O identificador da variante da via (opcional).
      * @param {Croqui[]} croquis - Os croquis da via.
+     * @param {string} [grau?] - O grau de dificuldade da via (opcional).
+     * @param {string} [crux?] - O crux da via (opcional).
+     * @param {boolean} [artificial?] - Se a via é artificial ou não (opcional).
+     * @param {number} [duracao?] - A duração da via (opcional).
+     * @param {string} [exposicao?] - A exposição da via (opcional).
+     * @param {number} [extensao?] - A extensão da via (opcional).
+     * @param {string[]} [conquistadores?] - Os conquistadores da via (opcional).
+     * @param {Date} [data?] - A data de conquista da via (opcional).
+     * @param {number} [id_face?] - O identificador da face da montanha à qual a via pertence (opcional).
+     * @param {number} [id_fonte?] - O identificador da fonte da via (opcional).
+     * @param {number} [id_variante?] - O identificador da variante da via (opcional).
      **/
     constructor(
+        public id: number,
         public nome: string,
         public id_montanha: number,
-        public id: number,
-        public grau?: string,
-        public crux?: string,
-        public artificial?: boolean,
-        public duracao?: number,
-        public exposicao?: string,
-        public extensao?: number,
-        public conquistadores?: string[],
-        public data?: Date,
-        public id_face?: number,
-        public id_fonte?: number,
-        public id_variante?: number,
         public croquis: Croqui[],
+        public grau?: string | null | undefined,
+        public crux?: string | null | undefined,
+        public artificial?: boolean | null | undefined,
+        public duracao?: number | null | undefined,
+        public exposicao?: string | null | undefined,
+        public extensao?: number | null | undefined,
+        public conquistadores?: string[] | null | undefined,
+        public data?: Date | null | undefined,
+        public id_face?: number | null | undefined,
+        public id_fonte?: number | null | undefined,
+        public id_variante?: number | null | undefined,
     ) {
+        this.nome = nome;
+        this.id_montanha = id_montanha;
+        this.id = id;
+        this.croquis = croquis;
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;

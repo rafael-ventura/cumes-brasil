@@ -1,5 +1,5 @@
 // Importação das interfaces necessárias.
-import { IMontanha } from "../interfaces/IMontanha";
+import { IMontanha } from "../interfaces/models/IMontanha";
 import { Via } from "./Via";
 
 /**

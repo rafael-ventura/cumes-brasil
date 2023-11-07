@@ -1,5 +1,5 @@
 // Importação das interfaces necessárias.
-import {IFace} from "../interfaces/IFace";
+import {IFace} from "../interfaces/models/IFace";
 import {Via} from "./Via";
 
 /**
