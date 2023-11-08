@@ -10,38 +10,33 @@ export interface ViaDto {
     conquistadores?: string[] | null | undefined;
     detalhes?: string | null | undefined;
     data?: Date | null | undefined;
-    montanha?: number | null | undefined;
-    face?: number | null | undefined;
-    fonte?: number | null | undefined;
+    montanha?: MontanhaDTO | null | undefined;
+    face?: FaceDTO | null | undefined;
+    fonte?: FonteDto | null | undefined;
     croquis: CroquiDTO[];
     id_via_principal?: number | null | undefined;
 }
-
 
 export interface FonteDto {
     id: number;
     referencia: string;
 }
 
-export interface VarianteDTO {
-    fk_variante: number; // Formato "via/V-2"
-}
-
 export interface MontanhaDTO {
-    id: number; // Formato "montanha/M-1"
+    id: number;
     nome: string;
-    altitude: number;
+    localizacao: string;
+    altura: number;
 }
 
 export interface FaceDTO {
-    id: number; // Formato "face/F-1"
+    id: number;
     nome: string;
-    altitude: number;
 }
 
 export interface CroquiDTO {
-    id: number; // Formato "croqui/C-1"
-    caminho_imagem: string;
+    id: number;
+    imagemUrl: string;
     autor: string;
-    descricao: string;
+    descricao?: string | null | undefined;
 }

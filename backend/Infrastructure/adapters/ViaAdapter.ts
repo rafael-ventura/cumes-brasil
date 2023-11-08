@@ -13,9 +13,16 @@ export class ViaAdapter {
     // Converte uma Via para o formato de documento JSON para o RavenDB
     static toRavenDBDocument(via: Via, montanha: Montanha, face: Face, fonte: Fonte): ViaDocument {
         return {
+            "@metadata": {
+                "@collection": "Vias"
+
+            },
             Id: via.id,
             Nome: via.nome,
-            Montanha: { // Supõe que você tenha o objeto Montanha completo disponível
+            Montanha: {
+                "@metadata": {
+                    "@collection": "Montanhas"
+                },
                 Id: montanha.id,
                 Nome: montanha.nome,
                 Altura: montanha.altura,
@@ -35,11 +42,17 @@ export class ViaAdapter {
             Extensao: via.extensao,
             Conquistadores: via.conquistadores,
             Data: via.data,
-            Face: { // Supõe que você tenha o objeto Face completo disponível
+            Face: {
+                "@metadata": {
+                    "@collection": "Faces"
+                },
                 Id: face.id,
                 Nome: face.nome,
             },
-            Fonte: { // Supõe que você tenha o objeto Fonte completo disponível
+            Fonte: {
+                "@metadata": {
+                    "@collection": "Fontes"
+                },
                 Id: fonte.id,
                 Referencia: fonte.referencia
             },
@@ -47,7 +60,6 @@ export class ViaAdapter {
         }
 
     }
-
 
 // Converte um documento do RavenDB para uma instância de Via
     static fromRavenDBDocument(document: ViaDocument): Via {
@@ -85,11 +97,11 @@ export class ViaAdapter {
             viaDto.nome,
             viaDto.croquis.map(croqui => new Croqui(
                 croqui.id,
-                croqui.caminho_imagem,
+                croqui.imagemUrl,
                 croqui.autor,
                 croqui.descricao,
             )),
-            viaDto.montanha as number,
+            viaDto.montanha!.id,
             viaDto.grau,
             viaDto.crux,
             viaDto.artificial,
@@ -99,7 +111,8 @@ export class ViaAdapter {
             viaDto.conquistadores,
             viaDto.detalhes,
             viaDto.data,
-            viaDto.fonte as number,
+            viaDto.face!.id,
+            viaDto.fonte!.id,
             viaDto.id_via_principal
         );
     }

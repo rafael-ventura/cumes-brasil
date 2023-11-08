@@ -4,6 +4,9 @@ import {FaceDocument} from "./FaceDocument";
 import {CroquiDocument} from "./CroquiDocument";
 
 export interface ViaDocument {
+    '@metadata': {
+        '@collection': 'Vias'
+    };
     Id: number;
     Nome: string;
     Grau?: string | null | undefined;

@@ -5,4 +5,5 @@ import {ColecaoBaseDocument} from "./ColecaoBaseDocument";
 
 export interface ColecaoFavoritosDocument extends ColecaoBaseDocument {
 
+
 }

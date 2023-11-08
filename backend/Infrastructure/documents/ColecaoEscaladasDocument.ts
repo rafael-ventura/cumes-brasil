@@ -4,4 +4,5 @@ import {ColecaoBaseDocument} from "./ColecaoBaseDocument";
 
 export interface ColecaoEscaladasDocument extends ColecaoBaseDocument {
     DataEscalada: Date;
+
 }

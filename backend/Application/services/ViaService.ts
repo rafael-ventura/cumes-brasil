@@ -3,13 +3,11 @@ import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
 import {ViaAdapter} from '../../Infrastructure/adapters/ViaAdapter';
 import {ViaDto} from "../../../shared/contratos/ViaDto";
 import {Via} from "../../Domain/models/Via";
-import {Croqui} from "../../Domain/models/Croqui";
 import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
 
 //TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.
-
 
 export class ViaService {
     private repo: ViaRepository;
@@ -38,22 +36,11 @@ export class ViaService {
     }
 
     async createVia(viaDTO: ViaDto): Promise<Via> {
-
-        const montanha = await this.getMontanhaById(viaDTO.montanha as number);
-        if (!montanha) {
-            throw new Error('Montanha não registrada no banco de dados.');
-        }
-        const face = await this.getFaceById(viaDTO.face as number);
-        if (!face) {
-            throw new Error('Face não registrada no banco de dados.');
-        }
-        const fonte = await this.getFonteById(viaDTO.fonte as number);
-        if (!fonte) {
-            throw new Error('Fonte não registrada no banco de dados.');
-        }
         // Converter ViaDTO para a entidade Via
         const via = ViaAdapter.fromDto(viaDTO);
-
+        const montanha = viaDTO.montanha as Montanha;
+        const face = viaDTO.face as Face;
+        const fonte = viaDTO.fonte as Fonte;
 
         // Salvar Via no RavenDB
         await this.repo.createVia(ViaAdapter.toRavenDBDocument(via, montanha, face, fonte));
@@ -65,21 +52,15 @@ export class ViaService {
 
     async updateVia(viaDTO: ViaDto): Promise<Via> {
 
-        const montanha = await this.getMontanhaById(viaDTO.montanha as number);
-        if (!montanha) {
-            throw new Error('Montanha não registrada no banco de dados.');
-        }
-        const face = await this.getFaceById(viaDTO.face as number);
-        if (!face) {
-            throw new Error('Face não registrada no banco de dados.');
-        }
-        const fonte = await this.getFonteById(viaDTO.fonte as number);
-        if (!fonte) {
-            throw new Error('Fonte não registrada no banco de dados.');
-        }
-
         // Converter ViaDTO para a entidade Via
         const via = ViaAdapter.fromDto(viaDTO);
+        const montanha = viaDTO.montanha ? await this.getMontanhaById(via.id_montanha!) : undefined;
+        const face = viaDTO.face ? await this.getFaceById(via.id_face!) : undefined;
+        const fonte = viaDTO.fonte ? await this.getFonteById(via.id_fonte!) : undefined;
+        if (!montanha || !face || !fonte) {
+            throw new Error('Montanha, Face ou Fonte não registrada no banco de dados.');
+        }
+
         // Salvar Via
         await this.repo.updateVia(ViaAdapter.toRavenDBDocument(via, montanha, face, fonte));
         // Caso tenha dado tudo certo, retornar a Via
