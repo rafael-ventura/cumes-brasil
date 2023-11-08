@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:frontend/views/PageConfig.dart';
 import 'package:frontend/views/PageFavoritos.dart';
 import 'package:frontend/views/PageHome.dart';
 import 'package:frontend/views/PageVias.dart';
-import 'package:frontend/widgets/ViaCard.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
