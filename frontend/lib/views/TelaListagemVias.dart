@@ -1,11 +1,7 @@
-// listagem_vias.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../widgets/ViaCard.dart';
-
-// VALIDAR
 
 class ListagemVias extends StatefulWidget {
   @override
@@ -23,16 +19,19 @@ class _ListagemViasState extends State<ListagemVias> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/vias/'));
+      final ravenDB =
+          'https://a.free.jardineiros.ravendb.cloud/databases/cumes_brasil/docs';
+      final response = await http.get(Uri.parse(ravenDB));
       if (response.statusCode == 200) {
         setState(() {
-          vias = List<Map<String, dynamic>>.from(json.decode(response.body));
+          vias = List<Map<String, dynamic>>.from(
+              json.decode(response.body)['Results']);
         });
       } else {
         print('Erro ao buscar vias: ${response.statusCode}');
       }
     } catch (error) {
-      print('Erro ao buscar vias: $error');
+      print('Erro ao buscar vias2: $error');
     }
   }
 
@@ -48,16 +47,12 @@ class _ListagemViasState extends State<ListagemVias> {
           final via = vias[index];
           return InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                'DetalhesVia',
-                arguments: {'viaId': via['id']},
-              );
+              // Você pode navegar para uma página de detalhes aqui.
             },
             child: ViaCard(
-              nome: via['nome'],
-              grau: via['grau'],
-              montanha: via['montanha'],
+              nome: via['Nome'],
+              grau: via['Grau'],
+              montanha: via['Montanha']['Nome'],
             ),
           );
         },
