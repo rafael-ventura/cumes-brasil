@@ -21,6 +21,7 @@ export class Montanha implements IMontanha {
         this.vias = [];
     }
 
+
     getAltura(): number {
         return this.altura;
     }

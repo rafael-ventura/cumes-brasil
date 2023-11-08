@@ -1,5 +1,5 @@
 export interface UsuarioDTO {
-    id: string; // Formato "usuario/U-1"
+    Id: number; // Formato "usuario/U-1"
     nome: string;
     email: string;
     colecoes: ColecaoDTO[];

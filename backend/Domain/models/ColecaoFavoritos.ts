@@ -6,6 +6,4 @@ export class ColecaoFavoritos extends ColecaoBase implements IColecaoFavoritos {
     constructor() {
         super('Favoritos', 'Minhas vias favoritas');
     }
-
-
 }

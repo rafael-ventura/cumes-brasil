@@ -20,10 +20,10 @@ export class UsuarioRepository {
         }
     }
 
-    async getUsuario(id: string): Promise<UsuarioDTO | null> {
+    async getUsuario(id: number): Promise<UsuarioDTO | null> {
         const session = this.store.openSession();
         try {
-            return await session.load(id);
+            return await session.load(id.toString());
         } finally {
             await session.dispose();
         }
@@ -39,14 +39,11 @@ export class UsuarioRepository {
         }
     }
 
-    async deleteUsuario(id: string): Promise<void> {
+    async deleteUsuario(id: number): Promise<void> {
         const session = this.store.openSession();
         try {
-            const usuario = await session.load(id);
-            if (usuario) {
-                await session.delete(usuario);
-                await session.saveChanges();
-            }
+            await session.delete(id.toString());
+            await session.saveChanges();
         } finally {
             await session.dispose();
         }

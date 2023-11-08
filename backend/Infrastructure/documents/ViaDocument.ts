@@ -1,24 +1,23 @@
-import {Croqui} from "../../Domain/models/Croqui";
+import {MontanhaDocument} from "./MontanhaDocument";
+import {FonteDocument} from "./Fonte";
+import {FaceDocument} from "./FaceDocument";
+import {CroquiDocument} from "./CroquiDocument";
 
 export interface ViaDocument {
-    '@metadata': {
-        '@collection': 'Vias'
-    };
     Id: number;
     Nome: string;
-    Id_Montanha: number;
-    Croquis: Croqui[];
-    Grau?: string | null;
-    Crux?: string | null;
-    Artificial?: boolean | null;
-    Duracao?: number | null;
-    Exposicao?: string | null;
-    Extensao?: number | null;
-    Conquistadores?: string[] | null;
-    Data?: Date | null; // Data no formato ISO para compatibilidade
-    Id_Face?: number | null;
-    Id_Fonte?: number | null;
-    Id_Variante?: number | null;
-
+    Grau?: string | null | undefined;
+    Crux?: string | null | undefined;
+    Artificial?: string | null | undefined;
+    Duracao?: string | null | undefined;
+    Exposicao?: string | null | undefined;
+    Extensao?: number | null | undefined;
+    Conquistadores?: string[] | null | undefined;
+    Detalhes?: string | null | undefined;
+    Data?: Date | null | undefined;
+    Montanha: MontanhaDocument;
+    Face: FaceDocument;
+    Fonte: FonteDocument;
+    Croquis: CroquiDocument[];
+    Id_Via_Principal?: number | null | undefined;
 }
-

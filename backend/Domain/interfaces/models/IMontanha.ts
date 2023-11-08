@@ -1,4 +1,5 @@
 import {Via} from "../../models/Via";
+import {Montanha} from "../../models/Montanha";
 
 export interface IMontanha {
     id: number;
@@ -7,7 +8,7 @@ export interface IMontanha {
     altura: number;
     vias: Via[];
 
-    getAltura(): number;
 
+    getAltura(): number;
     getVias(): Via[];
 }

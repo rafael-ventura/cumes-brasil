@@ -39,17 +39,6 @@ export class ViaController {
     };
 
     /**
-     * Encontra uma via pelo ID e retorna detalhes adicionais.
-     * @param {Request} req - O request do express, contendo o ID da via como parâmetro.
-     * @param {Response} res - O response do express, onde os detalhes da via serão retornados.
-     */
-    findDetailedById = async (req: Request, res: Response) => {
-        const {id} = req.params;
-        const via = await this.service.getViaDetailedById(id);
-        res.json(via);
-    }
-
-    /**
      * Cria uma nova via.
      * @param {Request} req - O request do express, contendo os dados da nova via no corpo da requisição.
      * @param {Response} res - O response do express, onde a via criada será retornada.
@@ -78,7 +67,7 @@ export class ViaController {
      */
     deleteVia = async (req: Request, res: Response) => {
         const id = req.params.id;
-        await this.service.deleteVia(id);
+        await this.service.deleteVia(parseInt(id));
         res.json({message: 'Via deletada com sucesso'});
     };
 }

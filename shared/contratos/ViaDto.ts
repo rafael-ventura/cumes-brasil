@@ -1,20 +1,20 @@
 export interface ViaDto {
-    id: number; // Formato "via/V-1"
+    id: number;
     nome: string;
-    grau: string;
-    crux: string;
-    artificial: boolean;
-    duracao: number;
-    exposicao: string;
-    extensao: number;
-    conquistadores: string[];
-    detalhes: string;
-    fonte: FonteDto;
-    variante: VarianteDTO;
-    montanha: MontanhaDTO;
-    face: FaceDTO;
-    data: Date;
-    croqui: CroquiDTO[];
+    grau?: string | null | undefined;
+    crux?: string | null | undefined;
+    artificial?: string | null | undefined;
+    duracao?: string | null | undefined;
+    exposicao?: string | null | undefined;
+    extensao?: number | null | undefined;
+    conquistadores?: string[] | null | undefined;
+    detalhes?: string | null | undefined;
+    data?: Date | null | undefined;
+    montanha?: number | null | undefined;
+    face?: number | null | undefined;
+    fonte?: number | null | undefined;
+    croquis: CroquiDTO[];
+    id_via_principal?: number | null | undefined;
 }
 
 
@@ -24,7 +24,6 @@ export interface FonteDto {
 }
 
 export interface VarianteDTO {
-    id: number; // Formato "variante/VA-1"
     fk_variante: number; // Formato "via/V-2"
 }
 

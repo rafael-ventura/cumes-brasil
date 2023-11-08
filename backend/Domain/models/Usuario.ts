@@ -1,23 +1,38 @@
 import {IUsuario} from "../interfaces/models/IUsuario";
 import {Via} from "./Via";
 import {ColecaoBase} from "./ColecaoBase";
+import {ColecaoEscaladas} from "./ColecaoEscaladas";
+import {ColecaoFavoritos} from "./ColecaoFavoritos";
+
 /**
  * Classe Usuario que implementa a interface IUsuario.
  * Esta classe representa um usuário com suas propriedades e métodos.
  */
 export class Usuario implements IUsuario {
+    public id: number;
+    public nome: string;
+    public email: string;
+    public senha: string;
+    public colecao: ColecaoBase;
+    public historico: ColecaoEscaladas;
+    public favoritos: ColecaoFavoritos;
+
     constructor(
-        public id: number,
-        public nome: string,
-        public email: string,
-        public senha: string,
-        public colecao: ColecaoBase
+        id: number,
+        nome: string,
+        email: string,
+        senha: string,
+        colecao: ColecaoBase,
+        historico: ColecaoEscaladas,
+        favoritos: ColecaoFavoritos
     ) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.colecao = colecao;
+        this.historico = historico;
+        this.favoritos = favoritos;
     }
 
     // Getters

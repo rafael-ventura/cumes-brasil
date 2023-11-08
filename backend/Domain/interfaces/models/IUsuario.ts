@@ -8,6 +8,9 @@ export interface IUsuario {
     email: string;
     senha: string;
     colecao: ColecaoBase;
+    historico: ColecaoDoUsuario;
+    favoritos: ColecaoDoUsuario;
+
 
     getId(): number;
 
