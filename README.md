@@ -77,7 +77,9 @@ Pessoas que contribuíram no projeto Cumes Brasil:
 |:--------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|
 |                                       [Rafael Ventura](https://github.com/rafael-ventura)                                        |                 [Igor Costa](https://github.com/igordeo-costa)                  |
 
-
+![Foto do Participante 3](https://avatars.githubusercontent.com/u/88738275?v=4)
+|:--------------------------------------------------------------------------------------------------------------------------------:
+[Vitor Indio](https://github.com/vitorindio)
 ---
 
 
