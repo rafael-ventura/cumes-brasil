@@ -19,9 +19,7 @@ class _ListagemViasState extends State<ListagemVias> {
 
   Future<void> fetchData() async {
     try {
-      final ravenDB =
-          'https://a.free.jardineiros.ravendb.cloud/databases/cumes_brasil/docs';
-      final response = await http.get(Uri.parse(ravenDB));
+      final response = await http.get(Uri.http('localhost:4000', 'api/vias'));
       if (response.statusCode == 200) {
         setState(() {
           vias = List<Map<String, dynamic>>.from(
