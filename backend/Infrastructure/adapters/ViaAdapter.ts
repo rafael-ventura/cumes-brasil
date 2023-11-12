@@ -11,24 +11,24 @@ import {CroquiDocument} from "../documents/CroquiDocument";
 
 export class ViaAdapter {
     // Converte uma Via para o formato de documento JSON para o RavenDB
-    static toRavenDBDocument(via: Via, montanha: Montanha, face: Face, fonte: Fonte): ViaDocument {
+    toRavenDBDocument(via: Via , montanha: Montanha, face: Face | undefined, fonte: Fonte | undefined): ViaDocument {
         return {
             "@metadata": {
                 "@collection": "Vias"
 
             },
             Id: via.id,
-            Nome: via.nome,
+            Nome: via?.nome,
             Montanha: {
                 "@metadata": {
                     "@collection": "Montanhas"
                 },
-                Id: montanha.id,
-                Nome: montanha.nome,
-                Altura: montanha.altura,
-                Localizacao: montanha.localizacao,
+                Id: montanha?.id,
+                Nome: montanha?.nome,
+                Altura: montanha?.altura,
+                Localizacao: montanha?.localizacao,
             },
-            Croquis: via.croquis.map(croqui => ({
+            Croquis: via.croquis?.map(croqui => ({
                 Id: croqui.id,
                 CaminhoImagem: croqui.imagemUrl,
                 Autor: croqui.autor,
@@ -46,15 +46,15 @@ export class ViaAdapter {
                 "@metadata": {
                     "@collection": "Faces"
                 },
-                Id: face.id,
-                Nome: face.nome,
+                Id: face?.id,
+                Nome: face?.nome,
             },
             Fonte: {
                 "@metadata": {
                     "@collection": "Fontes"
                 },
-                Id: fonte.id,
-                Referencia: fonte.referencia
+                Id: fonte?.id,
+                Referencia: fonte?.referencia
             },
             Id_Via_Principal: via.id_viaPrincipal
         }
@@ -62,17 +62,17 @@ export class ViaAdapter {
     }
 
 // Converte um documento do RavenDB para uma instância de Via
-    static fromRavenDBDocument(document: ViaDocument): Via {
+    fromRavenDBDocument(document: ViaDocument): Via {
         const via = new Via(
             document.Id,
             document.Nome,
-            document.Croquis.map(croqui => new Croqui(
+            document.Croquis?.map(croqui => new Croqui(
                 croqui.Id,
                 croqui.CaminhoImagem,
                 croqui.Autor,
                 croqui.Descricao,
             )),
-            document.Montanha.Id,
+            document.Montanha,
             document.Grau,
             document.Crux,
             document.Artificial,
@@ -82,16 +82,16 @@ export class ViaAdapter {
             document.Conquistadores,
             document.Detalhes,
             document.Data,
-            document.Fonte.Id,
+            document.Fonte?.Id,
             document.Id_Via_Principal,
-            document.Face.Id
+            document.Face?.Id
         );
 
         return via;
     }
 
     // Converte uma instância de ViaDto para Via
-    static fromDto(viaDto: ViaDto): Via {
+    fromDto(viaDto: ViaDto): Via {
         return new Via(
             viaDto.id,
             viaDto.nome,
@@ -101,7 +101,7 @@ export class ViaAdapter {
                 croqui.autor,
                 croqui.descricao,
             )),
-            viaDto.montanha!.id,
+            viaDto.montanha,
             viaDto.grau,
             viaDto.crux,
             viaDto.artificial,
