@@ -10,9 +10,9 @@ import {IMontanha} from "../interfaces/models/IMontanha";
  */
 export class Via implements IVia {
     public id: number;
-    public nome?: string | null | undefined;
+    public nome: string;
     public croquis?: Croqui[] | null | undefined;
-    public montanha?: IMontanha | null | undefined;
+    public id_montanha?: number | null | undefined;
     public grau?: string | null | undefined;
     public crux?: string | null | undefined;
     public artificial?: string | null | undefined;
@@ -47,9 +47,9 @@ export class Via implements IVia {
      **/
     constructor(
         id: number,
-        nome?: string | null | undefined,
+        nome: string,
         croquis?: Croqui[] | null | undefined,
-        montanha?: IMontanha | null | undefined,
+        montanha?: number | null | undefined,
         grau?: string | null | undefined,
         crux?: string | null | undefined,
         artificial?: string | null | undefined,
@@ -66,7 +66,7 @@ export class Via implements IVia {
         this.id = id;
         this.nome = nome;
         this.croquis = croquis;
-        if (montanha) this.montanha = montanha;
+        if (montanha) this.id_montanha = montanha;
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;

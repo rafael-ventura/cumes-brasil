@@ -11,9 +11,11 @@ import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaService {
     private repo: ViaRepository;
+    private adapter: ViaAdapter;
 
     constructor(repo: ViaRepository) {
         this.repo = repo;
+        this.adapter = new ViaAdapter();
 
     }
 
@@ -37,13 +39,13 @@ export class ViaService {
 
     async createVia(viaDTO: ViaDto): Promise<Via> {
         // Converter ViaDTO para a entidade Via
-        const via = ViaAdapter.fromDto(viaDTO);
+        const via = this.adapter.fromDto(viaDTO);
         const montanha = viaDTO.montanha as Montanha;
         const face = viaDTO.face as Face;
         const fonte = viaDTO.fonte as Fonte;
 
         // Salvar Via no RavenDB
-        await this.repo.createVia(ViaAdapter.toRavenDBDocument(via, montanha, face, fonte));
+        await this.repo.createVia(this.adapter.toRavenDBDocument(via, montanha, face, fonte));
 
         // Retornar a Via criada
         return via;
@@ -53,8 +55,8 @@ export class ViaService {
     async updateVia(viaDTO: ViaDto): Promise<Via> {
 
         // Converter ViaDTO para a entidade Via
-        const via = ViaAdapter.fromDto(viaDTO);
-        const montanha = viaDTO.montanha ? await this.getMontanhaById(via.montanha!) : undefined;
+        const via = this.adapter.fromDto(viaDTO);
+        const montanha = viaDTO.montanha ? await this.getMontanhaById(via.id_montanha!) : undefined;
         const face = viaDTO.face ? await this.getFaceById(via.id_face!) : undefined;
         const fonte = viaDTO.fonte ? await this.getFonteById(via.id_fonte!) : undefined;
         if (!montanha || !face || !fonte) {
@@ -62,7 +64,7 @@ export class ViaService {
         }
 
         // Salvar Via
-        await this.repo.updateVia(ViaAdapter.toRavenDBDocument(via, montanha, face, fonte));
+        await this.repo.updateVia(this.adapter.toRavenDBDocument(via, montanha, face, fonte));
         // Caso tenha dado tudo certo, retornar a Via
         return via;
     }

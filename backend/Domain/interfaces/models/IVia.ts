@@ -9,7 +9,7 @@ export interface IVia {
     id: number;
     nome?: string | null | undefined;
     croquis?: Croqui[] | null | undefined;
-    montanha?: IMontanha | null | undefined;
+    id_montanha?: number | null | undefined;
     grau?: string | null | undefined;
     crux?: string | null | undefined;
     artificial?: string | null | undefined;

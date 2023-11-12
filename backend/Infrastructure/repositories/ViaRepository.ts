@@ -11,9 +11,10 @@ import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
-
+    private adapter: ViaAdapter;
 
     constructor(store: DocumentStore) {
+        this.adapter = new ViaAdapter();
 
     }
 
@@ -91,7 +92,7 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => ViaAdapter.fromRavenDBDocument(viaDocument));
+            return viaDocuments.map(viaDocument => this.adapter.fromRavenDBDocument(viaDocument));
         } finally {
             await session.dispose();
         }
@@ -107,7 +108,7 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
-            return ViaAdapter.fromRavenDBDocument(viaDocument);
+            return this.adapter.fromRavenDBDocument(viaDocument);
         } finally {
             await session.dispose();
         }
