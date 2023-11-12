@@ -12,6 +12,7 @@ import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
 
+
     constructor(store: DocumentStore) {
 
     }

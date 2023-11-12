@@ -3,11 +3,10 @@ import { ColecaoBase } from "./ColecaoBase";
 import { IColecaoEscaladas } from "../interfaces/models/IColecaoEscaladas";
 
 export class ColecaoEscaladas extends ColecaoBase implements IColecaoEscaladas {
-    private datasEscalada: Map<number, Date[]>;
+    private datasEscalada = {}
 
     constructor() {
         super('Histórico', 'Minhas vias escaladas');
-        this.datasEscalada = new Map<number, Date[]>();
     }
 
     public registrarEscalada(via: Via, data: Date): void {
@@ -16,13 +15,13 @@ export class ColecaoEscaladas extends ColecaoBase implements IColecaoEscaladas {
             this.adicionarVia(via); // Usa o método da classe base para adicionar a via
         }
 
-        // Registra a data da escalada
+        /*// Registra a data da escalada
         let datas = this.datasEscalada.get(via.id) || [];
         datas.push(data);
-        this.datasEscalada.set(via.id, datas);
+        this.datasEscalada.set(via.id, datas);*/
     }
 
-    public getDatasEscalada(viaId: number): Date[] {
+    /*public getDatasEscalada(viaId: number): Date[] {
         return this.datasEscalada.get(viaId) || [];
-    }
+    }*/
 }

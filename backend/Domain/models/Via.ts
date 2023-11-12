@@ -2,6 +2,7 @@
 import {IVia} from "../interfaces/models/IVia";
 import {Croqui} from "./Croqui";
 import {Montanha} from "./Montanha";
+import {IMontanha} from "../interfaces/models/IMontanha";
 
 /**
  * Classe Via que implementa a interface IVia.
@@ -9,9 +10,9 @@ import {Montanha} from "./Montanha";
  */
 export class Via implements IVia {
     public id: number;
-    public nome: string;
-    public croquis: Croqui[];
-    public id_montanha?: number | null | undefined;
+    public nome?: string | null | undefined;
+    public croquis?: Croqui[] | null | undefined;
+    public montanha?: IMontanha | null | undefined;
     public grau?: string | null | undefined;
     public crux?: string | null | undefined;
     public artificial?: string | null | undefined;
@@ -30,24 +31,25 @@ export class Via implements IVia {
      * @param {number} id - O identificador único da via
      * @param {string} nome - O nome da via.
      * @param {Croqui[]} croquis - Os croquis da via.
-     * @param {number} [id_montanha?] - O identificador da montanha à qual a via pertence (opcional).
-     * @param {string} [grau?] - O grau de dificuldade da via (opcional).
-     * @param {string} [crux?] - O crux da via (opcional).
-     * @param {boolean} [artificial?] - Se a via é artificial ou não (opcional).
-     * @param {number} [duracao?] - A duração da via (opcional).
-     * @param {string} [exposicao?] - A exposição da via (opcional).
-     * @param {number} [extensao?] - A extensão da via (opcional).
-     * @param {string[]} [conquistadores?] - Os conquistadores da via (opcional).
-     * @param {Date} [data?] - A data de conquista da via (opcional).
-     * @param {number} [id_face?] - O identificador da face da montanha à qual a via pertence (opcional).
-     * @param {number} [id_fonte?] - O identificador da fonte da via (opcional).
-     * @param {number} [id_variante?] - O identificador da via principal da via (opcional). So vai existir se a via for variante.
+     * @param montanha
+     * @param grau
+     * @param crux
+     * @param artificial
+     * @param duracao
+     * @param exposicao
+     * @param extensao
+     * @param conquistadores
+     * @param detalhes
+     * @param data
+     * @param id_face
+     * @param id_fonte
+     * @param id_variante
      **/
     constructor(
         id: number,
-        nome: string,
-        croquis: Croqui[],
-        id_montanha?: number | null | undefined,
+        nome?: string | null | undefined,
+        croquis?: Croqui[] | null | undefined,
+        montanha?: IMontanha | null | undefined,
         grau?: string | null | undefined,
         crux?: string | null | undefined,
         artificial?: string | null | undefined,
@@ -64,7 +66,7 @@ export class Via implements IVia {
         this.id = id;
         this.nome = nome;
         this.croquis = croquis;
-        if (id_montanha) this.id_montanha = id_montanha;
+        if (montanha) this.montanha = montanha;
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;
@@ -96,7 +98,7 @@ export class Via implements IVia {
      */
 
 
-    getNome(): string {
+    getNome(): string | null | undefined {
         return this.nome;
     }
 
@@ -115,6 +117,9 @@ export class Via implements IVia {
      * @return {void}
      */
     associarCroqui(croqui: Croqui): void {
+        if (!this.croquis) {
+            this.croquis = [];
+        }
         this.croquis.push(croqui);
     }
 

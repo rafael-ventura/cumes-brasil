@@ -2,6 +2,6 @@ export interface FonteDocument {
     '@metadata': {
         '@collection': 'Fontes'
     };
-    Id: number;
-    Referencia: string;
+    Id: number | null;
+    Referencia: string | null;
 }
