@@ -1,17 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2020",
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "../",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "types": ["reflect-metadata"],
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "WebAPI/**/*.ts",
+    "Infrastructure/**/*.ts",
+    "Application/**/*.ts",
+    "Domain/**/*.ts",
+    "index.ts",
+    "../shared/**/*.ts",
+    "@types"
+  ],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-name: app_escalada
+name: frontend
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: '>=3.1.5 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,10 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  csv: ^5.0.0
-  mysql1: 0.20.0
-  shelf: ^1.1.0
-  flutter_dotenv: ^5.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -56,10 +52,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  assets:
-    - .env
-    - assets/ViasEscaladaZonaSul.csv
-    - lib
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -4,10 +4,10 @@ project(runner LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "app_escalada")
+set(BINARY_NAME "frontend")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "cerj.org.br.app_escalada")
+set(APPLICATION_ID "com.example.frontend")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -47,7 +47,7 @@ function(APPLY_STANDARD_SETTINGS TARGET)
 endfunction()
 
 # Flutter library and tool build rules.
-set(FLUTTER_MANAGED_DIR "flutter")
+set(FLUTTER_MANAGED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/flutter")
 add_subdirectory(${FLUTTER_MANAGED_DIR})
 
 # System-level dependencies.
