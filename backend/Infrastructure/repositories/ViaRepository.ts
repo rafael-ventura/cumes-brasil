@@ -11,13 +11,13 @@ import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
-
+    private adapter: ViaAdapter;
 
     constructor(store: DocumentStore) {
-
+        this.adapter = new ViaAdapter();
     }
 
-    async getMontanhaById(id_montanha: number): Promise<Montanha> {
+    /*async getMontanhaById(id_montanha: number): Promise<Montanha> {
         const session = store.openSession();
         try {
             const documents = await session.query({collection: 'Montanhas'}).whereEquals('Id', id_montanha).all();
@@ -26,11 +26,11 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo Montanha antes de passar para o adaptador
             const montanhaDocument = documents[0] as MontanhaDocument;
-            return MontanhaAdapter.fromRavenDBDocument(montanhaDocument);
+            return this.adapter.toMontanha(montanhaDocument);
         } finally {
             await session.dispose();
         }
-    }
+    }*/
 
     async getFaceById(id_face: number): Promise<Face> {
         const session = store.openSession();
@@ -43,7 +43,7 @@ export class ViaRepository {
             const faceDocument = documents[0] as Face;
             return faceDocument;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -58,7 +58,7 @@ export class ViaRepository {
             const fonteDocument = documents[0] as Fonte;
             return fonteDocument;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -68,7 +68,7 @@ export class ViaRepository {
             await session.store(via);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -78,7 +78,7 @@ export class ViaRepository {
             await session.store(via);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -91,9 +91,9 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => ViaAdapter.fromRavenDBDocument(viaDocument));
+            return viaDocuments.map(viaDocument => this.adapter.fromRavenDBDocument(viaDocument));
         } finally {
-            await session.dispose();
+            session.dispose();
         }
 
     }
@@ -107,9 +107,9 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
-            return ViaAdapter.fromRavenDBDocument(viaDocument);
+            return this.adapter.fromRavenDBDocument(viaDocument);
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -125,7 +125,7 @@ export class ViaRepository {
             await session.delete(viaDocument);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 

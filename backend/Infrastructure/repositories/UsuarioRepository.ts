@@ -1,69 +1,131 @@
 import {DocumentStore} from 'ravendb';
-import {UsuarioDTO} from '../../../shared/contratos/UsuarioDto';
+import {Usuario} from "../../Domain/models/Usuario";
+import {UsuarioAdapter} from "../adapters/UsuarioAdapter";
+import {UsuarioDTO} from "../../../shared/contratos/UsuarioDto";
 
 // Ajuste o caminho de importação conforme necessário
 
 export class UsuarioRepository {
     private store: DocumentStore;
+    private adapter: UsuarioAdapter;
 
     constructor(store: DocumentStore) {
         this.store = store;
+        this.adapter = new UsuarioAdapter();
     }
 
-    async createUsuario(usuario: UsuarioDTO): Promise<void> {
+    public async getUsuarioById(id_usuario: number): Promise<Usuario> {
         const session = this.store.openSession();
         try {
-            await session.store(usuario);
+            const documents = await session.query({collection: 'Usuarios'}).whereEquals('Id', id_usuario).all();
+            if (documents.length === 0) {
+                throw new Error('Usuário não encontrado');
+            }
+            // Assegura que o objeto é do tipo Usuario antes de passar para o adaptador
+            const usuarioDocument = documents[0] as Usuario;
+            return usuarioDocument;
+        } finally {
+            await session.dispose();
+        }
+    }
+
+    public async login(email: string, senha: string): Promise<Usuario> {
+
+        const session = this.store.openSession();
+        const usuario = await session.query<Usuario>({collection: 'Usuarios'})
+            .whereEquals('email', email)
+            .whereEquals('senha', senha)
+            .firstOrNull();
+        if (!usuario) {
+            throw new Error('Usuário não encontrado');
+        }
+        return usuario;
+    }
+
+    public async logout(usuarioId: number): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            const usuario = await session.load<Usuario>(usuarioId.toString());
+            if (!usuario) {
+                throw new Error('Usuário não encontrado');
+            }
+        } finally {
+            session.dispose();
+        }
+    }
+
+    public async alterarSenha(usuarioId: number, novaSenha: string): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            const usuario = await session.load<Usuario>(usuarioId.toString());
+            if (!usuario) {
+                throw new Error('Usuário não encontrado');
+            }
+            usuario.setSenha(novaSenha);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
-    async updateUsuario(usuario: UsuarioDTO): Promise<void> {
+    public async iniciarRecuperacaoSenha(email: string): Promise<void> {
         const session = this.store.openSession();
         try {
-            await session.store(usuario);
+            const usuario = await session.query<Usuario>({collection: 'Usuarios'})
+                .whereEquals('email', email)
+                .firstOrNull();
+            if (!usuario) {
+                throw new Error('Usuário não encontrado');
+            }
+            // Implementar lógica de início de recuperação de senha
+        } finally {
+            session.dispose();
+        }
+    }
+
+    public async redefinirSenha(token: string, novaSenha: string): Promise<void> {
+        const session = this.store.openSession();
+        try {
+            const usuario = await session.query<Usuario>({collection: 'Usuarios'})
+                .whereEquals('token', token)
+                .firstOrNull();
+            if (!usuario) {
+                throw new Error('Usuário não encontrado');
+            }
+            usuario.setSenha(novaSenha);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
-    async deleteUsuario(id_usuario: number): Promise<void> {
+    public async atualizarPerfil(usuarioId: number, dadosAtualizados: UsuarioDTO): Promise<Usuario> {
         const session = this.store.openSession();
         try {
-            await session.delete(id_usuario);
+            const usuario = await session.load<Usuario>(usuarioId.toString());
+            if (!usuario) {
+                throw new Error('Usuário não encontrado');
+            }
+            usuario.nome = dadosAtualizados.nome;
+            usuario.email = dadosAtualizados.email;
+            usuario.fotoPerfil = dadosAtualizados.fotoPerfil;
             await session.saveChanges();
+            return usuario;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
+
     }
 
-    async getUsuarioById(id_usuario: number): Promise<UsuarioDTO> {
+    public async getUsuarioByEmail(email: string): Promise<boolean> {
         const session = this.store.openSession();
         try {
-            return await session.load(id_usuario);
+            const usuario = await session.query<Usuario>({collection: 'Usuarios'})
+                .whereEquals('email', email)
+                .firstOrNull();
+            return !!usuario;
         } finally {
-            await session.dispose();
-        }
-    }
-
-    async getColecaoEscaladas(): Promise<UsuarioDTO[]> {
-        const session = this.store.openSession();
-        try {
-            return await session.query({collection: 'ColecaoEscaladas'}).all();
-        } finally {
-            await session.dispose();
-        }
-    }
-
-    async getColecaoFavoritos(): Promise<UsuarioDTO[]> {
-        const session = this.store.openSession();
-        try {
-            return await session.query({collection: 'ColecaoFavoritos'}).all();
-        } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 

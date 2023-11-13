@@ -4,7 +4,6 @@ import {ColecaoFavoritos} from "../../Domain/models/ColecaoFavoritos";
 import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
 import {Usuario} from "../../Domain/models/Usuario";
 import {UsuarioDTO} from "../../../shared/contratos/UsuarioDto";
-import {UsuarioAdapter} from "../../Infrastructure/adapters/UsuarioAdapter";
 
 export class UsuarioService {
     private usuarioRepository: UsuarioRepository;
@@ -16,38 +15,49 @@ export class UsuarioService {
     }
 
 
-    public async getUsuarioById(id_usuario: number): Promise<Usuario> {
+    public async getUsuarioById(id_usuario: number): Promise<UsuarioDTO> {
         const usuario = await this.usuarioRepository.getUsuarioById(id_usuario);
-        return this.usuarioAdapter.fromDto(usuario);
+        return this.usuarioAdapter.toDto(usuario);
 
     }
 
-    public async login(email: string, senha: string): Promise<Usuario | null> {
-        // Implementar lógica de autenticação
+    public async login(email: string, senha: string): Promise<UsuarioDTO | null> {
+        const usuario = await this.usuarioRepository.login(email, senha);
+        return this.usuarioAdapter.toDto(usuario);
     }
 
     public async logout(usuarioId: number): Promise<void> {
-        // Implementar lógica de logout
+        await this.usuarioRepository.logout(usuarioId);
+
     }
 
     public async alterarSenha(usuarioId: number, novaSenha: string): Promise<void> {
-        // Implementar lógica de alteração de senha
+        await this.usuarioRepository.alterarSenha(usuarioId, novaSenha);
+
     }
 
     public async iniciarRecuperacaoSenha(email: string): Promise<void> {
-        // Implementar lógica de início de recuperação de senha
+        const usuario = await this.usuarioRepository.iniciarRecuperacaoSenha(email);
+        // todo: validar necessidade desse método
+
     }
 
     public async redefinirSenha(token: string, novaSenha: string): Promise<void> {
-        // Implementar lógica de redefinição de senha
+        await this.usuarioRepository.redefinirSenha(token, novaSenha);
+
     }
 
-    public async atualizarPerfil(usuarioId: number, dadosAtualizados: UsuarioDTO): Promise<Usuario> {
-        // Implementar lógica de atualização de perfil
+    public async atualizarPerfil(usuarioId: number, dadosAtualizados: UsuarioDTO): Promise<UsuarioDTO> {
+        const usuario = await this.usuarioRepository.atualizarPerfil(usuarioId, dadosAtualizados);
+        return this.usuarioAdapter.toDto(usuario);
     }
 
     public async verificarEmail(email: string): Promise<boolean> {
-        // Implementar lógica de verificação de email
+        const existe = await this.usuarioRepository.getUsuarioByEmail(email);
+        return existe;
+
     }
 
 }
+
+import {UsuarioAdapter} from "../../Infrastructure/adapters/UsuarioAdapter";
