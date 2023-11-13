@@ -22,8 +22,9 @@ class _ListagemViasState extends State<ListagemVias> {
   }
 
   Future<void> fetchData() async {
+    Uri url = Uri.http('localhost:8080', '/api/vias/');
     try {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/vias/'));
+      final response = await http.get(url);
       if (response.statusCode == 200) {
         setState(() {
           vias = List<Map<String, dynamic>>.from(json.decode(response.body));

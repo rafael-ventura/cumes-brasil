@@ -1,10 +1,9 @@
-import 'package:app_escalada/models/MountainClimb.dart';
 import 'package:flutter/material.dart';
 
 class MountainClimbCard extends StatelessWidget {
-  final MountainClimb climb;
+  final dynamic climb;
 
-  MountainClimbCard({required this.climb, Key? key}) : super(key: key);
+  const MountainClimbCard({required this.climb, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
