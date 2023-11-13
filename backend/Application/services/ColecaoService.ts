@@ -19,22 +19,25 @@ export class ColecaoService {
 
     public async getVias(): Promise<ViaDto[]> {
         const vias = await this.viaRepository.getAll();
-        return vias.map(via => ViaAdapter.toRavenDBDocument(via, via.montanha, via.face, via.fonte));
+        return vias.map(via => this.viaAdapter.toRavenDBDocument(via, via.montanha, via.face, via.fonte));
     }
 
     public async getVia(id: number): Promise<ViaDto | null> {
-        const via = await this.viaRepository.getVia(id);
-        return via ? this.viaAdapter.toDto(via) : null;
+        const via = await this.viaRepository.getViaById(id);
+        return this.viaAdapter.d
     }
 
     public async createVia(viaDto: ViaDto): Promise<void> {
-        const via = this.viaAdapter.toModel(viaDto);
-        await this.viaRepository.createVia(via);
+        const via = this.viaAdapter.fromDto(viaDto);
+        const montanha = await this.viaRepository.getMontanhaById(via.id_montanha!);
+        const face = await this.viaRepository.getFaceById(via.id_face!);
+        const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
+        await this.viaRepository.createVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
     }
 
     public async updateVia(viaDto: ViaDto): Promise<void> {
-        const via = this.viaAdapter.toModel(viaDto);
-        await this.viaRepository.updateVia(via);
+        const via = this.viaAdapter.fromDto(viaDto);
+        await this.viaRepository.updateVia(this.viaAdapter.toRavenDBDocument(via, via.montanha, via.face, via.fonte));
     }
 
     public async deleteVia(id: number): Promise<void> {

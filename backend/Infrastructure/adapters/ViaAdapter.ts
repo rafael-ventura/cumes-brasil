@@ -2,7 +2,7 @@
 import {Via} from '../../Domain/models/Via';
 import {Croqui} from "../../Domain/models/Croqui";
 import {ViaDocument} from "../documents/ViaDocument";
-import {ViaDto} from "../../../shared/contratos/ViaDto";
+import {CroquiDTO, FaceDTO, FonteDto, MontanhaDTO, ViaDto} from "../../../shared/contratos/ViaDto";
 import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
@@ -115,5 +115,38 @@ export class ViaAdapter {
             viaDto.fonte!.id,
             viaDto.id_via_principal
         );
+    }
+
+    // Converte uma instância de Via para ViaDto
+    toDto(via: Via): { extensao: number | null | undefined; data: Date | null | undefined; fonte: FonteDto; nome: string | null | undefined; croquis: CroquiDTO[]; conquistadores: string[] | null | undefined; grau: string | null | undefined; artificial: string | null | undefined; face: FaceDTO; montanha: MontanhaDTO; id_via_principal: any; id: number; duracao: string | null | undefined; crux: string | null | undefined; detalhes: string | null | undefined; exposicao: string | null | undefined } {
+        return {
+            id: via.id,
+            nome: via.nome,
+            croquis: via.croquis?.map(croqui => ({
+                id: croqui.id,
+                imagemUrl: croqui.imagemUrl,
+                autor: croqui.autor,
+                descricao: croqui.descricao
+            })) as CroquiDTO[],
+            montanha: {
+                id: via.id_montanha
+            } as MontanhaDTO,
+            grau: via.grau,
+            crux: via.crux,
+            artificial: via.artificial,
+            duracao: via.duracao,
+            exposicao: via.exposicao,
+            extensao: via.extensao,
+            conquistadores: via.conquistadores,
+            detalhes: via.detalhes,
+            data: via.data,
+            face: {
+                id: via.id_face
+            } as FaceDTO,
+            fonte: {
+                id: via.id_fonte
+            } as FonteDto,
+            id_via_principal: via.id_viaPrincipal
+        }
     }
 }

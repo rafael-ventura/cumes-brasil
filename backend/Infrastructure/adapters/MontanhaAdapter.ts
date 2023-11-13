@@ -6,10 +6,10 @@ export class MontanhaAdapter {
 
     static fromRavenDBDocument(document: MontanhaDocument): Montanha {
         return new Montanha(
-            document.Id,
-            document.Nome,
-            document.Localizacao,
-            document.Altura,
+            document.Id!,
+            document.Nome!,
+            document.Localizacao!,
+            document.Altura!
         )
     }
 }

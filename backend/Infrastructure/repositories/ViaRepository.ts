@@ -17,7 +17,7 @@ export class ViaRepository {
         this.adapter = new ViaAdapter();
     }
 
-    /*async getMontanhaById(id_montanha: number): Promise<Montanha> {
+    async getMontanhaById(id_montanha: number): Promise<Montanha> {
         const session = store.openSession();
         try {
             const documents = await session.query({collection: 'Montanhas'}).whereEquals('Id', id_montanha).all();
@@ -25,12 +25,12 @@ export class ViaRepository {
                 throw new Error('Montanha não encontrada');
             }
             // Assegura que o objeto é do tipo Montanha antes de passar para o adaptador
-            const montanhaDocument = documents[0] as MontanhaDocument;
-            return this.adapter.toMontanha(montanhaDocument);
+            const montanha = documents[0] as Montanha;
+            return montanha;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
-    }*/
+    }
 
     async getFaceById(id_face: number): Promise<Face> {
         const session = store.openSession();
