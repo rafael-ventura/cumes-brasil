@@ -11,14 +11,14 @@ import {CroquiDocument} from "../documents/CroquiDocument";
 
 export class ViaAdapter {
     // Converte uma Via para o formato de documento JSON para o RavenDB
-    toRavenDBDocument(via: Via, montanha: Montanha, face: Face | undefined, fonte: Fonte | undefined): ViaDocument {
+    toRavenDBDocument(via: Via, montanha: Montanha |undefined = undefined, face: Face | undefined = undefined, fonte: Fonte | undefined = undefined): ViaDocument {
         return {
             "@metadata": {
                 "@collection": "Vias"
 
             },
             Id: via.id,
-            Nome: via?.nome,
+            Nome: via.nome,
             Montanha: {
                 "@metadata": {
                     "@collection": "Montanhas"
@@ -62,7 +62,7 @@ export class ViaAdapter {
     }
 
 // Converte um documento do RavenDB para uma instância de Via
-    fromRavenDBDocument(document: ViaDocument): Via {
+    fromDocument(document: ViaDocument): Via {
         const via = new Via(
             document.Id,
             document.Nome,
@@ -129,7 +129,7 @@ export class ViaAdapter {
                 descricao: croqui.descricao
             })) as CroquiDTO[],
             montanha: {
-                id: via.id_montanha
+                id: via.montanha
             } as MontanhaDTO,
             grau: via.grau,
             crux: via.crux,

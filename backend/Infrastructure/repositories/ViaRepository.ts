@@ -12,9 +12,11 @@ import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
     private adapter: ViaAdapter;
+    private montanhaAdapter: MontanhaAdapter;
 
     constructor(store: DocumentStore) {
         this.adapter = new ViaAdapter();
+        this.montanhaAdapter = new MontanhaAdapter();
     }
 
     async getMontanhaById(id_montanha: number): Promise<Montanha> {
@@ -91,7 +93,7 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => this.adapter.fromRavenDBDocument(viaDocument));
+            return viaDocuments.map(viaDocument => this.adapter.fromDocument(viaDocument));
         } finally {
             session.dispose();
         }
@@ -107,7 +109,7 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
-            return this.adapter.fromRavenDBDocument(viaDocument);
+            return this.adapter.fromDocument(viaDocument);
         } finally {
             session.dispose();
         }
@@ -128,5 +130,22 @@ export class ViaRepository {
             session.dispose();
         }
     }
+
+    async getMontanhas(): Promise<Montanha[]> {
+        const session = store.openSession();
+        try {
+            const documents = await session.query({collection: 'Montanhas'}).all();
+            if (documents.length === 0) {
+                throw new Error('Nenhuma montanha encontrada');
+            }
+            // Assegura que todos os objetos são do tipo Montanha antes de passar para o adaptador
+            const montanhaDocuments = documents as MontanhaDocument[];
+            return montanhaDocuments.map(montanhaDocument => this.montanhaAdapter.fromDocument(montanhaDocument));
+        } finally {
+            session.dispose();
+        }
+    }
+
+
 
 }

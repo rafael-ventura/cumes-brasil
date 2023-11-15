@@ -8,8 +8,8 @@ export interface ViaDocument {
     '@metadata': {
         '@collection': 'Vias'
     };
-    Id: number | null | undefined;
-    Nome: string | null | undefined;
+    Id: number;
+    Nome: string;
     Grau?: string | null | undefined;
     Crux?: string | null | undefined;
     Artificial?: string | null | undefined;

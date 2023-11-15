@@ -5,31 +5,35 @@ import {ViaDto} from "../../../shared/contratos/ViaDto";
 import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
+import {MontanhaRepository} from "../../Infrastructure/repositories/MontanhaRepository";
+import {Via} from "../../Domain/models/Via";
 
 //TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.
 
 export class ColecaoService {
     private viaRepository: ViaRepository;
     private viaAdapter: ViaAdapter;
+    private montanhaRepository: MontanhaRepository;
 
-    constructor(viaRepository: ViaRepository, viaAdapter: ViaAdapter) {
+    constructor(viaRepository: ViaRepository, viaAdapter: ViaAdapter, montanhaRepository: MontanhaRepository) {
         this.viaRepository = viaRepository;
-        this.viaAdapter = viaAdapter;
+        this.viaAdapter = new ViaAdapter();
+        this.montanhaRepository = montanhaRepository;
     }
 
-    public async getVias(): Promise<ViaDto[]> {
+    public async getVias(): Promise<Via[]> {
         const vias = await this.viaRepository.getAll();
-        return vias.map(via => this.viaAdapter.toRavenDBDocument(via, via.montanha, via.face, via.fonte));
+        return vias;
     }
 
-    public async getVia(id: number): Promise<ViaDto | null> {
+    public async getVia(id: number): Promise<Via | null> {
         const via = await this.viaRepository.getViaById(id);
-        return this.viaAdapter.d
+        return via;
     }
 
     public async createVia(viaDto: ViaDto): Promise<void> {
         const via = this.viaAdapter.fromDto(viaDto);
-        const montanha = await this.viaRepository.getMontanhaById(via.id_montanha!);
+        const montanha = await this.viaRepository.getMontanhaById(via.montanha!);
         const face = await this.viaRepository.getFaceById(via.id_face!);
         const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
         await this.viaRepository.createVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
@@ -37,7 +41,10 @@ export class ColecaoService {
 
     public async updateVia(viaDto: ViaDto): Promise<void> {
         const via = this.viaAdapter.fromDto(viaDto);
-        await this.viaRepository.updateVia(this.viaAdapter.toRavenDBDocument(via, via.montanha, via.face, via.fonte));
+        const montanha = await this.viaRepository.getMontanhaById(via.montanha!);
+        const face = await this.viaRepository.getFaceById(via.id_face!);
+        const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
+        await this.viaRepository.updateVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
     }
 
     public async deleteVia(id: number): Promise<void> {
@@ -48,13 +55,6 @@ export class ColecaoService {
         return await this.viaRepository.getMontanhas();
     }
 
-    public async getFaces(): Promise<Face[]> {
-        return await this.viaRepository.getFaces();
-    }
-
-    public async getFontes(): Promise<Fonte[]> {
-        return await this.viaRepository.getFontes();
-    }
 
 
 }
