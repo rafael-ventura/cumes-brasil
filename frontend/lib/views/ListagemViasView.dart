@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/viaModel.dart';
+import '../models/viaModel.dart';
 import '../widgets/ViaCard.dart';
 import '../controller/ViaController.dart';
 

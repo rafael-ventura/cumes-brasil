@@ -33,7 +33,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     HomeView(),
     ViasView(),
     FavoritosView(),
-    PerfilView(),
+    ConfigView(),
   ];
 
   void _onItemTapped(int index) {

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../model/viaModel.dart';
+import '../models/viaModel.dart';
 import 'package:http/http.dart' as http;
 
 class ViaController {
