@@ -29,6 +29,8 @@ export class ColecaoService {
     public async getVia(id: number): Promise<Via | null> {
         const via = await this.viaRepository.getViaById(id);
         return via;
+
+        return vias.map(via => this.viaAdapter.toDto(via));
     }
 
     public async createVia(viaDto: ViaDto): Promise<void> {
@@ -36,6 +38,7 @@ export class ColecaoService {
         const montanha = await this.viaRepository.getMontanhaById(via.montanha!);
         const face = await this.viaRepository.getFaceById(via.id_face!);
         const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
+
         await this.viaRepository.createVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
     }
 

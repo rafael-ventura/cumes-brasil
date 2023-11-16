@@ -7,6 +7,10 @@ import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
 import {CroquiDocument} from "../documents/CroquiDocument";
+import {MontanhaDocument} from "../documents/MontanhaDocument";
+import {IMontanha} from "../../Domain/interfaces/models/IMontanha";
+import {FaceDocument} from "../documents/FaceDocument";
+import {FonteDocument} from "../documents/Fonte";
 
 
 export class ViaAdapter {
@@ -19,10 +23,12 @@ export class ViaAdapter {
             },
             Id: via.id,
             Nome: via.nome,
+
             Montanha: {
                 "@metadata": {
                     "@collection": "Montanhas"
                 },
+
                 Id: montanha?.id,
                 Nome: montanha?.nome,
                 Altura: montanha?.altura,
@@ -96,7 +102,7 @@ export class ViaAdapter {
             viaDto.id,
             viaDto.nome,
             viaDto.croquis.map(croqui => new Croqui(
-                croqui.id,
+                croqui.id as number,
                 croqui.imagemUrl,
                 croqui.autor,
                 croqui.descricao,
@@ -131,6 +137,7 @@ export class ViaAdapter {
             montanha: {
                 id: via.montanha
             } as MontanhaDTO,
+
             grau: via.grau,
             crux: via.crux,
             artificial: via.artificial,

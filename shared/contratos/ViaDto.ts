@@ -18,24 +18,24 @@ export interface ViaDto {
 }
 
 export interface FonteDto {
-    id: number;
+    id: number | null | undefined;
     referencia: string;
 }
 
 export interface MontanhaDTO {
-    id: number;
+    id: number | null | undefined;
     nome: string;
     localizacao: string;
     altura: number;
 }
 
 export interface FaceDTO {
-    id: number;
+    id: number | null | undefined;
     nome: string;
 }
 
 export interface CroquiDTO {
-    id: number;
+    id: number | null | undefined;
     imagemUrl: string;
     autor: string;
     descricao?: string | null | undefined;

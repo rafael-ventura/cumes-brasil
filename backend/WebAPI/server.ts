@@ -1,8 +1,8 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
-import swaggerJSDoc from 'swagger-jsdoc';
 import routes from './routes/routes';
+const swaggerJSDoc = require('swagger-jsdoc');
 
 dotenv.config();
 

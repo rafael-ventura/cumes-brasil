@@ -110,6 +110,7 @@ export class ViaRepository {
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
             return this.adapter.fromDocument(viaDocument);
+
         } finally {
             session.dispose();
         }

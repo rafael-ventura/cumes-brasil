@@ -6,10 +6,12 @@ export class MontanhaAdapter {
 
     fromDocument(document: MontanhaDocument): Montanha {
         return new Montanha(
+
             document.Id!,
             document.Nome!,
             document.Localizacao!,
             document.Altura!
+
         )
     }
 
