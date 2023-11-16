@@ -4,9 +4,11 @@ export interface UsuarioDTO {
     Id: number; // Formato "usuario/U-1"
     nome: string;
     email: string;
+    fotoPerfil: string;
     colecoes: ColecaoDTO[];
     historico: HistoricoDTO[];
     favoritos: FavoritoDTO[];
+    senha: string;
 
 }
 

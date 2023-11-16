@@ -56,7 +56,7 @@ export class ViaService {
 
         // Converter ViaDTO para a entidade Via
         const via = this.adapter.fromDto(viaDTO);
-        const montanha = viaDTO.montanha ? await this.getMontanhaById(via.id_montanha!) : undefined;
+        const montanha = viaDTO.montanha ? await this.getMontanhaById(via.montanha!) : undefined;
         const face = viaDTO.face ? await this.getFaceById(via.id_face!) : undefined;
         const fonte = viaDTO.fonte ? await this.getFonteById(via.id_fonte!) : undefined;
         if (!montanha || !face || !fonte) {
