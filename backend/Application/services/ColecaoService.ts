@@ -5,6 +5,7 @@ import {ViaDto} from "../../../shared/contratos/ViaDto";
 import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
+import {MontanhaRepository} from "../../Infrastructure/repositories/MontanhaRepository";
 import {Via} from "../../Domain/models/Via";
 
 //TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.
@@ -12,37 +13,40 @@ import {Via} from "../../Domain/models/Via";
 export class ColecaoService {
     private viaRepository: ViaRepository;
     private viaAdapter: ViaAdapter;
+    private montanhaRepository: MontanhaRepository;
 
-    constructor(viaRepository: ViaRepository, viaAdapter: ViaAdapter) {
+    constructor(viaRepository: ViaRepository, viaAdapter: ViaAdapter, montanhaRepository: MontanhaRepository) {
         this.viaRepository = viaRepository;
-        this.viaAdapter = viaAdapter;
+        this.viaAdapter = new ViaAdapter();
+        this.montanhaRepository = montanhaRepository;
     }
 
-    public async getVias(): Promise<ViaDto[]> {
+    public async getVias(): Promise<Via[]> {
         const vias = await this.viaRepository.getAll();
+        return vias;
+    }
+
+    public async getVia(id: number): Promise<Via | null> {
+        const via = await this.viaRepository.getViaById(id);
+        return via;
 
         return vias.map(via => this.viaAdapter.toDto(via));
     }
 
-    public async getVia(id: number): Promise<ViaDto | null> {
-        const via = await this.viaRepository.getViaById(id);
-        return via ? this.viaAdapter.toDto(via) : null;
-    }
-
     public async createVia(viaDto: ViaDto): Promise<void> {
         const via = this.viaAdapter.fromDto(viaDto);
-        const montanha = via.id_montanha ? await this.viaRepository.getMontanhaById(via.id_montanha!) : undefined;
-        const face = via.id_face ? await this.viaRepository.getFaceById(via.id_face!) : undefined;
-        const fonte = via.id ? await this.viaRepository.getFonteById(via.id_fonte!) : undefined;
+        const montanha = await this.viaRepository.getMontanhaById(via.montanha!);
+        const face = await this.viaRepository.getFaceById(via.id_face!);
+        const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
 
         await this.viaRepository.createVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
     }
 
     public async updateVia(viaDto: ViaDto): Promise<void> {
         const via = this.viaAdapter.fromDto(viaDto);
-        const montanha = via.id_montanha ? await this.viaRepository.getMontanhaById(via.id_montanha!) : undefined;
-        const face = via.id_face ? await this.viaRepository.getFaceById(via.id_face!) : undefined;
-        const fonte = via.id ? await this.viaRepository.getFonteById(via.id_fonte!) : undefined;
+        const montanha = await this.viaRepository.getMontanhaById(via.montanha!);
+        const face = await this.viaRepository.getFaceById(via.id_face!);
+        const fonte = await this.viaRepository.getFonteById(via.id_fonte!);
         await this.viaRepository.updateVia(this.viaAdapter.toRavenDBDocument(via, montanha, face, fonte));
     }
 
@@ -54,13 +58,6 @@ export class ColecaoService {
         return await this.viaRepository.getMontanhas();
     }
 
-    public async getFaces(): Promise<Face[]> {
-        return await this.viaRepository.getFaces();
-    }
-
-    public async getFontes(): Promise<Fonte[]> {
-        return await this.viaRepository.getFontes();
-    }
 
 
 }

@@ -12,7 +12,7 @@ export class Via implements IVia {
     public id: number;
     public nome: string;
     public croquis?: Croqui[] | null | undefined;
-    public id_montanha?: number | null | undefined;
+    public montanha?: number | null | undefined;
     public grau?: string | null | undefined;
     public crux?: string | null | undefined;
     public artificial?: string | null | undefined;
@@ -28,7 +28,7 @@ export class Via implements IVia {
 
     /**
      * Construtor da classe Via.
-     * @param {number} id - O identificador único da via
+     * @param {IMontanha} id - O identificador único da via
      * @param {string} nome - O nome da via.
      * @param {Croqui[]} croquis - Os croquis da via.
      * @param montanha
@@ -85,7 +85,7 @@ export class Via implements IVia {
 
     /**
      * Getter para o identificador da via.
-     * @return {number} O identificador da via.
+     * @return {IMontanha} O identificador da via.
      */
     getId(): number {
         return this.id;

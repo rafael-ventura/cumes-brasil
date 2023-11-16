@@ -15,14 +15,15 @@ import {FonteDocument} from "../documents/Fonte";
 
 export class ViaAdapter {
     // Converte uma Via para o formato de documento JSON para o RavenDB
-    toRavenDBDocument(via: Via, montanha: Montanha | undefined, face: Face | undefined, fonte: Fonte | undefined): ViaDocument {
+    toRavenDBDocument(via: Via, montanha: Montanha |undefined = undefined, face: Face | undefined = undefined, fonte: Fonte | undefined = undefined): ViaDocument {
         return {
             "@metadata": {
                 "@collection": "Vias"
 
             },
             Id: via.id,
-            Nome: via?.nome.toString(),
+            Nome: via.nome,
+
             Montanha: {
                 "@metadata": {
                     "@collection": "Montanhas"
@@ -51,23 +52,23 @@ export class ViaAdapter {
                 "@metadata": {
                     "@collection": "Faces"
                 },
-                Id: face?.id,
-                Nome: face?.nome,
-            } as FaceDocument,
+                Id: face?.id!,
+                Nome: face?.nome!
+            },
             Fonte: {
                 "@metadata": {
                     "@collection": "Fontes"
                 },
-                Id: fonte?.id,
-                Referencia: fonte?.referencia
-            } as FonteDocument,
+                Id: fonte?.id!,
+                Referencia: fonte?.referencia!
+            },
             Id_Via_Principal: via.id_viaPrincipal
         }
 
     }
 
 // Converte um documento do RavenDB para uma instância de Via
-    fromRavenDBDocument(document: ViaDocument): Via {
+    fromDocument(document: ViaDocument): Via {
         const via = new Via(
             document.Id,
             document.Nome,
@@ -106,7 +107,7 @@ export class ViaAdapter {
                 croqui.autor,
                 croqui.descricao,
             )),
-            viaDto.montanha ? viaDto.montanha.id : undefined,
+            viaDto.montanha!.id,
             viaDto.grau,
             viaDto.crux,
             viaDto.artificial,
@@ -122,7 +123,8 @@ export class ViaAdapter {
         );
     }
 
-    toDto(via: Via): ViaDto {
+    // Converte uma instância de Via para ViaDto
+    toDto(via: Via): { extensao: number | null | undefined; data: Date | null | undefined; fonte: FonteDto; nome: string | null | undefined; croquis: CroquiDTO[]; conquistadores: string[] | null | undefined; grau: string | null | undefined; artificial: string | null | undefined; face: FaceDTO; montanha: MontanhaDTO; id_via_principal: any; id: number; duracao: string | null | undefined; crux: string | null | undefined; detalhes: string | null | undefined; exposicao: string | null | undefined } {
         return {
             id: via.id,
             nome: via.nome,
@@ -132,9 +134,10 @@ export class ViaAdapter {
                 autor: croqui.autor,
                 descricao: croqui.descricao
             })) as CroquiDTO[],
-            montanha: via.id_montanha ? {
-                id: via.id_montanha
-            } as MontanhaDTO : undefined,
+            montanha: {
+                id: via.montanha
+            } as MontanhaDTO,
+
             grau: via.grau,
             crux: via.crux,
             artificial: via.artificial,

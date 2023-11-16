@@ -12,10 +12,11 @@ import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
     private adapter: ViaAdapter;
+    private montanhaAdapter: MontanhaAdapter;
 
     constructor(store: DocumentStore) {
         this.adapter = new ViaAdapter();
-
+        this.montanhaAdapter = new MontanhaAdapter();
     }
 
     async getMontanhaById(id_montanha: number): Promise<Montanha> {
@@ -26,10 +27,10 @@ export class ViaRepository {
                 throw new Error('Montanha não encontrada');
             }
             // Assegura que o objeto é do tipo Montanha antes de passar para o adaptador
-            const montanhaDocument = documents[0] as MontanhaDocument;
-            return MontanhaAdapter.fromRavenDBDocument(montanhaDocument);
+            const montanha = documents[0] as Montanha;
+            return montanha;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -44,7 +45,7 @@ export class ViaRepository {
             const faceDocument = documents[0] as Face;
             return faceDocument;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -59,7 +60,7 @@ export class ViaRepository {
             const fonteDocument = documents[0] as Fonte;
             return fonteDocument;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -69,7 +70,7 @@ export class ViaRepository {
             await session.store(via);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -79,7 +80,7 @@ export class ViaRepository {
             await session.store(via);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -92,9 +93,9 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => this.adapter.fromRavenDBDocument(viaDocument));
+            return viaDocuments.map(viaDocument => this.adapter.fromDocument(viaDocument));
         } finally {
-            await session.dispose();
+            session.dispose();
         }
 
     }
@@ -108,9 +109,10 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
-            return this.adapter.fromRavenDBDocument(viaDocument);
+            return this.adapter.fromDocument(viaDocument);
+
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
@@ -126,8 +128,25 @@ export class ViaRepository {
             await session.delete(viaDocument);
             await session.saveChanges();
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
+
+    async getMontanhas(): Promise<Montanha[]> {
+        const session = store.openSession();
+        try {
+            const documents = await session.query({collection: 'Montanhas'}).all();
+            if (documents.length === 0) {
+                throw new Error('Nenhuma montanha encontrada');
+            }
+            // Assegura que todos os objetos são do tipo Montanha antes de passar para o adaptador
+            const montanhaDocuments = documents as MontanhaDocument[];
+            return montanhaDocuments.map(montanhaDocument => this.montanhaAdapter.fromDocument(montanhaDocument));
+        } finally {
+            session.dispose();
+        }
+    }
+
+
 
 }
