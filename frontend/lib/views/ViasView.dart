@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/widgets/ViaCard.dart';
 
-class PageVias extends StatelessWidget {
+class ViasView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(

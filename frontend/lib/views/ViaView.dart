@@ -1,15 +1,15 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
-import 'package:frontend/views/TelaListagemVias.dart';
+import 'package:frontend/views/ListagemViasView.dart';
 
-class PageVia extends StatelessWidget {
+class ViaView extends StatelessWidget {
   final String nome;
   final String grau;
   final String montanha;
   final String image =
       'https://images.squarespace-cdn.com/content/v1/598b7343f7e0abaa677c5fd8/1576953784201-VT0GE0GJTZR6OYRNAN33/escalada-rio-de-janeiro-morro-da-urca-face-norte-2.jpg?format=2500w';
 
-  const PageVia({
+  const ViaView({
     required this.nome,
     required this.grau,
     required this.montanha,
@@ -50,7 +50,7 @@ class PageVia extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          ListagemVias()), // Substitua 'NovaPagina' pelo nome da sua nova página
+                          ListagemViasView()), // Substitua 'NovaPagina' pelo nome da sua nova página
                 );
               },
               child: Container(

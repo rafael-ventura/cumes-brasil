@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/PageConfig.dart';
-import 'package:frontend/views/PageFavoritos.dart';
-import 'package:frontend/views/PageHome.dart';
-import 'package:frontend/views/PageVias.dart';
+import 'package:frontend/views/ConfigView.dart';
+import 'package:frontend/views/PerfilView.dart';
+import 'package:frontend/views/FavoritosView.dart';
+import 'package:frontend/views/HomeView.dart';
+import 'package:frontend/views/ViasView.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -29,10 +30,10 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
   final List<Widget> _children = [
-    PageHome(),
-    PageVias(),
-    PageFavoritos(),
-    PageConfig(),
+    HomeView(),
+    ViasView(),
+    FavoritosView(),
+    PerfilView(),
   ];
 
   void _onItemTapped(int index) {
@@ -60,8 +61,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mobile_friendly),
-            label: 'Concluidas',
+            icon: Icon(Icons.star),
+            label: 'Favoritas',
             backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(

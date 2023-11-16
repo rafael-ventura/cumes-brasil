@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/TelaListagemVias.dart';
+import 'package:frontend/views/ListagemViasView.dart';
 
-class PageHome extends StatelessWidget {
+class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,7 +14,7 @@ class PageHome extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ListagemVias()), // Substitua 'NovaPagina' pelo nome da sua nova página
+                    ListagemViasView()), // Substitua 'NovaPagina' pelo nome da sua nova página
           );
         },
         child: Container(

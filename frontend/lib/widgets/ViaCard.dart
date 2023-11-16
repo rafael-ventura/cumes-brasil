@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/views/PageVia.dart';
+import 'package:frontend/views/ViaView.dart';
 
 class ViaCard extends StatelessWidget {
   final String nome;
@@ -30,7 +30,7 @@ class ViaCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PageVia(
+                  builder: (context) => ViaView(
                         grau: grau,
                         montanha: montanha,
                         nome: nome,
