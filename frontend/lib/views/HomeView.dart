@@ -20,7 +20,7 @@ class HomeView extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: Colors.green),
+              borderRadius: BorderRadius.circular(10), color: Colors.red),
           child: Text(
             "Listagem de Vias",
             style: TextStyle(

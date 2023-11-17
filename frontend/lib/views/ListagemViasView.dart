@@ -20,7 +20,8 @@ class _ListagemViasState extends State<ListagemViasView> {
 
   Future<void> metodo() async {
     try {
-      List<ViaModel> fetchedVias = await viaController.getAll();
+      List<ViaModel> fetchedVias =
+          viaController.mockVias(); // Usando mockVias em vez de getAll()
       setState(() {
         vias = fetchedVias;
       });
@@ -29,11 +30,24 @@ class _ListagemViasState extends State<ListagemViasView> {
     }
   }
 
+  Future<void> metodo2() async {
+    try {
+      List<ViaModel> fetchedVias = await viaController.getMontanha(
+          'NomeMontanha'); // Substitua 'NomeMontanha' pelo nome da montanha desejada
+      setState(() {
+        vias = fetchedVias;
+      });
+    } catch (error) {
+      print('Erro ao buscar vias por montanha: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Listagem de Vias'),
+        backgroundColor: Colors.red,
       ),
       body: ListView.builder(
         itemCount: vias.length,

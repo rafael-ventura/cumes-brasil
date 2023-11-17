@@ -39,6 +39,32 @@ class UserController {
     }
   }
 
+  Future<UserModel> getUserById(String userId) async {
+    try {
+      final response = await http.get(baseUri.replace(path: 'getUser/$userId'));
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(json.decode(response.body));
+      } else {
+        throw Exception(
+            'Erro ao obter informações do usuário: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Erro de conexão: $error');
+    }
+  }
+
+  // Método para criar um usuário mockado
+  UserModel createMockUser() {
+    return UserModel(
+      id: 'usuario/U-1',
+      nome: 'Usuário Mockado',
+      email: 'mock@example.com',
+      colecoes: [],
+      historico: [],
+      favoritos: [],
+    );
+  }
+
   Future<List<UserModel>> getFavoritos(UserModel dynamic) async {
     try {
       final response = await http.get(baseUri.replace(path: 'favoritos'));

@@ -1,5 +1,5 @@
 class ViaModel {
-  int id;
+  String id;
   String nome;
   String? grau;
   String? crux;
