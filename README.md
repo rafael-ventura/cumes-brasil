@@ -1,7 +1,7 @@
 <h1 align="center">
     <img alt="Cumes Brasil Logo" src="logo.png" width="200px" />
     <br>
-    🏞️ Cumes Brasil 🧗‍♂️
+    🏞️ Cumes Brasil🧗‍♂️
 </h1>
 
 <p align="center">
@@ -61,6 +61,7 @@ Expressamos nossa profunda gratidão a esses contribuidores por permitirem o uso
 Clique nos links acima para acessar os respectivos designs no Figma.
 
 ## 🤝 Contribua
+[![](https://opencollective.com/cume-brasil/contributors.svg?width=890&button=false)](https://github.com/rafael-ventura/cume-brasil/graphs/contributors)
 
 1. **Fork** o projeto.
 2. Crie sua **Feature Branch**: `git checkout -b minha-feature`
@@ -76,7 +77,9 @@ Pessoas que contribuíram no projeto Cumes Brasil:
 |:--------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------:|
 |                                       [Rafael Ventura](https://github.com/rafael-ventura)                                        |                 [Igor Costa](https://github.com/igordeo-costa)                  |
 
-
+![Foto do Participante 3](https://avatars.githubusercontent.com/u/88738275?v=4)
+|:--------------------------------------------------------------------------------------------------------------------------------:
+[Vitor Indio](https://github.com/vitorindio)
 ---
 
 

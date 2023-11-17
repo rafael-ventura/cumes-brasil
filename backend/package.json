@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node WebAPI/server.ts",
-    "build": "tsc"
+    "build": "tsc && echo 'Build concluido com sucesso!'"
   },
   "keywords": [],
   "author": "",

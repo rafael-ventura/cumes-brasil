@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PageFavoritos extends StatelessWidget {
+class FavoritosView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

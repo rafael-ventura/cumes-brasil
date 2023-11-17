@@ -7,11 +7,19 @@ export class ColecaoBase implements IColecaoBase {
     descricao: string;
     private _vias: Via[];
 
-    constructor(nome: string, descricao: string, vias: Via[] = []) {
+    constructor(nome: string = '', descricao: string = '', vias: Via[] = []) {
         this.id = this.generateId();
-        this.nome = nome;
+        this.nome = nome || '';
         this.descricao = descricao;
         this._vias = vias;
+    }
+
+    get quantidadeVias(): number {
+        return this._vias.length;
+    }
+
+    descricaoMethod(descricao: string) {
+         this.descricao = descricao;
     }
 
     get vias(): Via[] {

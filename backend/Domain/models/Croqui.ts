@@ -9,21 +9,19 @@ export class Croqui implements ICroqui {
     id: number;
     imagemUrl: string;
     autor: string;
-    descricao: string;
-    vias: Via[];
+    descricao?: string | null | undefined;
+
 
     constructor(
         id: number,
         imagemUrl: string,
         autor: string,
-        descricao: string,
+        descricao?: string | null | undefined
     ) {
         this.id = id;
         this.autor = autor;
         this.imagemUrl = imagemUrl;
         this.descricao = descricao;
-        this.vias = [];
-        this.vias.map(via => via.associarCroqui(this));
     }
 
     /**
@@ -55,18 +53,12 @@ export class Croqui implements ICroqui {
      * @param via
      * @returns void
      */
-    adicionarVia(via: Via): void {
-        this.vias.push(via);
-    }
 
     /**
      * Método para remover uma Via do Croqui.
      * @param via
      * @returns void
      */
-    getVias(): Via[] {
-        return this.vias;
-    }
 
 
     toString(): string {

@@ -3,30 +3,35 @@
  * Deve refletir todos os atributos e métodos públicos da classe Via.
  */
 import {Croqui} from "../../models/Croqui";
+import {IMontanha} from "./IMontanha";
 
 export interface IVia {
     id: number;
-    nome: string;
-    id_montanha: number;
-    croquis: Croqui[];
+    nome?: string | null | undefined;
+    croquis?: Croqui[] | null | undefined;
+    montanha?: number | null | undefined;
     grau?: string | null | undefined;
     crux?: string | null | undefined;
-    artificial?: boolean | null | undefined;
-    duracao?: number | null | undefined;
+    artificial?: string | null | undefined;
+    duracao?: string | null | undefined;
     exposicao?: string | null | undefined;
     extensao?: number | null | undefined;
     conquistadores?: string[] | null | undefined;
+    detalhes?: string | null | undefined;
     data?: Date | null | undefined;
     id_face?: number | null | undefined;
     id_fonte?: number | null | undefined;
-    id_variante?: number | null | undefined;
+    id_viaPrincipal?: number | null | undefined;
 
-    getId(): number;
-    getNome(): string;
-    isArtificial(): boolean;
+    getId(): number | null | undefined;
+
+    getNome(): string | null | undefined;
+
+    isArtificial(): boolean | null | undefined;
+
     associarCroqui(croqui: Croqui): void;
-    toString(): string;
 
+    toString(): string;
 
 
 }
