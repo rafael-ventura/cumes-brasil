@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/views/PerfilView.dart';
 import 'package:frontend/views/SobreView.dart';
-import 'CriarContaView.dart';
-import 'LoginUserView.dart';
+import 'package:frontend/views/CriarContaView.dart';
+import 'package:frontend/views/LoginUserView.dart';
 
 class ConfigView extends StatelessWidget {
   @override
