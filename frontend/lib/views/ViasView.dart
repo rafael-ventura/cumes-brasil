@@ -74,7 +74,7 @@ class _ListagemViasState extends State<ViasView> {
               controller: _searchController,
               onChanged: _performSearch,
               decoration: InputDecoration(
-                labelText: 'Pesquisar Montanha',
+                labelText: 'Pesquisar',
                 prefixIcon: Icon(Icons.search),
               ),
             ),

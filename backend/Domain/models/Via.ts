@@ -66,7 +66,7 @@ export class Via implements IVia {
         this.id = id;
         this.nome = nome;
         this.croquis = croquis;
-        if (montanha) this.id_montanha = montanha;
+        if (montanha) this.montanha = montanha;
         if (grau) this.grau = grau;
         if (crux) this.crux = crux;
         if (artificial) this.artificial = artificial;

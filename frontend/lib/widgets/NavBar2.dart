@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ConfigView.dart';
-import 'package:frontend/views/PerfilView.dart';
-import 'package:frontend/views/FavoritosView.dart';
-import 'package:frontend/views/HomeView.dart';
-import 'package:frontend/views/ViasView.dart';
+import 'dart:convert';
+import '../views/ConfigView.dart';
+import '../views/PerfilView.dart';
+import '../views/FavoritosView.dart';
+import '../views/HomeView.dart';
+import '../views/ViasView.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
