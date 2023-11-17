@@ -102,6 +102,7 @@ export class ViaRepository {
 
     async getViaById(id: any): Promise<Via> {
         const session = store.openSession();
+        console.log("chamando a porra do db")
         try {
             const documents = await session.query({collection: 'Vias'}).whereEquals('Id', id).all();
             if (documents.length === 0) {
@@ -111,7 +112,11 @@ export class ViaRepository {
             const viaDocument = documents[0] as ViaDocument;
             return this.adapter.fromDocument(viaDocument);
 
-        } finally {
+        } catch (err) {
+            console.log(err)
+        }
+
+        finally {
             session.dispose();
         }
     }
