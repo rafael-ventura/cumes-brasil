@@ -79,12 +79,32 @@ class ViaModel {
   }
 
   factory ViaModel.fromJson(Map<String, dynamic> json) {
-    // Implemente a lógica para converter o JSON em uma instância de ViaModel
-    // Exemplo:
     return ViaModel(
       id: json['id'],
       nome: json['nome'],
-      // ... outros campos
+      grau: json['grau'],
+      crux: json['crux'],
+      artificial: json['artificial'],
+      duracao: json['duracao'],
+      exposicao: json['exposicao'],
+      extensao:
+          json['extensao']?.toDouble(), // Convertendo para double, se existir
+      conquistadores: json['conquistadores'] != null
+          ? List<String>.from(json['conquistadores'])
+          : null,
+      detalhes: json['detalhes'],
+      data: json['data'] != null ? DateTime.parse(json['data']) : null,
+      montanha: json['montanha'] != null
+          ? MontanhaModel.fromJson(json['montanha'])
+          : null,
+      face: json['face'] != null ? FaceModel.fromJson(json['face']) : null,
+      fonte: json['fonte'] != null ? FonteModel.fromJson(json['fonte']) : null,
+      croquis: json['croquis'] != null
+          ? (json['croquis'] as List<dynamic>)
+              .map((croqui) => CroquiModel.fromJson(croqui))
+              .toList()
+          : null,
+      idViaPrincipal: json['idViaPrincipal'],
     );
   }
 }
@@ -125,11 +145,13 @@ class MontanhaModel {
 
   factory MontanhaModel.fromJson(Map<String, dynamic> json) {
     return MontanhaModel(
-        id: json['id'],
-        nome: json['nome'],
-        localizacao: json['localizacao'],
-        altura: json['altura'],
-        imagemUrl: json['imagem']);
+      id: json['id'],
+      nome: json['nome'],
+      localizacao: json['localizacao'],
+      altura: json['altura']?.toDouble() ??
+          0.0, // Convertendo para double, se existir
+      imagemUrl: json['imagemUrl'],
+    );
   }
 }
 

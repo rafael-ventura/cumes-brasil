@@ -22,8 +22,7 @@ class _ListagemViasState extends State<ViasView> {
 
   Future<void> metodo() async {
     try {
-      List<ViaModel> fetchedVias =
-          viaController.mockVias(); // Usando mockVias em vez de getAll()
+      List<ViaModel> fetchedVias = await viaController.getViasFromJsonFile();
       setState(() {
         vias = fetchedVias;
         viasFiltradas = vias;
