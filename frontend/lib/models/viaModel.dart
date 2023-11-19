@@ -94,13 +94,14 @@ class MontanhaModel {
   String nome;
   String localizacao;
   double altura;
+  String? imagemUrl;
 
-  MontanhaModel({
-    this.id,
-    required this.nome,
-    required this.localizacao,
-    required this.altura,
-  });
+  MontanhaModel(
+      {this.id,
+      required this.nome,
+      required this.localizacao,
+      required this.altura,
+      this.imagemUrl});
 
   Map<String, dynamic> toMap() {
     return {
@@ -108,6 +109,7 @@ class MontanhaModel {
       'nome': nome,
       'localizacao': localizacao,
       'altura': altura,
+      'imagemUrl': imagemUrl,
     };
   }
 
@@ -117,16 +119,17 @@ class MontanhaModel {
       'nome': nome,
       'localizacao': localizacao,
       'altura': altura,
+      'imagemUrl': imagemUrl
     };
   }
 
   factory MontanhaModel.fromJson(Map<String, dynamic> json) {
     return MontanhaModel(
-      id: json['id'],
-      nome: json['nome'],
-      localizacao: json['localizacao'],
-      altura: json['altura'],
-    );
+        id: json['id'],
+        nome: json['nome'],
+        localizacao: json['localizacao'],
+        altura: json['altura'],
+        imagemUrl: json['imagem']);
   }
 }
 

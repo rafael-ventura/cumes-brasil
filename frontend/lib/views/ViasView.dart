@@ -33,19 +33,6 @@ class _ListagemViasState extends State<ViasView> {
     }
   }
 
-  Future<void> metodo2() async {
-    try {
-      List<ViaModel> fetchedVias = await viaController.getMontanha(
-          'NomeMontanha'); // Substitua 'NomeMontanha' pelo nome da montanha desejada
-      setState(() {
-        vias = fetchedVias;
-        viasFiltradas = vias;
-      });
-    } catch (error) {
-      print('Erro ao buscar vias por montanha: $error');
-    }
-  }
-
   void _performSearch(String query) {
     List<ViaModel> searchResults = [];
     if (query.isNotEmpty) {
@@ -74,7 +61,7 @@ class _ListagemViasState extends State<ViasView> {
               controller: _searchController,
               onChanged: _performSearch,
               decoration: InputDecoration(
-                labelText: 'Pesquisar',
+                labelText: 'Pesquisar (Via, Montanha, Grau)',
                 prefixIcon: Icon(Icons.search),
               ),
             ),
@@ -89,9 +76,7 @@ class _ListagemViasState extends State<ViasView> {
                     // Navegue para uma página de detalhes aqui.
                   },
                   child: ViaCard(
-                    nome: via.nome ?? 'Nome não disponível',
-                    grau: via.grau ?? 'Grau não disponível',
-                    montanha: via.montanha?.nome ?? 'Montanha não disponível',
+                    viaModel: via,
                   ),
                 );
               },

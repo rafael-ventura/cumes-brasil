@@ -1,18 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/models/viaModel.dart';
 import 'package:frontend/views/ViaView.dart';
 
 class ViaCard extends StatelessWidget {
-  final String nome;
-  final String grau;
-  final String montanha;
+  final ViaModel viaModel;
   final String image =
-      'https://images.squarespace-cdn.com/content/v1/598b7343f7e0abaa677c5fd8/1576953784201-VT0GE0GJTZR6OYRNAN33/escalada-rio-de-janeiro-morro-da-urca-face-norte-2.jpg?format=2500w';
+      'https://i.pinimg.com/736x/cb/64/a3/cb64a38f4bb6a06a9e4b27998fcfae00.jpg';
 
   ViaCard({
-    required this.nome,
-    required this.grau,
-    required this.montanha,
+    required this.viaModel,
   });
 
   @override
@@ -31,9 +30,7 @@ class ViaCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => ViaView(
-                        grau: grau,
-                        montanha: montanha,
-                        nome: nome,
+                        viaModel: viaModel,
                       )), // Substitua 'NovaPagina' pelo nome da sua nova página
             );
           },
@@ -42,9 +39,12 @@ class ViaCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), color: Colors.green),
             child: Row(children: [
               Container(
-                child: Image.network(image, fit: BoxFit.contain),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(30.0)),
+                child: Image.network((viaModel.montanha?.imagemUrl ?? image),
+                    fit: BoxFit.contain),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                width: 180,
               ),
               Container(
                 width: 20,
@@ -54,7 +54,7 @@ class ViaCard extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        nome,
+                        viaModel.nome,
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -62,7 +62,8 @@ class ViaCard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      child: Text('$grau - $montanha',
+                      child: Text(
+                          '${viaModel.grau} - ${viaModel.montanha?.nome ?? "Não possui nome de montanha"}',
                           style: TextStyle(
                             fontSize: 18,
                           )),

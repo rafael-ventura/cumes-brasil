@@ -1,99 +1,152 @@
 // lib/widgets/via_card.dart
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../views/ListagemViasView.dart';
+import '../models/viaModel.dart';
 
 class ViaView extends StatelessWidget {
-  final String nome;
-  final String grau;
-  final String montanha;
+  final ViaModel viaModel;
   final String image =
       'https://images.squarespace-cdn.com/content/v1/598b7343f7e0abaa677c5fd8/1576953784201-VT0GE0GJTZR6OYRNAN33/escalada-rio-de-janeiro-morro-da-urca-face-norte-2.jpg?format=2500w';
 
   const ViaView({
-    required this.nome,
-    required this.grau,
-    required this.montanha,
+    required this.viaModel,
   });
 
-  // This widget is the root of your application.
+  Widget buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget buildSectionContent(String content) {
+    return Text(
+      content,
+      style: TextStyle(fontSize: 16),
+    );
+  }
+
+  Widget buildConquistadoresList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildSectionTitle('Conquistadores:'),
+        SizedBox(height: 8),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: viaModel.conquistadores!.length,
+          itemBuilder: (context, index) {
+            return Text('- ${viaModel.conquistadores![index]}',
+                style: TextStyle(fontSize: 16));
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 10,
-        backgroundColor: Colors.green,
-        title: Text(
-          '$nome',
-          selectionColor: Colors.green,
+        appBar: AppBar(
+          titleSpacing: 10,
+          backgroundColor: Colors.green,
+          title: Text(
+            '${viaModel.nome}',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: Colors.amber,
-            child: Text('Nome: $nome'),
-          ),
-          Container(
-            color: Colors.amber,
-            child: Text('Grau: $grau'),
-          ),
-          Container(
-            color: Colors.amber,
-            child: Text('Montanha: $montanha'),
-          ),
-          Container(
-            color: Colors.pink,
-            child: InkWell(
-              onTap: () {
-                // Navegue para a outra página aqui
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ListagemViasView()), // Substitua 'NovaPagina' pelo nome da sua nova página
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.green),
-                child: Row(children: [
-                  Container(
-                    child: Image.network(
-                      image,
-                      width: 10,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.0)),
-                  ),
-                  Container(
-                    width: 20,
-                  ),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          child: Text(
-                            nome,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+        body: SingleChildScrollView(
+            child: Column(
+          children: [
+            Container(
+              width: min(400, 600),
+              child: Image.network((viaModel.montanha?.imagemUrl ?? image),
+                  fit: BoxFit.contain),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildSectionTitle('Montanha:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.montanha?.nome ?? "Sem Nome"}'),
+                          SizedBox(height: 16), SizedBox(height: 16),
+                          buildSectionTitle('Detalhes:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.detalhes ?? "Sem Detalhes"}'),
+                          SizedBox(height: 16),
+                          if (viaModel.data != null)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildSectionTitle('Data:'),
+                                SizedBox(height: 8),
+                                buildSectionContent(
+                                    '${viaModel.data!.toLocal()}'),
+                              ],
                             ),
-                          ),
-                        ),
-                        Container(
-                          child: Text('$grau - $montanha',
-                              style: TextStyle(
-                                fontSize: 18,
-                              )),
-                        ),
-                      ]),
-                ]),
+                          // Adicione mais widgets conforme necessário para outros atributos
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildSectionTitle('Grau:'),
+                          SizedBox(height: 8),
+                          buildSectionContent('${viaModel.grau ?? "Sem Grau"}'),
+                          SizedBox(height: 8),
+                          buildSectionTitle('Artificial:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.artificial ?? "Não"}'),
+                          buildSectionTitle('Altura:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.montanha?.altura ?? "Sem Montanha"}'),
+                          SizedBox(height: 8),
+                          buildSectionTitle('Duração:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.duracao ?? "Sem Duração"}'),
+                          SizedBox(height: 8),
+                          buildSectionTitle('Exposição:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.exposicao ?? "Sem Exposição"}'),
+                          SizedBox(height: 8),
+                          buildSectionTitle('Extensão:'),
+                          SizedBox(height: 8),
+                          buildSectionContent(
+                              '${viaModel.extensao ?? "Sem Extensão"}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      // Adicione a lógica para lidar com o clique em crux
+                    },
+                    child: buildSectionTitle('Crux:'),
+                  ),
+                  SizedBox(height: 8),
+                  buildConquistadoresList(),
+                ],
               ),
             ),
-          )
-        ],
-      ),
-    );
+          ],
+        )));
   }
 }

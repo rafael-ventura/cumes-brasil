@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/views/ListagemViasView.dart';
+import 'package:frontend/widgets/ListagemNewPageView.dart';
 
 class HomeView extends StatelessWidget {
   @override
@@ -12,9 +13,7 @@ class HomeView extends StatelessWidget {
           // Navegue para a outra página aqui
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ListagemViasView()), // Substitua 'NovaPagina' pelo nome da sua nova página
+            MaterialPageRoute(builder: (context) => ListagemNewPageView()),
           );
         },
         child: Container(

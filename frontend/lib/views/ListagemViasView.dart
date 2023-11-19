@@ -11,6 +11,8 @@ class ListagemViasView extends StatefulWidget {
 class _ListagemViasState extends State<ListagemViasView> {
   List<ViaModel> vias = [];
   ViaController viaController = ViaController();
+  List<ViaModel> viasFiltradas = [];
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _ListagemViasState extends State<ListagemViasView> {
           viaController.mockVias(); // Usando mockVias em vez de getAll()
       setState(() {
         vias = fetchedVias;
+        viasFiltradas = vias;
       });
     } catch (error) {
       print('Erro ao buscar vias: $error');
@@ -42,28 +45,56 @@ class _ListagemViasState extends State<ListagemViasView> {
     }
   }
 
+  void _performSearch(String query) {
+    List<ViaModel> searchResults = [];
+    if (query.isNotEmpty) {
+      searchResults = vias
+          .where((via) =>
+              via.nome.toLowerCase().contains(query.toLowerCase()) ||
+              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
+              via.montanha!.nome.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    } else {
+      searchResults = List.from(vias);
+    }
+    setState(() {
+      viasFiltradas = searchResults;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Listagem de Vias'),
-        backgroundColor: Colors.red,
-      ),
-      body: ListView.builder(
-        itemCount: vias.length,
-        itemBuilder: (context, index) {
-          final via = vias[index];
-          return InkWell(
-            onTap: () {
-              // Você pode navegar para uma página de detalhes aqui.
-            },
-            child: ViaCard(
-              nome: via.nome ?? 'Nome não disponível',
-              grau: via.grau ?? 'Grau não disponível',
-              montanha: via.montanha?.nome ?? 'Montanha não disponível',
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _performSearch,
+              decoration: InputDecoration(
+                labelText: 'Pesquisar (Via, Montanha, Grau)',
+                prefixIcon: Icon(Icons.search),
+              ),
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: viasFiltradas.length,
+              itemBuilder: (context, index) {
+                final via = viasFiltradas[index];
+                return InkWell(
+                  onTap: () {
+                    // Navegue para uma página de detalhes aqui.
+                  },
+                  child: ViaCard(
+                    viaModel: via,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
