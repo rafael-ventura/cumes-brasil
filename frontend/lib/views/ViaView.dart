@@ -62,8 +62,7 @@ class ViaView extends StatelessWidget {
           children: [
             Container(
               width: min(400, 600),
-              child: Image.network((viaModel.montanha?.imagemUrl ?? image),
-                  fit: BoxFit.contain),
+              child: Image.network((image), fit: BoxFit.contain),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
@@ -80,7 +79,7 @@ class ViaView extends StatelessWidget {
                           buildSectionTitle('Montanha:'),
                           SizedBox(height: 8),
                           buildSectionContent(
-                              '${viaModel.montanha?.nome ?? "Sem Nome"}'),
+                              '${"Sem Nome || nome da montanha deve ficar aqui!"}'),
                           SizedBox(height: 16), SizedBox(height: 16),
                           buildSectionTitle('Detalhes:'),
                           SizedBox(height: 8),
@@ -114,7 +113,7 @@ class ViaView extends StatelessWidget {
                           buildSectionTitle('Altura:'),
                           SizedBox(height: 8),
                           buildSectionContent(
-                              '${viaModel.montanha?.altura ?? "Sem Montanha"}'),
+                              '${"Sem Montanha altura da Montanha"}'),
                           SizedBox(height: 8),
                           buildSectionTitle('Duração:'),
                           SizedBox(height: 8),

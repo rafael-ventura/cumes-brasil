@@ -52,8 +52,7 @@ class _ListagemViasState extends State<ListagemViasView> {
       searchResults = vias
           .where((via) =>
               via.nome.toLowerCase().contains(query.toLowerCase()) ||
-              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
-              via.montanha!.nome.toLowerCase().contains(query.toLowerCase()))
+              via.grau!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else {
       searchResults = List.from(vias);

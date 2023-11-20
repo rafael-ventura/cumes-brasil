@@ -10,8 +10,8 @@ class ViaModel {
   List<String>? conquistadores;
   String? detalhes;
   DateTime? data;
-  MontanhaModel? montanha;
-  FaceModel? face;
+  int? montanha;
+  int? face;
   FonteModel? fonte;
   List<CroquiModel>? croquis;
   int? viaPrincipal;
@@ -49,8 +49,8 @@ class ViaModel {
       'detalhes': detalhes,
       'data': data
           ?.toIso8601String(), // Converte a data para String no formato ISO 8601
-      'montanha': montanha?.toMap(),
-      'face': face?.toMap(),
+      'montanha': montanha,
+      'face': face,
       'fonte': fonte?.toMap(),
       'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
       'idViaPrincipal': viaPrincipal,
@@ -70,8 +70,8 @@ class ViaModel {
       'conquistadores': conquistadores,
       'detalhes': detalhes,
       'data': data?.toIso8601String(),
-      'montanha': montanha?.toJson(),
-      'face': face?.toJson(),
+      'montanha': montanha,
+      'face': face,
       'fonte': fonte?.toJson(),
       'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
       'idViaPrincipal': viaPrincipal,
@@ -93,11 +93,8 @@ class ViaModel {
           : null,
       detalhes: json['detalhes'],
       data: json['data'] != null ? DateTime.parse(json['data']) : null,
-      montanha: json['montanha'] != null
-          ? MontanhaModel.fromJson(json['montanha'])
-          : null, // Mapear corretamente o campo montanha
-      face:
-          json['id_face'] != null ? FaceModel.fromJson(json['id_face']) : null,
+      montanha: json['montanha'], // Mapear corretamente o campo montanha
+      face: json['id_face'],
       fonte: json['id_fonte'] != null
           ? FonteModel.fromJson(json['id_fonte'])
           : null,
