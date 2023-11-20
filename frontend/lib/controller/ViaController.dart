@@ -40,7 +40,6 @@ class ViaController {
   Future<List<ViaModel>> getAll() async {
     try {
       final response = await http.get(Uri.http('localhost:4000', '/api/vias'));
-      print(response.body);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         final List<ViaModel> vias =
@@ -57,7 +56,6 @@ class ViaController {
   Future<List<ViaModel>> getViasFromJsonFile() async {
     try {
       String data = await rootBundle.loadString('assets/vias_data.json');
-
       List<dynamic> viasJson = json.decode(data);
       List<ViaModel> vias = viasJson
           .map((json) => ViaModel.fromJson(json.cast<String, dynamic>()))

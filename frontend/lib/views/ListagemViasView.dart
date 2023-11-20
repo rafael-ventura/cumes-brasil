@@ -36,7 +36,6 @@ class _ListagemViasState extends State<ListagemViasView> {
   Future<void> getAllVia() async {
     try {
       List<ViaModel> listaVias = await viaController.getAll();
-      print(listaVias);
       setState(() {
         vias = listaVias;
         viasFiltradas = vias;
