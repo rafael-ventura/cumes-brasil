@@ -1,9 +1,9 @@
 [
   {
-    "id": "via/V-1",
+    "id": 1,"grau": "5.10a","crux": "Crux 1",
     "nome": "Via 1",
-    "grau": "5.10a",
-    "crux": "Crux 1",
+    
+    
     "artificial": "Sim",
     "duracao": "2 horas",
     "exposicao": "Alta",
@@ -12,6 +12,7 @@
     "detalhes": "Detalhes da Via 1",
     "data": "2023-11-19T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 1",
       "localizacao": "Local 1",
       "altura": 1000,
@@ -26,7 +27,7 @@
     "idViaPrincipal": 123
   },
   {
-    "id": "via/V-2",
+    "id": 2,
     "nome": "Via 2",
     "grau": "5.8",
     "crux": "Crux 2",
@@ -38,6 +39,7 @@
     "detalhes": "Detalhes da Via 2",
     "data": "2023-11-09T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 2",
       "localizacao": "Local 2",
       "altura": 200,
@@ -52,7 +54,7 @@
     "idViaPrincipal": 456
   },
   {
-    "id": "via/V-3",
+    "id": 3,
     "nome": "Via 3",
     "grau": "5.8",
     "crux": "Crux 3",
@@ -64,6 +66,7 @@
     "detalhes": "Detalhes da Via 3",
     "data": "2023-10-30T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 3",
       "localizacao": "Local 3",
       "altura": 400,
@@ -78,7 +81,7 @@
     "idViaPrincipal": 789
   },
   {
-    "id": "via/V-1",
+    "id": 113,
     "nome": "Via do Pico da Neblina",
     "grau": "5.11b",
     "crux": "Passagem Técnica da Via",
@@ -90,6 +93,7 @@
     "detalhes": "Uma das vias mais desafiadoras do Pico da Neblina.",
     "data": "2022-10-15T00:00:00.000Z",
     "montanha": {
+      "id": 1,
       "nome": "Pico da Neblina",
       "localizacao": "Amazonas, Brasil",
       "altura": 2994,
@@ -104,7 +108,7 @@
     "idViaPrincipal": 123
   },
   {
-    "id": "via/V-2",
+    "id": 114,
     "nome": "Caminho do Dedo de Deus",
     "grau": "5.9",
     "crux": "Travessia na Agulha",
@@ -116,6 +120,7 @@
     "detalhes": "Uma via clássica com vistas incríveis para o Vale do Paraíba.",
     "data": "2022-09-05T00:00:00.000Z",
     "montanha": {
+      "id": 1,
       "nome": "Dedo de Deus",
       "localizacao": "Rio de Janeiro, Brasil",
       "altura": 1692,
@@ -130,7 +135,7 @@
     "idViaPrincipal": 456
   },
   {
-    "id": "via/V-3",
+    "id": 115,
     "nome": "Rota da Pedra Bonita",
     "grau": "5.10c",
     "crux": "Paredão Vertical",
@@ -142,6 +147,7 @@
     "detalhes": "Uma via desafiadora com uma bela vista da cidade do Rio de Janeiro.",
     "data": "2022-08-20T00:00:00.000Z",
     "montanha": {
+      "id": 1,
       "nome": "Pedra Bonita",
       "localizacao": "Rio de Janeiro, Brasil",
       "altura": 693,
@@ -156,7 +162,7 @@
     "idViaPrincipal": 789
   },
   {
-    "id": "via/V-5",
+    "id": 116,
     "nome": "Via 5",
     "grau": "5.11c",
     "crux": "Crux 5",
@@ -168,6 +174,7 @@
     "detalhes": "Detalhes da Via 5",
     "data": "2023-11-04T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 4",
       "localizacao": "Local 4"
     },
@@ -180,7 +187,7 @@
     "idViaPrincipal": 101
   },
   {
-    "id": "via/V-6",
+    "id": 117,
     "nome": "Via 6",
     "grau": "5.9",
     "crux": "Crux 6",
@@ -192,6 +199,7 @@
     "detalhes": "Detalhes da Via 6",
     "data": "2023-10-25T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 5",
       "localizacao": "Local 5"
     },
@@ -204,7 +212,7 @@
     "idViaPrincipal": 202
   },
   {
-    "id": "via/V-7",
+    "id": 188,
     "nome": "Via 7",
     "grau": "5.12b",
     "crux": "Crux 7",
@@ -216,6 +224,7 @@
     "detalhes": "Detalhes da Via 7",
     "data": "2023-10-20T12:34:56.789Z",
     "montanha": {
+      "id": 1,
       "nome": "Montanha 6",
       "localizacao": "Local 6"
     },

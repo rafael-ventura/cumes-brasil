@@ -1,7 +1,8 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ConfigView.dart';
+import 'package:frontend/views/PerfilView.dart';
 import 'package:frontend/controller/UserController.dart';
+import 'package:frontend/views/PerfilDetalhesView.dart';
 
 class CriarContaView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -50,7 +51,7 @@ class CriarContaView extends StatelessWidget {
 
         // Se a chamada for bem-sucedida, você pode navegar para outra tela, por exemplo
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ConfigView()),
+          MaterialPageRoute(builder: (context) => PerfilDetalhesView()),
         );
       } catch (error) {
         // Trate erros, se necessário

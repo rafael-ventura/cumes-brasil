@@ -24,11 +24,11 @@ class ViaController {
     }
   }
 
-  Future<List<ViaModel>> getById(int id) async {
+  Future<ViaModel> getById(int id) async {
     try {
       final response = await http.get(baseUri.replace(path: '$id'));
       if (response.statusCode == 200) {
-        return List<ViaModel>.from(json.decode(response.body));
+        return ViaModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Erro ao buscar vias: ${response.statusCode}');
       }
@@ -39,9 +39,13 @@ class ViaController {
 
   Future<List<ViaModel>> getAll() async {
     try {
-      final response = await http.get(baseUri);
+      final response = await http.get(Uri.http('localhost:4000', '/api/vias'));
+      print(response.body);
       if (response.statusCode == 200) {
-        return List<ViaModel>.from(json.decode(response.body));
+        final List<dynamic> responseData = json.decode(response.body);
+        final List<ViaModel> vias =
+            responseData.map((viaJson) => ViaModel.fromJson(viaJson)).toList();
+        return vias;
       } else {
         throw Exception('Erro ao buscar vias: ${response.statusCode}');
       }
@@ -50,7 +54,20 @@ class ViaController {
     }
   }
 
-  // busca as vias que tenham a montanha pesquisada
+  Future<List<ViaModel>> getViasFromJsonFile() async {
+    try {
+      String data = await rootBundle.loadString('assets/vias_data.json');
+
+      List<dynamic> viasJson = json.decode(data);
+      List<ViaModel> vias = viasJson
+          .map((json) => ViaModel.fromJson(json.cast<String, dynamic>()))
+          .toList(); // Converte o JSON para ViaModel usando o construtor fromJson
+      return vias;
+    } catch (error) {
+      throw Exception('Erro ao carregar vias do arquivo JSON: $error');
+    }
+  }
+
   Future<List<ViaModel>> getMontanha(String nomeMontanha) async {
     try {
       final response = await http
@@ -63,19 +80,6 @@ class ViaController {
       }
     } catch (error) {
       throw Exception('Erro de conexão: $error');
-    }
-  }
-
-  Future<List<ViaModel>> getViasFromJsonFile() async {
-    try {
-      String data = await rootBundle.loadString('assets/vias_data.json');
-      List<dynamic> viasJson = json.decode(data);
-      List<ViaModel> vias = viasJson
-          .map((json) => ViaModel.fromJson(json.cast<String, dynamic>()))
-          .toList(); // Converte o JSON para ViaModel usando o construtor fromJson
-      return vias;
-    } catch (error) {
-      throw Exception('Erro ao carregar vias do arquivo JSON: $error');
     }
   }
 }

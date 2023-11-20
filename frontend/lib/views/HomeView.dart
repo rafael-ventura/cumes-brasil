@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ListagemViasView.dart';
 import 'package:frontend/widgets/ListagemNewPageView.dart';
 
 class HomeView extends StatelessWidget {
@@ -10,9 +9,8 @@ class HomeView extends StatelessWidget {
       width: 400,
       child: InkWell(
         onTap: () {
-          // Navegue para a outra página aqui
-          Navigator.push(
-            context,
+          // Navegue para a outra página aqui usando o Navigator do contexto atual
+          Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => ListagemNewPageView()),
           );
         },

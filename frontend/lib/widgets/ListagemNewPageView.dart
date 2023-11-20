@@ -21,8 +21,7 @@ class _ListagemViasState extends State<ListagemNewPageView> {
 
   Future<void> metodo() async {
     try {
-      List<ViaModel> fetchedVias = await viaController
-          .getViasFromJsonFile(); // Usando mockVias em vez de getAll()
+      List<ViaModel> fetchedVias = await viaController.getViasFromJsonFile();
       setState(() {
         vias = fetchedVias;
       });
@@ -33,8 +32,8 @@ class _ListagemViasState extends State<ListagemNewPageView> {
 
   Future<void> metodo2() async {
     try {
-      List<ViaModel> fetchedVias = await viaController.getMontanha(
-          'NomeMontanha'); // Substitua 'NomeMontanha' pelo nome da montanha desejada
+      List<ViaModel> fetchedVias =
+          await viaController.getMontanha('NomeMontanha');
       setState(() {
         vias = fetchedVias;
       });
@@ -46,10 +45,11 @@ class _ListagemViasState extends State<ListagemNewPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Listagem de Vias'),
-          backgroundColor: Colors.red,
-        ),
-        body: ListagemViasView());
+      appBar: AppBar(
+        title: Text('Listagem New Page'),
+      ),
+      body:
+          ListagemViasView(), // Passando a lista de vias para a ListagemViasView
+    );
   }
 }

@@ -1,5 +1,5 @@
 class ViaModel {
-  String id;
+  int id;
   String nome;
   String? grau;
   String? crux;
@@ -14,7 +14,7 @@ class ViaModel {
   FaceModel? face;
   FonteModel? fonte;
   List<CroquiModel>? croquis;
-  int? idViaPrincipal;
+  int? viaPrincipal;
 
   ViaModel({
     required this.id,
@@ -32,7 +32,7 @@ class ViaModel {
     this.face,
     this.fonte,
     this.croquis,
-    this.idViaPrincipal,
+    this.viaPrincipal,
   });
 
   Map<String, dynamic> toMap() {
@@ -53,7 +53,7 @@ class ViaModel {
       'face': face?.toMap(),
       'fonte': fonte?.toMap(),
       'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
-      'idViaPrincipal': idViaPrincipal,
+      'idViaPrincipal': viaPrincipal,
     };
   }
 
@@ -74,7 +74,7 @@ class ViaModel {
       'face': face?.toJson(),
       'fonte': fonte?.toJson(),
       'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
-      'idViaPrincipal': idViaPrincipal,
+      'idViaPrincipal': viaPrincipal,
     };
   }
 
@@ -87,8 +87,7 @@ class ViaModel {
       artificial: json['artificial'],
       duracao: json['duracao'],
       exposicao: json['exposicao'],
-      extensao:
-          json['extensao']?.toDouble(), // Convertendo para double, se existir
+      extensao: json['extensao']?.toDouble(),
       conquistadores: json['conquistadores'] != null
           ? List<String>.from(json['conquistadores'])
           : null,
@@ -96,28 +95,31 @@ class ViaModel {
       data: json['data'] != null ? DateTime.parse(json['data']) : null,
       montanha: json['montanha'] != null
           ? MontanhaModel.fromJson(json['montanha'])
+          : null, // Mapear corretamente o campo montanha
+      face:
+          json['id_face'] != null ? FaceModel.fromJson(json['id_face']) : null,
+      fonte: json['id_fonte'] != null
+          ? FonteModel.fromJson(json['id_fonte'])
           : null,
-      face: json['face'] != null ? FaceModel.fromJson(json['face']) : null,
-      fonte: json['fonte'] != null ? FonteModel.fromJson(json['fonte']) : null,
       croquis: json['croquis'] != null
           ? (json['croquis'] as List<dynamic>)
               .map((croqui) => CroquiModel.fromJson(croqui))
               .toList()
           : null,
-      idViaPrincipal: json['idViaPrincipal'],
+      viaPrincipal: json['id_viaPrincipal'],
     );
   }
 }
 
 class MontanhaModel {
-  int? id;
+  int id;
   String nome;
   String localizacao;
   double altura;
   String? imagemUrl;
 
   MontanhaModel(
-      {this.id,
+      {required this.id,
       required this.nome,
       required this.localizacao,
       required this.altura,

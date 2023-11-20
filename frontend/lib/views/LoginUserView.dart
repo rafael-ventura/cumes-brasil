@@ -1,6 +1,7 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ConfigView.dart';
+import 'package:frontend/views/PerfilView.dart';
+import 'package:frontend/views/PerfilDetalhesView.dart';
 import '../controller/UserController.dart';
 
 class LoginUserView extends StatelessWidget {
@@ -29,7 +30,7 @@ class LoginUserView extends StatelessWidget {
         );
         // Se a chamada for bem-sucedida, navegar para outra tela
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ConfigView()),
+          MaterialPageRoute(builder: (context) => PerfilDetalhesView()),
         );
       } catch (error) {
         print('Erro ao logar usuário: $error');

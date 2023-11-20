@@ -25,13 +25,12 @@ class ViaCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            // Navegue para a outra página aqui
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ViaView(
                         viaModel: viaModel,
-                      )), // Substitua 'NovaPagina' pelo nome da sua nova página
+                      )),
             );
           },
           child: Container(

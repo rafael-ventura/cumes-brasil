@@ -1,63 +1,135 @@
 import 'package:flutter/material.dart';
-import '../controller/UserController.dart';
-import '../models/userModel.dart';
+import 'package:frontend/views/PerfilDetalhesView.dart';
+import 'package:frontend/views/SobreView.dart';
+import 'package:frontend/views/CriarContaView.dart';
+import 'package:frontend/views/LoginUserView.dart';
 
 class PerfilView extends StatelessWidget {
-// Id do usuário
-  final UserController _userController = UserController();
-
-  PerfilView();
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 10,
-        backgroundColor: Colors.amber[800],
-        title: Text(
-          'Meu Perfil',
-          selectionColor: Colors.green,
-        ),
-      ),
-      body: FutureBuilder<UserModel>(
-        future: Future.value(
-            _userController.createMockUser()), // Simulando um usuário logado
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // widget de carregamento
-          } else if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return Text('Usuário não encontrado');
-          } else {
-            UserModel user = snapshot.data!;
-            return Container(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    // imagem do perfil deve ficar aqui
-                    radius: 50,
-                    //backgroundImage: NetworkImage(user.imageUrl),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Nome: ${user.nome}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'E-mail: ${user.email}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  // Adicione mais informações conforme necessário
-                ],
+    return Container(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.amber[900],
+              borderRadius: BorderRadius.circular(100),
+              border: BoxBorder.lerp(Border.all(), Border.all(), 10)),
+          width: 150,
+          height: 150,
+          child: InkWell(
+            onTap: () {
+              // Navegue para a outra página aqui
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PerfilDetalhesView()), // Substitua 'NovaPagina' pelo nome da sua nova página
+              );
+            },
+            child: Container(
+                child: Center(
+              child: Text(
+                "Perfil",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            );
-          }
-        },
-      ),
-    );
+            )),
+          ),
+        ),
+        Container(
+            height: 300,
+            width: 400,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: BoxBorder.lerp(Border.all(), Border.all(), 10)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  child: InkWell(
+                    onTap: () {
+                      // Navegue para a outra página aqui
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CriarContaView()), // Substitua 'NovaPagina' pelo nome da sua nova página
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.amber[800]),
+                      child: Text(
+                        "Criar Conta",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  child: InkWell(
+                    onTap: () {
+                      // Navegue para a outra página aqui
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                LoginUserView()), // Substitua 'NovaPagina' pelo nome da sua nova página
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.amber[500]),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  child: InkWell(
+                    onTap: () {
+                      // Navegue para a outra página aqui
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SobreView()), // Substitua 'NovaPagina' pelo nome da sua nova página
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.amber[300]),
+                      child: Text(
+                        "Sobre",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+      ],
+    ));
   }
 }
