@@ -100,7 +100,7 @@ export class ViaRepository {
 
     }
 
-    async getViaById(id: any): Promise<Via> {
+    async getViaById(id: any): Promise<any> {
         const session = store.openSession();
         console.log("chamando a porra do db")
         try {
