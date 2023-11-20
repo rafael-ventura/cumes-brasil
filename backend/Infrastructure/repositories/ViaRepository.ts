@@ -78,6 +78,7 @@ export class ViaRepository {
         const session = store.openSession();
         try {
             await session.store(via);
+            console.log("foi update")
             await session.saveChanges();
         } finally {
             session.dispose();
@@ -93,6 +94,7 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
+            console.log("foi get all")
             return viaDocuments.map(viaDocument => this.adapter.fromDocument(viaDocument));
         } finally {
             session.dispose();
@@ -100,7 +102,7 @@ export class ViaRepository {
 
     }
 
-    async getViaById(id: any): Promise<Via> {
+    async getViaById(id: any): Promise<any> {
         const session = store.openSession();
         console.log("chamando a porra do db")
         try {
@@ -110,6 +112,7 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
+            console.log("foi get")
             return this.adapter.fromDocument(viaDocument);
 
         } catch (err) {
@@ -131,6 +134,7 @@ export class ViaRepository {
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
             await session.delete(viaDocument);
+            console.log("foi delete")
             await session.saveChanges();
         } finally {
             session.dispose();

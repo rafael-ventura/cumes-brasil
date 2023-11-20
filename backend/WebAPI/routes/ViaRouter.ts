@@ -15,7 +15,7 @@ ViaRouter.get('/:id', viaController.getViaById);
 ViaRouter.get('/', viaController.getAllVia);
 ViaRouter.post('/', viaController.createVia);
 ViaRouter.put('/', viaController.updateVia);
-ViaRouter.delete('/:id', viaController.deleteVia);
+ViaRouter.delete('d/:id', viaController.deleteVia);
 
 
 export default ViaRouter;
