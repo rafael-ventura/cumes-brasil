@@ -17,10 +17,10 @@ class _ListagemViasState extends State<ListagemViasView> {
   @override
   void initState() {
     super.initState();
-    metodo();
+    getAllVia();
   }
 
-  Future<void> metodo() async {
+  Future<void> getMock() async {
     try {
       List<ViaModel> fetchedVias = await viaController
           .getViasFromJsonFile(); // Usando mockVias em vez de getAll()
@@ -33,15 +33,15 @@ class _ListagemViasState extends State<ListagemViasView> {
     }
   }
 
-  Future<void> metodo2() async {
+  Future<void> getAllVia() async {
     try {
-      List<ViaModel> fetchedVias = await viaController.getMontanha(
-          'NomeMontanha'); // Substitua 'NomeMontanha' pelo nome da montanha desejada
+      List<ViaModel> listaVias = await viaController.getAll();
       setState(() {
-        vias = fetchedVias;
+        vias = listaVias;
+        viasFiltradas = vias;
       });
     } catch (error) {
-      print('Erro ao buscar vias por montanha: $error');
+      print('Erro ao buscar vias2: $error');
     }
   }
 
@@ -51,8 +51,7 @@ class _ListagemViasState extends State<ListagemViasView> {
       searchResults = vias
           .where((via) =>
               via.nome.toLowerCase().contains(query.toLowerCase()) ||
-              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
-              via.montanha!.nome.toLowerCase().contains(query.toLowerCase()))
+              via.grau!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else {
       searchResults = List.from(vias);
@@ -84,9 +83,7 @@ class _ListagemViasState extends State<ListagemViasView> {
               itemBuilder: (context, index) {
                 final via = viasFiltradas[index];
                 return InkWell(
-                  onTap: () {
-                    // Navegue para uma página de detalhes aqui.
-                  },
+                  onTap: () {},
                   child: ViaCard(
                     viaModel: via,
                   ),

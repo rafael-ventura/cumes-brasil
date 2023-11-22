@@ -101,13 +101,13 @@ export class ViaAdapter {
         return new Via(
             viaDto.id,
             viaDto.nome,
-            viaDto.croquis.map(croqui => new Croqui(
+            viaDto.croquis?.map(croqui => new Croqui(
                 croqui.id as number,
                 croqui.imagemUrl,
                 croqui.autor,
                 croqui.descricao,
             )),
-            viaDto.montanha!.id,
+            viaDto.montanha?.id,
             viaDto.grau,
             viaDto.crux,
             viaDto.artificial,
@@ -117,8 +117,8 @@ export class ViaAdapter {
             viaDto.conquistadores,
             viaDto.detalhes,
             viaDto.data,
-            viaDto.face!.id,
-            viaDto.fonte!.id,
+            viaDto.face?.id,
+            viaDto.fonte?.id,
             viaDto.id_via_principal
         );
     }

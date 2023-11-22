@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/NavBar2.dart';
+import 'package:frontend/views/MainView.dart';
+import 'package:frontend/widgets/barraDeNavegacao/NavBar.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: NavBar2(),
+      home: NavBar(), // Use o NavBar2 como o novo widget principal
     );
   }
 }
