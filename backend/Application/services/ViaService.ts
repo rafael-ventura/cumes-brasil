@@ -94,11 +94,4 @@ export class ViaService {
         await this.repo.deleteVia(via.id);
     }
 
-    async getMontanhas(): Promise<Montanha[]> {
-        // Buscar todas as Montanhas
-        const montanhas = await this.repo.getMontanhas();
-        // Converter todas as Montanhas para MontanhaDTO e retornar
-        return montanhas;
-    }
-
 }

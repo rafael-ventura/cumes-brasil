@@ -76,10 +76,34 @@ export class ViaController {
      * @param {Request} _ - O request do express.
      * @param {Response} res - O response do express, onde as montanhas serão retornadas.
      */
-    getMontanhas = async (_: Request, res: Response) => {
-        const result = await this.service.getMontanhas();
+    getMontanha = async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const result = await this.service.getMontanhaById(id);
 
         res.json(result);
 
     };
+
+    /**
+     * Obtém todas as faces.
+     * @param {Request} _ - O request do express.
+     * @param {Response} res - O response do express, onde as faces serão retornadas.
+     */
+    getFace = async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const result = await this.service.getFaceById(id);
+
+        res.json(result);
+    }
+    /**
+     * Obtém todas as fontes.
+     * @param {Request} _ - O request do express.
+     * @param {Response} res - O response do express, onde as fontes serão retornadas.
+     */
+    getFonte = async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const result = await this.service.getFonteById(id);
+
+        res.json(result);
+    }
 }

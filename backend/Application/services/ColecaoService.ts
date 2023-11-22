@@ -53,10 +53,5 @@ export class ColecaoService {
         await this.viaRepository.deleteVia(id);
     }
 
-    public async getMontanhas(): Promise<Montanha[]> {
-        return await this.viaRepository.getMontanhas();
-    }
-
-
 
 }
