@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/widgets/barraDeNavegacao/NavBarService.dart';
 import 'dart:convert';
 import '../../views/PerfilView.dart';
-import '../../views/PerfilDetalhesView.dart';
 import '../../views/FavoritosView.dart';
 import '../../views/HomeView.dart';
 import '../../views/ViasView.dart';
