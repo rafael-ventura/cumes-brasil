@@ -30,7 +30,6 @@ export class ColecaoService {
         const via = await this.viaRepository.getViaById(id);
         return via;
 
-        return vias.map(via => this.viaAdapter.toDto(via));
     }
 
     public async createVia(viaDto: ViaDto): Promise<void> {
