@@ -6,7 +6,7 @@ import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
 import store from '../../Infrastructure/config/db';
 
 // Crie uma instância de ViaService e passe-a para o construtor do ViaController
-const viaService = new ViaService(new ViaRepository(store));
+const viaService = new ViaService(new ViaRepository());
 const viaController = new ViaController(viaService);
 
 const ViaRouter = Router();

@@ -18,7 +18,6 @@ export class Face implements IFace {
     }
 
 
-
     getVias(): Via[] {
         return this.vias;
     }
@@ -26,4 +25,9 @@ export class Face implements IFace {
     toString(): string {
         return this.nome;
     }
+
+    public adicionarVia(via: Via): void {
+        this.vias.push(via);
+    }
+
 }

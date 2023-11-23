@@ -43,8 +43,7 @@ export class MontanhaRepository {
     async createMontanha(montanha: Montanha) {
         const session = store.openSession();
         try {
-            const montanhaDocument = this.montanhaAdapter.toDocument(montanha);
-            await session.store(montanhaDocument);
+            await session.store(montanha);
             await session.saveChanges();
         } finally {
             session.dispose();

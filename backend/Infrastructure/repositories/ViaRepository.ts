@@ -11,11 +11,11 @@ import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
 
 export class ViaRepository {
-    private adapter: ViaAdapter;
+    private viaAdapter: ViaAdapter;
     private montanhaAdapter: MontanhaAdapter;
 
-    constructor(store: DocumentStore) {
-        this.adapter = new ViaAdapter();
+    constructor() {
+        this.viaAdapter = new ViaAdapter();
         this.montanhaAdapter = new MontanhaAdapter();
     }
 
@@ -93,7 +93,7 @@ export class ViaRepository {
             }
             // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
             const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => this.adapter.fromDocument(viaDocument));
+            return viaDocuments.map(viaDocument => this.viaAdapter.fromDocument(viaDocument));
         } finally {
             session.dispose();
         }
@@ -110,7 +110,7 @@ export class ViaRepository {
             }
             // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
             const viaDocument = documents[0] as ViaDocument;
-            return this.adapter.fromDocument(viaDocument);
+            return this.viaAdapter.fromDocument(viaDocument);
 
         } catch (err) {
             console.log(err)

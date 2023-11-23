@@ -34,7 +34,7 @@ export class ViaController {
      * @param {Response} res - O response do express, onde as vias serão retornadas.
      */
     getAllVia = async (_: Request, res: Response) => {
-        const result = await this.service.getAll();
+        const result = await this.service.getVias();
         res.json(result);
     };
 

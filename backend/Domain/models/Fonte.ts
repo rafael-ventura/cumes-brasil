@@ -1,6 +1,7 @@
 import {Via} from "./Via";
+import {IFonte} from "../interfaces/models/IFonte";
 
-export class Fonte {
+export class Fonte implements IFonte {
     id: number;
     private vias: Via[];
     referencia: string;
@@ -31,5 +32,4 @@ export class Fonte {
         return this.referencia;
     }
 
-    // Pode adicionar métodos para atualizar, deletar, e adicionar vias conforme a necessidade
 }
