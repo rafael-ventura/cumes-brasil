@@ -16,7 +16,7 @@ ViaRouter.get('/', viaController.getAllVia);
 ViaRouter.post('/', viaController.createVia);
 ViaRouter.put('/', viaController.updateVia);
 ViaRouter.delete('/:id', viaController.deleteVia);
-ViaRouter.get('/montanha', viaController.getMontanha);
+ViaRouter.get('/montanha/:id', viaController.getMontanha);
 ViaRouter.get('/face', viaController.getFace);
 ViaRouter.get('/fonte', viaController.getFonte);
 
