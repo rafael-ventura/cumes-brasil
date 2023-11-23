@@ -10,11 +10,11 @@ class ViaModel {
   String? conquistadores;
   String? detalhes;
   String? data;
-  int? montanha;
-  int? face;
-  FonteModel? fonte;
+  String? montanha;
+  String? face;
+  String? fonte;
   List<CroquiModel>? croquis;
-  int? viaPrincipal;
+  String? viaPrincipal;
 
   ViaModel({
     required this.id,
@@ -50,7 +50,7 @@ class ViaModel {
       'data': data,
       'montanha': montanha,
       'face': face,
-      'fonte': fonte?.toJson(),
+      'fonte': fonte,
       'croquis': croquis?.map((croqui) => croqui.toJson()).toList(),
       'idViaPrincipal': viaPrincipal,
     };
@@ -58,24 +58,22 @@ class ViaModel {
 
   factory ViaModel.fromJson(Map<String, dynamic> json) {
     return ViaModel(
-      id: json['id'],
-      nome: json['nome'],
-      grau: json['grau'],
-      crux: json['crux'],
-      artificial: json['artificial'],
-      duracao: json['duracao'],
-      exposicao: json['exposicao'],
-      extensao: json['extensao'],
-      conquistadores: json['conquistadores'],
-      detalhes: json['detalhes'],
-      data: json['data'],
-      montanha: json['montanha'], // Mapear corretamente o campo montanha
-      face: json['id_face'],
-      fonte: json['id_fonte'] != null
-          ? FonteModel.fromJson(json['id_fonte'])
-          : null,
-      croquis: json['croquis'] != null
-          ? (json['croquis'] as List<dynamic>)
+      id: json['Id'],
+      nome: json['Nome'],
+      grau: json['Grau'],
+      crux: json['Crux'],
+      artificial: json['Artificial'],
+      duracao: json['Duracao'],
+      exposicao: json['Exposicao'],
+      extensao: json['Extensao'],
+      conquistadores: json['Conquistadores'],
+      detalhes: json['Detalhes'],
+      data: json['Data'],
+      montanha: json['Montanha'], // Mapear corretamente o campo montanha
+      face: json['IdFace'],
+      fonte: json['IdFonte'],
+      croquis: json['Croquis'] != null
+          ? (json['Croquis'] as List<dynamic>)
               .map((croqui) => CroquiModel.fromJson(croqui))
               .toList()
           : null,
