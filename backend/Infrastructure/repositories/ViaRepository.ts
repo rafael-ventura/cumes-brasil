@@ -84,16 +84,17 @@ export class ViaRepository {
         }
     }
 
-    async getAll(): Promise<Via[]> {
+    async getAll(): Promise<any> {
         const session = store.openSession();
         try {
             const documents = await session.query({collection: 'Vias'}).all();
             if (documents.length === 0) {
                 throw new Error('Nenhuma via encontrada');
             }
-            // Assegura que todos os objetos são do tipo ViaDocument antes de passar para o adaptador
-            const viaDocuments = documents as ViaDocument[];
-            return viaDocuments.map(viaDocument => this.viaAdapter.fromDocument(viaDocument));
+            return documents;
+
+        } catch (err) {
+            console.log(err)
         } finally {
             session.dispose();
         }
@@ -105,18 +106,15 @@ export class ViaRepository {
         console.log("chamando a porra do db")
         try {
             const documents = await session.query({collection: 'Vias'}).whereEquals('Id', id).all();
+
             if (documents.length === 0) {
                 throw new Error('Via não encontrada');
             }
-            // Assegura que o objeto é do tipo ViaDocument antes de passar para o adaptador
-            const viaDocument = documents[0] as ViaDocument;
-            return this.viaAdapter.fromDocument(viaDocument);
+            return documents[0];
 
         } catch (err) {
             console.log(err)
-        }
-
-        finally {
+        } finally {
             session.dispose();
         }
     }
@@ -136,8 +134,6 @@ export class ViaRepository {
             session.dispose();
         }
     }
-
-
 
 
 }

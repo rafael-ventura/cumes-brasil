@@ -25,7 +25,7 @@ export class UsuarioRepository {
             const usuarioDocument = documents[0] as Usuario;
             return usuarioDocument;
         } finally {
-            await session.dispose();
+            session.dispose();
         }
     }
 
