@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class ViaController {
-  final baseUri = Uri.http('localhost:4000', '/api/vias');
+  final baseUri = Uri.http('localhost:4000', '/api/vias/');
 
   Future<List<ViaModel>> postVia(ViaModel novaVia) async {
     try {
@@ -26,7 +26,8 @@ class ViaController {
 
   Future<ViaModel> getById(int id) async {
     try {
-      final response = await http.get(baseUri.replace(path: '$id'));
+      final response =
+          await http.get(Uri.http('localhost:4000', '/api/vias/$id'));
       if (response.statusCode == 200) {
         return ViaModel.fromJson(json.decode(response.body));
       } else {
@@ -37,9 +38,23 @@ class ViaController {
     }
   }
 
+  Future<ViaModel> getViaByIdFromJsonFile(int id) async {
+    try {
+      String data = await rootBundle.loadString('assets/vias_data.json');
+      List<dynamic> viasJson = json.decode(data);
+      // Obtém a primeira via que corresponde ao ID desejado
+      ViaModel? via = viasJson
+          .map((json) => ViaModel.fromJson(json.cast<String, dynamic>()))
+          .firstWhere((via) => via.id == id);
+      return via;
+    } catch (error) {
+      throw Exception('Erro ao carregar vias do arquivo JSON: $error');
+    }
+  }
+
   Future<List<ViaModel>> getAll() async {
     try {
-      final response = await http.get(Uri.http('localhost:4000', '/api/vias'));
+      final response = await http.get(baseUri);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         final List<ViaModel> vias =
@@ -66,18 +81,35 @@ class ViaController {
     }
   }
 
-  Future<List<ViaModel>> getMontanha(String nomeMontanha) async {
+  Future<MontanhaModel> getMontanhaById(int id) async {
     try {
-      final response = await http
-          .get(baseUri.replace(queryParameters: {'montanha': nomeMontanha}));
+      final response =
+          await http.get(Uri.http('localhost:4000', '/api/vias/montanha/1'));
       if (response.statusCode == 200) {
-        return List<ViaModel>.from(json.decode(response.body));
+        return MontanhaModel.fromJson(json.decode(response.body));
       } else {
         throw Exception(
             'Erro ao buscar vias por montanha: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Erro de conexão: $error');
+    }
+  }
+
+  Future<MontanhaModel> getMontanhaByIdromJsonFile(int id) async {
+    try {
+      String data = await rootBundle.loadString('assets/montanhas_data.json');
+      print(data);
+      List<dynamic> montanhaJson = json.decode(data);
+      print(data);
+      // Obtém a primeira via que corresponde ao ID desejado
+      MontanhaModel? montanha = montanhaJson
+          .map((json) => MontanhaModel.fromJson(json.cast<String, dynamic>()))
+          .firstWhere((montanha) => montanha.id == id);
+      print(montanha.nome);
+      return montanha;
+    } catch (error) {
+      throw Exception('Erro ao carregar montanhas do arquivo JSON: $error');
     }
   }
 }

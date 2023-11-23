@@ -29,7 +29,7 @@ class ViaCard extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => ViaView(
-                        viaModel: viaModel,
+                        viaId: viaModel.id,
                       )),
             );
           },
@@ -61,7 +61,7 @@ class ViaCard extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                          '${viaModel.grau} - ${"Não possui nome de montanha"}',
+                          '${viaModel.grau} - ${viaModel.montanha ?? "Não possui nome de montanha"}',
                           style: TextStyle(
                             fontSize: 18,
                           )),

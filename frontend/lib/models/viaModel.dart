@@ -6,10 +6,10 @@ class ViaModel {
   String? artificial;
   String? duracao;
   String? exposicao;
-  double? extensao;
-  List<String>? conquistadores;
+  String? extensao;
+  String? conquistadores;
   String? detalhes;
-  DateTime? data;
+  String? data;
   int? montanha;
   int? face;
   FonteModel? fonte;
@@ -47,7 +47,7 @@ class ViaModel {
       'extensao': extensao,
       'conquistadores': conquistadores,
       'detalhes': detalhes,
-      'data': data?.toIso8601String(),
+      'data': data,
       'montanha': montanha,
       'face': face,
       'fonte': fonte?.toJson(),
@@ -65,12 +65,10 @@ class ViaModel {
       artificial: json['artificial'],
       duracao: json['duracao'],
       exposicao: json['exposicao'],
-      extensao: json['extensao']?.toDouble(),
-      conquistadores: json['conquistadores'] != null
-          ? List<String>.from(json['conquistadores'])
-          : null,
+      extensao: json['extensao'],
+      conquistadores: json['conquistadores'],
       detalhes: json['detalhes'],
-      data: json['data'] != null ? DateTime.parse(json['data']) : null,
+      data: json['data'],
       montanha: json['montanha'], // Mapear corretamente o campo montanha
       face: json['id_face'],
       fonte: json['id_fonte'] != null
@@ -89,15 +87,15 @@ class ViaModel {
 class MontanhaModel {
   int id;
   String nome;
-  String localizacao;
-  double altura;
+  String? localizacao;
+  String? altura;
   String? imagemUrl;
 
   MontanhaModel(
       {required this.id,
       required this.nome,
-      required this.localizacao,
-      required this.altura,
+      this.localizacao,
+      this.altura,
       this.imagemUrl});
 
   Map<String, dynamic> toJson() {
@@ -112,11 +110,10 @@ class MontanhaModel {
 
   factory MontanhaModel.fromJson(Map<String, dynamic> json) {
     return MontanhaModel(
-      id: json['id'],
-      nome: json['nome'],
+      id: json['Id'],
+      nome: json['Nome'],
       localizacao: json['localizacao'],
-      altura: json['altura']?.toDouble() ??
-          0.0, // Convertendo para double, se existir
+      altura: json['altura'], // Convertendo para double, se existir
       imagemUrl: json['imagemUrl'],
     );
   }

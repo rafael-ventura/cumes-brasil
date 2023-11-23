@@ -30,18 +30,6 @@ class _ListagemViasState extends State<ListagemNewPageView> {
     }
   }
 
-  Future<void> metodo2() async {
-    try {
-      List<ViaModel> fetchedVias =
-          await viaController.getMontanha('NomeMontanha');
-      setState(() {
-        vias = fetchedVias;
-      });
-    } catch (error) {
-      print('Erro ao buscar vias por montanha: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -41,7 +41,7 @@ class _ListagemViasState extends State<ListagemViasView> {
         viasFiltradas = vias;
       });
     } catch (error) {
-      print('Erro ao buscar vias2: $error');
+      print('Erro ao buscar vias 2: $error');
     }
   }
 
