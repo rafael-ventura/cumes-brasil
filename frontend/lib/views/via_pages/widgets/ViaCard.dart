@@ -3,15 +3,18 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/viaModel.dart';
-import 'package:frontend/views/ViaView.dart';
+import 'package:frontend/views/via_pages/ViaView.dart';
 
 class ViaCard extends StatelessWidget {
   final ViaModel viaModel;
+  final String montanhaNome;
   final String image =
       'https://i.pinimg.com/736x/cb/64/a3/cb64a38f4bb6a06a9e4b27998fcfae00.jpg';
 
-  ViaCard({
+  const ViaCard({
+    super.key,
     required this.viaModel,
+    required this.montanhaNome,
   });
 
   @override
@@ -61,7 +64,7 @@ class ViaCard extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                          '${viaModel.grau} - ${viaModel.montanha ?? "Não possui nome de montanha"}',
+                          '${viaModel.grau} - ${montanhaNome ?? "Não possui nome de montanha"}',
                           style: TextStyle(
                             fontSize: 18,
                           )),

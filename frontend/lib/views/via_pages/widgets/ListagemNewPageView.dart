@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ListagemViasView.dart';
-import '../models/viaModel.dart';
+import 'package:frontend/views/via_pages/ListagemViasView.dart';
+import '../../../models/viaModel.dart';
 import '../widgets/ViaCard.dart';
-import '../controller/ViaController.dart';
+import '../../../controller/ViaController.dart';
 
 class ListagemNewPageView extends StatefulWidget {
   @override
@@ -34,7 +34,9 @@ class _ListagemViasState extends State<ListagemNewPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Listagem New Page'),
+        titleSpacing: 10,
+        backgroundColor: Colors.green[800],
+        title: Text('Listagem Vias'),
       ),
       body:
           ListagemViasView(), // Passando a lista de vias para a ListagemViasView

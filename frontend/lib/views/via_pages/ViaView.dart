@@ -2,7 +2,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:frontend/controller/ViaController.dart';
-import '../models/viaModel.dart';
+import 'package:frontend/views/via_pages/widgets/MontanhaComponent.dart'; //Componente para pegar valores de montanha
+import '../../models/viaModel.dart';
 
 class ViaView extends StatefulWidget {
   final int viaId; // Alteração: Adicionando o ID da via no construtor
@@ -131,9 +132,10 @@ class _ViaViewState extends State<ViaView> {
                                   children: [
                                     buildSectionTitle('Montanha:'),
                                     SizedBox(height: 8),
-                                    buildSectionContent(
-                                        '${viaModel.montanha ?? "Sem Nome da Montanha"}'),
-                                    SizedBox(height: 16),
+                                    //@MontanhaComponente
+                                    MontanhaComponent(
+                                        montanhaId: int.parse(
+                                            viaModel.montanha ?? '1')),
                                     SizedBox(height: 16),
                                     buildSectionTitle('Detalhes:'),
                                     SizedBox(height: 8),

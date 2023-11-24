@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/SobreView.dart';
-import 'package:frontend/views/CriarContaView.dart';
-import 'package:frontend/views/LoginUserView.dart';
-import 'package:frontend/widgets/PerfilUsuarioWidget.dart';
+import 'package:frontend/views/usuario_pages/SobreView.dart';
+import 'package:frontend/views/usuario_pages/CriarContaView.dart';
+import 'package:frontend/views/usuario_pages/LoginUserView.dart';
+import 'package:frontend/views/usuario_pages/widgets/PerfilUsuarioWidget.dart';
 
 class PerfilView extends StatelessWidget {
   @override

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../models/viaModel.dart';
-import '../widgets/ViaCard.dart';
-import '../controller/ViaController.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
+import 'package:frontend/models/viaModel.dart';
+
+import '../../controller/ViaController.dart';
 
 class ListagemViasView extends StatefulWidget {
+  const ListagemViasView({super.key});
+
   @override
   _ListagemViasState createState() => _ListagemViasState();
 }
@@ -84,9 +87,7 @@ class _ListagemViasState extends State<ListagemViasView> {
                 final via = viasFiltradas[index];
                 return InkWell(
                   onTap: () {},
-                  child: ViaCard(
-                    viaModel: via,
-                  ),
+                  child: ViaCard(viaModel: via, montanhaNome: "teste"),
                 );
               },
             ),

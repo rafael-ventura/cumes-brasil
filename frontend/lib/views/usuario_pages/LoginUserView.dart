@@ -1,7 +1,7 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/views/PerfilView.dart';
-import '../controller/UserController.dart';
+import 'package:frontend/controller/UserController.dart';
 
 class LoginUserView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

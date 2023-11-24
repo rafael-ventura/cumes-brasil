@@ -84,7 +84,7 @@ class ViaController {
   Future<MontanhaModel> getMontanhaById(int id) async {
     try {
       final response =
-          await http.get(Uri.http('localhost:4000', '/api/vias/montanha/1'));
+          await http.get(Uri.http('localhost:4000', '/api/vias/montanha/$id'));
       if (response.statusCode == 200) {
         return MontanhaModel.fromJson(json.decode(response.body));
       } else {
@@ -99,14 +99,11 @@ class ViaController {
   Future<MontanhaModel> getMontanhaByIdromJsonFile(int id) async {
     try {
       String data = await rootBundle.loadString('assets/montanhas_data.json');
-      print(data);
       List<dynamic> montanhaJson = json.decode(data);
-      print(data);
       // Obtém a primeira via que corresponde ao ID desejado
       MontanhaModel? montanha = montanhaJson
           .map((json) => MontanhaModel.fromJson(json.cast<String, dynamic>()))
           .firstWhere((montanha) => montanha.id == id);
-      print(montanha.nome);
       return montanha;
     } catch (error) {
       throw Exception('Erro ao carregar montanhas do arquivo JSON: $error');

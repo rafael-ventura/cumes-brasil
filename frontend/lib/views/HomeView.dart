@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ListagemNewPageView.dart';
+import 'package:frontend/views/via_pages/widgets/ListagemNewPageView.dart';
 
 class HomeView extends StatelessWidget {
   @override

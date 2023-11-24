@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/widgets/ViaCard2.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard2.dart';
 
 class FavoritosView extends StatelessWidget {
   @override
