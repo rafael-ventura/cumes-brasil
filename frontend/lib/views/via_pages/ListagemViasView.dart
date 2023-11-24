@@ -16,24 +16,12 @@ class _ListagemViasState extends State<ListagemViasView> {
   ViaController viaController = ViaController();
   List<ViaModel> viasFiltradas = [];
   TextEditingController _searchController = TextEditingController();
+  Map<String, MontanhaModel> montanhasMap = {};
 
   @override
   void initState() {
     super.initState();
     getAllVia();
-  }
-
-  Future<void> getMock() async {
-    try {
-      List<ViaModel> fetchedVias = await viaController
-          .getViasFromJsonFile(); // Usando mockVias em vez de getAll()
-      setState(() {
-        vias = fetchedVias;
-        viasFiltradas = vias;
-      });
-    } catch (error) {
-      print('Erro ao buscar vias: $error');
-    }
   }
 
   Future<void> getAllVia() async {
@@ -42,9 +30,30 @@ class _ListagemViasState extends State<ListagemViasView> {
       setState(() {
         vias = listaVias;
         viasFiltradas = vias;
+        // Pré-carregar informações da montanha
+        for (ViaModel via in vias) {
+          String montanhaId = via.montanha!;
+          if (!montanhasMap.containsKey(montanhaId)) {
+            // Se a montanha ainda não foi carregada, carregue-a
+            getMontanhaNome(montanhaId);
+          }
+        }
       });
     } catch (error) {
       print('Erro ao buscar vias 2: $error');
+    }
+  }
+
+  Future<void> getMontanhaNome(String montanhaId) async {
+    try {
+      MontanhaModel montanha =
+          await viaController.getMontanhaById(int.parse(montanhaId));
+      setState(() {
+        montanhasMap[montanhaId] = montanha;
+      });
+    } catch (error) {
+      print('Erro ao buscar nome da montanha: $error');
+      throw Error();
     }
   }
 
@@ -54,7 +63,12 @@ class _ListagemViasState extends State<ListagemViasView> {
       searchResults = vias
           .where((via) =>
               via.nome.toLowerCase().contains(query.toLowerCase()) ||
-              via.grau!.toLowerCase().contains(query.toLowerCase()))
+              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
+              montanhasMap[via.montanha!]
+                      ?.nome
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ==
+                  true)
           .toList();
     } else {
       searchResults = List.from(vias);
@@ -85,9 +99,13 @@ class _ListagemViasState extends State<ListagemViasView> {
               itemCount: viasFiltradas.length,
               itemBuilder: (context, index) {
                 final via = viasFiltradas[index];
+                final montanha = montanhasMap[via.montanha!];
                 return InkWell(
                   onTap: () {},
-                  child: ViaCard(viaModel: via, montanhaNome: "teste"),
+                  child: ViaCard(
+                    viaModel: via,
+                    montanhaNome: montanha?.nome ?? 'Carregando montanha...',
+                  ),
                 );
               },
             ),
