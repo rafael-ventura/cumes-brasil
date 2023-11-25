@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/viaModel.dart';
-import '../widgets/ViaCard.dart';
-import '../controller/ViaController.dart';
+import 'package:frontend/models/viaModel.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
+import 'package:frontend/controller/ViaController.dart';
 
 class ViasView extends StatefulWidget {
   @override
@@ -13,6 +13,7 @@ class _ListagemViasState extends State<ViasView> {
   ViaController viaController = ViaController();
   List<ViaModel> viasFiltradas = [];
   TextEditingController _searchController = TextEditingController();
+  String montanhaNome = "2";
 
   @override
   void initState() {
@@ -38,8 +39,7 @@ class _ListagemViasState extends State<ViasView> {
       searchResults = vias
           .where((via) =>
               via.nome.toLowerCase().contains(query.toLowerCase()) ||
-              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
-              via.montanha!.nome.toLowerCase().contains(query.toLowerCase()))
+              via.grau!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else {
       searchResults = List.from(vias);
@@ -74,9 +74,7 @@ class _ListagemViasState extends State<ViasView> {
                   onTap: () {
                     // Navegue para uma página de detalhes aqui.
                   },
-                  child: ViaCard(
-                    viaModel: via,
-                  ),
+                  child: ViaCard(viaModel: via, montanhaNome: montanhaNome),
                 );
               },
             ),

@@ -1,40 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/barraDeNavegacao/NavBarService.dart';
 import 'dart:convert';
-import '../views/ConfigView.dart';
-import '../views/PerfilView.dart';
-import '../views/FavoritosView.dart';
-import '../views/HomeView.dart';
-import '../views/ViasView.dart';
+import 'package:frontend/views/PerfilView.dart';
+import 'package:frontend/views/FavoritosView.dart';
+import 'package:frontend/views/HomeView.dart';
+import 'package:frontend/views/ViasView.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
-void main() => runApp(const NavBar2());
-
-class NavBar2 extends StatelessWidget {
-  const NavBar2({super.key});
+class NavBar extends StatefulWidget {
+  const NavBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: BottomNavBar(),
-    );
-  }
+  State<NavBar> createState() => _BottomNavBarState();
 }
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
-
-  @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
-}
-
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<NavBar> {
+  final NavBarService _navigationBarService = NavBarService();
   int _selectedIndex = 0;
   final List<Widget> _children = [
     HomeView(),
     ViasView(),
     FavoritosView(),
-    ConfigView(),
+    PerfilView(),
   ];
 
   void _onItemTapped(int index) {
@@ -67,8 +55,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Configurações',
+            icon: Icon(Icons.person),
+            label: 'Perfil',
             backgroundColor: Color.fromARGB(255, 66, 66, 66),
           ),
         ],

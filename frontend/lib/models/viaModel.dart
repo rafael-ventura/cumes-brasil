@@ -1,20 +1,20 @@
 class ViaModel {
-  String id;
+  int id;
   String nome;
   String? grau;
   String? crux;
   String? artificial;
   String? duracao;
   String? exposicao;
-  double? extensao;
-  List<String>? conquistadores;
+  String? extensao;
+  String? conquistadores;
   String? detalhes;
-  DateTime? data;
-  MontanhaModel? montanha;
-  FaceModel? face;
-  FonteModel? fonte;
+  String? data;
+  String? montanha;
+  String? face;
+  String? fonte;
   List<CroquiModel>? croquis;
-  int? idViaPrincipal;
+  String? viaPrincipal;
 
   ViaModel({
     required this.id,
@@ -32,30 +32,8 @@ class ViaModel {
     this.face,
     this.fonte,
     this.croquis,
-    this.idViaPrincipal,
+    this.viaPrincipal,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nome': nome,
-      'grau': grau,
-      'crux': crux,
-      'artificial': artificial,
-      'duracao': duracao,
-      'exposicao': exposicao,
-      'extensao': extensao,
-      'conquistadores': conquistadores,
-      'detalhes': detalhes,
-      'data': data
-          ?.toIso8601String(), // Converte a data para String no formato ISO 8601
-      'montanha': montanha?.toMap(),
-      'face': face?.toMap(),
-      'fonte': fonte?.toMap(),
-      'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
-      'idViaPrincipal': idViaPrincipal,
-    };
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -69,69 +47,54 @@ class ViaModel {
       'extensao': extensao,
       'conquistadores': conquistadores,
       'detalhes': detalhes,
-      'data': data?.toIso8601String(),
-      'montanha': montanha?.toJson(),
-      'face': face?.toJson(),
-      'fonte': fonte?.toJson(),
-      'croquis': croquis?.map((croqui) => croqui.toMap()).toList(),
-      'idViaPrincipal': idViaPrincipal,
+      'data': data,
+      'montanha': montanha,
+      'face': face,
+      'fonte': fonte,
+      'croquis': croquis?.map((croqui) => croqui.toJson()).toList(),
+      'idViaPrincipal': viaPrincipal,
     };
   }
 
   factory ViaModel.fromJson(Map<String, dynamic> json) {
     return ViaModel(
-      id: json['id'],
-      nome: json['nome'],
-      grau: json['grau'],
-      crux: json['crux'],
-      artificial: json['artificial'],
-      duracao: json['duracao'],
-      exposicao: json['exposicao'],
-      extensao:
-          json['extensao']?.toDouble(), // Convertendo para double, se existir
-      conquistadores: json['conquistadores'] != null
-          ? List<String>.from(json['conquistadores'])
-          : null,
-      detalhes: json['detalhes'],
-      data: json['data'] != null ? DateTime.parse(json['data']) : null,
-      montanha: json['montanha'] != null
-          ? MontanhaModel.fromJson(json['montanha'])
-          : null,
-      face: json['face'] != null ? FaceModel.fromJson(json['face']) : null,
-      fonte: json['fonte'] != null ? FonteModel.fromJson(json['fonte']) : null,
-      croquis: json['croquis'] != null
-          ? (json['croquis'] as List<dynamic>)
+      id: json['Id'],
+      nome: json['Nome'],
+      grau: json['Grau'],
+      crux: json['Crux'],
+      artificial: json['Artificial'],
+      duracao: json['Duracao'],
+      exposicao: json['Exposicao'],
+      extensao: json['Extensao'],
+      conquistadores: json['Conquistadores'],
+      detalhes: json['Detalhes'],
+      data: json['Data'],
+      montanha: json['Montanha'], // Mapear corretamente o campo montanha
+      face: json['IdFace'],
+      fonte: json['IdFonte'],
+      croquis: json['Croquis'] != null
+          ? (json['Croquis'] as List<dynamic>)
               .map((croqui) => CroquiModel.fromJson(croqui))
               .toList()
           : null,
-      idViaPrincipal: json['idViaPrincipal'],
+      viaPrincipal: json['id_viaPrincipal'],
     );
   }
 }
 
 class MontanhaModel {
-  int? id;
+  int id;
   String nome;
-  String localizacao;
-  double altura;
+  String? localizacao;
+  String? altura;
   String? imagemUrl;
 
   MontanhaModel(
-      {this.id,
+      {required this.id,
       required this.nome,
-      required this.localizacao,
-      required this.altura,
+      this.localizacao,
+      this.altura,
       this.imagemUrl});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nome': nome,
-      'localizacao': localizacao,
-      'altura': altura,
-      'imagemUrl': imagemUrl,
-    };
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -145,11 +108,10 @@ class MontanhaModel {
 
   factory MontanhaModel.fromJson(Map<String, dynamic> json) {
     return MontanhaModel(
-      id: json['id'],
-      nome: json['nome'],
+      id: json['Id'],
+      nome: json['Nome'],
       localizacao: json['localizacao'],
-      altura: json['altura']?.toDouble() ??
-          0.0, // Convertendo para double, se existir
+      altura: json['altura'], // Convertendo para double, se existir
       imagemUrl: json['imagemUrl'],
     );
   }
@@ -195,13 +157,6 @@ class FonteModel {
     required this.referencia,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'referencia': referencia,
-    };
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -229,15 +184,6 @@ class CroquiModel {
     required this.autor,
     this.descricao,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'imagemUrl': imagemUrl,
-      'autor': autor,
-      'descricao': descricao,
-    };
-  }
 
   Map<String, dynamic> toJson() {
     return {

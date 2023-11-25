@@ -6,10 +6,11 @@ import {Via} from "../../Domain/models/Via";
 import {Montanha} from "../../Domain/models/Montanha";
 import {Face} from "../../Domain/models/Face";
 import {Fonte} from "../../Domain/models/Fonte";
+import {IViaService} from "../../Domain/interfaces/services/IViaService";
 
 //TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.
 
-export class ViaService {
+export class ViaService implements IViaService {
     private repo: ViaRepository;
     private adapter: ViaAdapter;
 
@@ -51,7 +52,6 @@ export class ViaService {
         return via;
     }
 
-
     async updateVia(viaDTO: ViaDto): Promise<Via> {
 
         // Converter ViaDTO para a entidade Via
@@ -69,7 +69,7 @@ export class ViaService {
         return via;
     }
 
-    async getAll(): Promise<Via[]> {
+    async getVias(): Promise<Via[]> {
         // Buscar todas as Vias
         const vias = await this.repo.getAll();
         // Converter todas as Vias para ViaDTO e retornar
@@ -93,5 +93,6 @@ export class ViaService {
         // Remover Via
         await this.repo.deleteVia(via.id);
     }
+
 
 }

@@ -30,7 +30,6 @@ export class ColecaoService {
         const via = await this.viaRepository.getViaById(id);
         return via;
 
-        return vias.map(via => this.viaAdapter.toDto(via));
     }
 
     public async createVia(viaDto: ViaDto): Promise<void> {
@@ -53,11 +52,6 @@ export class ColecaoService {
     public async deleteVia(id: number): Promise<void> {
         await this.viaRepository.deleteVia(id);
     }
-
-    public async getMontanhas(): Promise<Montanha[]> {
-        return await this.viaRepository.getMontanhas();
-    }
-
 
 
 }

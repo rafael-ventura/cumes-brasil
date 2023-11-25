@@ -1,6 +1,6 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ConfigView.dart';
+import 'package:frontend/views/PerfilView.dart';
 import 'package:frontend/controller/UserController.dart';
 
 class CriarContaView extends StatelessWidget {
@@ -47,10 +47,9 @@ class CriarContaView extends StatelessWidget {
           senha: _passwordController.text,
           // Adicione outros parâmetros conforme necessário
         );
-
         // Se a chamada for bem-sucedida, você pode navegar para outra tela, por exemplo
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ConfigView()),
+          MaterialPageRoute(builder: (context) => PerfilView()),
         );
       } catch (error) {
         // Trate erros, se necessário

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../models/viaModel.dart';
-import '../widgets/ViaCard.dart';
-import '../controller/ViaController.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
+import 'package:frontend/models/viaModel.dart';
+
+import '../../controller/ViaController.dart';
 
 class ListagemViasView extends StatefulWidget {
+  const ListagemViasView({super.key});
+
   @override
   _ListagemViasState createState() => _ListagemViasState();
 }
@@ -13,35 +16,44 @@ class _ListagemViasState extends State<ListagemViasView> {
   ViaController viaController = ViaController();
   List<ViaModel> viasFiltradas = [];
   TextEditingController _searchController = TextEditingController();
+  Map<String, MontanhaModel> montanhasMap = {};
 
   @override
   void initState() {
     super.initState();
-    metodo();
+    getAllVia();
   }
 
-  Future<void> metodo() async {
+  Future<void> getAllVia() async {
     try {
-      List<ViaModel> fetchedVias = await viaController
-          .getViasFromJsonFile(); // Usando mockVias em vez de getAll()
+      List<ViaModel> listaVias = await viaController.getAll();
       setState(() {
-        vias = fetchedVias;
+        vias = listaVias;
         viasFiltradas = vias;
+        // Pré-carregar informações da montanha
+        for (ViaModel via in vias) {
+          String montanhaId = via.montanha!;
+          if (!montanhasMap.containsKey(montanhaId)) {
+            // Se a montanha ainda não foi carregada, carregue-a
+            getMontanhaNome(montanhaId);
+          }
+        }
       });
     } catch (error) {
-      print('Erro ao buscar vias: $error');
+      print('Erro ao buscar vias 2: $error');
     }
   }
 
-  Future<void> metodo2() async {
+  Future<void> getMontanhaNome(String montanhaId) async {
     try {
-      List<ViaModel> fetchedVias = await viaController.getMontanha(
-          'NomeMontanha'); // Substitua 'NomeMontanha' pelo nome da montanha desejada
+      MontanhaModel montanha =
+          await viaController.getMontanhaById(int.parse(montanhaId));
       setState(() {
-        vias = fetchedVias;
+        montanhasMap[montanhaId] = montanha;
       });
     } catch (error) {
-      print('Erro ao buscar vias por montanha: $error');
+      print('Erro ao buscar nome da montanha: $error');
+      throw Error();
     }
   }
 
@@ -52,7 +64,11 @@ class _ListagemViasState extends State<ListagemViasView> {
           .where((via) =>
               via.nome.toLowerCase().contains(query.toLowerCase()) ||
               via.grau!.toLowerCase().contains(query.toLowerCase()) ||
-              via.montanha!.nome.toLowerCase().contains(query.toLowerCase()))
+              montanhasMap[via.montanha!]
+                      ?.nome
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ==
+                  true)
           .toList();
     } else {
       searchResults = List.from(vias);
@@ -83,12 +99,12 @@ class _ListagemViasState extends State<ListagemViasView> {
               itemCount: viasFiltradas.length,
               itemBuilder: (context, index) {
                 final via = viasFiltradas[index];
+                final montanha = montanhasMap[via.montanha!];
                 return InkWell(
-                  onTap: () {
-                    // Navegue para uma página de detalhes aqui.
-                  },
+                  onTap: () {},
                   child: ViaCard(
                     viaModel: via,
+                    montanhaNome: montanha?.nome ?? 'Carregando montanha...',
                   ),
                 );
               },

@@ -1,230 +1,151 @@
 [
   {
-    "id": "via/V-1",
-    "nome": "Via 1",
-    "grau": "5.10a",
-    "crux": "Crux 1",
-    "artificial": "Sim",
-    "duracao": "2 horas",
-    "exposicao": "Alta",
-    "extensao": 30.5,
-    "conquistadores": ["Conquistador 1", "Conquistador 2"],
-    "detalhes": "Detalhes da Via 1",
-    "data": "2023-11-19T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 1",
-      "localizacao": "Local 1",
-      "altura": 1000,
-      "imagemUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Dedo_de_Deus_vista_do_Soberbo.jpg"
-    },
-    "face": {"nome": "Face 1"},
-    "fonte": {"id": 1, "referencia": "Fonte 1"},
-    "croquis": [
-      {"id": 1, "imagemUrl": "url1", "autor": "Autor 1"},
-      {"id": 2, "imagemUrl": "url2", "autor": "Autor 2", "descricao": "Descrição 2"}
-    ],
-    "idViaPrincipal": 123
+    "Id": 1,
+    "Nome": "Via Primeira",
+    "Croquis": [
+      {
+          "id": 1,
+          "autor": "Fotógrafo de Escaladas",
+          "imagemUrl": "http://exemplo.com/croqui1.jpg",
+          "descricao": "Croqui da via 29 de dezembro, mostrando as principais rochas e caminhos."
+      }
+  ],
+    "Montanha": "1",
+    "Grau": "5.10a",
+    "Crux": "Crux 1",
+    "Artificial": "Sim",
+    "Duracao": "2 horas",
+    "Exposicao": "Alta",
+    "Extensao": "30.5",
+    "Conquistadores": "Conquistador 1;Conquistador 2",
+    "Data": "2023-11-19",
+    "IdFace": "1",
+    "id_viaPrincipal": "1"
   },
   {
-    "id": "via/V-2",
-    "nome": "Via 2",
-    "grau": "5.8",
-    "crux": "Crux 2",
-    "artificial": "Não",
-    "duracao": "1 hora",
-    "exposicao": "Moderada",
-    "extensao": 25.0,
-    "conquistadores": ["Conquistador 3", "Conquistador 4"],
-    "detalhes": "Detalhes da Via 2",
-    "data": "2023-11-09T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 2",
-      "localizacao": "Local 2",
-      "altura": 200,
-      "imagemUrl": "https://images.squarespace-cdn.com/content/v1/598b7343f7e0abaa677c5fd8/1576953784201-VT0GE0GJTZR6OYRNAN33/escalada-rio-de-janeiro-morro-da-urca-face-norte-2.jpg?format=2500w"
-    },
-    "face": {"nome": "Face 2"},
-    "fonte": {"id": 2, "referencia": "Fonte 2"},
-    "croquis": [
+    "Id": 2,
+    "Nome": "Via 2",
+    "Grau": "5.8",
+    "Crux": "Crux 2",
+    "Artificial": "Não",
+    "Duracao": "1 hora",
+    "Exposicao": "Moderada",
+    "Extensao": "25.0",
+    "Conquistadores": "Conquistador 3;Conquistador 4",
+    "Detalhes": "Detalhes da Via 2",
+    "Data": "2023-11-09",
+    "Montanha": "2",
+    "IdFace": "1",
+    "Fonte": "Fonte 2",
+    "Croquis": [
       {"id": 3, "imagemUrl": "url3", "autor": "Autor 3", "descricao": "Descrição 3"},
       {"id": 4, "imagemUrl": "url4", "autor": "Autor 4"}
     ],
     "idViaPrincipal": 456
   },
   {
-    "id": "via/V-3",
-    "nome": "Via 3",
-    "grau": "5.8",
-    "crux": "Crux 3",
-    "artificial": "Sim",
-    "duracao": "1.5 horas",
-    "exposicao": "Baixa",
-    "extensao": 35.0,
-    "conquistadores": ["Conquistador 5"],
-    "detalhes": "Detalhes da Via 3",
-    "data": "2023-10-30T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 3",
-      "localizacao": "Local 3",
-      "altura": 400,
-      "imagemUrl": "https://i.pinimg.com/736x/cb/64/a3/cb64a38f4bb6a06a9e4b27998fcfae00.jpg"
-    },
-    "face": {"nome": "Face 1"},
-    "fonte": {"id": 3, "referencia": "Fonte 3"},
-    "croquis": [
+    "Id": 3,
+    "Nome": "Via 3",
+    "Grau": "5.8",
+    "Crux": "Crux 3",
+    "Artificial": "Sim",
+    "Duracao": "1.5 horas",
+    "Exposicao": "Baixa",
+    "Extensao": "35.0",
+    "Conquistadores": "Conquistador 5",
+    "Detalhes": "Detalhes da Via 3",
+    "Data": "2023-10-30",
+    "Montanha": "3",
+    "IdFace": "1",
+    "Fonte": "Fonte 3",
+    "Croquis": [
       {"id": 5, "imagemUrl": "url5", "autor": "Autor 5"},
       {"id": 6, "imagemUrl": "url6", "autor": "Autor 6", "descricao": "Descrição 6"}
     ],
     "idViaPrincipal": 789
   },
   {
-    "id": "via/V-1",
-    "nome": "Via do Pico da Neblina",
-    "grau": "5.11b",
-    "crux": "Passagem Técnica da Via",
-    "artificial": "Não",
-    "duracao": "4 horas",
-    "exposicao": "Alta",
-    "extensao": 300.0,
-    "conquistadores": ["João Almeida", "Maria Silva"],
-    "detalhes": "Uma das vias mais desafiadoras do Pico da Neblina.",
-    "data": "2022-10-15T00:00:00.000Z",
-    "montanha": {
-      "nome": "Pico da Neblina",
-      "localizacao": "Amazonas, Brasil",
-      "altura": 2994,
-      "imagemUrl": "https://altamontanha.com/wp-content/uploads/2020/12/Pico_da_Neblina_FAB.jpg"
-    },
-    "face": {"nome": "Face Norte"},
-    "fonte": {"id": 1, "referencia": "Livro: \"Escaladas no Brasil\""},
-    "croquis": [
+    "Id": 113,
+    "Nome": "Via do Pico da Neblina",
+    "Grau": "5.11b",
+    "Crux": "Passagem Técnica da Via",
+    "Artificial": "Não",
+    "Duracao": "4 horas",
+    "Exposicao": "Alta",
+    "Extensao": "300.0",
+    "Conquistadores": "João Almeida;Maria Silva",
+    "Detalhes": "Uma das vias mais desafiadoras do Pico da Neblina.",
+    "Data": "2022-10-15",
+    "Montanha": "4",
+    "IdFace": "1",
+    "Fonte": "Escaladas no Brasil",
+    "Croquis": [
       {"id": 1, "imagemUrl": "url1", "autor": "Carlos Rocha"},
       {"id": 2, "imagemUrl": "url2", "autor": "Ana Oliveira", "descricao": "Variação da rota principal."}
     ],
     "idViaPrincipal": 123
   },
   {
-    "id": "via/V-2",
-    "nome": "Caminho do Dedo de Deus",
-    "grau": "5.9",
-    "crux": "Travessia na Agulha",
-    "artificial": "Não",
-    "duracao": "2 horas",
-    "exposicao": "Moderada",
-    "extensao": 150.0,
-    "conquistadores": ["Pedro Souza", "Fernanda Lima"],
-    "detalhes": "Uma via clássica com vistas incríveis para o Vale do Paraíba.",
-    "data": "2022-09-05T00:00:00.000Z",
-    "montanha": {
-      "nome": "Dedo de Deus",
-      "localizacao": "Rio de Janeiro, Brasil",
-      "altura": 1692,
-      "imagemUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Dedo_de_Deus_vista_do_Soberbo.jpg"
-    },
-    "face": {"nome": "Face Sul"},
-    "fonte": {"id": 2, "referencia": "Guia de escaladas online"},
-    "croquis": [
+    "Id": 114,
+    "Nome": "Caminho do Dedo de Deus",
+    "Grau": "5.9",
+    "Crux": "Travessia na Agulha",
+    "Artificial": "Não",
+    "Duracao": "2 horas",
+    "Exposicao": "Moderada",
+    "Extensao": "150.0",
+    "Conquistadores": "Pedro Souza;Fernanda Lima",
+    "Detalhes": "Uma via clássica com vistas incríveis para o Vale do Paraíba.",
+    "Data": "2022-09-05",
+    "Montanha": "5",
+    "IdFace": "1",
+    "Fonte": "Guia de escaladas online",
+    "Croquis": [
       {"id": 3, "imagemUrl": "url3", "autor": "Rafaela Santos", "descricao": "Detalhes da crux."},
       {"id": 4, "imagemUrl": "url4", "autor": "Marcos Oliveira"}
     ],
     "idViaPrincipal": 456
   },
   {
-    "id": "via/V-3",
-    "nome": "Rota da Pedra Bonita",
-    "grau": "5.10c",
-    "crux": "Paredão Vertical",
-    "artificial": "Não",
-    "duracao": "3 horas",
-    "exposicao": "Baixa",
-    "extensao": 250.0,
-    "conquistadores": ["Ana Carolina"],
-    "detalhes": "Uma via desafiadora com uma bela vista da cidade do Rio de Janeiro.",
-    "data": "2022-08-20T00:00:00.000Z",
-    "montanha": {
-      "nome": "Pedra Bonita",
-      "localizacao": "Rio de Janeiro, Brasil",
-      "altura": 693,
-      "imagemUrl": "https://trilhandomontanhas.com/arquivos/2017-02/pedra-bonita-parque-da-tijuca-rio-de-janeiro-por-marcella-moraes-maior.jpg"
-    },
-    "face": {"nome": "Face Oeste"},
-    "fonte": {"id": 3, "referencia": "Relato de escalada no site ClimbBrasil"},
-    "croquis": [
+    "Id": 115,
+    "Nome": "Rota da Pedra Bonita",
+    "Grau": "5.10c",
+    "Crux": "Paredão Vertical",
+    "Artificial": "Não",
+    "Duracao": "3 horas",
+    "Exposicao": "Baixa",
+    "Extensao": "250.0",
+    "Conquistadores": "Ana Carolina",
+    "Detalhes": "Uma via desafiadora com uma bela vista da cidade do Rio de Janeiro.",
+    "Data": "2022-08-20",
+    "Montanha": "5",
+    "IdFace": "1",
+    "Fonte": "Relato de escalada no site ClimbBrasil",
+    "Croquis": [
       {"id": 5, "imagemUrl": "url5", "autor": "José Silva"},
       {"id": 6, "imagemUrl": "url6", "autor": "Mariana Costa", "descricao": "Variação para escaladores experientes."}
     ],
     "idViaPrincipal": 789
   },
   {
-    "id": "via/V-5",
-    "nome": "Via 5",
-    "grau": "5.11c",
-    "crux": "Crux 5",
-    "artificial": "Não",
-    "duracao": "1.8 horas",
-    "exposicao": "Moderada",
-    "extensao": 40.0,
-    "conquistadores": ["Conquistador 6", "Conquistador 7"],
-    "detalhes": "Detalhes da Via 5",
-    "data": "2023-11-04T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 4",
-      "localizacao": "Local 4"
-    },
-    "face": {"nome": "Face 3"},
-    "fonte": {"id": 4, "referencia": "Fonte 4"},
-    "croquis": [
+    "Id": 116,
+    "Nome": "Via 5",
+    "Grau": "5.11c",
+    "Crux": "Crux 5",
+    "Artificial": "Não",
+    "Duracao": "1.8 horas",
+    "Exposicao": "Moderada",
+    "Extensao": "40.0",
+    "Conquistadores": "Conquistador 6;Conquistador 7",
+    "Detalhes": "Detalhes da Via 5",
+    "Data": "2023-11-04",
+    "Montanha": "2",
+    "IdFace": "1",
+    "Fonte": "Fonte 4",
+    "Croquis": [
       {"id": 7, "imagemUrl": "url7", "autor": "Autor 7"},
       {"id": 8, "imagemUrl": "url8", "autor": "Autor 8", "descricao": "Descrição 8"}
     ],
     "idViaPrincipal": 101
-  },
-  {
-    "id": "via/V-6",
-    "nome": "Via 6",
-    "grau": "5.9",
-    "crux": "Crux 6",
-    "artificial": "Sim",
-    "duracao": "1.2 horas",
-    "exposicao": "Baixa",
-    "extensao": 28.0,
-    "conquistadores": ["Conquistador 8"],
-    "detalhes": "Detalhes da Via 6",
-    "data": "2023-10-25T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 5",
-      "localizacao": "Local 5"
-    },
-    "face": {"nome": "Face 2"},
-    "fonte": {"id": 5, "referencia": "Fonte 5"},
-    "croquis": [
-      {"id": 9, "imagemUrl": "url9", "autor": "Autor 9"},
-      {"id": 10, "imagemUrl": "url10", "autor": "Autor 10", "descricao": "Descrição 10"}
-    ],
-    "idViaPrincipal": 202
-  },
-  {
-    "id": "via/V-7",
-    "nome": "Via 7",
-    "grau": "5.12b",
-    "crux": "Crux 7",
-    "artificial": "Não",
-    "duracao": "2.5 horas",
-    "exposicao": "Alta",
-    "extensao": 45.0,
-    "conquistadores": ["Conquistador 9", "Conquistador 10"],
-    "detalhes": "Detalhes da Via 7",
-    "data": "2023-10-20T12:34:56.789Z",
-    "montanha": {
-      "nome": "Montanha 6",
-      "localizacao": "Local 6"
-    },
-    "face": {"nome": "Face 4"},
-    "fonte": {"id": 6, "referencia": "Fonte 6"},
-    "croquis": [
-      {"id": 11, "imagemUrl": "url11", "autor": "Autor 11"},
-      {"id": 12, "imagemUrl": "url12", "autor": "Autor 12", "descricao": "Descrição 12"}
-    ],
-    "idViaPrincipal": 303
   }
 ]

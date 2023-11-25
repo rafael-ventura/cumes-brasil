@@ -1,6 +1,6 @@
 // lib/widgets/via_card.dart
 import 'package:flutter/material.dart';
-import 'package:frontend/views/ListagemViasView.dart';
+import 'package:frontend/views/via_pages/ListagemViasView.dart';
 
 class SobreView extends StatelessWidget {
   // This widget is the root of your application.

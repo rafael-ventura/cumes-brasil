@@ -3,15 +3,18 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/viaModel.dart';
-import 'package:frontend/views/ViaView.dart';
+import 'package:frontend/views/via_pages/ViaView.dart';
 
 class ViaCard extends StatelessWidget {
   final ViaModel viaModel;
+  final String montanhaNome;
   final String image =
       'https://i.pinimg.com/736x/cb/64/a3/cb64a38f4bb6a06a9e4b27998fcfae00.jpg';
 
-  ViaCard({
+  const ViaCard({
+    super.key,
     required this.viaModel,
+    required this.montanhaNome,
   });
 
   @override
@@ -25,13 +28,12 @@ class ViaCard extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            // Navegue para a outra página aqui
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ViaView(
-                        viaModel: viaModel,
-                      )), // Substitua 'NovaPagina' pelo nome da sua nova página
+                        viaId: viaModel.id,
+                      )),
             );
           },
           child: Container(
@@ -39,8 +41,7 @@ class ViaCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), color: Colors.green),
             child: Row(children: [
               Container(
-                child: Image.network((viaModel.montanha?.imagemUrl ?? image),
-                    fit: BoxFit.contain),
+                child: Image.network((image), fit: BoxFit.contain),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
@@ -63,7 +64,7 @@ class ViaCard extends StatelessWidget {
                     ),
                     Container(
                       child: Text(
-                          '${viaModel.grau} - ${viaModel.montanha?.nome ?? "Não possui nome de montanha"}',
+                          '${viaModel.grau} - ${montanhaNome ?? "Não possui nome de montanha"}',
                           style: TextStyle(
                             fontSize: 18,
                           )),
