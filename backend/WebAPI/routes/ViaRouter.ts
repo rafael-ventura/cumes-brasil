@@ -21,4 +21,5 @@ ViaRouter.get('/face', viaController.getFace);
 ViaRouter.get('/fonte', viaController.getFonte);
 
 
+
 export default ViaRouter;

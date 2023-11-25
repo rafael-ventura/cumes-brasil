@@ -14,7 +14,9 @@ export let options = {
     }
 };
 
-const BASE_URL = 'http://localhost:4000';
+
+const BASE_URL = 'https://dd15-200-95-174-74.ngrok-free.app';
+
 const VIA_ID = '1';
 
 export default function () {
@@ -28,7 +30,7 @@ export default function () {
             id: VIA_ID,
             nome: 'Via Atualizada',
             grau: '6a',
-            // outros campos conforme necessário
+            
         });
         const params = {
             headers: {

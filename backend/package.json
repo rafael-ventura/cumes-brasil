@@ -4,10 +4,9 @@
   "description": "- **Endpoint:** `/vias`\r - **Método:** `GET`",
   "main": "server.ts",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "ts-node WebAPI/server.ts",
+    "start": "ts-node WebAPI/server.ts",
     "build": "tsc && echo 'Build concluido com sucesso!'",
-    "testecarga": "k6 run WebAPI/script.js"
+    "testecarga": "k6 cloud WebAPI/script.js"
   },
   "keywords": [],
   "author": "",
