@@ -1,7 +1,11 @@
 import {UsuarioController} from "../Controllers/UsuarioController";
 import { Router } from 'express';
+import {UsuarioService} from "../Application/services/UsuarioService";
 
+const usuarioService = new UsuarioService();
 const usuarioController = new UsuarioController(usuarioService);
+
+
 const router = Router();
 
 router.get("/:id", usuarioController.getUsuarioById);
