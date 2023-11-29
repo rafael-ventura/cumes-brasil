@@ -1,0 +1,36 @@
+import { TimeValueUnit } from "./TimeValueUnit";
+import { TimeValueRaw } from "../Documents/Operations/TimeSeries/RawTimeSeriesTypes";
+export declare class TimeValue {
+    private static readonly SECONDS_PER_DAY;
+    private static readonly SECONDS_IN_28_DAYS;
+    private static readonly SECONDS_IN_31_DAYS;
+    private static readonly SECONDS_IN_365_DAYS;
+    private static readonly SECONDS_IN_366_DAYS;
+    static readonly ZERO: TimeValue;
+    static readonly MAX_VALUE: TimeValue;
+    static readonly MIN_VALUE: TimeValue;
+    private _value;
+    private _unit;
+    get value(): number;
+    get unit(): TimeValueUnit;
+    constructor(value: number, unit: TimeValueUnit);
+    static ofSeconds(seconds: number): TimeValue;
+    static ofMinutes(minutes: number): TimeValue;
+    static ofHours(hours: number): TimeValue;
+    static ofDays(days: number): TimeValue;
+    static ofMonths(months: number): TimeValue;
+    static ofYears(years: number): TimeValue;
+    private _append;
+    toString(): string;
+    private _assertSeconds;
+    private static _assertValidUnit;
+    private static _assertSameUnits;
+    compareTo(other: TimeValue): number;
+    private static _getBoundsInSeconds;
+    private static _isSpecialCompare;
+    private static _isMax;
+    private static _isMin;
+    private static _trimCompareResult;
+    serialize(): TimeValueRaw;
+    static parse(raw: TimeValueRaw): TimeValue;
+}

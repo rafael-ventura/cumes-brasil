@@ -1,0 +1,30 @@
+import { AdvancedSessionExtensionBase } from "./AdvancedSessionExtensionBase";
+import { AttachmentName } from "./../Attachments";
+import { AttachmentData } from "./../Attachments";
+import { InMemoryDocumentSessionOperations } from "./InMemoryDocumentSessionOperations";
+export declare abstract class DocumentSessionAttachmentsBase extends AdvancedSessionExtensionBase {
+    protected constructor(session: InMemoryDocumentSessionOperations);
+    getNames(entity: object): AttachmentName[];
+    store(documentId: string, name: string, stream: AttachmentData): void;
+    store(documentId: string, name: string, stream: AttachmentData, contentType: string): void;
+    store(entity: object, name: string, stream: AttachmentData): void;
+    store(entity: object, name: string, stream: AttachmentData, contentType: string): void;
+    private _storeAttachmentByEntity;
+    protected _throwEntityNotInSessionOrMissingId(entity: object): never;
+    protected _throwEntityNotInSession(entity: object): never;
+    private _deleteAttachmentByEntity;
+    delete(entity: object, name: string): void;
+    delete(documentId: string, name: string): void;
+    rename(documentId: string, name: string, newName: string): void;
+    rename(entity: object, name: string, newName: string): void;
+    move(sourceEntity: object, sourceName: string, destinationEntity: object, destinationName: string): void;
+    move(sourceDocumentId: string, sourceName: string, destinationDocumentId: string, destinationName: string): void;
+    private _moveByEntities;
+    private _moveByEntityIds;
+    copy(sourceEntity: object, sourceName: string, destinationEntity: object, destinationName: string): void;
+    copy(sourceId: string, sourceName: string, destinationId: string, destinationName: string): void;
+    private _copyByEntities;
+    private _copyByEntityIds;
+    private static _throwDocumentAlreadyDeleted;
+    private static _throwOtherDeferredCommandException;
+}
