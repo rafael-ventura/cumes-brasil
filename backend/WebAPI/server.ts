@@ -2,6 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
+import session from 'express-session';
 
 const swaggerJSDoc = require('swagger-jsdoc');
 
@@ -16,6 +17,13 @@ import {FonteRepository} from "../Infrastructure/repositories/FonteRepository"; 
 dotenv.config();
 
 const app = express();
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Note: In production, set secure to true to enforce https
+}));
+
 const PORT = process.env.PORT || 4000;
 
 // Inicializando os repositórios
@@ -54,6 +62,7 @@ const options = {
 };
 
 const swaggerSpec = swaggerJSDoc(options);
+
 
 app.use(express.json());
 

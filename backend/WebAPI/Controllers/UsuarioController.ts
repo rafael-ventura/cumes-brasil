@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UsuarioService } from "../../Application/services/UsuarioService";
 import { UsuarioDTO } from "../../../shared/contratos/UsuarioDto";
+import session from 'express-session';
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -19,6 +20,8 @@ export class UsuarioController {
         const { email, senha } = req.body;
         const usuario = await this.service.login(email, senha);
         if (usuario) {
+            // Armazene o ID do usuário na sessão
+            req.session.userId = usuario.id;
             res.json(usuario);
         } else {
             res.status(401).send("Credenciais inválidas");
