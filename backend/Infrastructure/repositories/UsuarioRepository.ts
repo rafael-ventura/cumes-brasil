@@ -22,7 +22,8 @@ export class UsuarioRepository {
                 throw new Error('Usuário não encontrado');
             }
             // Assegura que o objeto é do tipo Usuario antes de passar para o adaptador
-            return documents[0] as Usuario;
+            const usuarioDocument = documents[0] as Usuario;
+            return usuarioDocument;
         } finally {
             session.dispose();
         }

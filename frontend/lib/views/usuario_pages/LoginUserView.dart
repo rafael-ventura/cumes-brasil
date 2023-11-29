@@ -8,26 +8,29 @@ class LoginUserView extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Adicione o seu UserController
   final UserController _userController = UserController();
 
   Future<void> _enviarMensagem(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
+      bool validarLogin = await _userController.autenticarUsuario(
+        email: _emailController.text,
+        senha: _passwordController.text,
+      );
+      if (validarLogin) {
+        print('');
+        return;
+      }
+
       try {
-        bool validarLogin = await _userController.autenticarUsuario(
+        await _userController.autenticarUsuario(
           email: _emailController.text,
           senha: _passwordController.text,
         );
-        if (validarLogin) {
-          // Se a chamada for bem-sucedida, navegar para outra tela
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => PerfilView()),
-          );
-        } else {
-          // Se as credenciais forem inválidas, mostrar uma mensagem de erro
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Credenciais inválidas')),
-          );
-        }
+        // Se a chamada for bem-sucedida, navegar para outra tela
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => PerfilView()),
+        );
       } catch (error) {
         print('Erro ao logar usuário: $error');
       }
@@ -41,7 +44,7 @@ class LoginUserView extends StatelessWidget {
         titleSpacing: 10,
         backgroundColor: Colors.amber[800],
         title: Text(
-          'Login',
+          'Criando Conta',
           selectionColor: Colors.green,
         ),
       ),
@@ -56,6 +59,7 @@ class LoginUserView extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'Por favor, insira seu email';
                 }
+                // Adicione lógica de validação de email, se necessário
                 return null;
               },
             ),
@@ -67,12 +71,13 @@ class LoginUserView extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'Por favor, insira sua senha';
                 }
+                // Adicione lógica de validação de senha, se necessário
                 return null;
               },
             ),
             ElevatedButton(
               onPressed: () => _enviarMensagem(context),
-              child: Text('Entrar'),
+              child: Text('Salvar'),
             ),
           ],
         ),

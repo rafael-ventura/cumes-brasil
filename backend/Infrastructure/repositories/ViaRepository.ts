@@ -77,8 +77,7 @@ export class ViaRepository {
     async updateVia(via: ViaDocument): Promise<void> {
         const session = store.openSession();
         try {
-            // Use o método session.store com o ID do documento existente para atualização
-            await session.store(via, via.Id.toString()); // Certifique-se de que via.id é o ID do documento existente
+            await session.store(via);
             await session.saveChanges();
         } finally {
             session.dispose();

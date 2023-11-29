@@ -4,8 +4,6 @@ import * as fs from "fs";
 // Carregar os certificados e a chave privada
 const certificate = fs.readFileSync("C:\\certificate\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.pem", "utf8");
 const privateKey = fs.readFileSync("C:\\certificate\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.key", "utf8");
-// const certificate = fs.readFileSync("C:\\Users\\irmae\\Downloads\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.pem", "utf8");
-// const privateKey = fs.readFileSync("C:\\Users\\irmae\\Downloads\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.key", "utf8");
 
 // Preparar as opções de autenticação
 const authOptions: IAuthOptions = {

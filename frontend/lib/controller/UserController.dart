@@ -12,8 +12,7 @@ class UserController {
   }) async {
     try {
       UserModel novoUsuario = UserModel(
-        id: '',
-        //chat GPT: preciso passar o id aqui? e como passo?
+        id: '', //chat GPT: preciso passar o id aqui? e como passo?
         nome: nome,
         email: email,
         colecoes: [],
@@ -148,24 +147,9 @@ class UserController {
     required String senha,
   }) async {
     try {
-      final response = await http.post(
-        Uri.http('localhost:4000', '/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': email,
-          'senha': senha,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        // Se a resposta for bem-sucedida, retorne true
-        return true;
-      } else if (response.statusCode == 401) {
-        // Se as credenciais forem inválidas, retorne false
-        return false;
-      } else {
-        throw Exception('Erro ao autenticar usuário: ${response.statusCode}');
-      }
+      // Lógica de autenticação aqui
+      // ...
+      return true; // ou false, dependendo da lógica de autenticação
     } catch (error) {
       throw Exception('Erro ao autenticar usuário: $error');
     }
