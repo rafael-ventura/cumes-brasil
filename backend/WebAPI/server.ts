@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
 
-const swaggerJSDoc = require('swagger-jsdoc');
 
 // Importações do ViaService e dos Repositórios
 import {MontanhaRepository} from "../Infrastructure/repositories/MontanhaRepository";
@@ -53,12 +52,14 @@ const options = {
     apis: ['../**/*.ts'], // Caminhos para os arquivos onde o swagger-jsdoc vai ler as anotações
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+
+const swaggerSpec = swaggerUi.setup(swaggerDefinition);
 
 app.use(express.json());
 
 // Documentação da API com Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/api-docs', swaggerUi.serve, swaggerSpec);
 
 // Rotas
 app.use('/api', routes);
