@@ -19,7 +19,6 @@ export class ViaAdapter {
         return {
             "@metadata": {
                 "@collection": "Vias"
-
             },
             Id: via.id,
             Nome: via.nome,

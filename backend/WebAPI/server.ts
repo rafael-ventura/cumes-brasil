@@ -8,7 +8,6 @@ const swaggerJSDoc = require('swagger-jsdoc');
 // Importações do ViaService e dos Repositórios
 import {MontanhaRepository} from "../Infrastructure/repositories/MontanhaRepository";
 import {ViaRepository} from "../Infrastructure/repositories/ViaRepository";
-import {InternalService} from '../Application/services/InternalService';
 import {FaceRepository} from "../Infrastructure/repositories/FaceRepository";
 import {CroquiRepository} from "../Infrastructure/repositories/CroquiRepository";
 import {FonteRepository} from "../Infrastructure/repositories/FonteRepository"; // Ajuste conforme necessário

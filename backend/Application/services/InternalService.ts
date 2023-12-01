@@ -40,7 +40,7 @@ export class InternalService {
     transformToViaDocument(vias: any[]) {
         return vias.map(via => ({
             '@metadata': {'@collection': 'Vias'},
-            Id: parseInt(via.id),
+            Id: (via.id),
             Nome: via.nome,
             Croquis: via.croquis,
             Montanha: via.id_montanha,

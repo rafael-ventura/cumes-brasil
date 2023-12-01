@@ -74,15 +74,29 @@ export class ViaRepository {
         }
     }
 
-    async updateVia(via: ViaDocument): Promise<void> {
+    async updateVia(viaDocument: ViaDocument): Promise<void> {
         const session = store.openSession();
         try {
-            await session.store(via);
+            // Carregar a entidade existente
+            var id = viaDocument.Id.toString()
+            console.log(id)
+            console.log(typeof id)
+            const existingVia = await session.load(id);
+
+            if (!existingVia) {
+                throw new Error('Via não encontrada');
+            }
+
+            // Atualizar os atributos da entidade
+            Object.assign(existingVia, viaDocument);
+
+            // Aplicar as mudanças
             await session.saveChanges();
         } finally {
             session.dispose();
         }
     }
+
 
     async getAll(): Promise<any> {
         const session = store.openSession();
