@@ -15,7 +15,7 @@ export let options = {
 };
 
 
-const BASE_URL = 'https://dd15-200-95-174-74.ngrok-free.app';
+const BASE_URL = 'https://622a-200-95-174-157.ngrok-free.app';
 
 const VIA_ID = '1';
 
