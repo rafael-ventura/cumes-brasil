@@ -92,6 +92,9 @@ export class ViaRepository {
             Object.assign(documentToUpdate, viaDocument);
 
             // Salve as mudanças no banco de dados
+            // aqui nao deveria ser algo assim :
+            // await session.store(documentToUpdate, documentToUpdate['@metadata']['@id']);
+            // seila, esse save changes parece que nao faz nada
             await session.saveChanges();
         } catch (err) {
             console.error(err);

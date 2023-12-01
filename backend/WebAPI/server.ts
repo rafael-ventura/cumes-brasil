@@ -2,6 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
+import session from 'express-session';
 
 
 // Importações do ViaService e dos Repositórios
@@ -29,6 +30,13 @@ const croquiRepository = new CroquiRepository();
 /*
 const viaService = new InternalService(montanhaRepository, viaRepository, faceRepository, fonteRepository, croquiRepository);
 */
+
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Note que 'secure' deve ser verdadeiro em produção se estiver usando HTTPS
+}));
 
 // Configuração do Swagger
 const swaggerDefinition = {

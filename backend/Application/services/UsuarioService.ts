@@ -9,11 +9,27 @@ export class UsuarioService {
     private usuarioRepository: UsuarioRepository;
     private usuarioAdapter: UsuarioAdapter;
 
-    constructor(usuarioRepository: UsuarioRepository, usuarioAdapter: UsuarioAdapter) {
-        this.usuarioRepository = usuarioRepository;
-        this.usuarioAdapter = new UsuarioAdapter();
+    constructor(usuarioRepository?: UsuarioRepository, usuarioAdapter?: UsuarioAdapter) {
+        this.usuarioRepository = usuarioRepository || new UsuarioRepository();
+        this.usuarioAdapter = new UsuarioAdapter() || new UsuarioAdapter();
     }
 
+    public async createUser(usuarioData: UsuarioDTO): Promise<UsuarioDTO> {
+        const novoUsuario = new Usuario(
+            usuarioData.Id,
+            usuarioData.nome,
+            usuarioData.email,
+            usuarioData.senha,
+            usuarioData.fotoPerfil,
+            {} as ColecaoBase,
+            {} as ColecaoEscaladas,
+            {} as ColecaoFavoritos
+        );
+
+        novoUsuario.setSenha(usuarioData.senha);
+        const usuarioCriado = await this.usuarioRepository.createUser(novoUsuario);
+        return this.usuarioAdapter.toDto(usuarioCriado);
+    }
 
     public async getUsuarioById(id_usuario: number): Promise<UsuarioDTO> {
         const usuario = await this.usuarioRepository.getUsuarioById(id_usuario);

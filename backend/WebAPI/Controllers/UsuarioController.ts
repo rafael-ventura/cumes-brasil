@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UsuarioService } from "../../Application/services/UsuarioService";
 import { UsuarioDTO } from "../../../shared/contratos/UsuarioDto";
+import session from 'express-session';
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -8,6 +9,12 @@ export class UsuarioController {
     constructor(service: UsuarioService) {
         this.service = service;
     }
+
+    createUser = async (req: Request, res: Response) => {
+        const usuarioData = req.body;
+        const novoUsuario = await this.service.createUser(usuarioData);
+        res.json(novoUsuario);
+    };
 
     getUsuarioById = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
@@ -19,6 +26,7 @@ export class UsuarioController {
         const { email, senha } = req.body;
         const usuario = await this.service.login(email, senha);
         if (usuario) {
+            req.session.userId = usuario.id;
             res.json(usuario);
         } else {
             res.status(401).send("Credenciais inválidas");
@@ -26,9 +34,14 @@ export class UsuarioController {
     };
 
     logout = async (req: Request, res: Response) => {
-        const usuarioId = parseInt(req.params.id);
+        const usuarioId = req.session.userId;
         await this.service.logout(usuarioId);
-        res.send("Logout realizado com sucesso");
+        req.session.destroy((err) => {
+            if (err) {
+                return res.send('Erro ao fazer logout');
+            }
+            res.send("Logout realizado com sucesso");
+        });
     };
 
     alterarSenha = async (req: Request, res: Response) => {

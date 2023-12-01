@@ -14,6 +14,17 @@ export class UsuarioRepository {
         this.adapter = new UsuarioAdapter();
     }
 
+    public async createUser(usuario: Usuario): Promise<Usuario> {
+        const session = this.store.openSession();
+        try {
+            await session.store(usuario);
+            await session.saveChanges();
+            return usuario;
+        } finally {
+            session.dispose();
+        }
+    }
+
     public async getUsuarioById(id_usuario: number): Promise<Usuario> {
         const session = this.store.openSession();
         try {
@@ -22,8 +33,7 @@ export class UsuarioRepository {
                 throw new Error('Usuário não encontrado');
             }
             // Assegura que o objeto é do tipo Usuario antes de passar para o adaptador
-            const usuarioDocument = documents[0] as Usuario;
-            return usuarioDocument;
+            return documents[0] as Usuario;
         } finally {
             session.dispose();
         }
