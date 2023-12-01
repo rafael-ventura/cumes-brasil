@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
 
-const swaggerJSDoc = require('swagger-jsdoc');
 
 // Importações do ViaService e dos Repositórios
 import {MontanhaRepository} from "../Infrastructure/repositories/MontanhaRepository";
@@ -27,9 +26,7 @@ const croquiRepository = new CroquiRepository();
 
 //todo : colocar uma config no appsettings booleano para processar ou não os csvs. Por
 // Inicializando o ViaService
-/*
 const viaService = new InternalService(montanhaRepository, viaRepository, faceRepository, fonteRepository, croquiRepository);
-*/
 
 // Configuração do Swagger
 const swaggerDefinition = {
@@ -52,12 +49,14 @@ const options = {
     apis: ['../**/*.ts'], // Caminhos para os arquivos onde o swagger-jsdoc vai ler as anotações
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+
+const swaggerSpec = swaggerUi.setup(swaggerDefinition);
 
 app.use(express.json());
 
 // Documentação da API com Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use('/api-docs', swaggerUi.serve, swaggerSpec);
 
 // Rotas
 app.use('/api', routes);
@@ -68,5 +67,5 @@ app.listen(PORT, () => {
     console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
     console.log(process.cwd())
 
-    /* console.log(viaService.processCSVData());*/
+     console.log(viaService.processCSVData());
 });
