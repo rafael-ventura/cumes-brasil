@@ -77,21 +77,25 @@ export class ViaRepository {
     async updateVia(viaDocument: ViaDocument): Promise<void> {
         const session = store.openSession();
         try {
-            // Carregar a entidade existente
-            var id = viaDocument.Id.toString()
-            console.log(id)
-            console.log(typeof id)
-            const existingVia = await session.load(id);
+            // Buscar o documento pelo ID interno
+            const documents = await session.query({collection: 'Vias'})
+                .whereEquals('Id', viaDocument.Id)
+                .all();
 
-            if (!existingVia) {
+            if (documents.length === 0) {
                 throw new Error('Via não encontrada');
             }
 
-            // Atualizar os atributos da entidade
-            Object.assign(existingVia, viaDocument);
+            // Atualizar o documento diretamente
+            const documentToUpdate = documents[0];
 
-            // Aplicar as mudanças
+            Object.assign(documentToUpdate, viaDocument);
+
+            // Salve as mudanças no banco de dados
             await session.saveChanges();
+        } catch (err) {
+            console.error(err);
+            throw err;
         } finally {
             session.dispose();
         }

@@ -26,7 +26,9 @@ const croquiRepository = new CroquiRepository();
 
 //todo : colocar uma config no appsettings booleano para processar ou não os csvs. Por
 // Inicializando o ViaService
+/*
 const viaService = new InternalService(montanhaRepository, viaRepository, faceRepository, fonteRepository, croquiRepository);
+*/
 
 // Configuração do Swagger
 const swaggerDefinition = {
@@ -67,5 +69,5 @@ app.listen(PORT, () => {
     console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
     console.log(process.cwd())
 
-     console.log(viaService.processCSVData());
+     /*console.log(viaService.processCSVData());*/
 });
