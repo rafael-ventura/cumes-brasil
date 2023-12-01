@@ -74,12 +74,12 @@ export class ViaRepository {
         }
     }
 
-    async updateVia(viaDocument: ViaDocument): Promise<void> {
+    async updateVia(viaDocument: Via): Promise<void> {
         const session = store.openSession();
         try {
             // Buscar o documento pelo ID interno
             const documents = await session.query({collection: 'Vias'})
-                .whereEquals('Id', viaDocument.Id)
+                .whereEquals('Id', viaDocument.id)
                 .all();
 
             if (documents.length === 0) {
