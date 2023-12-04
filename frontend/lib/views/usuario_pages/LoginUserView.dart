@@ -12,25 +12,24 @@ class LoginUserView extends StatelessWidget {
   final UserController _userController = UserController();
 
   Future<void> _enviarMensagem(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
     if (_formKey.currentState!.validate()) {
-      bool validarLogin = await _userController.autenticarUsuario(
-        email: _emailController.text,
-        senha: _passwordController.text,
-      );
-      if (validarLogin) {
-        print('');
-        return;
-      }
-
       try {
-        await _userController.autenticarUsuario(
+        bool validarLogin = await _userController.autenticarUsuario(
           email: _emailController.text,
           senha: _passwordController.text,
         );
-        // Se a chamada for bem-sucedida, navegar para outra tela
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => PerfilView()),
-        );
+        if (!validarLogin) {
+          scaffoldMessenger.showSnackBar(
+            const SnackBar(content: Text('Credenciais inválidas')),
+          );
+        } else {
+          // Navega para a tela de perfil se o login for bem-sucedido
+          navigator.pushReplacement(
+            MaterialPageRoute(builder: (context) => PerfilView()),
+          );
+        }
       } catch (error) {
         print('Erro ao logar usuário: $error');
       }
@@ -43,8 +42,8 @@ class LoginUserView extends StatelessWidget {
       appBar: AppBar(
         titleSpacing: 10,
         backgroundColor: Colors.amber[800],
-        title: Text(
-          'Criando Conta',
+        title: const Text(
+          'Login',
           selectionColor: Colors.green,
         ),
       ),
@@ -54,30 +53,28 @@ class LoginUserView extends StatelessWidget {
           children: [
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(hintText: 'Seu email'),
+              decoration: const InputDecoration(hintText: 'Seu email'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Por favor, insira seu email';
                 }
-                // Adicione lógica de validação de email, se necessário
                 return null;
               },
             ),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(hintText: 'Sua senha'),
+              decoration: const InputDecoration(hintText: 'Sua senha'),
               obscureText: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Por favor, insira sua senha';
                 }
-                // Adicione lógica de validação de senha, se necessário
                 return null;
               },
             ),
             ElevatedButton(
               onPressed: () => _enviarMensagem(context),
-              child: Text('Salvar'),
+              child: const Text('Entrar'),
             ),
           ],
         ),

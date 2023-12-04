@@ -26,13 +26,12 @@ class UserController {
       final response = await http.post(
         baseUri,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(
-            novoUsuario.toJson()), // Converte o objeto UserModel em JSON
+        body: jsonEncode(novoUsuario.toJson()), // Converte o objeto UserModel em JSON
       );
       if (response.statusCode == 200) {
         return UserModel.fromJson(json.decode(response.body));
       } else {
-        throw Exception('Erro ao buscar vias: ${response.statusCode}');
+        throw Exception('Erro ao criar usuário: ${response.statusCode}');
       }
     } catch (error) {
       throw Exception('Erro de conexão: $error');
@@ -147,9 +146,24 @@ class UserController {
     required String senha,
   }) async {
     try {
-      // Lógica de autenticação aqui
-      // ...
-      return true; // ou false, dependendo da lógica de autenticação
+      final response = await http.post(
+        Uri.http('localhost:4000', '/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'senha': senha,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Se a resposta for bem-sucedida, retorne true
+        return true;
+      } else if (response.statusCode == 401) {
+        // Se as credenciais forem inválidas, retorne false
+        return false;
+      } else {
+        throw Exception('Erro ao autenticar usuário: ${response.statusCode}');
+      }
     } catch (error) {
       throw Exception('Erro ao autenticar usuário: $error');
     }
