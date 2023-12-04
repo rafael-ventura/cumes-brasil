@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
 import 'package:frontend/models/viaModel.dart';
-
-import '../../controller/ViaController.dart';
+import 'package:frontend/controller/ViaController.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
 
 class ListagemViasView extends StatefulWidget {
-  const ListagemViasView({super.key});
+  final String? initialSearchQuery;
+
+  const ListagemViasView({Key? key, this.initialSearchQuery}) : super(key: key);
 
   @override
-  _ListagemViasState createState() => _ListagemViasState();
+  _ListagemViasViewState createState() => _ListagemViasViewState();
 }
 
-class _ListagemViasState extends State<ListagemViasView> {
+class _ListagemViasViewState extends State<ListagemViasView> {
   List<ViaModel> vias = [];
   ViaController viaController = ViaController();
   List<ViaModel> viasFiltradas = [];
@@ -21,7 +22,16 @@ class _ListagemViasState extends State<ListagemViasView> {
   @override
   void initState() {
     super.initState();
-    getAllVia();
+    _searchController.addListener(() {
+      _performSearch(_searchController.text);
+    });
+    getAllVia().then((_) {
+      // Se uma query de busca inicial foi fornecida, faça a busca.
+      if (widget.initialSearchQuery != null) {
+        _searchController.text = widget.initialSearchQuery!;
+        _performSearch(widget.initialSearchQuery!);
+      }
+    });
   }
 
   Future<void> getAllVia() async {
@@ -58,23 +68,20 @@ class _ListagemViasState extends State<ListagemViasView> {
   }
 
   void _performSearch(String query) {
-    List<ViaModel> searchResults = [];
-    if (query.isNotEmpty) {
-      searchResults = vias
-          .where((via) =>
-              via.nome.toLowerCase().contains(query.toLowerCase()) ||
-              via.grau!.toLowerCase().contains(query.toLowerCase()) ||
-              montanhasMap[via.montanha!]
-                      ?.nome
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) ==
-                  true)
-          .toList();
-    } else {
-      searchResults = List.from(vias);
-    }
     setState(() {
-      viasFiltradas = searchResults;
+      if (query.isEmpty) {
+        viasFiltradas = vias;
+      } else {
+        viasFiltradas = vias.where((via) {
+          final nomeVia = via.nome.toLowerCase();
+          final grauVia = via.grau?.toLowerCase() ?? '';
+          final nomeMontanha =
+              montanhasMap[via.montanha!]?.nome.toLowerCase() ?? '';
+          return nomeVia.contains(query) ||
+              grauVia.contains(query) ||
+              nomeMontanha.contains(query);
+        }).toList();
+      }
     });
   }
 
@@ -87,7 +94,6 @@ class _ListagemViasState extends State<ListagemViasView> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
-              onChanged: _performSearch,
               decoration: InputDecoration(
                 labelText: 'Pesquisar (Via, Montanha, Grau)',
                 prefixIcon: Icon(Icons.search),
@@ -99,12 +105,14 @@ class _ListagemViasState extends State<ListagemViasView> {
               itemCount: viasFiltradas.length,
               itemBuilder: (context, index) {
                 final via = viasFiltradas[index];
-                final montanha = montanhasMap[via.montanha!];
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    // Implemente a navegação para a página de detalhes da via aqui
+                  },
                   child: ViaCard(
                     viaModel: via,
-                    montanhaNome: montanha?.nome ?? 'Carregando montanha...',
+                    montanhaNome: montanhasMap[via.montanha]?.nome ??
+                        'Carregando montanha...',
                   ),
                 );
               },

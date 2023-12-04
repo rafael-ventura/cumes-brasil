@@ -1,32 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/views/via_pages/widgets/ListagemNewPageView.dart';
+import 'package:frontend/views/via_pages/ListagemViasView.dart';
 
 class HomeView extends StatelessWidget {
+  const HomeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 400,
-      child: InkWell(
-        onTap: () {
-          // Navegue para a outra página aqui usando o Navigator do contexto atual
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ListagemNewPageView()),
-          );
-        },
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: Colors.red),
-          child: Text(
-            "Listagem de Vias",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Página Inicial'),
+      ),
+      body: GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(16),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        children: <Widget>[
+          _buildCategoryButton(
+            context,
+            label: 'Vias de 5º grau',
+            icon: Icons.filter_5,
+            searchQuery: '5º grau',
           ),
+          _buildCategoryButton(
+            context,
+            label: 'Vias de duração 3',
+            icon: Icons.timer,
+            searchQuery: 'duração 3',
+          ),
+          _buildCategoryButton(
+            context,
+            label: 'Vias no Morro do Cantagalo',
+            icon: Icons.landscape,
+            searchQuery: 'Morro do Cantagalo',
+          ),
+          // Adicionando o novo botão
+          _buildCategoryButton(
+            context,
+            label: 'Vias do André Ilha',
+            icon: Icons.flag,
+            searchQuery: 'André Ilha',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(BuildContext context, {required String label, required IconData icon, required String searchQuery}) {
+    return ElevatedButton.icon(
+      icon: Icon(icon),
+      label: Text(label),
+      onPressed: () => _navigateAndSearch(context, searchQuery),
+      style: ElevatedButton.styleFrom(
+        primary: Theme.of(context).primaryColor,
+        onPrimary: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
+  }
+
+  void _navigateAndSearch(BuildContext context, String searchQuery) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ListagemViasView(initialSearchQuery: searchQuery),
+    ));
   }
 }
