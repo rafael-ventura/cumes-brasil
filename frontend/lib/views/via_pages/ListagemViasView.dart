@@ -69,6 +69,14 @@ class _ListagemViasState extends State<ListagemViasView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 10,
+        backgroundColor: Colors.green[800],
+        title: Text(
+          'Listagem de Vias',
+          selectionColor: Colors.green,
+        ),
+      ),
       body: Column(
         children: [
           Padding(
