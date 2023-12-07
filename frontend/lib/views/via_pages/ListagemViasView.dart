@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/viaModel.dart';
-import 'package:frontend/controller/ViaController.dart';
-import 'package:frontend/views/via_pages/ViaView.dart';
 import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
+import 'package:frontend/controller/ViaController.dart';
 
 class ListagemViasView extends StatefulWidget {
-  final String? initialSearchQuery;
-
-  const ListagemViasView({
-    Key? key,
-    this.initialSearchQuery,
-  }) : super(key: key);
+  const ListagemViasView({super.key, required String initialSearchQuery});
 
   @override
-  _ListagemViasViewState createState() => _ListagemViasViewState();
+  _ListagemViasState createState() => _ListagemViasState();
 }
 
-class _ListagemViasViewState extends State<ListagemViasView> {
+class _ListagemViasState extends State<ListagemViasView> {
   List<ViaModel> vias = [];
-  List<ViaModel> viasFiltradas = [];
-  TextEditingController _searchController = TextEditingController();
   ViaController viaController = ViaController();
+  List<ViaModel> viasFiltradas = [];
+  final TextEditingController _searchController = TextEditingController();
   List<MontanhaModel> montanhas = List<MontanhaModel>.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
-    _searchController.text = widget.initialSearchQuery ?? "";
-    _searchController.addListener(_onSearchChanged);
-    _fetchVias();
+    _searchController.addListener(() {
+      _performSearch(_searchController.text);
+    });
+    getAllVia();
+  }
+
+  Future<void> getAllVia() async {
+    try {
+      List<ViaModel> fetchedVias = await viaController.getAll();
+      setState(() {
+        vias = fetchedVias;
+        viasFiltradas = vias;
+      });
+    } catch (error) {
+      print('Erro ao buscar vias: $error');
+    }
   }
 
   Future<void> getMontanhaById(int id) async {
@@ -41,42 +48,19 @@ class _ListagemViasViewState extends State<ListagemViasView> {
       }
       setState(() {});
     } catch (error) {
-      print('Erro ao buscar montanha: $error');
+      print('Erro ao buscar montanha 3: $error');
     }
-  }
-
-  void _fetchVias() async {
-    try {
-      vias = await viaController.getAll();
-      _performSearch(_searchController.text);
-    } catch (error) {
-      print('Erro ao buscar vias: $error');
-    }
-  }
-
-  void _onSearchChanged() {
-    _performSearch(_searchController.text);
   }
 
   void _performSearch(String query) {
-    final lowerCaseQuery = query.toLowerCase();
     setState(() {
       viasFiltradas = vias.where((via) {
-        return via.nome.toLowerCase().contains(lowerCaseQuery) ||
-            (via.grau!.toLowerCase().contains(lowerCaseQuery) ||
-                via.montanha
-                    .toString()
-                    .toLowerCase()
-                    .contains(lowerCaseQuery) ||
-                via.conquistadores
-                    .toString()
-                    .toLowerCase()
-                    .contains(lowerCaseQuery) ||
-                via.crux.toString().toLowerCase().contains(lowerCaseQuery) ||
-                via.exposicao
-                    .toString()
-                    .toLowerCase()
-                    .contains(lowerCaseQuery) ||
+        return via.nome.toLowerCase().contains(query) ||
+            (via.grau!.toLowerCase().contains(query) ||
+                via.montanha.toString().toLowerCase().contains(query) ||
+                via.conquistadores.toString().toLowerCase().contains(query) ||
+                via.crux.toString().toLowerCase().contains(query) ||
+                via.exposicao.toString().toLowerCase().contains(query) ||
                 false);
       }).toList();
     });
@@ -85,16 +69,13 @@ class _ListagemViasViewState extends State<ListagemViasView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Listagem de Vias'),
-        // Inclua outros ícones se necessário
-      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
+              onChanged: _performSearch,
               decoration: const InputDecoration(
                 labelText: 'Pesquisar (Via, Montanha, Grau)',
                 prefixIcon: Icon(Icons.search),
@@ -108,22 +89,14 @@ class _ListagemViasViewState extends State<ListagemViasView> {
                 final via = viasFiltradas[index];
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViaView(
-                          viaId: via.id,
-                        ),
-                      ),
-                    );
+                    // Navegue para uma página de detalhes aqui.
                   },
                   child: ViaCard(
-                    viaModel: via,
-                    montanhaNome: montanhas
-                        .map((montanha) =>
-                            montanha.id == via.id ? montanha.nome : '')
-                        .toString(),
-                  ),
+                      viaModel: via,
+                      montanhaNome: montanhas
+                          .map((montanha) =>
+                              montanha.id == via.id ? montanha.nome : '')
+                          .toString()),
                 );
               },
             ),
@@ -131,11 +104,5 @@ class _ListagemViasViewState extends State<ListagemViasView> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 }

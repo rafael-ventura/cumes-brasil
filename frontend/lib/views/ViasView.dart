@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/viaModel.dart';
-import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
 import 'package:frontend/controller/ViaController.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
 
 class ViasView extends StatefulWidget {
-  const ViasView({super.key});
+  final String? initialSearchQuery;
+
+  const ViasView({Key? key, this.initialSearchQuery}) : super(key: key);
 
   @override
-  _ListagemViasState createState() => _ListagemViasState();
+  _ListagemViasViewState createState() => _ListagemViasViewState();
 }
 
-class _ListagemViasState extends State<ViasView> {
+class _ListagemViasViewState extends State<ViasView> {
   List<ViaModel> vias = [];
   ViaController viaController = ViaController();
   List<ViaModel> viasFiltradas = [];
-  final TextEditingController _searchController = TextEditingController();
-  List<MontanhaModel> montanhas = List<MontanhaModel>.empty(growable: true);
+  TextEditingController _searchController = TextEditingController();
+  Map<String, MontanhaModel> montanhasMap = {};
 
   @override
   void initState() {
@@ -23,46 +25,70 @@ class _ListagemViasState extends State<ViasView> {
     _searchController.addListener(() {
       _performSearch(_searchController.text);
     });
-    getAllVia();
+    getAllVia().then((_) {
+      // Se uma query de busca inicial foi fornecida, faça a busca.
+      if (widget.initialSearchQuery != null) {
+        _searchController.text = widget.initialSearchQuery!;
+        _performSearch(widget.initialSearchQuery!);
+      }
+    });
   }
 
   Future<void> getAllVia() async {
     try {
-      List<ViaModel> fetchedVias = await viaController.getAll();
+      List<ViaModel> listaVias = await viaController.getAll();
       setState(() {
-        vias = fetchedVias;
+        vias = listaVias;
         viasFiltradas = vias;
+        // Pré-carregar informações da montanha
+        for (ViaModel via in vias) {
+          String montanhaId = via.montanha!;
+          if (!montanhasMap.containsKey(montanhaId)) {
+            // Se a montanha ainda não foi carregada, carregue-a
+            getMontanhaNome(montanhaId);
+          }
+        }
       });
     } catch (error) {
-      print('Erro ao buscar vias: $error');
+      print('Erro ao buscar vias 2: $error');
     }
   }
 
-  Future<void> getMontanhaById(int id) async {
+  Future<void> getMontanhaNome(String montanhaId) async {
     try {
-      for (var via in vias) {
-        if (via.id == id) {
-          montanhas
-              .add(await viaController.getMontanhaById(via.montanha as int));
-        }
-      }
-      setState(() {});
+      MontanhaModel montanha =
+          await viaController.getMontanhaById(int.parse(montanhaId));
+      setState(() {
+        montanhasMap[montanhaId] = montanha;
+      });
     } catch (error) {
-      print('Erro ao buscar montanha 3: $error');
+      print('Erro ao buscar nome da montanha: $error');
+      throw Error();
     }
   }
 
   void _performSearch(String query) {
     setState(() {
-      viasFiltradas = vias.where((via) {
-        return via.nome.toLowerCase().contains(query) ||
-            (via.grau!.toLowerCase().contains(query) ||
-                via.montanha.toString().toLowerCase().contains(query) ||
-                via.conquistadores.toString().toLowerCase().contains(query) ||
-                via.crux.toString().toLowerCase().contains(query) ||
-                via.exposicao.toString().toLowerCase().contains(query) ||
-                false);
-      }).toList();
+      if (query.isEmpty) {
+        viasFiltradas = vias;
+      } else {
+        viasFiltradas = vias.where((via) {
+          final nomeVia = via.nome.toLowerCase();
+          final grauVia = via.grau?.toLowerCase() ?? '';
+          final nomeMontanha =
+              montanhasMap[via.montanha!]?.nome.toLowerCase() ?? '';
+          final conquistadoresVia =
+              via.conquistadores?.toString().toLowerCase() ?? '';
+          final cruxVia = via.crux?.toString().toLowerCase() ?? '';
+          final exposicaoVia = via.exposicao?.toString().toLowerCase() ?? '';
+          return nomeVia.contains(query) ||
+              grauVia.contains(query) ||
+              nomeMontanha.contains(query) ||
+              conquistadoresVia.contains(query) ||
+              cruxVia.contains(query) ||
+              exposicaoVia.contains(query);
+        }).toList();
+      }
     });
   }
 
@@ -75,8 +101,7 @@ class _ListagemViasState extends State<ViasView> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
-              onChanged: _performSearch,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Pesquisar (Via, Montanha, Grau)',
                 prefixIcon: Icon(Icons.search),
               ),
@@ -89,14 +114,13 @@ class _ListagemViasState extends State<ViasView> {
                 final via = viasFiltradas[index];
                 return InkWell(
                   onTap: () {
-                    // Navegue para uma página de detalhes aqui.
+                    // Implemente a navegação para a página de detalhes da via aqui
                   },
                   child: ViaCard(
-                      viaModel: via,
-                      montanhaNome: montanhas
-                          .map((montanha) =>
-                              montanha.id == via.id ? montanha.nome : '')
-                          .toString()),
+                    viaModel: via,
+                    montanhaNome: montanhasMap[via.montanha]?.nome ??
+                        'Carregando montanha...',
+                  ),
                 );
               },
             ),

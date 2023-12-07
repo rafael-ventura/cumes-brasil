@@ -13,7 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: NavBar(), // Use o NavBar2 como o novo widget principal
+      home: NavBar(
+        onNavigate: (int) {},
+      ), // Use o NavBar2 como o novo widget principal
     );
   }
 }
