@@ -20,7 +20,7 @@ class HomeView extends StatelessWidget {
             context,
             label: 'Vias de 5º grau',
             icon: Icons.filter_5,
-            searchQuery: '5º grau',
+            searchQuery: '5',
           ),
           _buildCategoryButton(
             context,
@@ -63,7 +63,10 @@ class HomeView extends StatelessWidget {
 
   void _navigateAndSearch(BuildContext context, String searchQuery) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ListagemViasView(initialSearchQuery: searchQuery),
+      builder: (context) => ListagemViasView(
+        initialSearchQuery: searchQuery,
+      ),
     ));
   }
+
 }

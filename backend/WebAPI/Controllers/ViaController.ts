@@ -35,8 +35,9 @@ export class ViaController {
      */
     getAllVia = async (_: Request, res: Response) => {
         const result = await this.service.getVias();
+        console.log('vias foram obtidas');
         res.json(result);
-    };
+    };//qq coisa so deixa vias obtidas
 
     /**
      * Cria uma nova via.

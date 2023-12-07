@@ -9,7 +9,9 @@ import 'package:frontend/views/ViasView.dart';
 /// Flutter code sample for [BottomNavigationBar].
 
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+  final void Function(int) onNavigate;
+
+  const NavBar({Key? key, required this.onNavigate}) : super(key: key);
 
   @override
   State<NavBar> createState() => _BottomNavBarState();
@@ -29,6 +31,7 @@ class _BottomNavBarState extends State<NavBar> {
     setState(() {
       _selectedIndex = index;
     });
+    widget.onNavigate(index);
   }
 
   @override

@@ -31,7 +31,8 @@ class ViaCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ViaView(
+                  builder: (context) =>
+                      ViaView(
                         viaId: viaModel.id,
                       )),
             );
@@ -40,36 +41,41 @@ class ViaCard extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10), color: Colors.green),
             child: Row(children: [
-              Container(
-                child: Image.network((image), fit: BoxFit.contain),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Image.network((image), fit: BoxFit.contain),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
                 ),
-                width: 180,
               ),
-              Container(
+              SizedBox(
                 width: 20,
               ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      child: Text(
-                        viaModel.nome,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+              Expanded(
+                flex: 3,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        child: Text(
+                          viaModel.nome,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Text(
-                          '${viaModel.grau} - ${montanhaNome ?? "Não possui nome de montanha"}',
-                          style: TextStyle(
-                            fontSize: 18,
-                          )),
-                    ),
-                  ]),
+                      Container(
+                        child: Text(
+                            '${viaModel.grau} - ${montanhaNome ?? "Não possui nome de montanha"}',
+                            style: TextStyle(
+                              fontSize: 18,
+                            )),
+                      ),
+                    ]),
+              ),
             ]),
           ),
         ),

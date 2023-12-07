@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import '../models/viaModel.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +13,7 @@ class ViaController {
       final response = await http.post(
         baseUri, headers: {'Content-Type': 'application/json'},
         body:
-            jsonEncode(novaVia.toJson()), // Converte o objeto ViaModel em JSON
+          jsonEncode(novaVia.toJson()), // Converte o objeto ViaModel em JSON
       );
       if (response.statusCode == 200) {
         return List<ViaModel>.from(json.decode(response.body));
@@ -67,6 +68,7 @@ class ViaController {
       throw Exception('Erro de conexão: $error');
     }
   }
+  
 
   Future<List<ViaModel>> getViasFromJsonFile() async {
     try {
