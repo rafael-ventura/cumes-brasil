@@ -13,7 +13,7 @@ class ViaController {
       final response = await http.post(
         baseUri, headers: {'Content-Type': 'application/json'},
         body:
-          jsonEncode(novaVia.toJson()), // Converte o objeto ViaModel em JSON
+            jsonEncode(novaVia.toJson()), // Converte o objeto ViaModel em JSON
       );
       if (response.statusCode == 200) {
         return List<ViaModel>.from(json.decode(response.body));
@@ -68,7 +68,6 @@ class ViaController {
       throw Exception('Erro de conexão: $error');
     }
   }
-  
 
   Future<List<ViaModel>> getViasFromJsonFile() async {
     try {
@@ -111,7 +110,45 @@ class ViaController {
       throw Exception('Erro ao carregar montanhas do arquivo JSON: $error');
     }
   }
+
+  String convertToRoman(int number) {
+    final List<String> romanNumerals = [
+      'I',
+      'II',
+      'III',
+      'IV',
+      'V',
+      'VI',
+      'VII',
+      'VIII',
+      'IX',
+      'X'
+    ];
+
+    if (number < 1 || number > 10) {
+      throw Exception(
+          'Número fora do intervalo de conversão para algarismos romanos.');
+    }
+
+    return romanNumerals[number - 1];
+  }
+
+  String getFormattedGrau(String? grau) {
+    if (grau != null && grau.isNotEmpty) {
+      try {
+        double grauDecimal = double.parse(grau);
+        int grauNumerico = grauDecimal.toInt();
+        return convertToRoman(grauNumerico);
+      } catch (e) {
+        // Caso o parsing falhe, retorne o grau original
+        return grau;
+      }
+    }
+    return '';
+  }
 }
+
+
 
 // List<ViaModel> vias = [
 //       ViaModel(id: 1, nome: 'Via 1', grau: '5.10a'),

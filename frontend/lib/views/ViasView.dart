@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/viaModel.dart';
 import 'package:frontend/controller/ViaController.dart';
 import 'package:frontend/views/via_pages/widgets/ViaCard.dart';
+import 'package:frontend/views/via_pages/widgets/ViaCard2.dart';
 
 class ViasView extends StatefulWidget {
   final String? initialSearchQuery;
@@ -58,12 +59,15 @@ class _ListagemViasViewState extends State<ViasView> {
     try {
       MontanhaModel montanha =
           await viaController.getMontanhaById(int.parse(montanhaId));
-      setState(() {
-        montanhasMap[montanhaId] = montanha;
-      });
+
+      // Verificar se o widget ainda é válido antes de chamar setState
+      if (mounted) {
+        setState(() {
+          montanhasMap[montanhaId] = montanha;
+        });
+      }
     } catch (error) {
       print('Erro ao buscar nome da montanha: $error');
-      throw Error();
     }
   }
 
@@ -102,27 +106,35 @@ class _ListagemViasViewState extends State<ViasView> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Pesquisar (Via, Montanha, Grau)',
+                labelText:
+                    'Pesquisar (Via, Montanha, Grau, Crux - só aceita letras minúsculas)',
                 prefixIcon: Icon(Icons.search),
               ),
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: viasFiltradas.length,
-              itemBuilder: (context, index) {
-                final via = viasFiltradas[index];
-                return InkWell(
-                  onTap: () {
-                    // Implemente a navegação para a página de detalhes da via aqui
-                  },
-                  child: ViaCard(
-                    viaModel: via,
-                    montanhaNome: montanhasMap[via.montanha]?.nome ??
-                        'Carregando montanha...',
-                  ),
-                );
-              },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 8), // Adicione o espaçamento desejado
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing:
+                      8.0, // Espaçamento horizontal entre os cartões
+                  mainAxisSpacing: 8.0, // Espaçamento vertical entre os cartões
+                ),
+                itemCount: viasFiltradas.length,
+                itemBuilder: (context, index) {
+                  final via = viasFiltradas[index];
+                  return InkWell(
+                    child: ViaCard2(
+                      viaModel: via,
+                      montanhaNome: montanhasMap[via.montanha]?.nome ??
+                          'Carregando montanha...',
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],

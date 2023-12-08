@@ -160,44 +160,40 @@ class _ViaViewState extends State<ViaView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     buildSectionTitle('Grau:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent(
-                                        '${viaModel.grau ?? "Sem Grau"}'),
-                                    SizedBox(height: 8),
+                                        '${viaController.getFormattedGrau(viaModel.grau) ?? "Sem Grau"}'),
+                                    SizedBox(height: 15),
+                                    buildSectionTitle('Crux:'),
+                                    SizedBox(height: 2),
+                                    buildSectionContent(
+                                        '${viaModel.crux ?? "Sem Crux"}'),
+                                    SizedBox(height: 15),
                                     buildSectionTitle('Artificial:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent(
                                         '${viaModel.artificial ?? "Não"}'),
+                                    SizedBox(height: 15),
                                     buildSectionTitle('Altura:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent('${"Sem Altura"}'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 15),
                                     buildSectionTitle('Duração:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent(
                                         '${viaModel.duracao ?? "Sem Duração"}'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 15),
                                     buildSectionTitle('Exposição:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent(
                                         '${viaModel.exposicao ?? "Sem Exposição"}'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 15),
                                     buildSectionTitle('Extensão:'),
-                                    SizedBox(height: 8),
+                                    SizedBox(height: 2),
                                     buildSectionContent(
                                         '${viaModel.extensao ?? "Sem Extensão"}'),
                                   ],
                                 ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                buildSectionTitle('Crux:'),
-                                SizedBox(height: 4),
-                                buildSectionContent(
-                                    '${viaModel.crux ?? "Sem Crux"}'),
-                                SizedBox(height: 16),
                               ],
                             ),
                             Column(

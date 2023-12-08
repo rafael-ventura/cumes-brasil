@@ -1,71 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/viaModel.dart';
-import 'package:frontend/views/via_pages/ViaView.dart';
 
-class ViaCard2 extends StatelessWidget {
+class ViaCard3 extends StatelessWidget {
   final String imgUrl =
       'https://images.squarespace-cdn.com/content/v1/598b7343f7e0abaa677c5fd8/1576953784201-VT0GE0GJTZR6OYRNAN33/escalada-rio-de-janeiro-morro-da-urca-face-norte-2.jpg?format=2500w';
-  final double width = 400;
-  final ViaModel viaModel;
-  final String montanhaNome;
-
-  const ViaCard2({
-    super.key,
-    required this.viaModel,
-    required this.montanhaNome,
-  });
-
-  String convertToRoman(int number) {
-    final List<String> romanNumerals = [
-      'I',
-      'II',
-      'III',
-      'IV',
-      'V',
-      'VI',
-      'VII',
-      'VIII',
-      'IX',
-      'X'
-    ];
-
-    if (number < 1 || number > 10) {
-      throw Exception(
-          'Número fora do intervalo de conversão para algarismos romanos.');
-    }
-
-    return romanNumerals[number - 1];
-  }
-
-  String getFormattedGrau(String? grau) {
-    if (grau != null && grau.isNotEmpty) {
-      try {
-        double grauDecimal = double.parse(grau);
-        int grauNumerico = grauDecimal.toInt();
-        return convertToRoman(grauNumerico);
-      } catch (e) {
-        // Caso o parsing falhe, retorne o grau original
-        return grau;
-      }
-    }
-    return '';
-  }
-
+  final String title = "Via Card Modelo 2";
+  final Color color = Colors.amber;
+  final double width = 300;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ViaView(
-                        viaId: viaModel.id,
-                      )),
-            );
-          },
+          onTap: () {},
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -85,28 +32,23 @@ class ViaCard2 extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                montanhaNome,
+                title,
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                maxLines:
-                    2, // Defina o número máximo de linhas que o texto deve ocupar
-                overflow: TextOverflow
-                    .ellipsis, // Adicione essa linha para mostrar os três pontos
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                  width: width,
-                  child: LikeListTile(
-                    title: '${viaModel.nome} - ${viaModel.exposicao}',
-                    likes: "0",
-                    subtitle:
-                        'Grau: ${getFormattedGrau(viaModel.grau)} - Crux: ${viaModel.crux}',
-                    color: Colors.amber,
-                  )),
             ],
           ),
         ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+            width: width,
+            child: LikeListTile(
+              title: "Andre Hirata",
+              likes: "130",
+              subtitle: "103 Reviews",
+              color: color,
+            ))
       ],
     );
   }
@@ -134,8 +76,10 @@ class LikeListTile extends StatelessWidget {
           aspectRatio: 1,
           child: Container(
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image: NetworkImage(
+                        "https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"))),
           ),
         ),
       ),

@@ -7,9 +7,6 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Página Inicial'),
-      ),
       body: GridView.count(
         crossAxisCount: 2,
         padding: const EdgeInsets.all(16),
@@ -46,7 +43,10 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryButton(BuildContext context, {required String label, required IconData icon, required String searchQuery}) {
+  Widget _buildCategoryButton(BuildContext context,
+      {required String label,
+      required IconData icon,
+      required String searchQuery}) {
     return ElevatedButton.icon(
       icon: Icon(icon),
       label: Text(label),
@@ -54,9 +54,11 @@ class HomeView extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         primary: Theme.of(context).primaryColor,
         onPrimary: Colors.white,
+        fixedSize: const Size(10, 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+        minimumSize: const Size(10, 10), // Ajuste aqui
       ),
     );
   }
@@ -68,5 +70,4 @@ class HomeView extends StatelessWidget {
       ),
     ));
   }
-
 }
