@@ -32,6 +32,14 @@ const croquiRepository = new CroquiRepository();
 const viaService = new InternalService(montanhaRepository, viaRepository, faceRepository, fonteRepository, croquiRepository);
 */
 
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+
+createConnection().then(async connection => {
+    console.log("Conectado ao banco de dados");
+}).catch(error => console.log(error));
+
+
 // Configuração do Swagger
 const swaggerDefinition = {
     openapi: '3.0.0',

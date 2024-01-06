@@ -23,8 +23,10 @@
     "mysql2": "^3.6.0",
     "raven": "^2.6.4",
     "ravendb": "^5.4.1",
-    "reflect-metadata": "^0.1.13",
-    "swagger-ui-express": "^5.0.0"
+    "reflect-metadata": "^0.1.14",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.0",
+    "typeorm": "^0.3.19"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
