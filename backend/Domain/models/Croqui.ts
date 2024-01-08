@@ -1,26 +1,26 @@
-import {ICroqui} from "../interfaces/models/ICroqui";
-import {Via} from "./Via";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Via } from './Via'; // Certifique-se de importar corretamente a entidade Via
 
-/**
- * Classe Croqui que implementa a interface ICroqui.
- * Esta classe representa um croqui de uma via de escalada.
- */
-export class Croqui implements ICroqui {
-    id: number;
+@Entity()
+export class Croqui {
+    @PrimaryGeneratedColumn()
+    id: number | undefined;
+
+    @Column()
     imagemUrl: string;
+
+    @Column()
     autor: string;
-    descricao?: string | null | undefined;
 
+    @Column({ nullable: true })
+    descricao: string | null | undefined;
 
-    constructor(
-        id: number,
-        imagemUrl: string,
-        autor: string,
-        descricao?: string | null | undefined
-    ) {
-        this.id = id;
-        this.autor = autor;
+    @ManyToOne(() => Via, (via: Via) => via.id_fonte)
+    via: Via | undefined | null;
+
+    constructor(imagemUrl: string, autor: string, descricao?: string | null | undefined) {
         this.imagemUrl = imagemUrl;
+        this.autor = autor;
         this.descricao = descricao;
     }
 
@@ -42,7 +42,6 @@ export class Croqui implements ICroqui {
     /**
      * Método para obter o autor do Croqui.
      * @returns string
-     * @returns void
      */
     getAutor(): string {
         return this.autor;
@@ -51,15 +50,17 @@ export class Croqui implements ICroqui {
     /**
      * Método para adicionar uma Via ao Croqui.
      * @param via
-     * @returns void
      */
+    adicionarVia(via: Via): void {
+        this.via = via;
+    }
 
     /**
      * Método para remover uma Via do Croqui.
-     * @param via
-     * @returns void
      */
-
+    removerVia(): void {
+        this.via = null;
+    }
 
     toString(): string {
         return `Croqui: ${this.id} - ${this.autor} - ${this.imagemUrl} - ${this.descricao}`;

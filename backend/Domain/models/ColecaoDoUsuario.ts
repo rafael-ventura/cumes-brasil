@@ -1,10 +1,9 @@
-import {Via} from "./Via";
-import {ColecaoBase} from "./ColecaoBase";
-import {IColecaoDoUsuario} from "../interfaces/models/IColecaoUsuario";
+import { Entity } from 'typeorm';
+import { ColecaoBase } from './ColecaoBase';
 
-export class ColecaoDoUsuario extends ColecaoBase implements IColecaoDoUsuario {
+@Entity()
+export class ColecaoDoUsuario extends ColecaoBase {
     constructor(nome: string, descricao: string) {
         super(nome, descricao);
     }
-
 }

@@ -1,25 +1,21 @@
-import {Via} from "./Via";
-import {ColecaoBase} from "./ColecaoBase";
-import {IColecaoFavoritos} from "../interfaces/models/IColecaoFavoritos";
+import { Entity, Column, ManyToMany } from 'typeorm';
+import { Via } from './Via';
+import { ColecaoBase } from './ColecaoBase';
 
-export class ColecaoFavoritos extends ColecaoBase implements IColecaoFavoritos {
+@Entity()
+export class ColecaoFavoritos extends ColecaoBase {
+    @ManyToMany(() => Via, via => via.colecoesFavoritas)
+    viasFavoritas: Via[];
 
     constructor() {
         super('Favoritos');
         this.descricaoFormated('');
+        this.viasFavoritas = [];
     }
 
     public descricaoFormated(descricao: string): string {
         return `${super.descricaoMethod(descricao)} ${this.quantidadeVias}`;
     }
 
-
-    /*
-    *
-    * front ( envia uma lista de Vias )
-    *
-    * back- recebe essa lista e
-    * Ao salvar usuario, criar 2 colecoes vazias (escaldas e favoritos)
-    * */
-
+    // Pode adicionar mais métodos conforme necessário
 }

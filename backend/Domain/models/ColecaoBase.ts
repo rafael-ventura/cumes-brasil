@@ -1,48 +1,44 @@
-import {Via} from "./Via";
-import {IColecaoBase} from "../interfaces/models/IColecaoBase";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Via } from './Via';
 
-export class ColecaoBase implements IColecaoBase {
-    id: number;
+@Entity()
+export class ColecaoBase {
+    @PrimaryGeneratedColumn()
+    id: number | undefined;
+
+    @Column()
     nome: string;
+
+    @Column()
     descricao: string;
-    private _vias: Via[];
 
-    constructor(nome: string = '', descricao: string = '', vias: Via[] = []) {
-        this.id = this.generateId();
-        this.nome = nome || '';
+    @OneToMany(() => Via, via => via.colecaoBase)
+    vias: Via[];
+
+    constructor(nome: string = '', descricao: string = '') {
+        this.nome = nome;
         this.descricao = descricao;
-        this._vias = vias;
+        this.vias = [];
     }
 
-    get quantidadeVias(): number {
-        return this._vias.length;
+    public get quantidadeVias(): string {
+        return `(${this.vias.length} vias)`;
     }
 
-    descricaoMethod(descricao: string) {
-         this.descricao = descricao;
+    public descricaoFormatada(): string {
+        return `${this.descricao} ${this.quantidadeVias}`;
     }
 
-    get vias(): Via[] {
-        return this._vias;
-    }
-
-    set vias(value: Via[]) {
-        this._vias = value;
-    }
-
-    private generateId(): number {
-        return Math.random();
-    }
 
     public adicionarVia(via: Via): void {
-        this._vias.push(via);
+        this.vias.push(via);
     }
 
     public removerVia(via: Via): void {
-        this._vias = this._vias.filter(v => v.id !== via.id);
+        this.vias = this.vias.filter(v => v.id !== via.id);
     }
 
     public getViaById(id: number): Via | undefined {
-        return this._vias.find(via => via.id === id);
+        return this.vias.find(via => via.id === id);
     }
 }

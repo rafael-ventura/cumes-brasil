@@ -1,19 +1,24 @@
-import {Via} from "./Via";
-import {IFonte} from "../interfaces/models/IFonte";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Via } from './Via'; // Certifique-se de importar corretamente a entidade Via
 
-export class Fonte implements IFonte {
-    id: number;
-    private vias: Via[];
+@Entity()
+export class Fonte {
+    @PrimaryGeneratedColumn()
+    id: number | undefined;
+
+    @OneToMany(() => Via, (via: Via) => via.id_fonte)
+    vias: Via[];
+
+    @Column()
     referencia: string;
 
-    constructor(id: number ,vias: Via[], referencia: string) {
-        this.id = id;
-        this.vias = vias;
+    constructor(referencia: string) {
         this.referencia = referencia;
+        this.vias = [];
     }
 
     public getViaById(id: number): Via | undefined {
-        return this.vias.find(via => via.getId() === id);
+        return this.vias.find(via => via.id === id);
     }
 
     public getVias(): Via[] {
@@ -25,11 +30,6 @@ export class Fonte implements IFonte {
     }
 
     public removerVia(via: Via): void {
-        this.vias = this.vias.filter(v => v.getId() !== via.getId());
+        this.vias = this.vias.filter(v => v.id !== via.id);
     }
-
-    public getReferencia(): string {
-        return this.referencia;
-    }
-
 }
