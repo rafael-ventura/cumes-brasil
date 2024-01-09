@@ -14,6 +14,7 @@ export class ColecaoEscaladas extends ColecaoBase {
 
     constructor() {
         super('Histórico', 'Minhas vias escaladas');
+        this.descricaoFormatada();
         this.viasEscaladas = [];
     }
 

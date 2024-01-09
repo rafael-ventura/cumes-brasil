@@ -25,6 +25,11 @@ export class Via implements IVia {
     public id_face?: number | null | undefined;
     public id_fonte?: number | null | undefined;
     public id_viaPrincipal?: number | null | undefined;
+    public colecaoBase?: number | null | undefined;
+    public colecaoUsuario?: number | null | undefined;
+    public colecaoEscaladas?: number | null | undefined;
+    public colecoesFavoritas?: number | null | undefined;
+
 
     /**
      * Construtor da classe Via.

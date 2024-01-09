@@ -9,13 +9,7 @@ export class ColecaoFavoritos extends ColecaoBase {
 
     constructor() {
         super('Favoritos');
-        this.descricaoFormated('');
+        this.descricaoFormatada();
         this.viasFavoritas = [];
     }
-
-    public descricaoFormated(descricao: string): string {
-        return `${super.descricaoMethod(descricao)} ${this.quantidadeVias}`;
-    }
-
-    // Pode adicionar mais métodos conforme necessário
 }
