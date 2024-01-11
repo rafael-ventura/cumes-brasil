@@ -2,7 +2,7 @@
  * Interface IVia que define a estrutura de uma via de escalada.
  * Deve refletir todos os atributos e métodos públicos da classe Via.
  */
-import {Croqui} from "../../models/Croqui";
+import {Croqui} from "../../entities/Croqui";
 import {IMontanha} from "./IMontanha";
 
 export interface IVia {

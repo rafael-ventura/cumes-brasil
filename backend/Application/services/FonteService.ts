@@ -1,5 +1,5 @@
 import {FonteRepository} from "../../Infrastructure/repositories/FonteRepository";
-import {Fonte} from "../../Domain/models/Fonte";
+import {Fonte} from "../../Domain/entities/Fonte";
 import {IFonteService} from "../../Domain/interfaces/services/IFonteService";
 import {FonteDto} from "../../../shared/contratos/ViaDto";
 

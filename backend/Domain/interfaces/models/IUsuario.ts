@@ -1,6 +1,5 @@
-import {Via} from "../../models/Via";
-import {ColecaoDoUsuario} from "../../models/ColecaoDoUsuario";
-import {ColecaoBase} from "../../models/ColecaoBase";
+import {Via} from "../../entities/Via"
+import {ColecaoBase} from "../../entities/ColecaoBase";
 
 export interface IUsuario {
     id: number;
@@ -8,8 +7,8 @@ export interface IUsuario {
     email: string;
     fotoPerfil: string;
     colecao: ColecaoBase;
-    historico: ColecaoDoUsuario;
-    favoritos: ColecaoDoUsuario;
+    historico: ColecaoBase;
+    favoritos: ColecaoBase;
 
     getSenha(): string;
 

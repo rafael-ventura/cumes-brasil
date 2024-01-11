@@ -2,10 +2,10 @@
 import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
 import {ViaAdapter} from '../../Infrastructure/adapters/ViaAdapter';
 import {ViaDto} from "../../../shared/contratos/ViaDto";
-import {Via} from "../../Domain/models/Via";
-import {Montanha} from "../../Domain/models/Montanha";
-import {Face} from "../../Domain/models/Face";
-import {Fonte} from "../../Domain/models/Fonte";
+import {Via} from "../../Domain/entities/Via";
+import {Montanha} from "../../Domain/entities/Montanha";
+import {Face} from "../../Domain/entities/Face";
+import {Fonte} from "../../Domain/entities/Fonte";
 import {IViaService} from "../../Domain/interfaces/services/IViaService";
 
 //TODO: Adicionar métodos de validação de dados, logica de negócio e tratamento de erros.

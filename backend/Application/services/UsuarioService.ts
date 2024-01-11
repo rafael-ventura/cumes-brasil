@@ -1,8 +1,8 @@
-import {ColecaoEscaladas} from "../../Domain/models/ColecaoEscaladas";
-import {ColecaoBase} from "../../Domain/models/ColecaoBase";
-import {ColecaoFavoritos} from "../../Domain/models/ColecaoFavoritos";
+import {ColecaoEscaladas} from "../../Domain/entities/ColecaoEscaladas";
+import {ColecaoBase} from "../../Domain/entities/ColecaoBase";
+import {ColecaoFavoritos} from "../../Domain/entities/ColecaoFavoritos";
 import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
-import {Usuario} from "../../Domain/models/Usuario";
+import {Usuario} from "../../Domain/entities/Usuario";
 import {UsuarioDTO} from "../../../shared/contratos/UsuarioDto";
 
 export class UsuarioService {

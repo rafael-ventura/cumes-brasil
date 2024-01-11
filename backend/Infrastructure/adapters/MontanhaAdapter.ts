@@ -1,4 +1,4 @@
-import {Montanha} from "../../Domain/models/Montanha";
+import {Montanha} from "../../Domain/entities/Montanha";
 import {MontanhaDocument} from "../documents/MontanhaDocument";
 import {ViaAdapter} from "./ViaAdapter";
 

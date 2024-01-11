@@ -1,4 +1,4 @@
-import {Face} from "../../Domain/models/Face";
+import {Face} from "../../Domain/entities/Face";
 import store from "../config/db";
 import {ViaRepository} from "./ViaRepository";
 

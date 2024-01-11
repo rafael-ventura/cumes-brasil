@@ -1,4 +1,4 @@
-import {Fonte} from "../../models/Fonte";
+import {Fonte} from "../../entities/Fonte";
 import {FonteDto} from "../../../../shared/contratos/ViaDto";
 
 

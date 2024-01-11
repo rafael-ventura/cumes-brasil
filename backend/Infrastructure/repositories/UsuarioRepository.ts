@@ -1,5 +1,5 @@
 import {DocumentStore} from 'ravendb';
-import {Usuario} from "../../Domain/models/Usuario";
+import {Usuario} from "../../Domain/entities/Usuario";
 import {UsuarioAdapter} from "../adapters/UsuarioAdapter";
 import {UsuarioDTO} from "../../../shared/contratos/UsuarioDto";
 

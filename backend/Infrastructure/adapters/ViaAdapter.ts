@@ -1,11 +1,11 @@
 // ViaAdapter.ts
-import {Via} from '../../Domain/models/Via';
-import {Croqui} from "../../Domain/models/Croqui";
+import {Via} from '../../Domain/entities/Via';
+import {Croqui} from "../../Domain/entities/Croqui";
 import {ViaDocument} from "../documents/ViaDocument";
 import {CroquiDTO, FaceDTO, FonteDto, MontanhaDTO, ViaDto} from "../../../shared/contratos/ViaDto";
-import {Montanha} from "../../Domain/models/Montanha";
-import {Face} from "../../Domain/models/Face";
-import {Fonte} from "../../Domain/models/Fonte";
+import {Montanha} from "../../Domain/entities/Montanha";
+import {Face} from "../../Domain/entities/Face";
+import {Fonte} from "../../Domain/entities/Fonte";
 import {CroquiDocument} from "../documents/CroquiDocument";
 import {MontanhaDocument} from "../documents/MontanhaDocument";
 import {IMontanha} from "../../Domain/interfaces/models/IMontanha";

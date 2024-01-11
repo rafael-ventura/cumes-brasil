@@ -1,5 +1,5 @@
-import {Via} from "../../models/Via";
-import {Montanha} from "../../models/Montanha";
+import {Via} from "../../entities/Via";
+import {Montanha} from "../../entities/Montanha";
 
 export interface IMontanha {
     id?: number;

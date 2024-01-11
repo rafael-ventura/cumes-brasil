@@ -1,8 +1,8 @@
-import {Montanha} from "../../models/Montanha";
+import {Montanha} from "../../entities/Montanha";
 import {ViaDto} from "../../../../shared/contratos/ViaDto";
-import {Via} from "../../models/Via";
-import {Fonte} from "../../models/Fonte";
-import {Face} from "../../models/Face";
+import {Via} from "../../entities/Via";
+import {Fonte} from "../../entities/Fonte";
+import {Face} from "../../entities/Face";
 
 
 export interface IViaService {

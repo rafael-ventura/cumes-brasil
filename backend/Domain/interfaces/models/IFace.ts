@@ -1,4 +1,4 @@
-import {Via} from "../../models/Via";
+import {Via} from "../../entities/Via";
 
 export interface IFace {
     id: number;

@@ -1,5 +1,5 @@
-import {Croqui} from "../../Domain/models/Croqui";
-import {Via} from "../../Domain/models/Via";
+import {Croqui} from "../../Domain/entities/Croqui";
+import {Via} from "../../Domain/entities/Via";
 import {MontanhaAdapter} from "../adapters/MontanhaAdapter";
 import {ViaAdapter} from "../adapters/ViaAdapter";
 import store from "../config/db";

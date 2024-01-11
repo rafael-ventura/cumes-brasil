@@ -1,8 +1,8 @@
 import {ViaAdapter} from "../adapters/ViaAdapter";
 import {MontanhaAdapter} from "../adapters/MontanhaAdapter";
-import {Montanha} from "../../Domain/models/Montanha";
+import {Montanha} from "../../Domain/entities/Montanha";
 import store from "../config/db";
-import {Via} from "../../Domain/models/Via";
+import {Via} from "../../Domain/entities/Via";
 
 export class MontanhaRepository {
     private viaAdapter: ViaAdapter;

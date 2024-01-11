@@ -1,7 +1,7 @@
 import {MontanhaAdapter} from "../adapters/MontanhaAdapter";
 import {ViaAdapter} from "../adapters/ViaAdapter";
 import {ViaRepository} from "./ViaRepository";
-import {Fonte} from "../../Domain/models/Fonte";
+import {Fonte} from "../../Domain/entities/Fonte";
 import store from "../config/db";
 
 export class FonteRepository {

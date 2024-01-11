@@ -1,14 +1,14 @@
 // ViaRepository.ts
 import {DocumentStore} from 'ravendb';
 import {ViaAdapter} from '../adapters/ViaAdapter';
-import {Via} from '../../Domain/models/Via';
+import {Via} from '../../Domain/entities/Via';
 import {ViaDocument} from "../documents/ViaDocument";
 import store from "../config/db";
-import {Montanha} from "../../Domain/models/Montanha";
+import {Montanha} from "../../Domain/entities/Montanha";
 import {MontanhaDocument} from "../documents/MontanhaDocument";
 import {MontanhaAdapter} from "../adapters/MontanhaAdapter";
-import {Face} from "../../Domain/models/Face";
-import {Fonte} from "../../Domain/models/Fonte";
+import {Face} from "../../Domain/entities/Face";
+import {Fonte} from "../../Domain/entities/Fonte";
 
 export class ViaRepository {
     private viaAdapter: ViaAdapter;

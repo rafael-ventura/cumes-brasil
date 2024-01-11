@@ -1,8 +1,8 @@
 import {UsuarioDTO} from "../../../shared/contratos/UsuarioDto";
-import {Usuario} from "../../Domain/models/Usuario";
-import {ColecaoBase} from "../../Domain/models/ColecaoBase";
-import {ColecaoEscaladas} from "../../Domain/models/ColecaoEscaladas";
-import {ColecaoFavoritos} from "../../Domain/models/ColecaoFavoritos";
+import {Usuario} from "../../Domain/entities/Usuario";
+import {ColecaoBase} from "../../Domain/entities/ColecaoBase";
+import {ColecaoEscaladas} from "../../Domain/entities/ColecaoEscaladas";
+import {ColecaoFavoritos} from "../../Domain/entities/ColecaoFavoritos";
 
 export class UsuarioAdapter {
 
