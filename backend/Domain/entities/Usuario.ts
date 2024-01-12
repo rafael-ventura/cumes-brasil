@@ -6,23 +6,23 @@ import {ColecaoBase} from "./ColecaoBase";
 @Entity()
 export class Usuario {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    nome: string;
+    nome: string | undefined;
 
     @Column()
-    email: string;
+    email: string | undefined;
 
     @Column({ nullable: true })
-    fotoPerfil: string;
+    fotoPerfil: string | undefined;
 
     @OneToMany(() => ColecaoBase, colecao => colecao.usuario, { cascade: true, eager: true })
-    colecoesPersonalizadas: ColecaoBase[];
+    colecoesPersonalizadas: ColecaoBase[] | undefined;
 
     @OneToMany(() => ColecaoEscaladas, colecaoEscaladas => colecaoEscaladas.usuario, { cascade: true, eager: true })
-    historicoEscaladas: ColecaoEscaladas[];
+    historicoEscaladas: ColecaoEscaladas[] | undefined;
 
     @OneToMany(() => ColecaoFavoritos, colecaoFavoritos => colecaoFavoritos.usuario, { cascade: true, eager: true })
-    favoritos: ColecaoFavoritos[];
+    favoritos: ColecaoFavoritos[] | undefined;
 }

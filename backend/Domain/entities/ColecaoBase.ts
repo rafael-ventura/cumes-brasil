@@ -5,19 +5,19 @@ import { Usuario } from './Usuario';
 @Entity()
 export class ColecaoBase {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    nome: string;
+    nome: string | undefined;
 
     @Column()
-    descricao: string;
+    descricao: string | undefined;
 
     @ManyToOne(() => Usuario, usuario => usuario.colecoesPersonalizadas)
-    usuario: Usuario;
+    usuario: Usuario | undefined;
 
     @ManyToMany(() => Via, via => via.colecoes)
     @JoinTable()
-    vias: Via[];
+    vias: Via[] | undefined;
 }
 

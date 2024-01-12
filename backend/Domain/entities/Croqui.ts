@@ -4,16 +4,16 @@ import { Via } from './Via';
 @Entity()
 export class Croqui {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    imagemUrl: string;
+    imagemUrl: string | undefined;
 
     @Column()
-    autor: string;
+    autor: string | undefined;
 
     @Column({ nullable: true })
-    descricao: string;
+    descricao: string | undefined;
 
     @ManyToMany(() => Via, via => via.croquis)
     @JoinTable({
@@ -21,5 +21,5 @@ export class Croqui {
         joinColumn: { name: "croqui_id", referencedColumnName: "id" },
         inverseJoinColumn: { name: "via_id", referencedColumnName: "id" }
     })
-    vias: Via[];
+    vias: Via[] | undefined;
 }

@@ -5,14 +5,14 @@ import { Via } from "./Via";
 @Entity()
 export class Face {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    nome: string;
+    nome: string | undefined;
 
     @ManyToOne(() => Montanha, montanha => montanha.faces)
-    montanha: Montanha;
+    montanha: Montanha | undefined;
 
     @OneToMany(() => Via, via => via.face, { cascade: true })
-    vias: Via[];
+    vias: Via[] | undefined;
 }

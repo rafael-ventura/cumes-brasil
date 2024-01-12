@@ -6,23 +6,23 @@ import {ColecaoBase} from "./ColecaoBase";
 @Entity()
 export class Escalada {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @ManyToOne(() => Via)
-    via: Via;
+    via: Via | undefined;
 
     @Column()
-    data: Date;
+    data: Date | undefined;
 
     @Column({ nullable: true })
-    observacao: string;
+    observacao: string | undefined;
 
     @ManyToOne(() => Usuario, usuario => usuario.historicoEscaladas)
-    usuario: Usuario;
+    usuario: Usuario | undefined;
 }
 
 @Entity()
 export class ColecaoEscaladas extends ColecaoBase {
     @OneToMany(() => Escalada, escalada => escalada.usuario, { cascade: true })
-    escaladas: Escalada[];
+    escaladas: Escalada[] | undefined;
 }

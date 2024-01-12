@@ -6,6 +6,6 @@ import { ColecaoBase } from './ColecaoBase';
 export class ColecaoFavoritos extends ColecaoBase {
     @ManyToMany(() => Via)
     @JoinTable()
-    viasFavoritas: Via[];
+    viasFavoritas: Via[] | undefined;
 }
 

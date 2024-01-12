@@ -4,11 +4,11 @@ import { Via } from './Via'; // Certifique-se de importar corretamente a entidad
 @Entity()
 export class Fonte {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @OneToMany(() => Via, via => via.fonte)
-    vias: Via[];
+    vias: Via[] | undefined;
 
     @Column()
-    referencia: string;
+    referencia: string | undefined;
 }

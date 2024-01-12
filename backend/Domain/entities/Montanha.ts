@@ -5,20 +5,20 @@ import { Via } from "./Via";
 @Entity()
 export class Montanha {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    nome: string;
+    nome: string | undefined;
 
     @Column()
-    localizacao: string;
+    localizacao: string | undefined;
 
     @Column({ type: "double" })
-    altura: number;
+    altura: number | undefined;
 
     @OneToMany(() => Face, face => face.montanha, { cascade: true })
-    faces: Face[];
+    faces: Face[] | undefined;
 
     @OneToMany(() => Via, via => via.montanha, { cascade: true })
-    vias: Via[];
+    vias: Via[] | undefined;
 }
