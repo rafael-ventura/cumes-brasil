@@ -17,60 +17,60 @@ import { ColecaoBase } from "./ColecaoBase";
 @Entity()
 export class Via {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    nome: string;
+    nome: string | undefined;
 
     @Column({ nullable: true })
-    grau: string;
+    grau: string | undefined;
 
     @Column({ nullable: true })
-    crux: string;
+    crux: string | undefined;
 
     @Column({ nullable: true })
-    artificial: string;
+    artificial: string | undefined;
 
     @Column({ nullable: true })
-    duracao: string;
+    duracao: string | undefined;
 
     @Column({ nullable: true })
-    exposicao: string;
+    exposicao: string | undefined;
 
     @Column({ type: "int", nullable: true })
-    extensao: number;
+    extensao: number | undefined;
 
     @Column({ type: "simple-array", nullable: true })
-    conquistadores: string[];
+    conquistadores: string[] | undefined;
 
     @Column({ nullable: true })
-    detalhes: string;
+    detalhes: string | undefined;
 
     @Column({ type: "date", nullable: true })
-    data: Date;
+    data: Date | undefined;
 
     @ManyToOne(() => Montanha, montanha => montanha.vias)
     @JoinColumn({ name: "montanha_id" })
-    montanha: Montanha;
+    montanha: Montanha | undefined;
 
     @ManyToOne(() => Face, face => face.vias)
     @JoinColumn({ name: "face_id" })
-    face: Face;
+    face: Face | undefined;
 
     @ManyToOne(() => Via, via => via.variantes)
     @JoinColumn({ name: "via_principal_id" })
-    viaPrincipal: Via;
+    viaPrincipal: Via | undefined;
 
     @OneToMany(() => Via, via => via.viaPrincipal)
-    variantes: Via[];
+    variantes: Via[] | undefined;
 
     @ManyToOne(() => Fonte, fonte => fonte.vias)
     @JoinColumn({ name: "fonte_id" })
-    fonte: Fonte;
+    fonte: Fonte | undefined;
 
     @ManyToMany(() => Croqui, croqui => croqui.vias)
-    croquis: Croqui[];
+    croquis: Croqui[] | undefined;
 
     @ManyToMany(() => ColecaoBase, colecaoBase => colecaoBase.vias)
-    colecoes: ColecaoBase[];
+    colecoes: ColecaoBase[] | undefined;
 }
