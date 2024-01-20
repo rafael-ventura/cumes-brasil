@@ -4,9 +4,10 @@
   "description": "- **Endpoint:** `/vias`\r - **Método:** `GET`",
   "main": "server.ts",
   "scripts": {
-    "start": "ts-node WebAPI/server.ts",
+    "start": "node Infrastructure/config/swagger.js && ts-node WebAPI/server.ts",
     "build": "tsc && echo 'Build concluido com sucesso!'",
-    "testecarga": "k6 cloud WebAPI/script.js"
+    "testecarga": "k6 cloud WebAPI/script.js",
+    "execute-ddl": "ts-node Infrastructure/sql_scripts/executeDDL.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +25,9 @@
     "raven": "^2.6.4",
     "ravendb": "^5.4.1",
     "reflect-metadata": "^0.1.14",
+    "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
+    "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.19"
   },
