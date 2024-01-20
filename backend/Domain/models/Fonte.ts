@@ -4,12 +4,12 @@ import {Via} from "./Via";
 
 export class Fonte {
     id: number;
+    autor: string;
     referencia: string;
-    vias?: Via[]; // Assumindo que você já tem a model Via
 
-    constructor(id: number, referencia: string, vias?: Via[]) {
+    constructor(id: number, autor: string, referencia: string, vias?: Via[]) {
         this.id = id;
+        this.autor = autor;
         this.referencia = referencia;
-        this.vias = vias;
     }
 }
