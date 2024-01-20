@@ -1,10 +1,16 @@
 import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import path from 'path';
 
-async function connect() {
-    return open({
-        filename: 'database/sqlite/cumes_brasil.db',
-        driver: sqlite3.Database
+function connect() {
+    // 'path.join' junta o diretório atual com o caminho relativo do banco de dados
+    const dbPath = path.join(__dirname, '../../../database/sqlite/cumes_brasil.db');
+    console.log(dbPath);
+    return new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+            console.error('Erro ao conectar ao banco de dados:', err.message);
+        } else {
+            console.log('Conectado ao banco de dados SQLite.');
+        }
     });
 }
 

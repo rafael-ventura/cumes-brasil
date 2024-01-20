@@ -1,26 +1,20 @@
-import { Request, Response } from 'express';
-import store from '../../Infrastructure/config/db';
+import {Request, Response} from 'express';
+import {ConexaoService} from "../../Application/services/ConexaoService";
 
-class ConexaoController {
-    testConnection = async (req: Request, res: Response) => {
-        try {
-            // Tentativa de obter as estatísticas do banco de dados como teste de conexão
-            const session = store.openSession();
+export class ConexaoController {
 
-            console.log("res:", res)
-            // Se a conexão for bem-sucedida e as estatísticas forem obtidas
-            res.status(200).json({
-                message: "Conexão com o banco de dados RavenDB foi bem-sucedida!"
-            });
-        } catch (error) {
-            // Se houver um erro na conexão com o banco de dados
-            res.status(500).json({
-                message: "Falha ao conectar com o banco de dados RavenDB.",
-                error: error
-            });
+    private internalService: ConexaoService;
 
+    constructor(internalService: ConexaoService) {
+        this.internalService = internalService;
+    }
+
+    checkDatabaseHealth = async (_: Request, res: Response) => {
+        const isHealthy = await this.internalService.healthCheck();
+        if (isHealthy) {
+            res.status(200).json({ status: "ok" });
+        } else {
+            res.status(500).json({ status: "error", message: "Database not responding" });
         }
     };
 }
-
-export default new ConexaoController();

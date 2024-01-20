@@ -1,110 +1,85 @@
-import {ViaDto} from "../../../shared/contratos/ViaDto";
-import {ViaService} from "../../Application/services/ViaService";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import { ViaService } from "../../Application/services/ViaService";
+import { ViaDto } from "../../../shared/contratos/ViaDto";
+import {Via} from "../../Domain/models/Via";
 
-/**
- * @class ViaController
- * Controller para operações relacionadas a vias.
- */
 export class ViaController {
     private service: ViaService;
 
-    /**
-     * Construtor para o controller de vias.
-     * @param {ViaService} service - O serviço de vias que será utilizado pelo controller.
-     */
     constructor(service: ViaService) {
         this.service = service;
     }
 
-    /**
-     * Obtém uma via pelo ID.
-     * @param {Request} req - O request do express, contendo o ID da via como parâmetro.
-     * @param {Response} res - O response do express, onde a via será retornada.
-     */
-    getViaById = async (req: Request, res: Response) => {
-        const id = req.params.id;
-        const result = await this.service.getViaById(id);
-        res.json(result);
+    getViaById = async (requisicao: Request, resposta: Response) => {
+        try {
+            const id = parseInt(requisicao.params.id);
+            const resultado = await this.service.getViaById(id);
+            if (!resultado) {
+                return resposta.status(404).json({ message: "Via não encontrada." });
+            }
+            resposta.json(resultado);
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({ error: error.message });
+            } else {
+                resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     };
 
-    /**
-     * Obtém todas as vias.
-     * @param {Request} _ - O request do express.
-     * @param {Response} res - O response do express, onde as vias serão retornadas.
-     */
-    getAllVia = async (_: Request, res: Response) => {
-        const result = await this.service.getVias();
-        console.log('vias foram obtidas');
-        res.json(result);
-    };//qq coisa so deixa vias obtidas
-
-    /**
-     * Cria uma nova via.
-     * @param {Request} req - O request do express, contendo os dados da nova via no corpo da requisição.
-     * @param {Response} res - O response do express, onde a via criada será retornada.
-     */
-    createVia = async (req: Request, res: Response) => {
-        const via: ViaDto = req.body;
-        const result = await this.service.createVia(via);
-        res.json(result);
+    getAllVia = async (_: Request, resposta: Response) => {
+        try {
+            const result = await this.service.getVias();
+            resposta.json(result);
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({ error: error.message });
+            } else {
+                resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     };
 
-    /**
-     * Atualiza uma via existente.
-     * @param {Request} req - O request do express, contendo os dados atualizados da via no corpo da requisição.
-     * @param {Response} res - O response do express, onde a via atualizada será retornada.
-     */
-    updateVia = async (req: Request, res: Response) => {
-        const via: ViaDto = req.body;
-        const result = await this.service.updateVia(via);
-        res.json(result);
+    createVia = async (requisicao: Request, resposta: Response) => {
+        try {
+            const via: Via = requisicao.body;
+            await this.service.createVia(via);
+            resposta.status(201).json({ message: "Via criada com sucesso." });
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({ error: error.message });
+            } else {
+                resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+            }
+
+        }
     };
 
-    /**
-     * Deleta uma via pelo ID.
-     * @param {Request} req - O request do express, contendo o ID da via como parâmetro.
-     * @param {Response} res - O response do express, que retornará uma mensagem de sucesso.
-     */
-    deleteVia = async (req: Request, res: Response) => {
-        const id = req.params.id;
-        await this.service.deleteVia(parseInt(id));
-        res.json({message: 'Via deletada com sucesso'});
+    updateVia = async (requisicao: Request, resposta: Response) => {
+        try {
+            const via: Via = requisicao.body;
+            await this.service.updateVia(via);
+            resposta.json({ message: "Via atualizada com sucesso." });
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({ error: error.message });
+            } else {
+                resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+            }
+        }
     };
 
-    /**
-     * Obtém todas as montanhas.
-     * @param {Request} _ - O request do express.
-     * @param {Response} res - O response do express, onde as montanhas serão retornadas.
-     */
-    getMontanha = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
-        const result = await this.service.getMontanhaById(id);
-
-        res.json(result);
-
+    deleteVia = async (requisicao: Request, resposta: Response) => {
+        try {
+            const id = parseInt(requisicao.params.id);
+            await this.service.deleteVia(id);
+            resposta.json({ message: "Via deletada com sucesso." });
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({ error: error.message });
+            } else {
+                resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     };
-
-    /**
-     * Obtém todas as faces.
-     * @param {Request} _ - O request do express.
-     * @param {Response} res - O response do express, onde as faces serão retornadas.
-     */
-    getFace = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
-        const result = await this.service.getFaceById(id);
-
-        res.json(result);
-    }
-    /**
-     * Obtém todas as fontes.
-     * @param {Request} _ - O request do express.
-     * @param {Response} res - O response do express, onde as fontes serão retornadas.
-     */
-    getFonte = async (req: Request, res: Response) => {
-        const id = parseInt(req.params.id);
-        const result = await this.service.getFonteById(id);
-
-        res.json(result);
-    }
 }
