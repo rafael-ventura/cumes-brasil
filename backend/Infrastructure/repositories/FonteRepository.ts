@@ -57,7 +57,7 @@ export class FonteRepository {
     async createFonte(fonte: Fonte): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.then((db) => {
-                db.run(`INSERT INTO Fonte (autor, referencia,vias) VALUES (?,?,?)`,
+                db.run(`INSERT INTO Fonte (autor, referencia) VALUES (?,?)`,
                     [fonte.autor, fonte.referencia],
                     (err) => {
                         if (err) {

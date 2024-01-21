@@ -6,12 +6,12 @@ export class Face {
     id: number;
     nome: string;
     montanhaId: number;
-    vias?: Via[]; // Assumindo que você já tem a model Via
+    fonteId?: number;
 
-    constructor(id: number, nome: string, montanhaId: number, vias?: Via[]) {
+    constructor(id: number, nome: string, montanhaId: number, fonteId?: number) {
         this.id = id;
         this.nome = nome;
         this.montanhaId = montanhaId;
-        this.vias = vias;
+        this.fonteId = fonteId;
     }
 }

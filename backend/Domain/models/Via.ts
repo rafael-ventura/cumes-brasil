@@ -2,7 +2,7 @@
 
 export class Via {
     id: number;
-    nome: string | undefined;
+    nome: string;
     grau: string | undefined;
     crux: string | undefined;
     artificial: string | undefined;
@@ -12,17 +12,16 @@ export class Via {
     conquistadores: string[] | undefined;
     detalhes: string | undefined;
     data: Date | undefined;
-    montanhaId: number | undefined;
-    faceId: number | undefined;
+    montanhaId: number;
+    faceId: number;
     viaPrincipalId: number | undefined;
-    fonteId: number | undefined;
+    fonteId: number;
 
-
-    constructor(id: number, nome: string | undefined, grau: string | undefined, crux: string | undefined,
+    constructor(id: number, nome: string, grau: string | undefined, crux: string | undefined,
                 artificial: string | undefined, duracao: string | undefined, exposicao: string | undefined,
                 extensao: number | undefined, conquistadores: string[] | undefined, detalhes: string | undefined,
-                data: Date | undefined, montanhaId: number | undefined, faceId: number | undefined,
-                viaPrincipalId: number | undefined, fonteId: number | undefined) {
+                data: Date | undefined, montanhaId: number, faceId: number,
+                viaPrincipalId: number | undefined, fonteId: number) {
         this.id = id;
         this.nome = nome;
         this.grau = grau;
@@ -39,6 +38,7 @@ export class Via {
         this.viaPrincipalId = viaPrincipalId;
         this.fonteId = fonteId;
     }
+
 
     public associarMontanha(montanhaId: number): void {
         this.montanhaId = montanhaId;
