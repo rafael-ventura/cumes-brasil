@@ -97,7 +97,7 @@ export class ViaRepository {
     async updateVia(via: Via): Promise<void> {
 
         return new Promise((resolve, reject) => {
-                this.db.run(`UPDATE Via SET nome = ?, grau = ?, crux = ?, artificial = ?, duracao = ?, exposicao = ?, extensao = ?, conquistadores = ?, detalhes = ?, data = ?, montanhaId = ?, faceId = ?, viaPrincipalId = ?, fonteId = ? WHERE id = ?`,
+                this.db.run(`UPDATE Via SET nome = ?, grau = ?, crux = ?, artificial = ?, duracao = ?, exposicao = ?, extensao = ?, conquistadores = ?, detalhes = ?, data = ?, montanha_id = ?, face_id = ?, via_principal_id = ?, fonte_id = ? WHERE id = ?`,
                     [via.nome, via.grau, via.crux, via.artificial, via.duracao, via.exposicao, via.extensao, JSON.stringify(via.conquistadores), via.detalhes, via.data, via.montanhaId, via.faceId, via.viaPrincipalId, via.fonteId, via.id],
                     (err) => {
                         if (err) {
@@ -108,7 +108,6 @@ export class ViaRepository {
                     });
             }
         );
-
     }
 
     async deleteVia(id: number): Promise<void> {
@@ -125,8 +124,5 @@ export class ViaRepository {
                 });
             }
         );
-
     }
-
-
 }

@@ -4,16 +4,19 @@ import {Via} from "./Via";
 
 export class Croqui {
     id: number;
+    nome: string;
     imagemUrl: string;
     autor: string;
     descricao?: string;
-    vias?: Via[]; // Assumindo que você já tem a model Via
+    fonteId?: number;
 
-    constructor(id: number, imagemUrl: string, autor: string, descricao?: string, vias?: Via[]) {
+
+    constructor(id: number, nome: string, imagemUrl: string, autor: string, descricao?: string, fonteId?: number) {
         this.id = id;
+        this.nome = nome;
         this.imagemUrl = imagemUrl;
         this.autor = autor;
         this.descricao = descricao;
-        this.vias = vias;
+        this.fonteId = fonteId;
     }
 }
