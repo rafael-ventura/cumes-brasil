@@ -1,25 +1,13 @@
-import {Via} from "./Via";
+// models/ColecaoFavoritos.ts
+
 import {ColecaoBase} from "./ColecaoBase";
-import {IColecaoFavoritos} from "../interfaces/models/IColecaoFavoritos";
+import {Via} from "./Via";
 
-export class ColecaoFavoritos extends ColecaoBase implements IColecaoFavoritos {
+export class ColecaoFavoritos extends ColecaoBase {
+    viasFavoritas?: Via[]; // Assumindo que você já tem a model Via
 
-    constructor() {
-        super('Favoritos');
-        this.descricaoFormated('');
+    constructor(id: number, nome: string, descricao: string, usuarioId: number, vias: Via[], viasFavoritas?: Via[]) {
+        super(id, nome, descricao, usuarioId, vias);
+        this.viasFavoritas = viasFavoritas;
     }
-
-    public descricaoFormated(descricao: string): string {
-        return `${super.descricaoMethod(descricao)} ${this.quantidadeVias}`;
-    }
-
-
-    /*
-    *
-    * front ( envia uma lista de Vias )
-    *
-    * back- recebe essa lista e
-    * Ao salvar usuario, criar 2 colecoes vazias (escaldas e favoritos)
-    * */
-
 }

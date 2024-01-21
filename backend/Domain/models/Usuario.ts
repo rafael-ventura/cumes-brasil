@@ -1,36 +1,19 @@
-import {IUsuario} from "../interfaces/models/IUsuario";
-import {Via} from "./Via";
+// models/Usuario.ts
+
 import {ColecaoBase} from "./ColecaoBase";
-import {ColecaoEscaladas} from "./ColecaoEscaladas";
-import {ColecaoFavoritos} from "./ColecaoFavoritos";
 
-/**
- * Classe Usuario que implementa a interface IUsuario.
- * Esta classe representa um usuário com suas propriedades e métodos.
- */
-export class Usuario implements IUsuario {
-    private _senha: string;
+export class Usuario {
+    id: number;
+    nome: string;
+    email: string;
+    fotoPerfil?: string;
+    colecoesPersonalizadas?: ColecaoBase[]; // Assumindo que você terá uma model para ColecaoBase
 
-    constructor(
-        public id: number,
-        public nome: string,
-        public email: string,
-        senha: string,
-        public fotoPerfil: string,
-        public colecao: ColecaoBase,
-        public historico: ColecaoEscaladas = new ColecaoEscaladas(),
-        public favoritos: ColecaoFavoritos = new ColecaoFavoritos()
-    ) {
-        this._senha = senha;
+    constructor(id: number, nome: string, email: string, fotoPerfil?: string, colecoesPersonalizadas?: ColecaoBase[]) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.fotoPerfil = fotoPerfil;
+        this.colecoesPersonalizadas = colecoesPersonalizadas;
     }
-
-    // Getters e Setters
-    getSenha(): string {
-        return this._senha;
-    }
-
-    setSenha(novaSenha: string) {
-        // Aqui você pode adicionar lógica de validação para a senha
-    }
-
 }

@@ -1,27 +1,16 @@
-import { Via } from "./Via";
-import { ColecaoBase } from "./ColecaoBase";
-import { IColecaoEscaladas } from "../interfaces/models/IColecaoEscaladas";
+// models/ColecaoEscaladas.ts
 
-export class ColecaoEscaladas extends ColecaoBase implements IColecaoEscaladas {
-    private datasEscalada = {}
+import {ColecaoBase} from "./ColecaoBase";
 
-    constructor() {
-        super('Histórico', 'Minhas vias escaladas');
+export class ColecaoEscaladas extends ColecaoBase {
+    viaId: number;
+    data: Date | undefined;
+    observacao: string | undefined;
+
+    constructor(id: number, nome: string, descricao: string, usuarioId: number, viaId: number, data: Date | undefined, observacao: string | undefined) {
+        super(id, nome, descricao, usuarioId);
+        this.viaId = viaId;
+        this.data = data;
+        this.observacao = observacao;
     }
-
-    public registrarEscalada(via: Via, data: Date): void {
-        // Verifica se a via já existe na coleção
-        if (!this.vias.includes(via)) {
-            this.adicionarVia(via); // Usa o método da classe base para adicionar a via
-        }
-
-        /*// Registra a data da escalada
-        let datas = this.datasEscalada.get(via.id) || [];
-        datas.push(data);
-        this.datasEscalada.set(via.id, datas);*/
-    }
-
-    /*public getDatasEscalada(viaId: number): Date[] {
-        return this.datasEscalada.get(viaId) || [];
-    }*/
 }

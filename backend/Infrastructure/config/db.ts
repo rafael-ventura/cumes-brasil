@@ -1,24 +1,18 @@
-import {DocumentStore, IAuthOptions} from 'ravendb';
-import * as fs from "fs";
+import sqlite3 from 'sqlite3';
+import path from 'path';
 
-// Carregar os certificados e a chave privada
-const certificate = fs.readFileSync("C:\\certificate\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.pem", "utf8");
-const privateKey = fs.readFileSync("C:\\certificate\\free.jardineiros.client.certificate\\PEM\\free.jardineiros.client.certificate.key", "utf8");
+function connect() {
+    // 'path.join' junta o diretório atual com o caminho relativo do banco de dados
+    const dbPath = path.join(__dirname, '../../../database/sqlite/cumes_brasil.db');
+    console.log(dbPath);
+    return new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+            console.error('Erro ao conectar ao banco de dados:', err.message);
+        } else {
+            console.log('Conectado ao banco de dados SQLite.');
+        }
+    });
+}
 
-// Preparar as opções de autenticação
-const authOptions: IAuthOptions = {
-    certificate: certificate + privateKey, // Concatenar certificado e chave privada
-    type: "pem",
-    // Se houver senha, descomente a linha abaixo e substitua 'sua_senha' pela senha fornecida
-    // password: "sua_senha"
-};
-
-// Configurar o DocumentStore com os detalhes do seu servidor RavenDB
-const store = new DocumentStore(
-    'https://a.free.jardineiros.ravendb.cloud', // Substitua pela URL correta
-    'cumes_brasil',
-    authOptions
-);
-store.initialize();
-
-export default store;
+const dbConnection = connect();
+export default dbConnection;

@@ -1,33 +1,17 @@
-// Importação das interfaces necessárias.
-import {IFace} from "../interfaces/models/IFace";
+// models/Face.ts
+
 import {Via} from "./Via";
 
-/**
- * Classe Face que implementa a interface IFace.
- * Esta classe representa uma face de montanha com suas propriedades e métodos.
- */
-export class Face implements IFace {
+export class Face {
     id: number;
     nome: string;
-    vias: Via[];
+    montanhaId: number;
+    vias?: Via[]; // Assumindo que você já tem a model Via
 
-    constructor(id: number, nome: string, vias: Via[]) {
+    constructor(id: number, nome: string, montanhaId: number, vias?: Via[]) {
         this.id = id;
         this.nome = nome;
+        this.montanhaId = montanhaId;
         this.vias = vias;
     }
-
-
-    getVias(): Via[] {
-        return this.vias;
-    }
-
-    toString(): string {
-        return this.nome;
-    }
-
-    public adicionarVia(via: Via): void {
-        this.vias.push(via);
-    }
-
 }

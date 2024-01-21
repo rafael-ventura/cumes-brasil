@@ -46,7 +46,9 @@ app.*.map.json
 
 *.pfx
 
+# Node modules and lock files
 node_modules/
+package-lock.json
 
 *.env
 ```

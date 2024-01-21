@@ -1,67 +1,19 @@
-import {ICroqui} from "../interfaces/models/ICroqui";
+// models/Croqui.ts
+
 import {Via} from "./Via";
 
-/**
- * Classe Croqui que implementa a interface ICroqui.
- * Esta classe representa um croqui de uma via de escalada.
- */
-export class Croqui implements ICroqui {
+export class Croqui {
     id: number;
     imagemUrl: string;
     autor: string;
-    descricao?: string | null | undefined;
+    descricao?: string;
+    vias?: Via[]; // Assumindo que você já tem a model Via
 
-
-    constructor(
-        id: number,
-        imagemUrl: string,
-        autor: string,
-        descricao?: string | null | undefined
-    ) {
+    constructor(id: number, imagemUrl: string, autor: string, descricao?: string, vias?: Via[]) {
         this.id = id;
+        this.imagemUrl = imagemUrl;
         this.autor = autor;
-        this.imagemUrl = imagemUrl;
         this.descricao = descricao;
-    }
-
-    /**
-     * Método para obter a imagem do Croqui.
-     */
-    getImagem(): string {
-        return this.imagemUrl;
-    }
-
-    /**
-     * Método para definir a imagem do Croqui.
-     * @param imagemUrl
-     */
-    setImagem(imagemUrl: string): void {
-        this.imagemUrl = imagemUrl;
-    }
-
-    /**
-     * Método para obter o autor do Croqui.
-     * @returns string
-     * @returns void
-     */
-    getAutor(): string {
-        return this.autor;
-    }
-
-    /**
-     * Método para adicionar uma Via ao Croqui.
-     * @param via
-     * @returns void
-     */
-
-    /**
-     * Método para remover uma Via do Croqui.
-     * @param via
-     * @returns void
-     */
-
-
-    toString(): string {
-        return `Croqui: ${this.id} - ${this.autor} - ${this.imagemUrl} - ${this.descricao}`;
+        this.vias = vias;
     }
 }

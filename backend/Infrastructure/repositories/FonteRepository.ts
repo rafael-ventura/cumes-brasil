@@ -1,88 +1,106 @@
-import {MontanhaAdapter} from "../adapters/MontanhaAdapter";
-import {ViaAdapter} from "../adapters/ViaAdapter";
-import {ViaRepository} from "./ViaRepository";
-import {Fonte} from "../../Domain/models/Fonte";
-import store from "../config/db";
+import {Database} from 'sqlite3';
+import {Fonte} from '../../Domain/models/Fonte';
 
 export class FonteRepository {
+    private db: Promise<Database>;
 
-
-    private viaAdapter: ViaAdapter;
-    private montanhaAdapter: MontanhaAdapter;
-    private _viaRepository: ViaRepository;
-
-
-    constructor(viaRepository: ViaRepository) {
-        this.viaAdapter = new ViaAdapter();
-        this.montanhaAdapter = new MontanhaAdapter();
-        this._viaRepository = viaRepository;
+    constructor(db: Promise<Database>) {
+        this.db = db;
     }
 
-    async createFonte(fonte: Fonte) {
-        const session = store.openSession();
-        try {
-            await session.store(fonte);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
+    async getFonteById(id: number): Promise<Fonte | null> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.get(`SELECT * FROM Fonte WHERE id = ?`, [id], (err, row: Fonte) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    if (row) {
+                        const fonte = new Fonte(
+                            row.id,
+                            row.autor,
+                            row.referencia
+                        );
+                        resolve(fonte);
+                    } else {
+                        resolve(null);
+                    }
+                });
+            });
+        });
     }
 
-    async updateFonte(fonte: Fonte) {
-        const session = store.openSession();
-        try {
-            await session.store(fonte);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
+    async getFontes(): Promise<Fonte[] | null> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.all(`SELECT * FROM Fonte`, (err, rows: Fonte[]) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    if (rows) {
+                        const fontes = rows.map((row) => new Fonte(
+                            row.id,
+                            row.autor,
+                            row.referencia
+                        ));
+                        resolve(fontes);
+                    } else {
+                        resolve(null);
+                    }
+                });
+            });
+        });
     }
 
-    async deleteFonte(fonte: Fonte) {
-        const session = store.openSession();
-        try {
-            await session.delete(fonte);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
+    async createFonte(fonte: Fonte): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.run(`INSERT INTO Fonte (autor, referencia,vias) VALUES (?,?,?)`,
+                    [fonte.autor, fonte.referencia],
+                    (err) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        resolve();
+                    });
+            });
+        });
     }
 
-    async getAllFontes(): Promise<Fonte[]> {
-        const session = store.openSession();
-        try {
-            const documents = await session.query({collection: 'Fontes'}).all();
-            // Assegura que o objeto é do tipo Fonte antes de passar para o adaptador
-            const fontes = documents.map(document => document as Fonte);
-            return fontes;
-        } finally {
-            session.dispose();
-        }
+    async updateFonte(fonte: Fonte): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.run(`UPDATE Fonte SET autor = ?, referencia = ? WHERE id = ?`,
+                    [fonte.autor, fonte.referencia, fonte.id],
+                    (err) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        resolve();
+                    });
+            });
+        });
     }
 
-    async getFonteById(id_fonte: number): Promise<Fonte> {
-        const session = store.openSession();
-        try {
-            const documents = await session.query({collection: 'Fontes'}).whereEquals('Id', id_fonte).all();
-            if (documents.length === 0) {
-                throw new Error('Fonte não encontrada');
-            }
-            // Assegura que o objeto é do tipo Fonte antes de passar para o adaptador
-            const fonte = documents[0] as Fonte;
-            return fonte;
-        } finally {
-            session.dispose();
-        }
+    async deleteFonte(id: number): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.run(`DELETE FROM Fonte WHERE id = ?`,
+                    [id],
+                    (err) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        resolve();
+                    })
+            });
+
+        });
     }
 
-    async associarFonteVia(fonte: Fonte, id_via: number) {
-        const session = store.openSession();
-        try {
-            const via = await this._viaRepository.getViaById(id_via);
-            fonte.adicionarVia(via);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
-    }
 }

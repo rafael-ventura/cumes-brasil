@@ -1,77 +1,34 @@
-import {Face} from "../../Domain/models/Face";
-import store from "../config/db";
-import {ViaRepository} from "./ViaRepository";
-
+import { Database } from 'sqlite3';
+import { Face } from '../../Domain/models/Face';
 
 export class FaceRepository {
-    private viaRepository: ViaRepository;
+    private db: Promise<Database>;
 
-    constructor(viaRepository: ViaRepository) {
-        this.viaRepository = viaRepository;
-
+    constructor(db: Promise<Database>) {
+        this.db = db;
     }
 
-    async createFace(face: Face) {
-        const session = store.openSession();
-        try {
-            await session.store(face);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
+    async getFaceById(id: number): Promise<Face | null> {
+        return new Promise((resolve, reject) => {
+            this.db.then((db) => {
+                db.get(`SELECT * FROM Face WHERE id = ?`, [id], (err, row: Face) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    if (row) {
+                        const face = new Face(
+                            row.id,
+                            row.nome,
+                            row.montanhaId,
+
+                        );
+                        resolve(face);
+                    } else {
+                        resolve(null);
+                    }
+                });
+            });
+        });
     }
-
-    async getFace(id: number) {
-        const session = store.openSession();
-        try {
-            return await session.load(id.toString());
-        } finally {
-            session.dispose();
-        }
-    }
-
-    async updateFace(face: Face) {
-        const session = store.openSession();
-        try {
-            await session.store(face);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
-    }
-
-    async deleteFace(id: number) {
-        const session = store.openSession();
-        try {
-            await session.delete(id.toString());
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
-    }
-
-    async getAllFaces(): Promise<Face[]> {
-        const session = store.openSession();
-        try {
-            const documents = await session.query({collection: 'Faces'}).all();
-            // Assegura que o objeto é do tipo Face antes de passar para o adaptador
-            const faces = documents.map(document => document as Face);
-            return faces;
-        } finally {
-            session.dispose();
-        }
-    }
-
-    async associarFaceVia(face: Face, id_via: number) {
-        const session = store.openSession();
-        try {
-            const via = await this.viaRepository.getViaById(id_via);
-            face.adicionarVia(via);
-            await session.saveChanges();
-        } finally {
-            session.dispose();
-        }
-    }
-
-
 }
