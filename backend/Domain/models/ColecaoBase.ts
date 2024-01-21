@@ -1,4 +1,3 @@
-// models/ColecaoBase.ts
 
 import {Via} from "./Via";
 
