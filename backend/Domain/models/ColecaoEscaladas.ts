@@ -1,5 +1,3 @@
-// models/ColecaoEscaladas.ts
-
 import {ColecaoBase} from "./ColecaoBase";
 
 export class ColecaoEscaladas extends ColecaoBase {
