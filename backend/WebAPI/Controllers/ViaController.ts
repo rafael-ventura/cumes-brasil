@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { ViaService } from "../../Application/services/ViaService";
-import { ViaDto } from "../../../shared/contratos/ViaDto";
 import {Via} from "../../Domain/models/Via";
 
 export class ViaController {
