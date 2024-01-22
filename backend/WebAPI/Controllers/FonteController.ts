@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {FonteService} from "../../Application/services/FonteService";
+import {Fonte} from "../../Domain/models/Fonte";
 
 export class FonteController {
     private service: FonteService;
@@ -9,7 +10,7 @@ export class FonteController {
     }
 
     async getFonteById(req: Request, res: Response) {
-      /*try {
+      try {
         const id = parseInt(req.params.id);
         const result = await this.service.getFonteById(id);
         if (!result) {
@@ -22,9 +23,7 @@ export class FonteController {
         } else {
           res.status(500).json({error: "Ocorreu um erro desconhecido"});
         }
-      }*/
-        const id = parseInt(req.params.id);
-        const result = await this.service.getFonteById(id);
+      }
     }
 
     async getAllFonte(req: Request, res: Response) {
@@ -42,7 +41,7 @@ export class FonteController {
 
     async createFonte(req: Request, res: Response) {
         try {
-            const fonte = req.body;
+            const fonte : Fonte = req.body;
             await this.service.createFonte(fonte);
             res.status(201).json({message: "Fonte criada com sucesso."});
         } catch (error) {

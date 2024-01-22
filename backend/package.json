@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node Infrastructure/config/swagger.js && ts-node WebAPI/server.ts",
     "build": "tsc && echo 'Build concluido com sucesso!'",
-    "testecarga": "k6 cloud WebAPI/script.js",
     "execute-ddl": "ts-node Infrastructure/sql_scripts/executeDDL.ts",
     "swagger": "node Infrastructure/config/swagger.js"
   },

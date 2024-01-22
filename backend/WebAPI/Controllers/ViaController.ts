@@ -10,7 +10,7 @@ export class ViaController {
     }
 
     /**
-     * @route GET /via/:id
+     * @route GET /vias/:id
      * @group Vias - Operações relacionadas a vias
      * @returns {Via.model} 200 - Via encontrada
      * @returns {object} 404 - Via não encontrada
@@ -34,7 +34,7 @@ export class ViaController {
     };
 
     /**
-     * @route GET /via
+     * @route GET /vias
      * @group Vias - Operações relacionadas a vias
      * @returns {Array.<Via>} 200 - Vias encontradas
      * @returns {Error} 500 - Erro desconhecido
@@ -58,7 +58,7 @@ export class ViaController {
     };
 
     /**
-     * @route POST /via
+     * @route POST /vias
      * @group Vias - Operações relacionadas a vias
      * @returns {object} 201 - Via criada com sucesso
      * @returns {Error} 500 - Erro desconhecido
@@ -79,7 +79,7 @@ export class ViaController {
     };
 
     /**
-     * @route PUT /via
+     * @route PUT /vias
      * @group Vias - Operações relacionadas a vias
      * @returns {object} 200 - Via atualizada com sucesso
      * @returns {Error} 500 - Erro desconhecido
