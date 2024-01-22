@@ -14,8 +14,8 @@ const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);
 
 routes.use('/vias', ViaRouter);
-routes.use('/usuarios', UsuarioRouter);
 routes.use('/montanhas', MontanhaRouter);
+routes.use('/usuarios', UsuarioRouter);
 routes.use('/fontes', FonteRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);

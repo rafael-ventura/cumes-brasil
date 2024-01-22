@@ -2,15 +2,15 @@ import {CroquiService} from "../../Application/services/CroquiService";
 import {Request, Response} from "express";
 
 export class CroquiController {
-    private croquiService: CroquiService;
+    private service: CroquiService;
 
     constructor(croquiService: CroquiService) {
-        this.croquiService = croquiService;
+        this.service = croquiService;
     }
 
     async getCroquiById(req: Request, res: Response) {
         const id = Number(req.params.id);
-        const croqui = await this.croquiService.getCroquiById(id);
+        const croqui = await this.service.getCroquiById(id);
         if (croqui) {
             res.status(200).json(croqui);
         } else {
@@ -19,7 +19,7 @@ export class CroquiController {
     }
 
     async getAllCroqui(req: Request, res: Response) {
-        const croquis = await this.croquiService.getCroquis();
+        const croquis = await this.service.getCroquis();
         if (croquis) {
             res.status(200).json(croquis);
         } else {
@@ -29,19 +29,19 @@ export class CroquiController {
 
     async createCroqui(req: Request, res: Response) {
         const croqui = req.body;
-        await this.croquiService.createCroqui(croqui);
+        await this.service.createCroqui(croqui);
         res.status(201).send();
     }
 
     async updateCroqui(req: Request, res: Response) {
         const croqui = req.body;
-        await this.croquiService.updateCroqui(croqui);
+        await this.service.updateCroqui(croqui);
         res.status(200).send();
     }
 
     async deleteCroqui(req: Request, res: Response) {
         const id = Number(req.params.id);
-        await this.croquiService.deleteCroqui(id);
+        await this.service.deleteCroqui(id);
         res.status(200).send();
     }
 }

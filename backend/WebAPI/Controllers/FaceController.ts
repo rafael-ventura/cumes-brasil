@@ -3,15 +3,15 @@ import {Request, Response} from "express";
 import {FaceService} from "../../Application/services/FaceService";
 
 export class FaceController {
-    private faceService: FaceService;
+    private service: FaceService;
 
     constructor(faceService: FaceService) {
-        this.faceService = faceService;
+        this.service = faceService;
     }
 
     async getFaceById(req: Request, res: Response) {
         const id = Number(req.params.id);
-        const face = await this.faceService.getFaceById(id);
+        const face = await this.service.getFaceById(id);
         if (face) {
             res.status(200).json(face);
         } else {
@@ -20,7 +20,7 @@ export class FaceController {
     }
 
     async getAllFace(req: Request, res: Response) {
-        const faces = await this.faceService.getFaces();
+        const faces = await this.service.getFaces();
         if (faces) {
             res.status(200).json(faces);
         } else {
@@ -30,19 +30,19 @@ export class FaceController {
 
     async createFace(req: Request, res: Response) {
         const face = req.body;
-        await this.faceService.createFace(face);
+        await this.service.createFace(face);
         res.status(201).send();
     }
 
     async updateFace(req: Request, res: Response) {
         const face = req.body;
-        await this.faceService.updateFace(face);
+        await this.service.updateFace(face);
         res.status(200).send();
     }
 
     async deleteFace(req: Request, res: Response) {
         const id = Number(req.params.id);
-        await this.faceService.deleteFace(id);
+        await this.service.deleteFace(id);
         res.status(200).send();
     }
 }
