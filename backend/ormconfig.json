@@ -1,8 +1,0 @@
-{
-    "type": "sqlite",
-    "database": "../../../sqlite/cumes_brasil.db",
-    "entities": ["../backend/Domain/entities/*.ts"],
-    "synchronize": true,
-    "logging": false
-}
-  
