@@ -1,4 +1,3 @@
-
 import {Request, Response} from "express";
 import {FaceService} from "../../Application/services/FaceService";
 
@@ -10,21 +9,35 @@ export class FaceController {
     }
 
     async getFaceById(req: Request, res: Response) {
-        const id = Number(req.params.id);
-        const face = await this.service.getFaceById(id);
-        if (face) {
-            res.status(200).json(face);
-        } else {
-            res.status(404).send();
+        try {
+            const id = parseInt(req.params.id);
+            const result = await this.service.getFaceById(id);
+            if (!result) {
+                return res.status(404).json({message: "Face não encontrada."});
+            }
+            res.json(result);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
         }
     }
 
     async getAllFace(req: Request, res: Response) {
-        const faces = await this.service.getFaces();
-        if (faces) {
-            res.status(200).json(faces);
-        } else {
-            res.status(404).send();
+        try {
+            const faces = await this.service.getFaces();
+            if (!faces) {
+                return res.status(404).json({message: "Face não encontrada."});
+            }
+            res.json(faces);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
         }
     }
 
