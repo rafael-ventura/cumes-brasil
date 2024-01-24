@@ -5,7 +5,7 @@ export class Montanha {
     nome: string;
     localizacao: string;
     altura: number | undefined;
-    fonteId: number | undefined;
+    fonte_id: number | undefined;
 
     constructor(id: number, nome: string, localizacao: string, altura: number | undefined, fonteId: number | undefined) {
 
@@ -13,6 +13,6 @@ export class Montanha {
         this.nome = nome;
         this.localizacao = localizacao;
         this.altura = altura;
-        this.fonteId = fonteId;
+        this.fonte_id = fonteId;
     }
 }

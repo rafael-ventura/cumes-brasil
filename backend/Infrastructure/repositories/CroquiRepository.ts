@@ -22,7 +22,7 @@ export class CroquiRepository {
                         row.imagemUrl,
                         row.autor,
                         row.descricao,
-                        row.fonteId
+                        row.fonte_id
                     );
                     resolve(croqui);
                 } else {
@@ -47,7 +47,7 @@ export class CroquiRepository {
                         row.imagemUrl,
                         row.autor,
                         row.descricao,
-                        row.fonteId
+                        row.fonte_id
                     ));
                     resolve(croquis);
                 } else {
@@ -60,8 +60,8 @@ export class CroquiRepository {
 
     async createCroqui(croqui: Croqui): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Croqui (nome, imagemUrl, autor, descricao, fonteId) VALUES (?,?,?,?,?)`,
-                [croqui.nome, croqui.imagemUrl, croqui.autor, croqui.descricao, croqui.fonteId],
+            this.db.run(`INSERT INTO Croqui (nome, imagemUrl, autor, descricao, fonte_id) VALUES (?,?,?,?,?)`,
+                [croqui.nome, croqui.imagemUrl, croqui.autor, croqui.descricao, croqui.fonte_id],
                 (err) => {
                     if (err) {
                         reject(err);
@@ -74,8 +74,8 @@ export class CroquiRepository {
 
     async updateCroqui(croqui: Croqui): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Croqui SET nome = ?, imagemUrl = ?, autor = ?, descricao = ?, fonteId = ? WHERE id = ?`,
-                [croqui.nome, croqui.imagemUrl, croqui.autor, croqui.descricao, croqui.fonteId, croqui.id],
+            this.db.run(`UPDATE Croqui SET nome = ?, imagemUrl = ?, autor = ?, descricao = ?, fonte_id = ? WHERE id = ?`,
+                [croqui.nome, croqui.imagemUrl, croqui.autor, croqui.descricao, croqui.fonte_id, croqui.id],
                 (err) => {
                     if (err) {
                         reject(err);
