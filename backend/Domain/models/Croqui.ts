@@ -8,7 +8,7 @@ export class Croqui {
     imagemUrl: string;
     autor: string;
     descricao?: string;
-    fonteId?: number;
+    fonte_id?: number;
 
 
     constructor(id: number, nome: string, imagemUrl: string, autor: string, descricao?: string, fonteId?: number) {
@@ -17,6 +17,6 @@ export class Croqui {
         this.imagemUrl = imagemUrl;
         this.autor = autor;
         this.descricao = descricao;
-        this.fonteId = fonteId;
+        this.fonte_id = fonteId;
     }
 }

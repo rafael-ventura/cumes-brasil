@@ -1,17 +1,16 @@
 // models/Face.ts
 
-import {Via} from "./Via";
 
 export class Face {
     id: number;
     nome: string;
-    montanhaId: number;
-    fonteId?: number;
+    montanha_id: number;
+    fonte_id?: number;
 
     constructor(id: number, nome: string, montanhaId: number, fonteId?: number) {
         this.id = id;
         this.nome = nome;
-        this.montanhaId = montanhaId;
-        this.fonteId = fonteId;
+        this.montanha_id = montanhaId;
+        this.fonte_id = fonteId;
     }
 }

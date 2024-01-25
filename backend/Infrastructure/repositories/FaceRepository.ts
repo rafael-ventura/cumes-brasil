@@ -20,8 +20,8 @@ export class FaceRepository {
                     const face = new Face(
                         row.id,
                         row.nome,
-                        row.montanhaId,
-                        row.fonteId
+                        row.montanha_id,
+                        row.fonte_id
                     );
                     resolve(face);
                 } else {
@@ -43,8 +43,8 @@ export class FaceRepository {
                     const faces = rows.map((row) => new Face(
                         row.id,
                         row.nome,
-                        row.montanhaId,
-                        row.fonteId
+                        row.montanha_id,
+                        row.fonte_id
                     ));
                     resolve(faces);
                 } else {
@@ -57,8 +57,8 @@ export class FaceRepository {
 
     async createFace(face: Face): Promise<void> {
         return new Promise((resolve, reject) => {
-                this.db.run(`INSERT INTO Face (nome, montanhaId, fonteId) VALUES (?,?,?)`,
-                    [face.nome, face.montanhaId, face.fonteId],
+                this.db.run(`INSERT INTO Face (nome, montanha_id, fonte_id) VALUES (?,?,?)`,
+                    [face.nome, face.montanha_id, face.fonte_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -73,8 +73,8 @@ export class FaceRepository {
 
     async updateFace(face: Face): Promise<void> {
         return new Promise((resolve, reject) => {
-                this.db.run(`UPDATE Face SET nome = ?, montanhaId = ?, fonteId = ? WHERE id = ?`,
-                    [face.nome, face.montanhaId, face.fonteId, face.id],
+                this.db.run(`UPDATE Face SET nome = ?, montanha_id = ?, fonte_id = ? WHERE id = ?`,
+                    [face.nome, face.montanha_id, face.fonte_id, face.id],
                     (err) => {
                         if (err) {
                             reject(err);
