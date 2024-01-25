@@ -21,7 +21,7 @@ export class ColecaoBaseRepository {
                             row.id,
                             row.nome,
                             row.descricao,
-                            row.usuarioId
+                            row.usuario_id
                         );
                         resolve(colecaoBase);
                     } else {
@@ -45,7 +45,7 @@ export class ColecaoBaseRepository {
                             row.id,
                             row.nome,
                             row.descricao,
-                            row.usuarioId
+                            row.usuario_id
                         ));
                         resolve(colecoesBase);
                     } else {
@@ -69,7 +69,7 @@ export class ColecaoBaseRepository {
                             row.id,
                             row.nome,
                             row.descricao,
-                            row.usuarioId
+                            row.usuario_id
                         ));
                         resolve(colecoesBase);
                     } else {
@@ -84,7 +84,7 @@ export class ColecaoBaseRepository {
         return new Promise((resolve, reject) => {
             this.db.then((db) => {
                 db.run(`INSERT INTO ColecaoBase (nome, descricao, usuario_id) VALUES (?,?,?)`,
-                    [colecaoBase.nome, colecaoBase.descricao, colecaoBase.usuarioId],
+                    [colecaoBase.nome, colecaoBase.descricao, colecaoBase.usuario_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -100,7 +100,7 @@ export class ColecaoBaseRepository {
         return new Promise((resolve, reject) => {
             this.db.then((db) => {
                 db.run(`UPDATE ColecaoBase SET nome = ?, descricao = ?, usuario_id = ? WHERE id = ?`,
-                    [colecaoBase.nome, colecaoBase.descricao, colecaoBase.usuarioId, colecaoBase.id],
+                    [colecaoBase.nome, colecaoBase.descricao, colecaoBase.usuario_id, colecaoBase.id],
                     (err) => {
                         if (err) {
                             reject(err);
