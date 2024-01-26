@@ -28,4 +28,7 @@ export class UsuarioService {
     async deleteUsuario(id: number): Promise<void> {
         return this.repository.deleteUsuario(id);
     }
+    async getColecaoBaseById(id: number) {
+        return this.repository.deleteUsuario(id);
+    }
 }

@@ -5,6 +5,7 @@ import MontanhaRouter from "./MontanhaRouter";
 import FonteRouter from "./FonteRouter";
 import FaceRouter from "./FaceRouter";
 import CroquiRouter from "./CroquiRouter";
+import ColecaoRouter from './ColecaoRouter';
 import {ConexaoController} from "../Controllers/ConexaoController";
 import {ConexaoService} from "../../Application/services/ConexaoService";
 
@@ -17,6 +18,7 @@ routes.use('/montanhas', MontanhaRouter);
 routes.use('/usuarios', UsuarioRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
+routes.use('/colecoesBase', ColecaoRouter);
 
 const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);

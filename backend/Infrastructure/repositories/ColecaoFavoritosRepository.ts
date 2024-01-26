@@ -1,4 +1,4 @@
-/*
+
 import {Database} from 'sqlite3';
 import {ColecaoFavoritos} from '../../Domain/models/ColecaoFavoritos';
 
@@ -21,8 +21,8 @@ export class ColecaoFavoritosRepository {
                         const colecaoFavoritos = new ColecaoFavoritos(
                             row.id,
                             row.nome,
-                            row.descricao,
-                            row.usuarioId
+                            row.descricao??"",
+                            row.usuario_id!
                         );
                         resolve(colecaoFavoritos);
                     } else {
@@ -45,8 +45,8 @@ export class ColecaoFavoritosRepository {
                         const colecoesFavoritos = rows.map((row) => new ColecaoFavoritos(
                             row.id,
                             row.nome,
-                            row.descricao,
-                            row.usuarioId
+                            row.descricao??"",
+                            row.usuario_id!
                         ));
                         resolve(colecoesFavoritos);
                     } else {
@@ -61,7 +61,7 @@ export class ColecaoFavoritosRepository {
         return new Promise((resolve, reject) => {
             this.db.then((db) => {
                 db.run(`INSERT INTO ColecaoFavoritos (nome, descricao, usuarioId) VALUES (?,?,?)`,
-                    [colecaoFavoritos.nome, colecaoFavoritos.descricao, colecaoFavoritos.usuarioId],
+                    [colecaoFavoritos.nome, colecaoFavoritos.descricao, colecaoFavoritos.usuario_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -91,7 +91,7 @@ export class ColecaoFavoritosRepository {
         return new Promise((resolve, reject) => {
             this.db.then((db) => {
                 db.run(`UPDATE ColecaoFavoritos SET nome = ?, descricao = ?, usuarioId = ? WHERE id = ?`,
-                    [colecaoFavoritos.nome, colecaoFavoritos.descricao, colecaoFavoritos.usuarioId, colecaoFavoritos.id],
+                    [colecaoFavoritos.nome, colecaoFavoritos.descricao, colecaoFavoritos.usuario_id, colecaoFavoritos.id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -104,4 +104,4 @@ export class ColecaoFavoritosRepository {
     }
 
 }
-*/
+
