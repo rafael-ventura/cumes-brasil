@@ -21,10 +21,18 @@ export class MontanhaService {
     }
 
     async updateMontanha(montanha: Montanha): Promise<void> {
+        if (!await this.getMontanhaById(montanha.id)) {
+            throw new Error("Montanha não encontrada");
+        }
         return this.montanhaRepository.updateMontanha(montanha);
     }
 
     async deleteMontanha(id: number): Promise<void> {
+        if (!await this.getMontanhaById(id)) {
+            throw new Error("Montanha não encontrada");
+        }
         return this.montanhaRepository.deleteMontanha(id);
+
+
     }
 }

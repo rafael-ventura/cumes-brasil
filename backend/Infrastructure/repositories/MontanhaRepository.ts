@@ -40,17 +40,13 @@ export class MontanhaRepository {
                     return;
                 }
                 if (rows) {
-                    const montanhas: Montanha[] = [];
-                    rows.forEach((row) => {
-                        const montanha = new Montanha(
-                            row.id,
-                            row.nome,
-                            row.localizacao,
-                            row.altura,
-                            row.fonte_id
-                        );
-                        montanhas.push(montanha);
-                    });
+                    const montanhas = rows.map((row) => new Montanha(
+                        row.id,
+                        row.nome,
+                        row.localizacao,
+                        row.altura,
+                        row.fonte_id
+                    ));
                     resolve(montanhas);
                 } else {
                     resolve(null);

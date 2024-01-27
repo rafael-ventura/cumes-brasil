@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Face (
     nome TEXT NOT NULL,
     montanha_id INTEGER NOT NULL,
     fonte_id INTEGER NOT NULL,
-    FOREIGN KEY (montanha_id) REFERENCES Montanha (id) ON DELETE CASCADE,
+    FOREIGN KEY (montanha_id) REFERENCES Montanha (id),
     FOREIGN KEY (fonte_id) REFERENCES Fonte (id)
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS ColecaoBase (
     nome TEXT NOT NULL,
     descricao TEXT,
     usuario_id INTEGER NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario (id) ON DELETE CASCADE
+    FOREIGN KEY (usuario_id) REFERENCES Usuario (id)
 );
 
 CREATE TABLE IF NOT EXISTS ColecaoEscaladas (
@@ -83,15 +83,17 @@ CREATE TABLE IF NOT EXISTS ColecaoEscaladas (
 
 CREATE TABLE IF NOT EXISTS ColecaoFavoritos (
     colecaoBase_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (colecaoBase_id) REFERENCES ColecaoBase (id) ON DELETE CASCADE
+	usuario_id INTEGER NOT NULL,
+    FOREIGN KEY (colecaoBase_id) REFERENCES ColecaoBase (id),
+	FOREIGN KEY (usuario_id) REFERENCES Usuario (id)
 );
 
 CREATE TABLE IF NOT EXISTS vias_croquis (
     croqui_id INTEGER,
     via_id INTEGER,
     PRIMARY KEY (croqui_id, via_id),
-    FOREIGN KEY (croqui_id) REFERENCES Croqui (id) ON DELETE CASCADE,
-    FOREIGN KEY (via_id) REFERENCES Via (id) ON DELETE CASCADE
+    FOREIGN KEY (croqui_id) REFERENCES Croqui (id),
+    FOREIGN KEY (via_id) REFERENCES Via (id)
 );
 
 CREATE TABLE IF NOT EXISTS vias_colecoes (

@@ -12,10 +12,10 @@ export class Via {
     conquistadores: string[] | undefined;
     detalhes: string | undefined;
     data: Date | undefined;
-    montanhaId: number;
-    faceId: number;
-    viaPrincipalId: number | undefined;
-    fonteId: number;
+    montanha_id: number;
+    face_id: number;
+    via_principal_id: number | undefined;
+    fonte_id: number;
 
     constructor(id: number, nome: string, grau: string | undefined, crux: string | undefined,
                 artificial: string | undefined, duracao: string | undefined, exposicao: string | undefined,
@@ -33,27 +33,27 @@ export class Via {
         this.conquistadores = conquistadores;
         this.detalhes = detalhes;
         this.data = data;
-        this.montanhaId = montanhaId;
-        this.faceId = faceId;
-        this.viaPrincipalId = viaPrincipalId;
-        this.fonteId = fonteId;
+        this.montanha_id = montanhaId;
+        this.face_id = faceId;
+        this.via_principal_id = viaPrincipalId;
+        this.fonte_id = fonteId;
     }
 
 
     public associarMontanha(montanhaId: number): void {
-        this.montanhaId = montanhaId;
+        this.montanha_id = montanhaId;
     }
 
     public associarFace(faceId: number): void {
-        this.faceId = faceId;
+        this.face_id = faceId;
     }
 
     public associarViaPrincipal(viaPrincipalId: number): void {
-        this.viaPrincipalId = viaPrincipalId;
+        this.via_principal_id = viaPrincipalId;
     }
 
     public associarFonte(fonteId: number): void {
-        this.fonteId = fonteId;
+        this.fonte_id = fonteId;
     }
 
 
