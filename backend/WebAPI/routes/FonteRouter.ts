@@ -12,7 +12,7 @@ const FonteRouter = Router();
 FonteRouter.get('/:id', fonteController.getFonteById);
 FonteRouter.get('/', fonteController.getAllFonte);
 FonteRouter.post('/', fonteController.createFonte);
-FonteRouter.put('/id', fonteController.updateFonte);
+FonteRouter.put('/:d', fonteController.updateFonte);
 FonteRouter.delete('/:id', fonteController.deleteFonte);
 
 export default FonteRouter;
