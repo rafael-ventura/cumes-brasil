@@ -12,7 +12,7 @@ const FaceRouter = Router();
 FaceRouter.get('/:id', faceController.getFaceById);
 FaceRouter.get('/', faceController.getAllFace);
 FaceRouter.post('/', faceController.createFace);
-FaceRouter.put('/', faceController.updateFace);
+FaceRouter.put('/id', faceController.updateFace);
 FaceRouter.delete('/:id', faceController.deleteFace);
 
 export default FaceRouter;

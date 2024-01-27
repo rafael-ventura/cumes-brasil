@@ -12,7 +12,7 @@ const UsuarioRouter = Router();
 UsuarioRouter.get('/:id', usuarioController.getUsuarioById);
 UsuarioRouter.get('/', usuarioController.getAllUsuario);
 UsuarioRouter.post('/', usuarioController.createUsuario);
-UsuarioRouter.put('/', usuarioController.updateUsuario);
+UsuarioRouter.put('/id', usuarioController.updateUsuario);
 UsuarioRouter.delete('/:id', usuarioController.deleteUsuario);
 
 export default UsuarioRouter;

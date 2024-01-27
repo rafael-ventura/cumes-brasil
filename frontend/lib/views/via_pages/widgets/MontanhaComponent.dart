@@ -3,9 +3,9 @@ import 'package:frontend/controller/ViaController.dart';
 import 'package:frontend/models/viaModel.dart'; // Certifique-se de importar o arquivo correto
 
 class MontanhaComponent extends StatefulWidget {
-  final int montanhaId;
+  final int montanha_id;
 
-  MontanhaComponent({required this.montanhaId});
+  MontanhaComponent({required this.montanha_id});
 
   @override
   _MontanhaComponentState createState() => _MontanhaComponentState();
@@ -17,7 +17,7 @@ class _MontanhaComponentState extends State<MontanhaComponent> {
   @override
   void initState() {
     super.initState();
-    montanhaFuture = getMontanha(widget.montanhaId);
+    montanhaFuture = getMontanha(widget.montanha_id);
   }
 
   @override
@@ -46,10 +46,10 @@ class _MontanhaComponentState extends State<MontanhaComponent> {
     );
   }
 
-  Future<MontanhaModel> getMontanha(int montanhaId) async {
+  Future<MontanhaModel> getMontanha(int montanha_id) async {
     try {
       ViaController viaController = ViaController(); // Crie uma instância
-      MontanhaModel montanha = await viaController.getMontanhaById(montanhaId);
+      MontanhaModel montanha = await viaController.getMontanhaById(montanha_id);
       print(montanha);
       return montanha;
     } catch (error) {
@@ -57,11 +57,11 @@ class _MontanhaComponentState extends State<MontanhaComponent> {
     }
   }
 
-  Future<MontanhaModel> getMontanhaMock(int montanhaId) async {
+  Future<MontanhaModel> getMontanhaMock(int montanha_id) async {
     try {
       ViaController viaController = ViaController(); // Crie uma instância
       MontanhaModel montanha =
-          await viaController.getMontanhaByIdromJsonFile(montanhaId);
+          await viaController.getMontanhaByIdromJsonFile(montanha_id);
       print(montanha);
       return montanha;
     } catch (error) {

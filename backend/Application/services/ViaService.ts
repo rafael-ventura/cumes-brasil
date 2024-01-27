@@ -1,5 +1,5 @@
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
-import { Via } from '../../Domain/models/Via';
+import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+import {Via} from '../../Domain/models/Via';
 
 export class ViaService {
     private repository: ViaRepository;
@@ -21,10 +21,16 @@ export class ViaService {
     }
 
     async updateVia(via: Via): Promise<void> {
+        if (!await this.getViaById(via.id)) {
+            throw new Error("Via não encontrada");
+        }
         return this.repository.updateVia(via);
     }
 
     async deleteVia(id: number): Promise<void> {
+        if (!await this.getViaById(id)) {
+            throw new Error("Via não encontrada");
+        }
         return this.repository.deleteVia(id);
     }
 }

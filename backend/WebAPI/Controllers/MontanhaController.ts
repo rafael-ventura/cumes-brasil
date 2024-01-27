@@ -43,8 +43,11 @@ export class MontanhaController {
      */
     getAllMontanha = async (req: Request, res: Response) => {
         try {
-            const result = await this.service.getMontanhas();
-            res.json(result);
+            const montanhas = await this.service.getMontanhas();
+            if (montanhas?.length === 0) {
+                return res.status(404).json({message: "Nenhuma montanha encontrada"});
+            }
+            res.json(montanhas);
         } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
@@ -81,9 +84,20 @@ export class MontanhaController {
      * @returns {Error} 500 - Erro desconhecido
      */
     updateMontanha = async (req: Request, res: Response) => {
-        const montanha: Montanha = req.body;
-        await this.service.updateMontanha(montanha);
-        res.status(200).send();
+        try {
+            const montanha: Montanha = req.body;
+            await this.service.updateMontanha(montanha);
+            res.json({message: "Montanha atualizada com sucesso."});
+        } catch (error) {
+            if (error instanceof Error) {
+                if (error.message === "Montanha não encontrada") {
+                    return res.status(400).json({error: error.message});
+                }
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     }
 
     /**
@@ -94,8 +108,19 @@ export class MontanhaController {
      * @returns {object} 404 - Montanha não encontrada
      */
     deleteMontanha = async (req: Request, res: Response) => {
-        const id = Number(req.params.id);
-        await this.service.deleteMontanha(id);
-        res.status(200).send();
+        try {
+            const id = parseInt(req.params.id);
+            await this.service.deleteMontanha(id);
+            res.status(200).json({message: "Montanha deletada com sucesso."});
+        } catch (error) {
+            if (error instanceof Error) {
+                if (error.message === "Montanha não encontrada") {
+                    return res.status(400).json({error: error.message});
+                }
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     }
 }

@@ -43,10 +43,10 @@ class _ListagemViasViewState extends State<ViasView> {
         viasFiltradas = vias;
         // Pré-carregar informações da montanha
         for (ViaModel via in vias) {
-          String montanhaId = via.montanha!;
-          if (!montanhasMap.containsKey(montanhaId)) {
+          String montanha_id = via.montanha!;
+          if (!montanhasMap.containsKey(montanha_id)) {
             // Se a montanha ainda não foi carregada, carregue-a
-            getMontanhaNome(montanhaId);
+            getMontanhaNome(montanha_id);
           }
         }
       });
@@ -55,15 +55,15 @@ class _ListagemViasViewState extends State<ViasView> {
     }
   }
 
-  Future<void> getMontanhaNome(String montanhaId) async {
+  Future<void> getMontanhaNome(String montanha_id) async {
     try {
       MontanhaModel montanha =
-          await viaController.getMontanhaById(int.parse(montanhaId));
+          await viaController.getMontanhaById(int.parse(montanha_id));
 
       // Verificar se o widget ainda é válido antes de chamar setState
       if (mounted) {
         setState(() {
-          montanhasMap[montanhaId] = montanha;
+          montanhasMap[montanha_id] = montanha;
         });
       }
     } catch (error) {
