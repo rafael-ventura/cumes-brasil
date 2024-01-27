@@ -29,6 +29,9 @@ export class UsuarioController {
     getAllUsuario = async (_: Request, resposta: Response) => {
         try {
             const result = await this.service.getUsuarios();
+            if (result?.length === 0) {
+                return resposta.status(404).json({message: "Nenhum usuario encontrado"});
+            }
             resposta.json(result);
         } catch (error) {
             if (error instanceof Error) {
@@ -58,9 +61,12 @@ export class UsuarioController {
         try {
             const usuario: Usuario = requisicao.body;
             await this.service.updateUsuario(usuario);
-            resposta.json({message: "Usuario atualizada com sucesso."});
+            resposta.status(200).json({message: "Usuario atualizada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Usuario não encontrada") {
+                    return resposta.status(404).json({message: error.message});
+                }
                 resposta.status(500).json({error: error.message});
             } else {
                 resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
@@ -73,15 +79,16 @@ export class UsuarioController {
         try {
             const id = parseInt(requisicao.params.id);
             await this.service.deleteUsuario(id);
-            resposta.json({message: "Usuario deletada com sucesso."});
+            resposta.status(200).json({message: "Usuario deletada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Usuario não encontrada") {
+                    return resposta.status(400).json({error: error.message});
+                }
                 resposta.status(500).json({error: error.message});
             } else {
                 resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
             }
-
         }
-
     }
 }

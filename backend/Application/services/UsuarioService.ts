@@ -22,10 +22,16 @@ export class UsuarioService {
     }
 
     async updateUsuario(usuario: Usuario): Promise<void> {
+        if (!await this.getUsuarioById(usuario.id)) {
+            throw new Error("Usuario não encontrada");
+        }
         return this.repository.updateUsuario(usuario);
     }
 
     async deleteUsuario(id: number): Promise<void> {
+        if (!await this.getUsuarioById(id)) {
+            throw new Error("Usuario não encontrada");
+        }
         return this.repository.deleteUsuario(id);
     }
     async getColecaoBaseById(id: number) {

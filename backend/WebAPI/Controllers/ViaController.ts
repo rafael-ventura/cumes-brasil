@@ -43,11 +43,11 @@ export class ViaController {
      */
     getAllVia = async (_: Request, resposta: Response) => {
         try {
-            const result : Via[] | null = await this.service.getVias();
-            if (result?.length === 0) {
+            const vias: Via[] | null = await this.service.getVias();
+            if (vias?.length === 0) {
                 return resposta.status(404).json({message: "Via não encontrada."});
             }
-            resposta.json(result);
+            resposta.json(vias);
         } catch (error) {
             if (error instanceof Error) {
                 resposta.status(500).json({error: error.message});
@@ -91,6 +91,9 @@ export class ViaController {
             resposta.json({message: "Via atualizada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Via não encontrada.") {
+                    return resposta.status(404).json({message: error.message});
+                }
                 resposta.status(500).json({error: error.message});
             } else {
                 resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
@@ -112,6 +115,9 @@ export class ViaController {
             resposta.json({message: "Via deletada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Via não encontrada.") {
+                    return resposta.status(404).json({message: error.message});
+                }
                 resposta.status(500).json({error: error.message});
             } else {
                 resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
