@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { FaceService } from "../../Application/services/FaceService";
-import { Face } from "../../Domain/models/Face";
+import {Request, Response} from "express";
+import {FaceService} from "../../Application/services/FaceService";
+import {Face} from "../../Domain/models/Face";
 
 export class FaceController {
   private service: FaceService;
@@ -44,8 +44,8 @@ export class FaceController {
   getAllFace = async (req: Request, res: Response) => {
     try {
       const faces = await this.service.getFaces();
-      if (!faces) {
-        return res.status(404).json({ message: "Face não encontrada." });
+      if (faces?.length === 0) {
+        return res.status(404).json({message: "Nenhuma face encontrada"});
       }
       res.json(faces);
     } catch (error) {
