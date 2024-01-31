@@ -50,6 +50,9 @@ app.*.map.json
 node_modules/
 package-lock.json
 
+# Banco de dados
+*.bd
+
 *.env
 ```
 /backend/node_modules/.bin/acorn
