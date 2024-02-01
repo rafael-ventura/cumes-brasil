@@ -1,8 +1,5 @@
 import {Database} from 'sqlite3';
 import {Usuario} from '../../Domain/models/Usuario';
-import {ColecaoBase} from "../../Domain/models/ColecaoBase";
-import {ColecaoFavoritos} from "../../Domain/models/ColecaoFavoritos";
-import {ColecaoEscaladas} from "../../Domain/models/ColecaoEscaladas";
 
 export class UsuarioRepository {
     private db: Database;
@@ -29,46 +26,11 @@ export class UsuarioRepository {
                     return;
                 }
 
-                // Buscar coleções associadas
-                const colecoesPersonalizadasRows = await new Promise<any[]>((resolve, reject) => {
-                    this.db.all(`SELECT * FROM ColecaoBase WHERE usuario_id = ?`, [id], (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(rows);
-                        }
-                    });
-                });
-
-                const colecoesFavoritosRows = await new Promise<any[]>((resolve, reject) => {
-                    this.db.all(`SELECT * FROM ColecaoFavoritos WHERE usuario_id = ?`, [id], (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(rows);
-                        }
-                    });
-                });
-
-                const colecoesEscaladasRows = await new Promise<any[]>((resolve, reject) => {
-                    this.db.all(`SELECT * FROM ColecaoEscaladas WHERE usuario_id = ?`, [id], (err, rows) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(rows);
-                        }
-                    });
-                });
-
-                // Mapear os resultados para as coleções do usuário
                 const usuario = new Usuario(
                     usuarioRow.id,
                     usuarioRow.nome,
                     usuarioRow.email,
                     usuarioRow.fotoPerfil,
-                    colecoesPersonalizadasRows.map(c => new ColecaoBase(c.id, c.nome, c.descricao, c.usuario_id)),
-                    colecoesFavoritosRows.map(c => new ColecaoFavoritos(c.id, c.nome, c.descricao, c.usuario_id)),
-                    colecoesEscaladasRows.map(c => new ColecaoEscaladas(c.id, c.nome, c.descricao, c.usuario_id, c.viaId, c.data, c.comentario))
                 );
 
                 resolve(usuario);
@@ -93,46 +55,11 @@ export class UsuarioRepository {
                     });
 
                     const usuarios = await Promise.all(usuariosRows.map(async (usuarioRow) => {
-                        // Buscar coleções associadas
-                        const colecoesPersonalizadasRows = await new Promise<any[]>((resolve, reject) => {
-                            this.db.all(`SELECT * FROM ColecaoBase WHERE usuario_id = ?`, [usuarioRow.id], (err, rows) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve(rows);
-                                }
-                            });
-                        });
-
-                        const colecoesFavoritosRows = await new Promise<any[]>((resolve, reject) => {
-                            this.db.all(`SELECT * FROM ColecaoFavoritos WHERE usuario_id = ?`, [usuarioRow.id], (err, rows) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve(rows);
-                                }
-                            });
-                        });
-
-                        const colecoesEscaladasRows = await new Promise<any[]>((resolve, reject) => {
-                            this.db.all(`SELECT * FROM ColecaoEscaladas WHERE usuario_id = ?`, [usuarioRow.id], (err, rows) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve(rows);
-                                }
-                            });
-                        });
-
-                        // Mapear os resultados para as coleções do usuário
                         return new Usuario(
                             usuarioRow.id,
                             usuarioRow.nome,
                             usuarioRow.email,
                             usuarioRow.fotoPerfil,
-                            colecoesPersonalizadasRows.map(c => new ColecaoBase(c.id, c.nome, c.descricao, c.usuario_id)),
-                            colecoesFavoritosRows.map(c => new ColecaoFavoritos(c.id, c.nome, c.descricao, c.usuario_id)),
-                            colecoesEscaladasRows.map(c => new ColecaoEscaladas(c.id, c.nome, c.descricao, c.usuario_id, c.viaId, c.data, c.comentario))
                         );
                     }));
 

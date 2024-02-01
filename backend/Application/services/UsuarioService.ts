@@ -1,5 +1,5 @@
-import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
 import {Usuario} from "../../Domain/models/Usuario";
+import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
 
 
 export class UsuarioService {
@@ -32,9 +32,6 @@ export class UsuarioService {
         if (!await this.getUsuarioById(id)) {
             throw new Error("Usuario não encontrada");
         }
-        return this.repository.deleteUsuario(id);
-    }
-    async getColecaoBaseById(id: number) {
         return this.repository.deleteUsuario(id);
     }
 }

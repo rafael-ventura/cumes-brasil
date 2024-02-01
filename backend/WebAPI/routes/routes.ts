@@ -18,7 +18,7 @@ routes.use('/montanhas', MontanhaRouter);
 routes.use('/usuarios', UsuarioRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
-routes.use('/colecoesBase', ColecaoRouter);
+routes.use('/colecoes', ColecaoRouter);
 
 const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);

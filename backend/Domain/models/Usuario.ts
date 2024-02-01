@@ -1,26 +1,21 @@
-import {ColecaoBase} from "./ColecaoBase";
+/*import {ColecaoBase} from "./Colecao";
 import {ColecaoFavoritos} from "./ColecaoFavoritos";
-import {ColecaoEscaladas} from "./ColecaoEscaladas";
-
+import {ColecaoEscaladas} from "./Escalada";
+*/
 export class Usuario {
     id: number;
     nome: string;
     email: string;
     fotoPerfil?: string;
-    colecoesPersonalizadas: ColecaoBase[];
-    colecoesFavoritos: ColecaoFavoritos[];
-    colecoesEscaladas: ColecaoEscaladas[];
 
-    constructor(id: number, nome: string, email: string, fotoPerfil?: string, colecoesPersonalizadas?: ColecaoBase[], colecoesFavoritos?: ColecaoFavoritos[], colecoesEscaladas?: ColecaoEscaladas[]) {
+    constructor(id: number, nome: string, email: string, fotoPerfil?: string) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.fotoPerfil = fotoPerfil;
-        this.colecoesPersonalizadas = colecoesPersonalizadas || [];
-        this.colecoesFavoritos = colecoesFavoritos || [];
-        this.colecoesEscaladas = colecoesEscaladas || [];
     }
 
+    /*
     // Métodos adicionais
     public addColecaoPersonalizada(colecao: ColecaoBase) {
         this.colecoesPersonalizadas.push(colecao);
@@ -45,7 +40,7 @@ export class Usuario {
     public removerColecaoEscaladas(colecaoId: number) {
         this.colecoesEscaladas = this.colecoesEscaladas.filter(c => c.id !== colecaoId);
     }
-
+    */
     public atualizarFotoPerfil(novaFoto: string) {
         this.fotoPerfil = novaFoto;
     }
@@ -54,6 +49,7 @@ export class Usuario {
         this.email = novoEmail;
     }
 
+    /*
     public buscarColecoesPersonalizadas(colecaoId: number): ColecaoBase | null {
         return this.colecoesPersonalizadas.find(c => c.id === colecaoId) || null;
     }
@@ -66,4 +62,5 @@ export class Usuario {
     public buscarColecoesEscaladas(colecaoId: number): ColecaoEscaladas | null {
         return this.colecoesEscaladas.find(c => c.id === colecaoId) || null;
     }
+    */
 }
