@@ -39,7 +39,7 @@ export class EscaladaController {
   /**
    * @route GET /escaladas/:id
    * @group Escaladas - Operações relacionadas a escaladas
-   * @returns {Escalada.model} 200 - Escalada encontrada
+   * @returns {Array.<Escalada>} 200 - Escaladas encontradas
    * @returns {object} 404 - Escalada não encontrada
    * @returns {Error} 500 - Erro desconhecido
    */
@@ -107,7 +107,7 @@ export class EscaladaController {
   };
 
   /**
-   * @route PUT /Escaladas
+   * @route PUT /escaladas
    * @group Escaladas - Operações relacionadas a Escaladas
    * @returns {object} 200 - Escalada atualizada com sucesso
    * @returns {Error} 500 - Erro desconhecido

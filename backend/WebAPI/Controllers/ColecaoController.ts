@@ -13,7 +13,7 @@ export class ColecaoController {
     }
 
     /**
-     * @route GET /Colecaoes/:id
+     * @route GET /colecaoes/:id
      * @group Colecaoes - Operações relacionadas a Colecaoes
      * @returns {Colecao.model} 200 - Colecao encontrada
      * @returns {object} 404 - Colecao não encontrada
@@ -37,7 +37,7 @@ export class ColecaoController {
     }
 
     /**
-     * @route GET /Colecaos
+     * @route GET /colecaos
      * @group Colecaos - Operações relacionadas a Colecaos
      * @returns {Array.<Colecao>} 200 - Colecaos encontradas
      * @returns {Error} 500 - Erro desconhecido
@@ -58,7 +58,7 @@ export class ColecaoController {
     }
 
     /**
-     * @route GET /colecoes-do-usuario/:usuarioId
+     * @route GET /colecaos/colecoesDoUsuario/:usuarioId
      * @group Colecoes - Operações relacionadas a Colecoes
      * @returns {object} 201 - Colecoes encontradas com sucesso
      * @returns {Error} 500 - Erro desconhecido
@@ -93,7 +93,7 @@ export class ColecaoController {
     }
 
     /**
-     * @route POST /Colecaos
+     * @route POST /colecaos
      * @group Colecoes - Operações relacionadas a Colecoes
      * @returns {object} 201 - Colecao criada com sucesso
      * @returns {Error} 500 - Erro desconhecido
@@ -113,7 +113,7 @@ export class ColecaoController {
     }
 
     /**
-     * @route PUT /Colecoes
+     * @route PUT /colecoes
      * @group Colecoes - Operações relacionadas a colecoes
      * @returns {object} 200 - Colecao atualizada com sucesso
      * @returns {Error} 500 - Erro desconhecido
@@ -125,9 +125,9 @@ export class ColecaoController {
     }
 
     /**
-     * @route DELETE /Colecoes/:id
+     * @route DELETE /colecoes/:id
      * @group Colecoes - Operações relacionadas a colecoes
-     * @returns {object} 200 - Colecao deletada com sucesso
+     * @returns {colecao-id} 200 - Colecao deletada com sucesso
      * @returns {Error} 500 - Erro desconhecido
      * @returns {object} 404 - Colecao não encontrada
      */
@@ -139,9 +139,10 @@ export class ColecaoController {
 
 
     /**
-     * @route ADD Via /Colecoes/addVia
+     * @route ADD Via /colecoes/addVia
      * @group Colecoes - Operações relacionadas a colecoes
      * @returns {object} 200 - Via adicionada com sucesso
+     * @param {colecao_id, via_id} - passado no corpo da requisicao
      * @returns {Error} 500 - Erro desconhecido
      * @returns {object} 404 - Colecao não encontrada
      */
@@ -182,6 +183,14 @@ export class ColecaoController {
         }
     }
 
+    /**
+     * @route ADD Via /colecoes/removeVia/:colecaoId/:viaId
+     * @group Colecoes - Operações relacionadas a colecoes
+     * @returns {object} 200 - Via removida da coleção com sucesso
+     * @param {colecao_id, via_id} - passado como parametro http
+     * @returns {Error} 500 - Erro desconhecido
+     * @returns {object} 404 - Colecao não encontrada
+     */
     removeVia = async (req: Request, res: Response) => {
         console.log('Entrou na função removeVia');
 

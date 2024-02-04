@@ -8,7 +8,14 @@ export class UsuarioController {
     constructor(service: UsuarioService) {
         this.service = service;
     }
-
+    
+    /**
+     * @route GET /usuarios/:id
+     * @group Usuarios - Operações relacionadas a Usuarios
+     * @returns {Usuario.model} 200 - Usuario encontrada
+     * @returns {object} 404 - Usuario não encontrado
+     * @returns {Error} 500 - Ocorreu um erro desconhecido
+     */
     getUsuarioById = async (requisicao: Request, resposta: Response) => {
         try {
             const id = parseInt(requisicao.params.id);
@@ -26,6 +33,13 @@ export class UsuarioController {
         }
     };
 
+    /**
+     * @route GET /usuarios
+     * @group Usuarios - Operações relacionadas a Usuarios
+     * @returns {Array.<Usuario>} 200 - Usuarios encontradas
+     * @returns {object} 404 - Usuarios não encontrados
+     * @returns {Error} 500 - Ocorreu um erro desconhecido
+     */
     getAllUsuario = async (_: Request, resposta: Response) => {
         try {
             const result = await this.service.getUsuarios();
@@ -42,6 +56,12 @@ export class UsuarioController {
         }
     };
 
+    /**
+     * @route POST /usuarios
+     * @group Usuarios - Operações relacionadas a Usuarios
+     * @returns {object} 200 - Usuario criada com sucesso.
+     * @returns {Error} 500 - Ocorreu um erro desconhecido
+     */
     createUsuario = async (requisicao: Request, resposta: Response) => {
         try {
             const usuario: Usuario = requisicao.body;
@@ -57,6 +77,13 @@ export class UsuarioController {
         }
     };
 
+    /**
+     * @route PUT /usuarios
+     * @group Usuarios - Operações relacionadas a Usuarios
+     * @returns {object} 200 - Usuario atualizada com sucesso
+     * @returns {object} 404 -message error
+     * @returns {Error} 500 - Ocorreu um erro desconhecido
+     */
     updateUsuario = async (requisicao: Request, resposta: Response) => {
         try {
             const usuario: Usuario = requisicao.body;
@@ -75,6 +102,13 @@ export class UsuarioController {
         }
     };
 
+    /**
+     * @route DELETE /usuarios/:id
+     * @group Usuarios - Operações relacionadas a Usuarios
+     * @returns {Usuario.model} 200 - Usuario deletada com sucesso
+     * @returns {object} 404 -message error
+     * @returns {Error} 500 - Ocorreu um erro desconhecido
+     */
     deleteUsuario = async (requisicao: Request, resposta: Response) => {
         try {
             const id = parseInt(requisicao.params.id);
