@@ -9,14 +9,14 @@ export class ViaRepository {
     }
 
     async getViaById(id: number): Promise<Via | null> {
+        var query = `SELECT * FROM Via WHERE id = ?`;
         return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Via WHERE id = ?`, [id], (err, row: Via) => {
+            this.db.get(query, [id], (err, row: Via) => {
                 if (err) {
                     reject(err);
                     return;
                 }
                 if (row) {
-
                     const via = new Via(
                         row.id,
                         row.nome,
@@ -29,10 +29,10 @@ export class ViaRepository {
                         row.conquistadores,
                         row.detalhes,
                         row.data,
-                        row.montanhaId,
-                        row.faceId,
-                        row.viaPrincipalId,
-                        row.fonteId
+                        row.montanha_id,
+                        row.face_id,
+                        row.via_principal_id,
+                        row.fonte_id
                     );
                     resolve(via);
                 } else {
@@ -62,10 +62,10 @@ export class ViaRepository {
                         row.conquistadores,
                         row.detalhes,
                         row.data,
-                        row.montanhaId,
-                        row.faceId,
-                        row.viaPrincipalId,
-                        row.fonteId
+                        row.montanha_id,
+                        row.face_id,
+                        row.via_principal_id,
+                        row.fonte_id
                     ));
                     resolve(vias);
                 } else {
@@ -81,7 +81,7 @@ export class ViaRepository {
         return new Promise((resolve, reject) => {
                 this.db.run(`INSERT INTO Via (nome, grau, crux, artificial, duracao, exposicao, extensao, conquistadores, detalhes, data, montanha_id, face_id, via_principal_id, fonte_id) 
             VALUES (?, ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)`,
-                    [via.nome, via.grau, via.crux, via.artificial, via.duracao, via.exposicao, via.extensao, JSON.stringify(via.conquistadores), via.detalhes, via.data, via.montanhaId, via.faceId, via.viaPrincipalId, via.fonteId],
+                    [via.nome, via.grau, via.crux, via.artificial, via.duracao, via.exposicao, via.extensao, JSON.stringify(via.conquistadores), via.detalhes, via.data, via.montanha_id, via.face_id, via.via_principal_id, via.fonte_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -98,7 +98,7 @@ export class ViaRepository {
 
         return new Promise((resolve, reject) => {
                 this.db.run(`UPDATE Via SET nome = ?, grau = ?, crux = ?, artificial = ?, duracao = ?, exposicao = ?, extensao = ?, conquistadores = ?, detalhes = ?, data = ?, montanha_id = ?, face_id = ?, via_principal_id = ?, fonte_id = ? WHERE id = ?`,
-                    [via.nome, via.grau, via.crux, via.artificial, via.duracao, via.exposicao, via.extensao, JSON.stringify(via.conquistadores), via.detalhes, via.data, via.montanhaId, via.faceId, via.viaPrincipalId, via.fonteId, via.id],
+                    [via.nome, via.grau, via.crux, via.artificial, via.duracao, via.exposicao, via.extensao, JSON.stringify(via.conquistadores), via.detalhes, via.data, via.montanha_id, via.face_id, via.via_principal_id, via.fonte_id, via.id],
                     (err) => {
                         if (err) {
                             reject(err);

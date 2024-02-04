@@ -134,7 +134,7 @@ class _ViaViewState extends State<ViaView> {
                                     SizedBox(height: 8),
                                     //@MontanhaComponente
                                     MontanhaComponent(
-                                        montanhaId: int.parse(
+                                        montanha_id: int.parse(
                                             viaModel.montanha ?? '1')),
                                     SizedBox(height: 16),
                                     buildSectionTitle('Detalhes:'),

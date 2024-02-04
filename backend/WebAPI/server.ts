@@ -20,9 +20,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 
-// Documentação da API com Swagger
-
-
 // Rotas
 app.use('/api', routes);
 
@@ -32,5 +29,4 @@ app.listen(PORT, () => {
     console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
     console.log(process.cwd())
 
-     /*console.log(viaService.processCSVData());*/
 });

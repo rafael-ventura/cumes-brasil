@@ -21,10 +21,14 @@ export class FonteService {
     }
 
     async updateFonte(fonte: Fonte): Promise<void> {
-        return this.fonteRepository.updateFonte(fonte);
+        if (!await this.getFonteById(fonte.id)) {
+            throw new Error("Fonte não encontrada");
+        }
     }
 
     async deleteFonte(id: number): Promise<void> {
-        return this.fonteRepository.deleteFonte(id);
+        if (!await this.getFonteById(id)) {
+            throw new Error("Fonte não encontrada");
+        }
     }
 }

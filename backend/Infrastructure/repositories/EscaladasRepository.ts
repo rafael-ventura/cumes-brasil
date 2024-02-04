@@ -1,28 +1,30 @@
-/*
+
 import { Database } from 'sqlite3';
-import { ColecaoEscaladas } from '../../Domain/models/ColecaoEscaladas';
+import { Escalada } from '../../Domain/models/Escalada';
 
-export class ColecaoEscaladasRepository {
-    private db: Promise<Database>;
+export class EscaladasRepository {
+    private db: Database;
 
-    constructor(db: Promise<Database>) /!**!/{
+    constructor(db: Database){
         this.db = db;
     }
 
-    async getColecaoEscaladasById(id: number): Promise<ColecaoEscaladas | null> {
+    async getEscaladaById(id: number): Promise<Escalada | null> {
         return new Promise((resolve, reject) => {
-            this.db.then((db) => {
-                db.get(`SELECT * FROM ColecaoEscaladas WHERE id = ?`, [id], (err, row: ColecaoEscaladas) => {
+            this.db.get(`SELECT * FROM ColecaoEscaladas WHERE id = ?`, [id], (err, row: Escalada) => {
                     if (err) {
                         reject(err);
                         return;
                     }
                     if (row) {
-                        const colecaoEscaladas = new ColecaoEscaladas(
+                        const colecaoEscaladas = new Escalada(
                             row.id,
                             row.nome,
+                            row.data,
                             row.descricao,
-                            row.usuarioId
+                            row.observacao,
+                            row.usuario_id!,
+                            row.via_id
                         );
                         resolve(colecaoEscaladas);
                     } else {
@@ -30,39 +32,38 @@ export class ColecaoEscaladasRepository {
                     }
                 });
             });
-        });
     }
 
-    async getColecoesEscaladas(): Promise<ColecaoEscaladas[] | null> {
+    async getEscaladas(): Promise<Escalada[] | null> {
         return new Promise((resolve, reject) => {
-            this.db.then((db) => {
-                db.all(`SELECT * FROM ColecaoEscaladas`, (err, rows: ColecaoEscaladas[]) => {
+            this.db.all(`SELECT * FROM ColecaoEscaladas`, (err, rows: Escalada[]) => {
                     if (err) {
                         reject(err);
                         return;
                     }
                     if (rows) {
-                        const colecoesEscaladas = rows.map((row) => new ColecaoEscaladas(
+                        const Escaladas = rows.map((row) => new Escalada(
                             row.id,
                             row.nome,
+                            row.data,
                             row.descricao,
-                            row.usuarioId
+                            row.observacao,
+                            row.usuario_id!,
+                            row.via_id
                         ));
-                        resolve(colecoesEscaladas);
+                        resolve(Escaladas);
                     } else {
                         resolve(null);
                     }
                 });
             });
-        });
     }
 
 
-    async createColecaoEscaladas(colecaoEscaladas: ColecaoEscaladas): Promise<void> {
+    async createColecaoEscaladas(Escalada: Escalada): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.then((db) => {
-                db.run(`INSERT INTO ColecaoEscaladas (nome, descricao, usuarioId) VALUES (?,?,?)`,
-                    [colecaoEscaladas.nome, colecaoEscaladas.descricao, colecaoEscaladas.usuarioId],
+            this.db.run(`INSERT INTO ColecaoEscaladas (nome, data, descricao, observacao, via_id, usuario_id) VALUES (?,?,?,?,?,?)`,
+                    [Escalada.nome, Escalada.data, Escalada.descricao, Escalada.observacao, Escalada.usuario_id, Escalada.via_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -71,14 +72,12 @@ export class ColecaoEscaladasRepository {
                         resolve();
                     });
             });
-        });
     }
 
-    async updateColecaoEscaladas(colecaoEscaladas: ColecaoEscaladas): Promise<void> {
+    async updateEscalada(Escalada: Escalada): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.then((db) => {
-                db.run(`UPDATE ColecaoEscaladas SET nome = ?, descricao = ?, usuarioId = ? WHERE id = ?`,
-                    [colecaoEscaladas.nome, colecaoEscaladas.descricao, colecaoEscaladas.usuarioId, colecaoEscaladas.id],
+            this.db.run(`UPDATE ColecaoEscaladas SET nome = ?, data = ?, descricao = ? observacao = ?, usuario_id = ?, via_id = ?,  WHERE id = ?`,
+                    [Escalada.id, Escalada.nome, Escalada.data, Escalada.descricao, Escalada.observacao, Escalada.usuario_id, Escalada.via_id],
                     (err) => {
                         if (err) {
                             reject(err);
@@ -87,13 +86,11 @@ export class ColecaoEscaladasRepository {
                         resolve();
                     });
             });
-        });
     }
 
     async deleteColecaoEscaladas(id: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.then((db) => {
-                db.run(`DELETE FROM ColecaoEscaladas WHERE id = ?`, [id], (err) => {
+            this.db.run(`DELETE FROM ColecaoEscaladas WHERE id = ?`, [id], (err) => {
                     if (err) {
                         reject(err);
                         return;
@@ -101,7 +98,6 @@ export class ColecaoEscaladasRepository {
                     resolve();
                 });
             });
-        });
     }
 
-}*/
+}

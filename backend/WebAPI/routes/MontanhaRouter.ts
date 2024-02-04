@@ -12,7 +12,7 @@ const MontanhaRouter = Router();
 MontanhaRouter.get('/:id', montanhaController.getMontanhaById);
 MontanhaRouter.get('/', montanhaController.getAllMontanha);
 MontanhaRouter.post('/', montanhaController.createMontanha);
-MontanhaRouter.put('/', montanhaController.updateMontanha);
+MontanhaRouter.put('/:id', montanhaController.updateMontanha);
 MontanhaRouter.delete('/:id', montanhaController.deleteMontanha);
 
 export default MontanhaRouter;

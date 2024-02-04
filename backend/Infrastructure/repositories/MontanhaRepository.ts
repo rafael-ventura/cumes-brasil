@@ -21,7 +21,7 @@ export class MontanhaRepository {
                         row.nome,
                         row.localizacao,
                         row.altura,
-                        row.fonteId
+                        row.fonte_id
                     );
                     resolve(montanha);
                 } else {
@@ -40,17 +40,13 @@ export class MontanhaRepository {
                     return;
                 }
                 if (rows) {
-                    const montanhas: Montanha[] = [];
-                    rows.forEach((row) => {
-                        const montanha = new Montanha(
-                            row.id,
-                            row.nome,
-                            row.localizacao,
-                            row.altura,
-                            row.fonteId
-                        );
-                        montanhas.push(montanha);
-                    });
+                    const montanhas = rows.map((row) => new Montanha(
+                        row.id,
+                        row.nome,
+                        row.localizacao,
+                        row.altura,
+                        row.fonte_id
+                    ));
                     resolve(montanhas);
                 } else {
                     resolve(null);
@@ -61,8 +57,8 @@ export class MontanhaRepository {
 
     async createMontanha(montanha: Montanha): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Montanha (nome, localizacao, altura, faces, fonteId) VALUES (?,?,?,?,?)`,
-                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonteId],
+            this.db.run(`INSERT INTO Montanha (nome, localizacao, altura, fonte_id) VALUES (?,?,?,?)`,
+                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonte_id],
                 (err) => {
                     if (err) {
                         reject(err);
@@ -75,8 +71,8 @@ export class MontanhaRepository {
 
     async updateMontanha(montanha: Montanha): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Montanha SET nome = ?, localizacao = ?, altura = ?, faces = ?, fonteId = ? WHERE id = ?`,
-                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonteId, montanha.id],
+            this.db.run(`UPDATE Montanha SET nome = ?, localizacao = ?, altura = ?, fonte_id = ? WHERE id = ?`,
+                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonte_id, montanha.id],
                 (err) => {
                     if (err) {
                         reject(err);

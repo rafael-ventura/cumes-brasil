@@ -12,7 +12,7 @@ const CroquiRouter = Router();
 CroquiRouter.get('/:id', croquiController.getCroquiById);
 CroquiRouter.get('/', croquiController.getAllCroqui);
 CroquiRouter.post('/', croquiController.createCroqui);
-CroquiRouter.put('/', croquiController.updateCroqui);
+CroquiRouter.put('/:id', croquiController.updateCroqui);
 CroquiRouter.delete('/:id', croquiController.deleteCroqui);
 
 export default CroquiRouter;
