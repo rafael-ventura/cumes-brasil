@@ -9,6 +9,12 @@ export class ConexaoController {
         this.internalService = internalService;
     }
 
+    /**
+     * @route GET /conexao
+     * @group Conexão - Operações relacionadas a conexão
+     * @returns {object} 200 - Conexão com sucesso
+     * @returns {Error} 500 - Database not responding
+     */
     checkDatabaseHealth = async (_: Request, res: Response) => {
         const isHealthy = await this.internalService.healthCheck();
         if (isHealthy) {

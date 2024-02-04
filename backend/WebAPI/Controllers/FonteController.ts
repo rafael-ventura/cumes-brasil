@@ -10,7 +10,7 @@ export class FonteController {
     }
 
     /**
-     * @route Fontes /fonte/:id
+     * @route Fontes /fontes/:id
      * @group Fonte - Operações relacionadas a fonte
      * @returns {Fonte.model} 200 - Fonte encontrada
      * @returns {object} 404 - Fonte não encontrada
