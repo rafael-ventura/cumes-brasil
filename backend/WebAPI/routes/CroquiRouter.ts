@@ -3,9 +3,12 @@ import dbConnection from '../../Infrastructure/config/db';
 import {CroquiController} from '../Controllers/CroquiController';
 import {CroquiService} from '../../Application/services/CroquiService';
 import {CroquiRepository} from '../../Infrastructure/repositories/CroquiRepository';
+import { FonteService } from '../../Application/services/FonteService';
+import { FonteRepository } from '../../Infrastructure/repositories/FonteRepository';
 
 const croquiService = new CroquiService(new CroquiRepository(dbConnection));
-const croquiController = new CroquiController(croquiService);
+const fonteService = new FonteService(new FonteRepository(dbConnection));
+const croquiController = new CroquiController(croquiService, fonteService);
 
 const CroquiRouter = Router();
 

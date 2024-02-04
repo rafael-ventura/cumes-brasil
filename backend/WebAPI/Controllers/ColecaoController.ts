@@ -1,13 +1,13 @@
 import { ColecaoService } from "../../Application/services/ColecaoService";
 import { Colecao} from "../../Domain/models/Colecao";
 import {Request, Response} from "express";
-import { ViaService } from "../../Application/services/ViaService";
+import { IViaService } from "../../Application/services/ViaService";
 
 export class ColecaoController {
     private service: ColecaoService;
-    private viaService: ViaService;
+    private viaService: IViaService;
 
-    constructor(colecaoaService: ColecaoService, viaService: ViaService) {
+    constructor(colecaoaService: ColecaoService, viaService: IViaService) {
         this.service = colecaoaService;
         this.viaService = viaService;
     }

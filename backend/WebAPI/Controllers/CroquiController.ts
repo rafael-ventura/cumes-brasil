@@ -1,12 +1,15 @@
 import {CroquiService} from "../../Application/services/CroquiService";
+import { FonteService } from "../../Application/services/FonteService";
 import {Request, Response} from "express";
 import {Croqui} from "../../Domain/models/Croqui";
 
 export class CroquiController {
   private service: CroquiService;
+  private fonteService: FonteService
 
-  constructor(croquiService: CroquiService) {
+  constructor(croquiService: CroquiService, fonteSevice: FonteService) {
     this.service = croquiService;
+    this.fonteService = fonteSevice;
   }
 
   /**

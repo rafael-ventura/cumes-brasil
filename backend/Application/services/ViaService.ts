@@ -1,6 +1,10 @@
 import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
 import {Via} from '../../Domain/models/Via';
 
+export interface IViaService {
+    getViaById(id: number): Promise<Via | null>;
+}
+
 export class ViaService {
     private repository: ViaRepository;
 

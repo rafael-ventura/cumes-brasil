@@ -1,6 +1,5 @@
 import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
 import { Colecao } from "../../Domain/models/Colecao";
-import { Via } from "../../Domain/models/Via";
 
 export class ColecaoService {
     private repository: ColecaoRepository;

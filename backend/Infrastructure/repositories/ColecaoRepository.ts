@@ -1,6 +1,5 @@
 import { Database } from "sqlite3";
 import { Colecao } from "../../Domain/models/Colecao";
-import { Via } from "../../Domain/models/Via";
 import { ViaRepository } from "./ViaRepository";
 
 export class ColecaoRepository {
