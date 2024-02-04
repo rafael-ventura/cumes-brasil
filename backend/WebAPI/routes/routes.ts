@@ -6,6 +6,7 @@ import FonteRouter from "./FonteRouter";
 import FaceRouter from "./FaceRouter";
 import CroquiRouter from "./CroquiRouter";
 import ColecaoRouter from './ColecaoRouter';
+import EscaladaRouter from './EscaladaRouter';
 import {ConexaoController} from "../Controllers/ConexaoController";
 import {ConexaoService} from "../../Application/services/ConexaoService";
 
@@ -19,6 +20,7 @@ routes.use('/usuarios', UsuarioRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
 routes.use('/colecoes', ColecaoRouter);
+routes.use('/escaladas', EscaladaRouter);
 
 const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);
