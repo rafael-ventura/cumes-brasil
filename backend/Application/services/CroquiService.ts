@@ -27,4 +27,8 @@ export class CroquiService {
     async deleteCroqui(id: number): Promise<void> {
         return this.croquiRepository.deleteCroqui(id);
     }
+
+    async associarCroquiEmVia(croqui_id: number, via_id: number): Promise<Croqui[] | null> {
+        return this.croquiRepository.associarCroquiEmVia(croqui_id, via_id);
+    }
 }

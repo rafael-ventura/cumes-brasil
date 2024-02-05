@@ -128,4 +128,21 @@ export class CroquiController {
       }
     }
   };
+
+
+  getCroquisByViaId = async (req: Request, res: Response) => {
+    try {
+      const croquis: Croqui[] | null = await this.service.getCroquis();
+      if (croquis?.length === 0) {
+        return res.status(404).json({message: "Nenhuma croqui encontrada"});
+      }
+      res.json(croquis);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({error: error.message});
+      } else {
+        res.status(500).json({error: "Ocorreu um erro desconhecido"});
+      }
+    }
+  };
 }

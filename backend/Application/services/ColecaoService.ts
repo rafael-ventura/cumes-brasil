@@ -12,6 +12,10 @@ export class ColecaoService {
         return this.repository.getColecaoById(id);
     }
 
+    async getViasIdsByColecaoId(id: number): Promise<number[] | null> {
+        return this.repository.getViasIdsByColecaoId(id);
+    }
+
     async getColecoesByUsuarioId(usuario_id: number): Promise<Colecao[] | null> {
         return this.repository.getColecoesByUsuarioId(usuario_id);
     }

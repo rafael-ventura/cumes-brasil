@@ -1,5 +1,7 @@
 // models/Via.ts
 
+import { Croqui } from "./Croqui";
+
 export class Via {
     id: number;
     nome: string;
@@ -16,12 +18,13 @@ export class Via {
     face_id: number;
     via_principal_id: number | undefined;
     fonte_id: number;
+    croquis?: Croqui[] | undefined;
 
     constructor(id: number, nome: string, grau: string | undefined, crux: string | undefined,
                 artificial: string | undefined, duracao: string | undefined, exposicao: string | undefined,
                 extensao: number | undefined, conquistadores: string[] | undefined, detalhes: string | undefined,
                 data: Date | undefined, montanhaId: number, faceId: number,
-                viaPrincipalId: number | undefined, fonteId: number) {
+                viaPrincipalId: number | undefined, fonteId: number, croqui?: Croqui[] | undefined) {
         this.id = id;
         this.nome = nome;
         this.grau = grau;
@@ -37,8 +40,8 @@ export class Via {
         this.face_id = faceId;
         this.via_principal_id = viaPrincipalId;
         this.fonte_id = fonteId;
+        this.croquis = croqui || [];
     }
-
 
     public associarMontanha(montanhaId: number): void {
         this.montanha_id = montanhaId;
