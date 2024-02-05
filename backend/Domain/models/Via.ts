@@ -1,5 +1,3 @@
-// models/Via.ts
-
 import { Croqui } from "./Croqui";
 
 export class Via {

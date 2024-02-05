@@ -1,55 +1,176 @@
-# Endpoints da API
+# API Cumes Brasil 🏞️
 
-## Vias
+API RESTful dedicada ao catálogo digital de vias de escalada do Brasil, proporcionando um meio para acessar, criar, atualizar e deletar informações sobre vias, montanhas, faces de montanha, usuários e croquis.
 
-### Listar todas as vias
-- **Endpoint:** `/vias`
-- **Método:** `GET`
+## Início Rápido
 
-### Pegar informações detalhadas de uma via específica pelo ID
-- **Endpoint:** `/vias/:id`
-- **Método:** `GET`
+Para iniciar o projeto localmente, siga estas etapas:
 
-### Pegar informações completas de uma via específica pelo ID (com JOIN nas tabelas relacionadas)
-- **Endpoint:** `/vias/detailed/:id`
-- **Método:** `GET`
+1. Clone o repositório:
+2. Instale as dependências:
+3. Configure as variáveis de ambiente conforme necessário em `.env`.
+4. Inicie o servidor:
 
-## Montanhas
 
-### Listar todas as montanhas
-- **Endpoint:** `/montanhas`
-- **Método:** `GET`
+## Tecnologias Utilizadas
 
-### Pegar uma montanha específica pelo ID
-- **Endpoint:** `/montanhas/:id`
-- **Método:** `GET`
+- Node.js
+- Express.js
+- TypeScript
+- SQLite (com planos de migração para um banco de dados mais robusto)
+- Swagger para documentação da API
 
-## Faces
+## Arquitetura
 
-### Listar todas as faces
-- **Endpoint:** `/faces`
-- **Método:** `GET`
+A API segue uma arquitetura em camadas, incluindo:
 
-### Pegar uma face específica pelo ID
-- **Endpoint:** `/faces/:id`
-- **Método:** `GET`
+- **Controllers**: Gerenciam as requisições e respostas HTTP.
+- **Services**: Contêm a lógica de negócios e chamam os repositories para acesso aos dados.
+- **Repositories**: Interagem diretamente com o banco de dados para realizar operações CRUD.
+- **Models**: Representam as entidades do domínio e são usadas pelos repositories.
 
-## Fontes
+## Endpoints
 
-### Listar todas as fontes
-- **Endpoint:** `/fontes`
-- **Método:** `GET`
+A seguir, são apresentados os principais endpoints disponíveis na API:
 
-### Pegar uma fonte específica pelo ID
-- **Endpoint:** `/fontes/:id`
-- **Método:** `GET`
+### Vias
 
-## Croquis
+- `GET /api/vias`: Retorna todas as vias cadastradas.
+- `GET /api/vias/{id}`: Retorna uma via específica pelo ID.
+- `POST /api/vias`: Cria uma nova via.
+- `PUT /api/vias/{id}`: Atualiza uma via existente.
+- `DELETE /api/vias/{id}`: Deleta uma via pelo ID.
 
-### Listar todos os croquis
-- **Endpoint:** `/croquis`
-- **Método:** `GET`
+### Montanhas
 
-### Pegar um croqui específico pelo ID
-- **Endpoint:** `/croquis/:id`
-- **Método:** `GET`
+- `GET /api/montanhas`: Lista todas as montanhas.
+- `GET /api/montanhas/{id}`: Retorna uma montanha específica pelo ID.
+- `POST /api/montanhas`: Cria uma nova montanha.
+- `PUT /api/montanhas/{id}`: Atualiza uma montanha existente.
+- `DELETE /api/montanhas/{id}`: Deleta uma montanha pelo ID.
+
+### Faces
+
+- `GET /api/faces`: Lista todas as faces de montanha.
+- `GET /api/faces/{id}`: Retorna uma face de montanha específica pelo ID.
+- `POST /api/faces`: Cria uma nova face de montanha.
+- `PUT /api/faces/{id}`: Atualiza uma face de montanha existente.
+- `DELETE /api/faces/{id}`: Deleta uma face de montanha pelo ID.
+
+### Fontes
+
+- `GET /api/fontes`: Lista todas as fontes.
+- `GET /api/fontes/{id}`: Retorna uma fonte específica pelo ID.
+- `POST /api/fontes`: Cria uma nova fonte.
+- `PUT /api/fontes/{id}`: Atualiza uma fonte existente.
+- `DELETE /api/fontes/{id}`: Deleta uma fonte pelo ID.
+
+### Usuários
+
+- `GET /api/usuarios`: Lista todos os usuários.
+- `GET /api/usuarios/{id}`: Retorna um usuário específico pelo ID.
+- `POST /api/usuarios`: Cria um novo usuário.
+- `PUT /api/usuarios/{id}`: Atualiza um usuário existente.
+- `DELETE /api/usuarios/{id}`: Deleta um usuário pelo ID.
+- `POST /api/usuarios/login`: Autentica um usuário e retorna um token JWT.
+- `POST /api/usuarios/logout`: Invalida o token JWT de um usuário autenticado.
+
+### Croquis
+
+- `GET /api/croquis`: Lista todos os croquis.
+- `GET /api/croquis/{id}`: Retorna um croqui específico pelo ID.
+- `POST /api/croquis`: Cria um novo croqui.
+- `PUT /api/croquis/{id}`: Atualiza um croqui existente.
+- `DELETE /api/croquis/{id}`: Deleta um croqui pelo ID.
+
+
+## Documentação da API
+
+Para mais detalhes sobre os endpoints, parâmetros, corpos de requisição e respostas, acesse a documentação Swagger da API em `http://localhost:4200/api-docs`.
+
+## Modelos de Dados
+
+## Modelos de Dados
+
+A API Cumes Brasil organiza informações sobre vias de escalada e elementos relacionados em várias tabelas interconectadas, conforme descrito abaixo:
+
+### `Fonte`
+Armazena informações sobre as fontes de dados ou referências para as informações das vias, montanhas, faces, e croquis.
+
+- **id**: Identificador único da fonte.
+- **autor**: Nome do autor ou da entidade que forneceu a informação.
+- **referencia**: Detalhes da referência ou como a informação pode ser verificada.
+
+### `Montanha`
+Representa as montanhas que contêm as vias de escalada.
+
+- **id**: Identificador único da montanha.
+- **nome**: Nome da montanha.
+- **localizacao**: Localização geográfica da montanha.
+- **altura**: Altura da montanha em metros.
+- **fonte_id**: Referência à fonte das informações da montanha.
+
+### `Face`
+Descreve as diferentes faces de uma montanha, onde as vias de escalada estão localizadas.
+
+- **id**: Identificador único da face.
+- **nome**: Nome da face da montanha.
+- **montanha_id**: Referência à montanha à qual a face pertence.
+- **fonte_id**: Referência à fonte das informações da face.
+
+### `Via`
+Contém informações sobre as vias de escalada individuais.
+
+- **id**: Identificador único da via.
+- **nome**: Nome da via de escalada.
+- **grau**, **crux**, **artificial**, **duracao**, **exposicao**, **extensao**: Características técnicas da via, como dificuldade, ponto mais desafiador, se há passagens artificiais, duração estimada, exposição ao risco e extensão total da via.
+- **conquistadores**: Informações sobre os escaladores que abriram a via.
+- **detalhes**: Outros detalhes relevantes da via.
+- **data**: Data de conquista ou abertura da via.
+- **montanha_id**: Referência à montanha onde a via está localizada.
+- **face_id**: Referência à face específica da montanha.
+- **via_principal_id**: Em caso de vias secundárias, referencia a via principal associada.
+- **fonte_id**: Referência à fonte das informações da via.
+
+### `Croqui`
+Fornece representações gráficas ou croquis das vias de escalada.
+
+- **id**: Identificador único do croqui.
+- **nome**: Nome associado ao croqui.
+- **imagemUrl**: URL para a imagem do croqui.
+- **autor**: Quem criou o croqui.
+- **descricao**: Descrição ou anotações adicionais sobre o croqui.
+- **fonte_id**: Referência à fonte das informações do croqui.
+
+### `Usuario`
+Armazena informações sobre os usuários da plataforma.
+
+- **id**: Identificador único do usuário.
+- **nome**: Nome do usuário.
+- **email**: Email do usuário, utilizado para login e comunicação.
+- **fotoPerfil**: URL para a foto de perfil do usuário.
+
+### Coleções
+Gerenciam as coleções criadas pelos usuários, como vias favoritas e escaladas realizadas.
+
+#### `ColecaoBase`
+- **id**: Identificador único da coleção.
+- **nome**, **descricao**: Nome e descrição da coleção.
+- **usuario_id**: Referência ao usuário que criou a coleção.
+
+#### `ColecaoEscaladas`
+- **id**: Identificador único da coleção de escaladas.
+- **via_id**: Referência às vias incluídas na coleção.
+- **data**, **observacao**: Data da escalada e observações adicionais.
+
+#### `ColecaoFavoritos`
+- **colecaoBase_id**: Identificador da coleção base associada aos favoritos.
+
+### Relações entre as Tabelas
+- **vias_croquis**: Associação muitos-para-muitos entre vias e croquis.
+- **vias_colecoes**: Associação muitos-para-muitos entre vias e coleções base.
+
+## Licença
+
+Este projeto está sob a Licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+
