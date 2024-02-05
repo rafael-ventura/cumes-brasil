@@ -66,11 +66,8 @@ Sua contribuição é muito bem-vinda! Veja como:
 
 ## 🤝 Participantes
 
-Agradecemos a todos que contribuíram para o Cumes Brasil:
+Pessoas que contribuíram para o projeto Cumes Brasil:
 
-- ![Rafael Ventura](https://github.com/rafael-ventura)
-- ![Igor Costa](https://github.com/igordeo-costa)
-- ![Vitor Indio](https://github.com/vitorindio)
-
-Desenvolvido com ❤️ pelo time Cumes Brasil!
-
+| <img src="https://avatars.githubusercontent.com/u/28628701?s=100&v=4" alt="Foto do Participante 1" /> | <img src="https://avatars.githubusercontent.com/u/69773445?s=100&v=4" alt="Foto do Participante 2" /> | <img src="https://avatars.githubusercontent.com/u/88738275?s=100&v=4" alt="Foto do Participante 3" /> |
+|:----------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|
+|                    [Rafael Ventura](https://github.com/rafael-ventura)                               |                    [Igor Costa](https://github.com/igordeo-costa)                                   |                    [Vitor Indio](https://github.com/vitorindio)                                     |
