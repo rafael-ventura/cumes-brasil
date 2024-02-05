@@ -1,0 +1,31 @@
+import { HttpRequestParameters } from "../../Primitives/Http";
+import * as stream from "readable-stream";
+import { RavenCommand } from "../../Http/RavenCommand";
+import { IRavenArrayResult } from "../../Types";
+import { DocumentConventions } from "../Conventions/DocumentConventions";
+import { ServerNode } from "../../Http/ServerNode";
+export declare class GetRevisionsCommand extends RavenCommand<IRavenArrayResult> {
+    private readonly _id;
+    private readonly _start;
+    private readonly _pageSize;
+    private readonly _metadataOnly;
+    private readonly _before;
+    private readonly _changeVector;
+    private readonly _changeVectors;
+    private readonly _conventions;
+    constructor(conventions: DocumentConventions, changeVector: string);
+    constructor(conventions: DocumentConventions, changeVector: string, metadataOnly: boolean);
+    constructor(conventions: DocumentConventions, changeVectors: string[]);
+    constructor(conventions: DocumentConventions, changeVectors: string[], metadataOnly: boolean);
+    constructor(conventions: DocumentConventions, id: string, before: Date);
+    constructor(conventions: DocumentConventions, id: string, start: number, pageSize: number);
+    constructor(conventions: DocumentConventions, id: string, start: number, pageSize: number, metadataOnly: boolean);
+    get id(): string;
+    get before(): Date;
+    get changeVector(): string;
+    get changeVectors(): string[];
+    createRequest(node: ServerNode): HttpRequestParameters;
+    getRequestQueryString(): string;
+    get isReadRequest(): boolean;
+    setResponseAsync(bodyStream: stream.Stream, fromCache: boolean): Promise<string>;
+}

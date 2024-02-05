@@ -1,0 +1,31 @@
+import { IDocumentQueryCustomization } from "./IDocumentQueryCustomization";
+import { AbstractDocumentQuery } from "./AbstractDocumentQuery";
+import { QueryOperation } from "./Operations/QueryOperation";
+import { QueryResult } from "../Queries/QueryResult";
+import { IndexQuery } from "../Queries/IndexQuery";
+import { ValueCallback } from "../../Types/Callbacks";
+import { QueryTimings } from "../Queries/Timings/QueryTimings";
+import { ProjectionBehavior } from "../Queries/ProjectionBehavior";
+export declare class DocumentQueryCustomization implements IDocumentQueryCustomization {
+    private _query;
+    constructor(query: AbstractDocumentQuery<any, any>);
+    getQuery(): AbstractDocumentQuery<any, any>;
+    getQueryOperation(): QueryOperation;
+    on(eventName: "beforeQueryExecuted", eventHandler: (eventArgs: IndexQuery) => void): IDocumentQueryCustomization;
+    on(eventName: "afterQueryExecuted", eventHandler: (eventArgs: QueryResult) => void): IDocumentQueryCustomization;
+    on(eventName: "afterStreamExecuted", eventHandler: (eventArgs: object) => void): IDocumentQueryCustomization;
+    once(eventName: "beforeQueryExecuted", eventHandler: (eventArgs: IndexQuery) => void): IDocumentQueryCustomization;
+    once(eventName: "afterQueryExecuted", eventHandler: (eventArgs: QueryResult) => void): IDocumentQueryCustomization;
+    once(eventName: "afterStreamExecuted", eventHandler: (eventArgs: object) => void): IDocumentQueryCustomization;
+    removeListener(eventName: "beforeQueryExecuted", eventHandler: (eventArgs: IndexQuery) => void): IDocumentQueryCustomization;
+    removeListener(eventName: "afterQueryExecuted", eventHandler: (eventArgs: QueryResult) => void): IDocumentQueryCustomization;
+    removeListener(eventName: "afterStreamExecuted", eventHandler: (eventArgs: object) => void): IDocumentQueryCustomization;
+    noCaching(): IDocumentQueryCustomization;
+    noTracking(): IDocumentQueryCustomization;
+    randomOrdering(): IDocumentQueryCustomization;
+    randomOrdering(seed: string): IDocumentQueryCustomization;
+    waitForNonStaleResults(): IDocumentQueryCustomization;
+    waitForNonStaleResults(waitTimeout: number): IDocumentQueryCustomization;
+    timings(timings: ValueCallback<QueryTimings>): IDocumentQueryCustomization;
+    projection(projectionBehavior: ProjectionBehavior): IDocumentQueryCustomization;
+}

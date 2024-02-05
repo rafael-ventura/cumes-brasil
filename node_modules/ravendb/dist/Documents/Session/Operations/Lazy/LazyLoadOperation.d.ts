@@ -1,0 +1,32 @@
+import { ILazyOperation } from "./ILazyOperation";
+import { ObjectTypeDescriptor } from "../../../../Types";
+import { InMemoryDocumentSessionOperations } from "../../InMemoryDocumentSessionOperations";
+import { LoadOperation } from "../LoadOperation";
+import { GetRequest } from "../../../Commands/MultiGet/GetRequest";
+import { QueryResult } from "../../../Queries/QueryResult";
+import { GetResponse } from "../../../Commands/MultiGet/GetResponse";
+export declare class LazyLoadOperation<T extends object> implements ILazyOperation {
+    private readonly _clazz;
+    private readonly _session;
+    private readonly _loadOperation;
+    private _ids;
+    private _includes;
+    private _alreadyInSession;
+    private _result;
+    private _queryResult;
+    private _requiresRetry;
+    constructor(session: InMemoryDocumentSessionOperations, loadOperation: LoadOperation, clazz: ObjectTypeDescriptor<T>);
+    createRequest(): GetRequest;
+    byId(id: string): LazyLoadOperation<T>;
+    byIds(ids: string[]): LazyLoadOperation<T>;
+    withIncludes(includes: string[]): LazyLoadOperation<T>;
+    get result(): any;
+    set result(result: any);
+    get queryResult(): QueryResult;
+    set queryResult(queryResult: QueryResult);
+    get requiresRetry(): boolean;
+    set requiresRetry(result: boolean);
+    handleResponseAsync(response: GetResponse): Promise<void>;
+    private _handleResponse;
+    getResult(): any;
+}

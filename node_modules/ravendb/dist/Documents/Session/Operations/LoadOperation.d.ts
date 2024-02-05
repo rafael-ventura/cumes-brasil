@@ -1,0 +1,32 @@
+import { InMemoryDocumentSessionOperations } from "../InMemoryDocumentSessionOperations";
+import { GetDocumentsCommand, GetDocumentsResult } from "../../Commands/GetDocumentsCommand";
+import { ObjectTypeDescriptor, EntitiesCollectionObject } from "../../../Types";
+import { AbstractTimeSeriesRange } from "../../Operations/TimeSeries/AbstractTimeSeriesRange";
+export declare class LoadOperation {
+    private _session;
+    private _ids;
+    private _includes;
+    private _countersToInclude;
+    private _revisionsToIncludeByChangeVector;
+    private _revisionsToIncludeByDateTimeBefore;
+    private _compareExchangeValuesToInclude;
+    private _includeAllCounters;
+    private _timeSeriesToInclude;
+    private _resultsSet;
+    private _results;
+    constructor(session: InMemoryDocumentSessionOperations);
+    createRequest(): GetDocumentsCommand;
+    byId(id: string): LoadOperation;
+    withCompareExchange(compareExchangeValues: string[]): this;
+    withCounters(counters: string[]): LoadOperation;
+    withRevisions(revisionsByChangeVector: string[]): LoadOperation;
+    withRevisions(revisionByDateTimeBefore: Date): LoadOperation;
+    withAllCounters(): this;
+    withTimeSeries(timeSeries: AbstractTimeSeriesRange[]): this;
+    withIncludes(includes: string[]): LoadOperation;
+    byIds(ids: string[]): LoadOperation;
+    getDocument<T extends object>(clazz: ObjectTypeDescriptor<T>): T | null;
+    private _getDocument;
+    getDocuments<T extends object>(clazz: ObjectTypeDescriptor<T>): EntitiesCollectionObject<T>;
+    setResult(result: GetDocumentsResult): void;
+}
