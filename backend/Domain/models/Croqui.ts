@@ -1,7 +1,3 @@
-// models/Croqui.ts
-
-import {Via} from "./Via";
-
 export class Croqui {
     id: number;
     nome: string;

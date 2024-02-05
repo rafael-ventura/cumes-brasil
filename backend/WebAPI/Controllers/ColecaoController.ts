@@ -1,13 +1,14 @@
 import { ColecaoService } from "../../Application/services/ColecaoService";
 import { Colecao} from "../../Domain/models/Colecao";
 import {Request, Response} from "express";
-import { ViaService } from "../../Application/services/ViaService";
+import { IViaService } from "../../Application/services/ViaService";
+import { Via } from "../../Domain/models/Via";
 
 export class ColecaoController {
     private service: ColecaoService;
-    private viaService: ViaService;
+    private viaService: IViaService;
 
-    constructor(colecaoaService: ColecaoService, viaService: ViaService) {
+    constructor(colecaoaService: ColecaoService, viaService: IViaService) {
         this.service = colecaoaService;
         this.viaService = viaService;
     }
@@ -26,6 +27,22 @@ export class ColecaoController {
             if (!colecao) {
                 return res.status(404).json({message: "Colecao não encontrada."});
             }
+            if (colecao.vias && colecao.vias.length === 0) {
+                const ViaIds = await this.service.getViasIdsByColecaoId(id);
+        
+                // Verificar se viaIds é null antes de mapear
+                if (ViaIds !== null) {
+                  const ViaList: Via[] = [];
+                  for (const viaId of ViaIds) {
+                    const viaInfo = await this.viaService.getViaById(viaId);
+                    if (viaInfo) {
+                        ViaList.push(viaInfo);
+                    }
+                  }
+                  colecao.vias = ViaList;
+                }
+              }
+
             res.json(colecao);
         } catch (error) {
             if (error instanceof Error) {
@@ -44,10 +61,30 @@ export class ColecaoController {
      * @returns {object} 404 - Colecao não encontrada
      * @returns {Error} 500 - Erro desconhecido
      */
-    getAllColecao = async (req: Request, res: Response) => {
+    getAllColecao = async (_: Request, res: Response) => {
         try {
-            const result = await this.service.getColecoes();
-            res.json(result);
+            const colecoes: Colecao[] | null = await this.service.getColecoes();
+
+            if (!colecoes) {
+                return res.status(404).json({message: "Colecao não encontrada."});
+            }
+            const colecoesComVias = await Promise.all(
+                colecoes.map(async (colecao) => {
+                  if (colecao.vias && colecao.vias.length === 0) {
+                    const ViaIds = await this.service.getViasIdsByColecaoId(colecao.id);
+        
+                    // Se viaIds não for null, atribuir à via
+                    if (ViaIds !== null) {
+                        colecao.vias = ViaIds.map(
+                        (viaId) => ({ id: viaId } as Via)
+                      );
+                    }
+                  }
+                  return colecao;
+                })
+              );
+
+            res.json(colecoesComVias);
         } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});

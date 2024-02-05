@@ -1,6 +1,5 @@
 import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
 import { Colecao } from "../../Domain/models/Colecao";
-import { Via } from "../../Domain/models/Via";
 
 export class ColecaoService {
     private repository: ColecaoRepository;
@@ -11,6 +10,10 @@ export class ColecaoService {
 
     async getColecaoById(id: number): Promise<Colecao | null> {
         return this.repository.getColecaoById(id);
+    }
+
+    async getViasIdsByColecaoId(id: number): Promise<number[] | null> {
+        return this.repository.getViasIdsByColecaoId(id);
     }
 
     async getColecoesByUsuarioId(usuario_id: number): Promise<Colecao[] | null> {

@@ -1,6 +1,5 @@
 import { Database } from "sqlite3";
 import { Colecao } from "../../Domain/models/Colecao";
-import { Via } from "../../Domain/models/Via";
 import { ViaRepository } from "./ViaRepository";
 
 export class ColecaoRepository {
@@ -13,103 +12,46 @@ export class ColecaoRepository {
   }
 
   async getColecaoById(id: number): Promise<Colecao | null> {
+    var query = `SELECT * FROM Colecao WHERE id = ?`;
     return new Promise((resolve, reject) => {
-      this.db.get(
-        `
-          SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
-          FROM Colecao
-          LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
-          WHERE Colecao.id = ?
-          GROUP BY Colecao.id
-        `,
-        [id],
-        async (err, row: any) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-  
-          if (row) {
-            const vias_ids: number[] = row.vias_ids
-              ? row.vias_ids.split(',').map(Number)
-              : [];
-  
-            const colecao = new Colecao(
-              row.id,
-              row.nome,
-              row.descricao,
-              row.usuario_id
-            );
-  
-            // Adiciona vias à coleção
-            const viasPromises = vias_ids.map(async (via_id: number) => {
-              return await this.viaRepository.getViaById(via_id);
-            });
-  
-            const vias = await Promise.all(viasPromises);
-  
-            // Adiciona vias à coleção
-            vias.forEach((via) => {
-              if (via) {
-                colecao.adicionarVia(via);
-              }
-            });
-  
-            resolve(colecao);
-          } else {
-            resolve(null);
-          }
+      this.db.get(query, [id], (err, row: Colecao) => {
+        if (err) {
+          reject(err);
+          return;
         }
-      );
+        if (row) {
+          const colecao = new Colecao(
+            row.id,
+            row.nome,
+            row.descricao,
+            row.usuario_id
+          );
+
+          resolve(colecao);
+        } else {
+          resolve(null);
+        }
+      });
     });
   }
-  
 
   async getColecoes(): Promise<Colecao[] | null> {
     return new Promise((resolve, reject) => {
-      this.db.all(
-        `
-                SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
-                FROM Colecao
-                LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
-                GROUP BY Colecao.id
-            `,
-        async (err, rows: any[]) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          if (rows) {
-            const colecoes = rows.map(async (row) => {
-              const vias_ids: number[] = row.vias_ids
-                ? row.vias_ids.split(",").map(Number)
-                : [];
-              const colecao = new Colecao(
-                row.id,
-                row.nome,
-                row.descricao,
-                row.usuario_id
-              );
-
-              // Adiciona vias à coleção
-              for (const via_id of vias_ids) {
-                const via = await this.viaRepository.getViaById(via_id);
-                if (via) {
-                  colecao.adicionarVia(via);
-                }
-              }
-
-              return colecao;
-            });
-
-            Promise.all(colecoes).then((colecoesResolved) => {
-              resolve(colecoesResolved);
-            });
-          } else {
-            resolve(null);
-          }
+      this.db.all(`SELECT * FROM Colecao`, (err, rows: Colecao[]) => {
+        if (err) {
+          reject(err);
+          return;
         }
-      );
+        if (rows) {
+          const colecoes = rows.map(
+            (row) =>
+              new Colecao(row.id, row.nome, row.descricao, row.usuario_id)
+          );
+          resolve(colecoes);
+        } else {
+          resolve(null);
+        }
+      });
     });
   }
 
@@ -253,6 +195,30 @@ export class ColecaoRepository {
             return;
           }
           resolve();
+        }
+      );
+    });
+  }
+
+  async getViasIdsByColecaoId(colecaoId: number): Promise<number[] | null> {
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        `SELECT via_id FROM ViasColecoes WHERE colecao_id = ?`,
+        [colecaoId],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          if (rows) {
+            const ViasIds = (rows as { via_id: number }[]).map(
+              (row) => row.via_id
+            );
+            resolve(ViasIds);
+          } else {
+            resolve(null);
+          }
         }
       );
     });
