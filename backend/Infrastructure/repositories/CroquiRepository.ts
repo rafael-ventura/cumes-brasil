@@ -120,32 +120,33 @@ export class CroquiRepository {
     });
   }
 
-  async associarCroquiEmVia(croquiId: number, viaId: number): Promise<Croqui[] | null> {
+  async associarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.db.all(
-        `SELECT * FROM Croqui WHERE usuario_id = ?`,
-        [croquiId, viaId],
-        (err, rows: Croqui[]) => {
+      this.db.run(
+        `INSERT INTO ViasCroquis (croqui_id, via_id) VALUES (?,?)`,
+        [croqui_id, via_id],
+        (err) => {
           if (err) {
             reject(err);
             return;
           }
-          if (rows) {
-            const croquis = rows.map(
-              (row) =>
-                new Croqui(
-                  row.id,
-                  row.nome,
-                  row.imagemUrl,
-                  row.autor,
-                  row.descricao,
-                  row.fonte_id
-                )
-            );
-            resolve(croquis);
-          } else {
-            resolve(null);
+          resolve();
+        }
+      );
+    });
+  }
+
+  async desassociarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.db.run(
+        `DELETE FROM ViasCroquis WHERE croqui_id = ? AND via_id = ?`,
+        [croqui_id, via_id],
+        (err) => {
+          if (err) {
+            reject(err);
+            return;
           }
+          resolve();
         }
       );
     });
