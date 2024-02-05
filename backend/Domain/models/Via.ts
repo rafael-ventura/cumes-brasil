@@ -1,5 +1,3 @@
-// models/Via.ts
-
 export class Via {
     id: number;
     nome: string;
