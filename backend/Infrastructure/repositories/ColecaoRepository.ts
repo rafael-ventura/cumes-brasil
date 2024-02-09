@@ -12,20 +12,46 @@ export class ColecaoRepository {
   }
 
   async getColecaoById(id: number): Promise<Colecao | null> {
-    var query = `SELECT * FROM Colecao WHERE id = ?`;
+    const query = `
+          SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
+          FROM Colecao
+          LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
+          LEFT JOIN Via ON ViasColecoes.via_id = Via.id
+          LEFT JOIN ViasCroquis ON Via.id = ViasCroquis.via_id
+          WHERE Colecao.id = ?
+          GROUP BY Colecao.id
+        `;
     return new Promise((resolve, reject) => {
-      this.db.get(query, [id], (err, row: Colecao) => {
+      this.db.get(query, [id], async (err, row: any) => {
         if (err) {
           reject(err);
           return;
         }
+        const colecao = new Colecao(
+          row.id,
+          row.nome,
+          row.descricao,
+          row.usuario_id,
+          row.vias //row.via deve ser populada
+        );
+
         if (row) {
-          const colecao = new Colecao(
-            row.id,
-            row.nome,
-            row.descricao,
-            row.usuario_id
-          );
+          const vias_ids: number[] = row.vias_ids
+            ? row.vias_ids.split(",").map(Number)
+            : [];
+
+          // Faz um getViaById pelo viaRepository
+          const viasPromises = vias_ids.map(async (via_id: number) => {
+            return await this.viaRepository.getViaById(via_id);
+          });
+          const vias = await Promise.all(viasPromises);
+
+          // Popula Vias à coleção
+          vias.forEach((via) => {
+            if (via) {
+              colecao.popularVia(via);
+            }
+          });
 
           resolve(colecao);
         } else {
@@ -37,21 +63,55 @@ export class ColecaoRepository {
 
   async getColecoes(): Promise<Colecao[] | null> {
     return new Promise((resolve, reject) => {
-      this.db.all(`SELECT * FROM Colecao`, (err, rows: Colecao[]) => {
-        if (err) {
-          reject(err);
-          return;
+      this.db.all(
+        `
+          SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
+          FROM Colecao
+          LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
+          GROUP BY Colecao.id
+        `,
+        async (err, rows: any[]) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (rows) {
+            const colecoes = rows.map(async (row) => {
+              const vias_ids: number[] = row.vias_ids
+                ? row.vias_ids.split(",").map(Number)
+                : [];
+              const colecao = new Colecao(
+                row.id,
+                row.nome,
+                row.descricao,
+                row.usuario_id
+              );
+
+              // Faz um getViaById pelo viaRepository
+              const viasPromises = vias_ids.map(async (via_id: number) => {
+                return await this.viaRepository.getViaById(via_id);
+              });
+
+              const vias = await Promise.all(viasPromises);
+
+              // Popula Vias à coleção
+              vias.forEach((via) => {
+                if (via) {
+                  colecao.popularVia(via);
+                }
+              });
+
+              return colecao;
+            });
+
+            Promise.all(colecoes).then((colecoesResolved) => {
+              resolve(colecoesResolved);
+            });
+          } else {
+            resolve(null);
+          }
         }
-        if (rows) {
-          const colecoes = rows.map(
-            (row) =>
-              new Colecao(row.id, row.nome, row.descricao, row.usuario_id)
-          );
-          resolve(colecoes);
-        } else {
-          resolve(null);
-        }
-      });
+      );
     });
   }
 

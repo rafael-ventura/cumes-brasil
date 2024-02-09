@@ -15,7 +15,7 @@ export class Colecao {
         this.vias = vias || [];
     }
 
-    public adicionarVia(via: Via): void {
+    public popularVia(via: Via): void {
         this.vias?.push(via);
     }
 }

@@ -27,23 +27,8 @@ export class ColecaoController {
             if (!colecao) {
                 return res.status(404).json({message: "Colecao não encontrada."});
             }
-            if (colecao.vias && colecao.vias.length === 0) {
-                const ViaIds = await this.service.getViasIdsByColecaoId(id);
-        
-                // Verificar se viaIds é null antes de mapear
-                if (ViaIds !== null) {
-                  const ViaList: Via[] = [];
-                  for (const viaId of ViaIds) {
-                    const viaInfo = await this.viaService.getViaById(viaId);
-                    if (viaInfo) {
-                        ViaList.push(viaInfo);
-                    }
-                  }
-                  colecao.vias = ViaList;
-                }
-              }
-
             res.json(colecao);
+
         } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
@@ -63,28 +48,11 @@ export class ColecaoController {
      */
     getAllColecao = async (_: Request, res: Response) => {
         try {
-            const colecoes: Colecao[] | null = await this.service.getColecoes();
-
+            const colecoes = await this.service.getColecoes();
             if (!colecoes) {
                 return res.status(404).json({message: "Colecao não encontrada."});
             }
-            const colecoesComVias = await Promise.all(
-                colecoes.map(async (colecao) => {
-                  if (colecao.vias && colecao.vias.length === 0) {
-                    const ViaIds = await this.service.getViasIdsByColecaoId(colecao.id);
-        
-                    // Se viaIds não for null, atribuir à via
-                    if (ViaIds !== null) {
-                        colecao.vias = ViaIds.map(
-                        (viaId) => ({ id: viaId } as Via)
-                      );
-                    }
-                  }
-                  return colecao;
-                })
-              );
-
-            res.json(colecoesComVias);
+            res.json(colecoes);
         } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
@@ -92,7 +60,7 @@ export class ColecaoController {
                 res.status(500).json({error: "Ocorreu um erro desconhecido"});
             }
         }
-    }
+    };
 
     /**
      * @route GET /colecaos/colecoesDoUsuario/:usuarioId
