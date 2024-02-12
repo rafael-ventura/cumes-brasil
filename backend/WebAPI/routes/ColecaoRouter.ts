@@ -5,9 +5,11 @@ import { ColecaoService } from '../../Application/services/ColecaoService';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { ViaService } from '../../Application/services/ViaService';
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { CroquiRepository } from '../../Infrastructure/repositories/CroquiRepository';
 
-const colecaoService = new ColecaoService(new ColecaoRepository(dbConnection, new ViaRepository(dbConnection)));
-const colecaoViaService = new ViaService(new ViaRepository(dbConnection));
+
+const colecaoService = new ColecaoService(new ColecaoRepository(dbConnection, new ViaRepository(dbConnection, new CroquiRepository(dbConnection)), new CroquiRepository(dbConnection)));
+const colecaoViaService = new ViaService(new ViaRepository(dbConnection, new CroquiRepository(dbConnection)));
 const colecaoController = new ColecaoController(colecaoService, colecaoViaService);
 
 const ColecaoRouter = Router();

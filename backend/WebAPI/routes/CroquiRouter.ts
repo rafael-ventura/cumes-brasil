@@ -10,7 +10,7 @@ import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 
 const croquiService = new CroquiService(new CroquiRepository(dbConnection));
 const fonteService = new FonteService(new FonteRepository(dbConnection));
-const viaService = new ViaService(new ViaRepository(dbConnection));
+const viaService = new ViaService(new ViaRepository(dbConnection, new CroquiRepository(dbConnection)));
 const croquiController = new CroquiController(croquiService, fonteService, viaService);
 
 const CroquiRouter = Router();

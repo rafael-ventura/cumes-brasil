@@ -6,7 +6,7 @@ import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
 import { CroquiRepository } from '../../Infrastructure/repositories/CroquiRepository';
 import { CroquiService } from '../../Application/services/CroquiService';
 
-const viaService = new ViaService(new ViaRepository(dbConnection));
+const viaService = new ViaService(new ViaRepository(dbConnection, new CroquiRepository(dbConnection)));
 const croquiService = new CroquiService(new CroquiRepository(dbConnection));
 const viaController = new ViaController(viaService, croquiService);
 

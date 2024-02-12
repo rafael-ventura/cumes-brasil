@@ -28,22 +28,6 @@ export class ViaController {
       if (!via) {
         return res.status(400).json({ error: "Via não encontrada." });
       }
-      // Se o array de croqui estiver vazio, obter os IDs e informações dos croquis associados à via
-      if (via.croquis && via.croquis.length === 0) {
-        const croquiIds = await this.service.getCroquiIdsByViaId(id);
-
-        // Verificar se croquiIds é null antes de mapear
-        if (croquiIds !== null) {
-          const croquiList: Croqui[] = [];
-          for (const croquiId of croquiIds) {
-            const croquiInfo = await this.croquiService.getCroquiById(croquiId);
-            if (croquiInfo) {
-              croquiList.push(croquiInfo);
-            }
-          }
-          via.croquis = croquiList;
-        }
-      }
       res.status(200).json(via);
     } catch (error) {
       console.error(error);
@@ -67,24 +51,7 @@ export class ViaController {
         return resposta.status(404).json({ message: "Via não encontrada." });
       }
 
-      // Para cada via, obter os IDs dos croquis associados
-      const viasComCroquis = await Promise.all(
-        vias.map(async (via) => {
-          if (via.croquis && via.croquis.length === 0) {
-            const croquiIds = await this.service.getCroquiIdsByViaId(via.id);
-
-            // Se croquiIds não for null, atribuir à via
-            if (croquiIds !== null) {
-              via.croquis = croquiIds.map(
-                (croquiId) => ({ id: croquiId } as Croqui)
-              );
-            }
-          }
-          return via;
-        })
-      );
-
-      resposta.json(viasComCroquis);
+      resposta.json(vias);
     } catch (error) {
       if (error instanceof Error) {
         resposta.status(500).json({ error: error.message });
@@ -181,11 +148,9 @@ export class ViaController {
       const croquis = await this.service.getCroquisByViaId(id);
 
       if (croquis === null) {
-        return res
-          .status(404)
-          .json({
-            message: "Nenhum croqui encontrado para a Via com ID fornecido",
-          });
+        return res.status(404).json({
+          message: "Nenhum croqui encontrado para a Via com ID fornecido",
+        });
       }
 
       res.status(200).json(croquis);

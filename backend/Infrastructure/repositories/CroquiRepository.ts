@@ -36,6 +36,17 @@ export class CroquiRepository {
     });
   }
 
+  async getCroquisByIds(ids: number[]): Promise<Croqui[]> {
+    const croquis: Croqui[] = [];
+    for (const id of ids) {
+      const croqui = await this.getCroquiById(id);
+      if (croqui) {
+        croquis.push(croqui);
+      }
+    }
+    return croquis;
+  }
+
   async getCroquis(): Promise<Croqui[] | null> {
     return new Promise((resolve, reject) => {
       this.db.all(`SELECT * FROM Croqui`, (err, rows: Croqui[]) => {
@@ -120,6 +131,27 @@ export class CroquiRepository {
     });
   }
 
+  async getCroquisIdsByViaId(via_id: number): Promise<number[] | null> {
+    return new Promise<number[] | null>((resolve, reject) => {
+      this.db.all(
+        `SELECT croqui_id FROM ViasCroquis WHERE via_id = ?`,
+        [via_id],
+        (err, rows: { croqui_id: number }[]) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (rows) {
+            const croquisIds = rows.map((row) => row.croqui_id);
+            resolve(croquisIds);
+          } else {
+            resolve(null);
+          }
+        }
+      );
+    });
+  }
+
   async associarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
     return new Promise((resolve, reject) => {
       this.db.run(
@@ -136,7 +168,10 @@ export class CroquiRepository {
     });
   }
 
-  async desassociarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
+  async desassociarCroquiEmVia(
+    croqui_id: number,
+    via_id: number
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       this.db.run(
         `DELETE FROM ViasCroquis WHERE croqui_id = ? AND via_id = ?`,

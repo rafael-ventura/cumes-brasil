@@ -1,62 +1,68 @@
 import { Database } from "sqlite3";
 import { Colecao } from "../../Domain/models/Colecao";
 import { ViaRepository } from "./ViaRepository";
+import { CroquiRepository } from "./CroquiRepository";
+import { Croqui } from "../../Domain/models/Croqui";
+import { Via } from "../../Domain/models/Via";
 
 export class ColecaoRepository {
   private db: Database;
   private viaRepository: ViaRepository;
+  private croquiRepository: CroquiRepository;
 
-  constructor(db: Database, viaRepository: ViaRepository) {
+  constructor(
+    db: Database,
+    viaRepository: ViaRepository,
+    croquiRepository: CroquiRepository
+  ) {
     this.db = db;
     this.viaRepository = viaRepository;
+    this.croquiRepository = croquiRepository;
   }
 
   async getColecaoById(id: number): Promise<Colecao | null> {
     const query = `
-          SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
-          FROM Colecao
-          LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
-          LEFT JOIN Via ON ViasColecoes.via_id = Via.id
-          LEFT JOIN ViasCroquis ON Via.id = ViasCroquis.via_id
-          WHERE Colecao.id = ?
-          GROUP BY Colecao.id
-        `;
+        SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
+        FROM Colecao
+        LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
+        WHERE Colecao.id = ?
+        GROUP BY Colecao.id
+    `;
     return new Promise((resolve, reject) => {
       this.db.get(query, [id], async (err, row: any) => {
         if (err) {
           reject(err);
           return;
         }
+        if (!row) {
+          resolve(null);
+          return;
+        }
+
+        const vias_ids: number[] = row.vias_ids
+          ? row.vias_ids.split(",").map(Number)
+          : [];
+
         const colecao = new Colecao(
           row.id,
           row.nome,
           row.descricao,
           row.usuario_id,
-          row.vias //row.via deve ser populada
+          []
         );
 
-        if (row) {
-          const vias_ids: number[] = row.vias_ids
-            ? row.vias_ids.split(",").map(Number)
-            : [];
+        const viasPromises = vias_ids.map(async (via_id: number) => {
+          const via = await this.viaRepository.getViaById(via_id);
+          if (via) {
+            // Recuperar os croquis da via
+            return via;
+          }
+        });
 
-          // Faz um getViaById pelo viaRepository
-          const viasPromises = vias_ids.map(async (via_id: number) => {
-            return await this.viaRepository.getViaById(via_id);
-          });
-          const vias = await Promise.all(viasPromises);
+        const vias = await Promise.all(viasPromises);
+        colecao.vias = vias.filter((via) => via !== null) as Via[];
 
-          // Popula Vias à coleção
-          vias.forEach((via) => {
-            if (via) {
-              colecao.popularVia(via);
-            }
-          });
-
-          resolve(colecao);
-        } else {
-          resolve(null);
-        }
+        resolve(colecao);
       });
     });
   }
@@ -65,11 +71,11 @@ export class ColecaoRepository {
     return new Promise((resolve, reject) => {
       this.db.all(
         `
-          SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
-          FROM Colecao
-          LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
-          GROUP BY Colecao.id
-        `,
+                SELECT Colecao.*, GROUP_CONCAT(ViasColecoes.via_id) as vias_ids
+                FROM Colecao
+                LEFT JOIN ViasColecoes ON Colecao.id = ViasColecoes.colecao_id
+                GROUP BY Colecao.id
+            `,
         async (err, rows: any[]) => {
           if (err) {
             reject(err);
@@ -89,7 +95,24 @@ export class ColecaoRepository {
 
               // Faz um getViaById pelo viaRepository
               const viasPromises = vias_ids.map(async (via_id: number) => {
-                return await this.viaRepository.getViaById(via_id);
+                const via = await this.viaRepository.getViaById(via_id);
+                if (via) {
+                  // Recuperar os croquis da via
+                  if (via.croquis) {
+                    const croquisPromises = via.croquis.map(
+                      async (croqui: Croqui) => {
+                        return await this.croquiRepository.getCroquiById(
+                          croqui.id
+                        );
+                      }
+                    );
+                    const croquis = await Promise.all(croquisPromises);
+                    via.croquis = croquis.filter(
+                      (croqui) => croqui !== null
+                    ) as Croqui[];
+                  }
+                }
+                return via;
               });
 
               const vias = await Promise.all(viasPromises);
