@@ -139,28 +139,21 @@ export class ColecaoRepository {
   }
 
   async getColecoesByUsuarioId(usuarioId: number): Promise<Colecao[] | null> {
-    return new Promise((resolve, reject) => {
-      this.db.all(
-        `SELECT * FROM Colecao WHERE usuario_id = ?`,
-        [usuarioId],
-        (err, rows: Colecao[]) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          if (rows) {
-            const colecoes = rows.map(
-              (row) =>
-                new Colecao(row.id, row.nome, row.descricao, row.usuario_id)
-            );
-            resolve(colecoes);
-          } else {
-            resolve(null);
-          }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const colecoes = await this.getColecoes();
+        if (colecoes) {
+          const colecoesDoUsuario = colecoes.filter(colecao => colecao.usuario_id === usuarioId);
+          resolve(colecoesDoUsuario);
+        } else {
+          resolve(null);
         }
-      );
+      } catch (error) {
+        reject(error);
+      }
     });
   }
+
 
   async createColecao(colecao: Colecao): Promise<void> {
     return new Promise((resolve, reject) => {
