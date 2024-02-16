@@ -1,17 +1,16 @@
 import {Router} from 'express';
 import dbConnection from '../../Infrastructure/config/db';
-import {CroquiController} from '../Controllers/CroquiController';
 import {CroquiService} from '../../Application/services/CroquiService';
 import {CroquiRepository} from '../../Infrastructure/repositories/CroquiRepository';
-import { FonteService } from '../../Application/services/FonteService';
-import { FonteRepository } from '../../Infrastructure/repositories/FonteRepository';
-import { ViaService } from '../../Application/services/ViaService';
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import {ViaService} from '../../Application/services/ViaService';
+import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+import {CroquiController} from "../Controllers/CroquiController";
 
+const croquiRepository = new CroquiRepository(dbConnection);
 const croquiService = new CroquiService(new CroquiRepository(dbConnection));
-const fonteService = new FonteService(new FonteRepository(dbConnection));
-const viaService = new ViaService(new ViaRepository(dbConnection, new CroquiRepository(dbConnection)));
-const croquiController = new CroquiController(croquiService, fonteService, viaService);
+const viaRepository = new ViaRepository(dbConnection, croquiRepository);
+const viaService = new ViaService(viaRepository, croquiRepository);
+const croquiController = new CroquiController(croquiService, viaService);
 
 const CroquiRouter = Router();
 

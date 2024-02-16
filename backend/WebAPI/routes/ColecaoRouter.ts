@@ -1,16 +1,20 @@
 import {Router} from 'express';
 import dbConnection from '../../Infrastructure/config/db';
-import { ColecaoController } from '../Controllers/ColecaoController';
-import { ColecaoService } from '../../Application/services/ColecaoService';
-import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
-import { ViaService } from '../../Application/services/ViaService';
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
-import { CroquiRepository } from '../../Infrastructure/repositories/CroquiRepository';
+import {ColecaoController} from '../Controllers/ColecaoController';
+import {ColecaoService} from '../../Application/services/ColecaoService';
+import {ColecaoRepository} from '../../Infrastructure/repositories/ColecaoRepository';
+import {ViaService} from '../../Application/services/ViaService';
+import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+import {CroquiRepository} from '../../Infrastructure/repositories/CroquiRepository';
 
 
-const colecaoService = new ColecaoService(new ColecaoRepository(dbConnection, new ViaRepository(dbConnection, new CroquiRepository(dbConnection)), new CroquiRepository(dbConnection)));
-const colecaoViaService = new ViaService(new ViaRepository(dbConnection, new CroquiRepository(dbConnection)));
-const colecaoController = new ColecaoController(colecaoService, colecaoViaService);
+const viaRepository = new ViaRepository(dbConnection, new CroquiRepository(dbConnection));
+const croquiRepository = new CroquiRepository(dbConnection);
+const colecaoRepository = new ColecaoRepository(dbConnection, viaRepository, croquiRepository);
+const colecaoService = new ColecaoService(colecaoRepository, viaRepository);
+const viaService = new ViaService(viaRepository, new CroquiRepository(dbConnection));
+const colecaoController = new ColecaoController(colecaoService, viaService);
+
 
 const ColecaoRouter = Router();
 

@@ -1,8 +1,7 @@
-import { ColecaoService } from "../../Application/services/ColecaoService";
-import { Colecao} from "../../Domain/models/Colecao";
+import {ColecaoService} from "../../Application/services/ColecaoService";
+import {Colecao} from "../../Domain/models/Colecao";
 import {Request, Response} from "express";
-import { IViaService } from "../../Application/services/ViaService";
-import { Via } from "../../Domain/models/Via";
+import {IViaService} from "../../Application/services/ViaService";
 
 export class ColecaoController {
     private service: ColecaoService;
@@ -24,13 +23,14 @@ export class ColecaoController {
         try {
             const id = parseInt(req.params.id);
             const colecao = await this.service.getColecaoById(id);
-            if (!colecao) {
-                return res.status(404).json({message: "Colecao não encontrada."});
-            }
+
             res.json(colecao);
 
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Colecao não encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
                 res.status(500).json({error: error.message});
             } else {
                 res.status(500).json({error: "Ocorreu um erro desconhecido"});
@@ -49,12 +49,12 @@ export class ColecaoController {
     getAllColecao = async (_: Request, res: Response) => {
         try {
             const colecoes = await this.service.getColecoes();
-            if (!colecoes) {
-                return res.status(404).json({message: "Colecao não encontrada."});
-            }
             res.json(colecoes);
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Nenhuma coleção encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
                 res.status(500).json({error: error.message});
             } else {
                 res.status(500).json({error: "Ocorreu um erro desconhecido"});
@@ -72,28 +72,30 @@ export class ColecaoController {
         try {
             const usuarioId = Number(req.params.usuarioId);
 
-            if (!usuarioId || isNaN(usuarioId)) {
-                return res.status(400).json({ error: 'ID do usuário inválido' });
-            }
-
             const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
-
-            if (colecoes === null) {
-                return res.status(404).json({ message: 'Nenhuma coleção encontrada para o usuário com ID fornecido' });
-            }
 
             res.status(200).json(colecoes);
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Ocorreu um erro ao buscar coleções do usuário' });
+            if (error instanceof Error) {
+                if (error.message === "Nenhuma coleção encontrada") {
+                    return res.status(404).json({message: error.message});
+                } else if (error.message === "Usuário não informado") {
+                    return res.status(400).json({error: error.message});
+                } else if (error.message === "Usuário inválido") {
+                    return res.status(400).json({error: error.message});
+                } else {
+                    res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                }
+            }
         }
     };
 
+    // TODO: Validar existencia do endpoint
     getViasByColecao = async (req: Request, res: Response) => {
         try {
-            
+
         } catch (error) {
-            
+
         }
     }
 
@@ -124,9 +126,20 @@ export class ColecaoController {
      * @returns {Error} 500 - Erro desconhecido
      */
     updateColecao = async (req: Request, res: Response) => {
-        const colecao: Colecao = req.body;
-        await this.service.updateColecao(colecao);
-        res.status(200).send();
+        try {
+            const colecao: Colecao = req.body;
+            await this.service.updateColecao(colecao);
+            res.status(200).json({message: "Colecao atualizada com sucesso."});
+        } catch (error) {
+            if (error instanceof Error) {
+                if (error.message === "Colecao não encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     }
 
     /**
@@ -137,9 +150,20 @@ export class ColecaoController {
      * @returns {object} 404 - Colecao não encontrada
      */
     deleteColecao = async (req: Request, res: Response) => {
-        const id = Number(req.params.id);
-        await this.service.deleteColecao(id);
-        res.status(200).send();
+        try {
+            const id = parseInt(req.params.id);
+            await this.service.deleteColecao(id);
+            res.status(200).json({message: "Colecao deletada com sucesso."});
+        } catch (error) {
+            if (error instanceof Error) {
+                if (error.message === "Colecao não encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
+                res.status(500).json({error: error.message});
+            } else {
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
     }
 
 
@@ -147,41 +171,28 @@ export class ColecaoController {
      * @route ADD Via /colecoes/addVia
      * @group Colecoes - Operações relacionadas a colecoes
      * @returns {object} 200 - Via adicionada com sucesso
-     * @param {colecao_id, via_id} - passado no corpo da requisicao
      * @returns {Error} 500 - Erro desconhecido
      * @returns {object} 404 - Colecao não encontrada
+     * @param req
+     * @param res
      */
     addVia = async (req: Request, res: Response) => {
         try {
-
-            const { colecao_id, via_id } = req.body; // Obtenha os dados do corpo da solicitação
+            const {colecao_id, via_id} = req.body;
             const colecaoId: number = (colecao_id);
             const viaId: number = (via_id);
-        
 
-            if(!colecaoId || !viaId){
-                return res.status(400).json({error: 'Id da coleção e/ou dados da via inválidos'});
-            }
+            await this.service.addVia(viaId, colecaoId);
 
-            const colecao = await this.service.getColecaoById(colecaoId);
-
-            if(!colecao){
-                return res.status(404).json({message: 'Coleção não encontrada.'});
-            }
-
-            const via = await this.viaService.getViaById(viaId);
-
-            if(!via){
-                return res.status(404).json({message: 'Via não encontrada.'});
-            }
-
-            await this.service.addVia(viaId , colecaoId);
-    
-            res.status(201).json({ message: 'Via adicionada à coleção com sucesso.' });
+            res.status(201).json({message: 'Via adicionada à coleção com sucesso.'});
 
         } catch (error) {
             if (error instanceof Error) {
-                res.status(500).json({error: error.message});
+                if (error.message === "Coleção não encontrada") {
+                    return res.status(404).json({message: error.message});
+                } else if (error.message === "Via não encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
             } else {
                 res.status(500).json({error: "Ocorreu um erro desconhecido"});
             }
@@ -197,30 +208,26 @@ export class ColecaoController {
      * @returns {object} 404 - Colecao não encontrada
      */
     removeVia = async (req: Request, res: Response) => {
-        console.log('Entrou na função removeVia');
-
         try {
             const colecaoId = Number(req.params.colecaoId);
             const viaId = Number(req.params.viaId);
-            
-            console.log(colecaoId, viaId);
 
-            if (!colecaoId || !viaId) {
-                return res.status(400).json({ error: 'Id da coleção e/ou dados da via inválidos' });
-            }
-    
             await this.service.removeVia(viaId, colecaoId);
-    
-            res.status(200).json({ message: 'Via removida da coleção com sucesso.' });
-    
+
+            res.status(200).json({message: 'Via removida da coleção com sucesso.'});
+
         } catch (error) {
             if (error instanceof Error) {
-                res.status(500).json({ error: error.message });
+                if (error.message === "Coleção não encontrada") {
+                    return res.status(404).json({message: error.message});
+                } else if (error.message === "Via não encontrada") {
+                    return res.status(404).json({message: error.message});
+                }
             } else {
-                res.status(500).json({ error: 'Ocorreu um erro desconhecido' });
+                res.status(500).json({error: "Ocorreu um erro desconhecido"});
             }
         }
     }
 
-    
+
 }

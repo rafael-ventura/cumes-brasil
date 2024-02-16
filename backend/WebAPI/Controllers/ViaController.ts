@@ -1,15 +1,12 @@
 import {Request, Response} from "express";
 import {ViaService} from "../../Application/services/ViaService";
 import {Via} from "../../Domain/models/Via";
-import {CroquiService} from "../../Application/services/CroquiService";
 
 export class ViaController {
   private service: ViaService;
-  private croquiService: CroquiService;
 
-  constructor(service: ViaService, croquiService: CroquiService) {
+  constructor(service: ViaService) {
     this.service = service;
-    this.croquiService = croquiService;
   }
 
   /**
