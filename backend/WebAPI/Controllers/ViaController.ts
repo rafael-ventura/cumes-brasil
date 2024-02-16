@@ -1,8 +1,7 @@
-import { Request, Response } from "express";
-import { ViaService } from "../../Application/services/ViaService";
-import { Via } from "../../Domain/models/Via";
-import { Croqui } from "../../Domain/models/Croqui";
-import { CroquiService } from "../../Application/services/CroquiService";
+import {Request, Response} from "express";
+import {ViaService} from "../../Application/services/ViaService";
+import {Via} from "../../Domain/models/Via";
+import {CroquiService} from "../../Application/services/CroquiService";
 
 export class ViaController {
   private service: ViaService;
@@ -24,14 +23,15 @@ export class ViaController {
     try {
       const id = parseInt(req.params.id);
       const via = await this.service.getViaById(id);
-
-      if (!via) {
-        return res.status(400).json({ error: "Via não encontrada." });
-      }
       res.status(200).json(via);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Ocorreu um erro ao buscar Via da Via" });
+      if (error instanceof Error) {
+        if (error.message === "Via não encontrada.") {
+          return res.status(404).json({message: error.message});
+        } else {
+          res.status(500).json({error: "Ocorreu um erro ao buscar Via"});
+        }
+      }
     }
   };
 
@@ -46,17 +46,14 @@ export class ViaController {
   getAllVia = async (_: Request, resposta: Response) => {
     try {
       const vias: Via[] | null = await this.service.getVias();
-
-      if (!vias || vias.length === 0) {
-        return resposta.status(404).json({ message: "Via não encontrada." });
-      }
-
       resposta.json(vias);
     } catch (error) {
       if (error instanceof Error) {
-        resposta.status(500).json({ error: error.message });
+        if (error.message === "Nenhuma via encontrada.") {
+          return resposta.status(404).json({message: error.message});
+        }
       } else {
-        resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+        resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
       }
     }
   };
@@ -74,7 +71,9 @@ export class ViaController {
       resposta.status(201).json({ message: "Via criada com sucesso." });
     } catch (error) {
       if (error instanceof Error) {
-        resposta.status(500).json({ error: error.message });
+        if (error.message === "Via já existente") {
+          return resposta.status(400).json({message: error.message});
+        }
       } else {
         resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
       }
@@ -139,24 +138,18 @@ export class ViaController {
   getCroquisByViaId = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const resultado = await this.service.getViaById(id);
-
-      if (!resultado) {
-        return res.status(400).json({ error: "Via não encontrada." });
-      }
 
       const croquis = await this.service.getCroquisByViaId(id);
-
-      if (croquis === null) {
-        return res.status(404).json({
-          message: "Nenhum croqui encontrado para a Via com ID fornecido",
-        });
-      }
-
       res.status(200).json(croquis);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Ocorreu um erro ao buscar Via da Via" });
+      if (error instanceof Error) {
+        if (error.message === "Via não encontrada.") {
+          return res.status(400).json({message: error.message});
+        } else if (error.message === "Nenhum croqui encontrado.") {
+          return res.status(404).json({message: error.message});
+        }
+      }
+      res.status(500).json({error: "Ocorreu um erro desconhecido"});
     }
   };
 }
