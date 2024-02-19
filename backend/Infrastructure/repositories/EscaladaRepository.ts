@@ -11,7 +11,7 @@ export class EscaladaRepository {
 
     async getEscaladaById(id: number): Promise<Escalada | null> {
         return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Escaladas WHERE id = ?`, [id], (err, row: Escalada) => {
+            this.db.get(`SELECT * FROM Escalada WHERE id = ?`, [id], (err, row: Escalada) => {
                     if (err) {
                         reject(err);
                         return;

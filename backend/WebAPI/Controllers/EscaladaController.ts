@@ -70,7 +70,7 @@ export class EscaladaController {
    * @returns {object} 404 - Escalada não encontrada
    * @returns {Error} 500 - Erro desconhecido
    */
-  getAllEscalada = async (req: Request, res: Response) => {
+  getAllEscalada = async (_: Request, res: Response) => {
     try {
       const escaladas: Escalada[] | null = await this.service.getEscaladas();
       if (escaladas?.length === 0) {
@@ -113,9 +113,17 @@ export class EscaladaController {
    * @returns {Error} 500 - Erro desconhecido
    */
   updateEscalada = async (req: Request, res: Response) => {
+    try {
       const escalada: Escalada = req.body;
       await this.service.updateEscalada(escalada);
-      res.status(200).send();
+      res.json( {message: "Escala atualizada com sucesso."} );
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(404).json({ message: error.message });
+      }
+      
+    }
+      
   };
 
   /**

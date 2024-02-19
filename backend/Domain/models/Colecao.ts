@@ -1,21 +1,27 @@
 import { Via } from "./Via";
 
 export class Colecao {
-    id: number;
-    nome: string;
-    descricao?: string | undefined;
-    usuario_id?: number;
-    vias?: Via[] | undefined;
+  id: number;
+  nome: string;
+  usuario_id: number;
+  descricao?: string | undefined;
+  vias?: Via[] | undefined;
 
-    constructor(id: number, nome: string, descricao?: string, usuarioId?: number, vias?: Via[]) {
-        this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.usuario_id = usuarioId;
-        this.vias = vias || [];
-    }
+  constructor(
+    id: number,
+    nome: string,
+    usuarioId: number,
+    descricao?: string,
+    vias?: Via[]
+  ) {
+    this.id = id;
+    this.nome = nome;
+    this.usuario_id = usuarioId;
+    this.descricao = descricao;
+    this.vias = vias || [];
+  }
 
-    public adicionarVia(via: Via): void {
-        this.vias?.push(via);
-    }
+  public popularVia(via: Via): void {
+    this.vias?.push(via);
+  }
 }

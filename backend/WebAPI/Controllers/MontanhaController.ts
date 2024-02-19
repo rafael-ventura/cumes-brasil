@@ -28,7 +28,7 @@ export class MontanhaController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getMontanhaById"});
             }
         }
     }
@@ -52,7 +52,7 @@ export class MontanhaController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllMontanha"});
             }
         }
     }
@@ -72,7 +72,7 @@ export class MontanhaController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createMontanha"});
             }
         }
     }
@@ -95,7 +95,7 @@ export class MontanhaController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateMontanha"});
             }
         }
     }
@@ -119,7 +119,7 @@ export class MontanhaController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteMontanha"});
             }
         }
     }

@@ -16,7 +16,7 @@ export class Via {
     face_id: number;
     via_principal_id: number | undefined;
     fonte_id: number;
-    croquis?: Croqui[] | undefined;
+    croquis?: Croqui[] | undefined; //populado pela function popularCroqui
 
     constructor(id: number, nome: string, grau: string | undefined, crux: string | undefined,
                 artificial: string | undefined, duracao: string | undefined, exposicao: string | undefined,
@@ -39,6 +39,10 @@ export class Via {
         this.via_principal_id = viaPrincipalId;
         this.fonte_id = fonteId;
         this.croquis = croqui || [];
+    }
+
+    public popularCroqui(croqui: Croqui): void{
+        this.croquis?.push(croqui);
     }
 
     public associarMontanha(montanhaId: number): void {
