@@ -27,9 +27,9 @@ export class ViaController {
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Via não encontrada.") {
-          return res.status(404).json({message: error.message});
+          return res.status(400).json({message: error.message});
         } else {
-          res.status(500).json({error: "Ocorreu um erro ao buscar Via"});
+          return res.status(500).json({error: error.message});
         }
       }
     }
@@ -53,7 +53,7 @@ export class ViaController {
           return resposta.status(404).json({message: error.message});
         }
       } else {
-        resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllVia"});
+        resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllVia."});
       }
     }
   };
@@ -78,12 +78,12 @@ export class ViaController {
         }else if(error.message === "É necessário existir uma face antes da criação da via."){
           return resposta.status(400).json({message: error.message});
         }else if(error.message === "Erro ao criar a via."){
-          return resposta.status(401).json({message: "Erro provavelmente na consulta sql"});
+          return resposta.status(401).json({message: "Erro provavelmente na escrita sql."});
         }else{
-          resposta.status(500).json({error: error.message});
+          return resposta.status(500).json({error: error.message});
         }
       }else{
-        resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller createVia"});
+        return resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller createVia."});
       }
     }
   };
@@ -101,7 +101,19 @@ export class ViaController {
       resposta.json({ message: "Via atualizada com sucesso." });
     } catch (error) {
       if (error instanceof Error) {
-          return resposta.status(404).json({ message: error.message });
+        if (error.message === "É necessário existir uma fonte antes da criação da via.") {
+          return resposta.status(400).json({message: error.message});
+        }else if(error.message === "É necessário existir uma montanha antes da criação da via."){
+          return resposta.status(400).json({message: error.message});
+        }else if(error.message === "É necessário existir uma face antes da criação da via."){
+          return resposta.status(400).json({message: error.message});
+        }else if(error.message === "Erro ao atualizar via."){
+          return resposta.status(401).json({message: "Erro provavelmente na consulta escrita sql."});
+        }else{
+          return resposta.status(500).json({error: error.message});
+        }
+      }else{
+        return resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller updateVia."});
       }
     }
   };
@@ -150,7 +162,7 @@ export class ViaController {
           return res.status(404).json({message: error.message});
         }
       }
-      res.status(500).json({error: "Ocorreu um erro desconhecido em controller getCroquisByViaId"});
+      return res.status(500).json({error: "Ocorreu um erro desconhecido em controller getCroquisByViaId."});
     }
   };
 }

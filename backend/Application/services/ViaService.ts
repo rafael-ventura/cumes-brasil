@@ -37,39 +37,29 @@ export class ViaService {
     } else if (isNaN(id)) {
       throw new Error("ID da via inválido");
     }
-    try {
-      const via = await this.repository.getViaById(id);
-      if (!via) {
-        throw new Error("Via não encontrada");
-      }
-
-      //TODO: Aqui nos poderiamos chamar o serviço de croqui para buscar os croquis da via.
-      //TODO: Dai, caso ele precicasse fazer alguma validacao ou algo alem da busca, ele poderia fazer.
-      const croquisIds = await this.croquiService.getCroquisIdsByViaId(id);
-
-      if (croquisIds) {
-        const croquisPromises = croquisIds.map(async (croquiId: number) => {
-          return await this.croquiService.getCroquiById(croquiId);
-        });
-        const croquis = await Promise.all(croquisPromises);
-        via.croquis = croquis.filter((croqui) => croqui !== null) as Croqui[];
-      } else {
-        via.croquis = [];
-      }
-
-      return via;
-    } catch (error) {
-      if ((error as Error).message === "Fonte não encontrada") {
-        return null;
-      }
+    const via = await this.repository.getViaById(id);
+    if (!via) {
+      throw new Error("Via não encontrada");
     }
+    const croquisIds = await this.croquiService.getCroquisIdsByViaId(id);
+    if (croquisIds) {
+      const croquisPromises = croquisIds.map(async (croquiId: number) => {
+        return await this.croquiService.getCroquiById(croquiId);
+      });
+      const croquis = await Promise.all(croquisPromises);
+      via.croquis = croquis.filter((croqui) => croqui !== null) as Croqui[];
+    } else {
+      via.croquis = [];
+    }
+
+    return via;
   }
 
   async getVias(): Promise<Via[] | null> {
     const vias = await this.repository.getVias();
 
     if (!vias || vias.length === 0) {
-      throw new Error("Nenhuma via encontrada");
+      throw new Error("Nenhuma via encontrada.");
     }
 
     const promises = vias.map(async (via) => {
@@ -97,7 +87,6 @@ export class ViaService {
         "É necessário existir uma fonte antes da criação da via."
       );
     }
-
     // Verificar se a montanha existe
     const montanhaExiste = await this.montanhaService.getMontanhaById(
       via.montanha_id
@@ -107,76 +96,83 @@ export class ViaService {
         "É necessário existir uma montanha antes da criação da via."
       );
     }
-
     // Verificar se a face existe
     const faceExiste = await this.faceService.getFaceById(via.face_id);
     if (!faceExiste) {
       throw new Error("É necessário existir uma face antes da criação da via.");
     }
-
     const result = await this.repository.createVia(via);
     if (result === null) {
       throw new Error("Erro ao criar a via.");
     }
-
     // Se todas as verificações passarem, então podemos criar a via
     return result;
   }
 
   async updateVia(via: Via): Promise<void> {
     if (!via.id) {
-      throw new Error("ID da via não fornecido");
+      throw new Error("ID da via não fornecido.");
     }
-    const viaExiste = await this.getViaById(via.id);
+    const viaExiste = await this.repository.getViaById(via.id);
     if (!viaExiste) {
-      throw new Error("Montanha não encontrada");
+      throw new Error("Montanha não encontrada.");
     }
-    // Verificar se a fonte existe
     const fonteExiste = await this.fonteService.getFonteById(via.fonte_id);
     if (!fonteExiste) {
-      throw new Error("É necessário existir uma fonte antes da criação da via");
+      throw new Error(
+        "É necessário existir uma fonte antes da criação da via."
+      );
     }
-
-    // Verificar se a montanha existe
     const montanhaExiste = await this.montanhaService.getMontanhaById(
       via.montanha_id
     );
     if (!montanhaExiste) {
       throw new Error(
-        "É necessário existir uma montanha antes da criação da via"
+        "É necessário existir uma montanha antes da criação da via."
       );
     }
-
-    // Verificar se a face existe
     const faceExiste = await this.faceService.getFaceById(via.face_id);
     if (!faceExiste) {
-      throw new Error("É necessário existir uma face antes da criação da via");
+      throw new Error("É necessário existir uma face antes da criação da via.");
     }
 
+    const result = await this.repository.updateVia(via);
+    if (result === null) {
+      throw new Error("Erro ao atualizar via.");
+    }
     // Se todas as verificações passarem, então podemos criar a via
-
-    // Adicione suas regras de validação aqui antes de atualizar a via
-    return this.repository.updateVia(via);
+    return result;
   }
 
   async deleteVia(id: number): Promise<void> {
-    if (!(await this.getViaById(id))) {
-      throw new Error("Via não encontrada");
+    if (!id) {
+      throw new Error("ID da via não fornecido");
+    } else if (isNaN(id)) {
+      throw new Error("ID da via inválido");
     }
-    return this.repository.deleteVia(id);
+    if (!(await this.repository.getViaById(id))) {
+      throw new Error("Via não encontrada.");
+    }
+
+    const result = await this.repository.deleteVia(id);
+    if (result === null) {
+      throw new Error("Erro ao deletar a via.");
+    }
+    // Se todas as verificações passarem, então podemos criar a via
+    return result;
   }
 
   async getCroquisByViaId(id: number): Promise<Croqui[] | null> {
-    const via = await this.getViaById(id);
+    const via = await this.repository.getViaById(id);
     if (!via) {
-      throw new Error("Via não encontrada");
+      throw new Error("Via não encontrada.");
     }
     var croquis = this.repository.getCroquisByViaId(id);
     if (!croquis) {
-      throw new Error("Nenhum croqui encontrado");
+      throw new Error("Nenhum croqui encontrado.");
       //@ts-ignore
     } else if (croquis.length == 0) {
-      throw new Error("Nenhum croqui encontrado");
+      throw new Error("Nenhum croqui encontrado.");
     }
     return croquis;
   }
