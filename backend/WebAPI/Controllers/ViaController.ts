@@ -20,6 +20,9 @@ export class ViaController {
     try {
       const id = parseInt(req.params.id);
       const via = await this.service.getViaById(id);
+      if (!via) {
+        return res.status(404).json({message: "Via não encontrada."});
+      }
       res.status(200).json(via);
     } catch (error) {
       if (error instanceof Error) {
@@ -50,7 +53,7 @@ export class ViaController {
           return resposta.status(404).json({message: error.message});
         }
       } else {
-        resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+        resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllVia"});
       }
     }
   };
@@ -68,11 +71,7 @@ export class ViaController {
       resposta.status(201).json({ message: "Via criada com sucesso." });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === "Via já existente") {
           return resposta.status(400).json({message: error.message});
-        }
-      } else {
-        resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
       }
     }
   };
@@ -90,12 +89,7 @@ export class ViaController {
       resposta.json({ message: "Via atualizada com sucesso." });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === "Via não encontrada.") {
           return resposta.status(404).json({ message: error.message });
-        }
-        resposta.status(500).json({ error: error.message });
-      } else {
-        resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
       }
     }
   };
@@ -118,8 +112,6 @@ export class ViaController {
           return resposta.status(404).json({ message: error.message });
         }
         resposta.status(500).json({ error: error.message });
-      } else {
-        resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
       }
     }
   };
@@ -146,7 +138,7 @@ export class ViaController {
           return res.status(404).json({message: error.message});
         }
       }
-      res.status(500).json({error: "Ocorreu um erro desconhecido"});
+      res.status(500).json({error: "Ocorreu um erro desconhecido em controller getCroquisByViaId"});
     }
   };
 }

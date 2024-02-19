@@ -1,15 +1,12 @@
 import {ColecaoService} from "../../Application/services/ColecaoService";
 import {Colecao} from "../../Domain/models/Colecao";
 import {Request, Response} from "express";
-import {IViaService} from "../../Application/services/ViaService";
 
 export class ColecaoController {
     private service: ColecaoService;
-    private viaService: IViaService;
 
-    constructor(colecaoaService: ColecaoService, viaService: IViaService) {
+    constructor(colecaoaService: ColecaoService) {
         this.service = colecaoaService;
-        this.viaService = viaService;
     }
 
     /**
@@ -33,7 +30,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getColecaoById"});
             }
         }
     }
@@ -57,7 +54,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllColecao"});
             }
         }
     };
@@ -84,7 +81,7 @@ export class ColecaoController {
                 } else if (error.message === "Usuário inválido") {
                     return res.status(400).json({error: error.message});
                 } else {
-                    res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                    res.status(500).json({error: "Ocorreu um erro desconhecido em controller getColecoesByUsuarioId"});
                 }
             }
         }
@@ -114,7 +111,7 @@ export class ColecaoController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createColecao"});
             }
         }
     }
@@ -137,7 +134,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateColecao"});
             }
         }
     }
@@ -161,7 +158,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteColecao"});
             }
         }
     }
@@ -194,7 +191,7 @@ export class ColecaoController {
                     return res.status(404).json({message: error.message});
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller addVia"});
             }
         }
     }
@@ -224,7 +221,7 @@ export class ColecaoController {
                     return res.status(404).json({message: error.message});
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller removeVia"});
             }
         }
     }

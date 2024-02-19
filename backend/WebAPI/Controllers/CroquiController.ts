@@ -1,13 +1,13 @@
 import {CroquiService} from "../../Application/services/CroquiService";
 import {Request, Response} from "express";
 import {Croqui} from "../../Domain/models/Croqui";
-import {IViaService} from "../../Application/services/ViaService";
+import {ViaService} from "../../Application/services/ViaService";
 
 export class CroquiController {
     private service: CroquiService;
-    private viaService: IViaService;
+    private viaService: ViaService;
 
-    constructor(croquiService: CroquiService, viaService: IViaService) {
+    constructor(croquiService: CroquiService, viaService: ViaService) {
         this.service = croquiService;
         this.viaService = viaService;
     }
@@ -31,7 +31,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getCroquiById"});
             }
         }
     };
@@ -55,7 +55,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllCroqui"});
             }
         }
     };
@@ -75,7 +75,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createCroqui"});
             }
         }
     };
@@ -99,7 +99,7 @@ export class CroquiController {
                     res.status(500).json({error: error.message});
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateCroqui"});
             }
         }
     };
@@ -124,7 +124,7 @@ export class CroquiController {
                     res.status(500).json({error: error.message});
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteCroqui"});
             }
         }
     };
@@ -142,7 +142,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getCroquisByViaId"});
             }
         }
     };
@@ -185,7 +185,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller associarVia"});
             }
         }
     };

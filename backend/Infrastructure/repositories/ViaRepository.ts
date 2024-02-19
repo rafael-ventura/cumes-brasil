@@ -1,15 +1,12 @@
 import {Database} from "sqlite3";
 import {Via} from "../../Domain/models/Via";
 import {Croqui} from "../../Domain/models/Croqui";
-import {CroquiRepository} from "./CroquiRepository";
 
 export class ViaRepository {
     private db: Database;
-    private croquiRepository;
 
-    constructor(db: Database, croquiRepository: CroquiRepository) {
+    constructor(db: Database) {
         this.db = db;
-        this.croquiRepository = croquiRepository;
     }
 
     async getViaById(id: number): Promise<Via | null> {
@@ -67,7 +64,7 @@ export class ViaRepository {
                                 row.duracao,
                                 row.exposicao,
                                 row.extensao,
-                                row.conquistadores,
+                                typeof row.conquistadores === 'string' ? JSON.parse(row.conquistadores) : [],
                                 row.detalhes,
                                 row.data,
                                 row.montanha_id,
@@ -185,30 +182,6 @@ export class ViaRepository {
                                 )
                         );
                         resolve(croquis);
-                    } else {
-                        resolve(null);
-                    }
-                }
-            );
-        });
-    }
-
-    public async getCroquiIdsByViaId(viaId: number): Promise<number[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(
-                `SELECT croqui_id FROM ViasCroquis WHERE via_id = ?`,
-                [viaId],
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-
-                    if (rows) {
-                        const croquiIds = (rows as { croqui_id: number }[]).map(
-                            (row) => row.croqui_id
-                        );
-                        resolve(croquiIds);
                     } else {
                         resolve(null);
                     }

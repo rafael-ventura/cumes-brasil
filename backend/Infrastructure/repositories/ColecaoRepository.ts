@@ -1,21 +1,13 @@
 import {Database} from "sqlite3";
 import {Colecao} from "../../Domain/models/Colecao";
-import {ViaRepository} from "./ViaRepository";
-import {CroquiRepository} from "./CroquiRepository";
 
 export class ColecaoRepository {
     private db: Database;
-    private viaRepository: ViaRepository;
-    private croquiRepository: CroquiRepository;
 
     constructor(
         db: Database,
-        viaRepository: ViaRepository,
-        croquiRepository: CroquiRepository
     ) {
         this.db = db;
-        this.viaRepository = viaRepository;
-        this.croquiRepository = croquiRepository;
     }
 
     async getColecaoById(id: number): Promise<Colecao | null> {
@@ -40,8 +32,8 @@ export class ColecaoRepository {
                 const colecao = new Colecao(
                     row.id,
                     row.nome,
-                    row.descricao,
                     row.usuario_id,
+                    row.descricao,
                     []
                 );
 
@@ -72,8 +64,8 @@ export class ColecaoRepository {
                             return new Colecao(
                                 row.id,
                                 row.nome,
-                                row.descricao,
                                 row.usuario_id,
+                                row.descricao,
                                 viasIds
                             );
                         });
@@ -84,28 +76,12 @@ export class ColecaoRepository {
         });
     }
 
-    async getColecoesByUsuarioId(usuarioId: number): Promise<Colecao[] | null> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const colecoes = await this.getColecoes();
-                if (colecoes) {
-                    const colecoesDoUsuario = colecoes.filter(colecao => colecao.usuario_id === usuarioId);
-                    resolve(colecoesDoUsuario);
-                } else {
-                    resolve(null);
-                }
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-
 
     async createColecao(colecao: Colecao): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(
-                `INSERT INTO Colecao (nome, descricao, usuario_id) VALUES (?,?,?)`,
-                [colecao.nome, colecao.descricao, colecao.usuario_id],
+                `INSERT INTO Colecao (nome, usuario_id, descricao) VALUES (?,?,?)`,
+                [colecao.nome, colecao.usuario_id, colecao.descricao],
                 (err) => {
                     if (err) {
                         reject(err);
@@ -120,8 +96,8 @@ export class ColecaoRepository {
     async updateColecao(colecao: Colecao): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(
-                `UPDATE Colecao SET nome = ?, descricao = ?, usuario_id = ? WHERE id = ?`,
-                [colecao.nome, colecao.descricao, colecao.usuario_id, colecao.id],
+                `UPDATE Colecao SET nome = ?, usuario_id = ?, descricao = ? WHERE id = ?`,
+                [colecao.nome, colecao.usuario_id, colecao.descricao, colecao.id],
                 (err) => {
                     if (err) {
                         reject(err);
@@ -159,8 +135,8 @@ export class ColecaoRepository {
                         const colecaoFavoritos = new Colecao(
                             row.id,
                             row.nome,
+                            row.usuario_id!,
                             row.descricao ?? "",
-                            row.usuario_id!
                         );
                         resolve(colecaoFavoritos);
                     } else {
@@ -172,6 +148,8 @@ export class ColecaoRepository {
     }
 
     //TODO: Criar logica para que não permita criação de nova coleção FAVORITO
+    //TODO: Ao criar um novo usuario rodar o metodo createColecaoFavorito para criar uma coleção favorita para o usuario
+    //TODO: Talvez seja necessário passar essa responsabilidade para ColecaoService ou UsuarioService.
     async createColecaoFavorito(usuario_id: number): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(
@@ -222,27 +200,21 @@ export class ColecaoRepository {
         });
     }
 
-    async getViasIdsByColecaoId(colecaoId: number): Promise<number[] | null> {
-        return new Promise((resolve, reject) => {
+    async getViasIdsByColecaoId(colecaoId: number): Promise<{ via_id: number }[] | null> {
+        return new Promise<{ via_id: number }[]>((resolve, reject) => {
             this.db.all(
                 `SELECT via_id FROM ViasColecoes WHERE colecao_id = ?`,
                 [colecaoId],
-                (err, rows) => {
+                (err, rows: { via_id: number }[]) => {
                     if (err) {
                         reject(err);
                         return;
                     }
-
-                    if (rows) {
-                        const ViasIds = (rows as { via_id: number }[]).map(
-                            (row) => row.via_id
-                        );
-                        resolve(ViasIds);
-                    } else {
-                        resolve(null);
-                    }
+                    resolve(rows);
                 }
             );
         });
     }
+    
+    
 }

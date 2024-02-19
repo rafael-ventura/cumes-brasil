@@ -28,11 +28,9 @@ export class FonteController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getFonteById"});
             }
         }
-        const id = parseInt(req.params.id);
-        const result = await this.service.getFonteById(id);
     }
 
     /**
@@ -54,7 +52,7 @@ export class FonteController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllFonte"});
             }
         }
     }
@@ -74,7 +72,7 @@ export class FonteController {
             if (error instanceof Error) {
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createFonte"});
             }
         }
     }
@@ -97,7 +95,7 @@ export class FonteController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateFonte"});
             }
         }
     }
@@ -121,7 +119,7 @@ export class FonteController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteFonte"});
             }
         }
     }
