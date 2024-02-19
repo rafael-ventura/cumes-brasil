@@ -71,7 +71,19 @@ export class ViaController {
       resposta.status(201).json({ message: "Via criada com sucesso." });
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message === "É necessário existir uma fonte antes da criação da via.") {
           return resposta.status(400).json({message: error.message});
+        }else if(error.message === "É necessário existir uma montanha antes da criação da via."){
+          return resposta.status(400).json({message: error.message});
+        }else if(error.message === "É necessário existir uma face antes da criação da via."){
+          return resposta.status(400).json({message: error.message});
+        }else if(error.message === "Erro ao criar a via."){
+          return resposta.status(401).json({message: "Erro provavelmente na consulta sql"});
+        }else{
+          resposta.status(500).json({error: error.message});
+        }
+      }else{
+        resposta.status(500).json({error: "Ocorreu um erro desconhecido em controller createVia"});
       }
     }
   };

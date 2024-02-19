@@ -2,7 +2,6 @@ import sqlite3 from 'sqlite3';
 import path from 'path';
 
 function connect() {
-    // 'path.join' junta o diretório atual com o caminho relativo do banco de dados
     const dbPath = path.join(__dirname, '../../../database/sqlite/cumes_brasil.db');
     console.log(dbPath);
     return new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {

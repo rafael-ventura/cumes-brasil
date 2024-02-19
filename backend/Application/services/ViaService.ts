@@ -90,88 +90,73 @@ export class ViaService {
   }
 
   async createVia(via: Via): Promise<void> {
-    try {
-      // Verificar se a fonte existe
-      const fonteExiste = await this.fonteService.getFonteById(via.fonte_id);
-      if (!fonteExiste) {
-        throw new Error(
-          "É necessário existir uma fonte antes da criação da via"
-        );
-      }
-
-      // Verificar se a montanha existe
-      const montanhaExiste = await this.montanhaService.getMontanhaById(
-        via.montanha_id
+    // Verificar se a fonte existe
+    const fonteExiste = await this.fonteService.getFonteById(via.fonte_id);
+    if (!fonteExiste) {
+      throw new Error(
+        "É necessário existir uma fonte antes da criação da via."
       );
-      if (!montanhaExiste) {
-        throw new Error(
-          "É necessário existir uma montanha antes da criação da via"
-        );
-      }
-
-      // Verificar se a face existe
-      const faceExiste = await this.faceService.getFaceById(via.face_id);
-      if (!faceExiste) {
-        throw new Error(
-          "É necessário existir uma face antes da criação da via"
-        );
-      }
-
-      // Se todas as verificações passarem, então podemos criar a via
-      return this.repository.createVia(via);
-    } catch (error) {
-      // Lidar com a exceção de forma apropriada, como registrar em log ou retornar uma mensagem de erro
-      console.error("Erro ao criar via:", error);
-      // Você pode optar por relançar a exceção se desejar que ela seja tratada em um nível superior
-      throw error;
     }
+
+    // Verificar se a montanha existe
+    const montanhaExiste = await this.montanhaService.getMontanhaById(
+      via.montanha_id
+    );
+    if (!montanhaExiste) {
+      throw new Error(
+        "É necessário existir uma montanha antes da criação da via."
+      );
+    }
+
+    // Verificar se a face existe
+    const faceExiste = await this.faceService.getFaceById(via.face_id);
+    if (!faceExiste) {
+      throw new Error("É necessário existir uma face antes da criação da via.");
+    }
+
+    const result = await this.repository.createVia(via);
+    if (result === null) {
+      throw new Error("Erro ao criar a via.");
+    }
+
+    // Se todas as verificações passarem, então podemos criar a via
+    return result;
   }
 
   async updateVia(via: Via): Promise<void> {
-    try {
-      if (!via.id) {
-        throw new Error("ID da via não fornecido");
-      }
-      const viaExiste = await this.getViaById(via.id);
-      if (!viaExiste) {
-        throw new Error("Montanha não encontrada");
-      }
-      // Verificar se a fonte existe
-      const fonteExiste = await this.fonteService.getFonteById(via.fonte_id);
-      if (!fonteExiste) {
-        throw new Error(
-          "É necessário existir uma fonte antes da criação da via"
-        );
-      }
-
-      // Verificar se a montanha existe
-      const montanhaExiste = await this.montanhaService.getMontanhaById(
-        via.montanha_id
-      );
-      if (!montanhaExiste) {
-        throw new Error(
-          "É necessário existir uma montanha antes da criação da via"
-        );
-      }
-
-      // Verificar se a face existe
-      const faceExiste = await this.faceService.getFaceById(via.face_id);
-      if (!faceExiste) {
-        throw new Error(
-          "É necessário existir uma face antes da criação da via"
-        );
-      }
-
-      // Se todas as verificações passarem, então podemos criar a via
-
-      // Adicione suas regras de validação aqui antes de atualizar a via
-      return this.repository.updateVia(via);
-    } catch (error) {
-      // Lidar com a exceção de forma apropriada, como registrar em log ou retornar uma mensagem de erro
-      console.error("Erro ao criar via:", error);
-      // Você pode optar por relançar a exceção se desejar que ela seja tratada em um nível superior
-      throw error;
+    if (!via.id) {
+      throw new Error("ID da via não fornecido");
     }
+    const viaExiste = await this.getViaById(via.id);
+    if (!viaExiste) {
+      throw new Error("Montanha não encontrada");
+    }
+    // Verificar se a fonte existe
+    const fonteExiste = await this.fonteService.getFonteById(via.fonte_id);
+    if (!fonteExiste) {
+      throw new Error("É necessário existir uma fonte antes da criação da via");
+    }
+
+    // Verificar se a montanha existe
+    const montanhaExiste = await this.montanhaService.getMontanhaById(
+      via.montanha_id
+    );
+    if (!montanhaExiste) {
+      throw new Error(
+        "É necessário existir uma montanha antes da criação da via"
+      );
+    }
+
+    // Verificar se a face existe
+    const faceExiste = await this.faceService.getFaceById(via.face_id);
+    if (!faceExiste) {
+      throw new Error("É necessário existir uma face antes da criação da via");
+    }
+
+    // Se todas as verificações passarem, então podemos criar a via
+
+    // Adicione suas regras de validação aqui antes de atualizar a via
+    return this.repository.updateVia(via);
   }
 
   async deleteVia(id: number): Promise<void> {
