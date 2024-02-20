@@ -4,10 +4,10 @@ export class Montanha {
     id: number;
     nome: string;
     localizacao: string;
-    altura: number | undefined;
-    fonte_id: number | undefined;
+    altura: number;
+    fonte_id: number;
 
-    constructor(id: number, nome: string, localizacao: string, altura: number | undefined, fonteId: number | undefined) {
+    constructor(id: number, nome: string, localizacao: string, altura: number, fonteId: number) {
 
         this.id = id;
         this.nome = nome;

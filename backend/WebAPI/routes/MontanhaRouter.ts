@@ -3,8 +3,13 @@ import dbConnection from '../../Infrastructure/config/db';
 import {MontanhaController} from '../Controllers/MontanhaController';
 import {MontanhaService} from '../../Application/services/MontanhaService';
 import {MontanhaRepository} from '../../Infrastructure/repositories/MontanhaRepository';
+import { FonteRepository } from '../../Infrastructure/repositories/FonteRepository';
+import { FonteService } from '../../Application/services/FonteService';
 
-const montanhaService = new MontanhaService(new MontanhaRepository(dbConnection));
+
+const fonteService = new FonteService(new FonteRepository(dbConnection));
+const montanhaRepository = new MontanhaRepository(dbConnection);
+const montanhaService = new MontanhaService(montanhaRepository, fonteService);
 const montanhaController = new MontanhaController(montanhaService);
 
 const MontanhaRouter = Router();

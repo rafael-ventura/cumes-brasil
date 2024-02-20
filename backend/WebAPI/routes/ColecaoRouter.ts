@@ -16,20 +16,21 @@ import { FaceRepository } from '../../Infrastructure/repositories/FaceRepository
 import { UsuarioService } from '../../Application/services/UsuarioService';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 
-
 const viaRepository = new ViaRepository(dbConnection);
 const colecaoRepository = new ColecaoRepository(dbConnection);
 const croquiRepository = new CroquiRepository(dbConnection);
+const croquiService = new CroquiService(croquiRepository, viaRepository);
 const usuarioRepository = new UsuarioRepository(dbConnection);
 const usuarioService = new UsuarioService(usuarioRepository);
-const croquiService = new CroquiService(croquiRepository);
 const fonteService = new FonteService(new FonteRepository(dbConnection));
-const montanhaService = new MontanhaService(new MontanhaRepository(dbConnection));
-const faceService = new FaceService(new FaceRepository(dbConnection));
-const viaService = new ViaService(viaRepository, croquiService, fonteService, montanhaService, faceService);
+const montanhaRepository = new MontanhaRepository(dbConnection);
+const montanhaService = new MontanhaService(montanhaRepository, fonteService);
+const faceRepository = new FaceRepository(dbConnection);
+const faceService = new FaceService(faceRepository, fonteService, montanhaService);
+const viaService = new ViaService(viaRepository, fonteService, montanhaService, faceService);
+viaService.setCroquiService(croquiService);
 const colecaoService = new ColecaoService(colecaoRepository, viaService, usuarioService);
 const colecaoController = new ColecaoController(colecaoService);
-
 
 const ColecaoRouter = Router();
 
@@ -41,7 +42,6 @@ ColecaoRouter.delete('/:id', colecaoController.deleteColecao);
 ColecaoRouter.post('/addVia', colecaoController.addVia);
 ColecaoRouter.delete('/removeVia/:colecaoId/:viaId', colecaoController.removeVia);
 ColecaoRouter.get('/colecoesDoUsuario/:usuarioId', colecaoController.getColecoesByUsuarioId);
-ColecaoRouter.get('/:usuarioId/:colecaoId', colecaoController.getViasByColecao);
 
 
 export default ColecaoRouter;
