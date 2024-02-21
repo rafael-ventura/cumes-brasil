@@ -29,7 +29,7 @@ const faceService = new FaceService(faceRepository, fonteService, montanhaServic
 const viaService = new ViaService(viaRepository, fonteService, montanhaService, faceService);
 viaService.setCroquiService(croquiService);
 const escaladaService = new EscaladaService(escaladaRepository , usuarioService, viaService);
-const escaladaController = new EscaladaController(escaladaService, usuarioService);
+const escaladaController = new EscaladaController(escaladaService);
 
 const EscaladaRouter = Router();
 

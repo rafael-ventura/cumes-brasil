@@ -5,11 +5,9 @@ import { UsuarioService } from "../../Application/services/UsuarioService";
 
 export class EscaladaController {
 	private service: EscaladaService;
-	private usuarioService: UsuarioService;
 
-	constructor(escaladaService: EscaladaService, usuarioService: UsuarioService) {
+	constructor(escaladaService: EscaladaService) {
 		this.service = escaladaService;
-		this.usuarioService = usuarioService;
 	}
 
 	/**
