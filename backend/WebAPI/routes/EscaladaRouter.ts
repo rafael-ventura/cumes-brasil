@@ -16,16 +16,20 @@ import { MontanhaRepository } from '../../Infrastructure/repositories/MontanhaRe
 import { FaceService } from '../../Application/services/FaceService';
 import { FaceRepository } from '../../Infrastructure/repositories/FaceRepository';
 
+const viaRepository = new ViaRepository(dbConnection);
+const croquiRepository = new CroquiRepository(dbConnection);
+const croquiService = new CroquiService(croquiRepository, viaRepository);
 const usuarioService = new UsuarioService(new UsuarioRepository(dbConnection));
 const escaladaRepository = new EscaladaRepository(dbConnection);
-const viaRepository = new ViaRepository(dbConnection);
-const croquiService = new CroquiService(new CroquiRepository(dbConnection));
 const fonteService = new FonteService(new FonteRepository(dbConnection));
-const montanhaService = new MontanhaService(new MontanhaRepository(dbConnection));
-const faceService = new FaceService(new FaceRepository(dbConnection));
-const viaService = new ViaService(viaRepository, croquiService, fonteService, montanhaService, faceService);
+const montanhaRepository = new MontanhaRepository(dbConnection);
+const montanhaService = new MontanhaService(montanhaRepository, fonteService);
+const faceRepository = new FaceRepository(dbConnection);
+const faceService = new FaceService(faceRepository, fonteService, montanhaService);
+const viaService = new ViaService(viaRepository, fonteService, montanhaService, faceService);
+viaService.setCroquiService(croquiService);
 const escaladaService = new EscaladaService(escaladaRepository , usuarioService, viaService);
-const escaladaController = new EscaladaController(escaladaService, usuarioService);
+const escaladaController = new EscaladaController(escaladaService);
 
 const EscaladaRouter = Router();
 

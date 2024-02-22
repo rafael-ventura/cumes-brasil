@@ -1,11 +1,21 @@
 import { FaceRepository } from "../../Infrastructure/repositories/FaceRepository";
 import { Face } from "../../Domain/models/Face";
+import { FonteService } from "./FonteService";
+import { MontanhaService } from "./MontanhaService";
 
 export class FaceService {
     private faceRepository: FaceRepository;
+    private fonteService: FonteService;
+    private montanhaService: MontanhaService;
 
-    constructor(faceRepository: FaceRepository) {
+    constructor(
+        faceRepository: FaceRepository,
+        fonteService: FonteService,
+        montanhaService: MontanhaService
+    ) {
         this.faceRepository = faceRepository;
+        this.fonteService = fonteService;
+        this.montanhaService = montanhaService;
     }
 
     async getFaceById(id: number): Promise<Face | null> {
@@ -14,18 +24,11 @@ export class FaceService {
         } else if (isNaN(id)) {
             throw new Error("ID da face inválido");
         }
-
-        try {
-            const face = await this.faceRepository.getFaceById(id);
-            return face;
-        } catch (error) {
-            // Se a face não for encontrada, retornar null em vez de lançar uma exceção
-            if ((error as Error).message === "Face não encontrada") {
-                return null;
-            }
-            // Se ocorrer outro tipo de erro, relançar a exceção
-            throw error;
+        const response = await this.faceRepository.getFaceById(id);
+        if (!response) {
+            throw new Error("Face não encontrada");
         }
+        return response;
     }
 
     async getFaces(): Promise<Face[] | null> {
@@ -37,8 +40,23 @@ export class FaceService {
     }
 
     async createFace(face: Face): Promise<void> {
-        // Adicione suas regras de validação aqui antes de criar a face
-        return this.faceRepository.createFace(face);
+        const fonteExiste = await this.fonteService.getFonteById(face.fonte_id);
+        if (!fonteExiste) {
+            throw new Error("É necessário existir uma fonte antes da criação da via");
+        }
+        const montanhaExiste = await this.montanhaService.getMontanhaById(
+            face.montanha_id
+        );
+        if (!montanhaExiste) {
+            throw new Error(
+                "É necessário existir uma montanha antes da criação da via"
+            );
+        }
+        const response = await this.faceRepository.createFace(face);
+        if (response === null) {
+            throw new Error("Erro ao criar face");
+        }
+        return response;
     }
 
     async updateFace(face: Face): Promise<void> {
@@ -49,8 +67,23 @@ export class FaceService {
         if (!existingFace) {
             throw new Error("Face não encontrada");
         }
-        // Adicione suas regras de validação aqui antes de atualizar a face
-        return this.faceRepository.updateFace(face);
+        const fonteExiste = await this.fonteService.getFonteById(face.fonte_id);
+        if (!fonteExiste) {
+            throw new Error("É necessário existir uma fonte antes da criação da via");
+        }
+        const montanhaExiste = await this.montanhaService.getMontanhaById(
+            face.montanha_id
+        );
+        if (!montanhaExiste) {
+            throw new Error(
+                "É necessário existir uma montanha antes da criação da via"
+            );
+        }
+        const resposta = await this.faceRepository.updateFace(face);
+        if (resposta === null) {
+            throw new Error("Erro ao atualizar face");
+        }
+        return resposta;
     }
 
     async deleteFace(id: number): Promise<void> {
