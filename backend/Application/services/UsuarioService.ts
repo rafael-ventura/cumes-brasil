@@ -10,28 +10,28 @@ export class UsuarioService {
     }
 
     async getUsuarioById(id: number): Promise<Usuario | null> {
-        return this.repository.getUsuarioById(id);
+        return this.repository.getById(id);
     }
 
     async getUsuarios(): Promise<Usuario[] | null> {
-        return this.repository.getUsuarios();
+        return this.repository.getAll();
     }
 
     async createUsuario(usuario: Usuario): Promise<void> {
-        return this.repository.createUsuario(usuario);
+        return this.repository.create(usuario);
     }
 
     async updateUsuario(usuario: Usuario): Promise<void> {
         if (!await this.getUsuarioById(usuario.id)) {
             throw new Error("Usuario não encontrada");
         }
-        return this.repository.updateUsuario(usuario);
+        return this.repository.update(usuario);
     }
 
     async deleteUsuario(id: number): Promise<void> {
         if (!await this.getUsuarioById(id)) {
             throw new Error("Usuario não encontrada");
         }
-        return this.repository.deleteUsuario(id);
+        return this.repository.delete(id);
     }
 }
