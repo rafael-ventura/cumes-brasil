@@ -20,9 +20,7 @@ export class ColecaoController {
         try {
             const id = parseInt(req.params.id);
             const colecao = await this.service.getColecaoById(id);
-
             res.json(colecao);
-
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Colecao não encontrada") {
@@ -68,9 +66,7 @@ export class ColecaoController {
     getColecoesByUsuarioId = async (req: Request, res: Response) => {
         try {
             const usuarioId = Number(req.params.usuarioId);
-
             const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
-
             res.status(200).json(colecoes);
         } catch (error) {
             if (error instanceof Error) {
@@ -87,14 +83,6 @@ export class ColecaoController {
         }
     };
 
-    // TODO: Validar existencia do endpoint
-    getViasByColecao = async (req: Request, res: Response) => {
-        try {
-
-        } catch (error) {
-
-        }
-    }
 
     /**
      * @route POST /colecaos
@@ -178,11 +166,8 @@ export class ColecaoController {
             const {colecao_id, via_id} = req.body;
             const colecaoId: number = (colecao_id);
             const viaId: number = (via_id);
-
             await this.service.addVia(viaId, colecaoId);
-
             res.status(201).json({message: 'Via adicionada à coleção com sucesso.'});
-
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Coleção não encontrada") {
@@ -208,11 +193,8 @@ export class ColecaoController {
         try {
             const colecaoId = Number(req.params.colecaoId);
             const viaId = Number(req.params.viaId);
-
             await this.service.removeVia(viaId, colecaoId);
-
             res.status(200).json({message: 'Via removida da coleção com sucesso.'});
-
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Coleção não encontrada") {

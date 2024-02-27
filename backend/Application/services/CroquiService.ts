@@ -1,12 +1,17 @@
-import {Croqui} from "../../Domain/models/Croqui";
-import {CroquiRepository} from "../../Infrastructure/repositories/CroquiRepository";
+import { Croqui } from "../../Domain/models/Croqui";
+import { CroquiRepository } from "../../Infrastructure/repositories/CroquiRepository";
+import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
+import { ViaService } from "./ViaService";
 
 export class CroquiService {
     private croquiRepository: CroquiRepository;
+    private viaRepository: ViaRepository;
 
-    constructor(croquiRepository: CroquiRepository) {
+    constructor(croquiRepository: CroquiRepository , viaRepository: ViaRepository) {
         this.croquiRepository = croquiRepository;
+        this.viaRepository = viaRepository;
     }
+
 
     async getCroquiById(id: number): Promise<Croqui | null> {
         if (!id) {
@@ -14,18 +19,11 @@ export class CroquiService {
         } else if (isNaN(id)) {
             throw new Error("ID da fonte inválido");
         }
-    
-        try {
-            const croqui = await this.croquiRepository.getCroquiById(id);
-            return croqui;
-        } catch (error) {
-            // Se a croqui não for encontrada, retornar null em vez de lançar uma exceção
-            if ((error as Error).message === "Croqui não encontrada") {
-                return null;
-            }
-            // Se ocorrer outro tipo de erro, relançar a exceção
-            throw error;
+        const response = await this.croquiRepository.getCroquiById(id);
+        if (response === null) {
+            throw new Error("Croqui não encontrada");
         }
+        return response;
     }
 
     async getCroquis(): Promise<Croqui[] | null> {
@@ -47,15 +45,19 @@ export class CroquiService {
         if (!croqui) {
             throw new Error("Croqui inválido");
         }
-        const croquiExists = await this.getCroquiById(croqui.id);
+        const croquiExists = await this.croquiRepository.getCroquiById(croqui.id);
         if (!croquiExists) {
             throw new Error("Croqui não encontrado");
         }
-        await this.croquiRepository.updateCroqui(croqui);
+        const response = this.croquiRepository.updateCroqui(croqui);
+        if (!response) {
+            throw new Error("Erro ao atualizar croqui");
+        }
+        await response;
     }
 
     async deleteCroqui(id: number): Promise<void> {
-        const croquiExists = await this.getCroquiById(id);
+        const croquiExists = await this.croquiRepository.getCroquiById(id);
         if (!croquiExists) {
             throw new Error("Croqui não encontrado");
         }
@@ -63,21 +65,37 @@ export class CroquiService {
     }
 
     async associarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
-        const croquiExists = await this.getCroquiById(croqui_id);
+        if (!via_id || !croqui_id) {
+            throw new Error("Erro na passagem de Ids. Id inválido");
+        }
+        const croquiExists = await this.croquiRepository.getCroquiById(croqui_id);
         if (!croquiExists) {
             throw new Error("Croqui não encontrado");
         }
-        // Validação adicional pode ser necessária aqui para verificar se a via existe
-        await this.croquiRepository.associarCroquiEmVia(croqui_id, via_id);
+        const viaExists = await this.viaRepository.getViaById(via_id);
+        if (!viaExists) {
+            throw new Error("Via não encontrada");
+        }
+        const response = this.croquiRepository.associarCroquiEmVia(croqui_id, via_id);
+        if (!response) {
+            throw new Error("Erro ao associar croqui em via");
+        }
+        await response ;
     }
 
     async desassociarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
-        const croquiExists = await this.getCroquiById(croqui_id);
-        if (!croquiExists) {
-            throw new Error("Croqui não encontrado");
+        if (!via_id || !croqui_id) {
+            throw new Error("Erro na passagem de Ids. Id inválido");
         }
-        // Validação adicional pode ser necessária aqui para verificar se a via existe
-        await this.croquiRepository.desassociarCroquiEmVia(croqui_id, via_id);
+        const croquiViaExiste = await this.croquiRepository.getCroquisIdsByViaId(via_id);
+        if (!croquiViaExiste) {
+            throw new Error("Croqui associado não encontrado para esta via");
+        }
+        const response = this.croquiRepository.desassociarCroquiEmVia(croqui_id, via_id);
+        if (!response) {
+            throw new Error("Erro ao desassociar croqui em via");
+        }
+        await response;
     }
 
     async getCroquisIdsByViaId(via_id: number): Promise<number[] | null> {

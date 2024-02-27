@@ -6,12 +6,14 @@ export class Usuario {
     id: number;
     nome: string;
     email: string;
+    password: string;
     fotoPerfil?: string;
 
-    constructor(id: number, nome: string, email: string, fotoPerfil?: string) {
+    constructor(id: number, nome: string, email: string, password: string,fotoPerfil?: string) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.password = password;
         this.fotoPerfil = fotoPerfil;
     }
 

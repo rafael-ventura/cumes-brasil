@@ -9,9 +9,11 @@ import ColecaoRouter from './ColecaoRouter';
 import EscaladaRouter from './EscaladaRouter';
 import {ConexaoController} from "../Controllers/ConexaoController";
 import {ConexaoService} from "../../Application/services/ConexaoService";
+import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
 
 const routes = Router();
 
+routes.use(authenticateToken);
 
 routes.use('/vias', ViaRouter);
 routes.use('/fontes', FonteRouter);

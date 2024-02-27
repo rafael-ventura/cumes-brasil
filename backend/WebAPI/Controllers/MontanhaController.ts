@@ -70,6 +70,9 @@ export class MontanhaController {
             res.status(201).json({message: "Montanha criada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
+                if (error.message === "Fonte não encontrada") {
+                    return res.status(400).json({error: error.message});
+                }
                 res.status(500).json({error: error.message});
             } else {
                 res.status(500).json({error: "Ocorreu um erro desconhecido em controller createMontanha"});
@@ -91,6 +94,8 @@ export class MontanhaController {
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Montanha não encontrada") {
+                    return res.status(400).json({error: error.message});
+                }else if (error.message === "Fonte não encontrada") {
                     return res.status(400).json({error: error.message});
                 }
                 res.status(500).json({error: error.message});

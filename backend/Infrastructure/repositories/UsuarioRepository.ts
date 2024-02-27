@@ -8,7 +8,7 @@ export class UsuarioRepository {
         this.db = db;
     }
 
-    async getUsuarioById(id: number): Promise<Usuario | null> {
+    async getById(id: number): Promise<Usuario | null> {
         return new Promise(async (resolve, reject) => {
             try {
                 const usuarioRow = await new Promise<any>((resolve, reject) => {
@@ -41,7 +41,7 @@ export class UsuarioRepository {
     }
 
 
-    async getUsuarios(): Promise<Usuario[] | null> {
+    async getAll(): Promise<Usuario[] | null> {
         return new Promise(async (resolve, reject) => {
                 try {
                     const usuariosRows = await new Promise<any[]>((resolve, reject) => {
@@ -72,7 +72,7 @@ export class UsuarioRepository {
         );
     }
 
-    async createUsuario(usuario: Usuario): Promise<void> {
+    async create(usuario: Usuario): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(`INSERT INTO Usuario (nome, email, fotoPerfil) VALUES (?,?,?)`,
                 [usuario.nome, usuario.email, usuario.fotoPerfil],
@@ -86,7 +86,7 @@ export class UsuarioRepository {
             });
     }
 
-    async updateUsuario(usuario: Usuario): Promise<void> {
+    async update(usuario: Usuario): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(`UPDATE Usuario SET nome = ?, email = ?, fotoPerfil = ? WHERE id = ?`,
                 [usuario.nome, usuario.email, usuario.fotoPerfil, usuario.id],
@@ -100,7 +100,7 @@ export class UsuarioRepository {
         });
     }
 
-    async deleteUsuario(id: number): Promise<void> {
+    async delete(id: number): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.run(`DELETE FROM Usuario WHERE id = ?`,
                 [id],
@@ -112,5 +112,28 @@ export class UsuarioRepository {
                     resolve();
                 });
         });
+    }
+
+    async findByEmail(email: string) {
+        return new Promise<Usuario | null>((resolve, reject) => {
+            this.db.get(`SELECT * FROM Usuario WHERE email = ?`, [email], (err, user: Usuario) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (!user) {
+                        resolve(null);
+                        return;
+                    }
+                    const usuario = new Usuario(
+                        user.id,
+                        user.nome,
+                        user.email,
+                        user.fotoPerfil,
+                    );
+                    resolve(usuario);
+                }
+            });
+        });
+
     }
 }

@@ -1,5 +1,5 @@
-import {Database} from "sqlite3";
-import {Croqui} from "../../Domain/models/Croqui";
+import { Database } from "sqlite3";
+import { Croqui } from "../../Domain/models/Croqui";
 
 export class CroquiRepository {
     private db: Database;
@@ -18,19 +18,19 @@ export class CroquiRepository {
                         reject(err);
                         return;
                     }
-                    if (row) {
-                        const croqui = new Croqui(
-                            row.id,
-                            row.nome,
-                            row.imagemUrl,
-                            row.autor,
-                            row.descricao,
-                            row.fonte_id
-                        );
-                        resolve(croqui);
-                    } else {
+                    if (!row) {
                         resolve(null);
+                        return;
                     }
+                    const croqui = new Croqui(
+                        row.id,
+                        row.nome,
+                        row.imagemUrl,
+                        row.autor,
+                        row.descricao,
+                        row.fonte_id
+                    );
+                    resolve(croqui);
                 }
             );
         });
