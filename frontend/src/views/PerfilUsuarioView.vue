@@ -1,10 +1,9 @@
 <template>
   <div>
-    <v-card>
+    <v-card align="center" justify="center" max-width="3000">
       <v-card-title>Perfil do Usuario</v-card-title>
-      <v-card-subtitle>Informações do Usuario</v-card-subtitle>
       <br>
-      <v-card>
+      <v-card align="center">
         <v-avatar size="150" class="mx-auto" color="grey">
           <v-img
             src="https://cdn.vuetifyjs.com/images/john.jpg"
@@ -15,11 +14,17 @@
       </v-card>
       <v-card-text>
         Nome: {{ nome }}<br>
+        <v-divider inset></v-divider>
         Email: {{ email }}<br>
+        <v-divider inset></v-divider>
         Data de Nascimento: {{ dataNascimento }}<br>
+        <v-divider inset></v-divider>
         Descrição: {{ descricao }}<br>
+        <v-divider inset></v-divider>
         Clubes: {{ clubes }}<br>
+        <v-divider inset></v-divider>
         Vias Escaladas: {{ viasEscaladas }}<br>
+        <v-divider inset></v-divider>
       </v-card-text>
     </v-card>
   </div>
