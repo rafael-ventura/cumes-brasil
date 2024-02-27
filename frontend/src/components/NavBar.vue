@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation v-model="value" color="teal" grow>
+  <v-bottom-navigation bg-color="secondary" v-model="value" grow>
     <v-btn router to="/">
       <v-icon>mdi-home-account</v-icon>
       Home
