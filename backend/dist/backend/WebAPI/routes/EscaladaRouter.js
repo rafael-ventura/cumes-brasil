@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const db_1 = __importDefault(require("../../Infrastructure/config/db"));
+const EscaladaRepository_1 = require("../../Infrastructure/repositories/EscaladaRepository");
+const EscaladaService_1 = require("../../Application/services/EscaladaService");
+const EscaladaController_1 = require("../Controllers/EscaladaController");
+const UsuarioService_1 = require("../../Application/services/UsuarioService");
+const UsuarioRepository_1 = require("../../Infrastructure/repositories/UsuarioRepository");
+const usuarioService = new UsuarioService_1.UsuarioService(new UsuarioRepository_1.UsuarioRepository(db_1.default));
+const escaladaService = new EscaladaService_1.EscaladaService(new EscaladaRepository_1.EscaladaRepository(db_1.default));
+const escaladaController = new EscaladaController_1.EscaladaController(escaladaService, usuarioService);
+const EscaladaRouter = (0, express_1.Router)();
+EscaladaRouter.get('/:id', escaladaController.getEscaladaById);
+EscaladaRouter.get('/', escaladaController.getAllEscalada);
+EscaladaRouter.post('/', escaladaController.createEscalada);
+EscaladaRouter.put('/', escaladaController.updateEscalada);
+EscaladaRouter.delete('/:id', escaladaController.deleteEscalada);
+EscaladaRouter.get('/usuario/:usuarioId', escaladaController.getEscaladasDoUsuario);
+exports.default = EscaladaRouter;
