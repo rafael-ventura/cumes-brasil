@@ -1,32 +1,16 @@
 <template>
-  <nav-bar/>
-  <router-view/>
+  <v-app>
+    <AppBar/>
+    <v-main>
+      <v-container fill-width>
+        <router-view/>
+      </v-container>
+    </v-main>
+
+    <nav-bar/>
+  </v-app>
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
-<script setup lang="ts">
-
+<script setup>
+import AppBar from "@/components/AppBar.vue";
 import NavBar from "@/components/NavBar.vue";
-
 </script>

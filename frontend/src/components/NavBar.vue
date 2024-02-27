@@ -1,25 +1,32 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-  <div class="nav-bar">
-    <nav>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/signup">Sign Up</router-link></li>
-        <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/recover">Recuperar Senha</router-link></li>
-        <li><router-link to="/vias">Explorar Vias</router-link></li>
-        <li><router-link to="/vias">Via</router-link></li>
-        <li><router-link to="/colecoes">Explorar Coleções</router-link></li>
-        <li><router-link to="/colecoes">Coleção</router-link></li>
+  <v-bottom-navigation v-model="value" color="teal" grow>
+    <v-btn router to="/">
+      <v-icon>mdi-home-account</v-icon>
+      Home
+    </v-btn>
 
-      </ul>
-    </nav>
-  </div>
+    <v-btn router to="/vias">
+      <v-icon>mdi-carabiner</v-icon>
+      Vias
+    </v-btn>
+
+    <v-btn router to="/colecoes">
+      <v-icon>mdi-bookmark-multiple</v-icon>
+      Colecoes
+    </v-btn>
+
+    <v-btn router to="/perfil">
+      <v-icon>mdi-account</v-icon>
+      Perfil
+    </v-btn>
+  </v-bottom-navigation>
 </template>
 
-<style scoped>
+<script>
+export default {
+  data: () => ({ value: 1 })
+};
+</script>
 
+<style scoped>
 </style>
