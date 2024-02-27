@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+// Adiciona uma propriedade personalizada 'user' à definição de tipo 'Request'
+declare global {
+    namespace Express {
+        interface Request {
+            user: any;
+        }
+    }
+}
+
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
     const token = req.headers['authorization'];
 
