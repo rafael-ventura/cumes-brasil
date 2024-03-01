@@ -21,20 +21,6 @@
       >
       </v-text-field>
 
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Senha
-
-        <a
-          class="text-caption text-decoration-none text-blue"
-          href="/reset-password"
-          rel="noopener noreferrer"
-          target="_blank"
-
-        >
-          Esqueci minha senha
-        </a>
-      </div>
-
       <v-text-field
         :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
         :type="visible ? 'text' : 'password'"
@@ -46,7 +32,23 @@
         v-model="password"
         required
       >
+        <template v-slot:append>
+          <v-btn icon @click="visible = !visible">
+            <v-icon :color="visible ? 'blue' : ''">{{ visible ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+          </v-btn>
+        </template>
       </v-text-field>
+
+      <v-divider class="my-4"></v-divider>
+
+      <a
+        class="text-caption text-decoration-none text-blue"
+        href="/reset-password"
+        rel="noopener noreferr er"
+        target="_blank"
+      >
+        Esqueci minha senha
+      </a>
 
       <v-btn
         block
