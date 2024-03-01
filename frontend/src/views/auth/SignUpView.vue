@@ -1,7 +1,7 @@
 <template>
   <div class="sign-up">
     <h1>Sign Up</h1>
-    <form>
+    <form @submit.prevent="register">
       <div class="form-group">
         <label for="nome">Nome</label>
         <input type="text" id="nome" v-model="nome" required>
@@ -17,14 +17,26 @@
   </div>
 </template>
 
-<script>
-export default {
-  data () {
-    return {
-      nome: "",
-      email: "",
-      senha: ""
-    };
+<script setup>
+import axios from 'axios';
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+let nome = '';
+let email = '';
+let senha = '';
+
+async function register() {
+  try {
+    const response = await axios.post('http://localhost:3000/register', {
+      nome,
+      email,
+      senha
+    });
+    console.log('User registered:', response.data);
+    await router.push('/login');
+  } catch (error) {
+    console.error('Registration failed:', error);
   }
-};
+}
 </script>

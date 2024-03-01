@@ -17,6 +17,7 @@
         variant="outlined"
         @input="maskEmail"
         v-model="email"
+        required
       >
       </v-text-field>
 
@@ -43,6 +44,7 @@
         variant="outlined"
         @click:append-inner="visible = !visible"
         v-model="password"
+        required
       >
       </v-text-field>
 
@@ -67,7 +69,7 @@
   </div>
 </template>
 <script setup>
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
 import axios from "axios";
 
