@@ -18,25 +18,25 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import {useRouter} from "vue-router";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
-let nome = '';
-let email = '';
-let senha = '';
+const nome = "";
+const email = "";
+const senha = "";
 
-async function register() {
+async function register () {
   try {
-    const response = await axios.post('http://localhost:3000/register', {
+    const response = await axios.post("http://localhost:3000/register", {
       nome,
       email,
       senha
     });
-    console.log('User registered:', response.data);
-    await router.push('/login');
+    console.log("User registered:", response.data);
+    await router.push("/login");
   } catch (error) {
-    console.error('Registration failed:', error);
+    console.error("Registration failed:", error);
   }
 }
 </script>

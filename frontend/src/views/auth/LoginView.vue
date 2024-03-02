@@ -77,30 +77,30 @@ import axios from "axios";
 
 const router = useRouter();
 const visible = false;
-let email = '';
-let password = '';
+let email = "";
+const password = "";
 
-async function login() {
+async function login () {
   try {
-    const response = await axios.post('http://localhost:3000/login', {
+    const response = await axios.post("http://localhost:3000/login", {
       email,
       password
     });
     const token = response.data.token;
     // Armazenar o token no armazenamento local
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
     // Redirecionar para a próxima página
-    await router.push('/dashboard');
+    await router.push("/dashboard");
   } catch (error) {
-    //TODO: notify pro usuário
-    console.error('Login failed:', error);
+    // TODO: notify pro usuário
+    console.error("Login failed:", error);
   }
 }
 
 // Máscara de email
-async function maskEmail(event) {
+async function maskEmail (event) {
   // Lógica para mascarar o campo de email
   const emailInput = event.target.value;
-  email = emailInput.replace(/./g, '*');
+  email = emailInput.replace(/./g, "*");
 }
 </script>
