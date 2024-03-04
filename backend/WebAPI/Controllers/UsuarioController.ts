@@ -8,7 +8,9 @@ export class UsuarioController {
     constructor(service: UsuarioService) {
         this.service = service;
     }
-    
+
+
+
     /**
      * @route GET /usuarios/:id
      * @group Usuarios - Operações relacionadas a Usuarios
@@ -63,9 +65,10 @@ export class UsuarioController {
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
     createUsuario = async (requisicao: Request, resposta: Response) => {
+        console.log("entrei create")
         try {
-            const usuario: Usuario = requisicao.body;
-            await this.service.createUsuario(usuario);
+            const { nome, email, password } = requisicao.body;
+            await this.service.register(nome, email, password);
             resposta.status(201).json({message: "Usuario criada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {

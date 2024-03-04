@@ -20,15 +20,8 @@ class AuthService {
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) throw new Error('Invalid password');
 
-        return this.generateToken(user.id);
-    }
-
-    async register(email: string, password: string): Promise<void> {
-        const existingUser = await this.userRepository.findByEmail(email);
-        if (existingUser) throw new Error('Email already registered');
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await this.userRepository.create(email, hashedPassword);
+        const token = this.generateToken(user.id.toString());
+        return token; // Retorna o token
     }
 
     generateToken(userId: string): string {

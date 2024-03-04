@@ -1,5 +1,6 @@
 import {Usuario} from "../../Domain/models/Usuario";
 import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
+import bcrypt from "bcrypt";
 
 
 export class UsuarioService {
@@ -17,8 +18,12 @@ export class UsuarioService {
         return this.repository.getAll();
     }
 
-    async createUsuario(usuario: Usuario): Promise<void> {
-        return this.repository.create(usuario);
+    async register(nome: string, email: string, password: string): Promise<void> {
+        const existingUser = await this.repository.findByEmail(email);
+        if (existingUser) throw new Error('Email already registered');
+
+        const passwordHash = await bcrypt.hash(password, 10);
+        await this.repository.create(nome, email, passwordHash);
     }
 
     async updateUsuario(usuario: Usuario): Promise<void> {

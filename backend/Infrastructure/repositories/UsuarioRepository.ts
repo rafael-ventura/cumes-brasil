@@ -72,18 +72,20 @@ export class UsuarioRepository {
         );
     }
 
-    async create(usuario: Usuario): Promise<void> {
+    async create(nome: string, email: string, passwordHash: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Usuario (nome, email, fotoPerfil) VALUES (?,?,?)`,
-                [usuario.nome, usuario.email, usuario.fotoPerfil],
+            this.db.run(
+                `INSERT INTO Usuario (nome, email, password_hash) VALUES (?, ?, ?)`,
+                [nome, email, passwordHash],
                 (err) => {
                     if (err) {
                         reject(err);
                         return;
                     }
                     resolve();
-                });
-            });
+                }
+            );
+        });
     }
 
     async update(usuario: Usuario): Promise<void> {
