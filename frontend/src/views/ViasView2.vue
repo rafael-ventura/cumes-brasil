@@ -1,38 +1,36 @@
-<!-- src/views/ViasView2.vue -->
-
+<!-- ViasView2.vue -->
 <template>
   <div>
-    <h2>Vias</h2>
-    <ul>
-      <li v-for="via in vias" :key="via.id">
-        {{ via.nome }}
-      </li>
-    </ul>
+    <v-card flat title="Vias de Escalada - Versão 2">
+      <v-data-table :headers="headers" :items="vias"></v-data-table>
+    </v-card>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
-import { ViaService } from "../services/viaService";
+<script setup>
+import { ref, onMounted } from "vue";
+import viaService from "@/services/viaService";
 
-export default defineComponent({
-  name: "ViasView2",
-  setup () {
-    const vias = ref<any[]>([]);
-    const viaService = new ViaService();
+const headers = [
+  { title: "Nome", key: "nome" },
+  { title: "Artificial", key: "artificial" },
+  { title: "Extensão (m)", key: "extensao" },
+  { title: "Exposição", key: "exposicao" },
+  { title: "Grau", key: "grau" }
+];
+const vias = ref([]);
 
-    // Carregar as vias ao montar o componente
-    onMounted(async () => {
-      try {
-        vias.value = await viaService.getAll();
-      } catch (error) {
-        console.error(error);
-      }
-    });
-
-    return {
-      vias
-    };
+onMounted(async () => {
+  try {
+    const response = await viaService.getAll();
+    if (response) {
+      console.log("Dados obtidos:", response);
+      vias.value = response;
+    } else {
+      console.error("Dados não encontrados na resposta da API");
+    }
+  } catch (error) {
+    console.error("Erro ao obter lista de vias:", error);
   }
 });
 </script>

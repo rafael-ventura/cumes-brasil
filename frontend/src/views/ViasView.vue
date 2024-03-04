@@ -16,9 +16,11 @@ import { useRouter } from "vue-router";
 import viaService from "@/services/viaService";
 
 const headers = [
-  { text: "Nome", value: "nome" },
-  { text: "Local", value: "local" },
-  { text: "Grau", value: "grau" }
+  { title: "Nome", key: "nome" },
+  { title: "Artificial", key: "artificial" },
+  { title: "Extensão (m)", key: "extensao" },
+  { title: "Exposição", key: "exposicao" },
+  { title: "Grau", key: "grau" }
 ];
 const vias = ref([]);
 const router = useRouter();
@@ -26,7 +28,7 @@ const router = useRouter();
 const showViaDetails = async (via) => {
   try {
     const response = await viaService.getById(via.id);
-    const detalhesVia = response.data;
+    const detalhesVia = response;
     await router.push({
       name: "ViaDetalhada",
       params: { id: via.id, detalhes: detalhesVia }
@@ -39,7 +41,7 @@ const showViaDetails = async (via) => {
 onMounted(async () => {
   try {
     const response = await viaService.getAll();
-    vias.value = response.data;
+    vias.value = response;
   } catch (error) {
     console.error("Erro ao obter lista de vias:", error);
   }
