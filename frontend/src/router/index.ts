@@ -46,6 +46,7 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+//TODO: descomentar quando ajustar o authenticate !!!
 // router.beforeEach((to, from, next) => {
 //   if (to.meta.requiresAuth && !authService.isAuthenticated()) {
 //     next({ name: "login" });
