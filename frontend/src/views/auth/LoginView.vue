@@ -1,106 +1,58 @@
 <template>
   <div>
-    <v-img class="mx-auto my-6" max-width="228"
-           src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg" />
+    <div class="mx-auto my-6">
+      <img src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg" alt="Vuetify Logo"
+           style="max-width: 228px;">
+    </div>
 
-    <v-card class="mx-auto pa-12 pb-8"
-            elevation="8"
-            max-width="448"
-            rounded="lg"
+    <div class="mx-auto pa-12 pb-8"
+         style="box-shadow: 0px 3px 6px #00000029; max-width: 448px; border-radius: 12px;"
     >
       <div class="text-subtitle-1 text-medium-emphasis">Entrar</div>
 
-      <v-text-field
-        density="compact"
-        placeholder="Email"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-        @input="maskEmail"
-        v-model="email"
-        required
-      >
-      </v-text-field>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" v-model="email" class="form-control" placeholder="Email" required ref="emailInput">
+      </div>
 
-      <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
-        density="compact"
-        placeholder="Sua senha"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible = !visible"
-        v-model="password"
-        required
-      >
-        <template v-slot:append>
-          <v-btn icon @click="visible = !visible">
-            <v-icon :color="visible ? 'blue' : ''">{{ visible ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
-          </v-btn>
-        </template>
-      </v-text-field>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" v-model="password" class="form-control" placeholder="Sua senha" required ref="passwordInput">
+      </div>
 
-      <v-divider class="my-4"></v-divider>
+      <div class="my-4">
+        <a href="/reset-password" class="text-caption text-decoration-none text-blue" target="_blank"
+           rel="noopener noreferrer">Esqueci minha senha</a>
+      </div>
 
-      <a
-        class="text-caption text-decoration-none text-blue"
-        href="/reset-password"
-        rel="noopener noreferr er"
-        target="_blank"
-      >
-        Esqueci minha senha
-      </a>
+      <button @click="login" class="btn btn-primary btn-block mb-8" :disabled="!email || !password">Log In</button>
 
-      <v-btn
-        block
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="tonal"
-        @click="login"
-        :disabled="!email || !password"
-      >
-        Log In
-      </v-btn>
-
-      <v-card-text class="text-center">
+      <div class="text-center">
         <span class="text-caption mr-2">Não tem conta?</span>
         <router-link to="/signup" class="text-blue text-decoration-none">Criar conta</router-link>
-      </v-card-text>
-    </v-card>
+      </div>
+    </div>
     <nav-bar/>
   </div>
 </template>
-<script setup>
+
+<script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import NavBar from "@/components/NavBar.vue";
-import axios from "axios";
+import authenticateService from "@/services/authenticateService";
 
 const router = useRouter();
-const visible = false;
-let email = "";
-const password = "";
+const email = ref("");
+const password = ref("");
 
-async function login () {
+async function login (): Promise<void> {
   try {
-    const response = await axios.post("http://localhost:3000/login", {
-      email,
-      password
-    });
-    const token = response.data.token;
-    // Armazenar o token no armazenamento local
-    localStorage.setItem("token", token);
-    // Redirecionar para a próxima página
-    await router.push("/dashboard");
+    const response = await authenticateService.login(email.value, password.value);
+    const token: string = response.data.token;
+    localStorage.setItem("authToken", token);
+    await router.push("/");
   } catch (error) {
-    // TODO: notify pro usuário
     console.error("Login failed:", error);
   }
-}
-
-// Máscara de email
-async function maskEmail (event) {
-  // Lógica para mascarar o campo de email
-  const emailInput = event.target.value;
-  email = emailInput.replace(/./g, "*");
 }
 </script>

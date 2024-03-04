@@ -11,9 +11,9 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import viaService from "@/services/viaService";
 
 const headers = [
   { text: "Nome", value: "nome" },
@@ -25,9 +25,7 @@ const router = useRouter();
 
 const showViaDetails = async (via) => {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/vias/${via.id}`
-    );
+    const response = await viaService.getById(via.id);
     const detalhesVia = response.data;
     await router.push({
       name: "ViaDetalhada",
@@ -40,7 +38,7 @@ const showViaDetails = async (via) => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/vias");
+    const response = await viaService.getAll();
     vias.value = response.data;
   } catch (error) {
     console.error("Erro ao obter lista de vias:", error);

@@ -7,25 +7,10 @@ import PerfilUsuarioView from "../views/PerfilUsuarioView.vue";
 
 const userRoutes: Array<RouteRecordRaw> = [
   {
-    path: "/signup",
-    name: "signup",
-    component: SignUpView
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: LoginView
-  },
-  {
-    path: "/recover",
-    name: "recover",
-    component: RedefinirSenhaView
-  },
-
-  {
     path: "/perfil",
     name: "perfil",
-    component: PerfilUsuarioView
+    component: PerfilUsuarioView,
+    meta: { requiresAuth: true }
   }
 ];
 

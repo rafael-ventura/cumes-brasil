@@ -7,12 +7,14 @@ const colecaoRoutes: Array<RouteRecordRaw> = [
   {
     path: "/colecoes",
     name: "colecoes",
-    component: ColecoesView
+    component: ColecoesView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/colecoes/:id",
     name: "colecaoDetalhada",
-    component: ColecaoDetalhadaView
+    component: ColecaoDetalhadaView,
+    meta: { requiresAuth: true }
   }
 ];
 

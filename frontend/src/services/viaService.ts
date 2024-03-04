@@ -3,7 +3,7 @@
 import apiClient from "./apiService";
 
 export class ViaService {
-  async getViaById (id: number) {
+  async getById (id: number) {
     try {
       const response = await apiClient.get(`/vias/${id}`);
       return response.data;
@@ -12,7 +12,7 @@ export class ViaService {
     }
   }
 
-  async getAllVias () {
+  async getAll () {
     try {
       const response = await apiClient.get("/vias");
       return response.data;
@@ -21,13 +21,13 @@ export class ViaService {
     }
   }
 
-  async createVia (via: any) {
+  async create (via: any) {
     try {
       await apiClient.post("/vias", via);
     } catch (error: any) { // Definindo o tipo como 'any'
       throw new Error(error.response.data.error || "Erro desconhecido ao criar via");
     }
   }
-
-  // Métodos para atualizar e deletar vias podem ser implementados de forma similar
 }
+
+export default new ViaService();

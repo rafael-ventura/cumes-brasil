@@ -19,14 +19,20 @@
       <v-icon>mdi-account</v-icon>
       Perfil
     </v-btn>
+
+    <v-btn v-if="isAuthenticated" @click="logout">Sair</v-btn>
   </v-bottom-navigation>
 </template>
 
-<script>
-export default {
-  data: () => ({ value: 1 })
-};
-</script>
+<script setup>
+import authenticateService from "@/services/authenticateService";
+import { useRouter } from "vue-router";
 
-<style scoped>
-</style>
+const router = useRouter();
+const isAuthenticated = authenticateService.isAuthenticated();
+
+function logout () {
+  authenticateService.logout();
+  router.push("/login"); // Redireciona para a página de login após logout
+}
+</script>

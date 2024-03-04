@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS Usuario (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    fotoPerfil TEXT
+    fotoPerfil TEXT,
+    password_hash TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Colecao (

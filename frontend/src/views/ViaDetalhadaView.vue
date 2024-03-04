@@ -13,19 +13,18 @@
 
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 const via = ref(null);
 const router = useRouter();
-const route = useRoute();
 
 const loadViaDetails = async () => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/vias/${route.params.id}`);
+    const response = await axios.get(`http://localhost:3000/api/vias/${router.params.id}`);
     via.value = response.data;
   } catch (error) {
-    console.error('Erro ao obter detalhes da via:', error);
+    console.error("Erro ao obter detalhes da via:", error);
   }
 };
 

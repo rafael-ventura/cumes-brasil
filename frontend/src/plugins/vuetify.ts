@@ -10,7 +10,7 @@ const vuetify = createVuetify({
     defaultSet: "mdi"
   },
   theme: {
-    defaultTheme: 'dark'
+    defaultTheme: "dark"
   }
 });
 

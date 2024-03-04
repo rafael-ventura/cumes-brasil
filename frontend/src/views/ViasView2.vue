@@ -24,7 +24,7 @@ export default defineComponent({
     // Carregar as vias ao montar o componente
     onMounted(async () => {
       try {
-        vias.value = await viaService.getAllVias();
+        vias.value = await viaService.getAll();
       } catch (error) {
         console.error(error);
       }

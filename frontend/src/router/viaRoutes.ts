@@ -8,17 +8,20 @@ const viasRoutes: Array<RouteRecordRaw> = [
   {
     path: "/vias",
     name: "vias",
-    component: ViasView
+    component: ViasView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/vias/:id",
     name: "viaDetalhada",
-    component: ViaDetalhadaView
+    component: ViaDetalhadaView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/vias2",
     name: "vias2",
-    component: ViasView2
+    component: ViasView2,
+    meta: { requiresAuth: true }
   }
 ];
 
