@@ -32,5 +32,7 @@ ViaRouter.post('/', viaController.createVia);
 ViaRouter.put('/:id', viaController.updateVia);
 ViaRouter.delete('/:id', viaController.deleteVia);
 ViaRouter.get('/:id/croquis', viaController.getCroquisByViaId);
+ViaRouter.get('/search', viaController.searchRoutes);
+
 
 export default ViaRouter;

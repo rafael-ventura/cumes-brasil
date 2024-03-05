@@ -178,4 +178,29 @@ export class ViaService {
         }
         return croquis;
     }
+
+    async searchVias(query: any): Promise<Via[]> {
+        const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;
+
+        let sqlQuery = 'SELECT * FROM Via WHERE 1=1';
+
+        if (searchQuery) {
+            sqlQuery += ` AND nome LIKE '%${searchQuery}%'`;
+        }
+
+        if (selectedMountain) {
+            sqlQuery += ` AND montanha_id = ${selectedMountain}`;
+        }
+
+        if (selectedDifficulty) {
+            sqlQuery += ` AND grau = '${selectedDifficulty}'`;
+        }
+
+        if (selectedExposure) {
+            sqlQuery += ` AND exposicao = '${selectedExposure}'`;
+        }
+
+        const results = await this.repository.query(sqlQuery);
+        return results;
+    }
 }

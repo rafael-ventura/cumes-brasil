@@ -165,4 +165,14 @@ export class ViaController {
 			return res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getCroquisByViaId" });
 		}
 	};
+
+	//metodo para fazer a busca de rotas a partir do componente de busca
+	searchRoutes = async (req: Request, res: Response) => {
+		try {
+			const results = await this.service.searchVias(req.query);
+			res.json(results);
+		} catch (error) {
+			res.status(500).json({ error: 'An error occurred while searching for routes.' });
+		}
+	};
 }
