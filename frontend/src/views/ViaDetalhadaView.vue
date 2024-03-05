@@ -14,7 +14,6 @@
         <p><strong>Data:</strong> {{ via.data }}</p>
         <p><strong>Montanha:</strong> {{ via.montanha_id.nome }}</p>
         <p><strong>Face:</strong> {{ via.face_id.nome }}</p>
-        <p><strong>Via Principal ID:</strong> {{ via.via_principal_id }}</p>
         <p><strong>Fonte:</strong> {{ via.fonte_id.autor }}</p>
         <!-- Aqui você pode adicionar os detalhes adicionais conforme necessário -->
       </v-card-text>
