@@ -4,39 +4,38 @@
     <form @submit.prevent="register">
       <div class="form-group">
         <label for="nome">Nome</label>
-        <input type="text" id="nome" v-model="nome" required>
+        <input type="text" id="nome" v-model="nome" ref="nomeInput" required>
         <label for="email">Email</label>
-        <input type="email" id="email" v-model="email" required>
+        <input type="email" id="email" v-model="email" ref="emailInput" required>
       </div>
       <div class="form-group">
         <label for="senha">Senha</label>
-        <input type="password" id="senha" v-model="senha" required>
+        <input type="password" id="senha" v-model="senha" ref="senhaInput" required>
       </div>
+      {{ nome + email + senha }}
       <button type="submit">Cadastrar</button>
     </form>
   </div>
 </template>
 
 <script setup>
-import axios from 'axios';
-import {useRouter} from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import UserService from "@/services/userService";
 
+const userService = new UserService();
 const router = useRouter();
-let nome = '';
-let email = '';
-let senha = '';
+const nome = ref("");
+const email = ref("");
+const senha = ref("");
 
-async function register() {
+async function register () {
   try {
-    const response = await axios.post('http://localhost:3000/register', {
-      nome,
-      email,
-      senha
-    });
-    console.log('User registered:', response.data);
-    await router.push('/login');
+    const response = await userService.create(nome.value, email.value, senha.value);
+    console.log("User registered:", response.data);
+    await router.push("/login");
   } catch (error) {
-    console.error('Registration failed:', error);
+    console.error("Registration failed:", error);
   }
 }
 </script>

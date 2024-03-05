@@ -10,11 +10,12 @@ import EscaladaRouter from './EscaladaRouter';
 import {ConexaoController} from "../Controllers/ConexaoController";
 import {ConexaoService} from "../../Application/services/ConexaoService";
 import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
+import AuthenticateRouter from "./AuthenticateRouter";
 
 const routes = Router();
+routes.use('', AuthenticateRouter);
 
-routes.use(authenticateToken);
-
+//routes.use(authenticateToken); // TODO: descomentar quando authenticacao estiver ok !
 routes.use('/vias', ViaRouter);
 routes.use('/fontes', FonteRouter);
 routes.use('/montanhas', MontanhaRouter);

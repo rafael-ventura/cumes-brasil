@@ -1,15 +1,21 @@
 // routes/auth.routes.ts
 
-import express from 'express';
+import { Router } from 'express';
 import AuthController from "../Controllers/AuthenticateController";
+import {UsuarioController} from "../Controllers/UsuarioController";
+import {UsuarioService} from "../../Application/services/UsuarioService";
+import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
+import dbConnection from "../../Infrastructure/config/db";
 
-const router = express.Router();
+const AuthenticateRouter = Router();
 const authController = new AuthController();
+const usuarioService = new UsuarioService(new UsuarioRepository(dbConnection));
+const usuarioController = new UsuarioController(usuarioService);
 
 // Rota de login
-router.post('/login', authController.login);
+AuthenticateRouter.post('/login', authController.login);
 
 // Rota de registro
-router.post('/register', authController.register);
+AuthenticateRouter.post('/register', usuarioController.createUsuario);
 
-export default router;
+export default AuthenticateRouter;

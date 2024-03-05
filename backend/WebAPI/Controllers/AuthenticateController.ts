@@ -14,17 +14,7 @@ class AuthController {
         try {
             const { email, password } = req.body;
             const token = await this.authService.login(email, password);
-            res.json({ token });
-        } catch (error) {
-            res.status(400).json({ message: error });
-        }
-    }
-
-    async register(req: Request, res: Response) {
-        try {
-            const { email, password } = req.body;
-            await this.authService.register(email, password);
-            res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
+            res.json({ token }); // Retorna o token gerado
         } catch (error) {
             res.status(400).json({ message: error });
         }

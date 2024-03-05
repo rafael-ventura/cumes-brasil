@@ -1,19 +1,24 @@
+// routes/index.ts
+
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import SignUpView from "../views/auth/SignUpView.vue";
-import LoginView from "../views/auth/LoginView.vue";
-import RedefinirSenhaView from "../views/auth/RedefinirSenhaView.vue";
-import ViasView from "../views/ViasView.vue";
-import ViaDetalhadaView from "../views/ViaDetalhadaView.vue";
-import ColecoesView from "../views/ColecoesView.vue";
-import ColecaoDetalhadaView from "../views/ColecaoDetalhadaView.vue";
-import PerfilUsuarioView from "../views/PerfilUsuarioView.vue";
+import userRoutes from "./userRoutes";
+import viasRoutes from "./viaRoutes";
+import colecaoRoutes from "./colecaoRoutes";
+import SignUpView from "@/views/auth/SignUpView.vue";
+import LoginView from "@/views/auth/LoginView.vue";
+import RedefinirSenhaView from "@/views/auth/RedefinirSenhaView.vue";
+import authService from "@/services/authenticateService";
 
 const routes: Array<RouteRecordRaw> = [
+  ...userRoutes,
+  ...viasRoutes,
+  ...colecaoRoutes,
   {
     path: "/",
     name: "home",
-    component: HomeView
+    component: HomeView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/signup",
@@ -29,31 +34,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/recover",
     name: "recover",
     component: RedefinirSenhaView
-  },
-  {
-    path: "/vias",
-    name: "vias",
-    component: ViasView
-  },
-  {
-    path: "/vias/:id",
-    name: "viaDetalhada",
-    component: ViaDetalhadaView
-  },
-  {
-    path: "/colecoes",
-    name: "colecoes",
-    component: ColecoesView
-  },
-  {
-    path: "/colecoes/:id",
-    name: "colecaoDetalhada",
-    component: ColecaoDetalhadaView
-  },
-  {
-    path: "/perfil",
-    name: "perfil",
-    component: PerfilUsuarioView
   }
 ];
 
@@ -61,5 +41,18 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 });
+
+router.beforeEach((to, from, next) => {
+  next();
+});
+
+//TODO: descomentar quando ajustar o authenticate !!!
+// router.beforeEach((to, from, next) => {
+//   if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+//     next({ name: "login" });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

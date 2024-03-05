@@ -98,5 +98,5 @@
   </v-container>
 </template>
 <script setup>
-const variants = ['elevated', 'flat', 'tonal', 'outlined'];
+const variants = ["elevated", "flat", "tonal", "outlined"];
 </script>
