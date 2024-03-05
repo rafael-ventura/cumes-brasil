@@ -36,7 +36,7 @@ const goViaDetalhadaView = async (event, rowData) => {
 
 onMounted(async () => {
   try {
-    const response = await viaService.getAll();
+    const response = await viaService.getAllVias();
     vias.value = response;
   } catch (error) {
     console.error("Erro ao obter lista de vias:", error);
