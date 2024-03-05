@@ -53,6 +53,18 @@ export class ViaService {
         } else {
             via.croquis = [];
         }
+        const fonte = await this.fonteService.getFonteById(via.fonte_id);
+        if (fonte) {
+            via.fonte_id = fonte;
+        }
+        const montanha = await this.montanhaService.getMontanhaById(via.montanha_id);
+        if (montanha) {
+            via.montanha_id = montanha;
+        }
+        const face = await this.faceService.getFaceById(via.face_id);
+        if (face) {
+            via.face_id = face;
+        }
 
         return via;
     }

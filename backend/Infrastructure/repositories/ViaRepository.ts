@@ -9,7 +9,7 @@ export class ViaRepository {
         this.db = db;
     }
 
-    async getViaById(id: number): Promise<Via | null> {
+    async getViaById(id: number): Promise<any | null> {
         const query = `SELECT * FROM Via WHERE id = ?`;
         return new Promise((resolve, reject) => {
             this.db.get(query, [id], async (err, row: any) => {
