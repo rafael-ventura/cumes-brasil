@@ -2,12 +2,14 @@
 
 import { Request, Response } from 'express';
 import AuthService from '../../Application/services/AuthenticateService';
+import { createAuthService } from '../../Application/services/AuthenticateService';
 
 class AuthController {
     private authService: AuthService;
 
     constructor() {
-        this.authService = new AuthService();
+        this.authService = createAuthService();
+        this.login = this.login.bind(this);
     }
 
     async login(req: Request, res: Response) {

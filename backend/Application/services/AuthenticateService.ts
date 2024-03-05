@@ -7,7 +7,7 @@ import dbConnection from '../../Infrastructure/config/db';
 
 class AuthService {
     private userRepository: UsuarioRepository;
-    private readonly secretKey: string = process.env.SECRET_KEY || '';
+    private secretKey: string = '';
 
     constructor() {
         this.userRepository = new UsuarioRepository(dbConnection);
@@ -15,27 +15,27 @@ class AuthService {
 
     async login(email: string, password: string): Promise<string> {
         const user = await this.userRepository.findByEmail(email);
-        if (!user) throw new Error('User not found');
+        if (!user) throw new Error('Nenhum usuário com esse Email encontrado');
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) throw new Error('Invalid password');
+        const isValidPassword = await bcrypt.compare(password, user.password_hash);
+        if (!isValidPassword) throw new Error('Senha inválida');
 
-        const token = this.generateToken(user.id.toString());
-        return token; // Retorna o token
+        return this.generateToken(user.id.toString());
     }
 
     generateToken(userId: string): string {
-        return jwt.sign({userId}, this.secretKey);
+        return jwt.sign(userId, this.secretKey);
     }
 
-    verifyToken(token: string): boolean {
-        try {
-            jwt.verify(token, this.secretKey);
-            return true;
-        } catch (error) {
-            return false;
-        }
+    setSecretKey(secretKey: string) {
+        this.secretKey = secretKey;
     }
+}
+
+export function createAuthService() {
+    const authService = new AuthService();
+    authService.setSecretKey(process.env.SECRET_KEY || '');
+    return authService;
 }
 
 export default AuthService;

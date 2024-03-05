@@ -1,11 +1,11 @@
-import express from 'express';
 import * as dotenv from 'dotenv';
+dotenv.config();
+console.log(process.env);
+import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
 import "reflect-metadata";
 import swaggerDocument from "../swagger_output.json";
-
-dotenv.config();
 
 var cors = require('cors')
 const app = express();

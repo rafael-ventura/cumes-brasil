@@ -130,12 +130,12 @@ export class UsuarioRepository {
                         user.id,
                         user.nome,
                         user.email,
+                        user.password_hash,
                         user.fotoPerfil ?? '',
                     );
                     resolve(usuario);
                 }
             });
         });
-
     }
 }

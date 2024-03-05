@@ -14,9 +14,9 @@ import AuthenticateRouter from "./AuthenticateRouter";
 
 const routes = Router();
 routes.use('', AuthenticateRouter);
-
-//routes.use(authenticateToken); // TODO: descomentar quando authenticacao estiver ok !
 routes.use('/vias', ViaRouter);
+
+routes.use(authenticateToken); //Todas as rotas abaixo precisam de autenticação
 routes.use('/fontes', FonteRouter);
 routes.use('/montanhas', MontanhaRouter);
 routes.use('/usuarios', UsuarioRouter);
