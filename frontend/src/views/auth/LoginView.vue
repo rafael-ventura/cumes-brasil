@@ -37,20 +37,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import authenticateService from "@/services/authenticateService";
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+const isAuthenticated = ref(authenticateService.isAuthenticated());
+
+watchEffect(() => {
+  isAuthenticated.value = authenticateService.isAuthenticated();
+});
 
 async function login (): Promise<void> {
   try {
     const response = await authenticateService.login(email.value, password.value);
     const token: string = response.data.token;
     localStorage.setItem("authToken", token);
+    isAuthenticated.value = true;
     await router.push("/");
+    window.location.reload(); // TODO: ver melhor forma de atualizar pagina
   } catch (error) {
     console.error("Login failed:", error);
   }

@@ -12,11 +12,12 @@ class AuthenticateService {
   }
 
   logout () {
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
   }
 
   isAuthenticated () {
     const token = localStorage.getItem("authToken");
+    console.log(!!token);
     return !!token;
   }
 }

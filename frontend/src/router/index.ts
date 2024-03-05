@@ -17,8 +17,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
-    meta: { requiresAuth: true }
+    component: HomeView
   },
   {
     path: "/signup",
@@ -46,13 +45,12 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-//TODO: descomentar quando ajustar o authenticate !!!
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requiresAuth && !authService.isAuthenticated()) {
-//     next({ name: "login" });
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+    next({ name: "login" });
+  } else {
+    next();
+  }
+});
 
 export default router;
