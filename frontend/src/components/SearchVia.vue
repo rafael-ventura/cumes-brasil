@@ -40,17 +40,29 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue';
+import viaService from "@/services/viaService";
 
 const searchQuery = ref('');
 const selectedMountain = ref('');
 const selectedDifficulty = ref('');
 const searchResults = ref([]);
+const selectedExposure = ref('');
 
-const search = () => {
-  // Lógica para realizar a busca no backend
-  // Atualizar searchResults com os resultados da busca
+const search = async () => {
+  try {
+    const response = await viaService.searchVias({
+      searchQuery: searchQuery.value,
+      selectedMountain: selectedMountain.value,
+      selectedDifficulty: selectedDifficulty.value,
+      selectedExposure: selectedExposure.value
+    });
+    searchResults.value = response.data;
+  } catch (error) {
+    console.error('Error searching routes:', error);
+    // Trate os erros de acordo com suas necessidades
+  }
 };
 
 const showDetails = (via) => {

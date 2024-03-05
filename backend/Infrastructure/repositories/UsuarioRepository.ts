@@ -138,4 +138,37 @@ export class UsuarioRepository {
             });
         });
     }
+
+    //get perfil ( retorna nome email e fotoPerfil)
+    async getPerfil(id: number): Promise<Usuario | null> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const usuarioRow = await new Promise<any>((resolve, reject) => {
+                    this.db.get(`SELECT nome, email, fotoPerfil FROM Usuario WHERE id = ?`, [id], (err, row) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(row);
+                        }
+                    });
+                });
+
+                if (!usuarioRow) {
+                    resolve(null);
+                    return;
+                }
+
+                const usuario = new Usuario(
+                    id,
+                    usuarioRow.nome,
+                    usuarioRow.email,
+                    usuarioRow.fotoPerfil,
+                );
+
+                resolve(usuario);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
 }

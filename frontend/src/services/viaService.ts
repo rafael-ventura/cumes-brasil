@@ -29,6 +29,15 @@ export class ViaService {
       throw new Error(error.response.data.error || "Erro desconhecido ao criar via");
     }
   }
+
+  async searchVias (query: any) {
+    try {
+      const response = await apiClient.get("/vias/search", { params: query });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
+    }
+  }
 }
 
 export default new ViaService();

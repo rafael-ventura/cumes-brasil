@@ -11,13 +11,14 @@ declare global {
 }
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
+    const secretKey = process.env.SECRET_KEY;
     const token = req.headers['authorization'];
 
     if (!token) {
         return res.status(401).json({ message: 'Token not provided' });
     }
 
-    jwt.verify(token, '8c7515be3e2a107dc0cf543889f045fb7df3177209ebfd0a2b966b6b6d9eb4d7', (err, decoded) => {
+    jwt.verify(token, secretKey as string, (err, decoded) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid token' });
         }
