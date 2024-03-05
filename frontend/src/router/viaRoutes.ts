@@ -1,4 +1,4 @@
-// authRoutes.ts
+// viaRoutes.ts
 import { RouteRecordRaw } from "vue-router";
 import ViasView from "../views/ViasView.vue";
 import ViaDetalhadaView from "../views/ViaDetalhadaView.vue";
@@ -13,14 +13,12 @@ const viasRoutes: Array<RouteRecordRaw> = [
   {
     path: "/vias/:id",
     name: "viaDetalhada",
-    component: ViaDetalhadaView,
-    meta: { requiresAuth: true }
+    component: ViaDetalhadaView
   },
   {
     path: "/vias2",
     name: "vias2",
-    component: ViasView2,
-    meta: { requiresAuth: true }
+    component: ViasView2
   }
 ];
 

@@ -1,4 +1,4 @@
-// authRoutes.ts
+// userRoutes.ts
 import { RouteRecordRaw } from "vue-router";
 import SignUpView from "../views/auth/SignUpView.vue";
 import LoginView from "../views/auth/LoginView.vue";

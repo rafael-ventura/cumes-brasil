@@ -1,4 +1,4 @@
-// authRoutes.ts
+// colecaoRoutes.ts
 import { RouteRecordRaw } from "vue-router";
 import ColecoesView from "../views/ColecoesView.vue";
 import ColecaoDetalhadaView from "../views/ColecaoDetalhadaView.vue";
