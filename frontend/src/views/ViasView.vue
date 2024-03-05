@@ -4,7 +4,7 @@
       <v-data-table
         :headers="headers"
         :items="vias"
-        @click:row="showViaDetails"
+        @click:row="goViaDetalhadaView"
       ></v-data-table>
     </v-card>
   </div>
@@ -16,6 +16,7 @@ import { useRouter } from "vue-router";
 import viaService from "@/services/viaService";
 
 const headers = [
+  { title: "Id", key: "id" },
   { title: "Nome", key: "nome" },
   { title: "Artificial", key: "artificial" },
   { title: "Extensão (m)", key: "extensao" },
@@ -25,16 +26,11 @@ const headers = [
 const vias = ref([]);
 const router = useRouter();
 
-const showViaDetails = async (via) => {
+const goViaDetalhadaView = async (event, rowData) => {
   try {
-    const response = await viaService.getById(via.id);
-    const detalhesVia = response;
-    await router.push({
-      name: "ViaDetalhada",
-      params: { id: via.id, detalhes: detalhesVia }
-    });
+    await router.push(`/vias/${rowData.item.id}`);
   } catch (error) {
-    console.error("Erro ao obter detalhes da via:", error);
+    console.error("Erro ao redirecionar para detalhes da via:", error);
   }
 };
 
