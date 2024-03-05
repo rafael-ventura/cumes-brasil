@@ -15,13 +15,13 @@ import AuthenticateRouter from "./AuthenticateRouter";
 const routes = Router();
 routes.use('', AuthenticateRouter);
 routes.use('/vias', ViaRouter);
-
-routes.use(authenticateToken); //Todas as rotas abaixo precisam de autenticação
 routes.use('/fontes', FonteRouter);
 routes.use('/montanhas', MontanhaRouter);
-routes.use('/usuarios', UsuarioRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
+
+routes.use(authenticateToken); //Todas as rotas abaixo precisam de autenticação
+routes.use('/usuarios', UsuarioRouter);
 routes.use('/colecoes', ColecaoRouter);
 routes.use('/escaladas', EscaladaRouter);
 

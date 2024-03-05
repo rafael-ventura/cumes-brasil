@@ -3,7 +3,8 @@
 import apiClient from "./apiService";
 
 export class ViaService {
-  async getById (id: number) {
+  // Chamadas da API de vias
+  async getViaById (id: number | string) {
     try {
       const response = await apiClient.get(`/vias/${id}`);
       return response.data;
@@ -12,7 +13,7 @@ export class ViaService {
     }
   }
 
-  async getAll () {
+  async getAllVias () {
     try {
       const response = await apiClient.get("/vias");
       return response.data;
@@ -21,7 +22,7 @@ export class ViaService {
     }
   }
 
-  async create (via: any) {
+  async createVia (via: any) {
     try {
       await apiClient.post("/vias", via);
     } catch (error: any) { // Definindo o tipo como 'any'
