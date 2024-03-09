@@ -13,7 +13,9 @@
       <!-- Dropdown para selecionar o grau de dificuldade -->
       <select v-model="selectedDifficulty">
         <option value="">Qualquer dificuldade</option>
-        <option v-for="difficulty in difficulties" :key="difficulty">{{ difficulty }}</option>
+        <option value="FACIL">Fácil</option>
+        <option value="MEDIO">Médio</option>
+        <option value="DIFICIL">Difícil</option>
       </select>
 
       <!-- Botão para iniciar a busca -->
@@ -30,7 +32,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="via in searchResults" :key="via.id" @click="showDetails(via)">
+      <tr v-for="via in searchResults" :key="via.id" @click="goViaDetalhadaView(via)">
         <td>{{ via.name }}</td>
         <td>{{ via.mountain }}</td>
         <td>{{ via.difficulty }}</td>
@@ -41,14 +43,27 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import viaService from "@/services/viaService";
+import montanhaService from "@/services/montanhaService";
+import router from "@/router";
 
 const searchQuery = ref('');
 const selectedMountain = ref('');
 const selectedDifficulty = ref('');
 const searchResults = ref([]);
 const selectedExposure = ref('');
+let mountains = ref([]);
+
+//onmounted find all montains to preencher dropdown
+onMounted(async () => {
+  try {
+    mountains.value = await montanhaService.getAll();
+  } catch (error) {
+    console.error('Error getting mountains:', error);
+    // Trate os erros de acordo com suas necessidades
+  }
+});
 
 const search = async () => {
   try {
@@ -65,8 +80,12 @@ const search = async () => {
   }
 };
 
-const showDetails = (via) => {
-  // Lógica para exibir detalhes da via
+const goViaDetalhadaView = async (via: { id: any; }) => {
+  try {
+    await router.push(`/vias/${via.id}`);
+  } catch (error) {
+    console.error('Error navigating to route details:', error);
+  }
 };
 </script>
 
