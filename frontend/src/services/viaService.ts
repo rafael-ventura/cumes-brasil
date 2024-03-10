@@ -1,6 +1,7 @@
 // services/ViaService.ts
 
 import apiClient from "./apiService";
+import { ViaModel } from "@/models/viaModel";
 
 export class ViaService {
   // Chamadas da API de vias
@@ -13,7 +14,7 @@ export class ViaService {
     }
   }
 
-  async getAllVias () {
+  async getAllVias (): Promise<ViaModel[]> {
     try {
       const response = await apiClient.get("/vias");
       return response.data;

@@ -13,9 +13,15 @@
       <!-- Dropdown para selecionar o grau de dificuldade -->
       <select v-model="selectedDifficulty">
         <option value="">Qualquer dificuldade</option>
-        <option value="FACIL">Fácil</option>
-        <option value="MEDIO">Médio</option>
-        <option value="DIFICIL">Difícil</option>
+        <option value="I">I</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+        <option value="IV">IV</option>
+        <option value="V">V</option>
+        <!-- with artificial ( a1, a2...)        -->
+        <option value="A1">A1</option>
+        <option value="A2">A2</option>
+        <option value="A3">A3</option>
       </select>
 
       <!-- Botão para iniciar a busca -->
@@ -23,7 +29,7 @@
     </div>
 
     <!-- Tabela para exibir os resultados da busca -->
-    <table class="result-table">
+    <table class="result-table" v-if="searchResults.length">
       <thead>
       <tr>
         <th>Nome da Via</th>
@@ -39,28 +45,34 @@
       </tr>
       </tbody>
     </table>
+    <div v-else>
+      Nenhum resultado encontrado
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from "vue";
 import viaService from "@/services/viaService";
 import montanhaService from "@/services/montanhaService";
 import router from "@/router";
+import { ViaModel } from "@/models/viaModel";
+import { MontanhaModel } from "@/models/montanhaModel";
 
-const searchQuery = ref('');
-const selectedMountain = ref('');
-const selectedDifficulty = ref('');
-const searchResults = ref([]);
-const selectedExposure = ref('');
-let mountains = ref([]);
+const searchQuery = ref("");
+const selectedMountain = ref("");
+const selectedDifficulty = ref("");
+const searchResults = ref<ViaModel[]>([]);
+const selectedExposure = ref("");
+const mountains = ref<MontanhaModel[]>([]);
 
-//onmounted find all montains to preencher dropdown
+// onmounted find all montains to preencher dropdown
 onMounted(async () => {
   try {
+    searchResults.value = await viaService.getAllVias();
     mountains.value = await montanhaService.getAll();
   } catch (error) {
-    console.error('Error getting mountains:', error);
+    console.error("Error getting mountains:", error);
     // Trate os erros de acordo com suas necessidades
   }
 });
@@ -73,18 +85,18 @@ const search = async () => {
       selectedDifficulty: selectedDifficulty.value,
       selectedExposure: selectedExposure.value
     });
-    searchResults.value = response.data;
+    searchResults.value = response.data as ViaModel[];
   } catch (error) {
-    console.error('Error searching routes:', error);
+    console.error("Error searching routes:", error);
     // Trate os erros de acordo com suas necessidades
   }
 };
 
-const goViaDetalhadaView = async (via: { id: any; }) => {
+const goViaDetalhadaView = async (via: ViaModel) => {
   try {
     await router.push(`/vias/${via.id}`);
   } catch (error) {
-    console.error('Error navigating to route details:', error);
+    console.error("Error navigating to route details:", error);
   }
 };
 </script>

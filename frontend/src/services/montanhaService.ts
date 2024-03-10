@@ -1,7 +1,7 @@
 // services/ViaService.ts
 
 import apiClient from "./apiService";
-import {ViaService} from "@/services/viaService";
+import { MontanhaModel } from "@/models/montanhaModel";
 
 export class MontanhaService {
   // Chamadas da API de vias
@@ -14,7 +14,7 @@ export class MontanhaService {
     }
   }
 
-  async getAll () {
+  async getAll (): Promise<MontanhaModel[]> {
     try {
       const response = await apiClient.get("/montanhas");
       return response.data;
