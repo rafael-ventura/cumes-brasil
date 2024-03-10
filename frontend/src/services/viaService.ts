@@ -16,7 +16,9 @@ export class ViaService {
 
   async getAllVias (): Promise<ViaModel[]> {
     try {
+      console.log("Buscando vias");
       const response = await apiClient.get("/vias");
+      console.log("Response:", response.data); // Adicione esta linha
       return response.data;
     } catch (error: any) { // Definindo o tipo como 'any'
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
@@ -32,6 +34,7 @@ export class ViaService {
   }
 
   async searchVias (query: any) {
+    console.log("Query:", query);
     try {
       const response = await apiClient.get("/vias/search", { params: query });
       return response.data;

@@ -26,13 +26,13 @@ const viaController = new ViaController(viaService);
 
 const ViaRouter = Router();
 
+ViaRouter.get('/search', viaController.searchRoutes);
 ViaRouter.get('/:id', viaController.getViaById);
 ViaRouter.get('/', viaController.getAllVia);
 ViaRouter.post('/', viaController.createVia);
 ViaRouter.put('/:id', viaController.updateVia);
 ViaRouter.delete('/:id', viaController.deleteVia);
 ViaRouter.get('/:id/croquis', viaController.getCroquisByViaId);
-ViaRouter.get('/search', viaController.searchRoutes);
 
 
 export default ViaRouter;

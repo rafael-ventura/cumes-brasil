@@ -39,9 +39,9 @@
       </thead>
       <tbody>
       <tr v-for="via in searchResults" :key="via.id" @click="goViaDetalhadaView(via)">
-        <td>{{ via.name }}</td>
-        <td>{{ via.mountain }}</td>
-        <td>{{ via.difficulty }}</td>
+        <td>{{ via.nome }}</td>
+        <td>{{ via.montanha_id }}</td> <!-- Altere 'mountain' para 'montanha_id' -->
+        <td>{{ via.grau }}</td> <!-- Altere 'difficulty' para 'grau' -->
       </tr>
       </tbody>
     </table>
@@ -66,10 +66,11 @@ const searchResults = ref<ViaModel[]>([]);
 const selectedExposure = ref("");
 const mountains = ref<MontanhaModel[]>([]);
 
-// onmounted find all montains to preencher dropdown
 onMounted(async () => {
   try {
-    searchResults.value = await viaService.getAllVias();
+    console.log("Getting mountains and Vias");
+    const allVias = await viaService.getAllVias();
+    searchResults.value = allVias || [];
     mountains.value = await montanhaService.getAll();
   } catch (error) {
     console.error("Error getting mountains:", error);
@@ -78,6 +79,10 @@ onMounted(async () => {
 });
 
 const search = async () => {
+  if (!searchQuery.value && !selectedMountain.value && !selectedDifficulty.value && !selectedExposure.value) {
+    return;
+  }
+
   try {
     const response = await viaService.searchVias({
       searchQuery: searchQuery.value,
@@ -85,7 +90,7 @@ const search = async () => {
       selectedDifficulty: selectedDifficulty.value,
       selectedExposure: selectedExposure.value
     });
-    searchResults.value = response.data as ViaModel[];
+    searchResults.value = response.data ? response.data as ViaModel[] : [];
   } catch (error) {
     console.error("Error searching routes:", error);
     // Trate os erros de acordo com suas necessidades
@@ -126,6 +131,6 @@ const goViaDetalhadaView = async (via: ViaModel) => {
 }
 
 .result-table th {
-  background-color: #f2f2f2;
+  background-color: #d3d3d3;
 }
 </style>
