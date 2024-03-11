@@ -7,6 +7,7 @@ import FaceRouter from "./FaceRouter";
 import CroquiRouter from "./CroquiRouter";
 import ColecaoRouter from './ColecaoRouter';
 import EscaladaRouter from './EscaladaRouter';
+import PerfilRouter from './PerfilRouter';
 import {ConexaoController} from "../Controllers/ConexaoController";
 import {ConexaoService} from "../../Application/services/ConexaoService";
 import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
@@ -20,10 +21,12 @@ routes.use('/montanhas', MontanhaRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
 routes.use('/usuarios', UsuarioRouter);
+routes.use('/perfil/', PerfilRouter);
 
 routes.use(authenticateToken); //Todas as rotas abaixo precisam de autenticação
 routes.use('/colecoes', ColecaoRouter);
 routes.use('/escaladas', EscaladaRouter);
+
 
 const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);

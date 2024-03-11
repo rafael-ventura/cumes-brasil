@@ -39,4 +39,9 @@ export class UsuarioService {
         }
         return this.repository.delete(id);
     }
+
+    //get perfil
+    async getPerfil(id: number): Promise<Usuario | null> {
+        return this.repository.getPerfil(id);
+    }
 }

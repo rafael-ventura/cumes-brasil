@@ -128,4 +128,22 @@ export class UsuarioController {
             }
         }
     }
+
+    //get perfil
+    getPerfil = async (requisicao: Request, resposta: Response) => {
+        try {
+            const userId = requisicao.user.id; // Usar o ID do usuário do token
+            const resultado = await this.service.getPerfil(userId);
+            if (!resultado) {
+                return resposta.status(404).json({message: "Perfil não encontrado."});
+            }
+            resposta.json(resultado);
+        } catch (error) {
+            if (error instanceof Error) {
+                resposta.status(500).json({error: error.message});
+            } else {
+                resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+            }
+        }
+    };
 }

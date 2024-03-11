@@ -28,6 +28,7 @@ class AuthService {
     generateToken(userId: string): string {
         return jwt.sign(userId, this.secretKey);
     }
+    
 
     setSecretKey(secretKey: string) {
         this.secretKey = secretKey;
