@@ -1,10 +1,10 @@
-import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
-import { Via } from "../../Domain/models/Via";
-import { Croqui } from "../../Domain/models/Croqui";
-import { CroquiService } from "./CroquiService";
-import { FonteService } from "./FonteService";
-import { MontanhaService } from "./MontanhaService";
-import { FaceService } from "./FaceService";
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import {Via} from "../../Domain/models/Via";
+import {Croqui} from "../../Domain/models/Croqui";
+import {CroquiService} from "./CroquiService";
+import {FonteService} from "./FonteService";
+import {MontanhaService} from "./MontanhaService";
+import {FaceService} from "./FaceService";
 
 export interface IViaService {
     getViaById(id: number): Promise<Via | null>;
@@ -195,24 +195,28 @@ export class ViaService {
         const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;
 
         let sqlQuery = 'SELECT * FROM Via WHERE 1=1';
+        let parameters: any[] = [];
 
         if (searchQuery) {
-            sqlQuery += ` AND nome LIKE '%${searchQuery}%'`;
+            sqlQuery += ' AND nome LIKE ?';
+            parameters.push(`%${searchQuery}%`);
         }
 
         if (selectedMountain) {
-            sqlQuery += ` AND montanha_id = ${selectedMountain}`;
+            sqlQuery += ' AND montanha_id = ?';
+            parameters.push(selectedMountain);
         }
 
         if (selectedDifficulty) {
-            sqlQuery += ` AND grau = '${selectedDifficulty}'`;
+            sqlQuery += ' AND grau = ?';
+            parameters.push(selectedDifficulty);
         }
 
         if (selectedExposure) {
-            sqlQuery += ` AND exposicao = '${selectedExposure}'`;
+            sqlQuery += ' AND exposicao = ?';
+            parameters.push(selectedExposure);
         }
 
-        const results = await this.repository.query(sqlQuery);
-        return results;
+        return await this.repository.query(sqlQuery, parameters);
     }
 }

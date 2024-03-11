@@ -37,6 +37,7 @@ export class ViaService {
     console.log("Query:", query);
     try {
       const response = await apiClient.get("/vias/search", { params: query });
+      console.log("Response:", response);
       return response.data;
     } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
