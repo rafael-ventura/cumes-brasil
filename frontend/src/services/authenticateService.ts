@@ -17,7 +17,7 @@ class AuthenticateService {
 
   isAuthenticated () {
     const token = localStorage.getItem("authToken");
-    console.log(!!token);
+    console.log("Token: ", !!token);
     return !!token;
   }
 }

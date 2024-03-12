@@ -7,13 +7,11 @@ import {authorizationMiddleware} from "../Middlewares/AuthorizationMiddleware";
 
 const usuarioService = new UsuarioService(new UsuarioRepository(dbConnection));
 const usuarioController = new UsuarioController(usuarioService)
-const authenticateToken = require('../Middlewares/AuthenticateMiddleware');
 
-const UsuarioRouter = Router();
+const PerfilRouter = Router();
 
-UsuarioRouter.get('/:id', usuarioController.getUsuarioById);
-UsuarioRouter.get('/', usuarioController.getAllUsuario);
-UsuarioRouter.put('/:id', usuarioController.updateUsuario);
-UsuarioRouter.delete('/:id', usuarioController.deleteUsuario);
+// perfil do usuario
+PerfilRouter.get('/', authorizationMiddleware, usuarioController.getPerfil);
 
-export default UsuarioRouter;
+
+export default PerfilRouter;

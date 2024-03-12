@@ -27,6 +27,19 @@ class UserService {
       throw new Error("Erro ao registrar: " + error);
     }
   }
+
+  async getPerfil () {
+    try {
+      const response = await apiClient.get(`/perfil`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`
+        }
+      });
+      return response.data;
+    } catch (error: any) { // Definindo o tipo como 'any'
+      throw new Error(error.response.data.error || "Erro desconhecido ao buscar usuario");
+    }
+  }
 }
 
-export default UserService;
+export default new UserService();
