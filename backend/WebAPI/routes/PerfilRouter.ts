@@ -11,7 +11,7 @@ const usuarioController = new UsuarioController(usuarioService)
 const PerfilRouter = Router();
 
 // perfil do usuario
-PerfilRouter.get('/perfil', authorizationMiddleware, usuarioController.getPerfil);
+PerfilRouter.get('/', authorizationMiddleware, usuarioController.getPerfil);
 
 
 export default PerfilRouter;

@@ -22,16 +22,20 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return {"token": token, "userId": user.id};
+        return {"token": token, "userId": user.id, auth: true};
     }
 
     generateToken(userId: string): string {
-        return jwt.sign(userId, this.secretKey);
+        return jwt.sign({userId}, this.secretKey);
     }
     
 
     setSecretKey(secretKey: string) {
         this.secretKey = secretKey;
+    }
+
+    async logout() {
+        return;
     }
 }
 

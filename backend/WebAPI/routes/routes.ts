@@ -21,12 +21,12 @@ routes.use('/montanhas', MontanhaRouter);
 routes.use('/faces', FaceRouter);
 routes.use('/croquis', CroquiRouter);
 routes.use('/usuarios', UsuarioRouter);
-routes.use('/perfil/', PerfilRouter);
+
 
 routes.use(authenticateToken); //Todas as rotas abaixo precisam de autenticação
 routes.use('/colecoes', ColecaoRouter);
 routes.use('/escaladas', EscaladaRouter);
-
+routes.use('/perfil', PerfilRouter);
 
 const internalService = new ConexaoService();
 const conexaoController = new ConexaoController(internalService);

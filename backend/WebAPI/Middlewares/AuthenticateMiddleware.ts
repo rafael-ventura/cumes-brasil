@@ -12,20 +12,20 @@ declare global {
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
     const secretKey = process.env.SECRET_KEY;
-    const token = req.headers['authorization'];
-
-    console.log('Token:', token);
-
-    if (!token) {
-        return res.status(401).json({ message: 'Token not provided' });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Token not provided or invalid' });
     }
-
+    const token = authHeader.split(' ')[1];
     jwt.verify(token, secretKey as string, (err, decoded) => {
-    if (err) {
-        console.error('Erro na verificação do token:', err);
-        return res.status(403).json({ message: 'Invalid token' });
-    }
-    req.user = decoded; // Adiciona o usuário decodificado ao objeto de solicitação para uso posterior
-    next();
-});
+        if (err) {
+            console.error('Erro na verificação do token:', err);
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ message: 'Token expirado' });
+            }
+            return res.status(403).json({ message: 'Invalid token' });
+        }
+        req.user = decoded; // Adiciona o usuário decodificado ao objeto de solicitação para uso posterior
+        next();
+    });
 }

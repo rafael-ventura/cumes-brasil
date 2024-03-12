@@ -28,9 +28,13 @@ class UserService {
     }
   }
 
-  async getPerfil (id: number) {
+  async getPerfil () {
     try {
-      const response = await apiClient.get(`/perfil/${id}`);
+      const response = await apiClient.get(`/perfil`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`
+        }
+      });
       return response.data;
     } catch (error: any) { // Definindo o tipo como 'any'
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar usuario");
@@ -38,4 +42,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export default new UserService();
