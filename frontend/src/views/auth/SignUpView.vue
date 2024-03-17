@@ -23,7 +23,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import UserService from "@/services/userService";
 
-const userService = new UserService();
+const userService = UserService;
 const router = useRouter();
 const nome = ref("");
 const email = ref("");
