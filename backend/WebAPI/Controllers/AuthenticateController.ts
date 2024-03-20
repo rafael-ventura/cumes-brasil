@@ -28,17 +28,7 @@ class AuthController {
         try {
             const { token } = req.body;
             const user = await this.authService.googleLogin(token);
-            console.log('user', user);
             res.json(user);
-        } catch (error) {
-            res.status(400).json({ message: error });
-        }
-    }
-
-    async logout(req: Request, res: Response) {
-        try {
-            this.authService.logout();
-            res.json({ message: 'Logout realizado com sucesso' });
         } catch (error) {
             res.status(400).json({ message: error });
         }

@@ -30,8 +30,6 @@ class AuthService {
     }
 
     async googleLogin(googleToken: string): Promise<any> {
-        console.log("Token do Google recebido no Service:", googleToken);
-
         if (!googleToken) {
             throw new Error('Token do Google não fornecido');
         }
@@ -42,8 +40,6 @@ class AuthService {
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
 
-            console.log("Ticket:", ticket);
-
             if (!ticket) {
                 throw new Error('Ticket não definido');
             }
@@ -53,10 +49,7 @@ class AuthService {
                 throw new Error('Payload não definido');
             }
 
-            console.log("Payload: ", payload);
-
             const userid = payload['sub'];
-            console.log("UserID:", userid);
             const email = payload['email'];
             const name = payload['name'];
 
@@ -67,8 +60,6 @@ class AuthService {
             if (typeof email !== 'string' || typeof name !== 'string') {
                 throw new Error('Email ou nome não definidos no payload');
             }
-
-            console.log("UserID:", userid, "Email:", email, "Name:", name);
 
             // Verificar se o usuário já existe
             let user = await this.userRepository.findByEmail(email);
@@ -85,8 +76,6 @@ class AuthService {
 
             // Gerar um token JWT para o usuário
             const token = this.generateToken(user.id.toString());
-
-            console.log("Token gerado:", token, "UserID:", user.id)
 
             return {"token": token, "userId": user.id, auth: true};
         } catch (error) {

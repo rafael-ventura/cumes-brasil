@@ -32,7 +32,6 @@ const senha = ref("");
 async function register () {
   try {
     const response = await userService.create(nome.value, email.value, senha.value);
-    console.log("User registered:", response.data);
     await router.push("/login");
   } catch (error) {
     console.error("Registration failed:", error);

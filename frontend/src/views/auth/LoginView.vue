@@ -119,7 +119,6 @@ async function loginWithGoogle (idToken: string) {
   try {
     const response = await authenticateService.authenticateWithGoogle(idToken);
     const token = response.data;
-    console.log('Usuário autenticado:', token);
     localStorage.setItem("authToken", token.token);
     isAuthenticated.value = true;
     await router.push("/");
@@ -132,7 +131,6 @@ async function login (): Promise<void> {
   try {
     const response = await authenticateService.login(email.value, password.value);
     const token = response.data.token;
-    console.log('Usuário autenticado:', token);
     localStorage.setItem("authToken", token.token);
     isAuthenticated.value = true;
     await router.push("/");
