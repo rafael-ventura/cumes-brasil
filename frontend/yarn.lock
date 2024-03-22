@@ -7354,6 +7354,16 @@ vue@^3.2.13:
     "@vue/server-renderer" "3.4.20"
     "@vue/shared" "3.4.20"
 
+vue3-google-login@^2.0.26:
+  version "2.0.26"
+  resolved "https://registry.npmjs.org/vue3-google-login/-/vue3-google-login-2.0.26.tgz"
+  integrity sha512-BuTSIeSjINNHNPs+BDF4COnjWvff27IfCBDxK6JPRqvm57lF8iK4B3+zcG8ud6BXfZdyuiDlxletbEDgg4/RFA==
+
+vue3-google-oauth2@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/vue3-google-oauth2/-/vue3-google-oauth2-1.0.7.tgz"
+  integrity sha512-XZv5+IVRLqKrsfm6DamD75e4LPynDt3xpmEw3SQBKfnUvpaIq6YuimOCPoXMfedR6nQHJeZkw62E/ii2disppA==
+
 vuetify@^3.5.5:
   version "3.5.6"
   resolved "https://registry.npmjs.org/vuetify/-/vuetify-3.5.6.tgz"

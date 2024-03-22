@@ -66,7 +66,6 @@ export class UsuarioController {
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
     createUsuario = async (requisicao: Request, resposta: Response) => {
-        console.log("entrei create")
         try {
             const { nome, email, password } = requisicao.body;
             await this.service.register(nome, email, password);

@@ -1,3 +1,5 @@
+// views/auth/LoginView.vue
+
 <template>
   <div>
     <div class="mx-auto my-6">
@@ -61,7 +63,10 @@
       >
         Log In
       </button>
-
+      <v-btn id="gSignIn" color="white" class="mt-3">
+        <v-icon left>mdi-google</v-icon>
+        Login com Google
+      </v-btn>
       <div class="text-center">
         <span class="text-caption mr-2">Não tem conta?</span>
         <router-link to="/signup" class="text-blue text-decoration-none"
@@ -74,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import authenticateService from "../../services/authenticateService";
 
@@ -83,23 +88,55 @@ const email = ref("");
 const password = ref("");
 const isAuthenticated = ref(authenticateService.isAuthenticated());
 
+// Função de callback para lidar com a resposta do Google
+interface GoogleResponse {
+  credential: string;
+}
+
+function handleCredentialResponse (response: GoogleResponse) {
+  const idToken = response.credential;
+  loginWithGoogle(idToken); // Chama loginWithGoogle passando o idToken
+  // Envie o idToken para o seu backend para validação e início de sessão
+}
+
+onMounted(() => {
+  window.google.accounts.id.initialize({
+    client_id: "35450661704-ab1ap5gj3to0tv7mafech2k9mohsbhrl.apps.googleusercontent.com", // Substitua pelo seu Client ID real
+    callback: handleCredentialResponse
+  });
+
+  window.google.accounts.id.renderButton(
+    document.getElementById("gSignIn"),
+    { theme: "outline", size: "medium" }
+  );
+});
+
 watchEffect(() => {
   isAuthenticated.value = authenticateService.isAuthenticated();
 });
 
+async function loginWithGoogle (idToken: string) {
+  try {
+    const response = await authenticateService.authenticateWithGoogle(idToken);
+    const token = response.data;
+    localStorage.setItem("authToken", token.token);
+    isAuthenticated.value = true;
+    await router.push("/");
+  } catch (error) {
+    console.error("Erro ao autenticar com o Google: ", error);
+  }
+}
+
 async function login (): Promise<void> {
   try {
-    const response = await authenticateService.login(
-      email.value,
-      password.value
-    );
-    const token: string = response.data.token;
+    const response = await authenticateService.login(email.value, password.value);
+    const token = response.data.token;
     localStorage.setItem("authToken", token.token);
-    localStorage.setItem("userId", token.userId);
     isAuthenticated.value = true;
     await router.push("/");
   } catch (error) {
     console.error("Login failed:", error);
   }
 }
+
 </script>

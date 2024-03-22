@@ -14,6 +14,7 @@ const usuarioController = new UsuarioController(usuarioService);
 
 // Rota de login
 AuthenticateRouter.post('/login', authController.login);
+AuthenticateRouter.post('/google-login', authController.googleLogin);
 
 // Rota de registro
 AuthenticateRouter.post('/register', usuarioController.createUsuario);

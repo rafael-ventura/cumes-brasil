@@ -39,7 +39,6 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const response = await userService.getPerfil();
-        console.log("Perfil do usuário:", response);
         perfil.value = response; // Use .value para acessar ou modificar o valor de uma ref
       } catch (error) {
         console.error("Erro ao buscar o perfil do usuário:", error);

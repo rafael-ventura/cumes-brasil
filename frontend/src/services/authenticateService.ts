@@ -11,13 +11,20 @@ class AuthenticateService {
     }
   }
 
+  async authenticateWithGoogle (googleTokenId: string) {
+    try {
+      return await apiClient.post("/google-login", { token: googleTokenId }); // Retorna a resposta completa
+    } catch (error) {
+      throw new Error("Erro ao autenticar com o Google: " + error);
+    }
+  }
+
   logout () {
     localStorage.removeItem("authToken");
   }
 
   isAuthenticated () {
     const token = localStorage.getItem("authToken");
-    console.log("Token: ", !!token);
     return !!token;
   }
 }

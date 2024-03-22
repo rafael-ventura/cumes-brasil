@@ -10,6 +10,7 @@ class AuthController {
     constructor() {
         this.authService = createAuthService();
         this.login = this.login.bind(this);
+        this.googleLogin = this.googleLogin.bind(this);
     }
 
     async login(req: Request, res: Response) {
@@ -22,10 +23,12 @@ class AuthController {
         }
     }
 
-    async logout(req: Request, res: Response) {
+
+    async googleLogin(req: Request, res: Response) {
         try {
-            this.authService.logout();
-            res.json({ message: 'Logout realizado com sucesso' });
+            const { token } = req.body;
+            const user = await this.authService.googleLogin(token);
+            res.json(user);
         } catch (error) {
             res.status(400).json({ message: error });
         }
