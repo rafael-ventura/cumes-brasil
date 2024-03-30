@@ -14,3 +14,8 @@
 import AppBar from "@/components/AppBar.vue";
 import NavBar from "@/components/NavBar.vue";
 </script>
+<style lang="scss">
+@import "@/assets/styles";
+
+</style>
+```

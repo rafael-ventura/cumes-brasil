@@ -1,25 +1,27 @@
 <template>
-  <v-bottom-navigation bg-color="secondary" v-model="value" grow>
-    <v-btn router to="/">
+  <v-bottom-navigation v-model="value" grow>
+    <v-btn router to="/" class="btn">
       <v-icon>mdi-home-account</v-icon>
       Home
     </v-btn>
 
-    <v-btn router to="/vias">
+    <v-btn router to="/vias" class="btn">
       <v-icon>mdi-carabiner</v-icon>
       Vias
     </v-btn>
 
-    <v-btn router to="/colecoes">
+    <v-btn router to="/colecoes" class="btn">
       <v-icon>mdi-bookmark-multiple</v-icon>
       Colecoes
     </v-btn>
 
-    <v-btn router to="/perfil">
+    <v-btn router to="/perfil" class="btn">
       <v-icon>mdi-account</v-icon>
       Perfil
     </v-btn>
-    <v-btn v-if="isAuthenticated" @click="logout">Sair</v-btn>
+    <v-btn v-if="isAuthenticated" @click="logout" router to="/login" class="btn">
+      Sair
+    </v-btn>
   </v-bottom-navigation>
 </template>
 
@@ -42,3 +44,25 @@ function logout () {
   router.push("/login"); // Redireciona para a página de login após logout
 }
 </script>
+<style lang="scss">
+@import "@/assets/styles";
+body .v-bottom-navigation {
+  background-color: map-get($colors, 'secondary');
+  .btn {
+    text-decoration: none;
+    color: map-get($colors, 'text-light');
+    .v-btn__overlay {
+      background-color: map-get($colors, 'tertiary');
+      color: map-get($colors, 'text') !important;
+    }
+  }
+  .v-btn {
+    &:hover, &:focus {
+      color: map-get($colors, 'quinary') !important;
+    }
+  }
+  .v-btn:hover {
+    color: map-get($colors, 'quinary') !important;
+  }
+}
+</style>

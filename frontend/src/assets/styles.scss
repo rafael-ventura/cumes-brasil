@@ -1,0 +1,78 @@
+// Definindo cores
+
+$colors: (
+  primary: #216230,
+  secondary: #7d5d3b,
+  tertiary: #3c3425,
+  quaternary: #070708,
+  quinary: #4f6c42,
+  senary: #c3c79e,
+  septenary: #E9EDC4,
+  octonary : #264919,
+  text: #000,
+  text-light: #fff
+);
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+// Funções
+@function color($key) {
+  @return map-get($colors, $key);
+}
+
+// Reset
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Estilos globais
+body {
+  font-family: Arial, sans-serif;
+  background-color: color(septenary);
+  color: color(primary);
+  line-height: 1.6;
+  margin: 0;
+  .v-main {
+    background-color: color(senary);
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: color(quinary);
+}
+
+a {
+  color: color(primary);
+  text-decoration: none;
+  @include transition;
+
+  &:hover {
+    color: color(senary);
+  }
+}
+
+button {
+  background-color: color(primary);
+  color: color(septenary);
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  @include transition;
+
+  &:hover {
+    background-color: color(tertiary);
+  }
+}
+
+

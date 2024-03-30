@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <v-container>
-      <v-row>
-        <v-col cols="4" v-for="(via, index) in vias" :key="index">
-          <v-card flat>
+      <v-row align="start"
+             no-gutters>
+        <v-col cols="6" v-for="(via, index) in vias" :key="index">
+          <v-card flat class="componente">
             <v-card-actions @click="goViaDetalhadaView(via)">
-              <div>
                 <v-card-title>{{ via.nome }}</v-card-title>
                 <v-card-subtitle>{{ via.montanha_id.nome }}</v-card-subtitle>
                 <v-card-text id="extensao">
@@ -15,13 +13,10 @@
                   <p>Grau: {{ via.grau }}</p>
                   <p>Crux: {{ via.crux }}</p>
                 </v-card-text>
-              </div>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
-    </v-container>
-  </div>
 </template>
 
 <script setup>
@@ -34,7 +29,7 @@ const headers = [
   { title: "Montanha", key: "montanha_id.nome" },
   { title: "Extensão (m)", key: "extensao" },
   { title: "Grau", key: "grau" },
-  { title: "Crux", key: "crux"}
+  { title: "Crux", key: "crux" }
 ];
 const vias = ref([]);
 const router = useRouter();
@@ -56,12 +51,12 @@ onMounted(async () => {
   }
 });
 </script>
-<style scoped>
-.v-card {
+<style lang="scss">
+@import "@/assets/styles";
+body .v-card {
   border-radius: 15px;
-  color: #ffffff;
-  background-color: #7d5d3b;
+  color: map-get($colors, "text-light");
+  background-color: map-get($colors, "quinary");
+  margin: 10px;
 }
-
-
 </style>
