@@ -113,4 +113,17 @@ export class EscaladaService {
 		}
 		return escaladas;
 	}
+
+	async getEscaladasDaVia(via_id: number): Promise<Escalada[] | null> {
+		if (!via_id) {
+			throw new Error("ID da via não fornecido");
+		} else if (isNaN(via_id)) {
+			throw new Error("ID da via inválido");
+		}
+		const escaladas = await this.repository.getEscaladasDaVia(via_id);
+		if (!escaladas) {
+			throw new Error("Nenhuma escalada encontrada para esta via");
+		}
+		return escaladas;
+	}
 }
