@@ -81,11 +81,33 @@ export class EscaladaRepository {
         });
     }
 
-
+    async getEscaladasDaVia(viaId: number): Promise<Escalada[] | null> {
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM Escalada WHERE via_id = ?`, [viaId], (err, rows: Escalada[]) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                if (rows) {
+                    const escaladas = rows.map((row) => new Escalada(
+                        row.id,
+                        row.nome,
+                        row.data,
+                        row.observacao,
+                        row.usuario_id!,
+                        row.via_id
+                    ));
+                    resolve(escaladas);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
 
     async createEscalada(escalada: Escalada): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Escalada (nome, data, observacao, via_id, usuario_id) VALUES (?,?,?,?,?)`,
+            this.db.run(`INSERT INTO Escalada (nome, data, observacao, usuario_id, via_id) VALUES (?,?,?,?,?)`,
                 [escalada.nome, escalada.data, escalada.observacao, escalada.usuario_id, escalada.via_id],
                 (err) => {
                     if (err) {

@@ -165,4 +165,22 @@ export class EscaladaController {
 			}
 		}
 	};
+
+	getEscaladasDaVia = async (req: Request, res: Response) => {
+		try {
+			const viaId = parseInt(req.params.viaId);
+			const result = await this.service.getEscaladasDaVia(viaId);
+			res.json(result);
+		} catch (error) {
+			if (error instanceof Error) {
+				if (error.message === "Nenhuma escalada encontrada para esta via") {
+					res.status(404).json({ error: error.message });
+				} else {
+				res.status(500).json({ error: error.message });
+				}
+			} else {
+				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+			}
+		}
+	}
 }
