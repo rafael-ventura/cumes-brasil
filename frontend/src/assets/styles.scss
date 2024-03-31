@@ -1,19 +1,17 @@
 // Definindo cores
 
-
-
-
 $colors: (
   primary: #216230,
-  secondary: #7d5d3b,
+  secondary: #D77E11,
   tertiary: #3c3425,
   quaternary: #070708,
-  quinary: #4f6c42,
+  quinary: #3C809A,
   senary: #c3c79e,
-  septenary: #E9EDC4,
-  octonary : #264919,
+  septenary: #45CEED,
+  octonary : #3766EE,
   text: #000,
-  text-light: #fff
+  text-light: #fff,
+  background: #c3c79e
 );
 
 // Mixins
@@ -40,6 +38,12 @@ $colors: (
 }
 
 // Estilos globais
+
+html {
+  font-family: Roboto, sans-serif;
+  font-size: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: color(septenary);
@@ -47,27 +51,62 @@ body {
   line-height: 1.6;
   margin: 0;
   .v-main {
-    background-color: color(senary);
+    background-color: #1E1E1E;
   }
 }
+
+
+// Headers
 
 h1, h2, h3, h4, h5, h6 {
-  color: color(quinary);
-}
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+  text-shadow: 0 0 15px rgba(50, 50, 50, 1);
 
-a {
-  color: color(primary);
-  text-decoration: none;
-  @include transition;
+  .rb-icon {
+    transform: scale(.8);
+  }
 
-  &:hover {
-    color: color(senary);
+  small {
+    font-size: .5em;
+    font-weight: 300;
+    transform: translateY(-.2em);
+    display: inline-block;
+    margin-left: .5em;
   }
 }
 
+// Links
+a {
+  color: color(secondary);
+  text-shadow: 0 0 5px rgba(0, 0, 0, .5);
+  transition: all 0.5s ease 0s;
+
+  .rb-icon {
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, .5));
+    transition: filter 0.5s ease 0s;
+  }
+
+  &:hover, &:focus {
+    text-decoration: none;
+    color: color(terciary);
+    text-shadow: 0 0 5px;
+
+    .rb-icon {
+      filter: drop-shadow(0 0 5px currentcolor);
+    }
+  }
+}
+
+a:hover, a:focus {
+  text-decoration: none !important;
+}
+
+// Botões
 button {
   background-color: color(primary);
-  color: color(septenary);
+  color: color(text-light);
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -78,6 +117,18 @@ button {
   }
 }
 
+// Formulários
+.text-center {
+  text-align: center;
+}
 
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.single-line {
+  white-space: nowrap;
+}
 
 

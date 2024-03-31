@@ -62,10 +62,10 @@ body .v-bottom-navigation {
   button {
     height: 100%;
     text-decoration: none;
-    color: map-get($colors, 'senary');
+    color: map-get($colors, 'text-light');
     background-color: map-get($colors, 'secondary');
     &:hover {
-      background-color: color(tertiary);
+      background-color: color(septenary);
     }
   }
   .router-link-exact-active button {
