@@ -7,7 +7,7 @@
       </v-container>
     </v-main>
 
-    <nav-bar/>
+    <NavBar/>
   </v-app>
 </template>
 <script setup>
