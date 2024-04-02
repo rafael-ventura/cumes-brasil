@@ -7,10 +7,15 @@
       </v-container>
     </v-main>
 
-    <nav-bar/>
+    <NavBar/>
   </v-app>
 </template>
 <script setup>
 import AppBar from "@/components/AppBar.vue";
 import NavBar from "@/components/NavBar.vue";
 </script>
+<style lang="scss">
+@import "@/assets/styles";
+
+</style>
+```

@@ -12,12 +12,10 @@
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "register-service-worker": "^1.7.2",
-    "vue": "^3.2.13",
+    "vue": "^3.4.20",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
-    "vue3-google-login": "^2.0.26",
-    "vue3-google-oauth2": "^1.0.7",
-    "vuetify": "^3.5.5"
+    "vuetify": "^3.5.13"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
@@ -36,6 +34,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^8.0.3",
+    "node-sass": "^9.0.0",
+    "sass-loader": "^14.1.1",
     "typescript": "~4.5.5"
   },
   "eslintConfig": {
