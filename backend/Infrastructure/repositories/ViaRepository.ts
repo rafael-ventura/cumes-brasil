@@ -57,7 +57,7 @@ export class ViaRepository {
         });
     }
 
-    async getVias(): Promise<Via[] | null> {
+    async getVias(): Promise<any[] | null> {
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT * FROM Via`, (err, rows: Via[]) => {
                 if (err) {
