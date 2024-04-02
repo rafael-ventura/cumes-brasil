@@ -74,7 +74,6 @@ CREATE TABLE IF NOT EXISTS Escalada (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     data DATE,
-    descricao TEXT,
     observacao TEXT,
     usuario_id INTEGER NOT NULL,
     via_id INTEGER NOT NULL,

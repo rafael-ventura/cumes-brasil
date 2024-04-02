@@ -23,7 +23,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import UserService from "@/services/userService";
 
-const userService = new UserService();
+const userService = UserService;
 const router = useRouter();
 const nome = ref("");
 const email = ref("");
@@ -32,7 +32,6 @@ const senha = ref("");
 async function register () {
   try {
     const response = await userService.create(nome.value, email.value, senha.value);
-    console.log("User registered:", response.data);
     await router.push("/login");
   } catch (error) {
     console.error("Registration failed:", error);

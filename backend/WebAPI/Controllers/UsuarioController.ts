@@ -1,6 +1,7 @@
 import {UsuarioService} from "../../Application/services/UsuarioService";
 import {Request, Response} from "express";
 import {Usuario} from "../../Domain/models/Usuario";
+import jwt from "jsonwebtoken";
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -65,7 +66,6 @@ export class UsuarioController {
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
     createUsuario = async (requisicao: Request, resposta: Response) => {
-        console.log("entrei create")
         try {
             const { nome, email, password } = requisicao.body;
             await this.service.register(nome, email, password);
@@ -130,20 +130,20 @@ export class UsuarioController {
     }
 
     //get perfil
-    getPerfil = async (requisicao: Request, resposta: Response) => {
-        try {
-            const id = parseInt(requisicao.params.id);
-            const resultado = await this.service.getPerfil(id);
-            if (!resultado) {
-                return resposta.status(404).json({message: "Perfil não encontrado."});
-            }
-            resposta.json(resultado);
-        } catch (error) {
-            if (error instanceof Error) {
-                resposta.status(500).json({error: error.message});
-            } else {
-                resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
-            }
+getPerfil = async (requisicao: Request, resposta: Response) => {
+    try {
+        const userId = requisicao.user.userId;
+        const resultado = await this.service.getPerfil(userId);
+        if (!resultado) {
+            return resposta.status(404).json({message: "Perfil não encontrado."});
         }
-    };
+        resposta.json(resultado);
+    } catch (error) {
+        if (error instanceof Error) {
+            resposta.status(500).json({error: error.message});
+        } else {
+            resposta.status(500).json({error: "Ocorreu um erro desconhecido"});
+        }
+    }
+};
 }

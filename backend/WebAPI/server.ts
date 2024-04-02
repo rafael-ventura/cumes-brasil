@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-console.log(process.env);
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
