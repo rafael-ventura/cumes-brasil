@@ -1,7 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, BaseEntity } from 'typeorm';
-import { Croqui } from './Croqui';
-import { Montanha } from './Montanha';
-import { Fonte } from './Fonte';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne, OneToMany,
+  PrimaryGeneratedColumn
+} from "typeorm";
+import { Croqui } from "./Croqui";
+import { Montanha } from "./Montanha";
+import { Fonte } from "./Fonte";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -35,36 +44,47 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   detalhes: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({
+    type: "date",
+    nullable: true
+  })
   data: Date;
+
+  @ManyToOne(() => Montanha)
+  @JoinColumn({ name: "montanha_id" })
+  montanha: Montanha;
 
   @Column()
   montanha_id: number;
 
-  @ManyToOne(() => Montanha)
-  @JoinColumn({ name: 'montanha_id' })
-  montanha: Montanha;
+  @ManyToOne(() => Via, via => via.variantes)
+  @JoinColumn({ name: "via_principal_id" })
+  viaPrincipal: Via; // Referência à via principal se for uma variante
 
-  @Column()
-  face_id: number;
+  @OneToMany(() => Via, via => via.viaPrincipal)
+  variantes: Via[]; // Variantes desta via
 
   @Column({ nullable: true })
   via_principal_id: number;
 
+  @ManyToOne(() => Fonte, fonte => fonte.vias)
+  @JoinColumn({ name: "fonte_id" })
+  fonte: Fonte;
+
   @Column()
   fonte_id: number;
 
-  @ManyToOne(() => Fonte, fonte => fonte.vias)
-  @JoinColumn({ name: 'fonte_id' })
-  fonte: Fonte;
-
-  @OneToMany(() => Croqui, croqui => croqui.via)
-  croquis: Croqui[];
-
-  public popularCroqui(croqui: Croqui): void {
-    if (!this.croquis) {
-      this.croquis = [];
+  @ManyToMany(() => Croqui, croqui => croqui.vias)
+  @JoinTable({
+    name: "via_croqui", // Nome da tabela de junção
+    joinColumn: {
+      name: "via_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "croqui_id",
+      referencedColumnName: "id"
     }
-    this.croquis.push(croqui);
-  }
+  })
+  croquis: Croqui[];
 }

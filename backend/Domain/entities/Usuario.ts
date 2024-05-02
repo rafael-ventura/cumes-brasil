@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Usuario extends BaseEntity {
@@ -17,11 +17,22 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true })
   fotoPerfil?: string;
 
-  public atualizarFotoPerfil(novaFoto: string) {
+  constructor (id: number, nome: string, email: string, password_hash: string, fotoPerfil?: string) {
+    super();
+    this.id = id;
+    this.nome = nome;
+    this.email = email;
+    this.password_hash = password_hash;
+    this.fotoPerfil = fotoPerfil;
+
+  }
+
+  public atualizarFotoPerfil (novaFoto: string) {
     this.fotoPerfil = novaFoto;
   }
 
-  public atualizarEmail(novoEmail: string) {
+  public atualizarEmail (novoEmail: string) {
     this.email = novoEmail;
   }
+
 }
