@@ -1,17 +1,12 @@
-import sqlite3 from 'sqlite3';
-import path from 'path';
+import path from "path";
+import { DataSource } from "typeorm";
 
-function connect() {
-    const dbPath = path.join(__dirname, '../../../database/sqlite/cumes_brasil.db');
-    console.log(dbPath);
-    return new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-        if (err) {
-            console.error('Erro ao conectar ao banco de dados:', err.message);
-        } else {
-            console.log('Conectado ao banco de dados SQLite.');
-        }
-    });
-}
-
-const dbConnection = connect();
-export default dbConnection;
+export const AppDataSource = new DataSource({
+    type: "sqlite",
+    database: path.join(__dirname, "../../../database/sqlite/cumes_brasil.db"),
+    synchronize: true,
+    logging: false,
+    entities: [
+        path.join(__dirname, "../../Domain/Entities/*.ts")
+    ]
+});
