@@ -14,4 +14,6 @@ export class Fonte extends BaseEntity {
 
   @OneToMany(() => Via, via => via.fonte)
   vias: Via[];
+
+
 }
