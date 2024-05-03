@@ -1,102 +1,26 @@
-import {Database} from 'sqlite3';
-import {Face} from '../../Domain/models/Face';
+import { Face } from "../../Domain/entities/Face";
+import { AppDataSource } from "../config/db";
 
 export class FaceRepository {
-    private db: Database;
+    private repository = AppDataSource.getRepository(Face);
 
-    constructor(db: Database) {
-        this.db = db;
+    async getById (id: number): Promise<Face | null> {
+        return this.repository.findOne({ where: { id: id } });
     }
 
-
-    async getFaceById(id: number): Promise<Face | null> {
-        return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Face WHERE id = ?`, [id], (err, row: Face) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (row) {
-                    const face = new Face(
-                        row.id,
-                        row.nome,
-                        row.montanha_id,
-                        row.fonte_id
-                    );
-                    resolve(face);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async getAll (): Promise<Face[]> {
+        return this.repository.find();
     }
 
-
-    async getFaces(): Promise<Face[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Face`, (err, rows: Face[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const faces = rows.map((row) => new Face(
-                        row.id,
-                        row.nome,
-                        row.montanha_id,
-                        row.fonte_id
-                    ));
-                    resolve(faces);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-
+    async create (face: Partial<Face>): Promise<void> {
+        await this.repository.insert(face);
     }
 
-    async createFace(face: Face): Promise<void> {
-        return new Promise((resolve, reject) => {
-                this.db.run(`INSERT INTO Face (nome, montanha_id, fonte_id) VALUES (?,?,?)`,
-                    [face.nome, face.montanha_id, face.fonte_id],
-                    (err) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-                        resolve();
-                    });
-            }
-                );
-
+    async update (id: number, faceData: Partial<Face>): Promise<void> {
+        await this.repository.update(id as any, faceData);
     }
 
-    async updateFace(face: Face): Promise<void> {
-        return new Promise((resolve, reject) => {
-                this.db.run(`UPDATE Face SET nome = ?, montanha_id = ?, fonte_id = ? WHERE id = ?`,
-                    [face.nome, face.montanha_id, face.fonte_id, face.id],
-                    (err) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-                        resolve();
-                    });
-            }
-                );
+    async delete (id: number): Promise<void> {
+        await this.repository.delete(id as any);
     }
-
-    async deleteFace(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Face WHERE id = ?`, [id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
-
-    }
-
 }

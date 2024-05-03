@@ -2,77 +2,39 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ColecaoService = void 0;
 class ColecaoService {
-    constructor(repository, viaRepository) {
-        this.repository = repository;
-        this.viaRepository = viaRepository;
+    constructor(colecaoRepo, viaService, usuarioService) {
+        this.colecaoRepo = colecaoRepo;
+        this.viaService = viaService;
+        this.usuarioService = usuarioService;
     }
     async getColecaoById(id) {
-        const colecao = await this.repository.getColecaoById(id);
-        if (!colecao) {
-            throw new Error("Coleção não encontrada");
-        }
-        return colecao;
+        return this.colecaoRepo.getById(id);
     }
-    // TODO: Se nao estamos usando, precisamos ter?
-    async getViasIdsByColecaoId(id) {
-        return this.repository.getViasIdsByColecaoId(id);
+    async getAllColecoes() {
+        return this.colecaoRepo.getAll();
     }
-    async getColecoesByUsuarioId(usuario_id) {
-        if (!usuario_id) {
-            throw new Error("Usuário não informado");
-        }
-        else if (isNaN(usuario_id)) {
-            throw new Error("Usuário inválido");
-        }
-        const colecoes = await this.repository.getColecoesByUsuarioId(usuario_id);
-        if (!colecoes) {
-            throw new Error("Nenhuma coleção encontrada");
-        }
-        return colecoes;
+    async getColecoesByUsuarioId(usuarioId) {
+        return this.colecaoRepo.getByUsuarioId(usuarioId);
     }
-    async getColecoes() {
-        const colecoes = await this.repository.getColecoes();
-        if (!colecoes) {
-            throw new Error("Nenhuma coleção encontrada");
+    async createColecao(colecaoData) {
+        if (await this.usuarioService.getUsuarioById(colecaoData.usuario_id)) {
+            await this.colecaoRepo.create(colecaoData);
         }
-        return colecoes;
-    }
-    async createColecao(colecao) {
-        return this.repository.createColecao(colecao);
-    }
-    async updateColecao(colecao) {
-        if (!await this.getColecaoById(colecao.id)) {
-            throw new Error("Coleção não encontrada");
+        else {
+            throw new Error("Usuário não encontrado");
         }
-        return this.repository.updateColecao(colecao);
+    }
+    async updateColecao(id, colecaoData) {
+        await this.colecaoRepo.update(id, colecaoData);
     }
     async deleteColecao(id) {
-        if (!await this.getColecaoById(id)) {
-            throw new Error("Coleção não encontrada");
-        }
-        return this.repository.deleteColecao(id);
+        await this.colecaoRepo.delete(id);
     }
-    async addVia(via_id, colecao_id) {
-        const colecao = await this.getColecaoById(colecao_id);
-        if (!colecao) {
-            throw new Error("Coleção não encontrada");
-        }
-        const via = await this.viaRepository.getViaById(via_id);
-        if (!via) {
-            throw new Error("Via não encontrada");
-        }
-        return this.repository.addVia(via_id, colecao_id);
+    async addViaToColecao(viaId, colecaoId) {
+        await this.colecaoRepo.addViaToColecao(viaId, colecaoId);
     }
-    async removeVia(via_id, colecao_id) {
-        const colecao = await this.getColecaoById(colecao_id);
-        if (!colecao) {
-            throw new Error("Coleção não encontrada");
-        }
-        const via = await this.viaRepository.getViaById(via_id);
-        if (!via) {
-            throw new Error("Via não encontrada");
-        }
-        return this.repository.removeVia(via_id, colecao_id);
+    async removeViaFromColecao(viaId, colecaoId) {
+        await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
     }
 }
 exports.ColecaoService = ColecaoService;

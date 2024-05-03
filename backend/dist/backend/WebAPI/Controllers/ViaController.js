@@ -14,15 +14,18 @@ class ViaController {
             try {
                 const id = parseInt(req.params.id);
                 const via = await this.service.getViaById(id);
+                if (!via) {
+                    return res.status(404).json({ message: "Via não encontrada" });
+                }
                 res.status(200).json(via);
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via não encontrada.") {
-                        return res.status(404).json({ message: error.message });
+                    if (error.message === "Via não encontrada") {
+                        return res.status(400).json({ message: error.message });
                     }
                     else {
-                        res.status(500).json({ error: "Ocorreu um erro ao buscar Via" });
+                        return res.status(500).json({ error: error.message });
                     }
                 }
             }
@@ -42,12 +45,12 @@ class ViaController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Nenhuma via encontrada.") {
-                        return resposta.status(404).json({ message: error.message });
+                    if (error.message === "Nenhuma via encontrada") {
+                        return resposta.status(404).json({ error: error.message });
                     }
                 }
                 else {
-                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido em controller getAllVia" });
                 }
             }
         };
@@ -61,16 +64,28 @@ class ViaController {
             try {
                 const via = requisicao.body;
                 await this.service.createVia(via);
-                resposta.status(201).json({ message: "Via criada com sucesso." });
+                resposta.status(201).json({ message: "Via criada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via já existente") {
-                        return resposta.status(400).json({ message: error.message });
+                    if (error.message === "É necessário existir uma fonte antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "É necessário existir uma montanha antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "É necessário existir uma face antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "Erro ao criar a via.") {
+                        return resposta.status(401).json({ error: "Erro provavelmente na escrita sql" });
+                    }
+                    else {
+                        return resposta.status(500).json({ error: error.message });
                     }
                 }
                 else {
-                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    return resposta.status(500).json({ error: "Ocorreu um erro desconhecido em controller createVia" });
                 }
             }
         };
@@ -83,18 +98,29 @@ class ViaController {
         this.updateVia = async (requisicao, resposta) => {
             try {
                 const via = requisicao.body;
-                await this.service.updateVia(via);
-                resposta.json({ message: "Via atualizada com sucesso." });
+                await this.service.updateVia(via.id, via);
+                resposta.json({ message: "Via atualizada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via não encontrada.") {
-                        return resposta.status(404).json({ message: error.message });
+                    if (error.message === "É necessário existir uma fonte antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
                     }
-                    resposta.status(500).json({ error: error.message });
+                    else if (error.message === "É necessário existir uma montanha antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "É necessário existir uma face antes da criação da via") {
+                        return resposta.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "Erro ao atualizar via.") {
+                        return resposta.status(401).json({ error: "Erro provavelmente na consulta escrita sql" });
+                    }
+                    else {
+                        return resposta.status(500).json({ error: error.message });
+                    }
                 }
                 else {
-                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    return resposta.status(500).json({ error: "Ocorreu um erro desconhecido em controller updateVia" });
                 }
             }
         };
@@ -109,44 +135,15 @@ class ViaController {
             try {
                 const id = parseInt(requisicao.params.id);
                 await this.service.deleteVia(id);
-                resposta.json({ message: "Via deletada com sucesso." });
+                resposta.json({ message: "Via deletada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via não encontrada.") {
-                        return resposta.status(404).json({ message: error.message });
+                    if (error.message === "Via não encontrada") {
+                        return resposta.status(404).json({ error: error.message });
                     }
                     resposta.status(500).json({ error: error.message });
                 }
-                else {
-                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
-                }
-            }
-        };
-        /**
-         * @route GET /vias/:id/croquis
-         * @group Vias - Operações relacionadas a vias e croquis
-         * @returns {object} 200 - Croquis encontrados com sucesso
-         * @returns {Error} 500 - Erro desconhecido
-         * @returns {object} 400 - Via não encontrada
-         * @returns {object} 404 - Nenhum croqui encontrado para a Via com ID fornecido
-         */
-        this.getCroquisByViaId = async (req, res) => {
-            try {
-                const id = parseInt(req.params.id);
-                const croquis = await this.service.getCroquisByViaId(id);
-                res.status(200).json(croquis);
-            }
-            catch (error) {
-                if (error instanceof Error) {
-                    if (error.message === "Via não encontrada.") {
-                        return res.status(400).json({ message: error.message });
-                    }
-                    else if (error.message === "Nenhum croqui encontrado.") {
-                        return res.status(404).json({ message: error.message });
-                    }
-                }
-                res.status(500).json({ error: "Ocorreu um erro desconhecido" });
             }
         };
         this.service = service;

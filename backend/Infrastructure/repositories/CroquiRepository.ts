@@ -1,189 +1,63 @@
-import { Database } from "sqlite3";
-import { Croqui } from "../../Domain/models/Croqui";
+import { AppDataSource } from "../config/db";
+import { Croqui } from "../../Domain/entities/Croqui";
+import { In, ObjectLiteral } from "typeorm";
 
 export class CroquiRepository {
-    private db: Database;
+  private repository = AppDataSource.getRepository(Croqui);
 
-    constructor(db: Database) {
-        this.db = db;
-    }
+  async getById (id: number): Promise<Croqui | null> {
+    return this.repository.findOne({ where: { id: id } });
+  }
 
-    async getCroquiById(id: number): Promise<Croqui | null> {
-        return new Promise((resolve, reject) => {
-            this.db.get(
-                `SELECT * FROM Croqui WHERE id = ?`,
-                [id],
-                (err, row: Croqui) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    if (!row) {
-                        resolve(null);
-                        return;
-                    }
-                    const croqui = new Croqui(
-                        row.id,
-                        row.nome,
-                        row.imagemUrl,
-                        row.autor,
-                        row.descricao,
-                        row.fonte_id
-                    );
-                    resolve(croqui);
-                }
-            );
-        });
-    }
+  async getByIds (ids: number[]): Promise<Croqui[]> {
+    return this.repository.findBy({ id: In(ids) });
+  }
 
-    async getCroquisByIds(ids: number[]): Promise<Croqui[]> {
-        const croquis: Croqui[] = [];
-        for (const id of ids) {
-            const croqui = await this.getCroquiById(id);
-            if (croqui) {
-                croquis.push(croqui);
-            }
-        }
-        return croquis;
-    }
+  async getAll (): Promise<Croqui[]> {
+    return this.repository.find();
+  }
 
-    async getCroquis(): Promise<Croqui[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Croqui`, (err, rows: Croqui[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const croquis = rows.map(
-                        (row) =>
-                            new Croqui(
-                                row.id,
-                                row.nome,
-                                row.imagemUrl,
-                                row.autor,
-                                row.descricao,
-                                row.fonte_id
-                            )
-                    );
-                    resolve(croquis);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-    }
+  async create (croqui: Partial<Croqui>): Promise<void> {
+    await this.repository.insert(croqui);
+  }
 
-    async createCroqui(croqui: Croqui): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `INSERT INTO Croqui (nome, imagemUrl, autor, descricao, fonte_id) VALUES (?,?,?,?,?)`,
-                [
-                    croqui.nome,
-                    croqui.imagemUrl,
-                    croqui.autor,
-                    croqui.descricao,
-                    croqui.fonte_id,
-                ],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  async update (id: number, croquiData: Partial<Croqui>): Promise<void> {
+    await this.repository.update(id as any, croquiData);
+  }
 
-    async updateCroqui(croqui: Croqui): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `UPDATE Croqui SET nome = ?, imagemUrl = ?, autor = ?, descricao = ?, fonte_id = ? WHERE id = ?`,
-                [
-                    croqui.nome,
-                    croqui.imagemUrl,
-                    croqui.autor,
-                    croqui.descricao,
-                    croqui.fonte_id,
-                    croqui.id,
-                ],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  async delete (id: number): Promise<void> {
+    await this.repository.delete(id as any);
+  }
 
-    async deleteCroqui(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Croqui WHERE id = ?`, [id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
-    }
+  async getCroquisIdsByViaId (via_id: number): Promise<number[] | null> {
+    return this.repository.createQueryBuilder("croqui")
+      .leftJoin("croqui.vias", "via")
+      .where("via.id = :via_id", { via_id })
+      .select("croqui.id")
+      .getRawMany()
+      .then((croquis) => croquis.map(croqui => croqui.id));
+  }
 
-    async getCroquisIdsByViaId(via_id: number): Promise<number[] | null> {
-        return new Promise<number[] | null>((resolve, reject) => {
-            this.db.all(
-                `SELECT croqui_id FROM ViasCroquis WHERE via_id = ?`,
-                [via_id],
-                (err, rows: { croqui_id: number }[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    if (rows) {
-                        const croquisIds = rows.map((row) => row.croqui_id);
-                        resolve(croquisIds);
-                    } else {
-                        resolve(null);
-                    }
-                }
-            );
-        });
-    }
+  async getCroquisByViaId (via_id: number): Promise<ObjectLiteral[]> {
+    return this.repository.createQueryBuilder("croqui")
+      .leftJoin("croqui.vias", "via")
+      .where("via.id = :via_id", { via_id })
+      .getMany();
+  }
 
-    async associarCroquiEmVia(croqui_id: number, via_id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `INSERT INTO ViasCroquis (croqui_id, via_id) VALUES (?,?)`,
-                [croqui_id, via_id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  async associarCroquiVia (croqui_id: number, via_id: number): Promise<void> {
+    return this.repository.createQueryBuilder()
+      .relation(Croqui, "vias")
+      .of(croqui_id)
+      .add(via_id);
 
-    async desassociarCroquiEmVia(
-        croqui_id: number,
-        via_id: number
-    ): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `DELETE FROM ViasCroquis WHERE croqui_id = ? AND via_id = ?`,
-                [croqui_id, via_id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  }
+
+  async desassociarCroquiVia (croqui_id: number, via_id: number): Promise<void> {
+    return this.repository.createQueryBuilder()
+      .relation(Croqui, "vias")
+      .of(croqui_id)
+      .remove(via_id);
+  }
 }
+

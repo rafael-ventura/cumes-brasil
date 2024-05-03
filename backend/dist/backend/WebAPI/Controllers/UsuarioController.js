@@ -58,10 +58,10 @@ class UsuarioController {
          * @returns {object} 200 - Usuario criada com sucesso.
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.createUsuario = async (requisicao, resposta) => {
+        this.registrarUsuario = async (requisicao, resposta) => {
             try {
-                const usuario = requisicao.body;
-                await this.service.createUsuario(usuario);
+                const { nome, email, password } = requisicao.body;
+                await this.service.register(nome, email, password);
                 resposta.status(201).json({ message: "Usuario criada com sucesso." });
             }
             catch (error) {
@@ -116,6 +116,25 @@ class UsuarioController {
                     if (error.message === "Usuario não encontrada") {
                         return resposta.status(400).json({ error: error.message });
                     }
+                    resposta.status(500).json({ error: error.message });
+                }
+                else {
+                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                }
+            }
+        };
+        //get perfil
+        this.getPerfil = async (requisicao, resposta) => {
+            try {
+                const userId = parseInt(requisicao.params.id);
+                const resultado = await this.service.getPerfil(userId);
+                if (!resultado) {
+                    return resposta.status(404).json({ message: "Perfil não encontrado." });
+                }
+                resposta.json(resultado);
+            }
+            catch (error) {
+                if (error instanceof Error) {
                     resposta.status(500).json({ error: error.message });
                 }
                 else {

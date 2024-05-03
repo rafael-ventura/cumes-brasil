@@ -1,47 +1,49 @@
-import {Usuario} from "../../Domain/models/Usuario";
-import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
+import { Usuario } from "../../Domain/entities/Usuario";
+import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
 import bcrypt from "bcrypt";
 
-
 export class UsuarioService {
-    private repository: UsuarioRepository;
+    private usuarioRepo: UsuarioRepository;
 
-    constructor(repository: UsuarioRepository) {
-        this.repository = repository;
+    constructor (usuarioRepo: UsuarioRepository) {
+        this.usuarioRepo = usuarioRepo;
     }
 
-    async getUsuarioById(id: number): Promise<Usuario | null> {
-        return this.repository.getById(id);
+    async getUsuarioById (id: number): Promise<Usuario | null> {
+        return this.usuarioRepo.getById(id);
     }
 
-    async getUsuarios(): Promise<Usuario[] | null> {
-        return this.repository.getAll();
+    async getUsuarios (): Promise<Usuario[]> {
+        return this.usuarioRepo.getAll();
     }
 
-    async register(nome: string, email: string, password: string): Promise<void> {
-        const existingUser = await this.repository.findByEmail(email);
-        if (existingUser) throw new Error('Email already registered');
+    async register (nome: string, email: string, password: string): Promise<void> {
 
         const passwordHash = await bcrypt.hash(password, 10);
-        await this.repository.create(nome, email, passwordHash);
+        await this.usuarioRepo.create(nome, email, passwordHash);
     }
 
-    async updateUsuario(usuario: Usuario): Promise<void> {
-        if (!await this.getUsuarioById(usuario.id)) {
-            throw new Error("Usuario não encontrada");
+    async updateUsuario (usuario: Usuario): Promise<void> {
+        await this.usuarioRepo.update(usuario.id, usuario);
+    }
+
+    async deleteUsuario (id: number): Promise<void> {
+        const user = await this.usuarioRepo.getById(id);
+        if (!user) {
+            throw new Error("Usuario não encontrado");
         }
-        return this.repository.update(usuario);
+
+        await this.usuarioRepo.delete(id);
     }
 
-    async deleteUsuario(id: number): Promise<void> {
-        if (!await this.getUsuarioById(id)) {
-            throw new Error("Usuario não encontrada");
-        }
-        return this.repository.delete(id);
+    async getUsuarioByEmail (email: string): Promise<any> {
+        return this.usuarioRepo.findByEmail(email);
+
     }
 
-    //get perfil
-    async getPerfil(id: number): Promise<Usuario | null> {
-        return this.repository.getPerfil(id);
+    async getPerfil (id: number): Promise<Usuario | null> {
+        return this.usuarioRepo.getPerfil(id);
     }
 }
+
+export default new UsuarioService(new UsuarioRepository());

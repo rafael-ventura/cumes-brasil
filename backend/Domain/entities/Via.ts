@@ -5,12 +5,14 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne, OneToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Croqui } from "./Croqui";
 import { Montanha } from "./Montanha";
 import { Fonte } from "./Fonte";
+import { Face } from "./Face";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -35,20 +37,25 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   exposicao: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({
+    type: "decimal",
+    precision: 5,
+    scale: 2,
+    nullable: true
+  })
   extensao: number;
 
-  @Column({ type: 'simple-array', nullable: true })
-  conquistadores: string[];
+  @Column({
+    type: "varchar",
+    nullable: true
+  })
+  conquistadores: string;
 
   @Column({ nullable: true })
   detalhes: string;
 
-  @Column({
-    type: "date",
-    nullable: true
-  })
-  data: Date;
+  @Column({ nullable: true })
+  data: string;
 
   @ManyToOne(() => Montanha)
   @JoinColumn({ name: "montanha_id" })
@@ -59,10 +66,10 @@ export class Via extends BaseEntity {
 
   @ManyToOne(() => Via, via => via.variantes)
   @JoinColumn({ name: "via_principal_id" })
-  viaPrincipal: Via; // Referência à via principal se for uma variante
+  viaPrincipal: Via;
 
   @OneToMany(() => Via, via => via.viaPrincipal)
-  variantes: Via[]; // Variantes desta via
+  variantes: Via[];
 
   @Column({ nullable: true })
   via_principal_id: number;
@@ -74,17 +81,15 @@ export class Via extends BaseEntity {
   @Column()
   fonte_id: number;
 
+  @ManyToOne(() => Face, face => face.vias)
+  @JoinColumn({ name: "face_id" })
+  face: Face;
+
+  @Column()
+  face_id: number;
+
   @ManyToMany(() => Croqui, croqui => croqui.vias)
-  @JoinTable({
-    name: "via_croqui", // Nome da tabela de junção
-    joinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "croqui_id",
-      referencedColumnName: "id"
-    }
-  })
+  @JoinTable({ name: "via_croqui" })
   croquis: Croqui[];
+
 }

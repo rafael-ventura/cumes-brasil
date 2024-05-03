@@ -1,98 +1,26 @@
-import {Database} from 'sqlite3';
-import {Fonte} from '../../Domain/models/Fonte';
+import { Fonte } from "../../Domain/entities/Fonte";
+import { AppDataSource } from "../config/db";
 
 export class FonteRepository {
-    private db: Database;
+    private repository = AppDataSource.getRepository(Fonte);
 
-    constructor(db: Database) {
-        this.db = db;
+    async getById (id: number): Promise<Fonte | null> {
+        return this.repository.findOne({ where: { id: id } });
     }
 
-    async getFonteById(id: number): Promise<Fonte | null> {
-        return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Fonte WHERE id = ?`, [id], (err, row: Fonte) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (row) {
-                    const fonte = new Fonte(
-                        row.id,
-                        row.autor,
-                        row.referencia
-                    );
-                        resolve(fonte);
-                    } else {
-                        resolve(null);
-                    }
-                });
-            });
+    async getAll (): Promise<Fonte[]> {
+        return this.repository.find();
     }
 
-    async getFontes(): Promise<Fonte[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Fonte`, (err, rows: Fonte[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const fontes = rows.map((row) => new Fonte(
-                        row.id,
-                        row.autor,
-                        row.referencia
-                    ));
-                        resolve(fontes);
-                    } else {
-                        resolve(null);
-                    }
-                });
-            });
-
+    async create (fonte: Partial<Fonte>): Promise<void> {
+        await this.repository.insert(fonte);
     }
 
-    async createFonte(fonte: Fonte): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Fonte (autor, referencia) VALUES (?,?)`,
-                [fonte.autor, fonte.referencia],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-            });
-
+    async update (id: number, fonteData: Partial<Fonte>): Promise<void> {
+        await this.repository.update(id as any, fonteData);
     }
 
-    async updateFonte(fonte: Fonte): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Fonte SET autor = ?, referencia = ? WHERE id = ?`,
-                [fonte.autor, fonte.referencia, fonte.id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-            });
+    async delete (id: number): Promise<void> {
+        await this.repository.delete(id as any);
     }
-
-    async deleteFonte(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Fonte WHERE id = ?`,
-                [id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                })
-            });
-
-    }
-
 }

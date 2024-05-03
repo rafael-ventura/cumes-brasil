@@ -1,99 +1,26 @@
-import {Database} from 'sqlite3';
-import {Montanha} from '../../Domain/models/Montanha';
+import { AppDataSource } from "../config/db";
+import { Montanha } from "../../Domain/entities/Montanha";
 
 export class MontanhaRepository {
-    private db: Database;
+    private repository = AppDataSource.getRepository(Montanha);
 
-    constructor(db: Database) {
-        this.db = db;
+    async getById (id: number): Promise<Montanha | null> {
+        return this.repository.findOne({ where: { id: id } });
     }
 
-    async getMontanhaById(id: number): Promise<Montanha | null> {
-        return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Montanha WHERE id = ?`, [id], (err, row: Montanha) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (row) {
-                    const montanha = new Montanha(
-                        row.id,
-                        row.nome,
-                        row.localizacao,
-                        row.altura,
-                        row.fonte_id
-                    );
-                    resolve(montanha);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-
+    async getAll (): Promise<Montanha[]> {
+        return this.repository.find();
     }
 
-    async getMontanhas(): Promise<Montanha[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Montanha`, (err, rows: Montanha[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const montanhas = rows.map((row) => new Montanha(
-                        row.id,
-                        row.nome,
-                        row.localizacao,
-                        row.altura,
-                        row.fonte_id
-                    ));
-                    resolve(montanhas);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async create (montanha: Partial<Montanha>): Promise<void> {
+        await this.repository.insert(montanha);
     }
 
-    async createMontanha(montanha: Montanha): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Montanha (nome, localizacao, altura, fonte_id) VALUES (?,?,?,?)`,
-                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonte_id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-        });
+    async update (id: number, montanhaData: Partial<Montanha>): Promise<void> {
+        await this.repository.update(id as any, montanhaData);
     }
 
-    async updateMontanha(montanha: Montanha): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Montanha SET nome = ?, localizacao = ?, altura = ?, fonte_id = ? WHERE id = ?`,
-                [montanha.nome, montanha.localizacao, montanha.altura, montanha.fonte_id, montanha.id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-        });
-    }
-
-    async deleteMontanha(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Montanha WHERE id = ?`,
-                [id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-        });
+    async delete (id: number): Promise<void> {
+        await this.repository.delete(id as any);
     }
 }

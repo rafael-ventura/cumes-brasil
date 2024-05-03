@@ -26,25 +26,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
+const express_1 = __importDefault(require("express"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const routes_1 = __importDefault(require("./routes/routes"));
 require("reflect-metadata");
 const swagger_output_json_1 = __importDefault(require("../swagger_output.json"));
+const db_1 = require("../Infrastructure/config/db");
+const initialLoad_1 = require("../Infrastructure/sql_scripts/initialLoad");
 dotenv.config();
-var cors = require('cors');
+const cors = require("cors");
 const app = (0, express_1.default)();
 app.use(cors());
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4020;
 // Documentação da API com Swagger
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
 app.use(express_1.default.json());
 // Rotas
 app.use('/api', routes_1.default);
+db_1.AppDataSource.initialize().then(async () => {
+    console.log("Conexão com o banco de dados estabelecida com sucesso");
+}).catch(error => console.log(error));
 // Inicialização do servidor
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
     console.log(process.cwd());
+    (0, initialLoad_1.initialLoad)().then(r => console.log("Carga inicial realizada com sucesso")).catch(e => console.log(e));
 });

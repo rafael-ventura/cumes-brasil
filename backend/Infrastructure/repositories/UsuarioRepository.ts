@@ -1,11 +1,15 @@
 import { Usuario } from "../../Domain/entities/Usuario";
-import { AppDataSource } from "../config/db.ts";
+import { AppDataSource } from "../config/db";
 
 export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
 
     async getById (id: number): Promise<Usuario | null> {
-        return this.repository.findOne(id as any);
+        return this.repository.findOne({
+            where: {
+                id: id,
+            }
+        });
     }
 
     async getAll () {
@@ -14,22 +18,23 @@ export class UsuarioRepository {
 
     async create (nome: string, email: string, passwordHash: string): Promise<void> {
         await this.repository.insert({
-            nome,
-            email,
-            passwordHash
+            nome: nome,
+            email: email,
+            password_hash: passwordHash
         });
     }
 
-    async update (usuario: Usuario): Promise<void> {
-        await this.repository.update(usuario.id as any, usuario);
+    async update (id: number, usuarioData: Partial<Usuario>): Promise<void> {
+        await this.repository.update(id as any, usuarioData);
     }
 
     async delete (id: number): Promise<void> {
         await this.repository.delete(id as any);
     }
 
+    // TODO: Implmentar a função findByEmail sem quebrar a aplicação
     async findByEmail (email: string) {
-        return this.repository.findOne(email as any);
+        return this.repository.findOne;
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {

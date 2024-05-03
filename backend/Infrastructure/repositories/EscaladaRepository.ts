@@ -1,148 +1,34 @@
-
-import { Database } from 'sqlite3';
-import { Escalada } from '../../Domain/models/Escalada';
+import { AppDataSource } from "../config/db";
+import { Escalada } from "../../Domain/entities/Escalada";
 
 export class EscaladaRepository {
-    private db: Database;
+    private repository = AppDataSource.getRepository(Escalada);
 
-    constructor(db: Database) {
-        this.db = db;
+    async getById (id: number): Promise<Escalada | null> {
+        return this.repository.findOne({ where: { id: id } });
     }
 
-    async getEscaladaById(id: number): Promise<Escalada | null> {
-        return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Escalada WHERE id = ?`, [id], (err, row: Escalada) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (row) {
-                    const escaladas = new Escalada(
-                        row.id,
-                        row.nome,
-                        row.data,
-                        row.observacao,
-                        row.usuario_id!,
-                        row.via_id
-                    );
-                    resolve(escaladas);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async getAll (): Promise<Escalada[]> {
+        return this.repository.find();
     }
 
-    async getEscaladas(): Promise<Escalada[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Escalada`, (err, rows: Escalada[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const Escaladas = rows.map((row) => new Escalada(
-                        row.id,
-                        row.nome,
-                        row.data,
-                        row.observacao,
-                        row.usuario_id!,
-                        row.via_id
-                    ));
-                    resolve(Escaladas);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async create (escalada: Partial<Escalada>): Promise<void> {
+        await this.repository.insert(escalada);
     }
 
-    async getEscaladasDoUsuario(usuarioId: number): Promise<Escalada[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Escalada WHERE usuario_id = ?`, [usuarioId], (err, rows: Escalada[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const escaladas = rows.map((row) => new Escalada(
-                        row.id,
-                        row.nome,
-                        row.data,
-                        row.observacao,
-                        row.usuario_id!,
-                        row.via_id
-                    ));
-                    resolve(escaladas);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async update (id: number, escaladaData: Partial<Escalada>): Promise<void> {
+        await this.repository.update(id as any, escaladaData);
     }
 
-    async getEscaladasDaVia(viaId: number): Promise<Escalada[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Escalada WHERE via_id = ?`, [viaId], (err, rows: Escalada[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const escaladas = rows.map((row) => new Escalada(
-                        row.id,
-                        row.nome,
-                        row.data,
-                        row.observacao,
-                        row.usuario_id!,
-                        row.via_id
-                    ));
-                    resolve(escaladas);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    async delete (id: number): Promise<void> {
+        await this.repository.delete(id as any);
     }
 
-    async createEscalada(escalada: Escalada): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Escalada (nome, data, observacao, usuario_id, via_id) VALUES (?,?,?,?,?)`,
-                [escalada.nome, escalada.data, escalada.observacao, escalada.usuario_id, escalada.via_id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-        });
+    async getEscaladasByUserId (userId: number): Promise<Escalada[]> {
+        return this.repository.find({ where: { usuario: userId as any } });
     }
 
-    async updateEscalada(escalada: Escalada): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Escalada SET nome = ?, data = ?, observacao = ?, usuario_id = ?, via_id = ? WHERE id = ?`,
-                [escalada.nome, escalada.data, escalada.observacao, escalada.usuario_id, escalada.via_id, escalada.id],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                });
-        });
+    async getEscaladasByViaId (viaId: number): Promise<Escalada[]> {
+        return this.repository.find({ where: { usuario: viaId as any } });
     }
-
-    async deleteEscalada(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Escalada WHERE id = ?`, [id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
-    }
-
 }

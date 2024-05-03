@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FaceService } from "../../Application/services/FaceService";
-import { Face } from "../../Domain/models/Face";
+import { Face } from "../../Domain/entities/Face";
 
 export class FaceController {
 	private service: FaceService;
@@ -90,15 +90,13 @@ export class FaceController {
 	   */
 	updateFace = async (req: Request, res: Response) => {
 		try {
-			const face = req.body;
-			await this.service.updateFace(face);
-			res.status(200).send();
+			const face: Face = req.body;
+			await this.service.updateFace(face.id, face);
+			res.status(200).json({ message: "Face atualizada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "É necessário existir uma fonte antes da atualização da via") {
-					res.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário existir uma montanha antes da atualização da via") {
-					res.status(400).json({ error: error.message });
+				if (error.message === "Face não encontrada") {
+					res.status(404).json({ error: error.message });
 				}
 				res.status(500).json({ error: error.message });
 			} else {

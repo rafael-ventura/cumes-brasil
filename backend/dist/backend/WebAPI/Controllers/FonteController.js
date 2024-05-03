@@ -15,7 +15,7 @@ class FonteController {
                 const id = parseInt(req.params.id);
                 const result = await this.service.getFonteById(id);
                 if (!result) {
-                    return res.status(404).json({ message: "Fonte não encontrada." });
+                    return res.status(404).json({ error: "Fonte não encontrada" });
                 }
                 res.json(result);
             }
@@ -24,11 +24,9 @@ class FonteController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getFonteById" });
                 }
             }
-            const id = parseInt(req.params.id);
-            const result = await this.service.getFonteById(id);
         };
         /**
          * @route GET /fontes
@@ -42,7 +40,7 @@ class FonteController {
             try {
                 const result = await this.service.getFontes();
                 if (result?.length === 0) {
-                    return res.status(404).json({ message: "Nenhuma fonte encontrada" });
+                    return res.status(404).json({ error: "Nenhuma fonte encontrada" });
                 }
                 res.json(result);
             }
@@ -51,7 +49,7 @@ class FonteController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getAllFonte" });
                 }
             }
         };
@@ -65,14 +63,14 @@ class FonteController {
             try {
                 const fonte = req.body;
                 await this.service.createFonte(fonte);
-                res.status(201).json({ message: "Fonte criada com sucesso." });
+                res.status(201).json({ message: "Fonte criada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller createFonte" });
                 }
             }
         };
@@ -85,18 +83,18 @@ class FonteController {
         this.updateFonte = async (req, res) => {
             try {
                 const fonte = req.body;
-                await this.service.updateFonte(fonte);
-                res.status(200).json({ message: "Fonte atualizada com sucesso." });
+                await this.service.updateFonte(fonte.id, fonte);
+                res.status(200).json({ message: "Fonte atualizada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Fonte não encontrada.") {
-                        return res.status(404).json({ message: error.message });
+                    if (error.message === "Fonte não encontrada") {
+                        return res.status(404).json({ error: error.message });
                     }
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller updateFonte" });
                 }
             }
         };
@@ -111,17 +109,20 @@ class FonteController {
             try {
                 const id = parseInt(req.params.id);
                 await this.service.deleteFonte(id);
-                res.status(200).json({ message: "Fonte deletada com sucesso." });
+                res.status(200).json({ message: "Fonte deletada com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Fonte não encontrada.") {
-                        return res.status(404).json({ message: error.message });
+                    if (error.message === "Fonte não encontrada") {
+                        return res.status(404).json({ error: error.message });
+                    }
+                    else if (error.message === "Erro ao deletar Fonte") {
+                        return res.status(500).json({ error: error.message });
                     }
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller deleteFonte" });
                 }
             }
         };

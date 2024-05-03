@@ -6,25 +6,19 @@ class MontanhaService {
         this.montanhaRepository = montanhaRepository;
     }
     async getMontanhaById(id) {
-        return this.montanhaRepository.getMontanhaById(id);
+        return this.montanhaRepository.getById(id);
     }
     async getMontanhas() {
-        return this.montanhaRepository.getMontanhas();
+        return this.montanhaRepository.getAll();
     }
     async createMontanha(montanha) {
-        return this.montanhaRepository.createMontanha(montanha);
+        return this.montanhaRepository.create(montanha);
     }
-    async updateMontanha(montanha) {
-        if (!await this.getMontanhaById(montanha.id)) {
-            throw new Error("Montanha não encontrada");
-        }
-        return this.montanhaRepository.updateMontanha(montanha);
+    async updateMontanha(id, montanhaData) {
+        await this.montanhaRepository.update(id, montanhaData);
     }
     async deleteMontanha(id) {
-        if (!await this.getMontanhaById(id)) {
-            throw new Error("Montanha não encontrada");
-        }
-        return this.montanhaRepository.deleteMontanha(id);
+        await this.montanhaRepository.delete(id);
     }
 }
 exports.MontanhaService = MontanhaService;

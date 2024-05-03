@@ -7,14 +7,11 @@ export class Escalada extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   nome: string;
 
-  @Column({
-    type: "date",
-    nullable: true
-  })
-  data: Date;
+  @Column({ nullable: false })
+  data: string;
 
   @Column({ nullable: true })
   observacao: string;
@@ -23,7 +20,14 @@ export class Escalada extends BaseEntity {
   @JoinColumn({ name: "usuario_id" })
   usuario: Usuario;
 
+  @Column()
+  usuario_id: number;
+
   @ManyToOne(() => Via)
   @JoinColumn({ name: "via_id" })
   via: Via;
+
+  @Column()
+  via_id: number;
+
 }

@@ -1,16 +1,13 @@
-import {UsuarioService} from "../../Application/services/UsuarioService";
-import {Request, Response} from "express";
-import {Usuario} from "../../Domain/models/Usuario";
-import jwt from "jsonwebtoken";
+import { UsuarioService } from "../../Application/services/UsuarioService";
+import { Request, Response } from "express";
+import { Usuario } from "../../Domain/entities/Usuario";
 
 export class UsuarioController {
     private service: UsuarioService;
 
-    constructor(service: UsuarioService) {
+    constructor (service: UsuarioService) {
         this.service = service;
     }
-
-
 
     /**
      * @route GET /usuarios/:id
@@ -65,7 +62,7 @@ export class UsuarioController {
      * @returns {object} 200 - Usuario criada com sucesso.
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    createUsuario = async (requisicao: Request, resposta: Response) => {
+    registrarUsuario = async (requisicao: Request, resposta: Response) => {
         try {
             const { nome, email, password } = requisicao.body;
             await this.service.register(nome, email, password);
@@ -132,7 +129,7 @@ export class UsuarioController {
     //get perfil
 getPerfil = async (requisicao: Request, resposta: Response) => {
     try {
-        const userId = requisicao.user.userId;
+        const userId = parseInt(requisicao.params.id);
         const resultado = await this.service.getPerfil(userId);
         if (!resultado) {
             return resposta.status(404).json({message: "Perfil não encontrado."});
