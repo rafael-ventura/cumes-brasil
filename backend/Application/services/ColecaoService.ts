@@ -24,11 +24,7 @@ export class ColecaoService {
   }
 
   async createColecao (colecaoData: Partial<Colecao>): Promise<void> {
-    if (await this.usuarioService.getUsuarioById(colecaoData.usuario_id as number)) {
-      await this.colecaoRepo.create(colecaoData);
-    } else {
-      throw new Error("Usuário não encontrado");
-    }
+    await this.colecaoRepo.create(colecaoData);
   }
 
   async updateColecao (id: number, colecaoData: Partial<Colecao>): Promise<void> {

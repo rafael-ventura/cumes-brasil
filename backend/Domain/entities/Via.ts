@@ -61,7 +61,7 @@ export class Via extends BaseEntity {
   @JoinColumn({ name: "montanha_id" })
   montanha: Montanha;
 
-  @Column()
+  @Column({ nullable: false })
   montanha_id: number;
 
   @ManyToOne(() => Via, via => via.variantes)
@@ -78,7 +78,7 @@ export class Via extends BaseEntity {
   @JoinColumn({ name: "fonte_id" })
   fonte: Fonte;
 
-  @Column()
+  @Column({ nullable: false })
   fonte_id: number;
 
   @ManyToOne(() => Face, face => face.vias)

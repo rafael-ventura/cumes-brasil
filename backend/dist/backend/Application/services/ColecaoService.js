@@ -17,7 +17,7 @@ class ColecaoService {
         return this.colecaoRepo.getByUsuarioId(usuarioId);
     }
     async createColecao(colecaoData) {
-        if (await this.usuarioService.getUsuarioById(colecaoData.usuario_id)) {
+        if (await this.usuarioService.getById(colecaoData.usuario_id)) {
             await this.colecaoRepo.create(colecaoData);
         }
         else {

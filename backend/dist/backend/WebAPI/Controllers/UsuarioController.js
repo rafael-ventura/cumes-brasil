@@ -13,7 +13,7 @@ class UsuarioController {
         this.getUsuarioById = async (requisicao, resposta) => {
             try {
                 const id = parseInt(requisicao.params.id);
-                const resultado = await this.service.getUsuarioById(id);
+                const resultado = await this.service.getById(id);
                 if (!resultado) {
                     return resposta.status(404).json({ message: "Usuario não encontrada." });
                 }
@@ -83,7 +83,7 @@ class UsuarioController {
         this.updateUsuario = async (requisicao, resposta) => {
             try {
                 const usuario = requisicao.body;
-                await this.service.updateUsuario(usuario);
+                await this.service.update(usuario);
                 resposta.status(200).json({ message: "Usuario atualizada com sucesso." });
             }
             catch (error) {
@@ -108,7 +108,7 @@ class UsuarioController {
         this.deleteUsuario = async (requisicao, resposta) => {
             try {
                 const id = parseInt(requisicao.params.id);
-                await this.service.deleteUsuario(id);
+                await this.service.delete(id);
                 resposta.status(200).json({ message: "Usuario deletada com sucesso." });
             }
             catch (error) {

@@ -29,7 +29,7 @@ export class CroquiRepository {
     await this.repository.delete(id as any);
   }
 
-  async getCroquisIdsByViaId (via_id: number): Promise<number[] | null> {
+  async getIdsByViaId (via_id: number): Promise<number[] | null> {
     return this.repository.createQueryBuilder("croqui")
       .leftJoin("croqui.vias", "via")
       .where("via.id = :via_id", { via_id })
@@ -38,22 +38,21 @@ export class CroquiRepository {
       .then((croquis) => croquis.map(croqui => croqui.id));
   }
 
-  async getCroquisByViaId (via_id: number): Promise<ObjectLiteral[]> {
+  async getByViaId (via_id: number): Promise<ObjectLiteral[]> {
     return this.repository.createQueryBuilder("croqui")
-      .leftJoin("croqui.vias", "via")
-      .where("via.id = :via_id", { via_id })
-      .getMany();
+        .leftJoin("croqui.vias", "via")
+        .where("via.id = :via_id", { via_id })
+        .getRawMany();
   }
 
-  async associarCroquiVia (croqui_id: number, via_id: number): Promise<void> {
+  async associarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
       .of(croqui_id)
       .add(via_id);
-
   }
 
-  async desassociarCroquiVia (croqui_id: number, via_id: number): Promise<void> {
+  async desassociarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
       .of(croqui_id)

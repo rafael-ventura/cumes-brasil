@@ -7,9 +7,9 @@ const UsuarioRepository_1 = require("../../Infrastructure/repositories/UsuarioRe
 const usuarioService = new UsuarioService_1.UsuarioService(new UsuarioRepository_1.UsuarioRepository());
 const usuarioController = new UsuarioController_1.UsuarioController(usuarioService);
 const UsuarioRouter = (0, express_1.Router)();
-UsuarioRouter.get("/:id", usuarioController.getUsuarioById);
-UsuarioRouter.get("/", usuarioController.getAllUsuario);
-UsuarioRouter.post("/", usuarioController.registrarUsuario);
-UsuarioRouter.put("/:id", usuarioController.updateUsuario);
-UsuarioRouter.delete("/:id", usuarioController.deleteUsuario);
+UsuarioRouter.get("/:id", usuarioController.getById);
+UsuarioRouter.get("/", usuarioController.getAll);
+UsuarioRouter.post("/", usuarioController.registrar);
+UsuarioRouter.put("/:id", usuarioController.update);
+UsuarioRouter.delete("/:id", usuarioController.delete);
 exports.default = UsuarioRouter;

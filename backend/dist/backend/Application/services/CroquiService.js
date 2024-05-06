@@ -54,27 +54,27 @@ class CroquiService {
         if (!via_id || !croqui_id) {
             throw new Error("Erro na passagem de Ids. Id inválido");
         }
-        const croquiViaExiste = await this.croquiRepository.getCroquisIdsByViaId(via_id);
+        const croquiViaExiste = await this.croquiRepository.getIdsByViaId(via_id);
         if (croquiViaExiste) {
             throw new Error("Croqui já associado a esta via");
         }
-        return this.croquiRepository.associarCroquiVia(croqui_id, via_id);
+        return this.croquiRepository.associarVia(croqui_id, via_id);
     }
     async desassociarCroquiEmVia(croqui_id, via_id) {
         if (!via_id || !croqui_id) {
             throw new Error("Erro na passagem de Ids. Id inválido");
         }
-        const croquiViaExiste = await this.croquiRepository.getCroquisIdsByViaId(via_id);
+        const croquiViaExiste = await this.croquiRepository.getIdsByViaId(via_id);
         if (!croquiViaExiste) {
             throw new Error("Croqui não associado a esta via");
         }
-        return this.croquiRepository.desassociarCroquiVia(croqui_id, via_id);
+        return this.croquiRepository.desassociarVia(croqui_id, via_id);
     }
     async getCroquisIdsByViaId(id) {
-        return this.croquiRepository.getCroquisIdsByViaId(id);
+        return this.croquiRepository.getIdsByViaId(id);
     }
     async getCroquisByViaId(id) {
-        return this.croquiRepository.getCroquisByViaId(id);
+        return this.croquiRepository.getByViaId(id);
     }
 }
 exports.CroquiService = CroquiService;

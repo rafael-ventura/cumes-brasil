@@ -59,33 +59,19 @@ export class CroquiService {
     }
 
     async associarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
-        if (!via_id || !croqui_id) {
-            throw new Error("Erro na passagem de Ids. Id inválido");
-        }
-        const croquiViaExiste = await this.croquiRepository.getCroquisIdsByViaId(via_id);
-        if (croquiViaExiste) {
-            throw new Error("Croqui já associado a esta via");
-        }
-        return this.croquiRepository.associarCroquiVia(croqui_id, via_id);
+        return this.croquiRepository.associarVia(croqui_id, via_id);
     }
 
     async desassociarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
-        if (!via_id || !croqui_id) {
-            throw new Error("Erro na passagem de Ids. Id inválido");
-        }
-        const croquiViaExiste = await this.croquiRepository.getCroquisIdsByViaId(via_id);
-        if (!croquiViaExiste) {
-            throw new Error("Croqui não associado a esta via");
-        }
-        return this.croquiRepository.desassociarCroquiVia(croqui_id, via_id);
+        return this.croquiRepository.desassociarVia(croqui_id, via_id);
     }
 
     async getCroquisIdsByViaId (id: number): Promise<number[] | null> {
-        return this.croquiRepository.getCroquisIdsByViaId(id);
+        return this.croquiRepository.getIdsByViaId(id);
     }
 
     async getCroquisByViaId (id: number): Promise<ObjectLiteral[]> {
-        return this.croquiRepository.getCroquisByViaId(id);
+        return this.croquiRepository.getByViaId(id);
     }
 
 }

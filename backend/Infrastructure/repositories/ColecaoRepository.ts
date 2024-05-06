@@ -31,10 +31,7 @@ export class ColecaoRepository {
     }
 
     async update (id: number, colecaoData: Partial<Colecao>): Promise<void> {
-        await this.repository.save({
-            ...colecaoData,
-            id: Number(id)
-        });
+        await this.repository.update(id, colecaoData);
     }
 
     async delete (id: number): Promise<void> {
@@ -42,23 +39,16 @@ export class ColecaoRepository {
     }
 
     async addViaToColecao (viaId: number, colecaoId: number): Promise<void> {
-        const colecao = await this.getById(colecaoId);
-
-        if (colecao) {
-            const via = await this.viaRepository.findOne(viaId as any);
-            if (via) {
-                colecao.vias.push(via);
-                await this.repository.save(colecao);
-            }
-        }
+        await this.viaRepository.createQueryBuilder()
+          .relation(Via, "colecoes")
+          .of(viaId)
+          .add(colecaoId);
     }
 
     async removeViaFromColecao (viaId: number, colecaoId: number): Promise<void> {
-        const colecao = await this.getById(colecaoId);
-        if (colecao) {
-            colecao.vias = colecao.vias.filter(via => via.id !== viaId);
-            await this.repository.save(colecao);
-        }
-
+        await this.viaRepository.createQueryBuilder()
+          .relation(Via, "colecoes")
+          .of(viaId)
+          .remove(colecaoId);
     }
 }

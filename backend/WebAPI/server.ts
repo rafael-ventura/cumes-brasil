@@ -5,7 +5,6 @@ import routes from "./routes/routes";
 import "reflect-metadata";
 import swaggerDocument from "../swagger_output.json";
 import { AppDataSource } from "../Infrastructure/config/db";
-import { initialLoad } from "../Infrastructure/sql_scripts/initialLoad";
 
 dotenv.config();
 

@@ -9,10 +9,10 @@ const usuarioController = new UsuarioController(usuarioService);
 
 const UsuarioRouter = Router();
 
-UsuarioRouter.get("/:id", usuarioController.getUsuarioById);
-UsuarioRouter.get("/", usuarioController.getAllUsuario);
-UsuarioRouter.post("/", usuarioController.registrarUsuario);
-UsuarioRouter.put("/:id", usuarioController.updateUsuario);
-UsuarioRouter.delete("/:id", usuarioController.deleteUsuario);
+UsuarioRouter.get("/:id", usuarioController.getById);
+UsuarioRouter.get("/", usuarioController.getAll);
+UsuarioRouter.post("/", usuarioController.registrar);
+UsuarioRouter.put("/:id", usuarioController.update);
+UsuarioRouter.delete("/:id", usuarioController.delete);
 
 export default UsuarioRouter;

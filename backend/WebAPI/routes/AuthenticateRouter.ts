@@ -14,6 +14,6 @@ AuthenticateRouter.post("/login", authController.login);
 AuthenticateRouter.post("/google-login", authController.googleLogin);
 
 // Rota de registro
-AuthenticateRouter.post('/register', usuarioController.registrarUsuario);
+AuthenticateRouter.post('/register', usuarioController.registrar);
 
 export default AuthenticateRouter;

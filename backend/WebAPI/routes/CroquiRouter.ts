@@ -13,12 +13,12 @@ const croquiController = new CroquiController(croquiService);
 const CroquiRouter = Router();
 
 CroquiRouter.get("/:id", croquiController.getCroquiById);
-CroquiRouter.get("/", croquiController.getAllCroqui);
-CroquiRouter.get("/:id/croquis", croquiController.getCroquisByViaId);
-CroquiRouter.post("/", croquiController.createCroqui);
-CroquiRouter.put("/:id", croquiController.updateCroqui);
-CroquiRouter.delete("/:id", croquiController.deleteCroqui);
-CroquiRouter.post("/associarVia", croquiController.associarCroquiEmVia);
-CroquiRouter.post("/desassociarVia", croquiController.desassociarCroquiEmVia);
+CroquiRouter.get("/", croquiController.getAll);
+CroquiRouter.get("/via/:id", croquiController.getByViaId);
+CroquiRouter.post("/", croquiController.create);
+CroquiRouter.put("/:id", croquiController.update);
+CroquiRouter.delete("/:id", croquiController.delete);
+CroquiRouter.post("/associarVia", croquiController.associarVia);
+CroquiRouter.post("/desassociarVia", croquiController.desassociarVia);
 
 export default CroquiRouter;
