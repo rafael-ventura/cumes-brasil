@@ -18,7 +18,7 @@ CroquiRouter.get("/via/:id", croquiController.getByViaId);
 CroquiRouter.post("/", croquiController.create);
 CroquiRouter.put("/:id", croquiController.update);
 CroquiRouter.delete("/:id", croquiController.delete);
-CroquiRouter.post("/associarVia", croquiController.associarVia);
-CroquiRouter.post("/desassociarVia", croquiController.desassociarVia);
+CroquiRouter.post("/via/associar", croquiController.associarVia);
+CroquiRouter.post("/via/associar", croquiController.desassociarVia);
 
 export default CroquiRouter;

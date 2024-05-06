@@ -16,7 +16,7 @@ export class ColecaoController {
      * @returns {object} 404 - Colecao não encontrada
      * @returns {Error} 500 - Erro desconhecido
      */
-    getColecaoById = async (req: Request, res: Response) => {
+    getById = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
             const colecao = await this.service.getColecaoById(id);
@@ -28,7 +28,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getColecaoById"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getById"});
             }
         }
     }
@@ -63,7 +63,7 @@ export class ColecaoController {
      * @returns {object} 201 - Colecoes encontradas com sucesso
      * @returns {Error} 500 - Erro desconhecido
      */
-    getColecoesByUsuarioId = async (req: Request, res: Response) => {
+    getByUsuarioId = async (req: Request, res: Response) => {
         try {
             const usuarioId = Number(req.params.usuarioId);
             const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
@@ -77,7 +77,7 @@ export class ColecaoController {
                 } else if (error.message === "Usuário inválido") {
                     return res.status(400).json({error: error.message});
                 } else {
-                    res.status(500).json({error: "Ocorreu um erro desconhecido em controller getColecoesByUsuarioId"});
+                    res.status(500).json({error: "Ocorreu um erro desconhecido em controller getByUsuarioId"});
                 }
             }
         }
@@ -152,13 +152,13 @@ export class ColecaoController {
     }
 
     /**
-     * @route POST Via /colecoes/addVia
+     * @route POST Via /colecoes/adicionarVia
      * @group Colecoes - Operações relacionadas a colecoes
      * @returns {object} 200 - Via adicionada com sucesso
      * @returns {Error} 500 - Erro desconhecido
      * @returns {object} 404 - Colecao não encontrada
      */
-    addVia = async (req: Request, res: Response) => {
+    adicionarVia = async (req: Request, res: Response) => {
         try {
             const {
                 colecao_id,
@@ -177,7 +177,7 @@ export class ColecaoController {
                     return res.status(404).json({message: error.message});
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller addVia"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller adicionarVia"});
             }
         }
     }

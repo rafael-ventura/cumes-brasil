@@ -142,7 +142,7 @@ export class EscaladaController {
 	 * @returns {object} 404 - Escalada não encontrada
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
-	getEscaladasDoUsuario = async (req: Request, res: Response) => {
+	getByUsuarioId = async (req: Request, res: Response) => {
 		try {
 			const usuarioId = parseInt(req.params.usuarioId);
 			const result = await this.service.getEscaladasDoUsuario(usuarioId);
@@ -160,7 +160,7 @@ export class EscaladaController {
 		}
 	};
 
-	getEscaladasDaVia = async (req: Request, res: Response) => {
+	getByViaId = async (req: Request, res: Response) => {
 		try {
 			const viaId = parseInt(req.params.viaId);
 			const result = await this.service.getEscaladasDaVia(viaId);

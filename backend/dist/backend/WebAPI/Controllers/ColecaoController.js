@@ -24,7 +24,7 @@ class ColecaoController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getColecaoById" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getById" });
                 }
             }
         };
@@ -77,7 +77,7 @@ class ColecaoController {
                         return res.status(400).json({ error: error.message });
                     }
                     else {
-                        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getColecoesByUsuarioId" });
+                        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByUsuarioId" });
                     }
                 }
             }
@@ -153,7 +153,7 @@ class ColecaoController {
             }
         };
         /**
-         * @route POST Via /colecoes/addVia
+         * @route POST Via /colecoes/adicionarVia
          * @group Colecoes - Operações relacionadas a colecoes
          * @returns {object} 200 - Via adicionada com sucesso
          * @returns {Error} 500 - Erro desconhecido
@@ -177,7 +177,7 @@ class ColecaoController {
                     }
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller addVia" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller adicionarVia" });
                 }
             }
         };

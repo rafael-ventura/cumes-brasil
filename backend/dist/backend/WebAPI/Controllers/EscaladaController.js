@@ -146,7 +146,7 @@ class EscaladaController {
         this.getEscaladasDoUsuario = async (req, res) => {
             try {
                 const usuarioId = parseInt(req.params.usuarioId);
-                const result = await this.service.getEscaladasDoUsuario(usuarioId);
+                const result = await this.service.getByUsuarioId(usuarioId);
                 res.json(result);
             }
             catch (error) {
@@ -166,7 +166,7 @@ class EscaladaController {
         this.getEscaladasDaVia = async (req, res) => {
             try {
                 const viaId = parseInt(req.params.viaId);
-                const result = await this.service.getEscaladasDaVia(viaId);
+                const result = await this.service.getByViaId(viaId);
                 res.json(result);
             }
             catch (error) {

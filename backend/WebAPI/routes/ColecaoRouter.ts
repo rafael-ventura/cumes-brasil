@@ -18,13 +18,13 @@ const colecaoController = new ColecaoController(colecaoService);
 
 const ColecaoRouter = Router();
 
-ColecaoRouter.get("/:id", colecaoController.getColecaoById);
+ColecaoRouter.get("/:id", colecaoController.getById);
 ColecaoRouter.get("/", colecaoController.getAllColecao);
 ColecaoRouter.post("/", colecaoController.createColecao);
 ColecaoRouter.put("/", colecaoController.updateColecao);
 ColecaoRouter.delete("/:id", colecaoController.deleteColecao);
-ColecaoRouter.post("/addVia", colecaoController.addVia);
-ColecaoRouter.delete("/removeVia/:colecaoId/:viaId", colecaoController.removeVia);
-ColecaoRouter.get("/colecoesDoUsuario/:usuarioId", colecaoController.getColecoesByUsuarioId);
+ColecaoRouter.post("/:id/via", colecaoController.adicionarVia);
+ColecaoRouter.delete("/:id/via/:viaId", colecaoController.removeVia);
+ColecaoRouter.get("/usuario/:id", colecaoController.getByUsuarioId);
 
 export default ColecaoRouter;
