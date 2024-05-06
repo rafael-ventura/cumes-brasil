@@ -1,5 +1,5 @@
+import { Fonte } from "../../Domain/entities/Fonte";
 import { FonteRepository } from "../../Infrastructure/repositories/FonteRepository";
-import { Fonte } from "../../Domain/models/Fonte";
 
 export class FonteService {
 	private fonteRepository: FonteRepository;
@@ -8,42 +8,38 @@ export class FonteService {
 		this.fonteRepository = fonteRepository;
 	}
 
-	async getFonteById(id: number): Promise<Fonte | null> {
+	async getFonteById (id: number): Promise<Fonte | null> {
 		if (!id) {
 			throw new Error("ID da fonte não fornecido");
 		} else if (isNaN(id)) {
 			throw new Error("ID da fonte inválido");
 		}
-		const response = await this.fonteRepository.getFonteById(id);
-		if (!response) {
-			throw new Error("Fonte não encontrada");
+		return this.fonteRepository.getById(id);
+
+	}
+
+	async getFontes (): Promise<Fonte[]> {
+		return this.fonteRepository.getAll();
+	}
+
+	async createFonte (fonte: Fonte): Promise<void> {
+		if (!fonte) {
+			throw new Error("Fonte inválida");
 		}
-		return response;
+		return this.fonteRepository.create(fonte);
 	}
 
-	async getFontes(): Promise<Fonte[] | null> {
-		const fontes = await this.fonteRepository.getFontes();
-		if (!fontes) {
-			throw new Error("Nenhuma fonte encontrada");
-		}
-		return fontes;
-	}
-
-	async createFonte(fonte: Fonte): Promise<void> {
-		// Adicione suas regras de validação aqui antes de criar a fonte
-		return this.fonteRepository.createFonte(fonte);
-	}
-
-	async updateFonte(fonte: Fonte): Promise<void> {
-		if (!fonte.id) {
+	async updateFonte (id: number, fonteData: Partial<Fonte>): Promise<void> {
+		if (!id) {
 			throw new Error("ID da fonte não fornecido");
+		} else if (isNaN(id)) {
+			throw new Error("ID da fonte inválido");
 		}
-		const existingFonte = await this.getFonteById(fonte.id);
+		const existingFonte = await this.getFonteById(id);
 		if (!existingFonte) {
 			throw new Error("Fonte não encontrada");
 		}
-		// Adicione suas regras de validação aqui antes de atualizar a fonte
-		return this.fonteRepository.updateFonte(fonte);
+		await this.fonteRepository.update(id, fonteData);
 	}
 
 	async deleteFonte(id: number): Promise<void> {
@@ -56,10 +52,6 @@ export class FonteService {
 		if (!existingFonte) {
 			throw new Error("Fonte não encontrada");
 		}
-		const result = await this.fonteRepository.deleteFonte(id);
-		if (result === null) {
-			throw new Error("Erro ao deletar Fonte");
-		}
-		return result;
+		await this.fonteRepository.delete(id);
 	}
 }

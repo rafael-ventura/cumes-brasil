@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ViaService } from "../../Application/services/ViaService";
-import { Via } from "../../Domain/models/Via";
+import { Via } from "../../Domain/entities/Via";
 
 export class ViaController {
 	private service: ViaService;
@@ -97,7 +97,7 @@ export class ViaController {
 	updateVia = async (requisicao: Request, resposta: Response) => {
 		try {
 			const via: Via = requisicao.body;
-			await this.service.updateVia(via);
+			await this.service.updateVia(via.id, via);
 			resposta.json({ message: "Via atualizada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
@@ -140,29 +140,4 @@ export class ViaController {
 		}
 	};
 
-	/**
-	 * @route GET /vias/:id/croquis
-	 * @group Vias - Operações relacionadas a vias e croquis
-	 * @returns {object} 200 - Croquis encontrados com sucesso
-	 * @returns {Error} 500 - Erro desconhecido
-	 * @returns {object} 400 - Via não encontrada
-	 * @returns {object} 404 - Nenhum croqui encontrado para a Via com ID fornecido
-	 */
-	getCroquisByViaId = async (req: Request, res: Response) => {
-		try {
-			const id = parseInt(req.params.id);
-
-			const croquis = await this.service.getCroquisByViaId(id);
-			res.status(200).json(croquis);
-		} catch (error) {
-			if (error instanceof Error) {
-				if (error.message === "Via não encontrada") {
-					return res.status(400).json({ error: error.message });
-				} else if (error.message === "Nenhum croqui encontrado") {
-					return res.status(404).json({ error: error.message });
-				}
-			}
-			return res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getCroquisByViaId" });
-		}
-	};
 }

@@ -1,30 +1,41 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsuarioService = void 0;
+const UsuarioRepository_1 = require("../../Infrastructure/repositories/UsuarioRepository");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UsuarioService {
-    constructor(repository) {
-        this.repository = repository;
+    constructor(usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
     }
     async getUsuarioById(id) {
-        return this.repository.getUsuarioById(id);
+        return this.usuarioRepo.getById(id);
     }
     async getUsuarios() {
-        return this.repository.getUsuarios();
+        return this.usuarioRepo.getAll();
     }
-    async createUsuario(usuario) {
-        return this.repository.createUsuario(usuario);
+    async register(nome, email, password) {
+        const passwordHash = await bcrypt_1.default.hash(password, 10);
+        await this.usuarioRepo.create(nome, email, passwordHash);
     }
     async updateUsuario(usuario) {
-        if (!await this.getUsuarioById(usuario.id)) {
-            throw new Error("Usuario não encontrada");
-        }
-        return this.repository.updateUsuario(usuario);
+        await this.usuarioRepo.update(usuario.id, usuario);
     }
     async deleteUsuario(id) {
-        if (!await this.getUsuarioById(id)) {
-            throw new Error("Usuario não encontrada");
+        const user = await this.usuarioRepo.getById(id);
+        if (!user) {
+            throw new Error("Usuario não encontrado");
         }
-        return this.repository.deleteUsuario(id);
+        await this.usuarioRepo.delete(id);
+    }
+    async getUsuarioByEmail(email) {
+        return this.usuarioRepo.findByEmail(email);
+    }
+    async getPerfil(id) {
+        return this.usuarioRepo.getPerfil(id);
     }
 }
 exports.UsuarioService = UsuarioService;
+exports.default = new UsuarioService(new UsuarioRepository_1.UsuarioRepository());

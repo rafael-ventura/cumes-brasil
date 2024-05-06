@@ -12,7 +12,8 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "types": ["reflect-metadata"],
+    "strictPropertyInitialization": false,
+    "types": ["reflect-metadata"]
   },
   "include": [
     "WebAPI/**/*.ts",

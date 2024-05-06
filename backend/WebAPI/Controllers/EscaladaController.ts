@@ -1,7 +1,6 @@
 import { EscaladaService } from "../../Application/services/EscaladaService";
 import { Request, Response } from "express";
-import { Escalada } from "../../Domain/models/Escalada";
-import { UsuarioService } from "../../Application/services/UsuarioService";
+import { Escalada } from "../../Domain/entities/Escalada";
 
 export class EscaladaController {
 	private service: EscaladaService;
@@ -40,26 +39,25 @@ export class EscaladaController {
 	 * @route GET /escaladas
 	 * @group Escaladas - Operações relacionadas a escaladas
 	 * @returns {Array.<Escalada>} 200 - Escaladas encontradas
-	 * @returns {Error} 500 - Erro desconhecido
 	 * @returns {object} 404 - Escalada não encontrada
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getAllEscalada = async (_: Request, res: Response) => {
 		try {
-			const escaladas: Escalada[] | null = await this.service.getEscaladas();
+			const escaladas = await this.service.getEscaladas();
 			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "Escalada não encontrada") {
-					res.status(404).json({ error: error.message });
-				} else {
-					res.status(500).json({ error: error.message });
+				if (error.message === "Nenhuma escalada encontrada") {
+					return res.status(404).json({ message: error.message });
 				}
+				res.status(500).json({ error: error.message });
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
 			}
 		}
-	};
+
+	}
 
 	/**
 	 * @route POST /escaladas
@@ -75,11 +73,11 @@ export class EscaladaController {
 		} catch (error) {
 			if (error instanceof Error) {
 				if (error.message === "É necessário informar uma via válida para criar uma escalada") {
-					res.status(404).json({ error: error.message });
+					res.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário informar um usuário válido para criar uma escalada") {
 					res.status(400).json({ error: error.message });
 				} else {
-					res.status(500).json({ error: error.message });
+					return res.status(404).json({ message: error.message });
 				}
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
@@ -95,19 +93,15 @@ export class EscaladaController {
 	 */
 	updateEscalada = async (req: Request, res: Response) => {
 		try {
-			const escalada: Escalada = req.body;
+			const escalada = req.body;
 			await this.service.updateEscalada(escalada);
-			res.json({ message: "Escala atualizada com sucesso" });
+			res.status(200).json({ message: "Escalada atualizada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
 				if (error.message === "Escalada não encontrada") {
 					res.status(404).json({ error: error.message });
-				} else if (error.message === "É necessário informar uma via válida para criar uma escalada") {
-					res.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário informar um usuário válido para criar uma escalada") {
-					res.status(400).json({ error: error.message });
 				} else {
-					return res.status(404).json({ message: error.message });
+					res.status(500).json({ error: error.message });
 				}
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
@@ -148,7 +142,7 @@ export class EscaladaController {
 	 * @returns {object} 404 - Escalada não encontrada
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
-	getEscaladasDoUsuario = async (req: Request, res: Response) => {
+	getByUsuarioId = async (req: Request, res: Response) => {
 		try {
 			const usuarioId = parseInt(req.params.usuarioId);
 			const result = await this.service.getEscaladasDoUsuario(usuarioId);
@@ -166,7 +160,7 @@ export class EscaladaController {
 		}
 	};
 
-	getEscaladasDaVia = async (req: Request, res: Response) => {
+	getByViaId = async (req: Request, res: Response) => {
 		try {
 			const viaId = parseInt(req.params.viaId);
 			const result = await this.service.getEscaladasDaVia(viaId);

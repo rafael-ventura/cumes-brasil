@@ -1,16 +1,13 @@
-import {UsuarioService} from "../../Application/services/UsuarioService";
-import {Request, Response} from "express";
-import {Usuario} from "../../Domain/models/Usuario";
-import jwt from "jsonwebtoken";
+import { UsuarioService } from "../../Application/services/UsuarioService";
+import { Request, Response } from "express";
+import { Usuario } from "../../Domain/entities/Usuario";
 
 export class UsuarioController {
     private service: UsuarioService;
 
-    constructor(service: UsuarioService) {
+    constructor (service: UsuarioService) {
         this.service = service;
     }
-
-
 
     /**
      * @route GET /usuarios/:id
@@ -19,7 +16,7 @@ export class UsuarioController {
      * @returns {object} 404 - Usuario não encontrado
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    getUsuarioById = async (requisicao: Request, resposta: Response) => {
+    getById = async (requisicao: Request, resposta: Response) => {
         try {
             const id = parseInt(requisicao.params.id);
             const resultado = await this.service.getUsuarioById(id);
@@ -43,7 +40,7 @@ export class UsuarioController {
      * @returns {object} 404 - Usuarios não encontrados
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    getAllUsuario = async (_: Request, resposta: Response) => {
+    getAll = async (_: Request, resposta: Response) => {
         try {
             const result = await this.service.getUsuarios();
             if (result?.length === 0) {
@@ -65,7 +62,7 @@ export class UsuarioController {
      * @returns {object} 200 - Usuario criada com sucesso.
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    createUsuario = async (requisicao: Request, resposta: Response) => {
+    registrar = async (requisicao: Request, resposta: Response) => {
         try {
             const { nome, email, password } = requisicao.body;
             await this.service.register(nome, email, password);
@@ -87,7 +84,7 @@ export class UsuarioController {
      * @returns {object} 404 -message error
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    updateUsuario = async (requisicao: Request, resposta: Response) => {
+    update = async (requisicao: Request, resposta: Response) => {
         try {
             const usuario: Usuario = requisicao.body;
             await this.service.updateUsuario(usuario);
@@ -112,7 +109,7 @@ export class UsuarioController {
      * @returns {object} 404 -message error
      * @returns {Error} 500 - Ocorreu um erro desconhecido
      */
-    deleteUsuario = async (requisicao: Request, resposta: Response) => {
+    delete = async (requisicao: Request, resposta: Response) => {
         try {
             const id = parseInt(requisicao.params.id);
             await this.service.deleteUsuario(id);
@@ -130,9 +127,9 @@ export class UsuarioController {
     }
 
     //get perfil
-getPerfil = async (requisicao: Request, resposta: Response) => {
+    getPerfil = async (requisicao: Request, resposta: Response) => {
     try {
-        const userId = requisicao.user.userId;
+        const userId = parseInt(requisicao.params.id);
         const resultado = await this.service.getPerfil(userId);
         if (!resultado) {
             return resposta.status(404).json({message: "Perfil não encontrado."});
