@@ -15,7 +15,7 @@ class FaceController {
                 const id = parseInt(req.params.id);
                 const result = await this.service.getFaceById(id);
                 if (!result) {
-                    return res.status(404).json({ message: "Face não encontrada." });
+                    return res.status(404).json({ error: "Face não encontrada" });
                 }
                 res.json(result);
             }
@@ -40,7 +40,7 @@ class FaceController {
             try {
                 const faces = await this.service.getFaces();
                 if (faces?.length === 0) {
-                    return res.status(404).json({ message: "Nenhuma face encontrada" });
+                    return res.status(404).json({ error: "Nenhuma face encontrada" });
                 }
                 res.json(faces);
             }
@@ -67,6 +67,12 @@ class FaceController {
             }
             catch (error) {
                 if (error instanceof Error) {
+                    if (error.message === "É necessário existir uma fonte antes da criação da via") {
+                        res.status(400).json({ error: error.message });
+                    }
+                    else if (error.message === "É necessário existir uma montanha antes da criação da via") {
+                        res.status(400).json({ error: error.message });
+                    }
                     res.status(500).json({ error: error.message });
                 }
                 else {
@@ -81,9 +87,22 @@ class FaceController {
            * @returns {Error} 500 - Erro desconhecido
            */
         this.updateFace = async (req, res) => {
-            const face = req.body;
-            await this.service.updateFace(face);
-            res.status(200).send();
+            try {
+                const face = req.body;
+                await this.service.updateFace(face.id, face);
+                res.status(200).json({ message: "Face atualizada com sucesso" });
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    if (error.message === "Face não encontrada") {
+                        res.status(404).json({ error: error.message });
+                    }
+                    res.status(500).json({ error: error.message });
+                }
+                else {
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                }
+            }
         };
         /**
            * @route DELETE /faces/:id
@@ -93,9 +112,24 @@ class FaceController {
            * @returns {object} 404 - Face não encontrada
            */
         this.deleteFace = async (req, res) => {
-            const id = Number(req.params.id);
-            await this.service.deleteFace(id);
-            res.status(200).send();
+            try {
+                const id = Number(req.params.id);
+                await this.service.deleteFace(id);
+                res.status(201).json({ message: "Face deletada com sucesso" });
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    if (error.message === "Face não encontrada") {
+                        return res.status(404).json({ error: error.message });
+                    }
+                    else {
+                        res.status(500).json({ error: error.message });
+                    }
+                }
+                else {
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                }
+            }
         };
         this.service = faceService;
     }

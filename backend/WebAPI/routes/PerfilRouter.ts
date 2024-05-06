@@ -1,11 +1,11 @@
-import {Router} from 'express';
-import dbConnection from '../../Infrastructure/config/db';
-import {UsuarioController} from '../Controllers/UsuarioController';
-import {UsuarioService} from '../../Application/services/UsuarioService';
-import {UsuarioRepository} from '../../Infrastructure/repositories/UsuarioRepository';
-import {authorizationMiddleware} from "../Middlewares/AuthorizationMiddleware";
+import { Router } from "express";
 
-const usuarioService = new UsuarioService(new UsuarioRepository(dbConnection));
+import { UsuarioController } from "../Controllers/UsuarioController";
+import { UsuarioService } from "../../Application/services/UsuarioService";
+import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
+import { authorizationMiddleware } from "../Middlewares/AuthorizationMiddleware";
+
+const usuarioService = new UsuarioService(new UsuarioRepository());
 const usuarioController = new UsuarioController(usuarioService)
 
 const PerfilRouter = Router();

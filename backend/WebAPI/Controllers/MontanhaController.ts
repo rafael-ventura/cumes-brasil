@@ -1,11 +1,11 @@
-import {MontanhaService} from "../../Application/services/MontanhaService";
-import {Request, Response} from "express";
-import {Montanha} from "../../Domain/models/Montanha";
+import { MontanhaService } from "../../Application/services/MontanhaService";
+import { Request, Response } from "express";
+import { Montanha } from "../../Domain/entities/Montanha";
 
 export class MontanhaController {
     private service: MontanhaService;
 
-    constructor(montanhaService: MontanhaService) {
+    constructor (montanhaService: MontanhaService) {
         this.service = montanhaService;
     }
 
@@ -89,8 +89,8 @@ export class MontanhaController {
     updateMontanha = async (req: Request, res: Response) => {
         try {
             const montanha: Montanha = req.body;
-            await this.service.updateMontanha(montanha);
-            res.json({message: "Montanha atualizada com sucesso."});
+            await this.service.updateMontanha(montanha.id, montanha);
+            res.json({ message: "Montanha atualizada com sucesso." });
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Montanha não encontrada") {

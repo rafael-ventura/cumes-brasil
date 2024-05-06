@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FonteService } from "../../Application/services/FonteService";
-import { Fonte } from "../../Domain/models/Fonte";
+import { Fonte } from "../../Domain/entities/Fonte";
 
 export class FonteController {
     private service: FonteService;
@@ -86,7 +86,7 @@ export class FonteController {
     updateFonte = async (req: Request, res: Response) => {
         try {
             const fonte: Fonte = req.body;
-            await this.service.updateFonte(fonte);
+            await this.service.updateFonte(fonte.id, fonte);
             res.status(200).json({ message: "Fonte atualizada com sucesso" });
         } catch (error) {
             if (error instanceof Error) {

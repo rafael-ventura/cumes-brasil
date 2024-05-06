@@ -1,28 +1,25 @@
-// services/AuthenticateService.ts
-
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import {UsuarioRepository} from "../../Infrastructure/repositories/UsuarioRepository";
-import dbConnection from '../../Infrastructure/config/db';
-import https from 'https';
-import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
+import { OAuth2Client } from "google-auth-library";
+import { ObjectLiteral } from "typeorm";
 
 class AuthService {
     private userRepository: UsuarioRepository;
-    private secretKey: string = '';
-    private client: OAuth2Client
+    private secretKey: string = "";
+    private client: OAuth2Client;
 
-    constructor() {
-        this.userRepository = new UsuarioRepository(dbConnection);
+    constructor () {
+        this.userRepository = new UsuarioRepository();
         this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     }
 
-    async login(email: string, password: string): Promise<any> {
-        const user = await this.userRepository.findByEmail(email);
-        if (!user) throw new Error('Nenhum usuário com esse Email encontrado');
+    async login (email: string, password: string): Promise<any> {
+        const user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
+        if (!user) throw new Error("Nenhum usuário com esse Email encontrado");
 
         const isValidPassword = await bcrypt.compare(password, user.password_hash);
-        if (!isValidPassword) throw new Error('Senha inválida');
+        if (!isValidPassword) throw new Error("Senha inválida");
 
         const token = this.generateToken(user.id.toString());
 
@@ -57,12 +54,8 @@ class AuthService {
                 throw new Error('UserID, Email ou Nome não definidos no payload');
             }
 
-            if (typeof email !== 'string' || typeof name !== 'string') {
-                throw new Error('Email ou nome não definidos no payload');
-            }
-
             // Verificar se o usuário já existe
-            let user = await this.userRepository.findByEmail(email);
+            let user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
             if (!user) {
                 // Criar um novo usuário se necessário
                 const passwordHash = await bcrypt.hash(googleToken, 10);

@@ -1,204 +1,49 @@
-import {Database} from "sqlite3";
-import {Via} from "../../Domain/models/Via";
-import {Croqui} from "../../Domain/models/Croqui";
+import { Via } from "../../Domain/entities/Via";
+import { AppDataSource } from "../config/db";
 
 export class ViaRepository {
-    private db: Database;
 
-    constructor(db: Database) {
-        this.db = db;
-    }
+  private repository = AppDataSource.getRepository(Via);
 
-    async query(query: string, params: any[] = []): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.db.all(query, params, (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
-        });
-    }
+  async getById (id: number): Promise<Via | null> {
+    return this.repository.findOne({ where: { id: id } });
+  }
 
-    async getViaById(id: number): Promise<any | null> {
-        const query = `SELECT * FROM Via WHERE id = ?`;
-        return new Promise((resolve, reject) => {
-            this.db.get(query, [id], async (err, row: any) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (!row) {
-                    resolve(null);
-                    return;
-                }
+  async getAll (): Promise<Via[]> {
+    return this.repository.find();
+  }
 
-                const via = new Via(
-                    row.id,
-                    row.nome,
-                    row.grau,
-                    row.crux,
-                    row.artificial,
-                    row.duracao,
-                    row.exposicao,
-                    row.extensao,
-                    JSON.parse(row.conquistadores),
-                    row.detalhes,
-                    row.data,
-                    row.montanha_id,
-                    row.face_id,
-                    row.via_principal_id,
-                    row.fonte_id
-                );
+  async create (via: Partial<Via>): Promise<void> {
+    await this.repository.insert(via);
+  }
 
-                resolve(via);
-            });
-        });
-    }
+  async update (id: number, viaData: Partial<Via>): Promise<void> {
+    await this.repository.update(id as any, viaData);
+  }
 
-    async getVias(): Promise<any[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Via`, (err, rows: Via[]) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const vias = rows.map(
-                        (row) =>
-                            new Via(
-                                row.id,
-                                row.nome,
-                                row.grau,
-                                row.crux,
-                                row.artificial,
-                                row.duracao,
-                                row.exposicao,
-                                row.extensao,
-                                typeof row.conquistadores === 'string' ? JSON.parse(row.conquistadores) : [],
-                                row.detalhes,
-                                row.data,
-                                row.montanha_id,
-                                row.face_id,
-                                row.via_principal_id,
-                                row.fonte_id
-                            )
-                    );
-                    resolve(vias);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-    }
+  async delete (id: number): Promise<void> {
+    await this.repository.delete(id as any);
+  }
 
-    async createVia(via: Via): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `INSERT INTO Via (nome, grau, crux, artificial, duracao, exposicao, extensao, conquistadores, detalhes, data, montanha_id, face_id, via_principal_id, fonte_id) 
-            VALUES (?, ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)`,
-                [
-                    via.nome,
-                    via.grau,
-                    via.crux,
-                    via.artificial,
-                    via.duracao,
-                    via.exposicao,
-                    via.extensao,
-                    JSON.stringify(via.conquistadores),
-                    via.detalhes,
-                    via.data,
-                    via.montanha_id,
-                    via.face_id,
-                    via.via_principal_id,
-                    via.fonte_id,
-                ],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  async addCroqui (viaId: number, croquiId: number): Promise<void> {
+    await this.repository.createQueryBuilder()
+      .relation(Via, "croquis")
+      .of(viaId)
+      .add(croquiId);
+  }
 
-    async updateVia(via: Via): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(
-                `UPDATE Via SET nome = ?, grau = ?, crux = ?, artificial = ?, duracao = ?, exposicao = ?, extensao = ?, conquistadores = ?, detalhes = ?, data = ?, montanha_id = ?, face_id = ?, via_principal_id = ?, fonte_id = ? WHERE id = ?`,
-                [
-                    via.nome,
-                    via.grau,
-                    via.crux,
-                    via.artificial,
-                    via.duracao,
-                    via.exposicao,
-                    via.extensao,
-                    JSON.stringify(via.conquistadores),
-                    via.detalhes,
-                    via.data,
-                    via.montanha_id,
-                    via.face_id,
-                    via.via_principal_id,
-                    via.fonte_id,
-                    via.id,
-                ],
-                (err) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    resolve();
-                }
-            );
-        });
-    }
+  async removeCroqui (viaId: number, croquiId: number): Promise<void> {
+    await this.repository.createQueryBuilder()
+      .relation(Via, "croquis")
+      .of(viaId)
+      .remove(croquiId);
+  }
 
-    async deleteVia(id: number): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Via WHERE id = ?`, [id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
-    }
-
-    public async getCroquisByViaId(viaId: number): Promise<Croqui[] | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all(
-                `SELECT c.* FROM Croqui c
-                INNER JOIN ViasCroquis vc ON c.id = vc.croqui_id
-                WHERE vc.via_id = ?`,
-                [viaId],
-                (err, rows: Croqui[]) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    if (rows) {
-                        const croquis = rows.map(
-                            (row) =>
-                                new Croqui(
-                                    row.id,
-                                    row.nome,
-                                    row.imagemUrl,
-                                    row.autor,
-                                    row.descricao,
-                                    row.fonte_id
-                                )
-                        );
-                        resolve(croquis);
-                    } else {
-                        resolve(null);
-                    }
-                }
-            );
-        });
-    }
+  async getViasIdByColecaoId (colecaoId: number): Promise<number[]> {
+    const vias = await this.repository.createQueryBuilder("via")
+      .leftJoin("via.colecoes", "colecao")
+      .where("colecao.id = :colecaoId", { colecaoId })
+      .getMany();
+    return vias.map(via => via.id);
+  }
 }

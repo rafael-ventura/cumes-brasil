@@ -1,17 +1,27 @@
-import sqlite3 from 'sqlite3';
-import path from 'path';
+import path from "path";
+import { DataSource } from "typeorm";
+import { Via } from "../../Domain/entities/Via";
+import { Usuario } from "../../Domain/entities/Usuario";
+import { Croqui } from "../../Domain/entities/Croqui";
+import { Face } from "../../Domain/entities/Face";
+import { Montanha } from "../../Domain/entities/Montanha";
+import { Fonte } from "../../Domain/entities/Fonte";
+import { Colecao } from "../../Domain/entities/Colecao";
+import { Escalada } from "../../Domain/entities/Escalada";
 
-function connect() {
-    const dbPath = path.join(__dirname, '../../../database/sqlite/cumes_brasil.db');
-    console.log(dbPath);
-    return new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-        if (err) {
-            console.error('Erro ao conectar ao banco de dados:', err.message);
-        } else {
-            console.log('Conectado ao banco de dados SQLite.');
-        }
-    });
-}
-
-const dbConnection = connect();
-export default dbConnection;
+export const AppDataSource = new DataSource({
+    type: "sqlite",
+    database: path.join(__dirname, "../../../database/sqlite/cumes_brasil.db"),
+    synchronize: true,
+    logging: false,
+    entities: [
+        Via,
+        Usuario,
+        Croqui,
+        Face,
+        Montanha,
+        Fonte,
+        Colecao,
+        Escalada
+    ]
+});

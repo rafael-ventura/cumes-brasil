@@ -24,7 +24,7 @@ class MontanhaController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getMontanhaById" });
                 }
             }
         };
@@ -49,7 +49,7 @@ class MontanhaController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getAllMontanha" });
                 }
             }
         };
@@ -67,10 +67,13 @@ class MontanhaController {
             }
             catch (error) {
                 if (error instanceof Error) {
+                    if (error.message === "Fonte não encontrada") {
+                        return res.status(400).json({ error: error.message });
+                    }
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller createMontanha" });
                 }
             }
         };
@@ -83,7 +86,7 @@ class MontanhaController {
         this.updateMontanha = async (req, res) => {
             try {
                 const montanha = req.body;
-                await this.service.updateMontanha(montanha);
+                await this.service.updateMontanha(montanha.id, montanha);
                 res.json({ message: "Montanha atualizada com sucesso." });
             }
             catch (error) {
@@ -91,10 +94,13 @@ class MontanhaController {
                     if (error.message === "Montanha não encontrada") {
                         return res.status(400).json({ error: error.message });
                     }
+                    else if (error.message === "Fonte não encontrada") {
+                        return res.status(400).json({ error: error.message });
+                    }
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller updateMontanha" });
                 }
             }
         };
@@ -119,7 +125,7 @@ class MontanhaController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller deleteMontanha" });
                 }
             }
         };

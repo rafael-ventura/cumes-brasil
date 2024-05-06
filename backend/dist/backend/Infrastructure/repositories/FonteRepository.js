@@ -1,77 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FonteRepository = void 0;
-const Fonte_1 = require("../../Domain/models/Fonte");
+const Fonte_1 = require("../../Domain/entities/Fonte");
+const db_1 = require("../config/db");
 class FonteRepository {
-    constructor(db) {
-        this.db = db;
+    constructor() {
+        this.repository = db_1.AppDataSource.getRepository(Fonte_1.Fonte);
     }
-    async getFonteById(id) {
-        return new Promise((resolve, reject) => {
-            this.db.get(`SELECT * FROM Fonte WHERE id = ?`, [id], (err, row) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (row) {
-                    const fonte = new Fonte_1.Fonte(row.id, row.autor, row.referencia);
-                    resolve(fonte);
-                }
-                else {
-                    resolve(null);
-                }
-            });
-        });
+    async getById(id) {
+        return this.repository.findOne({ where: { id: id } });
     }
-    async getFontes() {
-        return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM Fonte`, (err, rows) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                if (rows) {
-                    const fontes = rows.map((row) => new Fonte_1.Fonte(row.id, row.autor, row.referencia));
-                    resolve(fontes);
-                }
-                else {
-                    resolve(null);
-                }
-            });
-        });
+    async getAll() {
+        return this.repository.find();
     }
-    async createFonte(fonte) {
-        return new Promise((resolve, reject) => {
-            this.db.run(`INSERT INTO Fonte (autor, referencia) VALUES (?,?)`, [fonte.autor, fonte.referencia], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
+    async create(fonte) {
+        await this.repository.insert(fonte);
     }
-    async updateFonte(fonte) {
-        return new Promise((resolve, reject) => {
-            this.db.run(`UPDATE Fonte SET autor = ?, referencia = ? WHERE id = ?`, [fonte.autor, fonte.referencia, fonte.id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
+    async update(id, fonteData) {
+        await this.repository.update(id, fonteData);
     }
-    async deleteFonte(id) {
-        return new Promise((resolve, reject) => {
-            this.db.run(`DELETE FROM Fonte WHERE id = ?`, [id], (err) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
+    async delete(id) {
+        await this.repository.delete(id);
     }
 }
 exports.FonteRepository = FonteRepository;
