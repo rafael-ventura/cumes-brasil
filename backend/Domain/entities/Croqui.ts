@@ -1,4 +1,13 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { Via } from "./Via";
 import { Fonte } from "./Fonte";
 
@@ -27,6 +36,17 @@ export class Croqui extends BaseEntity {
   fonte_id: number;
 
   @ManyToMany(() => Via, via => via.croquis)
+  @JoinTable({
+    name: "via_croqui",
+    joinColumn: {
+      name: "croquiId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "viaId",
+      referencedColumnName: "id"
+    }
+  })
   vias: Via[];
 
 }

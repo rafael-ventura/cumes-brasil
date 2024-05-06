@@ -19,7 +19,7 @@ export class EscaladaService {
 		this.viaService = viaService;
 	}
 
-	async getEscaladaById (id: number): Promise<Escalada | null> {
+	async getById (id: number): Promise<Escalada | null> {
 		if (!id) {
 			throw new Error("ID da fonte não fornecido");
 		} else if (isNaN(id)) {
@@ -29,15 +29,15 @@ export class EscaladaService {
 
 	}
 
-	async getEscaladas (): Promise<Escalada[]> {
+	async get (): Promise<Escalada[]> {
 		return this.repository.getAll();
 	}
 
-	async createEscalada (escalada: Escalada): Promise<void> {
+	async create (escalada: Escalada): Promise<void> {
 		return this.repository.create(escalada);
 	}
 
-	async updateEscalada(escalada: Escalada): Promise<void> {
+	async update(escalada: Escalada): Promise<void> {
 		const escaladaExiste = await this.repository.getById(escalada.id);
 		if (!escaladaExiste) {
 			throw new Error("Escalada não encontrada");
@@ -45,7 +45,7 @@ export class EscaladaService {
 		return this.repository.update(escalada.id, escalada);
 	}
 
-	async deleteEscalada(id: number): Promise<void> {
+	async delete(id: number): Promise<void> {
 		const escaladaExiste = await this.repository.getById(id);
 		if (!escaladaExiste) {
 			throw new Error("Escalada não encontrada");
@@ -59,7 +59,7 @@ export class EscaladaService {
 		} else if (isNaN(usuario_id)) {
 			throw new Error("ID do usuário inválido");
 		}
-		return this.repository.getEscaladasByUserId(usuario_id);
+		return this.repository.getByUserId(usuario_id);
 	}
 
 	async getEscaladasDaVia (via_id: number): Promise<ObjectLiteral[]> {
@@ -68,6 +68,6 @@ export class EscaladaService {
 		} else if (isNaN(via_id)) {
 			throw new Error("ID da via inválido");
 		}
-		return this.repository.getEscaladasByViaId(via_id);
+		return this.repository.getByViaId(via_id);
 	}
 }

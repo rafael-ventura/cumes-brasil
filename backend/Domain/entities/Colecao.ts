@@ -23,14 +23,10 @@ export class Colecao extends BaseEntity {
   @Column({ nullable: true })
   descricao?: string;
 
-  @ManyToOne(() => Usuario, usuario => usuario.colecoes)
-  @JoinColumn({ name: "usuario_id" })
-  usuario: Usuario;
-
   @Column()
   usuario_id: number;
 
-  @ManyToMany(() => Via)
+  @ManyToMany(() => Via , via => via.colecoes)
   @JoinTable({
     name: "colecao_via",
     joinColumn: {
@@ -43,11 +39,5 @@ export class Colecao extends BaseEntity {
     }
   })
   vias: Via[];
-
-  public popularVia (via: Via): void {
-    if (!this.vias) {
-      this.vias = [];
-    }
-    this.vias.push(via);
-  }
+  
 }

@@ -23,7 +23,7 @@ ColecaoRouter.get("/", colecaoController.getAllColecao);
 ColecaoRouter.post("/", colecaoController.createColecao);
 ColecaoRouter.put("/", colecaoController.updateColecao);
 ColecaoRouter.delete("/:id", colecaoController.deleteColecao);
-ColecaoRouter.post("/:id/via", colecaoController.adicionarVia);
+ColecaoRouter.post("/adicionarVia", colecaoController.adicionarVia);
 ColecaoRouter.delete("/:id/via/:viaId", colecaoController.removeVia);
 ColecaoRouter.get("/usuario/:id", colecaoController.getByUsuarioId);
 

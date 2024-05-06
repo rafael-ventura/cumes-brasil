@@ -18,9 +18,6 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true })
   fotoPerfil?: string;
 
-  @OneToMany(() => Colecao, colecao => colecao.usuario)
-  colecoes: Colecao[];
-
   constructor (id: number, nome: string, email: string, password_hash: string, fotoPerfil?: string) {
     super();
     this.id = id;
