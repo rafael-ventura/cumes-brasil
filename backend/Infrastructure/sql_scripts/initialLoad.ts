@@ -4,7 +4,12 @@ import { Montanha } from "../../Domain/entities/Montanha";
 import { Face } from "../../Domain/entities/Face";
 import { Via } from "../../Domain/entities/Via";
 import { Croqui } from "../../Domain/entities/Croqui";
-import * as initialData from "../../../database/json/initialData.json";
+
+import viasJson from "../../../database/json/vias.json";
+import croquisJson from "../../../database/json/croquis.json";
+import facesJson from "../../../database/json/faces.json";
+import montanhasJson from "../../../database/json/montanhas.json";
+import fontesJson from "../../../database/json/fontes.json";
 
 export async function loadData () {
   const queryRunner = AppDataSource.createQueryRunner();
@@ -19,27 +24,29 @@ export async function loadData () {
     const viaRepository = queryRunner.manager.getRepository(Via);
     const croquiRepository = queryRunner.manager.getRepository(Croqui);
 
-    // Processo de criação e salvamento das entidades
-    const fontes = fonteRepository.create(initialData.fontes);
+    const fontes = fonteRepository.create(fontesJson.fontes);
     await fonteRepository.save(fontes);
 
-    const montanhas = montanhaRepository.create(initialData.montanhas);
+    const montanhas = montanhaRepository.create(montanhasJson.montanhas);
     await montanhaRepository.save(montanhas);
 
-    const faces = faceRepository.create(initialData.faces);
+    const faces = faceRepository.create(facesJson.faces);
     await faceRepository.save(faces);
 
-    const vias = viaRepository.create(initialData.vias);
+    const vias = viaRepository.create(viasJson.vias);
     await viaRepository.save(vias);
 
-    const croquis = croquiRepository.create(initialData.croquis);
+    const croquis = croquiRepository.create(croquisJson.croquis);
     await croquiRepository.save(croquis);
 
     await queryRunner.commitTransaction();
   } catch (error) {
+
     console.error("Erro ao carregar dados:", error);
     await queryRunner.rollbackTransaction();
+
   } finally {
+
     await queryRunner.release();
   }
 }
