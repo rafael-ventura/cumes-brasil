@@ -22,9 +22,6 @@ export class Croqui extends BaseEntity {
   @Column()
   imagemUrl: string;
 
-  @Column()
-  autor: string;
-
   @Column({ nullable: true })
   descricao?: string;
 
