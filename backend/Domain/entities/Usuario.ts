@@ -6,13 +6,13 @@ export class Usuario extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column( { nullable: false })
   nome: string;
 
-  @Column()
+  @Column( { nullable: false })
   email: string;
 
-  @Column()
+  @Column( { nullable: false })
   password_hash: string;
 
   @Column({ nullable: true })

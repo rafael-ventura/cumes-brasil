@@ -2,14 +2,14 @@
   "croquis": [
     {
       "id": 1,
-      "nome": "Croquis da Anibal Mapa",
+      "nome": "Croquis da Anibal - Mapa",
       "imagemUrl": "/assets/Img1.jpeg",
       "autor": "Pedro Bugim",
       "fonte_id": 2
     },
     {
       "id": 2,
-      "nome": "Croquis da Anibal Foto",
+      "nome": "Croquis da Anibal - Foto",
       "imagemUrl": "/assets/Img2.jpeg",
       "autor": "Pedro Bugim",
       "fonte_id": 2
