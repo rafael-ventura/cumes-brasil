@@ -1,0 +1,311 @@
+{
+  "montanhas": [
+    {
+      "nome": "Morro Pica de Acucar",
+      "localizacao": "Rio de Janeiro",
+      "altura": 256,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra da Gávea",
+      "localizacao": "Rio de Janeiro",
+      "altura": 842,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra Bonita",
+      "localizacao": "Rio de Janeiro",
+      "altura": 693,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Elefante",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1160,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Sino",
+      "localizacao": "Rio de Janeiro",
+      "altura": 2263,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Quilombo",
+      "localizacao": "Rio de Janeiro",
+      "altura": 2000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Sumaré",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Telégrafo",
+      "localizacao": "Rio de Janeiro",
+      "altura": 354,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra do Vento",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Dois Olhos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Quatro Dedos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Dois Dedos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Cinco Dedos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Seis Dedos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Pedra dos Sete Dedos",
+      "localizacao": "Rio de Janeiro",
+      "altura": 1000,
+      "fonte_id": 1
+    }
+  ],
+  "fontes": [
+    {
+      "autor": "ElmoJuh Boquete Fofo",
+      "referencia": "Elmo Juh com sua revista ficticia"
+    },
+    {
+      "autor": "Vitin",
+      "referencia": "Vitin com sua revista ficticia"
+    }
+  ],
+  "faces": [
+    {
+      "nome": "Face Cequelete",
+      "montanha_id": 1,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Abismo",
+      "montanha_id": 2,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Açúcar",
+      "montanha_id": 3,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Elefante",
+      "montanha_id": 4,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Sino",
+      "montanha_id": 5,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Quilombo",
+      "montanha_id": 6,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Sumaré",
+      "montanha_id": 7,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Telégrafo",
+      "montanha_id": 8,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face do Vento",
+      "montanha_id": 9,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Dois Olhos",
+      "montanha_id": 10,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Quatro Dedos",
+      "montanha_id": 11,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Dois Dedos",
+      "montanha_id": 12,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Cinco Dedos",
+      "montanha_id": 13,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Seis Dedos",
+      "montanha_id": 14,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Face dos Sete Dedos",
+      "montanha_id": 15,
+      "fonte_id": 1
+    }
+  ],
+  "vias": [
+    {
+      "nome": "Desafio do Pico",
+      "grau": "VIsup",
+      "crux": "VII",
+      "artificial": "A2",
+      "duracao": "D3",
+      "exposicao": "E2",
+      "extensao": 150.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    },
+    {
+      "nome": "Via dos 5 Dedos",
+      "grau": "VI",
+      "crux": "V",
+      "artificial": "A1",
+      "duracao": "D2",
+      "exposicao": "E1",
+      "extensao": 100.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    },
+    {
+      "nome": "Via dos 7 Dedos",
+      "grau": "V",
+      "crux": "IV",
+      "artificial": "A0",
+      "duracao": "D1",
+      "exposicao": "E0",
+      "extensao": 50.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    },
+    {
+      "nome": "Via dos 6 Dedos",
+      "grau": "V",
+      "crux": "V",
+      "artificial": "A0",
+      "duracao": "D1",
+      "exposicao": "E0",
+      "extensao": 50.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    },
+    {
+      "nome": "Via dos 4 Dedos",
+      "grau": "V",
+      "crux": "VI",
+      "artificial": "A0",
+      "duracao": "D1",
+      "exposicao": "E0",
+      "extensao": 50.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    },
+    {
+      "nome": "Via dos 3 Dedos",
+      "grau": "V",
+      "crux": "III",
+      "artificial": "A0",
+      "duracao": "D1",
+      "exposicao": "E0",
+      "extensao": 50.6,
+      "conquistadores": "['Ana Silva', 'Carlos Rocha']",
+      "detalhes": "Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.",
+      "data": "2021-07-15",
+      "montanha_id": 1,
+      "fonte_id": 1,
+      "face_id": 1
+    }
+  ],
+  "croquis": [
+    {
+      "nome": "Croqui do Pico",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 1,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Croqui dos 5 Dedos",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 2,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Croqui dos 7 Dedos",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 3,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Croqui dos 6 Dedos",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 4,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Croqui dos 4 Dedos",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 5,
+      "fonte_id": 1
+    },
+    {
+      "nome": "Croqui dos 3 Dedos",
+      "imagemUrl": "https://www.google.com.br",
+      "via_id": 6,
+      "fonte_id": 1
+    }
+  ]
+}
