@@ -100,7 +100,7 @@ export class Via extends BaseEntity {
   @JoinColumn({ name: "face_id" })
   face: Face;
 
-  @Column()
+  @Column( { nullable: false })
   face_id: number;
 
   @ManyToMany(() => Croqui , croqui => croqui.vias)
@@ -116,11 +116,4 @@ export class Via extends BaseEntity {
     }
   })
   croquis: Croqui[];
-
-  public popularCroqui (croqui: Croqui): void {
-    if (!this.croquis) {
-      this.croquis = [];
-    }
-    this.croquis.push(croqui);
-  }
 }

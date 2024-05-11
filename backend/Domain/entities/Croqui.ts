@@ -16,23 +16,18 @@ export class Croqui extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column( { nullable: false })
   nome: string;
 
-  @Column()
+  @Column( { nullable: false })
   imagemUrl: string;
 
-  @Column()
-  autor: string;
-
-  @Column({ nullable: true })
-  descricao?: string;
 
   @ManyToOne(() => Fonte)
   @JoinColumn({ name: "fonte_id" })
   fonte: Fonte;
 
-  @Column()
+  @Column({ nullable: false })
   fonte_id: number;
 
   @ManyToMany(() => Via, via => via.croquis)
