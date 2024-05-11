@@ -6,11 +6,14 @@ export class ViaRepository {
   private repository = AppDataSource.getRepository(Via);
 
   async getById (id: number): Promise<Via | null> {
-    return this.repository.findOne({ where: { id: id }, relations: ["croquis"]});
+    return this.repository.findOne({
+      where: { id },
+      relations: ["montanha", "face", "fonte", "croquis"],
+    });
   }
 
   async getAll (): Promise<Via[]> {
-    return this.repository.find({ relations: ["croquis"] });
+    return this.repository.find({ relations: ["montanha", "face", "fonte", "croquis"] });
   }
 
   async create (via: Partial<Via>): Promise<void> {

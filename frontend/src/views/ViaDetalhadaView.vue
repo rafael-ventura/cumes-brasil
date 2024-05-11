@@ -9,12 +9,12 @@
         <p><strong>Duração:</strong> {{ via.duracao }}</p>
         <p><strong>Exposição:</strong> {{ via.exposicao }}</p>
         <p><strong>Extensão:</strong> {{ via.extensao }}</p>
-        <p><strong>Conquistadores:</strong> {{ via.conquistadores.join(', ') }}</p>
+        <p><strong>Conquistadores:</strong> {{ via.conquistadores }}</p>
         <p><strong>Detalhes:</strong> {{ via.detalhes }}</p>
         <p><strong>Data:</strong> {{ via.data }}</p>
-        <p><strong>Montanha:</strong> {{ via.montanha_id.nome }}</p>
-        <p><strong>Face:</strong> {{ via.face_id.nome }}</p>
-        <p><strong>Fonte:</strong> {{ via.fonte_id.autor }}</p>
+        <p><strong>Montanha:</strong> {{ via.montanha.nome }}</p>
+        <p><strong>Face:</strong> {{ via.face.nome }}</p>
+        <p><strong>Fonte:</strong> {{ via.fonte.autor }}</p>
         <!-- Aqui você pode adicionar os detalhes adicionais conforme necessário -->
       </v-card-text>
     </v-card>
