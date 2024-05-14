@@ -5,11 +5,11 @@ export class MontanhaRepository {
     private repository = AppDataSource.getRepository(Montanha);
 
     async getById (id: number): Promise<Montanha | null> {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne({ where: { id: id }, relations: ["fonte"]});
     }
 
     async getAll (): Promise<Montanha[]> {
-        return this.repository.find();
+        return this.repository.find({relations: ["fonte"]});
     }
 
     async create (montanha: Partial<Montanha>): Promise<void> {
