@@ -9,6 +9,7 @@ import { loadData } from "../Infrastructure/sql_scripts/initialLoad";
 import { Via } from "../Domain/entities/Via";
 
 dotenv.config();
+require('dotenv').config();
 const cors = require("cors");
 const app = express();
 app.use(cors());
