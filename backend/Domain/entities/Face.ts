@@ -8,21 +8,21 @@ export class Face extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   nome: string;
 
   @ManyToOne(() => Montanha)
   @JoinColumn({ name: "montanha_id" })
   montanha: Montanha;
 
-  @Column()
+  @Column({ nullable: false })
   montanha_id: number;
 
   @ManyToOne(() => Fonte)
   @JoinColumn({ name: "fonte_id" })
   fonte: Fonte;
 
-  @Column()
+  @Column({ nullable: false })
   fonte_id: number;
 
   @OneToMany(() => Via, via => via.face)

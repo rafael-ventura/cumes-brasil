@@ -1,0 +1,130 @@
+{
+  "montanhas": [
+    {
+      "id": 1,
+      "nome": "Morro do Leme",
+      "bairro": "Leme",
+      "altitude": 125,
+      "fonte_id": 1
+    },
+    {
+      "id": 2,
+      "nome": "Morro de São João",
+      "bairro": "Botafogo",
+      "altitude": 242,
+      "fonte_id": 1
+    },
+    {
+      "id": 3,
+      "nome": "Morro de São João (Pedra da Abelha)",
+      "bairro": "Botafogo",
+      "altitude": 242,
+      "fonte_id": 1
+    },
+    {
+      "id": 4,
+      "nome": "Agulha do Inhangá",
+      "bairro": "Copacabana",
+      "altitude": 164,
+      "fonte_id": 1
+    },
+    {
+      "id": 5,
+      "nome": "Morro dos Cabritos",
+      "bairro": "Copacabana",
+      "altitude": 379,
+      "fonte_id": 1
+    },
+    {
+      "id": 6,
+      "nome": "Morro da Catacumba",
+      "bairro": "Lagoa",
+      "altitude": 131,
+      "fonte_id": 1
+    },
+    {
+      "id": 7,
+      "nome": "Pedra do Urubu",
+      "bairro": "Lagoa",
+      "altitude": 111,
+      "fonte_id": 1
+    },
+    {
+      "id": 8,
+      "nome": "Morro da Saudade",
+      "bairro": "Humaitá",
+      "altitude": 244,
+      "fonte_id": 1
+    },
+    {
+      "id": 9,
+      "nome": "Morro do Cantagalo",
+      "bairro": "Ipanema",
+      "altitude": 201,
+      "fonte_id": 1
+    },
+    {
+      "id": 10,
+      "nome": "Pedreira da Rua Aníbal Moreira",
+      "bairro": "Tijuca",
+      "altitude": 36,
+      "fonte_id": 2
+    },
+    {
+      "id": 11,
+      "nome": "Morro do Urubu",
+      "bairro": "",
+      "altitude": 120,
+      "fonte_id": 1
+    },
+    {
+      "id": 12,
+      "nome": "Ponta do Arpoador",
+      "bairro": "Ipanema",
+      "altitude": 9,
+      "fonte_id": 1
+    },
+    {
+      "id": 13,
+      "nome": "Falésias do Vidigal",
+      "bairro": "Vidigal",
+      "altitude": 0,
+      "fonte_id": 1
+    },
+    {
+      "id": 14,
+      "nome": "Falésias da Niemeyer",
+      "bairro": "São Conrado",
+      "altitude": 0,
+      "fonte_id": 1
+    },
+    {
+      "id": 15,
+      "nome": "Falésia do Leblon",
+      "bairro": "Leblon",
+      "altitude": 0,
+      "fonte_id": 1
+    },
+    {
+      "id": 16,
+      "nome": "Falésia do Alto Leblon I",
+      "bairro": "Leblon",
+      "altitude": 0,
+      "fonte_id": 1
+    },
+    {
+      "id": 17,
+      "nome": "Falésia do Alto Leblon II",
+      "bairro": "Leblon",
+      "altitude": 0,
+      "fonte_id": 1
+    },
+    {
+      "id": 18,
+      "nome": "Irmão Menor do Leblon",
+      "bairro": "Leblon",
+      "altitude": 440,
+      "fonte_id": 1
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import { Croqui } from "./Croqui";
 import { Montanha } from "./Montanha";
 import { Fonte } from "./Fonte";
 import { Face } from "./Face";
+import { Colecao } from "./Colecao";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -57,6 +58,20 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   data: string;
 
+  @ManyToMany(() => Colecao, colecao => colecao.vias)
+  @JoinTable({
+    name: "colecao_via",
+    joinColumn: {
+      name: "via_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "colecao_id",
+      referencedColumnName: "id"
+    }
+  })
+  colecoes: Colecao[];
+
   @ManyToOne(() => Montanha)
   @JoinColumn({ name: "montanha_id" })
   montanha: Montanha;
@@ -85,11 +100,20 @@ export class Via extends BaseEntity {
   @JoinColumn({ name: "face_id" })
   face: Face;
 
-  @Column()
+  @Column( { nullable: false })
   face_id: number;
 
-  @ManyToMany(() => Croqui, croqui => croqui.vias)
-  @JoinTable({ name: "via_croqui" })
+  @ManyToMany(() => Croqui , croqui => croqui.vias)
+  @JoinTable({
+    name: "via_croqui",
+    joinColumn: {
+      name: "viaId",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "croquiId",
+      referencedColumnName: "id"
+    }
+  })
   croquis: Croqui[];
-
 }

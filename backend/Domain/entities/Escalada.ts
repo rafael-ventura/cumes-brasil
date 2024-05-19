@@ -20,14 +20,14 @@ export class Escalada extends BaseEntity {
   @JoinColumn({ name: "usuario_id" })
   usuario: Usuario;
 
-  @Column()
+  @Column({ nullable: false })
   usuario_id: number;
 
   @ManyToOne(() => Via)
   @JoinColumn({ name: "via_id" })
   via: Via;
 
-  @Column()
+  @Column({ nullable: true })
   via_id: number;
 
 }

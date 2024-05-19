@@ -19,7 +19,7 @@ export class EscaladaController {
 	getEscaladaById = async (req: Request, res: Response) => {
 		try {
 			const id = parseInt(req.params.id);
-			const result = await this.service.getEscaladaById(id);
+			const result = await this.service.getById(id);
 			res.json(result);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -44,7 +44,7 @@ export class EscaladaController {
 	 */
 	getAllEscalada = async (_: Request, res: Response) => {
 		try {
-			const escaladas = await this.service.getEscaladas();
+			const escaladas = await this.service.get();
 			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -68,7 +68,7 @@ export class EscaladaController {
 	createEscalada = async (req: Request, res: Response) => {
 		try {
 			const escalada = req.body;
-			await this.service.createEscalada(escalada);
+			await this.service.create(escalada);
 			res.status(201).json({ message: "Escalada criada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
@@ -94,7 +94,7 @@ export class EscaladaController {
 	updateEscalada = async (req: Request, res: Response) => {
 		try {
 			const escalada = req.body;
-			await this.service.updateEscalada(escalada);
+			await this.service.update(escalada);
 			res.status(200).json({ message: "Escalada atualizada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
@@ -120,7 +120,7 @@ export class EscaladaController {
 	deleteEscalada = async (req: Request, res: Response) => {
 		try {
 			const id = parseInt(req.params.id);
-			await this.service.deleteEscalada(id);
+			await this.service.delete(id);
 			res.status(200).json({ message: "Escalada deletada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
@@ -144,7 +144,7 @@ export class EscaladaController {
 	 */
 	getByUsuarioId = async (req: Request, res: Response) => {
 		try {
-			const usuarioId = parseInt(req.params.usuarioId);
+			const usuarioId = parseInt(req.params.id);
 			const result = await this.service.getEscaladasDoUsuario(usuarioId);
 			res.json(result);
 		} catch (error) {
@@ -162,7 +162,7 @@ export class EscaladaController {
 
 	getByViaId = async (req: Request, res: Response) => {
 		try {
-			const viaId = parseInt(req.params.viaId);
+			const viaId = parseInt(req.params.id);
 			const result = await this.service.getEscaladasDaVia(viaId);
 			res.json(result);
 		} catch (error) {

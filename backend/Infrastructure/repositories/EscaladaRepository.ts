@@ -5,11 +5,11 @@ export class EscaladaRepository {
     private repository = AppDataSource.getRepository(Escalada);
 
     async getById (id: number): Promise<Escalada | null> {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne({ where: { id: id }, relations: ["via"]});
     }
 
     async getAll (): Promise<Escalada[]> {
-        return this.repository.find();
+        return this.repository.find({relations: ["via"]});
     }
 
     async create (escalada: Partial<Escalada>): Promise<void> {
@@ -24,11 +24,11 @@ export class EscaladaRepository {
         await this.repository.delete(id as any);
     }
 
-    async getEscaladasByUserId (userId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { usuario: userId as any } });
+    async getByUserId (userId: number): Promise<Escalada[]> {
+        return this.repository.find({ where: { usuario_id: userId as any } });
     }
 
-    async getEscaladasByViaId (viaId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { usuario: viaId as any } });
+    async getByViaId (viaId: number): Promise<Escalada[]> {
+        return this.repository.find({ where: { via_id: viaId as any } });
     }
 }

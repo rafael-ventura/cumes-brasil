@@ -6,10 +6,10 @@ export class Fonte extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   autor: string;
 
-  @Column()
+  @Column({ nullable: false })
   referencia: string;
 
   @OneToMany(() => Via, via => via.fonte)

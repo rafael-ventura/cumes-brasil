@@ -65,7 +65,7 @@ export class ColecaoController {
      */
     getByUsuarioId = async (req: Request, res: Response) => {
         try {
-            const usuarioId = Number(req.params.usuarioId);
+            const usuarioId = Number(req.params.id);
             const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
             res.status(200).json(colecoes);
         } catch (error) {
@@ -164,7 +164,6 @@ export class ColecaoController {
                 colecao_id,
                 via_id
             } = req.body;
-
             const colecaoId: number = (colecao_id);
             const viaId: number = (via_id);
             await this.service.addViaToColecao(viaId, colecaoId);
@@ -192,7 +191,7 @@ export class ColecaoController {
      */
     removeVia = async (req: Request, res: Response) => {
         try {
-            const colecaoId = parseInt(req.params.colecaoId);
+            const colecaoId = parseInt(req.params.id);
             const viaId = parseInt(req.params.viaId);
             await this.service.removeViaFromColecao(viaId, colecaoId);
             res.status(200).json({ message: "Via removida da coleção com sucesso." });
