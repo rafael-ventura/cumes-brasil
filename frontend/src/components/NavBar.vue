@@ -28,7 +28,7 @@
       </button>
     </router-link>
 
-    <router-link v-if="isAuthenticated" @click="logout" to="/login" value="home" exact>
+    <router-link v-show="isAuthenticated" @click="logout" to="/login" value="home" exact>
       <button>
         Sair
       </button>
@@ -37,22 +37,25 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 import authenticateService from "@/services/authenticateService";
 import { useRouter } from "vue-router";
 
 const value = 0;
 const router = useRouter();
-const isAuthenticated = ref(authenticateService.isAuthenticated());
+const isAuthenticated = authenticateService.isAuthenticated;
 
 watchEffect(() => {
-  isAuthenticated.value = authenticateService.isAuthenticated();
+  isAuthenticated.value = authenticateService.isAuthenticated.value;
+});
+
+authenticateService.watchAuthStateChange((newAuthState) => {
+  isAuthenticated.value = newAuthState;
 });
 
 function logout () {
   authenticateService.logout();
-  isAuthenticated.value = false;
-  router.push("/login"); // Redireciona para a página de login após logout
+  router.push("/login");
 }
 </script>
 <style lang="scss">

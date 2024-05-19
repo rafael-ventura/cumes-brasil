@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+  if (to.meta.requiresAuth && !authService.isAuthenticated.value) {
     next({ name: "login" });
   } else {
     next();
