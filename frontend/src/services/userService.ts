@@ -23,8 +23,15 @@ class UserService {
     try {
       const response = await apiClient.post("/register", { nome, email, password });
       return response.data;
-    } catch (error) {
-      throw new Error("Erro ao registrar: " + error);
+    } catch (error: any) {
+      console.log(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        console.log(error.response.data.error);
+        throw error.response.data.error;
+      } else {
+        console.log("Erro desconhecido ao criar usuario", error);
+        throw error;
+      }
     }
   }
 

@@ -1,5 +1,3 @@
-// views/auth/LoginView.vue
-
 <template>
   <div>
     <div class="mx-auto my-6">
