@@ -32,9 +32,9 @@ export class UsuarioRepository {
         await this.repository.delete(id as any);
     }
 
-    // TODO: Implmentar a função findByEmail sem quebrar a aplicação
-    async findByEmail (email: string) {
-        return this.repository.findOne;
+    async findByEmail (email: string): Promise<Usuario | null> {
+        const user = await this.repository.findOne({ where: { email } });
+        return user ?? null; // caso user seja null, retorna null
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {

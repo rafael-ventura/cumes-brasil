@@ -12,7 +12,6 @@
         <label for="senha">Senha</label>
         <input type="password" id="senha" v-model="senha" ref="senhaInput" required>
       </div>
-      {{ nome + email + senha }}
       <button type="submit">Cadastrar</button>
     </form>
   </div>
@@ -31,10 +30,12 @@ const senha = ref("");
 
 async function register () {
   try {
-    const response = await userService.create(nome.value, email.value, senha.value);
-    await router.push("/login");
+    await userService.create(nome.value, email.value, senha.value);
+    alert('Usuário cadastrado com sucesso!');
+    await router.push('/login');
   } catch (error) {
     console.error("Registration failed:", error);
+    alert('Erro ao cadastrar usuário: ' + error);
   }
 }
 </script>

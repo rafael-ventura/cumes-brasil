@@ -1,5 +1,3 @@
-// views/auth/LoginView.vue
-
 <template>
   <div>
     <div class="mx-auto my-6">
@@ -86,7 +84,7 @@ import authenticateService from "../../services/authenticateService";
 const router = useRouter();
 const email = ref("");
 const password = ref("");
-const isAuthenticated = ref(authenticateService.isAuthenticated());
+const isAuthenticated = ref(authenticateService.checkAuthState());
 
 // Função de callback para lidar com a resposta do Google
 interface GoogleResponse {
@@ -112,7 +110,7 @@ onMounted(() => {
 });
 
 watchEffect(() => {
-  isAuthenticated.value = authenticateService.isAuthenticated();
+  isAuthenticated.value = authenticateService.checkAuthState();
 });
 
 async function loginWithGoogle (idToken: string) {

@@ -66,7 +66,7 @@ export class UsuarioController {
         try {
             const { nome, email, password } = requisicao.body;
             await this.service.register(nome, email, password);
-            resposta.status(201).json({message: "Usuario criada com sucesso."});
+            resposta.status(201).json({message: "Usuario criado com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
                 resposta.status(500).json({error: error.message});

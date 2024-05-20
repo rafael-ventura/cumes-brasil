@@ -22,7 +22,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     const token = authHeader.split(' ')[1];
 
     // Tente verificar com a chave secreta primeiro
-    jwt.verify(token, process.env.SECRET_KEY as string, (err, decoded) => {
+    jwt.verify(token, '8c7515be3e2a107dc0cf543889f045fb7df3177209ebfd0a2b966b6b6d9eb4d7', (err, decoded) => {
         if (!err) {
             req.user = decoded;
             return next();
