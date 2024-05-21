@@ -1,6 +1,6 @@
 <template>
   <q-list bordered separator>
-    <q-item v-for="via in vias" :key="via.id" clickable @click="goViaDetalhadaView(via)">
+    <q-item v-for="via in props.vias" :key="via.id" clickable @click="goViaDetalhadaView(via)">
       <q-item-section>
         <q-item-label class="text-h6">{{ via.nome }}</q-item-label>
         <q-item-label caption>{{ via.montanha.nome }}</q-item-label>
