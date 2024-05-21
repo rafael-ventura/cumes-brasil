@@ -1,56 +1,36 @@
-// routes/index.ts
+import { route } from 'quasar/wrappers'
+import {
+  createMemoryHistory,
+  createRouter,
+  createWebHashHistory,
+  createWebHistory
+} from 'vue-router'
 
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import userRoutes from "./userRoutes";
-import viasRoutes from "./viaRoutes";
-import colecaoRoutes from "./colecaoRoutes";
-import SignUpView from "@/views/auth/SignUpView.vue";
-import LoginView from "@/views/auth/LoginView.vue";
-import RedefinirSenhaView from "@/views/auth/RedefinirSenhaView.vue";
-import authService from "@/services/authenticateService";
+import routes from './routes'
 
-const routes: Array<RouteRecordRaw> = [
-  ...userRoutes,
-  ...viasRoutes,
-  ...colecaoRoutes,
-  {
-    path: "/",
-    name: "home",
-    component: HomeView
-  },
-  {
-    path: "/signup",
-    name: "signup",
-    component: SignUpView
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: LoginView
-  },
-  {
-    path: "/recover",
-    name: "recover",
-    component: RedefinirSenhaView
-  }
-];
+/*
+ * If not building with SSR mode, you can
+ * directly export the Router instantiation;
+ *
+ * The function below can be async too; either use
+ * async/await or return a Promise which resolves
+ * with the Router instance.
+ */
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-});
+export default route(function (/* { store, ssrContext } */) {
+  const createHistory = process.env.SERVER
+    ? createMemoryHistory
+    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
 
-router.beforeEach((to, from, next) => {
-  next();
-});
+  const Router = createRouter({
+    scrollBehavior: () => ({ left: 0, top: 0 }),
+    routes,
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !authService.isAuthenticated.value) {
-    next({ name: "login" });
-  } else {
-    next();
-  }
-});
+    // Leave this as is and make changes in quasar.conf.js instead!
+    // quasar.conf.js -> build -> vueRouterMode
+    // quasar.conf.js -> build -> publicPath
+    history: createHistory(process.env.VUE_ROUTER_BASE)
+  })
 
-export default router;
+  return Router
+})

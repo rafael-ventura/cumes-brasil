@@ -1,54 +1,63 @@
-// authenticateService.ts
-
-import apiClient from "./apiService";
-import { ref, watchEffect } from "vue";
+import { api } from 'boot/axios'
 
 class AuthenticateService {
-  isAuthenticated = ref(false);
-
   async login (email: string, password: string) {
     try {
-      const response = await apiClient.post("/login", { email, password });
-      if (response.status === 200) {
-        localStorage.setItem("authToken", response.data.token);
-        this.checkAuthState();
+      const response = await api.post('/login', {
+        email,
+        password
+      })
+      // Salvar token de autenticação, se houver
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token)
       }
-      return response;
+      return response
     } catch (error) {
-      throw new Error("Erro ao fazer login: " + error);
+      throw new Error('Erro ao fazer login: ' + error)
     }
   }
 
   async authenticateWithGoogle (googleTokenId: string) {
     try {
-      const response = await apiClient.post("/google-login", { token: googleTokenId });
-      if (response.status === 200) {
-        this.isAuthenticated.value = true;
+      const response = await api.post('/google-login', { token: googleTokenId })
+      // Salvar token de autenticação, se houver
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token)
       }
-      return response;
+      return response
     } catch (error) {
-      throw new Error("Erro ao autenticar com o Google: " + error);
+      throw new Error('Erro ao autenticar com o Google: ' + error)
+    }
+  }
+
+  async signUp (nome: string, email: string, senha: string) {
+    try {
+      return await api.post('/register', {
+        nome,
+        email,
+        senha
+      })
+    } catch (error) {
+      throw new Error('Erro ao fazer cadastro: ' + error)
+    }
+  }
+
+  async resetPassword (email: string) {
+    try {
+      return await api.post('/reset-password', { email })
+    } catch (error) {
+      throw new Error('Erro ao redefinir senha: ' + error)
     }
   }
 
   logout () {
-    localStorage.removeItem("authToken");
-    this.isAuthenticated.value = false;
+    localStorage.removeItem('authToken')
   }
 
-  checkAuthState () {
-    const token = localStorage.getItem("authToken");
-    this.isAuthenticated.value = !!token;
-  }
-
-  watchAuthStateChange (callback: (newAuthState: boolean) => void) {
-    watchEffect(() => {
-      callback(this.isAuthenticated.value);
-    });
+  isAuthenticated () {
+    const token = localStorage.getItem('authToken')
+    return !!token
   }
 }
 
-const authenticateService = new AuthenticateService();
-authenticateService.checkAuthState();
-
-export default new AuthenticateService();
+export default new AuthenticateService()

@@ -1,65 +1,50 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "quasar-project",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "productName": "Cumes Brasil",
+  "author": "Rafael Ventura <raf4ael@gmail.com>",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "lint-fix": "vue-cli-service lint --fix"
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "fix-lint": "eslint --ext .js,.ts,.vue ./ --fix",
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build"
   },
   "dependencies": {
-    "axios": "^1.6.7",
-    "core-js": "^3.8.3",
-    "register-service-worker": "^1.7.2",
-    "vue": "^3.4.20",
-    "vue-class-component": "^8.0.0-0",
-    "vue-router": "^4.0.3",
-    "vuetify": "^3.5.13"
+    "@quasar/extras": "^1.16.4",
+    "axios": "^1.7.1",
+    "quasar": "^2.16.0",
+    "vue": "^3.4.18",
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
-    "@mdi/font": "^7.4.47",
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.4.0",
-    "@vue/cli-plugin-babel": "^5.0.0",
-    "@vue/cli-plugin-eslint": "^5.0.0",
-    "@vue/cli-plugin-pwa": "^5.0.0",
-    "@vue/cli-plugin-router": "^5.0.0",
-    "@vue/cli-plugin-typescript": "^5.0.0",
-    "@vue/cli-service": "^5.0.0",
-    "@vue/eslint-config-standard": "^6.1.0",
-    "@vue/eslint-config-typescript": "^9.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "node-sass": "^9.0.0",
-    "sass-loader": "^14.1.1",
-    "typescript": "~4.5.5"
+    "@quasar/app-vite": "^1.9.0",
+    "@types/node": "^12.20.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "typescript": "^4.5.4",
+    "vite-plugin-checker": "^0.6.4",
+    "vue-tsc": "^1.8.22",
+    "workbox-build": "^7.0.0",
+    "workbox-cacheable-response": "^7.0.0",
+    "workbox-core": "^7.0.0",
+    "workbox-expiration": "^7.0.0",
+    "workbox-precaching": "^7.0.0",
+    "workbox-routing": "^7.0.0",
+    "workbox-strategies": "^7.0.0"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "@vue/standard",
-      "@vue/typescript/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {
-      "semi": [
-        "error",
-        "always"
-      ],
-      "quotes": [
-        "warn",
-        "double"
-      ]
-    }
+  "engines": {
+    "node": "^20 || ^18 || ^16",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
   }
 }

@@ -1,8 +1,12 @@
+<!-- pages/ViaDetalhada.vue -->
 <template>
   <div v-if="via">
-    <v-card>
-      <v-card-title>{{ via.nome }}</v-card-title>
-      <v-card-text>
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">{{ via.nome }}</div>
+        <div class="text-subtitle2">{{ via.montanha.nome }}</div>
+      </q-card-section>
+      <q-card-section>
         <p><strong>Grau:</strong> {{ via.grau }}</p>
         <p><strong>Crux:</strong> {{ via.crux }}</p>
         <p><strong>Artificial:</strong> {{ via.artificial }}</p>
@@ -15,29 +19,30 @@
         <p><strong>Montanha:</strong> {{ via.montanha.nome }}</p>
         <p><strong>Face:</strong> {{ via.face.nome }}</p>
         <p><strong>Fonte:</strong> {{ via.fonte.autor }}</p>
-        <!-- Aqui você pode adicionar os detalhes adicionais conforme necessário -->
-      </v-card-text>
-    </v-card>
+      </q-card-section>
+    </q-card>
   </div>
   <div v-else>
+    <q-spinner nome="dots" size="2em" class="q-ma-md"/>
     <p>Carregando...</p>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-import viaService from "@/services/viaService";
-import { useRoute } from "vue-router";
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import ViaService from '../services/viaService'
+import { Via } from 'components/models'
 
-const route = useRoute();
-const via = ref(null);
+const route = useRoute()
+const via = ref<Via | null>(null)
 
 onMounted(async () => {
   try {
-    const id = route.params.id; // assume que o ID da via está presente nos parâmetros de rota
-    via.value = await viaService.getViaById(id);
+    const id = Number(route.params.id)
+    via.value = await ViaService.getViaById(id)
   } catch (error) {
-    console.error("Erro ao buscar detalhes da via:", error);
+    console.error('Erro ao buscar detalhes da via:', error)
   }
-});
+})
 </script>
