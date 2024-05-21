@@ -30,7 +30,7 @@ class AuthenticateService {
     }
   }
 
-  async signUp (nome: string, email: string, senha: string) {
+  async register (nome: string, email: string, senha: string) {
     try {
       return await api.post('/register', {
         nome,

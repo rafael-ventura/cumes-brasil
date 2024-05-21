@@ -36,7 +36,7 @@ const onLogin = async ({
 }
 
 const goToResetPassword = () => {
-  router.push('/reset-password')
+  router.push('/reset-senha')
 }
 
 const goToSignUp = () => {

@@ -1,13 +1,13 @@
 <template>
   <q-page class="q-pa-md">
-    <auth-form
+    <register-form
       title="Cadastrar"
       submit-label="Cadastrar"
       @submit="onSignUp"
     >
       <q-input v-model="confirmPassword" label="Confirmar Senha" type="password" required />
       <q-btn flat label="Já tem uma conta?" @click="goToLogin" />
-    </auth-form>
+    </register-form>
     <AuthError :message="errorMessage" />
   </q-page>
 </template>
@@ -16,7 +16,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthenticateService from '../../services/authenticateService'
-import AuthForm from 'components/Auth/RegisterForm.vue'
+import RegisterForm from 'components/Auth/RegisterForm.vue'
 import AuthError from 'components/Auth/AuthError.vue'
 
 defineOptions({
@@ -34,7 +34,7 @@ const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, s
   }
 
   try {
-    const response = await AuthenticateService.signUp(nome, email, senha)
+    const response = await AuthenticateService.register(nome, email, senha)
     console.log(response.data)
     await router.push('/login')
   } catch (error: any) {

@@ -64,8 +64,8 @@ export class UsuarioController {
      */
     registrar = async (requisicao: Request, resposta: Response) => {
         try {
-            const { nome, email, password } = requisicao.body;
-            await this.service.register(nome, email, password);
+            const { nome, email, senha } = requisicao.body;
+            await this.service.register(nome, email, senha);
             resposta.status(201).json({message: "Usuario criado com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
