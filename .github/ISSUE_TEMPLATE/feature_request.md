@@ -3,23 +3,23 @@ name: Feature request
 about: Criando Issues
 title: ''
 labels: ''
-assignees: rafael-ventura
+assignees: ''
 
 ---
 
-### **Objetivo:**
+### Objetivo
 
 >
 
-## Definicoes
+### Definições
 
 >
 
-## Wireframe (Modelo a seguir por enquanto)
+### Wireframe (Modelo a seguir por enquanto)
 
 >
 
-### **Passos:**
+### Passos
 
 >
 
