@@ -3,7 +3,7 @@
 import apiClient from "./apiService";
 import { ViaModel } from "@/models/viaModel";
 
-export class ViaService {
+export class ViaService implements ISearchService<ViaModel>{
   // Chamadas da API de vias
   async getViaById (id: number | string) {
     try {
@@ -33,7 +33,7 @@ export class ViaService {
     }
   }
 
-  async searchVias (query: any) {
+  async search (query: any): Promise<ViaModel[]> {
     console.log("Query:", query);
     try {
       const response = await apiClient.get("/vias/search", { params: query });

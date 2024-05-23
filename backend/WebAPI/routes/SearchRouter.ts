@@ -1,4 +1,3 @@
-/*
 import {Router} from 'express';
 import {SearchService} from '../../Application/services/SearchService';
 import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
@@ -14,4 +13,3 @@ const ViaRouter = Router();
 ViaRouter.get('/', searchController.searchRoutes);
 
 export default ViaRouter;
-*/

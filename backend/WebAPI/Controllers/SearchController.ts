@@ -1,5 +1,3 @@
-/*
-TODO: refazer o acesso ao banco, agora que temos ORM
 import { Request, Response } from "express";
 import { SearchService } from "../../Application/services/SearchService";
 import { Via } from "../../Domain/models/Via";
@@ -21,4 +19,3 @@ export class SearchController {
 		}
 	};
 }
-*/

@@ -39,33 +39,4 @@ export class ViaService {
     async getViasIdByColecaoId (colecaoId: number): Promise<number[]> {
         return this.viaRepo.getViasIdByColecaoId(colecaoId);
     }
-
-    async searchVias(query: any): Promise<Via[]> {
-        const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;
-
-        let sqlQuery = 'SELECT * FROM Via WHERE 1=1';
-        let parameters: any[] = [];
-
-        if (searchQuery) {
-            sqlQuery += ' AND nome LIKE ?';
-            parameters.push(`%${searchQuery}%`);
-        }
-
-        if (selectedMountain) {
-            sqlQuery += ' AND montanha_id = ?';
-            parameters.push(selectedMountain);
-        }
-
-        if (selectedDifficulty) {
-            sqlQuery += ' AND grau = ?';
-            parameters.push(selectedDifficulty);
-        }
-
-        if (selectedExposure) {
-            sqlQuery += ' AND exposicao = ?';
-            parameters.push(selectedExposure);
-        }
-
-        return await this.viaRepo.query(sqlQuery, parameters);
-    }
 }
