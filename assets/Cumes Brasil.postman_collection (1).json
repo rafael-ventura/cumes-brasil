@@ -1,0 +1,1671 @@
+{
+	"info": {
+		"_postman_id": "e8cd0420-ca01-4732-b4b6-a6062c8e7776",
+		"name": "Cumes Brasil",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14853447",
+		"_collection_link": "https://warped-eclipse-340486.postman.co/workspace/Dev~9c0bf37b-7f17-40c7-ad21-c8a3afe54a68/collection/14853447-e8cd0420-ca01-4732-b4b6-a6062c8e7776?action=share&source=collection_link&creator=14853447"
+	},
+	"item": [
+		{
+			"name": "Fontes",
+			"item": [
+				{
+					"name": "api/fontes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/fontes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"fontes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/fontes/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/fontes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"fontes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/fontes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"autor\": \"ElmoJuh Boquete Fofo\",\r\n    \"referencia\": \"Elmo Juh com sua revista ficticia\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/fontes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"fontes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/fontes/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"id\": 1,\r\n        \"autor\": \"ElmoJuh Boquete Violento\",\r\n        \"referencia\": \"Elmo Juh com sua revista ficticia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/fontes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"fontes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/fontes/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/fontes/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"fontes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Montanhas",
+			"item": [
+				{
+					"name": "api/montanhas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/montanhas/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"montanhas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/montanhas/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/montanhas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"montanhas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/montanhas",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Morro Pica de Acucar\",\r\n    \"localizacao\": 134.056,\r\n    \"altura\": 256,\r\n    \"fonte_id\": 1\r\n    \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/montanhas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"montanhas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/montanhas/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\r\n        \"id\": 1,\r\n        \"nome\": \"Morro Pau de Acucar\",\r\n        \"localizacao\": \"134.056\",\r\n        \"altura\": 256,\r\n        \"fonte_id\": 1\r\n    }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/montanhas/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"montanhas",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/montanhas/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/montanhas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"montanhas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Faces",
+			"item": [
+				{
+					"name": "api/faces",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/faces",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"faces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/faces/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/faces/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"faces",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/faces",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Face Cequelete\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n\r\n/*\r\n\r\n\r\n{\r\n   \"id\": 2,\r\n    \"nome\": \"Nordeste (Forte Duque de Caxias)\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n}\r\n\r\n{\r\n    \"id\": 2,\r\n    \"nome\": \"Norte (Forte Duque de Caxias)\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n\r\n{\r\n    \"id\": 2,\r\n    \"nome\": \"Noroeste (Forte Duque de Caxias)\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n\r\n{\r\n    \"id\": 2,\r\n    \"nome\": \"Sudoeste (Praia do Leme/Copacabana)\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n\r\n{\r\n    \"id\": 2,\r\n    \"nome\": \"Falésia à beira-mar (Forte Duque de Caxias)\",\r\n    \"montanha_id\": 1,\r\n    \"fonte_id\" : 1\r\n}\r\n\r\n*/",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/faces",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"faces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/faces/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"croqui 2\",\r\n    \"imagemUrl\": \"https://google.com\",\r\n    \"autor\": \"Autor 2\",\r\n    \"descricao\": \"Croqui 2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/faces/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"faces",
+								"id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/faces/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"croqui 2\",\r\n    \"imagemUrl\": \"https://google.com\",\r\n    \"autor\": \"Autor 2\",\r\n    \"descricao\": \"Croqui 2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/faces/id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"faces",
+								"id"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Croquis",
+			"item": [
+				{
+					"name": "api/croquis",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis/via/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/via/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"via",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"croqui de merda\",\r\n    \"imagemUrl\": \"https://google.com\",\r\n    \"autor\": \"Autor Filha da Puta\",\r\n    \"descricao\": \"Croqui.\",\r\n    \"fonte_id\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis/via/associar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"via_id\": 1,\r\n    \"croqui_id\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/via/associar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"via",
+								"associar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis//via/desassociar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"via_id\": 5,\r\n    \"croqui_id\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/via/desassociar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"via",
+								"desassociar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"croqui 2\",\r\n    \"imagemUrl\": \"https://google.com\",\r\n    \"autor\": \"Autor 2\",\r\n    \"descricao\": \"Croqui 2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/croquis/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"croqui 2\",\r\n    \"imagemUrl\": \"https://google.com\",\r\n    \"autor\": \"Autor 2\",\r\n    \"descricao\": \"Croqui 2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/croquis/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"croquis",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vias",
+			"item": [
+				{
+					"name": "api/vias",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/vias/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/vias/id/croquis",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias/5/croquis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias",
+								"5",
+								"croquis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/vias",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Desafio do Pico\",\r\n  \"grau\": \"VIsup\",\r\n  \"crux\": \"Passagem técnica no meio da via\",\r\n  \"artificial\": \"A2\",\r\n  \"duracao\": \"D3\",\r\n  \"exposicao\": \"E2\",\r\n  \"extensao\": 150,\r\n  \"conquistadores\": [\"Ana Silva\", \"Carlos Rocha\"],\r\n  \"detalhes\": \"Via de grande beleza cênica, com trechos de escalada livre e artificial. Exige boa técnica e resistência.\",\r\n  \"data\": \"2021-07-15\",\r\n  \"montanha_id\": 1,\r\n  \"face_id\": 1,\r\n  \"via_principal_id\": null,\r\n  \"fonte_id\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/vias/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"nome\": \"Desafio da Pica\"\r\n  \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/vias/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"nome\": \"29 de dezembro\",\r\n  \"grau\": \"2.0\",\r\n  \"crux\": \"IIsup\",\r\n  \"artificial\": \"A2+(2)\",\r\n  \"duracao\": \"D3\",\r\n  \"exposicao\": \"E3\",\r\n  \"extensao\": 55,\r\n  \"conquistadores\": [\"Jofre Telles\", \"Marina Mello\"],\r\n  \"data\": \"2005-08-05\",\r\n  \"montanha\": {\r\n    \"id\": 1,\r\n    \"nome\": \"Pão de Açúcar\",\r\n    \"localizacao\": \"Rio de Janeiro\",\r\n    \"altura\": 396\r\n  },\r\n  \"face\": {\r\n    \"id\": 1,\r\n    \"nome\": \"Face Norte\"\r\n  },\r\n  \"fonte\": {\r\n    \"id\": 1,\r\n    \"referencia\": \"Guia de Escaladas do Rio de Janeiro\"\r\n  },\r\n  \"croquis\": [\r\n    {\r\n      \"id\": 1,\r\n      \"imagemUrl\": \"http://exemplo.com/croqui1.jpg\",\r\n      \"autor\": \"Fotógrafo de Escaladas\",\r\n      \"descricao\": \"Croqui da via 29 de dezembro, mostrando as principais rochas e caminhos.\"\r\n    },\r\n    {\r\n        \"id\": 2,\r\n        \"imagemUrl\": \"http://exemplo.com/croqui2.jpg\",\r\n        \"autor\": \"Marcos Carrasqueira\",\r\n        \"descricao\": \"Croqui do crux da Via 29 de dezembro, detalhando os tipos de agarra e trechos artificiais.\"\r\n    }\r\n  ],\r\n  \"id_via_principal\": null\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/vias/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"vias",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Colecoes",
+			"item": [
+				{
+					"name": "api/colecoes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzEwMTg0MjM3fQ.IwlFwbeV7rhi3xQxGaa81qhhv-P9ffu9_bvVXi7qfMQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzEwMTc1NTUzfQ.zdLhvoITcXGRrW0wPsAhIeQpSrpC10ZX7DLsGcLGRuQ"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes/usuario/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes/usuario/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes",
+								"usuario",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Colecao 3\",\r\n    \"descricao\": \"col 3\",\r\n    \"usuario_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes/adicionarVia",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"colecao_id\": 2,\r\n    \"via_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes/adicionarVia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes",
+								"adicionarVia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes/id/via/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes/1/via/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes",
+								"1",
+								"via",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"Colecao 123\",\r\n    \"descricao\": \"Descricao colecao 5\",\r\n    \"usuario_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/colecoes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"colecoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/colecoes",
+					"request": {
+						"method": "DELETE",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Escaladas",
+			"item": [
+				{
+					"name": "api/escaladas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzExNzczNzgyfQ.AULJ3XQAXGV3iwkdMiUEA81Zd9hqjOLXr_2AXvaO2_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladas/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzExNzczNzgyfQ.AULJ3XQAXGV3iwkdMiUEA81Zd9hqjOLXr_2AXvaO2_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladasDoUsuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzExNzczNzgyfQ.AULJ3XQAXGV3iwkdMiUEA81Zd9hqjOLXr_2AXvaO2_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas/usuario/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas",
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladasDaVia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzExNzczNzgyfQ.AULJ3XQAXGV3iwkdMiUEA81Zd9hqjOLXr_2AXvaO2_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas/via/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas",
+								"via",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzExNzczNzgyfQ.AULJ3XQAXGV3iwkdMiUEA81Zd9hqjOLXr_2AXvaO2_k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Escalada do ovo esquerdo e direito\",\r\n    \"data\": \"16/04/2022\",\r\n    \"descricao\": \"Caguei 3 vezes na via\",\r\n    \"observacao\": \"Escalada de merda\",\r\n    \"usuario_id\": 2,\r\n    \"via_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladas/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": 1,\r\n        \"nome\": \"Escalada dos Anjos Editada 2\",\r\n        \"data\": \"10/03/2022\",\r\n        \"descricao\": \"Primeira escalada solo no cume\",\r\n        \"observacao\": \"Escalada difícil\",\r\n        \"via_id\": 5,\r\n        \"usuario_id\": 1\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/escaladas",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4020/api/escaladas/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"escaladas",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "api/usuarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/usuarios/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/usuarios/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/perfil",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyIiwiaWF0IjoxNzEwMjE1NDkyfQ.OVwDLENFL3rZiHsc8T9LUreAfhpFjvCGODIIuRbOsew",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzEwMTg0MjM3fQ.IwlFwbeV7rhi3xQxGaa81qhhv-P9ffu9_bvVXi7qfMQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/perfil",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"perfil"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/usuarios/id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": 1,\r\n        \"nome\": \"Carlos Caralinho\",\r\n        \"email\": \"carlos@gmail.com.br\",\r\n        \"password_hash\": \"$2b$10$mHewXLWy0eHb0UXSBlpa..JyjS3Q.E7IX.6Ut1wJg4XwO0XMIvvvu\",\r\n        \"fotoPerfil\": null\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/usuarios/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/usuarios/id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/usuarios/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Autenticar Usuario",
+			"item": [
+				{
+					"name": "cadastrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Carlos Caralinho\",\r\n    \"email\": \"carlos@gmail.com.br\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"carlos@gmail.com.br\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4020/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4020",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "api/teste",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 1,\r\n  \"nome\": \"29 de dezembro\",\r\n  \"grau\": \"2.0\",\r\n  \"crux\": \"IIsup\",\r\n  \"artificial\": \"A2+(2)\",\r\n  \"duracao\": \"D3\",\r\n  \"exposicao\": \"E3\",\r\n  \"extensao\": 55,\r\n  \"conquistadores\": [\"Jofre Telles\", \"Marina Mello\"],\r\n  \"data\": \"2005-08-05\",\r\n  \"montanha\": {\r\n    \"id\": 1,\r\n    \"nome\": \"Pão de Açúcar\",\r\n    \"localizacao\": \"Rio de Janeiro\",\r\n    \"altura\": 396\r\n  },\r\n  \"face\": {\r\n    \"id\": 1,\r\n    \"nome\": \"Face Norte\"\r\n  },\r\n  \"fonte\": {\r\n    \"id\": 1,\r\n    \"referencia\": \"Guia de Escaladas do Rio de Janeiro\"\r\n  },\r\n  \"croquis\": [\r\n    {\r\n      \"id\": 1,\r\n      \"imagemUrl\": \"http://exemplo.com/croqui1.jpg\",\r\n      \"autor\": \"Fotógrafo de Escaladas\",\r\n      \"descricao\": \"Croqui da via 29 de dezembro, mostrando as principais rochas e caminhos.\"\r\n    },\r\n    {\r\n        \"id\": 2,\r\n        \"imagemUrl\": \"http://exemplo.com/croqui2.jpg\",\r\n        \"autor\": \"Marcos Carrasqueira\",\r\n        \"descricao\": \"Croqui do crux da Via 29 de dezembro, detalhando os tipos de agarra e trechos artificiais.\"\r\n    }\r\n  ],\r\n  \"id_via_principal\": null\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4020/api/conexao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4020",
+					"path": [
+						"api",
+						"conexao"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4020/api/colecoesFavortito",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4020/api/colecoesFavortito",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4020",
+					"path": [
+						"api",
+						"colecoesFavortito"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
