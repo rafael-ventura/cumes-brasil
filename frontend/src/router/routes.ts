@@ -1,45 +1,45 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: '',
-        component: () => import('pages/Home.vue')
+        path: "",
+        component: () => import("pages/Home.vue")
       },
       {
-        path: 'busca',
-        component: () => import('pages/Busca.vue')
+        path: "busca",
+        component: () => import("pages/Busca.vue")
       },
       {
-        path: 'via/:id',
-        component: () => import('pages/ViaDetalhada.vue')
+        path: "vias/:id",
+        component: () => import("pages/ViaDetalhada.vue")
       },
       {
-        path: 'colecoes',
-        component: () => import('pages/Colecoes.vue')
+        path: "colecoes",
+        component: () => import("pages/Colecoes.vue")
       },
       {
-        path: 'colecoes/:id',
-        component: () => import('pages/ColecaoDetalhada.vue')
+        path: "colecoes/:id",
+        component: () => import("pages/ColecaoDetalhada.vue")
       },
       {
-        path: 'perfil',
-        component: () => import('pages/Perfil.vue')
+        path: "perfil",
+        component: () => import("pages/Perfil.vue")
       },
       {
-        path: 'login',
-        component: () => import('pages/Auth/Login.vue')
+        path: "login",
+        component: () => import("pages/Auth/Login.vue")
       },
       {
-        path: 'register',
-        component: () => import('pages/Auth/Register.vue')
+        path: "register",
+        component: () => import("pages/Auth/Register.vue")
       },
       {
-        path: 'reset-password',
-        component: () => import('pages/Auth/RedefinirSenha.vue')
+        path: "reset-password",
+        component: () => import("pages/Auth/RedefinirSenha.vue")
       }
     ]
   },
@@ -47,9 +47,9 @@ const routes: RouteRecordRaw[] = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    path: "/:catchAll(.*)*",
+    component: () => import("pages/ErrorNotFound.vue")
   }
-]
+];
 
-export default routes
+export default routes;

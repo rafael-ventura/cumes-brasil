@@ -7,6 +7,6 @@
 <script setup lang="ts">
 
 defineOptions({
-  name: 'HomeView'
-})
+  name: "HomePage"
+});
 </script>

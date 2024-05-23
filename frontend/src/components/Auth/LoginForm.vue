@@ -6,36 +6,45 @@
 
     <q-card-section>
       <q-form @submit.prevent="onSubmit">
-        <q-input v-model="email" label="Email" type="email" required/>
-        <q-input v-model="senha" label="Senha" type="password" required/>
+        <q-input v-model="email"
+                 label="Email"
+                 type="email"
+                 required/>
+        <q-input v-model="senha"
+                 label="Senha"
+                 type="password"
+                 required/>
 
         <slot></slot>
 
-        <q-btn type="submit" :label="submitLabel" color="primary" class="q-mt-md"/>
+        <q-btn type="submit"
+               :label="submitLabel"
+               color="primary"
+               class="q-mt-md"/>
       </q-form>
     </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref } from "vue";
 
 const props = defineProps({
   title: String,
   submitLabel: String
-})
+});
 
-const emits = defineEmits(['submit'])
+const emits = defineEmits(["submit"]);
 
-const email = ref('')
-const senha = ref('')
+const email = ref("");
+const senha = ref("");
 
 const onSubmit = () => {
-  emits('submit', {
+  emits("submit", {
     email: email.value,
     senha: senha.value
-  })
-}
+  });
+};
 </script>
 
 <style scoped>

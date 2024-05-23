@@ -6,11 +6,17 @@
       </q-card-section>
       <q-card-section>
         <q-form @submit.prevent="onResetPassword">
-          <q-input v-model="email" label="Email" type="email" required/>
+          <q-input v-model="email"
+                   label="Email"
+                   type="email"
+                   required/>
 
           <slot></slot>
 
-          <q-btn type="submit" label="Redefinir Senha" color="primary" class="q-mt-md"/>
+          <q-btn type="submit"
+                 label="Redefinir Senha"
+                 color="primary"
+                 class="q-mt-md"/>
         </q-form>
       </q-card-section>
     </q-card>
@@ -18,21 +24,21 @@
 </template>
 
 <script setup lang="ts">
-import AuthenticateService from '../../services/authenticateService'
-import { ref } from 'vue'
+import AuthenticateService from "../../services/authenticateService";
+import { ref } from "vue";
+
+const email = ref("");
 
 defineOptions({
-  name: 'ResetPasswordPage'
-})
-
-const email = ref('')
+  name: "ResetPasswordPage"
+});
 
 const onResetPassword = async () => {
   try {
-    const response = await AuthenticateService.resetPassword(email.value)
-    console.log(response.data)
+    const response = await AuthenticateService.resetPassword(email.value);
+    console.log(response.data);
   } catch (error: any) {
-    console.error('Erro ao redefinir senha:', error.message)
+    console.error("Erro ao redefinir senha:", error.message);
   }
-}
+};
 </script>

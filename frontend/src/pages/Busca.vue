@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row items-center q-my-md">
-      <div class="col">
+      <div class="col-12 col-md">
         <q-input
           v-model="searchQuery"
           label="Buscar vias de escalada"
@@ -10,57 +10,67 @@
         />
       </div>
       <div class="col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal"/>
+        <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal" />
       </div>
     </div>
-    <ViaLista :vias="vias"/>
+    <ViaLista :vias="vias" @show-details="showViaDetails" />
     <q-dialog v-model="isFilterModalOpen" persistent>
-      <FiltrosAvancados @apply-filters="applyFilters"/>
+      <FiltrosAvancados @apply-filters="applyFilters" />
     </q-dialog>
+    <ModalViaDetalhada :isOpen="isViaModalOpen" :via="<Via>selectedVia" @update:isOpen="isViaModalOpen = $event" />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import ViaService from '../services/viaService'
-import ViaLista from 'components/ViaLista.vue'
-import { Via } from 'components/models'
-import FiltrosAvancados from 'components/FiltrosAvancados.vue'
+import { onMounted, ref } from "vue";
+import ViaService from "../services/viaService";
+import ViaLista from "components/ViaLista.vue";
+import FiltrosAvancados from "components/FiltrosAvancados.vue";
+import ModalViaDetalhada from "components/ModalViaDetalhada.vue";
+import { Via } from "src/models/Via";
+
+const searchQuery = ref("");
+const vias = ref<Via[]>([]);
+const isFilterModalOpen = ref(false);
+const isViaModalOpen = ref(false);
+const selectedVia = ref<Via | null>(null);
 
 defineOptions({
-  name: 'BuscaPage'
-})
+  name: "BuscaPage"
+});
 
-const searchQuery = ref('')
-const vias = ref<Via[]>([])
-const isFilterModalOpen = ref(false)
+onMounted(() => {
+  searchVias();
+});
 
 const searchVias = async () => {
-  if (searchQuery.value.trim() === '') {
-    vias.value = await ViaService.getAllVias()
+  if (searchQuery.value.trim() === "") {
+    vias.value = await ViaService.getAllVias();
   } else {
     try {
-      vias.value = await ViaService.searchVias(searchQuery.value)
+      vias.value = await ViaService.searchVias(searchQuery.value);
     } catch (error) {
-      console.error('Erro ao buscar vias:', error)
+      console.error("Erro ao buscar vias:", error);
     }
   }
-}
+};
 
 const openFilterModal = () => {
-  isFilterModalOpen.value = true
-}
+  isFilterModalOpen.value = true;
+};
 
 const applyFilters = async (filters: any) => {
   try {
-    vias.value = await ViaService.searchViasWithFilters(filters)
+    vias.value = await ViaService.searchViasWithFilters(filters);
   } catch (error) {
-    console.error('Erro ao aplicar filtros:', error)
+    console.error("Erro ao aplicar filtros:", error);
   }
-  isFilterModalOpen.value = false
-}
+  isFilterModalOpen.value = false;
+};
 
-onMounted(() => {
-  searchVias()
-})
+const showViaDetails = (via: Via) => {
+  selectedVia.value = via;
+  isViaModalOpen.value = true;
+};
+
 </script>

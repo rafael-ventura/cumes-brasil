@@ -1,29 +1,38 @@
 <template>
-  <q-list bordered separator>
-    <q-item v-for="via in props.vias" :key="via.id" clickable @click="goViaDetalhadaView(via)">
-      <q-item-section>
-        <q-item-label class="text-h6">{{ via.nome }}</q-item-label>
-        <q-item-label caption>{{ via.montanha.nome }}</q-item-label>
-      </q-item-section>
-      <q-item-section side top>
-        <q-badge color="primary" label="Grau: {{ via.grau }}" />
-        <q-badge color="secondary" label="Crux: {{ via.crux }}" class="q-ml-sm" />
-        <q-badge color="info" label="Extensão: {{ via.extensao }}m" class="q-ml-sm" />
-      </q-item-section>
-    </q-item>
-  </q-list>
+  <div class="via-list">
+    <ViaCard v-for="via in props.vias" :key="via.id" :via="via" @click="showDetails(via)"/>
+    <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
+      <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event"/>
+    </q-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import { useRouter } from 'vue-router'
-import { Via } from 'components/models'
+import { ref } from "vue";
+import { Via } from "src/models/Via";
+import ViaCard from "components/ViaCard.vue";
+import ModalViaDetalhada from "components/ModalViaDetalhada.vue";
 
-const props = defineProps<{ vias: Via[] }>()
+const props = defineProps<{ vias: Via[] }>();
 
-const router = useRouter()
+const isModalOpen = ref(false);
+const selectedVia = ref<Via | null>(null);
 
-const goViaDetalhadaView = (via: Via) => {
-  router.push(`/vias/${via.id}`)
-}
+const showDetails = (via: Via) => {
+  selectedVia.value = via;
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 </script>
+
+<style scoped>
+.via-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+</style>

@@ -30,4 +30,6 @@ export class Escalada extends BaseEntity {
   @Column({ nullable: true })
   via_id: number;
 
+
+
 }

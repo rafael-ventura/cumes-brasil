@@ -5,41 +5,45 @@
       submit-label="Login"
       @submit="onLogin"
     >
-      <q-btn flat label="Forgot Password?" @click="goToResetPassword"/>
-      <q-btn flat label="Sign Up" @click="goToSignUp"/>
+      <q-btn flat
+             label="Forgot Password?"
+             @click="goToResetPassword"/>
+      <q-btn flat
+             label="Sign Up"
+             @click="goToSignUp"/>
     </login-form>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import AuthenticateService from '../../services/authenticateService'
-import LoginForm from 'components/Auth/LoginForm.vue'
+import { useRouter } from "vue-router";
+import AuthenticateService from "../../services/authenticateService";
+import LoginForm from "components/Auth/LoginForm.vue";
 
 defineOptions({
-  name: 'LoginPage'
-})
+  name: "LoginPage"
+});
 
-const router = useRouter()
+const router = useRouter();
 
 const onLogin = async ({
   email,
   senha
 }: { email: string, senha: string }) => {
   try {
-    const response = await AuthenticateService.login(email, senha)
-    console.log(response.data)
-    await router.push('/')
+    const response = await AuthenticateService.login(email, senha);
+    console.log(response.data);
+    await router.push("/");
   } catch (error: any) {
-    console.error(error.message)
+    console.error(error.message);
   }
-}
+};
 
 const goToResetPassword = () => {
-  router.push('/reset-senha')
-}
+  router.push("/reset-password");
+};
 
 const goToSignUp = () => {
-  router.push('/register')
-}
+  router.push("/register");
+};
 </script>
