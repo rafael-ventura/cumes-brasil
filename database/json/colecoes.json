@@ -1,0 +1,11 @@
+{
+  "colecoes":
+          [
+            {
+              "nome": "Colecao Urca",
+              "descricao": "Colecao De Teste",
+              "usuario_id": 1,
+              "imagem_id": 1
+            }
+          ]
+}
