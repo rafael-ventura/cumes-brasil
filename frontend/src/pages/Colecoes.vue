@@ -9,6 +9,7 @@
           </q-avatar>
         </q-item-section>
         <q-item-section>
+          <q-img :src="colecao.imagem?.url" class="q-mr-md" style="width: 56px; height: 56px"/>
           <q-item-label class="text-h6">{{ colecao.nome }}</q-item-label>
           <q-item-label caption>{{ colecao.descricao }}</q-item-label>
         </q-item-section>
@@ -18,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import AuthenticateService from "src/services/AuthenticateService";
 import ColecaoService from "src/services/ColecaoService";
@@ -33,12 +34,12 @@ defineOptions({
 
 onMounted(async () => {
   if (!AuthenticateService.isAuthenticated()) {
-    router.push("/login");
+    await router.push("/auth/login");
     return;
   }
 
   try {
-    colecoes.value = await ColecaoService.getAllColecoes();
+    colecoes.value = await ColecaoService.getAll();
   } catch (error) {
     console.error("Erro ao buscar coleções:", error);
   }

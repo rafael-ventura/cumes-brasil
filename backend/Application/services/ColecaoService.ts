@@ -1,14 +1,9 @@
 import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
 import { Colecao } from "../../Domain/entities/Colecao";
-import { ViaService } from "./ViaService";
-import { UsuarioService } from "./UsuarioService";
-import { Via } from "../../Domain/entities/Via";
 
 export class ColecaoService {
   constructor(
-    private colecaoRepo: ColecaoRepository,
-    private viaService: ViaService,
-    private usuarioService: UsuarioService
+    private colecaoRepo: ColecaoRepository
   ) {}
 
   async getColecaoById(id: number): Promise<Colecao | null> {

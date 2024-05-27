@@ -13,7 +13,7 @@ const colecaoRepository = new ColecaoRepository_1.ColecaoRepository();
 const usuarioRepository = new UsuarioRepository_1.UsuarioRepository();
 const usuarioService = new UsuarioService_1.UsuarioService(usuarioRepository);
 const viaService = new ViaService_1.ViaService(viaRepository);
-const colecaoService = new ColecaoService_1.ColecaoService(colecaoRepository, viaService, usuarioService);
+const colecaoService = new ColecaoService_1.ColecaoService(colecaoRepository);
 const colecaoController = new ColecaoController_1.ColecaoController(colecaoService);
 const ColecaoRouter = (0, express_1.Router)();
 ColecaoRouter.get("/:id", colecaoController.getById);

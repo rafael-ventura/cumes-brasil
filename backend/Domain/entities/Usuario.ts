@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
+import { Escalada } from "./Escalada";
 
 @Entity()
 export class Usuario extends BaseEntity {
@@ -16,11 +17,13 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: false })
   password_hash: string;
 
-  @ManyToOne(() => Imagem)
-  @JoinColumn({ name: "foto_perfil" })
+  @ManyToOne(() => Imagem, imagem => imagem.usuarios)
   foto_perfil: number;
 
-  @OneToMany(() => Colecao, colecao => colecao.usuario_id)
+  @OneToMany(() => Colecao, colecao => colecao.usuario)
   colecoes: Colecao[];
+
+  @OneToMany(() => Escalada, escalada => escalada.usuario)
+  escaladas: Escalada[];
 
 }

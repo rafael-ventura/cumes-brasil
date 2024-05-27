@@ -1,8 +1,8 @@
 <template>
   <div class="via-list">
-    <ViaCard v-for="via in props.vias" :key="via.id" :via="via" @click="showDetails(via)"/>
+    <ViaCard v-for="via in props.vias" :key="via.id" :via="via" @click="showDetails(via)" />
     <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
-      <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event"/>
+      <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event" />
     </q-dialog>
   </div>
 </template>

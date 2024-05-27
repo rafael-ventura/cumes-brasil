@@ -35,11 +35,16 @@ const swagger_output_json_1 = __importDefault(require("../swagger_output.json"))
 const db_1 = require("../Infrastructure/config/db");
 const initialLoad_1 = require("../Infrastructure/sql_scripts/initialLoad");
 const Via_1 = require("../Domain/entities/Via");
+const path_1 = __importDefault(require("path"));
 dotenv.config();
 const cors = require("cors");
 const app = (0, express_1.default)();
 app.use(cors());
 const PORT = process.env.PORT || 4020;
+// Servir arquivos estáticos da pasta assets
+const assetsPath = path_1.default.join(__dirname, "../../assets");
+console.log("Servidor está servindo arquivos estáticos no diretório:", assetsPath);
+app.use("/assets", express_1.default.static(assetsPath));
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
 app.use(express_1.default.json());
 app.use('/api', routes_1.default);

@@ -26,14 +26,12 @@ __decorate([
     __metadata("design:type", String)
 ], Croqui.prototype, "nome", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte),
-    (0, typeorm_1.JoinColumn)({ name: "fonte_id" }),
-    __metadata("design:type", Fonte_1.Fonte)
+    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte, fonte => fonte.croquis),
+    __metadata("design:type", Number)
 ], Croqui.prototype, "fonte", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem),
-    (0, typeorm_1.JoinColumn)({ name: "imagem_id" }),
-    __metadata("design:type", Imagem_1.Imagem)
+    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem, imagem => imagem.croquis),
+    __metadata("design:type", Number)
 ], Croqui.prototype, "imagem", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Via_1.Via, via => via.croquis),

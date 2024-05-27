@@ -41,13 +41,13 @@ const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, s
   try {
     const response = await AuthenticateService.register(nome, email, senha);
     console.log(response.data);
-    await router.push("/login");
+    await router.push("/auth/login");
   } catch (error: any) {
     errorMessage.value = "Erro ao cadastrar usuário: " + error.message;
   }
 };
 
 const goToLogin = () => {
-  router.push("/login");
+  router.push("/auth/login");
 };
 </script>

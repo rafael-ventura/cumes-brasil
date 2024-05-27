@@ -13,11 +13,9 @@ export class Escalada extends BaseEntity {
   @Column({ nullable: true })
   observacao: string;
 
-  @ManyToOne(() => Usuario)
-  @JoinColumn({ name: "usuario_id" })
-  usuario_id: number;
+  @ManyToOne(() => Usuario, usuario => usuario.escaladas)
+  usuario: number;
 
-  @ManyToOne(() => Via)
-  @JoinColumn({ name: "via_id" })
-  via_id: number;
+  @ManyToOne(() => Via, via => via.escaladas)
+  via: number;
 }

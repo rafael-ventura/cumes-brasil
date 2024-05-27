@@ -13,6 +13,8 @@ exports.Montanha = void 0;
 const typeorm_1 = require("typeorm");
 const Fonte_1 = require("./Fonte");
 const Imagem_1 = require("./Imagem");
+const Face_1 = require("./Face");
+const Via_1 = require("./Via");
 let Montanha = class Montanha extends typeorm_1.BaseEntity {
 };
 exports.Montanha = Montanha;
@@ -34,14 +36,20 @@ __decorate([
 ], Montanha.prototype, "altura", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte),
-    (0, typeorm_1.JoinColumn)({ name: "fonte_id" }),
-    __metadata("design:type", Fonte_1.Fonte)
+    __metadata("design:type", Number)
 ], Montanha.prototype, "fonte", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem),
-    (0, typeorm_1.JoinColumn)({ name: "imagem_id" }),
-    __metadata("design:type", Imagem_1.Imagem)
+    __metadata("design:type", Number)
 ], Montanha.prototype, "imagem", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Face_1.Face, face => face.montanha),
+    __metadata("design:type", Array)
+], Montanha.prototype, "faces", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Via_1.Via, via => via.montanha),
+    __metadata("design:type", Array)
+], Montanha.prototype, "vias", void 0);
 exports.Montanha = Montanha = __decorate([
     (0, typeorm_1.Entity)()
 ], Montanha);

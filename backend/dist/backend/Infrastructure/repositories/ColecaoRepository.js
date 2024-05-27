@@ -10,25 +10,13 @@ class ColecaoRepository {
         this.viaRepository = db_1.AppDataSource.getRepository(Via_1.Via);
     }
     async getById(id) {
-        return this.repository.findOne({
-            where: { id },
-            relations: ["vias"]
-        });
+        return this.repository.findOne({ where: { id } });
     }
     async getAll() {
-        return this.repository.find({
-            relations: ["vias"]
-        });
+        return this.repository.find();
     }
-    async getByUsuarioId(usuarioId) {
-        return this.repository.find({
-            where: {
-                usuario: {
-                    id: usuarioId
-                }
-            },
-            relations: ["vias", "imagem", "usuario"]
-        });
+    async getByUsuarioId(usuario_id) {
+        return this.repository.find({ where: { id: usuario_id } });
     }
     async create(colecaoData) {
         await this.repository.save(colecaoData);

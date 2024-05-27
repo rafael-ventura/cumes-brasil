@@ -34,7 +34,7 @@ class AuthService {
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
             if (!ticket) {
-                throw new Error('Ticket não definido');
+                throw new Error("Ticket não definido");
             }
             const payload = ticket.getPayload();
             if (!payload) {

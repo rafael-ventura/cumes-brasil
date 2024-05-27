@@ -40,10 +40,10 @@ const onLogin = async ({
 };
 
 const goToResetPassword = () => {
-  router.push("/reset-password");
+  router.push("/auth/reset-password");
 };
 
 const goToSignUp = () => {
-  router.push("/register");
+  router.push("/auth/register");
 };
 </script>

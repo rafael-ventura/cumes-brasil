@@ -70,7 +70,7 @@ class FaceController {
                     if (error.message === "É necessário existir uma Fonte antes da criação da via") {
                         res.status(400).json({ error: error.message });
                     }
-                    else if (error.message === "É necessário existir uma Montanha antes da criação da via") {
+                    else if (error.message === "É necessário existir uma montanha antes da criação da via") {
                         res.status(400).json({ error: error.message });
                     }
                     res.status(500).json({ error: error.message });

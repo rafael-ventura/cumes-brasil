@@ -73,7 +73,7 @@ export class ViaController {
 			if (error instanceof Error) {
 				if (error.message === "É necessário existir uma Fonte antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário existir uma Montanha antes da criação da via") {
+				} else if (error.message === "É necessário existir uma montanha antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário existir uma Face antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
@@ -103,7 +103,7 @@ export class ViaController {
 			if (error instanceof Error) {
 				if (error.message === "É necessário existir uma Fonte antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário existir uma Montanha antes da criação da via") {
+				} else if (error.message === "É necessário existir uma montanha antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário existir uma Face antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
@@ -156,11 +156,13 @@ export class ViaController {
 			if (error instanceof Error) {
 				if (error.message === "Nenhuma via encontrada") {
 					return res.status(404).json({ error: error.message });
+				} else {
+					res.status(500).json({ error: error.message });
+
 				}
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasInColecao" });
 			}
 		}
 	}
-
 }

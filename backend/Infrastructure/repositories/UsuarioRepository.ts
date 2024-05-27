@@ -6,11 +6,16 @@ export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
 
     async getById (id: number): Promise<Usuario | null> {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .where("usuario.id = :id", { id })
+          .getOne();
     }
 
     async getAll () {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .getMany();
     }
 
     async create (nome: string, email: string, senhaHash: string): Promise<void> {
@@ -35,7 +40,10 @@ export class UsuarioRepository {
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {
-        return this.repository.findOne(id as any);
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .where("usuario.id = :id", { id })
+          .getOne();
     }
 }
 

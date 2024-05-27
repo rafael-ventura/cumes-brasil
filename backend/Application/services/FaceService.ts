@@ -35,14 +35,14 @@ export class FaceService {
         if (!face) {
             throw new Error("Face inválida");
         }
-        const fonteExiste = await this.fonteService.getFonteById(face.fonte_id);
+        const fonteExiste = await this.fonteService.getFonteById(face.fonte);
         if (!fonteExiste) {
             throw new Error("É necessário existir uma Fonte antes da criação da via");
         }
-        const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha_id);
+        const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha);
         if (!montanhaExiste) {
             throw new Error(
-              "É necessário existir uma Montanha antes da criação da via");
+              "É necessário existir uma montanha antes da criação da via");
         }
         return this.faceRepository.create(face);
     }

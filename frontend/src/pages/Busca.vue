@@ -2,12 +2,7 @@
   <q-page class="q-pa-md">
     <div class="row items-center q-my-md">
       <div class="col-12 col-md">
-        <q-input
-          v-model="searchQuery"
-          label="Buscar vias de escalada"
-          @input="searchVias"
-          debounce="300"
-        />
+        <q-input v-model="searchQuery" label="Buscar vias de escalada" @input="searchVias" debounce="300"/>
       </div>
       <div class="col-auto">
         <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal" />
@@ -39,19 +34,20 @@ defineOptions({
   name: "BuscaPage"
 });
 
-onMounted(() => {
-  searchVias();
+onMounted(async () => {
+  await searchVias();
 });
 
 const searchVias = async () => {
-  if (searchQuery.value.trim() === "") {
-    vias.value = await ViaService.getAllVias();
-  } else {
-    try {
+  vias.value = await ViaService.getAllVias();
+  try {
+    if (searchQuery.value.trim() === "") {
+      vias.value = await ViaService.getAllVias();
+    } else {
       vias.value = await ViaService.searchVias(searchQuery.value);
-    } catch (error) {
-      console.error("Erro ao buscar vias:", error);
     }
+  } catch (error) {
+    console.error("Erro ao buscar vias:", error);
   }
 };
 
@@ -72,5 +68,4 @@ const showViaDetails = (via: Via) => {
   selectedVia.value = via;
   isViaModalOpen.value = true;
 };
-
 </script>

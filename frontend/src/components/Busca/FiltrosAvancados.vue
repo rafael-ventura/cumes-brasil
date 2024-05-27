@@ -17,7 +17,7 @@
         <q-select
           v-model="filters.montanha"
           :options="montanhaOptions"
-          label="Montanha"
+          label="montanha"
           clearable
         />
         <q-select
@@ -69,8 +69,8 @@ const grauOptions = [
 ];
 
 const montanhaOptions = [
-  { label: "Montanha 1", value: "Montanha 1" },
-  { label: "Montanha 2", value: "Montanha 2" }
+  { label: "montanha 1", value: "montanha 1" },
+  { label: "montanha 2", value: "montanha 2" }
   // Adicione outras opções conforme necessário
 ];
 

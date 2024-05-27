@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -15,6 +14,8 @@ import { Fonte } from "./Fonte";
 import { Face } from "./Face";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
+import { Escalada } from "./Escalada";
+import { ColecaoVia } from "./ColecaoVia";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -59,28 +60,23 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   data: string;
 
-  @ManyToOne(() => Montanha)
-  @JoinColumn({ name: "montanha_id" })
-  montanha_id: number;
+  @ManyToOne(() => Montanha, montanha => montanha.vias)
+  montanha: number;
 
-  @ManyToOne(() => Via)
-  @JoinColumn({ name: "via_principal_id" })
-  via_principal_id: number;
+  @ManyToOne(() => Via, via => via.variantes)
+  viaPrincipal: number;
 
-  @OneToMany(() => Via, via => via.via_principal_id)
+  @OneToMany(() => Via, via => via.viaPrincipal)
   variantes: Via[];
 
-  @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte_id: number;
+  @ManyToOne(() => Fonte, fonte => fonte.vias)
+  fonte: number;
 
-  @ManyToOne(() => Face)
-  @JoinColumn({ name: "face_id" })
-  face_id: number;
+  @ManyToOne(() => Face, face => face.vias)
+  face: number;
 
-  @ManyToOne(() => Imagem)
-  @JoinColumn({ name: "imagem_id" })
-  imagem_id: number;
+  @ManyToOne(() => Imagem, imagem => imagem.vias)
+  imagem: number;
 
   @ManyToMany(() => Croqui, croqui => croqui.vias)
   @JoinTable({
@@ -96,17 +92,11 @@ export class Via extends BaseEntity {
   })
   croquis: Croqui[];
 
-  @ManyToMany(() => Colecao, colecao => colecao.vias)
-  @JoinTable({
-    name: "colecao_via",
-    joinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    }
-  })
-  colecoes: Colecao[];
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.via)
+  viasColecoes: ColecaoVia[];
+
+  @OneToMany(() => Escalada, escalada => escalada.via)
+  escaladas: Escalada[];
+
+
 }

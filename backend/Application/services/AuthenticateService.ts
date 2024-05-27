@@ -38,7 +38,7 @@ class AuthService {
             });
 
             if (!ticket) {
-                throw new Error('Ticket não definido');
+                throw new Error("Ticket não definido");
             }
 
             const payload = ticket.getPayload();

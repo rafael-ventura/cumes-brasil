@@ -1,17 +1,29 @@
+//src/Infrastructure/repositories/ViaRepository.ts
 import { Via } from "../../Domain/entities/Via";
 import { AppDataSource } from "../config/db";
-import { Colecao } from "../../Domain/entities/Colecao";
 
 export class ViaRepository {
 
   private repository = AppDataSource.getRepository(Via);
-
   async getById (id: number): Promise<Via | null> {
-    return this.repository.findOne({ where: { id } });
+    return this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.montanha", "montanha")
+      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+      .leftJoinAndSelect("via.fonte", "fonte")
+      .leftJoinAndSelect("via.face", "face")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .where("via.id = :id", { id })
+      .getOne();
   }
 
   async getAll (): Promise<Via[]> {
-    return this.repository.find();
+    return await this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.montanha", "montanha")
+      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+      .leftJoinAndSelect("via.fonte", "fonte")
+      .leftJoinAndSelect("via.face", "face")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .getMany();
   }
 
   async create (via: Partial<Via>): Promise<void> {
@@ -27,9 +39,11 @@ export class ViaRepository {
   }
 
   async getViasByColecaoId (colecaoId: number): Promise<Via[]> {
-    const colecaoRepository = AppDataSource.getRepository(Colecao);
-    const colecao = await colecaoRepository.findOne({ where: { id: colecaoId } });
-
-    return colecao ? colecao.vias : [];
+    return await this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
+      .getMany();
   }
+
 }

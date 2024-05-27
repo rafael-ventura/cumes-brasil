@@ -3,16 +3,16 @@
     {
       "id": 1,
       "nome": "Croquis do Campo Escola Anibal",
-      "imagem_id": 5,
+      "imagem": 5,
       "autor": "Pedro Bugim",
-      "fonte_id": 2
+      "fonte": 2
     },
     {
       "id": 2,
       "nome": "Croquis do Campo Escola Anibal",
-      "imagem_id": 6,
+      "imagem": 6,
       "autor": "Pedro Bugim",
-      "fonte_id": 3
+      "fonte": 3
     }
   ]
 }

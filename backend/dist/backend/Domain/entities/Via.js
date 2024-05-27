@@ -17,6 +17,7 @@ const Fonte_1 = require("./Fonte");
 const Face_1 = require("./Face");
 const Colecao_1 = require("./Colecao");
 const Imagem_1 = require("./Imagem");
+const Escalada_1 = require("./Escalada");
 let Via = class Via extends typeorm_1.BaseEntity {
 };
 exports.Via = Via;
@@ -73,48 +74,28 @@ __decorate([
     __metadata("design:type", String)
 ], Via.prototype, "data", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Colecao_1.Colecao, colecao => colecao.vias),
-    (0, typeorm_1.JoinTable)({
-        name: "colecao_via",
-        joinColumn: {
-            name: "via_id",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "colecao_id",
-            referencedColumnName: "id"
-        }
-    }),
-    __metadata("design:type", Array)
-], Via.prototype, "colecoes", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Montanha_1.Montanha),
-    (0, typeorm_1.JoinColumn)({ name: "montanha_id" }),
-    __metadata("design:type", Montanha_1.Montanha)
+    (0, typeorm_1.ManyToOne)(() => Montanha_1.Montanha, montanha => montanha.vias),
+    __metadata("design:type", Number)
 ], Via.prototype, "montanha", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Via),
-    (0, typeorm_1.JoinColumn)({ name: "via_principal_id" }),
-    __metadata("design:type", Via)
+    (0, typeorm_1.ManyToOne)(() => Via, via => via.variantes),
+    __metadata("design:type", Number)
 ], Via.prototype, "viaPrincipal", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Via, via => via.viaPrincipal),
     __metadata("design:type", Array)
 ], Via.prototype, "variantes", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte),
-    (0, typeorm_1.JoinColumn)({ name: "fonte_id" }),
-    __metadata("design:type", Fonte_1.Fonte)
+    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte, fonte => fonte.vias),
+    __metadata("design:type", Number)
 ], Via.prototype, "fonte", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Face_1.Face),
-    (0, typeorm_1.JoinColumn)({ name: "face_id" }),
-    __metadata("design:type", Face_1.Face)
+    (0, typeorm_1.ManyToOne)(() => Face_1.Face, face => face.vias),
+    __metadata("design:type", Number)
 ], Via.prototype, "face", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem),
-    (0, typeorm_1.JoinColumn)({ name: "imagem_id" }),
-    __metadata("design:type", Imagem_1.Imagem)
+    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem, imagem => imagem.vias),
+    __metadata("design:type", Number)
 ], Via.prototype, "imagem", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Croqui_1.Croqui, croqui => croqui.vias),
@@ -131,6 +112,25 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], Via.prototype, "croquis", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Colecao_1.Colecao, colecao => colecao.vias),
+    (0, typeorm_1.JoinTable)({
+        name: "colecao_via",
+        joinColumn: {
+            name: "via_id",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "colecao_id",
+            referencedColumnName: "id"
+        }
+    }),
+    __metadata("design:type", Array)
+], Via.prototype, "colecoes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Escalada_1.Escalada, escalada => escalada.via),
+    __metadata("design:type", Array)
+], Via.prototype, "escaladas", void 0);
 exports.Via = Via = __decorate([
     (0, typeorm_1.Entity)()
 ], Via);

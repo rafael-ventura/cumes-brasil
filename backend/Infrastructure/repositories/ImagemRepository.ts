@@ -5,11 +5,16 @@ export class ImagemRepository {
   private repository = AppDataSource.getRepository(Imagem);
 
   async getById (id: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { id: id } });
+    return this.repository.createQueryBuilder("imagem")
+      .leftJoinAndSelect("imagem.fonte", "fonte")
+      .where("imagem.id = :id", { id })
+      .getOne();
   }
 
   async getAll (): Promise<Imagem[]> {
-    return this.repository.find();
+    return this.repository.createQueryBuilder("imagem")
+      .leftJoinAndSelect("imagem.fonte", "fonte")
+      .getMany();
   }
 
   async create (imagem: Partial<Imagem>): Promise<void> {

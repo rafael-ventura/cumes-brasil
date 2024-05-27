@@ -1,17 +1,26 @@
 import { AppDataSource } from "../config/db";
 import { Colecao } from "../../Domain/entities/Colecao";
 import { Via } from "../../Domain/entities/Via";
+import { ColecaoVia } from "../../Domain/entities/ColecaoVia";
 
 export class ColecaoRepository {
     private repository = AppDataSource.getRepository(Colecao);
     private viaRepository = AppDataSource.getRepository(Via);
+    private colecaoViaRepository = AppDataSource.getRepository(ColecaoVia);
 
     async getById (id: number): Promise<Colecao | null> {
-        return this.repository.findOne({ where: { id } });
+        return this.repository.createQueryBuilder("colecao")
+          .leftJoinAndSelect("colecao.usuario", "usuario")
+          .leftJoinAndSelect("colecao.imagem", "imagem")
+          .where("colecao.id = :id", { id })
+          .getOne();
     }
 
     async getAll (): Promise<Colecao[]> {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("colecao")
+          .leftJoinAndSelect("colecao.usuario", "usuario")
+          .leftJoinAndSelect("colecao.imagem", "imagem")
+          .getMany();
     }
 
     async getByUsuarioId (usuario_id: number): Promise<Colecao[]> {
@@ -31,24 +40,28 @@ export class ColecaoRepository {
     }
 
     async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
-        const existingRelation = await this.viaRepository.createQueryBuilder()
-          .relation(Via, "colecoes")
-          .of(via_id)
-          .loadMany();
+        const existingEntry = await this.colecaoViaRepository.findOne({
+            where: {
+                via_id,
+                colecao_id
+            }
+        });
 
-        if (existingRelation.some(colecao => colecao.id === colecao_id)) {
-            return;
+        if (existingEntry) {
+            throw new Error("A via já está presente nesta coleção.");
         }
-        await this.viaRepository.createQueryBuilder()
-          .relation(Via, "colecoes")
-          .of(via_id)
-          .add(colecao_id);
+        const colecaoVia = this.colecaoViaRepository.create({
+            via_id,
+            colecao_id
+        });
+        await this.colecaoViaRepository.save(colecaoVia);
     }
 
     async removeViaFromColecao (via_id: number, colecao_id: number): Promise<void> {
-        await this.viaRepository.createQueryBuilder()
-          .relation(Via, "colecoes")
-          .of(via_id)
-          .remove(colecao_id);
+        await this.colecaoViaRepository.delete({
+            via_id,
+            colecao_id
+        });
+
     }
 }

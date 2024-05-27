@@ -1,6 +1,6 @@
 # API Cumes Brasil 🏞️
 
-API RESTful dedicada ao catálogo digital de vias de escalada do Brasil, proporcionando um meio para acessar, criar, atualizar e deletar informações sobre vias, montanhas, faces de Montanha, usuários e croquis.
+API RESTful dedicada ao catálogo digital de vias de escalada do Brasil, proporcionando um meio para acessar, criar, atualizar e deletar informações sobre vias, montanhas, faces de montanha, usuários e croquis.
 
 ## Início Rápido
 
@@ -44,18 +44,18 @@ A seguir, são apresentados os principais endpoints disponíveis na API:
 ### Montanhas
 
 - `GET /api/montanhas`: Lista todas as montanhas.
-- `GET /api/montanhas/{id}`: Retorna uma Montanha específica pelo ID.
-- `POST /api/montanhas`: Cria uma nova Montanha.
-- `PUT /api/montanhas/{id}`: Atualiza uma Montanha existente.
-- `DELETE /api/montanhas/{id}`: Deleta uma Montanha pelo ID.
+- `GET /api/montanhas/{id}`: Retorna uma montanha específica pelo ID.
+- `POST /api/montanhas`: Cria uma nova montanha.
+- `PUT /api/montanhas/{id}`: Atualiza uma montanha existente.
+- `DELETE /api/montanhas/{id}`: Deleta uma montanha pelo ID.
 
 ### Faces
 
-- `GET /api/faces`: Lista todas as faces de Montanha.
-- `GET /api/faces/{id}`: Retorna uma Face de Montanha específica pelo ID.
-- `POST /api/faces`: Cria uma nova Face de Montanha.
-- `PUT /api/faces/{id}`: Atualiza uma Face de Montanha existente.
-- `DELETE /api/faces/{id}`: Deleta uma Face de Montanha pelo ID.
+- `GET /api/faces`: Lista todas as faces de montanha.
+- `GET /api/faces/{id}`: Retorna uma Face de montanha específica pelo ID.
+- `POST /api/faces`: Cria uma nova Face de montanha.
+- `PUT /api/faces/{id}`: Atualiza uma Face de montanha existente.
+- `DELETE /api/faces/{id}`: Deleta uma Face de montanha pelo ID.
 
 ### Fontes
 
@@ -101,22 +101,22 @@ Armazena informações sobre as fontes de dados ou referências para as informa�
 - **autor**: Nome do autor ou da entidade que forneceu a informação.
 - **referencia**: Detalhes da referência ou como a informação pode ser verificada.
 
-### `Montanha`
+### `montanha`
 Representa as montanhas que contêm as vias de escalada.
 
-- **id**: Identificador único da Montanha.
-- **nome**: Nome da Montanha.
-- **localizacao**: Localização geográfica da Montanha.
-- **altura**: Altura da Montanha em metros.
-- **fonte_id**: Referência à Fonte das informações da Montanha.
+- **id**: Identificador único da montanha.
+- **nome**: Nome da montanha.
+- **localizacao**: Localização geográfica da montanha.
+- **altura**: Altura da montanha em metros.
+- **fonte**: Referência à Fonte das informações da montanha.
 
 ### `Face`
-Descreve as diferentes faces de uma Montanha, onde as vias de escalada estão localizadas.
+Descreve as diferentes faces de uma montanha, onde as vias de escalada estão localizadas.
 
 - **id**: Identificador único da Face.
-- **nome**: Nome da Face da Montanha.
-- **montanha_id**: Referência à Montanha à qual a Face pertence.
-- **fonte_id**: Referência à Fonte das informações da Face.
+- **nome**: Nome da Face da montanha.
+- **montanha_id**: Referência à montanha à qual a Face pertence.
+- **fonte**: Referência à Fonte das informações da Face.
 
 ### `Via`
 Contém informações sobre as vias de escalada individuais.
@@ -127,10 +127,10 @@ Contém informações sobre as vias de escalada individuais.
 - **conquistadores**: Informações sobre os escaladores que abriram a via.
 - **detalhes**: Outros detalhes relevantes da via.
 - **data**: Data de conquista ou abertura da via.
-- **montanha_id**: Referência à Montanha onde a via está localizada.
-- **face_id**: Referência à Face específica da Montanha.
+- **montanha_id**: Referência à montanha onde a via está localizada.
+- **face_id**: Referência à Face específica da montanha.
 - **via_principal_id**: Em caso de vias secundárias, referencia a via principal associada.
-- **fonte_id**: Referência à Fonte das informações da via.
+- **fonte**: Referência à Fonte das informações da via.
 
 ### `Croqui`
 Fornece representações gráficas ou croquis das vias de escalada.
@@ -140,7 +140,7 @@ Fornece representações gráficas ou croquis das vias de escalada.
 - **imagemUrl**: URL para a Imagem do croqui.
 - **autor**: Quem criou o croqui.
 - **descricao**: Descrição ou anotações adicionais sobre o croqui.
-- **fonte_id**: Referência à Fonte das informações do croqui.
+- **fonte**: Referência à Fonte das informações do croqui.
 
 ### `Usuario`
 Armazena informações sobre os usuários da plataforma.

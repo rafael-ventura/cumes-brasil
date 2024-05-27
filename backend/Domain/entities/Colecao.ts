@@ -5,12 +5,13 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Via } from "./Via";
 import { Imagem } from "./Imagem";
 import { Usuario } from "./Usuario";
+import { ColecaoVia } from "./ColecaoVia";
 
 @Entity()
 export class Colecao extends BaseEntity {
@@ -24,24 +25,11 @@ export class Colecao extends BaseEntity {
   descricao?: string;
 
   @ManyToOne(() => Usuario, usuario => usuario.colecoes)
-  @JoinColumn({ name: "usuario_id" })
-  usuario_id: number;
+  usuario: number;
 
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  @JoinColumn({ name: "imagem_id" })
-  imagem_id: number;
+  imagem: number;
 
-  @ManyToMany(() => Via, via => via.colecoes)
-  @JoinTable({
-    name: "colecao_via",
-    joinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    }
-  })
-  vias: Via[];
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.colecao)
+  viasColecoes: ColecaoVia[]
 }

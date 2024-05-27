@@ -26,14 +26,12 @@ __decorate([
     __metadata("design:type", String)
 ], Face.prototype, "nome", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Montanha_1.Montanha),
-    (0, typeorm_1.JoinColumn)({ name: "montanha_id" }),
-    __metadata("design:type", Montanha_1.Montanha)
+    (0, typeorm_1.ManyToOne)(() => Montanha_1.Montanha, montanha => montanha.faces),
+    __metadata("design:type", Number)
 ], Face.prototype, "montanha", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte),
-    (0, typeorm_1.JoinColumn)({ name: "fonte_id" }),
-    __metadata("design:type", Fonte_1.Fonte)
+    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte, fonte => fonte.faces),
+    __metadata("design:type", Number)
 ], Face.prototype, "fonte", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Via_1.Via, via => via.face),

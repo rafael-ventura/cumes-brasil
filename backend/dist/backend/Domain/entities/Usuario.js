@@ -13,15 +13,8 @@ exports.Usuario = void 0;
 const typeorm_1 = require("typeorm");
 const Colecao_1 = require("./Colecao");
 const Imagem_1 = require("./Imagem");
+const Escalada_1 = require("./Escalada");
 let Usuario = class Usuario extends typeorm_1.BaseEntity {
-    constructor(id, nome, email, password_hash, fotoPerfil) {
-        super();
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.password_hash = password_hash;
-        this.fotoPerfil = fotoPerfil;
-    }
 };
 exports.Usuario = Usuario;
 __decorate([
@@ -41,15 +34,17 @@ __decorate([
     __metadata("design:type", String)
 ], Usuario.prototype, "password_hash", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem),
-    (0, typeorm_1.JoinColumn)({ name: "imagem_id" }),
-    __metadata("design:type", Imagem_1.Imagem)
-], Usuario.prototype, "fotoPerfil", void 0);
+    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem, imagem => imagem.usuarios),
+    __metadata("design:type", Number)
+], Usuario.prototype, "foto_perfil", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Colecao_1.Colecao, colecao => colecao.usuario),
     __metadata("design:type", Array)
 ], Usuario.prototype, "colecoes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Escalada_1.Escalada, escalada => escalada.usuario),
+    __metadata("design:type", Array)
+], Usuario.prototype, "escaladas", void 0);
 exports.Usuario = Usuario = __decorate([
-    (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, Imagem_1.Imagem])
+    (0, typeorm_1.Entity)()
 ], Usuario);

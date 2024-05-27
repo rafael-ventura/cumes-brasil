@@ -11,17 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Imagem = void 0;
 const typeorm_1 = require("typeorm");
+const Fonte_1 = require("./Fonte");
 const Colecao_1 = require("./Colecao");
 const Via_1 = require("./Via");
 const Montanha_1 = require("./Montanha");
 const Usuario_1 = require("./Usuario");
+const Croqui_1 = require("./Croqui");
 let Imagem = class Imagem extends typeorm_1.BaseEntity {
-    constructor(id, url, descricao) {
-        super();
-        this.id = id;
-        this.url = url;
-        this.descricao = descricao;
-    }
 };
 exports.Imagem = Imagem;
 __decorate([
@@ -37,6 +33,18 @@ __decorate([
     __metadata("design:type", String)
 ], Imagem.prototype, "descricao", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte, fonte => fonte.imagens),
+    __metadata("design:type", Number)
+], Imagem.prototype, "fonte", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], Imagem.prototype, "tipo_entidade", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Colecao_1.Colecao, colecao => colecao.imagem),
+    __metadata("design:type", Array)
+], Imagem.prototype, "colecoes", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Via_1.Via, via => via.imagem),
     __metadata("design:type", Array)
 ], Imagem.prototype, "vias", void 0);
@@ -45,14 +53,13 @@ __decorate([
     __metadata("design:type", Array)
 ], Imagem.prototype, "montanhas", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Usuario_1.Usuario, usuario => usuario.fotoPerfil),
+    (0, typeorm_1.OneToMany)(() => Usuario_1.Usuario, usuario => usuario.foto_perfil),
     __metadata("design:type", Array)
 ], Imagem.prototype, "usuarios", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Colecao_1.Colecao, colecao => colecao.imagem),
+    (0, typeorm_1.OneToMany)(() => Croqui_1.Croqui, croqui => croqui.imagem),
     __metadata("design:type", Array)
-], Imagem.prototype, "colecoes", void 0);
+], Imagem.prototype, "croquis", void 0);
 exports.Imagem = Imagem = __decorate([
-    (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String])
+    (0, typeorm_1.Entity)()
 ], Imagem);

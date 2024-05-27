@@ -23,24 +23,18 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
-], Escalada.prototype, "nome", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
-    __metadata("design:type", String)
 ], Escalada.prototype, "data", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Escalada.prototype, "observacao", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario),
-    (0, typeorm_1.JoinColumn)({ name: "usuario_id" }),
-    __metadata("design:type", Usuario_1.Usuario)
+    (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario, usuario => usuario.escaladas),
+    __metadata("design:type", Number)
 ], Escalada.prototype, "usuario", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Via_1.Via),
-    (0, typeorm_1.JoinColumn)({ name: "via_id" }),
-    __metadata("design:type", Via_1.Via)
+    (0, typeorm_1.ManyToOne)(() => Via_1.Via, via => via.escaladas),
+    __metadata("design:type", Number)
 ], Escalada.prototype, "via", void 0);
 exports.Escalada = Escalada = __decorate([
     (0, typeorm_1.Entity)()

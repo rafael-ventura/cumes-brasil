@@ -29,9 +29,8 @@ export class ViaService {
     await this.viaRepo.delete(id);
   }
 
-  async getViasIdByColecaoId (colecaoId: number): Promise<number[]> {
-    const vias = await this.viaRepo.getViasByColecaoId(colecaoId);
-    return vias.map(via => via.id);
+  async getViasIdByColecaoId (colecaoId: number): Promise<Via[]> {
+    return this.viaRepo.getViasByColecaoId(colecaoId);
   }
 
 }

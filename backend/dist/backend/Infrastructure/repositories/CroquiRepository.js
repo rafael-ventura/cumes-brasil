@@ -9,13 +9,14 @@ class CroquiRepository {
         this.repository = db_1.AppDataSource.getRepository(Croqui_1.Croqui);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id }, relations: ["fonte"] });
+        return this.repository.findOne({ where: { id: id }
+        });
     }
     async getByIds(ids) {
         return this.repository.findBy({ id: (0, typeorm_1.In)(ids) });
     }
     async getAll() {
-        return this.repository.find({ relations: ["fonte"] });
+        return this.repository.find();
     }
     async create(croqui) {
         await this.repository.insert(croqui);

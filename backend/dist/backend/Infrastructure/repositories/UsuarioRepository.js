@@ -8,11 +8,7 @@ class UsuarioRepository {
         this.repository = db_1.AppDataSource.getRepository(Usuario_1.Usuario);
     }
     async getById(id) {
-        return this.repository.findOne({
-            where: {
-                id: id,
-            }
-        });
+        return this.repository.findOne({ where: { id: id } });
     }
     async getAll() {
         return this.repository.find();

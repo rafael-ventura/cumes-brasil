@@ -17,7 +17,7 @@
           <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
           <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
           <p><strong>Data:</strong> {{ via?.data }}</p>
-          <p><strong>Montanha:</strong> {{ via?.montanha.nome }}</p>
+          <p><strong>montanha:</strong> {{ via?.montanha.nome }}</p>
           <p><strong>Face:</strong> {{ via?.face.nome }}</p>
           <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
         </q-card-section>
@@ -34,7 +34,7 @@ import BotaoVoltar from "components/BotaoVoltar.vue";
 import { Via } from "src/models/Via";
 
 const route = useRoute();
-const via = ref<Via | null>(null);
+const via = ref<Via>();
 
 defineOptions({
   name: "ViaDetalhadaPage"

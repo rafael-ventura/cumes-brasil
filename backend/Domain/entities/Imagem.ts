@@ -17,25 +17,24 @@ export class Imagem extends BaseEntity {
   @Column({ nullable: true })
   descricao?: string;
 
-  @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte_id: number;
+  @ManyToOne(() => Fonte, fonte => fonte.imagens)
+  fonte: number;
 
   @Column({ nullable: false })
   tipo_entidade: string;
 
-  @OneToMany(() => Colecao, colecao => colecao.imagem_id)
+  @OneToMany(() => Colecao, colecao => colecao.imagem)
   colecoes: Colecao[];
 
-  @OneToMany(() => Via, via => via.imagem_id)
+  @OneToMany(() => Via, via => via.imagem)
   vias: Via[];
 
-  @OneToMany(() => Montanha, montanha => montanha.imagem_id)
+  @OneToMany(() => Montanha, montanha => montanha.imagem)
   montanhas: Montanha[];
 
   @OneToMany(() => Usuario, usuario => usuario.foto_perfil)
   usuarios: Usuario[];
 
-  @OneToMany(() => Croqui, croqui => croqui.imagem_id)
+  @OneToMany(() => Croqui, croqui => croqui.imagem)
   croquis: Croqui[];
 }

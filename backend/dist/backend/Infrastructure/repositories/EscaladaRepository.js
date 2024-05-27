@@ -8,10 +8,10 @@ class EscaladaRepository {
         this.repository = db_1.AppDataSource.getRepository(Escalada_1.Escalada);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id }, relations: ["via"] });
+        return this.repository.findOne({ where: { id: id } });
     }
     async getAll() {
-        return this.repository.find({ relations: ["via"] });
+        return this.repository.find();
     }
     async create(escalada) {
         await this.repository.insert(escalada);
@@ -23,10 +23,10 @@ class EscaladaRepository {
         await this.repository.delete(id);
     }
     async getByUserId(userId) {
-        return this.repository.find({ where: { usuario: { id: userId } } });
+        return this.repository.find({ where: { usuario: userId } });
     }
     async getByViaId(viaId) {
-        return this.repository.find({ where: { via: { id: viaId } } });
+        return this.repository.find({ where: { via: viaId } });
     }
 }
 exports.EscaladaRepository = EscaladaRepository;

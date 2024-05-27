@@ -56,9 +56,6 @@ class CroquiService {
     async desassociarCroquiEmVia(croqui_id, via_id) {
         return this.croquiRepository.desassociarVia(croqui_id, via_id);
     }
-    async getCroquisIdsByViaId(id) {
-        return this.croquiRepository.getIdsByViaId(id);
-    }
     async getCroquisByViaId(id) {
         return this.croquiRepository.getByViaId(id);
     }

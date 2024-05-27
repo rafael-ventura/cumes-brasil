@@ -2,6 +2,7 @@
 
 import { api } from "boot/axios";
 import { Usuario } from "src/models/Usuario";
+import { adjustImageUrl } from "src/services/ImageService";
 
 class UserService {
   async getById (id: number) {
@@ -24,7 +25,7 @@ class UserService {
 
   async create (nome: string, email: string, password: string) {
     try {
-      const response = await api.post("/register", {
+      const response = await api.post("/auth/register", {
         nome,
         email,
         password
@@ -46,7 +47,11 @@ class UserService {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`
         }
       });
-      return response.data as Usuario;
+      const usuario = response.data as Usuario;
+      if (usuario.foto_perfil?.url) {
+        usuario.foto_perfil.url = adjustImageUrl(usuario.foto_perfil.url);
+      }
+      return usuario;
     } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar perfil");
     }

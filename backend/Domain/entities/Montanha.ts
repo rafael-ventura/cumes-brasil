@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGe
 import { Fonte } from "./Fonte";
 import { Imagem } from "./Imagem";
 import { Face } from "./Face";
+import { Via } from "./Via";
 
 @Entity()
 export class Montanha extends BaseEntity {
@@ -18,13 +19,14 @@ export class Montanha extends BaseEntity {
   altura?: number;
 
   @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte_id: number;
+  fonte: number;
 
   @ManyToOne(() => Imagem)
-  @JoinColumn({ name: "imagem_id" })
-  imagem_id: number;
+  imagem: number;
 
-  @OneToMany(() => Face, face => face.montanha_id)
+  @OneToMany(() => Face, face => face.montanha)
   faces: Face[];
+
+  @OneToMany(() => Via, via => via.montanha)
+  vias: Via[];
 }

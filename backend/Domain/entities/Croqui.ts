@@ -20,13 +20,11 @@ export class Croqui extends BaseEntity {
   @Column({ nullable: false })
   nome: string;
 
-  @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte_id: number;
+  @ManyToOne(() => Fonte, fonte => fonte.croquis)
+  fonte: number;
 
-  @ManyToOne(() => Imagem)
-  @JoinColumn({ name: "imagem_id" })
-  imagem_id: number;
+  @ManyToOne(() => Imagem, imagem => imagem.croquis)
+  imagem: number;
 
   @ManyToMany(() => Via, via => via.croquis)
   @JoinTable({

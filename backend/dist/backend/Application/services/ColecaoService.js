@@ -2,10 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ColecaoService = void 0;
 class ColecaoService {
-    constructor(colecaoRepo, viaService, usuarioService) {
+    constructor(colecaoRepo) {
         this.colecaoRepo = colecaoRepo;
-        this.viaService = viaService;
-        this.usuarioService = usuarioService;
     }
     async getColecaoById(id) {
         return this.colecaoRepo.getById(id);

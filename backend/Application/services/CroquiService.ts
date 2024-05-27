@@ -65,11 +65,6 @@ export class CroquiService {
     async desassociarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
         return this.croquiRepository.desassociarVia(croqui_id, via_id);
     }
-
-    async getCroquisIdsByViaId (id: number): Promise<number[] | null> {
-        return this.croquiRepository.getIdsByViaId(id);
-    }
-
     async getCroquisByViaId (id: number): Promise<ObjectLiteral[]> {
         return this.croquiRepository.getByViaId(id);
     }

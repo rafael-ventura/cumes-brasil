@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <div class="col-12 col-md-6 col-lg-4">
         <div class="profile-header q-pa-md q-mb-md">
-          <img :src="user?.fotoPerfil || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
+          <img :src="user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
                class="profile-picture"/>
           <div class="profile-info q-pa-md q-mt-md">
             <div class="text-h6">{{ user?.nome }}</div>
@@ -42,7 +42,7 @@ defineOptions({
 onMounted(async () => {
   try {
     if (!AuthenticateService.isAuthenticated()) {
-      await router.push("/login");
+      await router.push("/auth/login");
     } else {
       user.value = await UserService.getPerfil();
     }
@@ -57,7 +57,7 @@ const openEditDialog = () => {
 
 const logout = () => {
   UserService.logout();
-  router.push("/login");
+  router.push("/auth/login");
 };
 
 const updateUser = async (updatedUser: Usuario) => {

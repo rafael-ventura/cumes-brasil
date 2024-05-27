@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from "vue";
+import { defineEmits, defineProps, ref } from "vue";
 import { Usuario } from "src/models/Usuario";
 
 const props = defineProps<{ user: Usuario, title: string, submitLabel: string }>();
@@ -28,7 +28,7 @@ const emits = defineEmits(["submit"]);
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);
 const senha = ref("");
-const fotoPerfil = ref(props.user.fotoPerfil || "");
+const fotoPerfil = ref(props.user.foto_perfil?.url);
 
 const senhaPlaceholder = props.user.password_hash ? "Deixe em branco para manter a senha atual" : "Senha";
 
@@ -37,7 +37,7 @@ const onSubmit = () => {
     ...props.user,
     nome: nome.value,
     email: email.value,
-    senha: senha.value || props.user.password_hash, // Manter a senha atual se não for alterada
+    senha: senha.value || props.user.password_hash,
     fotoPerfil: fotoPerfil.value
   });
 };

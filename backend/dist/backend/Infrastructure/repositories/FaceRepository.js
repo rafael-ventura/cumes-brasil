@@ -8,10 +8,10 @@ class FaceRepository {
         this.repository = db_1.AppDataSource.getRepository(Face_1.Face);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id }, relations: ["montanha", "fonte"] });
+        return this.repository.findOne({ where: { id: id } });
     }
     async getAll() {
-        return this.repository.find({ relations: ["montanha", "fonte"] });
+        return this.repository.find();
     }
     async create(face) {
         await this.repository.insert(face);

@@ -22,7 +22,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Colecao.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
 ], Colecao.prototype, "nome", void 0);
 __decorate([
@@ -30,14 +30,12 @@ __decorate([
     __metadata("design:type", String)
 ], Colecao.prototype, "descricao", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario),
-    (0, typeorm_1.JoinColumn)({ name: "usuario_id" }),
-    __metadata("design:type", Usuario_1.Usuario)
+    (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario, usuario => usuario.colecoes),
+    __metadata("design:type", Number)
 ], Colecao.prototype, "usuario", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem),
-    (0, typeorm_1.JoinColumn)({ name: "imagem_id" }),
-    __metadata("design:type", Imagem_1.Imagem)
+    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem, imagem => imagem.colecoes),
+    __metadata("design:type", Number)
 ], Colecao.prototype, "imagem", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => Via_1.Via, via => via.colecoes),

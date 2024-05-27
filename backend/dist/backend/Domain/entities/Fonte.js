@@ -13,7 +13,16 @@ exports.Fonte = void 0;
 const typeorm_1 = require("typeorm");
 const Via_1 = require("./Via");
 const Croqui_1 = require("./Croqui");
+const Imagem_1 = require("./Imagem");
+const Montanha_1 = require("./Montanha");
+const Face_1 = require("./Face");
 let Fonte = class Fonte extends typeorm_1.BaseEntity {
+    constructor(id, autor, referencia) {
+        super();
+        this.id = id;
+        this.autor = autor;
+        this.referencia = referencia;
+    }
 };
 exports.Fonte = Fonte;
 __decorate([
@@ -36,6 +45,19 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Croqui_1.Croqui, croqui => croqui.fonte),
     __metadata("design:type", Array)
 ], Fonte.prototype, "croquis", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Montanha_1.Montanha, montanha => montanha.fonte),
+    __metadata("design:type", Array)
+], Fonte.prototype, "montanhas", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Face_1.Face, face => face.fonte),
+    __metadata("design:type", Array)
+], Fonte.prototype, "faces", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Imagem_1.Imagem, imagem => imagem.fonte),
+    __metadata("design:type", Array)
+], Fonte.prototype, "imagens", void 0);
 exports.Fonte = Fonte = __decorate([
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)(),
+    __metadata("design:paramtypes", [Number, String, String])
 ], Fonte);
