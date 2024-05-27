@@ -16,19 +16,19 @@ export class Fonte extends BaseEntity {
   @Column({ nullable: false })
   referencia: string;
 
-  @OneToMany(() => Via, via => via.fonte)
+  @OneToMany(() => Via, via => via.fonte_id)
   vias: Via[];
 
-  @OneToMany(() => Croqui, croqui => croqui.fonte)
+  @OneToMany(() => Croqui, croqui => croqui.fonte_id)
   croquis: Croqui[];
 
-  @OneToMany(() => Montanha, montanha => montanha.Fonte)
+  @OneToMany(() => Montanha, montanha => montanha.fonte_id)
   montanhas: Montanha[];
 
-  @OneToMany(() => Face, face => face.Fonte)
+  @OneToMany(() => Face, face => face.fonte_id)
   faces: Face[];
 
-  @OneToMany(() => Imagem, imagem => imagem.Fonte)
+  @OneToMany(() => Imagem, imagem => imagem.fonte_id)
   imagens: Imagem[];
 
   constructor (id: number, autor: string, referencia: string) {

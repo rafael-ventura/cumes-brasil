@@ -9,10 +9,10 @@ class EscaladaService {
     }
     async getById(id) {
         if (!id) {
-            throw new Error("ID da fonte não fornecido");
+            throw new Error("ID da Fonte não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da fonte inválido");
+            throw new Error("ID da Fonte inválido");
         }
         return this.repository.getById(id);
     }

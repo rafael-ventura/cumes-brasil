@@ -30,7 +30,8 @@ export class ViaService {
   }
 
   async getViasIdByColecaoId (colecaoId: number): Promise<number[]> {
-    return this.viaRepo.getViasIdByColecaoId(colecaoId);
+    const vias = await this.viaRepo.getViasByColecaoId(colecaoId);
+    return vias.map(via => via.id);
   }
 
 }

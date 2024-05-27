@@ -6,11 +6,7 @@ export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
 
     async getById (id: number): Promise<Usuario | null> {
-        return this.repository.findOne({
-            where: {
-                id: id,
-            }
-        });
+        return this.repository.findOne({ where: { id: id } });
     }
 
     async getAll () {

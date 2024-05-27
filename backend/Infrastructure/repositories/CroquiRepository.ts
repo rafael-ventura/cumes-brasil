@@ -6,15 +6,15 @@ export class CroquiRepository {
   private repository = AppDataSource.getRepository(Croqui);
 
   async getById (id: number): Promise<Croqui | null> {
-    return this.repository.findOne({ where: { id: id }, relations: ["fonte"] });
-  }
-
+    return this.repository.findOne({ where: { id: id }
+    });
+    }
   async getByIds (ids: number[]): Promise<Croqui[]> {
     return this.repository.findBy({ id: In(ids) });
   }
 
   async getAll (): Promise<Croqui[]> {
-    return this.repository.find({relations: ["fonte"]});
+    return this.repository.find();
   }
 
   async create (croqui: Partial<Croqui>): Promise<void> {

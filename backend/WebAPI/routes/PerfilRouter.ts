@@ -10,7 +10,7 @@ const usuarioController = new UsuarioController(usuarioService)
 
 const PerfilRouter = Router();
 
-// perfil do usuario
+// perfil do Usuario
 PerfilRouter.get('/', authorizationMiddleware, usuarioController.getPerfil);
 
 

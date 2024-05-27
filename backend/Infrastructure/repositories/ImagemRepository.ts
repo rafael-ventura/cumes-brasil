@@ -17,11 +17,30 @@ export class ImagemRepository {
   }
 
   async update (id: number, imagemData: Partial<Imagem>): Promise<void> {
-    await this.repository.update(id as any, imagemData);
+    await this.repository.update(id, imagemData);
   }
 
   async delete (id: number): Promise<void> {
-    await this.repository.delete(id as any);
+    await this.repository.delete(id);
   }
 
+  async getByColecaoId (colecaoId: number): Promise<Imagem | null> {
+    return this.repository.findOne({ where: { colecoes: { id: colecaoId } } });
+  }
+
+  async getByUsuarioId (usuarioId: number): Promise<Imagem | null> {
+    return this.repository.findOne({ where: { usuarios: { id: usuarioId } } });
+  }
+
+  async getByMontanhaId (montanhaId: number): Promise<Imagem | null> {
+    return this.repository.findOne({ where: { montanhas: { id: montanhaId } } });
+  }
+
+  async getByViaId (viaId: number): Promise<Imagem | null> {
+    return this.repository.findOne({ where: { vias: { id: viaId } } });
+  }
+
+  async getByCroquiId (croquiId: number): Promise<Imagem | null> {
+    return this.repository.findOne({ where: { croquis: { id: croquiId } } });
+  }
 }

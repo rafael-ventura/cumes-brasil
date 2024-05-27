@@ -10,9 +10,9 @@ export class FonteService {
 
 	async getFonteById (id: number): Promise<Fonte | null> {
 		if (!id) {
-			throw new Error("ID da fonte não fornecido");
+			throw new Error("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da fonte inválido");
+			throw new Error("ID da Fonte inválido");
 		}
 		return this.fonteRepository.getById(id);
 
@@ -31,9 +31,9 @@ export class FonteService {
 
 	async updateFonte (id: number, fonteData: Partial<Fonte>): Promise<void> {
 		if (!id) {
-			throw new Error("ID da fonte não fornecido");
+			throw new Error("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da fonte inválido");
+			throw new Error("ID da Fonte inválido");
 		}
 		const existingFonte = await this.getFonteById(id);
 		if (!existingFonte) {
@@ -44,9 +44,9 @@ export class FonteService {
 
 	async deleteFonte(id: number): Promise<void> {
 		if (!id) {
-			throw new Error("ID da fonte não fornecido");
+			throw new Error("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da fonte inválido");
+			throw new Error("ID da Fonte inválido");
 		}
 		const existingFonte = await this.getFonteById(id);
 		if (!existingFonte) {

@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -59,36 +60,26 @@ export class Via extends BaseEntity {
   data: string;
 
   @ManyToOne(() => Montanha)
-  montanha: Montanha;
-
-  @Column({ nullable: false })
+  @JoinColumn({ name: "montanha_id" })
   montanha_id: number;
 
   @ManyToOne(() => Via)
-  viaPrincipal: Via;
-
-  @Column({ nullable: true })
+  @JoinColumn({ name: "via_principal_id" })
   via_principal_id: number;
 
-  @OneToMany(() => Via, via => via.viaPrincipal)
+  @OneToMany(() => Via, via => via.via_principal_id)
   variantes: Via[];
 
   @ManyToOne(() => Fonte)
-  fonte: Fonte;
-
-  @Column({ nullable: false })
+  @JoinColumn({ name: "fonte_id" })
   fonte_id: number;
 
   @ManyToOne(() => Face)
-  face: Face;
-
-  @Column({ nullable: false })
+  @JoinColumn({ name: "face_id" })
   face_id: number;
 
   @ManyToOne(() => Imagem)
-  imagem: Imagem;
-
-  @Column({ nullable: true })
+  @JoinColumn({ name: "imagem_id" })
   imagem_id: number;
 
   @ManyToMany(() => Croqui, croqui => croqui.vias)

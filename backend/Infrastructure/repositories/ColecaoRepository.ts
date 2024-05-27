@@ -7,23 +7,15 @@ export class ColecaoRepository {
     private viaRepository = AppDataSource.getRepository(Via);
 
     async getById (id: number): Promise<Colecao | null> {
-        return this.repository.findOne({
-            where: { id },
-            relations: ["vias"]
-        });
+        return this.repository.findOne({ where: { id } });
     }
 
     async getAll (): Promise<Colecao[]> {
-        return this.repository.find({
-            relations: ["vias"]
-        });
+        return this.repository.find();
     }
 
-    async getByUsuarioId (usuarioId: number): Promise<Colecao[]> {
-        return this.repository.find({
-            where: { usuario_id: usuarioId },
-            relations: ["vias"]
-        });
+    async getByUsuarioId (usuario_id: number): Promise<Colecao[]> {
+        return this.repository.find({ where: { id: usuario_id } });
     }
 
     async create (colecaoData: Partial<Colecao>): Promise<void> {

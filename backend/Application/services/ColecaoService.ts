@@ -2,44 +2,44 @@ import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepo
 import { Colecao } from "../../Domain/entities/Colecao";
 import { ViaService } from "./ViaService";
 import { UsuarioService } from "./UsuarioService";
+import { Via } from "../../Domain/entities/Via";
 
 export class ColecaoService {
-  constructor (
+  constructor(
     private colecaoRepo: ColecaoRepository,
     private viaService: ViaService,
     private usuarioService: UsuarioService
-  ) {
-  }
+  ) {}
 
-  async getColecaoById (id: number): Promise<Colecao | null> {
+  async getColecaoById(id: number): Promise<Colecao | null> {
     return this.colecaoRepo.getById(id);
   }
 
-  async getAllColecoes (): Promise<Colecao[]> {
+  async getAllColecoes(): Promise<Colecao[]> {
     return this.colecaoRepo.getAll();
   }
 
-  async getColecoesByUsuarioId (usuarioId: number): Promise<Colecao[]> {
+  async getColecoesByUsuarioId(usuarioId: number): Promise<Colecao[]> {
     return this.colecaoRepo.getByUsuarioId(usuarioId);
   }
 
-  async createColecao (colecaoData: Partial<Colecao>): Promise<void> {
+  async createColecao(colecaoData: Partial<Colecao>): Promise<void> {
     await this.colecaoRepo.create(colecaoData);
   }
 
-  async updateColecao (id: number, colecaoData: Partial<Colecao>): Promise<void> {
+  async updateColecao(id: number, colecaoData: Partial<Colecao>): Promise<void> {
     await this.colecaoRepo.update(id, colecaoData);
   }
 
-  async deleteColecao (id: number): Promise<void> {
+  async deleteColecao(id: number): Promise<void> {
     await this.colecaoRepo.delete(id);
   }
 
-  async addViaToColecao (viaId: number, colecaoId: number): Promise<void> {
+  async addViaToColecao(viaId: number, colecaoId: number): Promise<void> {
     await this.colecaoRepo.addViaToColecao(viaId, colecaoId);
   }
 
-  async removeViaFromColecao (viaId: number, colecaoId: number): Promise<void> {
+  async removeViaFromColecao(viaId: number, colecaoId: number): Promise<void> {
     await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
   }
 }

@@ -20,9 +20,9 @@ export class FaceService {
 
     async getFaceById (id: number): Promise<Face | null> {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         return this.faceRepository.getById(id);
     }
@@ -37,21 +37,21 @@ export class FaceService {
         }
         const fonteExiste = await this.fonteService.getFonteById(face.fonte_id);
         if (!fonteExiste) {
-            throw new Error("É necessário existir uma fonte antes da criação da via");
+            throw new Error("É necessário existir uma Fonte antes da criação da via");
         }
         const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha_id);
         if (!montanhaExiste) {
             throw new Error(
-              "É necessário existir uma montanha antes da criação da via");
+              "É necessário existir uma Montanha antes da criação da via");
         }
         return this.faceRepository.create(face);
     }
 
     async updateFace (id: number, face: Partial<Face>): Promise<void> {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         const existingFace = await this.getFaceById(id);
         if (!existingFace) {
@@ -62,9 +62,9 @@ export class FaceService {
 
     async deleteFace (id: number): Promise<void> {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         const existingFace = await this.getFaceById(id);
         if (!existingFace) {

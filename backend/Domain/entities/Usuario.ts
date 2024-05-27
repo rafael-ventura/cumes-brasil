@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
 
@@ -17,12 +17,10 @@ export class Usuario extends BaseEntity {
   password_hash: string;
 
   @ManyToOne(() => Imagem)
-  Imagem: Imagem;
+  @JoinColumn({ name: "foto_perfil" })
+  foto_perfil: number;
 
-  @Column({ nullable: true })
-  imagem_id: number;
-
-  @OneToMany(() => Colecao, colecao => colecao.usuario)
+  @OneToMany(() => Colecao, colecao => colecao.usuario_id)
   colecoes: Colecao[];
 
 }

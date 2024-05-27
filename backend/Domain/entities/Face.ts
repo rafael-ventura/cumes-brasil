@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Montanha } from "./Montanha";
 import { Fonte } from "./Fonte";
 import { Via } from "./Via";
@@ -12,18 +12,14 @@ export class Face extends BaseEntity {
   nome: string;
 
   @ManyToOne(() => Montanha)
-  Montanha: Montanha;
-
-  @Column({ nullable: false })
+     @JoinColumn({ name: "montanha_id" })
   montanha_id: number;
 
   @ManyToOne(() => Fonte)
-  Fonte: Fonte;
-
-  @Column({ nullable: false })
+  @JoinColumn({ name: "fonte_id" })
   fonte_id: number;
 
-  @OneToMany(() => Via, via => via.face)
+  @OneToMany(() => Via, via => via.face_id)
   vias: Via[];
 
 }

@@ -13,7 +13,7 @@ class ColecaoController {
         this.getById = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
-                const colecao = await this.service.getColecaoById(id);
+                const colecao = await this.service.getById(id);
                 res.json(colecao);
             }
             catch (error) {
@@ -38,7 +38,7 @@ class ColecaoController {
          */
         this.getAllColecao = async (_, res) => {
             try {
-                const colecoes = await this.service.getAllColecoes();
+                const colecoes = await this.service.getAll();
                 res.json(colecoes);
             }
             catch (error) {

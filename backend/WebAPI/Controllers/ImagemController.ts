@@ -11,7 +11,7 @@ export class ImagemController {
 
   /**
    * @route GET /imagens/:id
-   * @group Imagem - Operações relacionadas a imagem
+   * @group Imagem - Operações relacionadas a Imagem
    * @returns {Imagem.model} 200 - Imagem encontrada
    * @returns {object} 404 - Imagem não encontrada
    * @returns {Error} 500 - Erro desconhecido
@@ -45,7 +45,7 @@ export class ImagemController {
     try {
       const result: Imagem[] | null = await this.service.getImagens();
       if (result?.length === 0) {
-        return res.status(404).json({ error: "Nenhuma imagem encontrada" });
+        return res.status(404).json({ error: "Nenhuma Imagem encontrada" });
       }
       res.json(result);
     } catch (error) {
@@ -61,7 +61,7 @@ export class ImagemController {
   /**
    * @route POST /imagens
    * @group Imagem - Operações relacionadas a imagens
-   * @param {Imagem.model} imagem.body.required - Nova imagem
+   * @param {Imagem.model} Imagem.body.required - Nova Imagem
    * @returns {void} 201 - Imagem criada
    * @returns {Error} 500 - Erro desconhecido
    */
@@ -82,7 +82,7 @@ export class ImagemController {
   /**
    * @route PUT /imagens/:id
    * @group Imagem - Operações relacionadas a imagens
-   * @param {Imagem.model} imagem.body.required - Imagem atualizada
+   * @param {Imagem.model} Imagem.body.required - Imagem atualizada
    * @returns {void} 204 - Imagem atualizada
    * @returns {object} 404 - Imagem não encontrada
    * @returns {Error} 500 - Erro desconhecido
@@ -124,4 +124,125 @@ export class ImagemController {
       }
     }
   };
+
+  /**
+   * @route GET /imagens/colecao/:id
+   * @group Imagem - Operações relacionadas a imagens
+   * @returns {Array.<Imagem>} 200 - Imagens encontradas
+   * @returns {object} 404 - Imagens não encontradas
+   * @returns {Error} 500 - Erro desconhecido
+   */
+  getByColecaoId = async (req: Request, res: Response) => {
+    try {
+      const colecaoId = parseInt(req.params.id);
+      const result = await this.service.getByColecaoId(colecaoId);
+      if (!result) {
+        return res.status(404).json({ error: "Imagens não encontradas" });
+      }
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByColecaoId" });
+      }
+    }
+  };
+
+  /**
+   * @route GET /imagens/usuario/:id
+   * @group Imagem - Operações relacionadas a imagens
+   * @returns {Array.<Imagem>} 200 - Imagens encontradas
+   * @returns {object} 404 - Imagens não encontradas
+   * @returns {Error} 500 - Erro desconhecido
+   */
+  getByUsuarioId = async (req: Request, res: Response) => {
+    try {
+      const usuarioId = parseInt(req.params.id);
+      const result = await this.service.getByUsuarioId(usuarioId);
+      if (!result) {
+        return res.status(404).json({ error: "Imagens não encontradas" });
+      }
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByUsuarioId" });
+      }
+    }
+  };
+
+  /**
+   * @route GET /imagens/montanha/:id
+   * @group Imagem - Operações relacionadas a imagens
+   * @returns {Array.<Imagem>} 200 - Imagens encontradas
+   * @returns {object} 404 - Imagens não encontradas
+   * @returns {Error} 500 - Erro desconhecido
+   */
+  getByMontanhaId = async (req: Request, res: Response) => {
+    try {
+      const montanhaId = parseInt(req.params.id);
+      const result = await this.service.getByMontanhaId(montanhaId);
+      if (!result) {
+        return res.status(404).json({ error: "Imagens não encontradas" });
+      }
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByMontanhaId" });
+      }
+    }
+  };
+
+  /**
+   * @route GET /imagens/via/:id
+   * @group Imagem - Operações relacionadas a imagens
+   * @returns {Array.<Imagem>} 200 - Imagens encontradas
+   * @returns {object} 404 - Imagens não encontradas
+   * @returns {Error} 500 - Erro desconhecido
+   */
+  getByViaId = async (req: Request, res: Response) => {
+    try {
+      const viaId = parseInt(req.params.id);
+      const result = await this.service.getByViaId(viaId);
+      if (!result) {
+        return res.status(404).json({ error: "Imagens não encontradas" });
+      }
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByViaId" });
+      }
+    }
+  };
+
+  /**
+   * @route GET /imagens/croqui/:id
+   * @group Imagem - Operações relacionadas a imagens
+   * @returns {Array.<Imagem>} 200 - Imagens encontradas
+   * @returns {object} 404 - Imagens não encontradas
+   * @returns {Error} 500 - Erro desconhecido
+   */
+  getByCroquiId = async (req: Request, res: Response) => {
+    try {
+      const croquiId = parseInt(req.params.id);
+      const result = await this.service.getByCroquiId(croquiId);
+      if (!result) {
+        return res.status(404).json({ error: "Imagens não encontradas" });
+      }
+      res.json(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByCroquiId" });
+      }
+    }
+  };
+
 }

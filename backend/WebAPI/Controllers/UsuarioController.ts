@@ -44,7 +44,7 @@ export class UsuarioController {
         try {
             const result = await this.service.getUsuarios();
             if (result?.length === 0) {
-                return resposta.status(404).json({message: "Nenhum usuario encontrado"});
+                return resposta.status(404).json({message: "Nenhum Usuario encontrado"});
             }
             resposta.json(result);
         } catch (error) {

@@ -13,5 +13,10 @@ ImagemRouter.get("/", imagemController.getAllImagem);
 ImagemRouter.post("/", imagemController.createImagem);
 ImagemRouter.put("/:id", imagemController.updateImagem);
 ImagemRouter.delete("/:id", imagemController.deleteImagem);
+ImagemRouter.get("/colecao/:id", imagemController.getByColecaoId);
+ImagemRouter.get("/usuario/:id", imagemController.getByUsuarioId);
+ImagemRouter.get("/montanha/:id", imagemController.getByMontanhaId);
+ImagemRouter.get("/via/:id", imagemController.getByViaId);
+ImagemRouter.get("/croqui/:id", imagemController.getByCroquiId);
 
 export default ImagemRouter;

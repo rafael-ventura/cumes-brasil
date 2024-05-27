@@ -9,10 +9,10 @@ class FaceService {
     }
     async getFaceById(id) {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         return this.faceRepository.getById(id);
     }
@@ -25,20 +25,20 @@ class FaceService {
         }
         const fonteExiste = await this.fonteService.getFonteById(face.fonte.id);
         if (!fonteExiste) {
-            throw new Error("É necessário existir uma fonte antes da criação da via");
+            throw new Error("É necessário existir uma Fonte antes da criação da via");
         }
         const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha.id);
         if (!montanhaExiste) {
-            throw new Error("É necessário existir uma montanha antes da criação da via");
+            throw new Error("É necessário existir uma Montanha antes da criação da via");
         }
         return this.faceRepository.create(face);
     }
     async updateFace(id, face) {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         const existingFace = await this.getFaceById(id);
         if (!existingFace) {
@@ -48,10 +48,10 @@ class FaceService {
     }
     async deleteFace(id) {
         if (!id) {
-            throw new Error("ID da face não fornecido");
+            throw new Error("ID da Face não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da face inválido");
+            throw new Error("ID da Face inválido");
         }
         const existingFace = await this.getFaceById(id);
         if (!existingFace) {

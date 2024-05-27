@@ -1,4 +1,13 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { Via } from "./Via";
 import { Imagem } from "./Imagem";
 import { Usuario } from "./Usuario";
@@ -8,22 +17,18 @@ export class Colecao extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   nome: string;
 
   @Column({ nullable: true })
   descricao?: string;
 
   @ManyToOne(() => Usuario, usuario => usuario.colecoes)
-  usuario: Usuario;
-
-  @Column({ nullable: false })
+  @JoinColumn({ name: "usuario_id" })
   usuario_id: number;
 
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  imagem: Imagem;
-
-  @Column({ nullable: true })
+  @JoinColumn({ name: "imagem_id" })
   imagem_id: number;
 
   @ManyToMany(() => Via, via => via.colecoes)

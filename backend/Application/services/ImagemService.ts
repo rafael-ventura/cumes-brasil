@@ -8,12 +8,11 @@ export class ImagemService {
     this.imagemRepository = imagemRepository;
   }
 
-  async getImagemById (id: number
-  ): Promise<Imagem | null> {
+  async getImagemById (id: number): Promise<Imagem | null> {
     if (!id) {
-      throw new Error("ID da imagem não fornecido");
+      throw new Error("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da imagem inválido");
+      throw new Error("ID da Imagem inválido");
     }
     return this.imagemRepository.getById(id);
   }
@@ -31,9 +30,9 @@ export class ImagemService {
 
   async updateImagem (id: number, imagemData: Partial<Imagem>): Promise<void> {
     if (!id) {
-      throw new Error("ID da imagem não fornecido");
+      throw new Error("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da imagem inválido");
+      throw new Error("ID da Imagem inválido");
     }
     const existingImagem = await this.getImagemById(id);
     if (!existingImagem) {
@@ -44,9 +43,9 @@ export class ImagemService {
 
   async deleteImagem (id: number): Promise<void> {
     if (!id) {
-      throw new Error("ID da imagem não fornecido");
+      throw new Error("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da imagem inválido");
+      throw new Error("ID da Imagem inválido");
     }
     const existingImagem = await this.getImagemById(id);
     if (!existingImagem) {
@@ -55,5 +54,23 @@ export class ImagemService {
     await this.imagemRepository.delete(id);
   }
 
-}
+  async getByColecaoId (colecaoId: number): Promise<Imagem | null> {
+    return this.imagemRepository.getByColecaoId(colecaoId);
+  }
 
+  async getByUsuarioId (usuarioId: number): Promise<Imagem | null> {
+    return this.imagemRepository.getByUsuarioId(usuarioId);
+  }
+
+  async getByMontanhaId (montanhaId: number): Promise<Imagem | null> {
+    return this.imagemRepository.getByMontanhaId(montanhaId);
+  }
+
+  async getByViaId (viaId: number): Promise<Imagem | null> {
+    return this.imagemRepository.getByViaId(viaId);
+  }
+
+  async getByCroquiId (croquiId: number): Promise<Imagem | null> {
+    return this.imagemRepository.getByCroquiId(croquiId);
+  }
+}

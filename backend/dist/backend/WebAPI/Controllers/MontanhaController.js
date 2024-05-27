@@ -40,7 +40,7 @@ class MontanhaController {
             try {
                 const montanhas = await this.service.getMontanhas();
                 if (montanhas?.length === 0) {
-                    return res.status(404).json({ message: "Nenhuma montanha encontrada" });
+                    return res.status(404).json({ message: "Nenhuma Montanha encontrada" });
                 }
                 res.json(montanhas);
             }
