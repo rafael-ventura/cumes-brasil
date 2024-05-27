@@ -8,10 +8,17 @@ class MontanhaRepository {
         this.repository = db_1.AppDataSource.getRepository(Montanha_1.Montanha);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("montanha")
+            .leftJoinAndSelect("montanha.fonte", "fonte")
+            .leftJoinAndSelect("montanha.imagens", "imagem")
+            .where("montanha.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("montanha")
+            .leftJoinAndSelect("montanha.fonte", "fonte")
+            .leftJoinAndSelect("montanha.imagens", "imagem")
+            .getMany();
     }
     async create(montanha) {
         await this.repository.insert(montanha);

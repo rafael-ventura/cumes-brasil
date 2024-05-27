@@ -164,50 +164,13 @@ class ViaController {
                     if (error.message === "Nenhuma via encontrada") {
                         return res.status(404).json({ error: error.message });
                     }
+                    else {
+                        res.status(500).json({ error: error.message });
+                    }
                 }
                 else {
                     res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasInColecao" });
                 }
-            }
-        };
-        /**
-         * Get via by id
-         * @route GET /vias/detalhe/:id
-         * @group Vias - Operações relacionadas a vias
-         * @param {number} id.path.required - id da via - eg: 1
-         * @returns {Via.model} 200 - Via encontrada
-         * @returns {object} 404 - Via not found
-         * @returns {Error} 500 - Internal server error
-         */
-        this.getByIdDetalhado = async (req, res) => {
-            const id = parseInt(req.params.id);
-            try {
-                const via = await this.service.getDetalhadoById(id);
-                if (via) {
-                    res.json(via);
-                }
-                else {
-                    res.status(404).json({ message: "Via not found" });
-                }
-            }
-            catch (error) {
-                res.status(500).json({ message: "Internal server error", error });
-            }
-        };
-        /**
-         * Get all vias
-         * @route GET /vias/detalhe
-         * @group Vias - Operações relacionadas a vias
-         * @returns {Array.<Via>} 200 - Vias encontradas
-         * @returns {Error} 500 - Internal server error
-         */
-        this.getAllDetalhado = async (req, res) => {
-            try {
-                const vias = await this.service.getAllDetalhado();
-                res.json(vias);
-            }
-            catch (error) {
-                res.status(500).json({ message: "Internal server error", error });
             }
         };
         this.service = service;

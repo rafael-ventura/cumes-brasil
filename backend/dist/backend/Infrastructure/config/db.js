@@ -15,6 +15,7 @@ const Fonte_1 = require("../../Domain/entities/Fonte");
 const Colecao_1 = require("../../Domain/entities/Colecao");
 const Escalada_1 = require("../../Domain/entities/Escalada");
 const Imagem_1 = require("../../Domain/entities/Imagem");
+const ColecaoVia_1 = require("../../Domain/entities/ColecaoVia");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: path_1.default.join(__dirname, "../../../database/sqlite/cumes_brasil.db"),
@@ -22,6 +23,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     logging: false,
     entities: [
         Colecao_1.Colecao,
+        ColecaoVia_1.ColecaoVia,
         Croqui_1.Croqui,
         Escalada_1.Escalada,
         Face_1.Face,

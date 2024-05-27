@@ -15,9 +15,9 @@ const Croqui_1 = require("./Croqui");
 const Montanha_1 = require("./Montanha");
 const Fonte_1 = require("./Fonte");
 const Face_1 = require("./Face");
-const Colecao_1 = require("./Colecao");
 const Imagem_1 = require("./Imagem");
 const Escalada_1 = require("./Escalada");
+const ColecaoVia_1 = require("./ColecaoVia");
 let Via = class Via extends typeorm_1.BaseEntity {
 };
 exports.Via = Via;
@@ -113,20 +113,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Via.prototype, "croquis", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Colecao_1.Colecao, colecao => colecao.vias),
-    (0, typeorm_1.JoinTable)({
-        name: "colecao_via",
-        joinColumn: {
-            name: "via_id",
-            referencedColumnName: "id"
-        },
-        inverseJoinColumn: {
-            name: "colecao_id",
-            referencedColumnName: "id"
-        }
-    }),
+    (0, typeorm_1.OneToMany)(() => ColecaoVia_1.ColecaoVia, colecaoVia => colecaoVia.via),
     __metadata("design:type", Array)
-], Via.prototype, "colecoes", void 0);
+], Via.prototype, "viasColecoes", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Escalada_1.Escalada, escalada => escalada.via),
     __metadata("design:type", Array)

@@ -8,10 +8,15 @@ class UsuarioRepository {
         this.repository = db_1.AppDataSource.getRepository(Usuario_1.Usuario);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .getMany();
     }
     async create(nome, email, senhaHash) {
         await this.repository.insert({
@@ -31,7 +36,10 @@ class UsuarioRepository {
         return user ?? null;
     }
     async getPerfil(id) {
-        return this.repository.findOne(id);
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
 }
 exports.UsuarioRepository = UsuarioRepository;

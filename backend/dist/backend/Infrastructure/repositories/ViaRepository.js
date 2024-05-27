@@ -9,10 +9,23 @@ class ViaRepository {
         this.repository = db_1.AppDataSource.getRepository(Via_1.Via);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id } });
+        return this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .where("via.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return await this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .getMany();
     }
     async create(via) {
         await this.repository.insert(via);
@@ -24,31 +37,11 @@ class ViaRepository {
         await this.repository.delete(id);
     }
     async getViasByColecaoId(colecaoId) {
-        return this.repository.createQueryBuilder("via")
-            .innerJoin("via.colecoes", "colecao")
-            .where("colecao.id = :colecaoId", { colecaoId })
-            .getMany();
-    }
-    async getDetalhadoById(id) {
-        return this.repository.createQueryBuilder("via")
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-            .leftJoinAndSelect("via.fonte", "fonte")
-            .leftJoinAndSelect("via.face", "face")
+        return await this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
             .leftJoinAndSelect("via.imagem", "imagem")
-            .where("via.id = :id", { id })
-            .getOne();
-    }
-    async getAllDetalhado() {
-        const vias = await this.repository.createQueryBuilder("via")
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-            .leftJoinAndSelect("via.fonte", "fonte")
-            .leftJoinAndSelect("via.face", "face")
-            .leftJoinAndSelect("via.imagem", "imagem")
+            .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
             .getMany();
-        console.log(vias);
-        return vias;
     }
 }
 exports.ViaRepository = ViaRepository;

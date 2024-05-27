@@ -23,14 +23,5 @@ class ViaService {
     async getViasIdByColecaoId(colecaoId) {
         return this.viaRepo.getViasByColecaoId(colecaoId);
     }
-    async getDetalhadoById(id) {
-        return this.viaRepo.getDetalhadoById(id);
-    }
-    async getAllDetalhado() {
-        if (this.viaRepo.getAllDetalhado) {
-            return this.viaRepo.getAllDetalhado();
-        }
-        return null;
-    }
 }
 exports.ViaService = ViaService;

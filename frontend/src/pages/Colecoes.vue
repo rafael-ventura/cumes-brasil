@@ -5,11 +5,11 @@
       <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
         <q-item-section avatar>
           <q-avatar size="56px" color="primary" text-color="white">
-            {{ colecao.nome.charAt(0) }}
+            <q-img :src="colecao.imagem?.url" cover/>
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-img :src="colecao.imagem?.url" class="q-mr-md" style="width: 56px; height: 56px"/>
+
           <q-item-label class="text-h6">{{ colecao.nome }}</q-item-label>
           <q-item-label caption>{{ colecao.descricao }}</q-item-label>
         </q-item-section>

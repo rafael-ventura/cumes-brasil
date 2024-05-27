@@ -162,8 +162,8 @@ class ColecaoController {
         this.adicionarVia = async (req, res) => {
             try {
                 const { colecao_id, via_id } = req.body;
-                const colecaoId = (colecao_id);
-                const viaId = (via_id);
+                const colecaoId = colecao_id;
+                const viaId = via_id;
                 await this.service.addViaToColecao(viaId, colecaoId);
                 res.status(201).json({ message: "Via adicionada à coleção com sucesso." });
             }
@@ -174,6 +174,12 @@ class ColecaoController {
                     }
                     else if (error.message === "Via não encontrada") {
                         return res.status(404).json({ message: error.message });
+                    }
+                    else if (error.message === "A via já está presente nesta coleção.") {
+                        return res.status(400).json({ message: error.message });
+                    }
+                    else {
+                        res.status(500).json({ error: error.message });
                     }
                 }
                 else {

@@ -8,10 +8,17 @@ class EscaladaRepository {
         this.repository = db_1.AppDataSource.getRepository(Escalada_1.Escalada);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("escalada")
+            .leftJoinAndSelect("escalada.usuario", "usuario")
+            .leftJoinAndSelect("escalada.via", "via")
+            .where("escalada.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("escalada")
+            .leftJoinAndSelect("escalada.usuario", "usuario")
+            .leftJoinAndSelect("escalada.via", "via")
+            .getMany();
     }
     async create(escalada) {
         await this.repository.insert(escalada);
