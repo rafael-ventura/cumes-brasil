@@ -23,11 +23,11 @@ class FaceService {
         if (!face) {
             throw new Error("Face inválida");
         }
-        const fonteExiste = await this.fonteService.getFonteById(face.fonte_id);
+        const fonteExiste = await this.fonteService.getFonteById(face.fonte.id);
         if (!fonteExiste) {
             throw new Error("É necessário existir uma fonte antes da criação da via");
         }
-        const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha_id);
+        const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha.id);
         if (!montanhaExiste) {
             throw new Error("É necessário existir uma montanha antes da criação da via");
         }

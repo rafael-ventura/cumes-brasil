@@ -8,6 +8,7 @@ import { Montanha } from "../../Domain/entities/Montanha";
 import { Fonte } from "../../Domain/entities/Fonte";
 import { Colecao } from "../../Domain/entities/Colecao";
 import { Escalada } from "../../Domain/entities/Escalada";
+import { Imagem } from "../../Domain/entities/Imagem";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -15,13 +16,14 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [
-        Via,
-        Usuario,
-        Croqui,
-        Face,
-        Montanha,
-        Fonte,
         Colecao,
-        Escalada
+        Croqui,
+        Escalada,
+        Face,
+        Fonte,
+        Imagem,
+        Montanha,
+        Usuario,
+        Via
     ]
 });

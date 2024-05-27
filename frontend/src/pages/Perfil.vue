@@ -26,9 +26,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import UserService from "../services/userService";
-import AuthenticateService from "src/services/authenticateService";
-import PerfilEditarForm from "components/PerfilEditarForm.vue";
+import UserService from "src/services/UserService";
+import AuthenticateService from "src/services/AuthenticateService";
+import PerfilEditarForm from "components/Perfil/PerfilEditarForm.vue";
 import { Usuario } from "src/models/Usuario";
 
 const router = useRouter();

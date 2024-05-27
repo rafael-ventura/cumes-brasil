@@ -1,4 +1,4 @@
-// src/services/userService.ts
+// src/services/UserService.ts
 
 import { api } from "boot/axios";
 import { Usuario } from "src/models/Usuario";

@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import ViaService from "../services/viaService";
+import ViaService from "src/services/ViaService";
 import SearchInput from "components/SearchInput.vue";
 import ViaList from "components/ViaList.vue";
 import { Via } from "src/models/Via";

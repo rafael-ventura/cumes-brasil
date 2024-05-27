@@ -21,7 +21,7 @@ export class ColecaoRepository {
 
     async getByUsuarioId (usuarioId: number): Promise<Colecao[]> {
         return this.repository.find({
-            where: { usuario_id: usuarioId as any },
+            where: { usuario_id: usuarioId },
             relations: ["vias"]
         });
     }
@@ -39,7 +39,6 @@ export class ColecaoRepository {
     }
 
     async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
-        // verificação para evitar duplicatas. Não encontrei um jeito melhor para não usar a verificacao
         const existingRelation = await this.viaRepository.createQueryBuilder()
           .relation(Via, "colecoes")
           .of(via_id)

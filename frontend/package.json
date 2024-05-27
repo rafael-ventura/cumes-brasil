@@ -9,7 +9,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "fix-lint": "eslint --ext .js,.ts,.vue ./ --fix",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "quasar dev",
+    "front": "eslint --ext .js,.ts,.vue ./ --fix && quasar dev ",
     "build": "quasar build"
   },
   "dependencies": {

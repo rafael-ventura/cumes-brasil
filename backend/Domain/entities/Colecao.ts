@@ -1,19 +1,10 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Via } from "./Via";
+import { Imagem } from "./Imagem";
 import { Usuario } from "./Usuario";
 
 @Entity()
 export class Colecao extends BaseEntity {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,10 +14,19 @@ export class Colecao extends BaseEntity {
   @Column({ nullable: true })
   descricao?: string;
 
-  @Column()
+  @ManyToOne(() => Usuario, usuario => usuario.colecoes)
+  usuario: Usuario;
+
+  @Column({ nullable: false })
   usuario_id: number;
 
-  @ManyToMany(() => Via , via => via.colecoes)
+  @ManyToOne(() => Imagem, imagem => imagem.colecoes)
+  imagem: Imagem;
+
+  @Column({ nullable: true })
+  imagem_id: number;
+
+  @ManyToMany(() => Via, via => via.colecoes)
   @JoinTable({
     name: "colecao_via",
     joinColumn: {
@@ -39,5 +39,4 @@ export class Colecao extends BaseEntity {
     }
   })
   vias: Via[];
-  
 }

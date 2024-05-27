@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Via } from "./Via";
 import { Usuario } from "./Usuario";
 
@@ -17,19 +17,14 @@ export class Escalada extends BaseEntity {
   observacao: string;
 
   @ManyToOne(() => Usuario)
-  @JoinColumn({ name: "usuario_id" })
-  usuario: Usuario;
+  Usuario: Usuario;
 
   @Column({ nullable: false })
   usuario_id: number;
 
   @ManyToOne(() => Via)
-  @JoinColumn({ name: "via_id" })
-  via: Via;
+  Via: Via;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   via_id: number;
-
-
-
 }

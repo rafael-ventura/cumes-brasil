@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import AuthenticateService from "../../services/authenticateService";
+import AuthenticateService from "../../services/AuthenticateService";
 import RegisterForm from "components/Auth/RegisterForm.vue";
 import AuthError from "components/Auth/AuthError.vue";
 

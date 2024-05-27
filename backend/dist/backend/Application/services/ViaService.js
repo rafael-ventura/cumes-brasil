@@ -20,12 +20,6 @@ class ViaService {
     async deleteVia(id) {
         await this.viaRepo.delete(id);
     }
-    async addCroquiToVia(viaId, croquiId) {
-        await this.viaRepo.addCroqui(viaId, croquiId);
-    }
-    async removeCroquiFromVia(viaId, croquiId) {
-        await this.viaRepo.removeCroqui(viaId, croquiId);
-    }
     async getViasIdByColecaoId(colecaoId) {
         return this.viaRepo.getViasIdByColecaoId(colecaoId);
     }

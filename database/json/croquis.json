@@ -2,17 +2,17 @@
   "croquis": [
     {
       "id": 1,
-      "nome": "Croquis da Anibal - Mapa",
-      "imagemUrl": "/assets/Img1.jpeg",
+      "nome": "Croquis do Campo Escola Anibal",
+      "imagem_id": 5,
       "autor": "Pedro Bugim",
       "fonte_id": 2
     },
     {
       "id": 2,
-      "nome": "Croquis da Anibal - Foto",
-      "imagemUrl": "/assets/Img2.jpeg",
+      "nome": "Croquis do Campo Escola Anibal",
+      "imagem_id": 6,
       "autor": "Pedro Bugim",
-      "fonte_id": 2
+      "fonte_id": 3
     }
   ]
 }

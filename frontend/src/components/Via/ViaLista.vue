@@ -10,8 +10,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Via } from "src/models/Via";
-import ViaCard from "components/ViaCard.vue";
-import ModalViaDetalhada from "components/ModalViaDetalhada.vue";
+import ViaCard from "components/Via/ViaCard.vue";
+import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 
 const props = defineProps<{ vias: Via[] }>();
 

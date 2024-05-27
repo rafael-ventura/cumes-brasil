@@ -10,10 +10,10 @@ class UsuarioController {
          * @returns {object} 404 - Usuario não encontrado
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.getUsuarioById = async (requisicao, resposta) => {
+        this.getById = async (requisicao, resposta) => {
             try {
                 const id = parseInt(requisicao.params.id);
-                const resultado = await this.service.getById(id);
+                const resultado = await this.service.getUsuarioById(id);
                 if (!resultado) {
                     return resposta.status(404).json({ message: "Usuario não encontrada." });
                 }
@@ -35,7 +35,7 @@ class UsuarioController {
          * @returns {object} 404 - Usuarios não encontrados
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.getAllUsuario = async (_, resposta) => {
+        this.getAll = async (_, resposta) => {
             try {
                 const result = await this.service.getUsuarios();
                 if (result?.length === 0) {
@@ -58,11 +58,11 @@ class UsuarioController {
          * @returns {object} 200 - Usuario criada com sucesso.
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.registrarUsuario = async (requisicao, resposta) => {
+        this.registrar = async (requisicao, resposta) => {
             try {
-                const { nome, email, password } = requisicao.body;
-                await this.service.register(nome, email, password);
-                resposta.status(201).json({ message: "Usuario criada com sucesso." });
+                const { nome, email, senha } = requisicao.body;
+                await this.service.register(nome, email, senha);
+                resposta.status(201).json({ message: "Usuario criado com sucesso." });
             }
             catch (error) {
                 if (error instanceof Error) {
@@ -80,10 +80,10 @@ class UsuarioController {
          * @returns {object} 404 -message error
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.updateUsuario = async (requisicao, resposta) => {
+        this.update = async (requisicao, resposta) => {
             try {
                 const usuario = requisicao.body;
-                await this.service.update(usuario);
+                await this.service.updateUsuario(usuario);
                 resposta.status(200).json({ message: "Usuario atualizada com sucesso." });
             }
             catch (error) {
@@ -105,10 +105,10 @@ class UsuarioController {
          * @returns {object} 404 -message error
          * @returns {Error} 500 - Ocorreu um erro desconhecido
          */
-        this.deleteUsuario = async (requisicao, resposta) => {
+        this.delete = async (requisicao, resposta) => {
             try {
                 const id = parseInt(requisicao.params.id);
-                await this.service.delete(id);
+                await this.service.deleteUsuario(id);
                 resposta.status(200).json({ message: "Usuario deletada com sucesso." });
             }
             catch (error) {

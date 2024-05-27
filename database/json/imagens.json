@@ -1,0 +1,40 @@
+{
+  "imagens": [
+    {
+      "url": "../assets/colecao-default-01.jpg",
+      "descricao": "Foto Default para Colecao",
+      "fonte_id": 3,
+      "tipo_entidade": "colecao"
+    },
+    {
+      "url": "../assets/montanha-default-01.jpg",
+      "descricao": "Foto Default para Montanha",
+      "fonte_id": 4,
+      "tipo_entidade": "montanha"
+    },
+    {
+      "url": "../assets/usuario-default-01.jpg",
+      "descricao": "Foto Default para Usuário",
+      "fonte_id": 1,
+      "tipo_entidade": "usuario"
+    },
+    {
+      "url": "../assets/via-default-01.jpg",
+      "descricao": "Foto Default para Via",
+      "fonte_id": 1,
+      "tipo_entidade": "via"
+    },
+    {
+      "url": "../assets/croquis/croqui_01.jpg",
+      "descricao": "Croquis da Anibal - Mapa Desenhado",
+      "fonte_id": 2,
+      "tipo_entidade": "croqui"
+    },
+    {
+      "url": "../assets/croquis/croqui_02.jpg",
+      "descricao": "Croquis da Anibal - Foto das Vias",
+      "fonte_id": 2,
+      "tipo_entidade": "croqui"
+    }
+  ]
+}

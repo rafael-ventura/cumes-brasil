@@ -8,10 +8,10 @@ class MontanhaRepository {
         this.repository = db_1.AppDataSource.getRepository(Montanha_1.Montanha);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne({ where: { id: id }, relations: ["fonte"] });
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.find({ relations: ["fonte"] });
     }
     async create(montanha) {
         await this.repository.insert(montanha);

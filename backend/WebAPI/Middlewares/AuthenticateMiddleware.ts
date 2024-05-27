@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 
-// Adiciona uma propriedade personalizada 'user' à definição de tipo 'Request'
+// Adiciona uma propriedade personalizada 'user' à definição de tipo_entidade 'Request'
 declare global {
     namespace Express {
         interface Request {

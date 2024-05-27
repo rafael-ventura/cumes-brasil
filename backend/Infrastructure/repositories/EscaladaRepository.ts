@@ -25,10 +25,10 @@ export class EscaladaRepository {
     }
 
     async getByUserId (userId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { usuario_id: userId as any } });
+        return this.repository.find({ where: { usuario_id: userId } });
     }
 
     async getByViaId (viaId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { via_id: viaId as any } });
+        return this.repository.find({ where: { via_id: viaId } });
     }
 }

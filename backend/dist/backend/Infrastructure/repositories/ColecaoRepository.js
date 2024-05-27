@@ -12,48 +12,51 @@ class ColecaoRepository {
     async getById(id) {
         return this.repository.findOne({
             where: { id },
-            relations: ["vias", "usuario"]
+            relations: ["vias"]
         });
     }
     async getAll() {
         return this.repository.find({
-            relations: ["vias", "usuario"]
+            relations: ["vias"]
         });
     }
     async getByUsuarioId(usuarioId) {
         return this.repository.find({
-            where: { usuario: usuarioId },
-            relations: ["vias", "usuario"]
+            where: {
+                usuario: {
+                    id: usuarioId
+                }
+            },
+            relations: ["vias", "imagem", "usuario"]
         });
     }
     async create(colecaoData) {
         await this.repository.save(colecaoData);
     }
     async update(id, colecaoData) {
-        await this.repository.save({
-            ...colecaoData,
-            id: Number(id)
-        });
+        await this.repository.update(id, colecaoData);
     }
     async delete(id) {
         await this.repository.delete(id);
     }
-    async addViaToColecao(viaId, colecaoId) {
-        const colecao = await this.getById(colecaoId);
-        if (colecao) {
-            const via = await this.viaRepository.findOne(viaId);
-            if (via) {
-                colecao.vias.push(via);
-                await this.repository.save(colecao);
-            }
+    async addViaToColecao(via_id, colecao_id) {
+        const existingRelation = await this.viaRepository.createQueryBuilder()
+            .relation(Via_1.Via, "colecoes")
+            .of(via_id)
+            .loadMany();
+        if (existingRelation.some(colecao => colecao.id === colecao_id)) {
+            return;
         }
+        await this.viaRepository.createQueryBuilder()
+            .relation(Via_1.Via, "colecoes")
+            .of(via_id)
+            .add(colecao_id);
     }
-    async removeViaFromColecao(viaId, colecaoId) {
-        const colecao = await this.getById(colecaoId);
-        if (colecao) {
-            colecao.vias = colecao.vias.filter(via => via.id !== viaId);
-            await this.repository.save(colecao);
-        }
+    async removeViaFromColecao(via_id, colecao_id) {
+        await this.viaRepository.createQueryBuilder()
+            .relation(Via_1.Via, "colecoes")
+            .of(via_id)
+            .remove(colecao_id);
     }
 }
 exports.ColecaoRepository = ColecaoRepository;

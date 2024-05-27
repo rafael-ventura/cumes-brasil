@@ -34,23 +34,30 @@ require("reflect-metadata");
 const swagger_output_json_1 = __importDefault(require("../swagger_output.json"));
 const db_1 = require("../Infrastructure/config/db");
 const initialLoad_1 = require("../Infrastructure/sql_scripts/initialLoad");
+const Via_1 = require("../Domain/entities/Via");
 dotenv.config();
 const cors = require("cors");
 const app = (0, express_1.default)();
 app.use(cors());
 const PORT = process.env.PORT || 4020;
-// Documentação da API com Swagger
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
 app.use(express_1.default.json());
-// Rotas
 app.use('/api', routes_1.default);
 db_1.AppDataSource.initialize().then(async () => {
     console.log("Conexão com o banco de dados estabelecida com sucesso");
-}).catch(error => console.log(error));
-// Inicialização do servidor
+    const viaRepository = db_1.AppDataSource.getRepository(Via_1.Via);
+    const count = await viaRepository.count();
+    if (count === 0) {
+        console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
+        (0, initialLoad_1.loadData)().then(() => console.log("Carga inicial realizada com sucesso"))
+            .catch(e => console.log("Erro na carga de dados:", e));
+    }
+    else {
+        console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
+    }
+}).catch(error => console.log("Erro ao conectar com o banco de dados:", error));
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
     console.log(process.cwd());
-    (0, initialLoad_1.initialLoad)().then(r => console.log("Carga inicial realizada com sucesso")).catch(e => console.log(e));
 });

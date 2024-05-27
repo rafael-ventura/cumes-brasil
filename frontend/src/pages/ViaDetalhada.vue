@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import ViaService from "../services/viaService";
+import ViaService from "src/services/ViaService";
 import BotaoVoltar from "components/BotaoVoltar.vue";
 import { Via } from "src/models/Via";
 

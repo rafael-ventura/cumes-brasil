@@ -17,11 +17,11 @@ class UsuarioRepository {
     async getAll() {
         return this.repository.find();
     }
-    async create(nome, email, passwordHash) {
+    async create(nome, email, senhaHash) {
         await this.repository.insert({
             nome: nome,
             email: email,
-            password_hash: passwordHash
+            password_hash: senhaHash
         });
     }
     async update(id, usuarioData) {
@@ -30,9 +30,9 @@ class UsuarioRepository {
     async delete(id) {
         await this.repository.delete(id);
     }
-    // TODO: Implmentar a função findByEmail sem quebrar a aplicação
     async findByEmail(email) {
-        return this.repository.findOne;
+        const user = await this.repository.findOne({ where: { email } });
+        return user ?? null;
     }
     async getPerfil(id) {
         return this.repository.findOne(id);

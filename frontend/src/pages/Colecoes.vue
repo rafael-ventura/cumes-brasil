@@ -1,24 +1,50 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h6">Suas Coleções</div>
+    <div class="text-h6 q-mb-md">Suas Coleções</div>
+    <q-list bordered separator>
+      <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
+        <q-item-section avatar>
+          <q-avatar size="56px" color="primary" text-color="white">
+            {{ colecao.nome.charAt(0) }}
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          <q-item-label class="text-h6">{{ colecao.nome }}</q-item-label>
+          <q-item-label caption>{{ colecao.descricao }}</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
   </q-page>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { onMounted } from "vue";
-import AuthenticateService from "../services/authenticateService";
+import AuthenticateService from "src/services/AuthenticateService";
+import ColecaoService from "src/services/ColecaoService";
+import { Colecao } from "src/models/Colecao";
 
 const router = useRouter();
+const colecoes = ref<Colecao[]>([]);
 
 defineOptions({
   name: "ColecoesPage"
 });
 
-onMounted(() => {
+onMounted(async () => {
   if (!AuthenticateService.isAuthenticated()) {
     router.push("/login");
+    return;
+  }
+
+  try {
+    colecoes.value = await ColecaoService.getAllColecoes();
+  } catch (error) {
+    console.error("Erro ao buscar coleções:", error);
   }
 });
 
+const goToColecaoDetalhada = (colecao: Colecao) => {
+  router.push(`/colecoes/${colecao.id}`);
+};
 </script>

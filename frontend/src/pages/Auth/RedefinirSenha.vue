@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import AuthenticateService from "../../services/authenticateService";
+import AuthenticateService from "../../services/AuthenticateService";
 import { ref } from "vue";
 
 const email = ref("");

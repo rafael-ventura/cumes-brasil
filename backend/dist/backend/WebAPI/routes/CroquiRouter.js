@@ -11,11 +11,11 @@ const croquiService = new CroquiService_1.CroquiService(croquiRepository, viaRep
 const croquiController = new CroquiController_1.CroquiController(croquiService);
 const CroquiRouter = (0, express_1.Router)();
 CroquiRouter.get("/:id", croquiController.getCroquiById);
-CroquiRouter.get("/", croquiController.getAllCroqui);
-CroquiRouter.get("/:id/croquis", croquiController.getByViaId);
-CroquiRouter.post("/", croquiController.createCroqui);
-CroquiRouter.put("/:id", croquiController.updateCroqui);
-CroquiRouter.delete("/:id", croquiController.deleteCroqui);
-CroquiRouter.post("/associarVia", croquiController.associarVia);
-CroquiRouter.post("/desassociarVia", croquiController.desassociarVia);
+CroquiRouter.get("/", croquiController.getAll);
+CroquiRouter.get("/via/:id", croquiController.getByViaId);
+CroquiRouter.post("/", croquiController.create);
+CroquiRouter.put("/:id", croquiController.update);
+CroquiRouter.delete("/:id", croquiController.delete);
+CroquiRouter.post("/via/associar", croquiController.associarVia);
+CroquiRouter.post("/via/desassociar", croquiController.desassociarVia);
 exports.default = CroquiRouter;

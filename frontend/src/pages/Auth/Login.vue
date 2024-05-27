@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import AuthenticateService from "../../services/authenticateService";
+import AuthenticateService from "../../services/AuthenticateService";
 import LoginForm from "components/Auth/LoginForm.vue";
 
 defineOptions({

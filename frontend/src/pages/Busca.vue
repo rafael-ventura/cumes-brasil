@@ -23,10 +23,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import ViaService from "../services/viaService";
-import ViaLista from "components/ViaLista.vue";
-import FiltrosAvancados from "components/FiltrosAvancados.vue";
-import ModalViaDetalhada from "components/ModalViaDetalhada.vue";
+import ViaService from "../services/ViaService";
+import ViaLista from "components/Via/ViaLista.vue";
+import FiltrosAvancados from "components/Busca/FiltrosAvancados.vue";
+import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
 
 const searchQuery = ref("");

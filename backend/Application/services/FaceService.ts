@@ -39,13 +39,10 @@ export class FaceService {
         if (!fonteExiste) {
             throw new Error("É necessário existir uma fonte antes da criação da via");
         }
-        const montanhaExiste = await this.montanhaService.getMontanhaById(
-          face.montanha_id
-        );
+        const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha_id);
         if (!montanhaExiste) {
             throw new Error(
-              "É necessário existir uma montanha antes da criação da via"
-            );
+              "É necessário existir uma montanha antes da criação da via");
         }
         return this.faceRepository.create(face);
     }

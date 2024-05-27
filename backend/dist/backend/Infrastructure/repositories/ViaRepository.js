@@ -8,10 +8,13 @@ class ViaRepository {
         this.repository = db_1.AppDataSource.getRepository(Via_1.Via);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne({
+            where: { id },
+            relations: ["montanha", "face", "fonte", "croquis"],
+        });
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.find({ relations: ["montanha", "face", "fonte", "croquis"] });
     }
     async create(via) {
         await this.repository.insert(via);

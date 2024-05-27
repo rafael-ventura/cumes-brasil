@@ -13,6 +13,7 @@ import { ConexaoService } from "../../Application/services/ConexaoService";
 import { AppDataSource } from "../../Infrastructure/config/db";
 import AuthenticateRouter from "./AuthenticateRouter";
 import { authenticateToken } from "../Middlewares/AuthenticateMiddleware";
+import ImagemRouter from "./ImagemRouter";
 
 const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
@@ -24,6 +25,7 @@ routes.use("/montanhas", MontanhaRouter);
 routes.use("/faces", FaceRouter);
 routes.use("/croquis", CroquiRouter);
 routes.use("/usuarios", UsuarioRouter);
+routes.use("/imagens", ImagemRouter);
 routes.use(authenticateToken);
 routes.use("/colecoes", ColecaoRouter);
 routes.use("/escaladas", EscaladaRouter);
