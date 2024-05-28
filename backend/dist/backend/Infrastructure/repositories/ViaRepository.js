@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ViaRepository = void 0;
+//src/Infrastructure/repositories/ViaRepository.ts
 const Via_1 = require("../../Domain/entities/Via");
 const db_1 = require("../config/db");
 class ViaRepository {
@@ -8,10 +9,25 @@ class ViaRepository {
         this.repository = db_1.AppDataSource.getRepository(Via_1.Via);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
+            .where("via.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return await this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
+            .getMany();
     }
     async create(via) {
         await this.repository.insert(via);
@@ -22,24 +38,17 @@ class ViaRepository {
     async delete(id) {
         await this.repository.delete(id);
     }
-    async addCroqui(viaId, croquiId) {
-        await this.repository.createQueryBuilder()
-            .relation(Via_1.Via, "croquis")
-            .of(viaId)
-            .add(croquiId);
-    }
-    async removeCroqui(viaId, croquiId) {
-        await this.repository.createQueryBuilder()
-            .relation(Via_1.Via, "croquis")
-            .of(viaId)
-            .remove(croquiId);
-    }
-    async getViasIdByColecaoId(colecaoId) {
-        const vias = await this.repository.createQueryBuilder("via")
-            .leftJoin("via.colecoes", "colecao")
-            .where("colecao.id = :colecaoId", { colecaoId })
+    async getViasByColecaoId(colecaoId) {
+        return await this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
+            .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
             .getMany();
-        return vias.map(via => via.id);
     }
 }
 exports.ViaRepository = ViaRepository;

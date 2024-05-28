@@ -17,10 +17,13 @@ export class UsuarioService {
         return this.usuarioRepo.getAll();
     }
 
-    async register (nome: string, email: string, password: string): Promise<void> {
-
-        const passwordHash = await bcrypt.hash(password, 10);
-        await this.usuarioRepo.create(nome, email, passwordHash);
+    async register (nome: string, email: string, senha: string): Promise<void> {
+        const existingUser = await this.usuarioRepo.findByEmail(email);
+        if (existingUser != null) {
+            throw new Error("Email já cadastrado");
+        }
+        const senhaHash = await bcrypt.hash(senha, 10);
+        await this.usuarioRepo.create(nome, email, senhaHash);
     }
 
     async updateUsuario (usuario: Usuario): Promise<void> {

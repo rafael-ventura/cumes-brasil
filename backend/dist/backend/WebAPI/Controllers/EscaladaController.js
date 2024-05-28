@@ -13,7 +13,7 @@ class EscaladaController {
         this.getEscaladaById = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
-                const result = await this.service.getEscaladaById(id);
+                const result = await this.service.getById(id);
                 res.json(result);
             }
             catch (error) {
@@ -39,7 +39,7 @@ class EscaladaController {
          */
         this.getAllEscalada = async (_, res) => {
             try {
-                const escaladas = await this.service.getEscaladas();
+                const escaladas = await this.service.get();
                 res.json(escaladas);
             }
             catch (error) {
@@ -63,7 +63,7 @@ class EscaladaController {
         this.createEscalada = async (req, res) => {
             try {
                 const escalada = req.body;
-                await this.service.createEscalada(escalada);
+                await this.service.create(escalada);
                 res.status(201).json({ message: "Escalada criada com sucesso" });
             }
             catch (error) {
@@ -92,7 +92,7 @@ class EscaladaController {
         this.updateEscalada = async (req, res) => {
             try {
                 const escalada = req.body;
-                await this.service.updateEscalada(escalada);
+                await this.service.update(escalada);
                 res.status(200).json({ message: "Escalada atualizada com sucesso" });
             }
             catch (error) {
@@ -119,7 +119,7 @@ class EscaladaController {
         this.deleteEscalada = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
-                await this.service.deleteEscalada(id);
+                await this.service.delete(id);
                 res.status(200).json({ message: "Escalada deletada com sucesso" });
             }
             catch (error) {
@@ -143,10 +143,10 @@ class EscaladaController {
          * @returns {object} 404 - Escalada não encontrada
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.getEscaladasDoUsuario = async (req, res) => {
+        this.getByUsuarioId = async (req, res) => {
             try {
-                const usuarioId = parseInt(req.params.usuarioId);
-                const result = await this.service.getByUsuarioId(usuarioId);
+                const usuarioId = parseInt(req.params.id);
+                const result = await this.service.getEscaladasDoUsuario(usuarioId);
                 res.json(result);
             }
             catch (error) {
@@ -163,10 +163,10 @@ class EscaladaController {
                 }
             }
         };
-        this.getEscaladasDaVia = async (req, res) => {
+        this.getByViaId = async (req, res) => {
             try {
-                const viaId = parseInt(req.params.viaId);
-                const result = await this.service.getByViaId(viaId);
+                const viaId = parseInt(req.params.id);
+                const result = await this.service.getEscaladasDaVia(viaId);
                 res.json(result);
             }
             catch (error) {

@@ -14,19 +14,23 @@ const Montanha_1 = require("../../Domain/entities/Montanha");
 const Fonte_1 = require("../../Domain/entities/Fonte");
 const Colecao_1 = require("../../Domain/entities/Colecao");
 const Escalada_1 = require("../../Domain/entities/Escalada");
+const Imagem_1 = require("../../Domain/entities/Imagem");
+const ColecaoVia_1 = require("../../Domain/entities/ColecaoVia");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: path_1.default.join(__dirname, "../../../database/sqlite/cumes_brasil.db"),
     synchronize: true,
     logging: false,
     entities: [
-        Via_1.Via,
-        Usuario_1.Usuario,
-        Croqui_1.Croqui,
-        Face_1.Face,
-        Montanha_1.Montanha,
-        Fonte_1.Fonte,
         Colecao_1.Colecao,
-        Escalada_1.Escalada
+        ColecaoVia_1.ColecaoVia,
+        Croqui_1.Croqui,
+        Escalada_1.Escalada,
+        Face_1.Face,
+        Fonte_1.Fonte,
+        Imagem_1.Imagem,
+        Montanha_1.Montanha,
+        Usuario_1.Usuario,
+        Via_1.Via
     ]
 });

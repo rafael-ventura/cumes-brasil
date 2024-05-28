@@ -12,8 +12,8 @@ export class MontanhaController {
     /**
      * @route GET /montanhas/:id
      * @group Montanhas - Operações relacionadas a montanhas
-     * @returns {Montanha.model} 200 - Montanha encontrada
-     * @returns {object} 404 - Montanha não encontrada
+     * @returns {Montanha.model} 200 - montanha encontrada
+     * @returns {object} 404 - montanha não encontrada
      * @returns {Error} 500 - Erro desconhecido
      */
     getMontanhaById = async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ export class MontanhaController {
             const id = parseInt(req.params.id);
             const result = await this.service.getMontanhaById(id);
             if (!result) {
-                return res.status(404).json({message: "Montanha não encontrada."});
+                return res.status(404).json({message: "montanha não encontrada."});
             }
             res.json(result);
         } catch (error) {
@@ -38,7 +38,7 @@ export class MontanhaController {
      * @group Montanhas - Operações relacionadas a montanhas
      * @returns {Array.<Montanha>} 200 - Montanhas encontradas
      * @returns {Error} 500 - Erro desconhecido
-     * @returns {object} 404 - Montanha não encontrada
+     * @returns {object} 404 - montanha não encontrada
      * @returns {Error} 500 - Erro desconhecido
      */
     getAllMontanha = async (req: Request, res: Response) => {
@@ -60,14 +60,14 @@ export class MontanhaController {
     /**
      * @route POST /montanhas
      * @group Montanhas - Operações relacionadas a montanhas
-     * @returns {object} 201 - Montanha criada com sucesso
+     * @returns {object} 201 - montanha criada com sucesso
      * @returns {Error} 500 - Erro desconhecido
      */
     createMontanha = async (req: Request, res: Response) => {
         try {
             const montanha: Montanha = req.body;
             await this.service.createMontanha(montanha);
-            res.status(201).json({message: "Montanha criada com sucesso."});
+            res.status(201).json({message: "montanha criada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Fonte não encontrada") {
@@ -83,17 +83,17 @@ export class MontanhaController {
     /**
      * @route PUT /montanhas
      * @group Montanhas - Operações relacionadas a montanhas
-     * @returns {object} 200 - Montanha atualizada com sucesso
+     * @returns {object} 200 - montanha atualizada com sucesso
      * @returns {Error} 500 - Erro desconhecido
      */
     updateMontanha = async (req: Request, res: Response) => {
         try {
             const montanha: Montanha = req.body;
             await this.service.updateMontanha(montanha.id, montanha);
-            res.json({ message: "Montanha atualizada com sucesso." });
+            res.json({ message: "montanha atualizada com sucesso." });
         } catch (error) {
             if (error instanceof Error) {
-                if (error.message === "Montanha não encontrada") {
+                if (error.message === "montanha não encontrada") {
                     return res.status(400).json({error: error.message});
                 }else if (error.message === "Fonte não encontrada") {
                     return res.status(400).json({error: error.message});
@@ -108,18 +108,18 @@ export class MontanhaController {
     /**
      * @route DELETE /montanhas/:id
      * @group Montanhas - Operações relacionadas a montanhas
-     * @returns {object} 200 - Montanha deletada com sucesso
+     * @returns {object} 200 - montanha deletada com sucesso
      * @returns {Error} 500 - Erro desconhecido
-     * @returns {object} 404 - Montanha não encontrada
+     * @returns {object} 404 - montanha não encontrada
      */
     deleteMontanha = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
             await this.service.deleteMontanha(id);
-            res.status(200).json({message: "Montanha deletada com sucesso."});
+            res.status(200).json({message: "montanha deletada com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
-                if (error.message === "Montanha não encontrada") {
+                if (error.message === "montanha não encontrada") {
                     return res.status(400).json({error: error.message});
                 }
                 res.status(500).json({error: error.message});

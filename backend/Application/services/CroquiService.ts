@@ -14,9 +14,9 @@ export class CroquiService {
 
     async getCroquiById (id: number): Promise<Croqui | null> {
         if (!id) {
-            throw new Error("ID da fonte não fornecido");
+            throw new Error("ID da Fonte não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da fonte inválido");
+            throw new Error("ID da Fonte inválido");
         }
         return this.croquiRepository.getById(id);
     }
@@ -65,11 +65,6 @@ export class CroquiService {
     async desassociarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
         return this.croquiRepository.desassociarVia(croqui_id, via_id);
     }
-
-    async getCroquisIdsByViaId (id: number): Promise<number[] | null> {
-        return this.croquiRepository.getIdsByViaId(id);
-    }
-
     async getCroquisByViaId (id: number): Promise<ObjectLiteral[]> {
         return this.croquiRepository.getByViaId(id);
     }

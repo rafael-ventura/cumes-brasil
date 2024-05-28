@@ -11,7 +11,7 @@ export class FonteController {
 
     /**
      * @route Fontes /fontes/:id
-     * @group Fonte - Operações relacionadas a fonte
+     * @group Fonte - Operações relacionadas a Fonte
      * @returns {Fonte.model} 200 - Fonte encontrada
      * @returns {object} 404 - Fonte não encontrada
      * @returns {Error} 500 - Erro desconhecido
@@ -45,7 +45,7 @@ export class FonteController {
         try {
             const result: Fonte[] | null = await this.service.getFontes();
             if (result?.length === 0) {
-                return res.status(404).json({ error: "Nenhuma fonte encontrada" });
+                return res.status(404).json({ error: "Nenhuma Fonte encontrada" });
             }
             res.json(result);
         } catch (error) {

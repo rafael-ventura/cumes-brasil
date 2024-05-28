@@ -16,18 +16,22 @@ const PerfilRouter_1 = __importDefault(require("./PerfilRouter"));
 const ConexaoController_1 = require("../Controllers/ConexaoController");
 const ConexaoService_1 = require("../../Application/services/ConexaoService");
 const db_1 = require("../../Infrastructure/config/db");
+const AuthenticateRouter_1 = __importDefault(require("./AuthenticateRouter"));
+const AuthenticateMiddleware_1 = require("../Middlewares/AuthenticateMiddleware");
+const ImagemRouter_1 = __importDefault(require("./ImagemRouter"));
 const routes = (0, express_1.Router)();
 const conexaoController = new ConexaoController_1.ConexaoController(new ConexaoService_1.ConexaoService(db_1.AppDataSource));
 routes.get("/conexao", conexaoController.checkDatabaseHealth);
-/* routes.use("", AuthenticateRouter); */
+routes.use("", AuthenticateRouter_1.default);
 routes.use("/vias", ViaRouter_1.default);
 routes.use("/fontes", FonteRouter_1.default);
 routes.use("/montanhas", MontanhaRouter_1.default);
 routes.use("/faces", FaceRouter_1.default);
 routes.use("/croquis", CroquiRouter_1.default);
 routes.use("/usuarios", UsuarioRouter_1.default);
-/* routes.use(authenticateToken); */
+routes.use("/imagens", ImagemRouter_1.default);
 routes.use("/colecoes", ColecaoRouter_1.default);
 routes.use("/escaladas", EscaladaRouter_1.default);
 routes.use("/perfil", PerfilRouter_1.default);
+routes.use(AuthenticateMiddleware_1.authenticateToken);
 exports.default = routes;

@@ -44,7 +44,7 @@ export class UsuarioController {
         try {
             const result = await this.service.getUsuarios();
             if (result?.length === 0) {
-                return resposta.status(404).json({message: "Nenhum usuario encontrado"});
+                return resposta.status(404).json({message: "Nenhum Usuario encontrado"});
             }
             resposta.json(result);
         } catch (error) {
@@ -64,9 +64,9 @@ export class UsuarioController {
      */
     registrar = async (requisicao: Request, resposta: Response) => {
         try {
-            const { nome, email, password } = requisicao.body;
-            await this.service.register(nome, email, password);
-            resposta.status(201).json({message: "Usuario criada com sucesso."});
+            const { nome, email, senha } = requisicao.body;
+            await this.service.register(nome, email, senha);
+            resposta.status(201).json({message: "Usuario criado com sucesso."});
         } catch (error) {
             if (error instanceof Error) {
                 resposta.status(500).json({error: error.message});

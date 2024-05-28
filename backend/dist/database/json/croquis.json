@@ -1,0 +1,18 @@
+{
+    "croquis": [
+        {
+            "id": 1,
+            "nome": "Croquis do Campo Escola Anibal",
+            "imagem": 5,
+            "autor": "Pedro Bugim",
+            "fonte": 2
+        },
+        {
+            "id": 2,
+            "nome": "Croquis do Campo Escola Anibal",
+            "imagem": 6,
+            "autor": "Pedro Bugim",
+            "fonte": 3
+        }
+    ]
+}

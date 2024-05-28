@@ -5,11 +5,18 @@ export class MontanhaRepository {
     private repository = AppDataSource.getRepository(Montanha);
 
     async getById (id: number): Promise<Montanha | null> {
-        return this.repository.findOne({ where: { id: id }, relations: ["fonte"]});
+        return this.repository.createQueryBuilder("montanha")
+          .leftJoinAndSelect("montanha.fonte", "fonte")
+          .leftJoinAndSelect("montanha.imagens", "imagem")
+          .where("montanha.id = :id", { id })
+          .getOne();
     }
 
     async getAll (): Promise<Montanha[]> {
-        return this.repository.find({relations: ["fonte"]});
+        return this.repository.createQueryBuilder("montanha")
+          .leftJoinAndSelect("montanha.fonte", "fonte")
+          .leftJoinAndSelect("montanha.imagens", "imagem")
+          .getMany();
     }
 
     async create (montanha: Partial<Montanha>): Promise<void> {

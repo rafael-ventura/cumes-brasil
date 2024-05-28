@@ -5,11 +5,19 @@ export class FaceRepository {
     private repository = AppDataSource.getRepository(Face);
 
     async getById (id: number): Promise<Face | null> {
-        return this.repository.findOne({ where: { id: id }, relations: ["montanha", "fonte"]});
+        return this.repository.createQueryBuilder("face")
+          .leftJoinAndSelect("face.montanha", "montanha")
+          .leftJoinAndSelect("face.fonte", "fonte")
+          .where("face.id = :id", { id })
+          .getOne();
+
     }
 
     async getAll (): Promise<Face[]> {
-        return this.repository.find({relations: ["montanha", "fonte"]});
+        return this.repository.createQueryBuilder("face")
+          .leftJoinAndSelect("face.montanha", "montanha")
+          .leftJoinAndSelect("face.fonte", "fonte")
+          .getMany();
     }
 
     async create (face: Partial<Face>): Promise<void> {

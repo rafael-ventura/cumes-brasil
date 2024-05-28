@@ -4,22 +4,22 @@ CREATE TABLE IF NOT EXISTS Fonte (
     referencia TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Montanha (
+CREATE TABLE IF NOT EXISTS montanha (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     localizacao TEXT NOT NULL,
     altura REAL,
-    fonte_id INTEGER NOT NULL,
-    FOREIGN KEY (fonte_id) REFERENCES Fonte (id)
+    fonte INTEGER NOT NULL,
+    FOREIGN KEY (fonte) REFERENCES Fonte (id)
 );
 
 CREATE TABLE IF NOT EXISTS Face (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     montanha_id INTEGER NOT NULL,
-    fonte_id INTEGER NOT NULL,
-    FOREIGN KEY (montanha_id) REFERENCES Montanha (id),
-    FOREIGN KEY (fonte_id) REFERENCES Fonte (id)
+    fonte INTEGER NOT NULL,
+    FOREIGN KEY (montanha_id) REFERENCES montanha (id),
+    FOREIGN KEY (fonte) REFERENCES Fonte (id)
 );
 
 CREATE TABLE IF NOT EXISTS Via (
@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS Via (
     montanha_id INTEGER NOT NULL,
     face_id INTEGER NOT NULL,
     via_principal_id INTEGER,
-    fonte_id INTEGER NOT NULL,
-    FOREIGN KEY (montanha_id) REFERENCES Montanha (id),
+    fonte INTEGER NOT NULL,
+    FOREIGN KEY (montanha_id) REFERENCES montanha (id),
     FOREIGN KEY (face_id) REFERENCES Face (id),
     FOREIGN KEY (via_principal_id) REFERENCES Via (id),
-    FOREIGN KEY (fonte_id) REFERENCES Fonte (id)
+    FOREIGN KEY (fonte) REFERENCES Fonte (id)
 );
 
 CREATE TABLE IF NOT EXISTS Croqui (
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS Croqui (
     imagemUrl TEXT NOT NULL,
     autor TEXT NOT NULL,
     descricao TEXT,
-    fonte_id INTEGER NOT NULL,
-    FOREIGN KEY (fonte_id) REFERENCES Fonte (id)
+    fonte INTEGER NOT NULL,
+    FOREIGN KEY (fonte) REFERENCES Fonte (id)
 );
 
 CREATE TABLE IF NOT EXISTS Usuario (

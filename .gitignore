@@ -974,10 +974,10 @@ package-lock.json
 /backend/node_modules/color-convert/package.json
 /backend/node_modules/color-convert/README.md
 /backend/node_modules/color-convert/route.js
-/backend/node_modules/color-name/index.js
-/backend/node_modules/color-name/LICENSE
-/backend/node_modules/color-name/package.json
-/backend/node_modules/color-name/README.md
+/backend/node_modules/color-nome/index.js
+/backend/node_modules/color-nome/LICENSE
+/backend/node_modules/color-nome/package.json
+/backend/node_modules/color-nome/README.md
 /backend/node_modules/commander/typings/index.d.ts
 /backend/node_modules/commander/CHANGELOG.md
 /backend/node_modules/commander/index.js

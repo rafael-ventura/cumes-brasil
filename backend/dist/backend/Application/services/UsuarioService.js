@@ -16,9 +16,13 @@ class UsuarioService {
     async getUsuarios() {
         return this.usuarioRepo.getAll();
     }
-    async register(nome, email, password) {
-        const passwordHash = await bcrypt_1.default.hash(password, 10);
-        await this.usuarioRepo.create(nome, email, passwordHash);
+    async register(nome, email, senha) {
+        const existingUser = await this.usuarioRepo.findByEmail(email);
+        if (existingUser != null) {
+            throw new Error("Email já cadastrado");
+        }
+        const senhaHash = await bcrypt_1.default.hash(senha, 10);
+        await this.usuarioRepo.create(nome, email, senhaHash);
     }
     async updateUsuario(usuario) {
         await this.usuarioRepo.update(usuario.id, usuario);

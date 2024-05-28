@@ -13,7 +13,7 @@ const colecaoRepository = new ColecaoRepository();
 const usuarioRepository = new UsuarioRepository();
 const usuarioService = new UsuarioService(usuarioRepository);
 const viaService = new ViaService(viaRepository);
-const colecaoService = new ColecaoService(colecaoRepository, viaService, usuarioService);
+const colecaoService = new ColecaoService(colecaoRepository);
 const colecaoController = new ColecaoController(colecaoService);
 
 const ColecaoRouter = Router();

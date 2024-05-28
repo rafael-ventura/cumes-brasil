@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -14,6 +13,9 @@ import { Montanha } from "./Montanha";
 import { Fonte } from "./Fonte";
 import { Face } from "./Face";
 import { Colecao } from "./Colecao";
+import { Imagem } from "./Imagem";
+import { Escalada } from "./Escalada";
+import { ColecaoVia } from "./ColecaoVia";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -58,62 +60,43 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   data: string;
 
-  @ManyToMany(() => Colecao, colecao => colecao.vias)
+  @ManyToOne(() => Montanha, montanha => montanha.vias)
+  montanha: number;
+
+  @ManyToOne(() => Via, via => via.variantes)
+  viaPrincipal: number;
+
+  @OneToMany(() => Via, via => via.viaPrincipal)
+  variantes: Via[];
+
+  @ManyToOne(() => Fonte, fonte => fonte.vias)
+  fonte: number;
+
+  @ManyToOne(() => Face, face => face.vias)
+  face: number;
+
+  @ManyToOne(() => Imagem, imagem => imagem.vias)
+  imagem: number;
+
+  @ManyToMany(() => Croqui, croqui => croqui.vias)
   @JoinTable({
-    name: "colecao_via",
+    name: "via_croqui",
     joinColumn: {
       name: "via_id",
       referencedColumnName: "id"
     },
     inverseJoinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    }
-  })
-  colecoes: Colecao[];
-
-  @ManyToOne(() => Montanha)
-  @JoinColumn({ name: "montanha_id" })
-  montanha: Montanha;
-
-  @Column({ nullable: false })
-  montanha_id: number;
-
-  @ManyToOne(() => Via, via => via.variantes)
-  @JoinColumn({ name: "via_principal_id" })
-  viaPrincipal: Via;
-
-  @OneToMany(() => Via, via => via.viaPrincipal)
-  variantes: Via[];
-
-  @Column({ nullable: true })
-  via_principal_id: number;
-
-  @ManyToOne(() => Fonte, fonte => fonte.vias)
-  @JoinColumn({ name: "fonte_id" })
-  fonte: Fonte;
-
-  @Column({ nullable: false })
-  fonte_id: number;
-
-  @ManyToOne(() => Face, face => face.vias)
-  @JoinColumn({ name: "face_id" })
-  face: Face;
-
-  @Column( { nullable: false })
-  face_id: number;
-
-  @ManyToMany(() => Croqui , croqui => croqui.vias)
-  @JoinTable({
-    name: "via_croqui",
-    joinColumn: {
-      name: "viaId",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "croquiId",
+      name: "croqui_id",
       referencedColumnName: "id"
     }
   })
   croquis: Croqui[];
+
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.via)
+  viasColecoes: ColecaoVia[];
+
+  @OneToMany(() => Escalada, escalada => escalada.via)
+  escaladas: Escalada[];
+
+
 }

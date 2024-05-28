@@ -1,24 +1,33 @@
-# frontend
+# Cumes Brasil (quasar-project)
 
-## Project setup
-```
-yarn install
-```
+A Quasar Project
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
+## Install the dependencies
+```bash
+yarn
+# or
+npm install
 ```
 
-### Lints and fixes files
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+```bash
+quasar dev
 ```
+
+
+### Lint the files
+```bash
 yarn lint
+# or
+npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### Build the app for production
+```bash
+quasar build
+```
+
+### Customize the configuration
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).

@@ -10,38 +10,33 @@ import {
 } from "typeorm";
 import { Via } from "./Via";
 import { Fonte } from "./Fonte";
+import { Imagem } from "./Imagem";
 
 @Entity()
 export class Croqui extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column( { nullable: false })
+  @Column({ nullable: false })
   nome: string;
 
-  @Column( { nullable: false })
-  imagemUrl: string;
+  @ManyToOne(() => Fonte, fonte => fonte.croquis)
+  fonte: number;
 
-
-  @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte: Fonte;
-
-  @Column({ nullable: false })
-  fonte_id: number;
+  @ManyToOne(() => Imagem, imagem => imagem.croquis)
+  imagem: number;
 
   @ManyToMany(() => Via, via => via.croquis)
   @JoinTable({
     name: "via_croqui",
     joinColumn: {
-      name: "croquiId",
+      name: "croqui_id",
       referencedColumnName: "id"
     },
     inverseJoinColumn: {
-      name: "viaId",
+      name: "via_id",
       referencedColumnName: "id"
     }
   })
   vias: Via[];
-
 }

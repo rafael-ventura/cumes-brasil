@@ -1,39 +1,29 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Colecao } from "./Colecao";
+import { Imagem } from "./Imagem";
+import { Escalada } from "./Escalada";
 
 @Entity()
 export class Usuario extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column( { nullable: false })
+  @Column({ nullable: false })
   nome: string;
 
-  @Column( { nullable: false })
+  @Column({ nullable: false })
   email: string;
 
-  @Column( { nullable: false })
+  @Column({ nullable: false })
   password_hash: string;
 
-  @Column({ nullable: true })
-  fotoPerfil?: string;
+  @ManyToOne(() => Imagem, imagem => imagem.usuarios)
+  foto_perfil: number;
 
-  constructor (id: number, nome: string, email: string, password_hash: string, fotoPerfil?: string) {
-    super();
-    this.id = id;
-    this.nome = nome;
-    this.email = email;
-    this.password_hash = password_hash;
-    this.fotoPerfil = fotoPerfil;
+  @OneToMany(() => Colecao, colecao => colecao.usuario)
+  colecoes: Colecao[];
 
-  }
-
-  public atualizarFotoPerfil (novaFoto: string) {
-    this.fotoPerfil = novaFoto;
-  }
-
-  public atualizarEmail (novoEmail: string) {
-    this.email = novoEmail;
-  }
+  @OneToMany(() => Escalada, escalada => escalada.usuario)
+  escaladas: Escalada[];
 
 }

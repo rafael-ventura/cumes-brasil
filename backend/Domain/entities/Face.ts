@@ -11,20 +11,13 @@ export class Face extends BaseEntity {
   @Column({ nullable: false })
   nome: string;
 
-  @ManyToOne(() => Montanha)
-  @JoinColumn({ name: "montanha_id" })
-  montanha: Montanha;
+  @ManyToOne(() => Montanha, montanha => montanha.faces)
+  montanha: number;
 
-  @Column({ nullable: false })
-  montanha_id: number;
-
-  @ManyToOne(() => Fonte)
-  @JoinColumn({ name: "fonte_id" })
-  fonte: Fonte;
-
-  @Column({ nullable: false })
-  fonte_id: number;
+  @ManyToOne(() => Fonte, fonte => fonte.faces)
+  fonte: number;
 
   @OneToMany(() => Via, via => via.face)
   vias: Via[];
+
 }

@@ -3,19 +3,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CroquiRepository = void 0;
 const db_1 = require("../config/db");
 const Croqui_1 = require("../../Domain/entities/Croqui");
-const typeorm_1 = require("typeorm");
 class CroquiRepository {
     constructor() {
         this.repository = db_1.AppDataSource.getRepository(Croqui_1.Croqui);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("croqui")
+            .leftJoinAndSelect("croqui.fonte", "fonte")
+            .leftJoinAndSelect("croqui.imagem", "imagem")
+            .where("croqui.id = :id", { id })
+            .getOne();
     }
     async getByIds(ids) {
-        return this.repository.findBy({ id: (0, typeorm_1.In)(ids) });
+        return this.repository.createQueryBuilder("croqui")
+            .leftJoinAndSelect("croqui.fonte", "fonte")
+            .leftJoinAndSelect("croqui.imagem", "imagem")
+            .where("croqui.id IN (:...ids)", { ids })
+            .getMany();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("croqui")
+            .leftJoinAndSelect("croqui.fonte", "fonte")
+            .leftJoinAndSelect("croqui.imagem", "imagem")
+            .getMany();
     }
     async create(croqui) {
         await this.repository.insert(croqui);
@@ -26,7 +36,7 @@ class CroquiRepository {
     async delete(id) {
         await this.repository.delete(id);
     }
-    async getCroquisIdsByViaId(via_id) {
+    async getIdsByViaId(via_id) {
         return this.repository.createQueryBuilder("croqui")
             .leftJoin("croqui.vias", "via")
             .where("via.id = :via_id", { via_id })
@@ -34,19 +44,19 @@ class CroquiRepository {
             .getRawMany()
             .then((croquis) => croquis.map(croqui => croqui.id));
     }
-    async getCroquisByViaId(via_id) {
+    async getByViaId(via_id) {
         return this.repository.createQueryBuilder("croqui")
             .leftJoin("croqui.vias", "via")
             .where("via.id = :via_id", { via_id })
-            .getMany();
+            .getRawMany();
     }
-    async associarCroquiVia(croqui_id, via_id) {
+    async associarVia(croqui_id, via_id) {
         return this.repository.createQueryBuilder()
             .relation(Croqui_1.Croqui, "vias")
             .of(croqui_id)
             .add(via_id);
     }
-    async desassociarCroquiVia(croqui_id, via_id) {
+    async desassociarVia(croqui_id, via_id) {
         return this.repository.createQueryBuilder()
             .relation(Croqui_1.Croqui, "vias")
             .of(croqui_id)

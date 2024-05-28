@@ -10,7 +10,7 @@ class ColecaoController {
          * @returns {object} 404 - Colecao não encontrada
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.getColecaoById = async (req, res) => {
+        this.getById = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
                 const colecao = await this.service.getColecaoById(id);
@@ -59,9 +59,9 @@ class ColecaoController {
          * @returns {object} 201 - Colecoes encontradas com sucesso
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.getColecoesByUsuarioId = async (req, res) => {
+        this.getByUsuarioId = async (req, res) => {
             try {
-                const usuarioId = Number(req.params.usuarioId);
+                const usuarioId = Number(req.params.id);
                 const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
                 res.status(200).json(colecoes);
             }
@@ -159,11 +159,11 @@ class ColecaoController {
          * @returns {Error} 500 - Erro desconhecido
          * @returns {object} 404 - Colecao não encontrada
          */
-        this.addVia = async (req, res) => {
+        this.adicionarVia = async (req, res) => {
             try {
                 const { colecao_id, via_id } = req.body;
-                const colecaoId = (colecao_id);
-                const viaId = (via_id);
+                const colecaoId = colecao_id;
+                const viaId = via_id;
                 await this.service.addViaToColecao(viaId, colecaoId);
                 res.status(201).json({ message: "Via adicionada à coleção com sucesso." });
             }
@@ -174,6 +174,12 @@ class ColecaoController {
                     }
                     else if (error.message === "Via não encontrada") {
                         return res.status(404).json({ message: error.message });
+                    }
+                    else if (error.message === "A via já está presente nesta coleção.") {
+                        return res.status(400).json({ message: error.message });
+                    }
+                    else {
+                        res.status(500).json({ error: error.message });
                     }
                 }
                 else {
@@ -191,7 +197,7 @@ class ColecaoController {
          */
         this.removeVia = async (req, res) => {
             try {
-                const colecaoId = parseInt(req.params.colecaoId);
+                const colecaoId = parseInt(req.params.id);
                 const viaId = parseInt(req.params.viaId);
                 await this.service.removeViaFromColecao(viaId, colecaoId);
                 res.status(200).json({ message: "Via removida da coleção com sucesso." });

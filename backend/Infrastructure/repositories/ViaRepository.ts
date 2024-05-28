@@ -1,3 +1,4 @@
+//src/Infrastructure/repositories/ViaRepository.ts
 import { Via } from "../../Domain/entities/Via";
 import { AppDataSource } from "../config/db";
 import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
@@ -5,16 +6,27 @@ import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRep
 export class ViaRepository implements ISearchRepository<Via>{
 
   private repository = AppDataSource.getRepository(Via);
-
   async getById (id: number): Promise<Via | null> {
-    return this.repository.findOne({
-      where: { id },
-      relations: ["montanha", "face", "fonte", "croquis"],
-    });
+    return this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.montanha", "montanha")
+      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+      .leftJoinAndSelect("via.fonte", "fonte")
+      .leftJoinAndSelect("via.face", "face")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .leftJoinAndSelect("via.croquis", "croquis")
+      .where("via.id = :id", { id })
+      .getOne();
   }
 
   async getAll (): Promise<Via[]> {
-    return this.repository.find({ relations: ["montanha", "face", "fonte", "croquis"] });
+    return await this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.montanha", "montanha")
+      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+      .leftJoinAndSelect("via.fonte", "fonte")
+      .leftJoinAndSelect("via.face", "face")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .leftJoinAndSelect("via.croquis", "croquis")
+      .getMany();
   }
 
   async create (via: Partial<Via>): Promise<void> {
@@ -29,27 +41,19 @@ export class ViaRepository implements ISearchRepository<Via>{
     await this.repository.delete(id as any);
   }
 
-  async addCroqui (viaId: number, croquiId: number): Promise<void> {
-    await this.repository.createQueryBuilder()
-      .relation(Via, "croquis")
-      .of(viaId)
-      .add(croquiId);
-  }
-
-  async removeCroqui (viaId: number, croquiId: number): Promise<void> {
-    await this.repository.createQueryBuilder()
-      .relation(Via, "croquis")
-      .of(viaId)
-      .remove(croquiId);
-  }
-
-  async getViasIdByColecaoId (colecaoId: number): Promise<number[]> {
-    const vias = await this.repository.createQueryBuilder("via")
-      .leftJoin("via.colecoes", "colecao")
-      .where("colecao.id = :colecaoId", { colecaoId })
+  async getViasByColecaoId (colecaoId: number): Promise<Via[]> {
+    return await this.repository.createQueryBuilder("via")
+      .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
+      .leftJoinAndSelect("via.montanha", "montanha")
+      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+      .leftJoinAndSelect("via.fonte", "fonte")
+      .leftJoinAndSelect("via.face", "face")
+      .leftJoinAndSelect("via.imagem", "imagem")
+      .leftJoinAndSelect("via.croquis", "croquis")
+      .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
       .getMany();
-    return vias.map(via => via.id);
   }
+
 
   async search(query: any): Promise<Via[]> {
     const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;

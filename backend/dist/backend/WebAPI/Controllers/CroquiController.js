@@ -36,7 +36,7 @@ class CroquiController {
          * @returns {object} 404 - Croqui não encontrada
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.getAllCroqui = async (req, res) => {
+        this.getAll = async (req, res) => {
             try {
                 const croquis = await this.service.getCroquis();
                 if (croquis?.length === 0) {
@@ -59,7 +59,7 @@ class CroquiController {
          * @returns {object} 201 - Croqui criada com sucesso
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.createCroqui = async (req, res) => {
+        this.create = async (req, res) => {
             try {
                 const croqui = req.body;
                 await this.service.createCroqui(croqui);
@@ -80,7 +80,7 @@ class CroquiController {
          * @returns {object} 200 - Croqui atualizada com sucesso
          * @returns {Error} 500 - Erro desconhecido
          */
-        this.updateCroqui = async (req, res) => {
+        this.update = async (req, res) => {
             try {
                 const croqui = req.body;
                 await this.service.updateCroqui(croqui.id, croqui);
@@ -107,7 +107,7 @@ class CroquiController {
          * @returns {Error} 500 - Erro desconhecido
          * @returns {object} 404 - Croqui não encontrada
          */
-        this.deleteCroqui = async (req, res) => {
+        this.delete = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
                 await this.service.deleteCroqui(id);
@@ -136,29 +136,20 @@ class CroquiController {
          * @param req
          * @param res
          */
-        this.associarCroquiEmVia = async (req, res) => {
+        this.associarVia = async (req, res) => {
             try {
                 const { via_id, croqui_id } = req.body;
                 const viaId = parseInt(via_id);
                 const croquiId = parseInt(croqui_id);
-                await this.service.associarVia(croquiId, viaId);
+                await this.service.associarCroquiEmVia(croquiId, viaId);
                 res.status(201).json({ message: "Croqui associado a Via com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    let statusCode = 500;
-                    let errorMessage = "Ocorreu um erro desconhecido em controller associarVia";
-                    switch (error.message) {
-                        case "Erro na passagem de Ids. Id inválido":
-                        case "Croqui associado não encontrado para esta via":
-                            statusCode = 404;
-                            errorMessage = error.message;
-                            break;
-                    }
-                    res.status(statusCode).json({ error: errorMessage });
+                    res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller associarVia" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
                 }
             }
         };
@@ -171,28 +162,19 @@ class CroquiController {
          * @param req
          * @param res
          */
-        this.desassociarCroquiEmVia = async (req, res) => {
+        this.desassociarVia = async (req, res) => {
             try {
                 const viaId = parseInt(req.params.viaId);
                 const croquiId = parseInt(req.params.croquiId);
-                await this.service.desassociarVia(croquiId, viaId);
+                await this.service.desassociarCroquiEmVia(croquiId, viaId);
                 res.status(201).json({ message: "Croqui desassociado a Via com sucesso" });
             }
             catch (error) {
                 if (error instanceof Error) {
-                    let statusCode = 500;
-                    let errorMessage = "Ocorreu um erro desconhecido em controller desassociarVia";
-                    switch (error.message) {
-                        case "Erro na passagem de Ids. Id inválido":
-                        case "Croqui associado não encontrado para esta via":
-                            statusCode = 404;
-                            errorMessage = error.message;
-                            break;
-                    }
-                    res.status(statusCode).json({ error: errorMessage });
+                    res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller desassociarVia" });
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
                 }
             }
         };
@@ -207,19 +189,16 @@ class CroquiController {
         this.getByViaId = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
-                const croquis = await this.service.getByViaId(id);
+                const croquis = await this.service.getCroquisByViaId(id);
                 res.status(200).json(croquis);
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via não encontrada") {
-                        return res.status(400).json({ error: error.message });
-                    }
-                    else if (error.message === "Nenhum croqui encontrado") {
-                        return res.status(404).json({ error: error.message });
-                    }
+                    res.status(500).json({ error: error.message });
                 }
-                return res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getByViaId" });
+                else {
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
+                }
             }
         };
         this.service = croquiService;

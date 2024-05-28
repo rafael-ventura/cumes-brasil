@@ -68,13 +68,13 @@ class ViaController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "É necessário existir uma fonte antes da criação da via") {
+                    if (error.message === "É necessário existir uma Fonte antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
                     else if (error.message === "É necessário existir uma montanha antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
-                    else if (error.message === "É necessário existir uma face antes da criação da via") {
+                    else if (error.message === "É necessário existir uma Face antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
                     else if (error.message === "Erro ao criar a via.") {
@@ -103,13 +103,13 @@ class ViaController {
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "É necessário existir uma fonte antes da criação da via") {
+                    if (error.message === "É necessário existir uma Fonte antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
                     else if (error.message === "É necessário existir uma montanha antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
-                    else if (error.message === "É necessário existir uma face antes da criação da via") {
+                    else if (error.message === "É necessário existir uma Face antes da criação da via") {
                         return resposta.status(400).json({ error: error.message });
                     }
                     else if (error.message === "Erro ao atualizar via.") {
@@ -143,6 +143,33 @@ class ViaController {
                         return resposta.status(404).json({ error: error.message });
                     }
                     resposta.status(500).json({ error: error.message });
+                }
+            }
+        };
+        /**
+         * @route GET /vias/colecao/:id
+         * @group Vias - Operações relacionadas a vias
+         * @returns {Array.<Via>} 200 - Vias encontradas
+         * @returns {Error} 500 - Erro desconhecido
+         * @returns {object} 404 - Via não encontrada
+         */
+        this.getViasInColecao = async (req, res) => {
+            try {
+                const colecaoId = parseInt(req.params.id);
+                const vias = await this.service.getViasIdByColecaoId(colecaoId);
+                res.status(200).json(vias);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    if (error.message === "Nenhuma via encontrada") {
+                        return res.status(404).json({ error: error.message });
+                    }
+                    else {
+                        res.status(500).json({ error: error.message });
+                    }
+                }
+                else {
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasInColecao" });
                 }
             }
         };

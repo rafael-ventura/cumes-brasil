@@ -33,7 +33,7 @@ class Via {
         this.via_principal_id = viaPrincipalId;
     }
     associarFonte(fonteId) {
-        this.fonte_id = fonteId;
+        this.fonte = fonteId;
     }
 }
 exports.Via = Via;

@@ -1,20 +1,30 @@
 import { AppDataSource } from "../config/db";
 import { Croqui } from "../../Domain/entities/Croqui";
-import { In, ObjectLiteral } from "typeorm";
+import { ObjectLiteral } from "typeorm";
 
 export class CroquiRepository {
   private repository = AppDataSource.getRepository(Croqui);
 
   async getById (id: number): Promise<Croqui | null> {
-    return this.repository.findOne({ where: { id: id }, relations: ["fonte"] });
-  }
-
+    return this.repository.createQueryBuilder("croqui")
+      .leftJoinAndSelect("croqui.fonte", "fonte")
+      .leftJoinAndSelect("croqui.imagem", "imagem")
+      .where("croqui.id = :id", { id })
+      .getOne();
+    }
   async getByIds (ids: number[]): Promise<Croqui[]> {
-    return this.repository.findBy({ id: In(ids) });
+    return this.repository.createQueryBuilder("croqui")
+      .leftJoinAndSelect("croqui.fonte", "fonte")
+      .leftJoinAndSelect("croqui.imagem", "imagem")
+      .where("croqui.id IN (:...ids)", { ids })
+      .getMany();
   }
 
   async getAll (): Promise<Croqui[]> {
-    return this.repository.find({relations: ["fonte"]});
+    return this.repository.createQueryBuilder("croqui")
+      .leftJoinAndSelect("croqui.fonte", "fonte")
+      .leftJoinAndSelect("croqui.imagem", "imagem")
+      .getMany();
   }
 
   async create (croqui: Partial<Croqui>): Promise<void> {

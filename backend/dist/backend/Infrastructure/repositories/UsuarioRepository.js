@@ -8,20 +8,21 @@ class UsuarioRepository {
         this.repository = db_1.AppDataSource.getRepository(Usuario_1.Usuario);
     }
     async getById(id) {
-        return this.repository.findOne({
-            where: {
-                id: id,
-            }
-        });
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .getMany();
     }
-    async create(nome, email, passwordHash) {
+    async create(nome, email, senhaHash) {
         await this.repository.insert({
             nome: nome,
             email: email,
-            password_hash: passwordHash
+            password_hash: senhaHash
         });
     }
     async update(id, usuarioData) {
@@ -30,12 +31,15 @@ class UsuarioRepository {
     async delete(id) {
         await this.repository.delete(id);
     }
-    // TODO: Implmentar a função findByEmail sem quebrar a aplicação
     async findByEmail(email) {
-        return this.repository.findOne;
+        const user = await this.repository.findOne({ where: { email } });
+        return user ?? null;
     }
     async getPerfil(id) {
-        return this.repository.findOne(id);
+        return this.repository.createQueryBuilder("usuario")
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
 }
 exports.UsuarioRepository = UsuarioRepository;

@@ -7,10 +7,10 @@ class FonteService {
     }
     async getFonteById(id) {
         if (!id) {
-            throw new Error("ID da fonte não fornecido");
+            throw new Error("ID da Fonte não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da fonte inválido");
+            throw new Error("ID da Fonte inválido");
         }
         return this.fonteRepository.getById(id);
     }
@@ -25,10 +25,10 @@ class FonteService {
     }
     async updateFonte(id, fonteData) {
         if (!id) {
-            throw new Error("ID da fonte não fornecido");
+            throw new Error("ID da Fonte não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da fonte inválido");
+            throw new Error("ID da Fonte inválido");
         }
         const existingFonte = await this.getFonteById(id);
         if (!existingFonte) {
@@ -38,10 +38,10 @@ class FonteService {
     }
     async deleteFonte(id) {
         if (!id) {
-            throw new Error("ID da fonte não fornecido");
+            throw new Error("ID da Fonte não fornecido");
         }
         else if (isNaN(id)) {
-            throw new Error("ID da fonte inválido");
+            throw new Error("ID da Fonte inválido");
         }
         const existingFonte = await this.getFonteById(id);
         if (!existingFonte) {

@@ -34,7 +34,6 @@ export class EscaladaController {
 		}
 	};
 
-
 	/**
 	 * @route GET /escaladas
 	 * @group Escaladas - Operações relacionadas a escaladas

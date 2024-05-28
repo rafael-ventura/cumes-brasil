@@ -1,26 +1,28 @@
 import { Usuario } from "../../Domain/entities/Usuario";
 import { AppDataSource } from "../config/db";
+import { ObjectLiteral } from "typeorm";
 
 export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
 
     async getById (id: number): Promise<Usuario | null> {
-        return this.repository.findOne({
-            where: {
-                id: id,
-            }
-        });
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .where("usuario.id = :id", { id })
+          .getOne();
     }
 
     async getAll () {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .getMany();
     }
 
-    async create (nome: string, email: string, passwordHash: string): Promise<void> {
+    async create (nome: string, email: string, senhaHash: string): Promise<void> {
         await this.repository.insert({
             nome: nome,
             email: email,
-            password_hash: passwordHash
+            password_hash: senhaHash
         });
     }
 
@@ -32,13 +34,16 @@ export class UsuarioRepository {
         await this.repository.delete(id as any);
     }
 
-    // TODO: Implmentar a função findByEmail sem quebrar a aplicação
-    async findByEmail (email: string) {
-        return this.repository.findOne;
+    async findByEmail (email: string): Promise<ObjectLiteral | null> {
+        const user = await this.repository.findOne({ where: { email } });
+        return user ?? null;
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {
-        return this.repository.findOne(id as any);
+        return this.repository.createQueryBuilder("usuario")
+          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+          .where("usuario.id = :id", { id })
+          .getOne();
     }
 }
 

@@ -71,11 +71,11 @@ export class ViaController {
 			resposta.status(201).json({ message: "Via criada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "É necessário existir uma fonte antes da criação da via") {
+				if (error.message === "É necessário existir uma Fonte antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário existir uma montanha antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário existir uma face antes da criação da via") {
+				} else if (error.message === "É necessário existir uma Face antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "Erro ao criar a via.") {
 					return resposta.status(401).json({ error: "Erro provavelmente na escrita sql" });
@@ -101,11 +101,11 @@ export class ViaController {
 			resposta.json({ message: "Via atualizada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "É necessário existir uma fonte antes da criação da via") {
+				if (error.message === "É necessário existir uma Fonte antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário existir uma montanha antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
-				} else if (error.message === "É necessário existir uma face antes da criação da via") {
+				} else if (error.message === "É necessário existir uma Face antes da criação da via") {
 					return resposta.status(400).json({ error: error.message });
 				} else if (error.message === "Erro ao atualizar via.") {
 					return resposta.status(401).json({ error: "Erro provavelmente na consulta escrita sql" });
@@ -139,4 +139,30 @@ export class ViaController {
 			}
 		}
 	};
+
+	/**
+	 * @route GET /vias/colecao/:id
+	 * @group Vias - Operações relacionadas a vias
+	 * @returns {Array.<Via>} 200 - Vias encontradas
+	 * @returns {Error} 500 - Erro desconhecido
+	 * @returns {object} 404 - Via não encontrada
+	 */
+	getViasInColecao = async (req: Request, res: Response) => {
+		try {
+			const colecaoId = parseInt(req.params.id);
+			const vias = await this.service.getViasIdByColecaoId(colecaoId);
+			res.status(200).json(vias);
+		} catch (error) {
+			if (error instanceof Error) {
+				if (error.message === "Nenhuma via encontrada") {
+					return res.status(404).json({ error: error.message });
+				} else {
+					res.status(500).json({ error: error.message });
+
+				}
+			} else {
+				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasInColecao" });
+			}
+		}
+	}
 }

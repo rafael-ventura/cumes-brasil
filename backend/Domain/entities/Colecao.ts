@@ -5,39 +5,31 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
 import { Via } from "./Via";
+import { Imagem } from "./Imagem";
 import { Usuario } from "./Usuario";
+import { ColecaoVia } from "./ColecaoVia";
 
 @Entity()
 export class Colecao extends BaseEntity {
-
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   nome: string;
 
   @Column({ nullable: true })
   descricao?: string;
 
-  @Column()
-  usuario_id: number;
+  @ManyToOne(() => Usuario, usuario => usuario.colecoes)
+  usuario: number;
 
-  @ManyToMany(() => Via , via => via.colecoes)
-  @JoinTable({
-    name: "colecao_via",
-    joinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    }
-  })
-  vias: Via[];
-  
+  @ManyToOne(() => Imagem, imagem => imagem.colecoes)
+  imagem: number;
+
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.colecao)
+  viasColecoes: ColecaoVia[]
 }

@@ -35,7 +35,7 @@ export class FaceController {
 
 	/**
 	 * @route GET /Faces
-	 * @group Face - Operações relacionadas a face
+	 * @group Face - Operações relacionadas a Face
 	 * @returns {Array.<Face>} 200 - Vias encontradas
 	 * @returns {Error} 500 - Erro desconhecido
 	 * @returns {object} 404 - Face não encontrada
@@ -45,7 +45,7 @@ export class FaceController {
 		try {
 			const faces = await this.service.getFaces();
 			if (faces?.length === 0) {
-				return res.status(404).json({ error: "Nenhuma face encontrada" });
+				return res.status(404).json({ error: "Nenhuma Face encontrada" });
 			}
 			res.json(faces);
 		} catch (error) {
@@ -70,7 +70,7 @@ export class FaceController {
 			res.status(201).json({ message: "Face criada com sucesso" });
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "É necessário existir uma fonte antes da criação da via") {
+				if (error.message === "É necessário existir uma Fonte antes da criação da via") {
 					res.status(400).json({ error: error.message });
 				} else if (error.message === "É necessário existir uma montanha antes da criação da via") {
 					res.status(400).json({ error: error.message });

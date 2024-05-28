@@ -5,7 +5,10 @@ export class FonteRepository {
     private repository = AppDataSource.getRepository(Fonte);
 
     async getById (id: number): Promise<Fonte | null> {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne(
+          {
+              where: { id: id }
+          });
     }
 
     async getAll (): Promise<Fonte[]> {

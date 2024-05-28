@@ -164,19 +164,23 @@ export class ColecaoController {
                 colecao_id,
                 via_id
             } = req.body;
-            const colecaoId: number = (colecao_id);
-            const viaId: number = (via_id);
+            const colecaoId: number = colecao_id;
+            const viaId: number = via_id;
             await this.service.addViaToColecao(viaId, colecaoId);
             res.status(201).json({ message: "Via adicionada à coleção com sucesso." });
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Coleção não encontrada") {
-                    return res.status(404).json({message: error.message});
+                    return res.status(404).json({ message: error.message });
                 } else if (error.message === "Via não encontrada") {
-                    return res.status(404).json({message: error.message});
+                    return res.status(404).json({ message: error.message });
+                } else if (error.message === "A via já está presente nesta coleção.") {
+                    return res.status(400).json({ message: error.message });
+                } else {
+                    res.status(500).json({ error: error.message });
                 }
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller adicionarVia"});
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller adicionarVia" });
             }
         }
     }
@@ -207,4 +211,5 @@ export class ColecaoController {
             }
         }
     }
+
 }

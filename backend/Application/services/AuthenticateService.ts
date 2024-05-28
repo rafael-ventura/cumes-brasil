@@ -38,7 +38,7 @@ class AuthService {
             });
 
             if (!ticket) {
-                throw new Error('Ticket não definido');
+                throw new Error("Ticket não definido");
             }
 
             const payload = ticket.getPayload();
@@ -84,15 +84,12 @@ class AuthService {
     setSecretKey(secretKey: string) {
         this.secretKey = secretKey;
     }
-
-    async logout() {
-        return;
-    }
 }
 
 export function createAuthService() {
     const authService = new AuthService();
-    authService.setSecretKey(process.env.SECRET_KEY || '');
+    // TODO: verificar pq ele nao está pegando do .env
+    authService.setSecretKey(process.env.SECRET_KEY || '8c7515be3e2a107dc0cf543889f045fb7df3177209ebfd0a2b966b6b6d9eb4d7');
     return authService;
 }
 

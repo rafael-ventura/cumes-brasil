@@ -8,10 +8,17 @@ class FaceRepository {
         this.repository = db_1.AppDataSource.getRepository(Face_1.Face);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.createQueryBuilder("face")
+            .leftJoinAndSelect("face.montanha", "montanha")
+            .leftJoinAndSelect("face.fonte", "fonte")
+            .where("face.id = :id", { id })
+            .getOne();
     }
     async getAll() {
-        return this.repository.find();
+        return this.repository.createQueryBuilder("face")
+            .leftJoinAndSelect("face.montanha", "montanha")
+            .leftJoinAndSelect("face.fonte", "fonte")
+            .getMany();
     }
     async create(face) {
         await this.repository.insert(face);

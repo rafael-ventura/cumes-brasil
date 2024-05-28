@@ -8,7 +8,9 @@ class FonteRepository {
         this.repository = db_1.AppDataSource.getRepository(Fonte_1.Fonte);
     }
     async getById(id) {
-        return this.repository.findOne({ where: { id: id } });
+        return this.repository.findOne({
+            where: { id: id }
+        });
     }
     async getAll() {
         return this.repository.find();
