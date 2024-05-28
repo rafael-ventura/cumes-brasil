@@ -1,5 +1,5 @@
 <template>
-  <q-footer elevated>
+  <q-footer elevated class="bg-primary text-white">
     <q-toolbar class="q-pa-md justify-around">
       <q-btn flat
              round
@@ -24,7 +24,7 @@
       <q-btn flat
              round
              size="lg"
-             icon="brightness_4"
+             :icon="isDarkMode ? 'brightness_7' : 'brightness_4'"
              @click="toggleDarkMode"/>
     </q-toolbar>
   </q-footer>
@@ -51,10 +51,5 @@ const toggleDarkMode = () => {
 <style scoped>
 .q-toolbar {
   justify-content: space-around;
-  @media (min-width: 600px) {
-    .q-toolbar {
-      height: 56px;
-    }
-  }
 }
 </style>

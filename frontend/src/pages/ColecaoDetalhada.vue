@@ -1,27 +1,30 @@
 <template>
   <q-page class="q-pa-md">
     <div class="header-container">
-      <q-btn flat round icon="arrow_back" class="header-back-btn" @click="goBack"/>
+      <BotaoVoltar/>
       <div class="header"
            :style="{ backgroundImage: `url(${colecao?.imagem?.url || 'https://via.placeholder.com/300x150'})` }">
-        <div class="header-content">
-          <div class="text-h5">{{ colecao?.nome }}</div>
-          <div class="text-subtitle1">{{ colecao?.descricao }}</div>
-          <div class="text-caption">{{ vias?.length || "0" }} vias</div>
-        </div>
-        <q-btn flat icon="filter_list" class="header-filter-btn"/>
+        <q-card class="absolute-bottom opaco">
+          <q-card-section class="header-content">
+            <div class="text-h5">{{ colecao?.nome }}</div>
+            <div class="text-subtitle1">{{ colecao?.descricao }}</div>
+            <div class="text-caption">{{ vias?.length || "0" }} vias</div>
+          </q-card-section>
+          <q-btn flat icon="filter_list" class="header-filter-btn"/>
+        </q-card>
       </div>
     </div>
     <div class="via-list">
       <q-card v-for="via in vias" :key="via.id" class="via-card" clickable @click="goToViaDetalhada(via.id)">
-        <q-card-section class="row no-wrap items-center">
-          <img :src="via.imagem?.url || 'https://via.placeholder.com/150x150'" class="via-image" alt="via image"/>
+        <q-img :src="via.imagem?.url || 'https://via.placeholder.com/150x150'" class="via-image" alt="via image"/>
+        <q-card-section class="q-pt-none">
           <div class="via-info">
             <div class="text-h6">{{ via.nome }}</div>
             <div class="text-subtitle2">Grau: {{ via.grau }}</div>
             <div class="text-subtitle2">Extensão: {{ via.extensao }}m</div>
           </div>
         </q-card-section>
+
       </q-card>
     </div>
     <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
@@ -37,6 +40,7 @@ import ColecaoService from "src/services/ColecaoService";
 import { Colecao } from "src/models/Colecao";
 import { Via } from "src/models/Via";
 import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
+import BotaoVoltar from "components/BotaoVoltar.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -58,11 +62,6 @@ onMounted(async () => {
 const goToViaDetalhada = (id: number) => {
   router.push(`/vias/${id}`);
 };
-
-const goBack = () => {
-  router.push("/colecoes");
-};
-
 const closeModal = () => {
   isModalOpen.value = false;
 };
@@ -72,6 +71,10 @@ const closeModal = () => {
 .header-container {
   margin-bottom: 16px;
   position: relative;
+}
+
+.opaco {
+  opacity: 0.6;
 }
 
 .header {
@@ -95,14 +98,6 @@ const closeModal = () => {
   border-radius: 8px;
 }
 
-.header-back-btn {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  color: white;
-  z-index: 1;
-}
-
 .header-filter-btn {
   position: absolute;
   top: 16px;
@@ -124,8 +119,6 @@ const closeModal = () => {
   margin: 0 auto;
   padding: 16px;
   border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .via-image {

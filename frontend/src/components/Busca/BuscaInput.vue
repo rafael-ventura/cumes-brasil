@@ -1,4 +1,3 @@
-<!-- pages/Busca.vue -->
 <template>
   <q-page class="q-pa-md">
     <div class="text-h6">Buscar Aventuras</div>

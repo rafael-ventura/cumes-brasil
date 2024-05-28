@@ -15,6 +15,7 @@ class ViaRepository {
             .leftJoinAndSelect("via.fonte", "fonte")
             .leftJoinAndSelect("via.face", "face")
             .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
             .where("via.id = :id", { id })
             .getOne();
     }
@@ -25,6 +26,7 @@ class ViaRepository {
             .leftJoinAndSelect("via.fonte", "fonte")
             .leftJoinAndSelect("via.face", "face")
             .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
             .getMany();
     }
     async create(via) {
@@ -39,7 +41,12 @@ class ViaRepository {
     async getViasByColecaoId(colecaoId) {
         return await this.repository.createQueryBuilder("via")
             .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
             .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.croquis", "croquis")
             .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
             .getMany();
     }

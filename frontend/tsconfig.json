@@ -9,14 +9,14 @@
     "src",
     "src-pwa",
     "src/**/*.ts",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "quasar.config.js"
   ],
   "exclude": [
     "./dist",
     "./.quasar",
     "./node_modules",
     "./src-capacitor",
-    "./src-cordova",
-    "./quasar.config.*.temporary.compiled*"
+    "./src-cordova"
   ]
 }

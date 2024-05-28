@@ -54,6 +54,12 @@ class ColecaoService {
       throw new Error("Erro ao buscar vias da coleção: " + error.message);
     }
   }
+
+  // TODO - Apos a implementação do backend de Filtro, tarefa do @Vitin
+  async search (query: any): Promise<Colecao[]> {
+    query.toString();
+    return [];
+  }
 }
 
 export default new ColecaoService();

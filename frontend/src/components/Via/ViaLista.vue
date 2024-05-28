@@ -17,7 +17,6 @@ const props = defineProps<{ vias: Via[] }>();
 
 const isModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
-
 const showDetails = (via: Via) => {
   selectedVia.value = via;
   isModalOpen.value = true;

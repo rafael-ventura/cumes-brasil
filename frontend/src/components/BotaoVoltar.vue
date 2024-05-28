@@ -1,11 +1,5 @@
 <template>
-  <q-btn
-    flat
-    round
-    icon="arrow_back"
-    class="back-button"
-    @click="goBack"
-  />
+  <q-btn round icon="arrow_back" color="grey-9" class="header-back-btn" @click="goBack"/>
 </template>
 
 <script setup lang="ts">
