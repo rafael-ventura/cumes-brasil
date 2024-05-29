@@ -11,5 +11,12 @@ defineOptions({
 </script>
 
 <style scoped>
-
+/* Estilo específico para melhorar a aparência em dispositivos móveis */
+.q-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 </style>

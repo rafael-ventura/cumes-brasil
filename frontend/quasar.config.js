@@ -45,7 +45,7 @@ module.exports = configure(function (/* ctx */) {
     build: {
       env: {
         API_BASE_URL: process.env.NODE_ENV === 'development'
-          ? 'http://localhost:4020/api'
+          ? 'http://192.168.1.147:4020/api'
           : 'http://192.168.1.147:4020/api'
       },
       target: {

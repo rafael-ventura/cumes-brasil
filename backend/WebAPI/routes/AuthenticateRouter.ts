@@ -11,11 +11,11 @@ const usuarioService = new UsuarioService(new UsuarioRepository());
 const usuarioController = new UsuarioController(usuarioService);
 
 // Rota de login
-AuthenticateRouter.post("/auth/login", authController.login);
-AuthenticateRouter.post("/auth/-login", authController.googleLogin);
+AuthenticateRouter.post("/login", authController.login);
+AuthenticateRouter.post("/google-login", authController.googleLogin);
 
 // Rota de registro
-AuthenticateRouter.post("/auth/register", usuarioController.registrar);
+AuthenticateRouter.post("/register", usuarioController.registrar);
 
 AuthenticateRouter.use(errorRequestMiddleware);
 

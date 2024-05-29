@@ -12,17 +12,16 @@
     <q-dialog v-model="isFilterModalOpen" persistent>
       <FiltrosAvancados @apply-filters="applyFilters"/>
     </q-dialog>
-
     <q-list bordered separator>
       <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
         <q-item-section avatar>
-          <q-avatar size="56px" color="primary" text-color="white">
+          <q-avatar square size="150px" class="custom-avatar" color="primary" text-color="white">
             <q-img :src="colecao.imagem?.url" cover/>
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-h6">{{ colecao.nome }}</q-item-label>
-          <q-item-label caption>{{ colecao.descricao }}</q-item-label>
+          <q-item-label class="text-h4">{{ colecao.nome }}</q-item-label>
+          <q-item-label caption class="text-body1">{{ colecao.descricao }}</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -35,7 +34,7 @@ import { useRouter } from "vue-router";
 import AuthenticateService from "src/services/AuthenticateService";
 import ColecaoService from "src/services/ColecaoService";
 import { Colecao } from "src/models/Colecao";
-import FiltrosAvancados from "components/Busca/FiltrosAvancados.vue";
+import FiltrosAvancados from "components/Busca/BuscaFiltros.vue";
 
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
@@ -83,3 +82,65 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
 </script>
+
+<style scoped>
+.q-page {
+  padding: 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.col-12 {
+  flex: 1 1 100%;
+}
+
+.col-md {
+  flex: 1 1 auto;
+}
+
+.q-list {
+  margin-top: 16px;
+}
+
+.q-item {
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.q-item-section:first-of-type {
+  flex: 0 0 150px;
+  max-width: 150px;
+}
+
+.q-avatar {
+  height: 150px;
+  width: 150px;
+  border-radius: 12px;
+}
+
+.q-item-section:last-of-type {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 24px;
+}
+
+.text-h4 {
+  font-size: 1.5rem;
+}
+
+.text-body1 {
+  font-size: 1.2rem;
+}
+
+.custom-avatar {
+  border-radius: 12px;
+}
+</style>

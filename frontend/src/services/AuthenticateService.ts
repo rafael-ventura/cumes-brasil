@@ -3,7 +3,9 @@ import { api } from "boot/axios";
 class AuthenticateService {
   async login (email: string, password: string) {
     try {
-      const response = await api.post("/login", {
+      console.log("o caminho do endpoint eh", api.defaults.baseURL);
+      console.log("o caminho do endpoint eh", api.name);
+      const response = await api.post("/auth/login", {
         email,
         password
       });
@@ -19,7 +21,7 @@ class AuthenticateService {
 
   async authenticateWithGoogle (googleTokenId: string) {
     try {
-      const response = await api.post("/google-login", { token: googleTokenId });
+      const response = await api.post("/auth/google-login", { token: googleTokenId });
       // Salvar token de autenticação, se houver
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
@@ -32,7 +34,9 @@ class AuthenticateService {
 
   async register (nome: string, email: string, senha: string) {
     try {
-      return await api.post("/register", {
+      console.log("o caminho do endpoint eh", api.defaults.baseURL);
+      console.log("o caminho do endpoint eh", api.name);
+      return await api.post("/auth/register", {
         nome,
         email,
         senha
@@ -44,7 +48,7 @@ class AuthenticateService {
 
   async resetPassword (email: string) {
     try {
-      return await api.post("/reset-password", { email });
+      return await api.post("/auth/reset-password", { email });
     } catch (error) {
       throw new Error("Erro ao redefinir senha: " + error);
     }

@@ -20,7 +20,7 @@
 import { onMounted, ref } from "vue";
 import ViaService from "../services/ViaService";
 import ViaLista from "components/Via/ViaLista.vue";
-import FiltrosAvancados from "components/Busca/FiltrosAvancados.vue";
+import FiltrosAvancados from "components/Busca/BuscaFiltros.vue";
 import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
 

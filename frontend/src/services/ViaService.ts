@@ -44,7 +44,7 @@ class ViaService {
     }
   }
 
-  // TODO: DESENVOLVER AMBOS ENDPOINTS ABAIXO NO BACKEND, TAREFA DO @VITOR.
+  // @TODO - Criar Endpoint para permitir Busca
   async searchVias (query: string): Promise<Via[]> {
     try {
       const response = await api.get("/vias/search", { params: { query } });
@@ -54,18 +54,19 @@ class ViaService {
     }
   }
 
-  async searchViasWithFilters (filters: any): Promise<Via[]> {
+  // @TODO - Criar Endpoint para permitir filtragem
+  async searchViasWithFilters ({ key, order }: any): Promise<Via[]> {
     try {
-      const response = await api.get("/vias/search", { params: filters });
+      const response = await api.get("/vias/search", { params: { key, order } });
       return response.data;
     } catch (error: any) {
       throw new Error("Erro desconhecido ao buscar vias com filtros");
     }
   }
 
-  async getViasInColecao (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
+  async getViasInColecao (colecaoId: string | RouteParamValue[], filters?: any): Promise<Via[]> {
     try {
-      const response = await api.get(`/vias/colecao/${colecaoId}`);
+      const response = await api.get(`/vias/colecao/${colecaoId}`, { params: filters });
       const vias = response.data as Via[];
 
       for (const via of vias) {

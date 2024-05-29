@@ -18,7 +18,7 @@ import ImagemRouter from "./ImagemRouter";
 const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
 routes.get("/conexao", conexaoController.checkDatabaseHealth);
-routes.use("", AuthenticateRouter);
+routes.use("auth", AuthenticateRouter);
 routes.use("/vias", ViaRouter);
 routes.use("/fontes", FonteRouter);
 routes.use("/montanhas", MontanhaRouter);
