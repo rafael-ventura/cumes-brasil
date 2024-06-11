@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Via } from "./Via";
 import { Usuario } from "./Usuario";
+import { Participante } from "./Participante";
 
 @Entity()
 export class Escalada extends BaseEntity {
@@ -12,6 +13,9 @@ export class Escalada extends BaseEntity {
 
   @Column({ nullable: true })
   observacao: string;
+
+  @OneToMany(() => Participante, participante => participante.escalada, { cascade: true })
+  participantes: Participante[];
 
   @ManyToOne(() => Usuario, usuario => usuario.escaladas)
   usuario: number;

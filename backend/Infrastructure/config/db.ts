@@ -10,6 +10,7 @@ import { Colecao } from "../../Domain/entities/Colecao";
 import { Escalada } from "../../Domain/entities/Escalada";
 import { Imagem } from "../../Domain/entities/Imagem";
 import { ColecaoVia } from "../../Domain/entities/ColecaoVia";
+import { Participante } from "../../Domain/entities/Participante";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -26,6 +27,7 @@ export const AppDataSource = new DataSource({
         Imagem,
         Montanha,
         Usuario,
-        Via
+        Via,
+        Participante
     ]
 });
