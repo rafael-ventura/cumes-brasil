@@ -1,6 +1,6 @@
 import { EscaladaService } from "../../Application/services/EscaladaService";
 import { Request, Response } from "express";
-import { Escalada } from "../../Domain/entities/Escalada";
+import EscaladaValidation from "../../Domain/interfaces/validations/EscaladaValidation";
 
 export class EscaladaController {
 	private service: EscaladaService;
@@ -67,6 +67,7 @@ export class EscaladaController {
 	createEscalada = async (req: Request, res: Response) => {
 		try {
 			const escalada = req.body;
+			EscaladaValidation.valida(escalada);
 			await this.service.create(escalada);
 			res.status(201).json({ message: "Escalada criada com sucesso" });
 		} catch (error) {
@@ -93,6 +94,7 @@ export class EscaladaController {
 	updateEscalada = async (req: Request, res: Response) => {
 		try {
 			const escalada = req.body;
+			EscaladaValidation.valida(escalada);
 			await this.service.update(escalada);
 			res.status(200).json({ message: "Escalada atualizada com sucesso" });
 		} catch (error) {
@@ -151,7 +153,7 @@ export class EscaladaController {
 				if (error.message === "Nenhuma escalada encontrada para este usuário") {
 					res.status(404).json({ error: error.message });
 				} else {
-				res.status(500).json({ error: error.message });
+					res.status(500).json({ error: error.message });
 				}
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
@@ -169,7 +171,7 @@ export class EscaladaController {
 				if (error.message === "Nenhuma escalada encontrada para esta via") {
 					res.status(404).json({ error: error.message });
 				} else {
-				res.status(500).json({ error: error.message });
+					res.status(500).json({ error: error.message });
 				}
 			} else {
 				res.status(500).json({ error: "Ocorreu um erro desconhecido" });
