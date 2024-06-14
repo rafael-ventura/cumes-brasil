@@ -20,21 +20,16 @@ export class ViaController {
 		try {
 			const id = parseInt(req.params.id);
 			const via = await this.service.getViaById(id);
-			if (!via) {
-				return res.status(404).json({ message: "Via não encontrada" });
-			}
+			console.log("Endpoint GET /vias/:id foi chamado");
 			res.status(200).json(via);
 		} catch (error) {
 			if (error instanceof Error) {
-				if (error.message === "Via não encontrada") {
-					return res.status(400).json({ message: error.message });
-				} else {
-					return res.status(500).json({ error: error.message });
-				}
+				return res.status(500).json({ error: error.message });
+			} else {
+				return res.status(500).json({ error: "An unknown error occurred" });
 			}
 		}
 	};
-
 	/**
 	 * @route GET /vias
 	 * @group Vias - Operações relacionadas a vias
@@ -46,6 +41,7 @@ export class ViaController {
 	getAllVia = async (_: Request, resposta: Response) => {
 		try {
 			const vias: Via[] | null = await this.service.getVias();
+			console.log("Endpoint GET /vias foi chamado");
 			resposta.json(vias);
 		} catch (error) {
 			if (error instanceof Error) {

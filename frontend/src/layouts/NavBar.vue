@@ -32,4 +32,10 @@ const toggleDarkMode = () => {
 .q-toolbar {
   justify-content: space-around;
 }
+
+.q-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 </style>

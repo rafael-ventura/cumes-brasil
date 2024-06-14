@@ -1,32 +1,19 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="text-h6">Buscar Aventuras</div>
-    <SearchInput label="Buscar vias de escalada"
-                 @update:query="onQueryUpdate"/>
-    <ViaList :vias="vias"/>
-  </q-page>
+  <q-input v-model="query" :label="props.label" @input="updateQuery" debounce="300" />
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import ViaService from "src/services/ViaService";
-import SearchInput from "components/SearchInput.vue";
-import ViaList from "components/ViaList.vue";
-import { Via } from "src/models/Via";
+import { defineProps, defineEmits, ref } from "vue";
 
-const searchQuery = ref("");
-const vias = ref<Via[]>([]);
+const props = defineProps({
+  label: String
+});
 
-const onQueryUpdate = async (query: string) => {
-  searchQuery.value = query;
-  if (searchQuery.value.trim() === "") {
-    vias.value = [];
-    return;
-  }
-  try {
-    vias.value = await ViaService.searchVias(searchQuery.value);
-  } catch (error) {
-    console.error("Erro ao buscar vias:", error);
-  }
+const emits = defineEmits(["update:query"]);
+
+const query = ref("");
+
+const updateQuery = () => {
+  emits("update:query", query.value);
 };
 </script>

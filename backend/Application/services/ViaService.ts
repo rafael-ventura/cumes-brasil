@@ -8,8 +8,12 @@ export class ViaService {
     this.viaRepo = viaRepo;
   }
 
-  async getViaById (id: number): Promise<Via | null> {
-    return this.viaRepo.getById(id);
+  async getViaById (id: number): Promise<Via> {
+    const via = await this.viaRepo.getById(id);
+    if (!via) {
+     throw new Error("Via não encontrada");
+    }
+    return via;
   }
 
   async getVias (): Promise<Via[]> {
