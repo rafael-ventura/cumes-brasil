@@ -1,7 +1,7 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
-/// @ts-ignore
-const api = axios.create({ baseURL: process.env.API_BASE_URL });
+
+const api = axios.create({ baseURL: "http://localhost:4020/api" });
 
 api.interceptors.response.use(
   response => response,
