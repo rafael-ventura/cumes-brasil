@@ -120,7 +120,7 @@ class ColecaoService {
         return order === "asc" ? aDur - bDur : bDur - aDur;
       });
     } else if (key === "extensao" && order !== null) {
-      sortedVias.sort((a, b) => order === "asc" ? a.extensao - b.extensao : b.extensao - a.extensao);
+      sortedVias.sort((a, b) => order === "asc" ? a.extensao! - b.extensao! : b.extensao! - a.extensao!);
     } else if (key === "data" && order !== null) {
       sortedVias.sort((a, b) => order === "asc" ? a.id - b.id : b.id - a.id);
     }
