@@ -8,9 +8,12 @@
                  class="profile-picture"/>
           </div>
           <div class="col-6 col-md-6">
-            <div class="text-h6">{{ user?.nome }}</div>
-            <div class="text-h6">{{ user?.email }}</div>
+            <div class="text-h5">{{ user?.nome }}</div>
+            <div class="text-h5">{{ user?.email }}</div>
           </div>
+        </div>
+        <div class="q-pa-md q-mb-md">
+          <span class="text-h6"><span> {{10}}</span> Número de escaladas</span>
         </div>
       </div>
     </div>
