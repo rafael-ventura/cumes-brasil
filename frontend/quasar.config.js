@@ -44,7 +44,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       env: {
-        API_BASE_URL: 'http://localhost:8000/api'
+        API_BASE_URL: '"http://localhost:4020"'
       },
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
