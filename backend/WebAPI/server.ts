@@ -15,7 +15,10 @@ const app = express();
 const PORT = process.env.PORT || 4020;
 
 const allowedOrigins = [
-    "http://localhost:4020"
+    "http://localhost:4020",
+    "http://localhost:9000",
+    "http://192.168.1.147:4020",
+    "http://192.168.1.147:9000"
 ];
 
 const corsOptions = {
