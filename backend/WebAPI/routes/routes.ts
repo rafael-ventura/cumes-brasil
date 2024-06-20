@@ -28,7 +28,7 @@ routes.use("/usuarios", UsuarioRouter);
 routes.use("/imagens", ImagemRouter);
 routes.use("/colecoes", ColecaoRouter);
 routes.use("/escaladas", EscaladaRouter);
-routes.use("/perfil", PerfilRouter);
+routes.use("/perfil", authenticateToken, PerfilRouter);
 routes.use(authenticateToken);
 
 export default routes;

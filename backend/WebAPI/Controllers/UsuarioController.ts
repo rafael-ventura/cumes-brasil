@@ -129,7 +129,8 @@ export class UsuarioController {
     //get perfil
     getPerfil = async (requisicao: Request, resposta: Response) => {
     try {
-        const userId = parseInt(requisicao.params.id);
+        console.log('console.log headers: ', requisicao.user);
+        const userId = parseInt(requisicao.user.userId);
         const resultado = await this.service.getPerfil(userId);
         if (!resultado) {
             return resposta.status(404).json({message: "Perfil não encontrado."});

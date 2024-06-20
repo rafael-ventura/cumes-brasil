@@ -45,7 +45,7 @@ export class UsuarioService {
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {
-        return this.usuarioRepo.getPerfil(id);
+        return this.usuarioRepo.getPerfilSemHash(id);
     }
 }
 
