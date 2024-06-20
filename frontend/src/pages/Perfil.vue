@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="q-pa-md q-mb-md">
-          <span class="text-h6"><span> {{10}}</span> Número de escaladas</span>
+          <span class="text-h6"><span> {{12}}</span> Número de escaladas</span>
         </div>
       </div>
     </div>
