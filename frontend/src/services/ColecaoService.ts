@@ -37,9 +37,10 @@ class ColecaoService {
     }
   }
 
-  async getAll (): Promise<Colecao[]> {
+  async getColecaoByUsuarioId (): Promise<Colecao[]> {
+    const userId = localStorage.getItem("userId");
     try {
-      const response = await api.get("/colecoes");
+      const response = await api.get(`/colecoes/usuario/${userId}`);
       const colecoes = response.data;
 
       for (const colecao of colecoes) {

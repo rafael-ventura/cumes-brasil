@@ -39,11 +39,19 @@ export class UsuarioRepository {
         return user ?? null;
     }
 
-    async getPerfil (id: number): Promise<Usuario | null> {
+    async getPerfilComHash (id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
           .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
           .where("usuario.id = :id", { id })
           .getOne();
+    }
+
+    async getPerfilSemHash (id: number): Promise<Usuario | null> {
+        return this.repository.createQueryBuilder("usuario")
+            .select(["usuario.nome", "usuario.email", "usuario.foto_perfil"])
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
 }
 

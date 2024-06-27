@@ -1,23 +1,33 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row justify-center">
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="profile-header q-pa-md q-mb-md">
-          <img :src="user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
-               class="profile-picture"/>
-          <div class="profile-info q-pa-md q-mt-md">
-            <div class="text-h6">{{ user?.nome }}</div>
-            <div class="text-h6">{{ user?.nome }}</div>
+      <div class="col-10">
+        <div class="profile-header q-pa-md q-mb-md row justify-between">
+          <div class="col">
+            <img :src="user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
+                 class="profile-picture"/>
+          </div>
+          <div class="col">
+            <div class="text-h5">{{ user?.nome }}</div>
+            <div class="text-h5">{{ user?.email }}</div>
           </div>
         </div>
-        <q-card-actions align="right" class="actions">
-          <q-btn flat label="Editar Dados" @click="openEditDialog"/>
-          <q-btn flat label="Logout" color="negative" @click="logout"/>
-        </q-card-actions>
+        <div class="q-pa-md q-mb-md">
+          <q-btn class="text-h6" label="12 Escaladas" to="/escaladas" />
+          <q-btn class="text-h6" :label="`${numColecoes} Coleções`" to="/colecoes" />
+        </div>
       </div>
     </div>
-
-    <q-dialog v-model="isEditDialogOpen" persistent>
+    <q-btn icon="settings" @click="isConfigDialogOpen = true" class="fixed-top-right"/>
+    <q-dialog v-model="isConfigDialogOpen">
+      <q-card>
+        <q-card-section>
+          <q-btn flat label="Editar Dados" @click="openEditDialog"/>
+          <q-btn flat label="Logout" color="negative" @click="logout"/>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="isEditDialogOpen">
       <PerfilEditarForm :user="<Usuario>user" title="Editar Perfil" submitLabel="Salvar" @submit="updateUser"/>
     </q-dialog>
   </q-page>
@@ -27,13 +37,16 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import UserService from "src/services/UserService";
+import ColecaoService from "src/services/ColecaoService";
 import AuthenticateService from "src/services/AuthenticateService";
 import PerfilEditarForm from "components/Perfil/PerfilEditaForm.vue";
 import { Usuario } from "src/models/Usuario";
 
 const router = useRouter();
 const user = ref<Usuario | null>(null);
+const numColecoes = ref(0);
 const isEditDialogOpen = ref(false);
+const isConfigDialogOpen = ref(false);
 
 defineOptions({
   name: "PerfilPage"
@@ -45,6 +58,8 @@ onMounted(async () => {
       await router.push("/auth/login");
     } else {
       user.value = await UserService.getPerfil();
+      const colecoes = await ColecaoService.getColecaoByUsuarioId();
+      numColecoes.value = colecoes.length;
     }
   } catch (error) {
     console.error(error);
@@ -75,17 +90,29 @@ const updateUser = async (updatedUser: Usuario) => {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  margin-bottom: 16px;
 }
 
-.profile-info {
-  background-color: rgba(255, 255, 255, 0.1); /* Ajuste conforme necessário para modo escuro/claro */
+.profile-header {
   padding: 16px;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  background-color: #b7d5dc;
+  border-radius: 40px;
 }
 
 .actions {
-  margin-top: 16px;
+  display: flex;
   justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.fixed-top-right {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+}
+
+.rigthText{
+  margin-left: 50%;
 }
 </style>

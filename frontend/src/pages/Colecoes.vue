@@ -52,7 +52,7 @@ onMounted(async () => {
   }
 
   try {
-    colecoes.value = await ColecaoService.getAll();
+    colecoes.value = await ColecaoService.getColecaoByUsuarioId();
   } catch (error) {
     console.error("Erro ao buscar coleções:", error);
   }
@@ -63,7 +63,7 @@ const searchColecoes = async () => {
     if (searchQuery.value.trim()) {
       colecoes.value = await ColecaoService.searchByName(searchQuery.value.trim());
     } else {
-      colecoes.value = await ColecaoService.getAll();
+      colecoes.value = await ColecaoService.getColecaoByUsuarioId();
     }
   } catch (error) {
     console.error("Erro ao buscar coleções:", error);
