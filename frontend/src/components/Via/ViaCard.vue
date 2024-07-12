@@ -24,6 +24,7 @@ const props = defineProps<{ via: Via }>();
 const emits = defineEmits(["click"]);
 
 const emitClick = () => {
+  props.via.nome &&
   emits("click");
 };
 </script>
