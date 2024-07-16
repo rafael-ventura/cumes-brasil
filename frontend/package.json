@@ -1,14 +1,15 @@
 {
-  "name": "quasar-project",
+  "name": "frontend",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "Escaladas",
   "productName": "Cumes Brasil",
-  "author": "Rafael Ventura <raf4ael@gmail.com>",
+  "author": "cumesbrasil@gmail.com",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./ --fix",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build",
+    "dev": "quasar dev",
     "front-dev": "cross-env NODE_ENV=development eslint --ext .js,.ts,.vue ./ --fix && quasar dev ",
     "front-homol": "cross-env NODE_ENV=homol eslint --ext .js,.ts,.vue ./ --fix && quasar dev"
   },

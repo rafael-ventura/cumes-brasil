@@ -5,14 +5,14 @@
         <q-input v-model="searchQuery" label="Buscar vias de escalada" @input="searchVias" debounce="300"/>
       </div>
       <div class="col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal" />
+        <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal"/>
       </div>
     </div>
-    <ViaLista :vias="vias" @show-details="showViaDetails" />
+    <ViaLista :vias="vias" @show-details="showViaDetails"/>
     <q-dialog v-model="isFilterModalOpen" persistent>
-      <FiltrosAvancados @apply-filters="applyFilters" />
+      <BuscaAvancada @apply-filters="applyFilters"/>
     </q-dialog>
-    <ModalViaDetalhada :isOpen="isViaModalOpen" :via="<Via>selectedVia" @update:isOpen="isViaModalOpen = $event" />
+    <ModalViaDetalhada :isOpen="isViaModalOpen" :via="<Via>selectedVia" @update:isOpen="isViaModalOpen = $event"/>
   </q-page>
 </template>
 
@@ -20,7 +20,7 @@
 import { onMounted, ref } from "vue";
 import ViaService from "../services/ViaService";
 import ViaLista from "components/Via/ViaLista.vue";
-import FiltrosAvancados from "components/Busca/FiltrosAvancados.vue";
+import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
 import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
 
@@ -29,6 +29,7 @@ const vias = ref<Via[]>([]);
 const isFilterModalOpen = ref(false);
 const isViaModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
+const appliedFilters = ref({});
 
 defineOptions({
   name: "BuscaPage"
@@ -39,12 +40,11 @@ onMounted(async () => {
 });
 
 const searchVias = async () => {
-  vias.value = await ViaService.getAllVias();
   try {
-    if (searchQuery.value.trim() === "") {
+    if (searchQuery.value.trim() === "" && Object.keys(appliedFilters.value).length === 0) {
       vias.value = await ViaService.getAllVias();
     } else {
-      vias.value = await ViaService.searchVias(searchQuery.value);
+      vias.value = await ViaService.searchVias(searchQuery.value, appliedFilters.value);
     }
   } catch (error) {
     console.error("Erro ao buscar vias:", error);
@@ -56,11 +56,8 @@ const openFilterModal = () => {
 };
 
 const applyFilters = async (filters: any) => {
-  try {
-    vias.value = await ViaService.searchViasWithFilters(filters);
-  } catch (error) {
-    console.error("Erro ao aplicar filtros:", error);
-  }
+  appliedFilters.value = filters;
+  await searchVias();
   isFilterModalOpen.value = false;
 };
 

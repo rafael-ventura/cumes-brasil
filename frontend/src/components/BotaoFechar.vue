@@ -3,7 +3,7 @@
     flat
     round
     icon="close"
-    class="close-button"
+    class="btn-close"
     @click="emitClose"
   />
 </template>
@@ -17,9 +17,3 @@ const emitClose = () => {
   emits("close");
 };
 </script>
-
-<style scoped>
-.close-button:hover {
-  background-color: darkred;
-}
-</style>

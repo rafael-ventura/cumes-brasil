@@ -2,6 +2,7 @@ import { Montanha } from "src/models/Montanha";
 import { Imagem } from "src/models/Imagem";
 import { Face } from "src/models/Face";
 import { Fonte } from "src/models/Fonte";
+import { Croqui } from "src/models/Croqui";
 
 export interface Via {
   id: number;
@@ -20,4 +21,5 @@ export interface Via {
   fonte: Fonte;
   face: Face;
   imagem: Imagem;
+  croquis: Croqui[];
 }

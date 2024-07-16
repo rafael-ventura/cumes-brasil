@@ -42,17 +42,8 @@ Cumes Brasil é construído com as seguintes tecnologias:
 
 ## 📚 Créditos
 
-Os dados do Cumes Brasil são uma compilação de várias fontes, com créditos especiais para **André Ilha** pelas vias da Zona Sul e para a **Companhia da Escalada** e **Daflon** por outras contribuições valiosas.
+Os dados do Cumes Brasil são uma compilação de várias fontes, com créditos especiais para **André Ilha** pelas vias da Zona Sul, Pedro Bugim por seu blog querido e para a **Companhia da Escalada** e **Daflon** por diversas contribuições valiosas.
 
-## Links do Figma
-
-Confira os designs do nosso PWA no Figma:
-
-1. [Tela Inicial](https://www.figma.com/file/n0Javq8YYiVvEXQag6dY2p?type=design)
-2. [Tela com Vias](https://www.figma.com/file/i0EYmZ8wS5ahZQiBiP9NPf?type=design)
-3. [Tela com Via Detalhada](https://www.figma.com/file/UU7Q0EVArgkfKyPfvoDc59?type=design)
-4. [Tela Minha Conta](https://www.figma.com/file/pzWoxyFinXWf2893IvMSkr?type=design)
-5. [Tela Busca (com filtros)](https://www.figma.com/file/eaKhdZWdGH2Vsx242ms9lm?type=design)
 
 ## 🤝 Contribua
 

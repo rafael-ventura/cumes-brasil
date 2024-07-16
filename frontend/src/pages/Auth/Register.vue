@@ -21,8 +21,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import AuthenticateService from "../../services/AuthenticateService";
-import RegisterForm from "components/Auth/RegisterForm.vue";
-import AuthError from "components/Auth/AuthError.vue";
+import RegisterForm from "components/Auth/RegistroForm.vue";
+import AuthError from "components/Auth/AutenticacaoErro.vue";
 
 defineOptions({
   name: "RegisterPage"
