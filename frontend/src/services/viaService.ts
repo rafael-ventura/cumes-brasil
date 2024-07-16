@@ -1,46 +1,81 @@
 // services/ViaService.ts
 
-import apiClient from "./apiService";
-import { ViaModel } from "@/models/viaModel";
+import { api } from "boot/axios";
+import { Via } from "src/models/Via";
+import { RouteParamValue } from "vue-router";
+import { adjustImageUrl } from "src/services/ImageService";
 
-export class ViaService implements ISearchService<ViaModel>{
-  // Chamadas da API de vias
-  async getViaById (id: number | string) {
+class ViaService {
+  async getViaById (id: number | string): Promise<Via> {
     try {
-      const response = await apiClient.get(`/vias/${id}`);
-      return response.data;
-    } catch (error: any) { // Definindo o tipo como 'any'
+      const response = await api.get(`/vias/${id}`);
+      const via = response.data as Via;
+
+      if (via.imagem?.url) {
+        via.imagem.url = adjustImageUrl(via.imagem.url);
+      }
+      return via;
+    } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar via");
     }
   }
 
-  async getAllVias (): Promise<ViaModel[]> {
+  async getAllVias (): Promise<Via[]> {
     try {
-      console.log("Buscando vias");
-      const response = await apiClient.get("/vias");
-      console.log("Response:", response.data); // Adicione esta linha
-      return response.data;
-    } catch (error: any) { // Definindo o tipo como 'any'
+      const response = await api.get("/vias/");
+      const vias = response.data as Via[];
+
+      for (const via of vias) {
+        if (via.imagem?.url) {
+          via.imagem.url = adjustImageUrl(via.imagem.url);
+        }
+      }
+      return vias;
+    } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
     }
   }
 
-  async createVia (via: any) {
+  async createVia (via: Via) {
     try {
-      await apiClient.post("/vias", via);
-    } catch (error: any) { // Definindo o tipo como 'any'
+      await api.post("/vias", via);
+    } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao criar via");
     }
   }
 
-  async search (query: any): Promise<ViaModel[]> {
-    console.log("Query:", query);
+  // TODO: DESENVOLVER AMBOS ENDPOINTS ABAIXO NO BACKEND, TAREFA DO @VITOR.
+  async searchVias (query: string): Promise<Via[]> {
     try {
-      const response = await apiClient.get("/vias/search", { params: query });
-      console.log("Response:", response);
+      const response = await api.get("/vias/search", { params: { query } });
       return response.data;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
+      throw new Error("Erro desconhecido ao buscar vias");
+    }
+  }
+
+  async searchViasWithFilters (filters: any): Promise<Via[]> {
+    try {
+      const response = await api.get("/vias/search", { params: filters });
+      return response.data;
+    } catch (error: any) {
+      throw new Error("Erro desconhecido ao buscar vias com filtros");
+    }
+  }
+
+  async getViasInColecao (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
+    try {
+      const response = await api.get(`/vias/colecao/${colecaoId}`);
+      const vias = response.data as Via[];
+
+      for (const via of vias) {
+        if (via.imagem?.url) {
+          via.imagem.url = adjustImageUrl(via.imagem.url);
+        }
+      }
+      return vias;
+    } catch (error: any) {
+      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias da coleção");
     }
   }
 }
