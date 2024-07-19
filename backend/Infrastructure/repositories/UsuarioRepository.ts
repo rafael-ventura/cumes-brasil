@@ -1,6 +1,7 @@
 import { Usuario } from "../../Domain/entities/Usuario";
 import { AppDataSource } from "../config/db";
-import { ObjectLiteral } from "typeorm";
+import {ObjectLiteral, Repository} from "typeorm";
+import {Service} from "typedi";
 
 export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
@@ -18,8 +19,8 @@ export class UsuarioRepository {
           .getMany();
     }
 
-    async create (nome: string, email: string, senhaHash: string): Promise<void> {
-        await this.repository.insert({
+    async create (nome: string, email: string, senhaHash: string): Promise<Usuario> {
+        return await this.repository.save({
             nome: nome,
             email: email,
             password_hash: senhaHash
