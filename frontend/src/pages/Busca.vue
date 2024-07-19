@@ -21,11 +21,13 @@ import ViaService from "../services/ViaService";
 import ViaLista from "components/Via/ViaLista.vue";
 import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
 import { Via } from "src/models/Via";
+import {useRouter} from "vue-router";
 
 const searchQuery = ref("");
 const vias = ref<Via[]>([]);
 const isFilterModalOpen = ref(false);
 const appliedFilters = ref({});
+const router = useRouter();
 
 defineOptions({
   name: "BuscaPage"
