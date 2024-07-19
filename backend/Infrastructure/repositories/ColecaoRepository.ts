@@ -1,9 +1,11 @@
-import {AppDataSource} from "../config/db";
-import {Colecao} from "../../Domain/entities/Colecao";
-import {ColecaoVia} from "../../Domain/entities/ColecaoVia";
-import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
-import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
+import { AppDataSource } from "../config/db";
+import { Colecao } from "../../Domain/entities/Colecao";
+import { ColecaoVia } from "../../Domain/entities/ColecaoVia";
+import { Service } from "typedi";
+import { ISearchRepository } from "../../Domain/interfaces/repositories/ISearchRepository";
+import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
 
+@Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
     private repository = AppDataSource.getRepository(Colecao);
     private colecaoViaRepository = AppDataSource.getRepository(ColecaoVia);
