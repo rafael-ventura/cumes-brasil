@@ -11,20 +11,28 @@
       swipeable
       control-color="amber"
       padding
-      height="300px"
+      height="350px"
       class="bg-grey-9 shadow-2 rounded-borders"
     >
-      <!-- Podemos chamar uma propaganda aqui. Um ads -->
-      <q-carousel-slide :name="0" img-src="https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png" />
+      <q-carousel-slide
+        :name="-1"
+        img-src="https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png"
+        @click="openDialog('https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png')"
+      />
       <q-carousel-slide
         v-for="(croqui, index) in croquis"
         :key="index"
         :name="index"
         :img-src="croqui.imagem.url"
+        @click="openDialog(croqui.imagem.url)"
       />
     </q-carousel>
+    <q-dialog v-model="dialog">
+      <img :src="selectedImage" contain style="min-width: 40vh" zoom />
+    </q-dialog>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref } from "vue";
 import { Croqui } from "src/models/Croqui";
@@ -32,5 +40,12 @@ import { Croqui } from "src/models/Croqui";
 const props = defineProps({
   croquis: Array as () => Croqui[]
 });
-const slide = ref(0);
+const slide = ref(-1);
+const dialog = ref(false);
+const selectedImage = ref("");
+
+function openDialog (imageUrl: string) {
+  selectedImage.value = imageUrl;
+  dialog.value = true;
+}
 </script>
