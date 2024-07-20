@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { Via } from "src/models/Via";
 import ViaCard from "components/Via/ViaCard.vue";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{ vias: Via[] }>();
 const router = useRouter();

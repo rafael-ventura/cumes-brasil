@@ -22,7 +22,7 @@ import ViaLista from "components/Via/ViaLista.vue";
 import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
 import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 
 const searchQuery = ref("");
 const vias = ref<Via[]>([]);
