@@ -12,5 +12,5 @@ MontanhaRouter.get("/:id", montanhaController.getMontanhaById);
 MontanhaRouter.get("/", montanhaController.getAllMontanha);
 MontanhaRouter.post("/", montanhaController.createMontanha);
 MontanhaRouter.put("/:id", montanhaController.updateMontanha);
-MontanhaRouter.delete("/:id", montanhaController.deleteMontanha);
+MontanhaRouter.delete('/:id');
 exports.default = MontanhaRouter;

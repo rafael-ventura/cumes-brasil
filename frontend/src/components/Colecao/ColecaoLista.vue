@@ -38,7 +38,7 @@ onMounted(async () => {
   try {
     const colecaoId = route.params.id;
     colecao.value = await ColecaoService.getById(colecaoId);
-    vias.value = await ColecaoService.getViasInColecao(colecaoId);
+    vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {
     console.error(error);
   }

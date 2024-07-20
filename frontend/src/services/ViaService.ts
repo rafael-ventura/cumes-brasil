@@ -1,7 +1,7 @@
 import { api } from "boot/axios";
 import { Via } from "src/models/Via";
 import { RouteParamValue } from "vue-router";
-import { adjustImageUrl } from "src/services/ImageService";
+import { adjustImageUrl } from "src/services/ImagemService";
 
 class ViaService {
   async getViaById (id: number | string): Promise<Via> {
@@ -66,6 +66,36 @@ class ViaService {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
     }
   }
+
+  romanToInt = (roman: string): number => {
+    const romanMap: { [key: string]: number } = {
+      I: 1,
+      IV: 4,
+      V: 5,
+      IX: 9,
+      X: 10,
+      XL: 40,
+      L: 50,
+      XC: 90,
+      C: 100,
+      CD: 400,
+      D: 500,
+      CM: 900,
+      M: 1000
+    };
+    let num = 0;
+    let i = 0;
+    while (i < roman.length) {
+      if (i + 1 < roman.length && romanMap[roman.substring(i, i + 2)]) {
+        num += romanMap[roman.substring(i, i + 2)];
+        i += 2;
+      } else {
+        num += romanMap[roman.charAt(i)];
+        i++;
+      }
+    }
+    return num;
+  };
 }
 
 export default new ViaService();

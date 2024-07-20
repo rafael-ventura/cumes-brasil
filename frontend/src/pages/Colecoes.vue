@@ -25,6 +25,31 @@
         </q-item-section>
       </q-item>
     </q-list>
+
+    <!-- Botão de adicionar coleção -->
+    <q-btn
+      fab
+      icon="add"
+      color="blue"
+      class="fixed-bottom-right"
+      @click="openAddColecaoModal"
+    />
+
+    <q-dialog v-model="isAddColecaoModalOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Adicionar Coleção</div>
+        </q-card-section>
+        <q-card-section>
+          <q-input v-model="novaColecao.nome" label="Nome da Coleção" />
+          <q-input v-model="novaColecao.descricao" label="Descrição da Coleção" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Adicionar" color="primary" @click="addColecao" />
+          <q-btn flat label="Cancelar" @click="isAddColecaoModalOpen = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -40,6 +65,8 @@ const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
 const searchQuery = ref("");
 const isFilterModalOpen = ref(false);
+const isAddColecaoModalOpen = ref(false);
+const novaColecao = ref({ nome: "", descricao: "" });
 
 defineOptions({
   name: "ColecoesPage"
@@ -52,7 +79,7 @@ onMounted(async () => {
   }
 
   try {
-    colecoes.value = await ColecaoService.getColecaoByUsuarioId();
+    colecoes.value = await ColecaoService.getByUsuarioId();
   } catch (error) {
     console.error("Erro ao buscar coleções:", error);
   }
@@ -63,7 +90,7 @@ const searchColecoes = async () => {
     if (searchQuery.value.trim()) {
       colecoes.value = await ColecaoService.searchByName(searchQuery.value.trim());
     } else {
-      colecoes.value = await ColecaoService.getColecaoByUsuarioId();
+      colecoes.value = await ColecaoService.getByUsuarioId();
     }
   } catch (error) {
     console.error("Erro ao buscar coleções:", error);
@@ -85,6 +112,21 @@ const applyFilters = async (filters: any) => {
 const goToColecaoDetalhada = (colecao: Colecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
+
+const openAddColecaoModal = () => {
+  isAddColecaoModalOpen.value = true;
+};
+
+const addColecao = async () => {
+  try {
+    await ColecaoService.create(novaColecao.value);
+    colecoes.value = await ColecaoService.getByUsuarioId();
+    isAddColecaoModalOpen.value = false;
+    novaColecao.value = { nome: "", descricao: "" };
+  } catch (error) {
+    console.error("Erro ao adicionar coleção:", error);
+  }
+};
 </script>
 
 <style scoped>
@@ -103,5 +145,12 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
   object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+.fixed-bottom-right {
+  position: fixed;
+  bottom: 120px; /* Ajuste a posição para ficar acima da navbar */
+  right: 16px;
+  z-index: 2; /* Garante que o botão esteja acima do conteúdo */
 }
 </style>

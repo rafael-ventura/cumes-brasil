@@ -8,9 +8,12 @@
         <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal"/>
       </div>
     </div>
-    <ViaLista :vias="vias" />
+    <ViaLista :vias="vias" @show-details="showViaDetails"/>
     <q-dialog v-model="isFilterModalOpen" persistent>
       <BuscaAvancada @apply-filters="applyFilters"/>
+    </q-dialog>
+    <q-dialog v-model="isViaModalOpen" persistent>
+      <ModalViaDetalhada :via="<Via>selectedVia" is-open/>
     </q-dialog>
   </q-page>
 </template>
@@ -22,7 +25,6 @@ import ViaLista from "components/Via/ViaLista.vue";
 import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
 import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
-import {useRouter} from "vue-router";
 
 const searchQuery = ref("");
 const vias = ref<Via[]>([]);
@@ -30,7 +32,6 @@ const isFilterModalOpen = ref(false);
 const isViaModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
 const appliedFilters = ref({});
-const router = useRouter();
 
 defineOptions({
   name: "BuscaPage"

@@ -31,6 +31,7 @@ const toggleDarkMode = () => {
 <style scoped>
 .q-toolbar {
   justify-content: space-around;
+  z-index: 1; /* Garante que a navbar esteja sempre acima do conteúdo */
 }
 
 .q-footer {

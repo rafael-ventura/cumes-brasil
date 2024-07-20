@@ -1,10 +1,10 @@
-// src/services/UserService.ts
+// src/services/UsuarioService.ts
 
 import { api } from "boot/axios";
 import { Usuario } from "src/models/Usuario";
-import { adjustImageUrl } from "src/services/ImageService";
+import { adjustImageUrl } from "src/services/ImagemService";
 
-class UserService {
+class UsuarioService {
   async getById (id: number) {
     try {
       const response = await api.get(`/usuarios/${id}`);
@@ -71,4 +71,4 @@ class UserService {
   }
 }
 
-export default new UserService();
+export default new UsuarioService();

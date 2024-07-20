@@ -157,7 +157,7 @@ export class ViaController {
 
 				}
 			} else {
-				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasInColecao" });
+				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasIn" });
 			}
 		}
 	}

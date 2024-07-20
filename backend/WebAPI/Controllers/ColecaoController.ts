@@ -122,7 +122,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateColecao"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller update"});
             }
         }
     }
@@ -146,7 +146,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteColecao"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller delete"});
             }
         }
     }

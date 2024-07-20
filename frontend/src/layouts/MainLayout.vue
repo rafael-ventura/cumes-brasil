@@ -1,9 +1,9 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-page-container class="no-padding">
-      <router-view/>
+    <q-page-container class="page-container">
+      <router-view />
     </q-page-container>
-    <NavBar/>
+    <NavBar />
   </q-layout>
 </template>
 
@@ -12,16 +12,9 @@ import NavBar from "layouts/NavBar.vue";
 </script>
 
 <style scoped>
-/* Ajuste global para melhorar a aparência em dispositivos móveis */
-.q-page-container {
-  padding-top: 56px; /* Espaço para a navbar */
-}
-
-.q-layout__footer {
-  height: 56px; /* Ajuste de altura para a footer */
-}
-
-.q-layout--view {
-  min-height: 100vh; /* Certifique-se de que o layout ocupa toda a altura da tela */
+.page-container {
+  padding-bottom: 56px; /* Espaço para a navbar */
+  min-height: calc(100vh - 56px); /* Certifique-se de que o container ocupa toda a altura da tela menos a altura da navbar */
+  overflow: auto; /* Permite rolagem dentro do container */
 }
 </style>

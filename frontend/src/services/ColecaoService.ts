@@ -2,24 +2,9 @@ import { api } from "boot/axios";
 import { Colecao } from "src/models/Colecao";
 import { Via } from "src/models/Via";
 import { RouteParamValue } from "vue-router";
-import { adjustImageUrl } from "src/services/ImageService";
-
-// Função para converter números romanos para inteiros
-const romanToInt = (roman: string): number => {
-  const romanMap: { [key: string]: number } = { I: 1, IV: 4, V: 5, IX: 9, X: 10, XL: 40, L: 50, XC: 90, C: 100, CD: 400, D: 500, CM: 900, M: 1000 };
-  let num = 0;
-  let i = 0;
-  while (i < roman.length) {
-    if (i + 1 < roman.length && romanMap[roman.substring(i, i + 2)]) {
-      num += romanMap[roman.substring(i, i + 2)];
-      i += 2;
-    } else {
-      num += romanMap[roman.charAt(i)];
-      i++;
-    }
-  }
-  return num;
-};
+import { adjustImageUrl } from "src/services/ImagemService";
+import ViaService from "src/services/ViaService";
+import { UnwrapRef } from "vue";
 
 class ColecaoService {
   async getById (id: string | RouteParamValue[]): Promise<Colecao> {
@@ -37,7 +22,7 @@ class ColecaoService {
     }
   }
 
-  async getColecaoByUsuarioId (): Promise<Colecao[]> {
+  async getByUsuarioId (): Promise<Colecao[]> {
     const userId = localStorage.getItem("userId");
     try {
       const response = await api.get(`/colecoes/usuario/${userId}`);
@@ -55,7 +40,34 @@ class ColecaoService {
     }
   }
 
-  async getViasInColecao (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
+  async create (colecao: Omit<Colecao, "id">): Promise<void> { // Remove 'id' para criação
+    try {
+      await api.post("/colecoes", colecao);
+    } catch (error: any) {
+      throw new Error("Erro ao criar coleção: " + error.message);
+    }
+  }
+
+  async delete (colecaoId: UnwrapRef<Colecao["id"]>): Promise<void> {
+    try {
+      await api.delete(`/colecoes/${colecaoId}`);
+    } catch (error: any) {
+      throw new Error("Erro ao deletar coleção: " + error.message);
+    }
+  }
+
+  async update (colecaoId: UnwrapRef<Colecao["id"]>, colecao: UnwrapRef<{
+    nome: string;
+    descricao: string
+  }>): Promise<void> {
+    try {
+      await api.put(`/colecoes/${colecaoId}`, colecao);
+    } catch (error: any) {
+      throw new Error("Erro ao atualizar coleção: " + error.message);
+    }
+  }
+
+  async getViasIn (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
     try {
       const response = await api.get(`/vias/colecao/${colecaoId}`);
       const vias = response.data;
@@ -109,8 +121,8 @@ class ColecaoService {
     const sortedVias = [...vias];
     if (key === "grau" && order !== null) {
       sortedVias.sort((a, b) => {
-        const grauA = a.grau ? romanToInt(a.grau) : 0;
-        const grauB = b.grau ? romanToInt(b.grau) : 0;
+        const grauA = a.grau ? ViaService.romanToInt(a.grau) : 0;
+        const grauB = b.grau ? ViaService.romanToInt(b.grau) : 0;
         return order === "asc" ? grauA - grauB : grauB - grauA;
       });
     } else if (key === "duracao" && order !== null) {

@@ -10,11 +10,16 @@
               <div class="text-subtitle1">{{ colecao?.descricao }}</div>
               <div class="text-caption">{{ vias?.length || "0" }} vias</div>
             </div>
-            <q-btn flat icon="sort" class="header-filter-btn" @click.stop="toggleSortMenu"/>
+            <div>
+              <q-icon name="settings" size="2rem" @click.stop="openConfigDialogModal" />
+              <br>
+              <q-icon name="sort" size="2rem" @click.stop="toggleSortMenu" />
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <ModalConfigColecoes v-model="isConfigDialogOpen" @edit="startEditing" @delete="confirmDeletion" />
     <ViasOrdena v-if="sortMenu" @sort="handleSort" @reset="resetSort" @close="toggleSortMenu"/>
     <div class="via-list">
       <q-card v-for="via in vias" :key="via.id" class="via-card" clickable @click="goToViaDetalhada(via.id)">
@@ -22,11 +27,11 @@
         <q-card-section class="q-pt-none">
           <div class="via-info">
             <div class="text-h6">{{ via.nome }}</div>
-            <div class="text-subtitle2">Grau: {{ via.grau || 'N/A' }}</div>
-            <div class="text-subtitle2">Extensão: {{ via.extensao }}m</div>
-            <div class="text-subtitle2">Duração: {{ via.duracao }}</div>
-            <div class="text-subtitle2">Montanha: {{ via.montanha.nome }}</div>
-            <div class="text-subtitle2">Face: {{ via.face.nome }}</div>
+            <div class="text-subtitle2"> Grau: {{ via.grau || 'N/A' }}</div>
+            <div class="text-subtitle2"> Extensão: {{ via.extensao }}m</div>
+            <div class="text-subtitle2"> Duração: {{ via.duracao }}</div>
+            <div class="text-subtitle2"> Montanha: {{ via.montanha.nome }}</div>
+            <div class="text-subtitle2"> Face: {{ via.face.nome }}</div>
           </div>
         </q-card-section>
       </q-card>
@@ -34,6 +39,54 @@
     <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event"/>
     <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
       <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event"/>
+    </q-dialog>
+
+    <q-dialog v-model="isDeleteConfirmOpen" persistent>
+      <q-card>
+        <q-card-section>
+          Tem certeza que deseja excluir esta coleção?
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Sim" color="red" @click="deleteCollection" />
+          <q-btn flat label="Voltar" @click="isDeleteConfirmOpen = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="isEditFormOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <q-input v-model="colecaoEdit.nome" label="Nome da Coleção" />
+          <q-input v-model="colecaoEdit.descricao" label="Descrição da Coleção" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Editar" color="primary" @click="editCollection" />
+          <q-btn flat label="Voltar" @click="isEditFormOpen = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-btn
+      fab
+      icon="add"
+      color="blue"
+      class="fixed-bottom-right"
+      @click="openAddViaModal"
+    />
+
+    <q-dialog v-model="isAddViaModalOpen" persistent>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Adicionar Via</div>
+        </q-card-section>
+        <q-card-section>
+          <!-- Aqui você pode adicionar a lógica para listar e selecionar vias recomendadas -->
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Adicionar" color="primary" @click="addVia" />
+          <q-btn flat label="Cancelar" @click="isAddViaModalOpen = false" />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -48,6 +101,7 @@ import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import BotaoVoltar from "components/BotaoVoltar.vue";
 import ViasOrdena from "components/Colecao/ViasOrdenacao.vue";
 import ImagemModal from "components/Colecao/ImagemModal.vue";
+import ModalConfigColecoes from "components/Colecao/ModalConfigColecoes.vue";
 
 type SortParams = {
   key: keyof Via;
@@ -57,12 +111,20 @@ type SortParams = {
 const route = useRoute();
 const router = useRouter();
 const colecao = ref<Colecao | null>(null);
+const colecaoEdit = ref({
+  nome: "",
+  descricao: ""
+});
 const vias = ref<Via[]>([]);
 const isModalOpen = ref(false);
 const isImageModalOpen = ref(false);
+const isDeleteConfirmOpen = ref(false);
+const isEditFormOpen = ref(false);
+const isAddViaModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
 const expandedImageUrl = ref("");
 const sortMenu = ref(false);
+const isConfigDialogOpen = ref(false);
 
 defineOptions({
   name: "ColecaoDetalhadaPage"
@@ -72,7 +134,7 @@ onMounted(async () => {
   try {
     const colecaoId = route.params.id as string;
     colecao.value = await ColecaoService.getById(colecaoId);
-    vias.value = await ColecaoService.getViasInColecao(colecaoId);
+    vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {
     console.error("Erro ao buscar detalhes da coleção:", error);
   }
@@ -80,6 +142,10 @@ onMounted(async () => {
 
 const goToViaDetalhada = (id: number) => {
   router.push(`/vias/${id}`);
+};
+
+const openConfigDialogModal = () => {
+  isConfigDialogOpen.value = true;
 };
 
 const closeModal = () => {
@@ -106,10 +172,53 @@ const handleSort = async ({ key, order }: SortParams) => {
 const resetSort = async () => {
   try {
     const colecaoId = route.params.id as string;
-    vias.value = await ColecaoService.getViasInColecao(colecaoId);
+    vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {
     console.error("Erro ao redefinir a ordenação:", error);
   }
+};
+
+const startEditing = () => {
+  colecaoEdit.value.nome = colecao.value?.nome || "";
+  colecaoEdit.value.descricao = colecao.value?.descricao || "";
+  isEditFormOpen.value = true;
+};
+
+const confirmDeletion = () => {
+  isDeleteConfirmOpen.value = true;
+};
+
+const deleteCollection = async () => {
+  if (colecao.value) {
+    try {
+      await ColecaoService.delete(colecao.value.id);
+      router.push("/colecoes");
+    } catch (error) {
+      console.error("Erro ao excluir a coleção:", error);
+    }
+  }
+};
+
+const editCollection = async () => {
+  if (colecao.value) {
+    try {
+      await ColecaoService.update(colecao.value.id, colecaoEdit.value);
+      colecao.value.nome = colecaoEdit.value.nome;
+      colecao.value.descricao = colecaoEdit.value.descricao;
+      isEditFormOpen.value = false;
+    } catch (error) {
+      console.error("Erro ao editar a coleção:", error);
+    }
+  }
+};
+
+const openAddViaModal = () => {
+  isAddViaModalOpen.value = true;
+};
+
+const addVia = async () => {
+  // Lógica para adicionar via
+  isAddViaModalOpen.value = false;
 };
 </script>
 
@@ -144,8 +253,8 @@ const resetSort = async () => {
 
 .header-content {
   background: rgba(0, 0, 0, 0.5);
-  padding: 16px;
-  border-radius: 8px;
+  padding: 4%;
+  border-radius: 4%;
   width: 100%;
 }
 
@@ -183,5 +292,12 @@ const resetSort = async () => {
 
 .via-info {
   flex: 1;
+}
+
+.fixed-bottom-right {
+  position: fixed;
+  bottom: 120px; /* Ajuste a posição para ficar acima da navbar */
+  right: 16px;
+  z-index: 2; /* Garante que o botão esteja acima do conteúdo */
 }
 </style>

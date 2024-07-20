@@ -42,12 +42,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import UserService from "src/services/UserService";
+import UserService from "src/services/UsuarioService";
 import ColecaoService from "src/services/ColecaoService";
 import AuthenticateService from "src/services/AuthenticateService";
 import PerfilEditarForm from "components/Perfil/PerfilEditaForm.vue";
 import { Usuario } from "src/models/Usuario";
-import {dom} from "quasar";
+import { dom } from "quasar";
 import width = dom.width;
 
 const router = useRouter();
@@ -68,7 +68,7 @@ onMounted(async () => {
       await router.push("/auth/login");
     } else {
       user.value = await UserService.getPerfil();
-      const colecoes = await ColecaoService.getColecaoByUsuarioId();
+      const colecoes = await ColecaoService.getByUsuarioId();
       numColecoes.value = colecoes.length;
     }
   } catch (error) {
