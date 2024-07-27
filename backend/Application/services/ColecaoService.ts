@@ -1,5 +1,5 @@
-import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
-import { Colecao } from "../../Domain/entities/Colecao";
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { Colecao } from '../../Domain/entities/Colecao';
 
 export class ColecaoService {
   constructor(
@@ -23,6 +23,10 @@ export class ColecaoService {
   }
 
   async updateColecao(id: number, colecaoData: Partial<Colecao>): Promise<void> {
+    const colecao = await this.colecaoRepo.getById(id);
+    if (!colecao) {
+      throw new Error('Coleção não encontrada');
+    }
     await this.colecaoRepo.update(id, colecaoData);
   }
 

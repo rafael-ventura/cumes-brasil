@@ -42,11 +42,7 @@ class UsuarioService {
 
   async getPerfil () {
     try {
-      const response = await api.get('/perfil', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
-        }
-      });
+      const response = await api.get('/perfil');
       const usuario = response.data as Usuario;
       if (usuario.foto_perfil?.url) {
         usuario.foto_perfil.url = adjustImageUrl(usuario.foto_perfil.url);

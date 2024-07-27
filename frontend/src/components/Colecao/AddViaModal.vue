@@ -1,18 +1,18 @@
 <template>
-  <q-dialog v-model="dialogOpen" persistent>
+  <q-dialog v-model="dialogOpen" :persistent="false" @hide="handleHide">
     <q-card>
       <q-card-section>
         <div class="text-h6">Adicionar Via</div>
         <q-input v-model="searchQuery" label="Buscar vias" @input="searchVias" debounce="300" />
       </q-card-section>
       <q-card-section>
-        <via-sugestao :vias="suggestedVias" />
+        <via-sugestao :vias="suggestedVias" @add-via="addVia" />
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat label="Cancelar" @click="closeDialog" />
       </q-card-actions>
+      <q-pagination v-if="totalPages > 1" v-model="currentPage" :max="totalPages" @update:model-value="onPageChange" />
     </q-card>
-    <q-pagination v-if="totalPages > 1" v-model="currentPage" :max="totalPages" @update:model-value="onPageChange" />
   </q-dialog>
 </template>
 
@@ -38,13 +38,23 @@ const totalPages = ref(1);
 watch(() => props.isOpen, (newValue) => {
   dialogOpen.value = newValue;
   if (newValue) {
-    loadVias();
+    currentPage.value = 1; // Resetar a página ao abrir o modal
+    loadVias(); // Carregar vias ao abrir o modal
+  }
+});
+
+watch(dialogOpen, (newValue) => {
+  if (newValue) {
+    currentPage.value = 1; // Resetar a página ao abrir o modal
+    loadVias(); // Carregar vias ao abrir o modal
+  } else {
+    emit('update:isOpen', false);
   }
 });
 
 const searchVias = async () => {
   if (searchQuery.value.trim()) {
-    const result = await ColecaoService.getViasNotIn(props.colecaoId, currentPage.value);
+    const result = await ColecaoService.getViasNotIn(props.colecaoId, currentPage.value, 10);
     suggestedVias.value = result.vias
       .filter(via => via.nome.toLowerCase().includes(searchQuery.value.trim().toLowerCase()))
       .map((via: ViaWithAdded) => ({ ...via, added: false }));
@@ -55,7 +65,7 @@ const searchVias = async () => {
 };
 
 const loadVias = async () => {
-  const result = await ColecaoService.getViasNotIn(props.colecaoId, currentPage.value);
+  const result = await ColecaoService.getViasNotIn(props.colecaoId, currentPage.value, 10);
   suggestedVias.value = result.vias.map((via: ViaWithAdded) => ({ ...via, added: false }));
   totalPages.value = Math.ceil(result.total / 10);
 };
@@ -66,6 +76,11 @@ const addVia = (via: ViaWithAdded) => {
 };
 
 const closeDialog = () => {
+  dialogOpen.value = false; // Atualiza o estado do diálogo
+};
+
+const handleHide = () => {
+  dialogOpen.value = false;
   emit('update:isOpen', false);
 };
 

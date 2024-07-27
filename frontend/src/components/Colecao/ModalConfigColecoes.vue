@@ -1,10 +1,6 @@
 <template>
   <q-dialog :model-value="modelValue" @update:model-value="closeDialog" persistent>
     <q-card>
-      <q-card-section class="row items-center">
-        <h6 class="q-ml-sm">Configurações da Coleção</h6>
-      </q-card-section>
-      <q-separator />
       <div v-if="currentView === 'main'">
         <q-list>
           <q-item clickable @click="showEditView">

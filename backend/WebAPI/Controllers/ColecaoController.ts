@@ -123,17 +123,18 @@ export class ColecaoController {
      */
     updateColecao = async (req: Request, res: Response) => {
         try {
+            const id = parseInt(req.params.id);
             const colecao: Colecao = req.body;
-            await this.service.updateColecao(colecao.id, colecao);
+            await this.service.updateColecao(id, colecao);
             res.status(200).json({ message: "Colecao atualizada com sucesso." });
         } catch (error) {
             if (error instanceof Error) {
                 if (error.message === "Colecao não encontrada") {
-                    return res.status(404).json({message: error.message});
+                    return res.status(404).json({ message: error.message });
                 }
-                res.status(500).json({error: error.message});
+                res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller update"});
+                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller update' });
             }
         }
     }

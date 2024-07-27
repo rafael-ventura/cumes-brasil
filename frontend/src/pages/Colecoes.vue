@@ -12,7 +12,7 @@
     <q-dialog v-model="isFilterModalOpen" persistent>
       <BuscaAvancada @apply-filters="applyFilters"/>
     </q-dialog>
-    <q-list bordered separator>
+    <q-list >
       <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
         <q-item-section avatar>
           <q-avatar square size="150px" class="custom-avatar" color="primary" text-color="white">
@@ -20,7 +20,7 @@
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-h4">{{ colecao.nome }}</q-item-label>
+          <q-item-label class="text-h6 break-word">{{ colecao.nome }}</q-item-label>
           <q-item-label caption class="text-body1">{{ colecao.descricao }}</q-item-label>
         </q-item-section>
       </q-item>
@@ -70,8 +70,25 @@ const novaColecao = ref({
   nome: '',
   descricao: '',
   usuario_id: Number(localStorage.getItem('userId')) || 0,
-  imagem_id: 1
+  imagem_id: 1 // Defina a imagem padrão aqui, se necessário
 });
+
+const addColecao = async () => {
+  try {
+    novaColecao.value.usuario_id = Number(localStorage.getItem('userId')) || 0; // Assegure que o usuário está sendo passado
+    await ColecaoService.create(novaColecao.value);
+    colecoes.value = await ColecaoService.getByUsuarioId();
+    isAddColecaoModalOpen.value = false;
+    novaColecao.value = {
+      nome: '',
+      descricao: '',
+      usuario_id: Number(localStorage.getItem('userId')) || 0,
+      imagem_id: 1 // Defina a imagem padrão aqui, se necessário
+    };
+  } catch (error) {
+    console.error('Erro ao adicionar coleção:', error);
+  }
+};
 
 defineOptions({
   name: 'ColecoesPage'
@@ -122,22 +139,6 @@ const openAddColecaoModal = () => {
   isAddColecaoModalOpen.value = true;
 };
 
-const addColecao = async () => {
-  try {
-    await ColecaoService.create(novaColecao.value);
-    colecoes.value = await ColecaoService.getByUsuarioId();
-    isAddColecaoModalOpen.value = false;
-    novaColecao.value = {
-      nome: '',
-      descricao: '',
-      usuario_id: Number(localStorage.getItem('userId')) || 0,
-      imagem_id: 1
-    };
-  } catch (error) {
-    console.error('Erro ao adicionar coleção:', error);
-  }
-};
-
 </script>
 
 <style scoped>
@@ -163,5 +164,9 @@ const addColecao = async () => {
   bottom: 120px; /* Ajuste a posição para ficar acima da navbar */
   right: 16px;
   z-index: 2; /* Garante que o botão esteja acima do conteúdo */
+}
+
+.break-word {
+  word-break: break-all;
 }
 </style>

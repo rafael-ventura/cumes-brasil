@@ -78,6 +78,15 @@ export class ViaRepository {
       .leftJoinAndSelect('via.imagem', 'imagem')
       .leftJoinAndSelect('via.croquis', 'croquis')
       .where('viasColecoes.colecao_id IS NULL OR viasColecoes.colecao_id != :colecaoId', { colecaoId })
+      .andWhere((qb) => {
+        const subQuery = qb.subQuery()
+          .select('via.id')
+          .from('via', 'via')
+          .leftJoin('via.viasColecoes', 'viasColecoes')
+          .where('viasColecoes.colecao_id = :colecaoId')
+          .getQuery();
+        return 'via.id NOT IN ' + subQuery;
+      })
       .skip((page - 1) * limit)
       .take(limit)
       .getManyAndCount();
