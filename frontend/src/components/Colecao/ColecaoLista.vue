@@ -20,13 +20,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import ColecaoService from "src/services/ColecaoService";
-import ColecaoCard from "components/Colecao/ColecaoCard.vue";
-import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
-import { Colecao } from "src/models/Colecao";
-import { Via } from "src/models/Via";
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import ColecaoService from 'src/services/ColecaoService';
+import ColecaoCard from 'components/Colecao/ColecaoCard.vue';
+import ModalViaDetalhada from 'components/Via/ModalViaDetalhada.vue';
+import { Colecao } from 'src/models/Colecao';
+import { Via } from 'src/models/Via';
 
 const route = useRoute();
 const colecao = ref<Colecao>(await ColecaoService.getById(route.params.id));

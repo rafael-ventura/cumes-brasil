@@ -18,36 +18,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import AuthenticateService from "../../services/AuthenticateService";
-import RegisterForm from "components/Auth/RegistroForm.vue";
-import AuthError from "components/Auth/AutenticacaoErro.vue";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import AuthenticateService from '../../services/AuthenticateService';
+import RegisterForm from 'components/Auth/RegistroForm.vue';
+import AuthError from 'components/Auth/AutenticacaoErro.vue';
 
 defineOptions({
-  name: "RegisterPage"
+  name: 'RegisterPage'
 });
 
-const confirmPassword = ref("");
+const confirmPassword = ref('');
 const errorMessage = ref<string | null>(null);
 const router = useRouter();
 
 const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, senha: string }) => {
   if (senha !== confirmPassword.value) {
-    errorMessage.value = "Senhas não conferem";
+    errorMessage.value = 'Senhas não conferem';
     return;
   }
 
   try {
     const response = await AuthenticateService.register(nome, email, senha);
     console.log(response.data);
-    await router.push("/auth/login");
+    await router.push('/auth/login');
   } catch (error: any) {
-    errorMessage.value = "Erro ao cadastrar usuário: " + error.message;
+    errorMessage.value = 'Erro ao cadastrar usuário: ' + error.message;
   }
 };
 
 const goToLogin = () => {
-  router.push("/auth/login");
+  router.push('/auth/login');
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-none">
     <div class="header-container" @click="expandImage(colecao?.imagem?.url || 'https://via.placeholder.com/300x150')">
-      <BotaoVoltar class="back-button"/>
+      <BotaoVoltar class="back-button" />
       <div class="header" :style="{ backgroundImage: `url(${colecao?.imagem?.url || 'https://via.placeholder.com/300x150'})` }">
         <div class="header-content">
           <div class="header-info">
@@ -19,11 +19,16 @@
         </div>
       </div>
     </div>
-    <ModalConfigColecoes v-model="isConfigDialogOpen" @edit="startEditing" @delete="confirmDeletion" />
-    <ViasOrdena v-if="sortMenu" @sort="handleSort" @reset="resetSort" @close="toggleSortMenu"/>
+    <ModalConfigColecoes
+      v-model="isConfigDialogOpen"
+      :collectionData="colecao || {}"
+      @edit="editCollection"
+      @delete="confirmDeletion"
+    />
+    <ViasOrdena v-if="sortMenu" @sort="handleSort" @reset="resetSort" @close="toggleSortMenu" />
     <div class="via-list">
       <q-card v-for="via in vias" :key="via.id" class="via-card" clickable @click="goToViaDetalhada(via.id)">
-        <q-img :src="via.imagem?.url || 'https://via.placeholder.com/150x150'" class="via-image" alt="via image"/>
+        <q-img :src="via.imagem?.url || 'https://via.placeholder.com/150x150'" class="via-image" alt="via image" />
         <q-card-section class="q-pt-none">
           <div class="via-info">
             <div class="text-h6">{{ via.nome }}</div>
@@ -36,9 +41,9 @@
         </q-card-section>
       </q-card>
     </div>
-    <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event"/>
+    <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event" />
     <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
-      <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event"/>
+      <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event" />
     </q-dialog>
 
     <q-dialog v-model="isDeleteConfirmOpen" persistent>
@@ -60,7 +65,7 @@
           <q-input v-model="colecaoEdit.descricao" label="Descrição da Coleção" />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Editar" color="primary" @click="editCollection" />
+          <q-btn flat label="Editar" color="primary" @click="submitEditCollection" />
           <q-btn flat label="Voltar" @click="isEditFormOpen = false" />
         </q-card-actions>
       </q-card>
@@ -73,47 +78,35 @@
       class="fixed-bottom-right"
       @click="openAddViaModal"
     />
-
-    <q-dialog v-model="isAddViaModalOpen" persistent>
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Adicionar Via</div>
-        </q-card-section>
-        <q-card-section>
-          <!-- Aqui você pode adicionar a lógica para listar e selecionar vias recomendadas -->
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Adicionar" color="primary" @click="addVia" />
-          <q-btn flat label="Cancelar" @click="isAddViaModalOpen = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <AddViaModal :isOpen="isAddViaModalOpen" :colecaoId="String(colecao?.id)" @update:isOpen="updateIsAddViaModalOpen"
+                 @via-added="viaAdded" />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import ColecaoService from "src/services/ColecaoService";
-import { Colecao } from "src/models/Colecao";
-import { Via } from "src/models/Via";
-import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
-import BotaoVoltar from "components/BotaoVoltar.vue";
-import ViasOrdena from "components/Colecao/ViasOrdenacao.vue";
-import ImagemModal from "components/Colecao/ImagemModal.vue";
-import ModalConfigColecoes from "components/Colecao/ModalConfigColecoes.vue";
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import ColecaoService from 'src/services/ColecaoService';
+import { Colecao } from 'src/models/Colecao';
+import { Via } from 'src/models/Via';
+import ModalViaDetalhada from 'components/Via/ModalViaDetalhada.vue';
+import BotaoVoltar from 'components/BotaoVoltar.vue';
+import ViasOrdena from 'components/Colecao/ViasOrdenacao.vue';
+import ImagemModal from 'components/Colecao/ImagemModal.vue';
+import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
+import AddViaModal from 'components/Colecao/AddViaModal.vue';
 
 type SortParams = {
   key: keyof Via;
-  order: "asc" | "desc";
+  order: 'asc' | 'desc';
 };
 
 const route = useRoute();
 const router = useRouter();
 const colecao = ref<Colecao | null>(null);
 const colecaoEdit = ref({
-  nome: "",
-  descricao: ""
+  nome: '',
+  descricao: ''
 });
 const vias = ref<Via[]>([]);
 const isModalOpen = ref(false);
@@ -122,12 +115,12 @@ const isDeleteConfirmOpen = ref(false);
 const isEditFormOpen = ref(false);
 const isAddViaModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
-const expandedImageUrl = ref("");
+const expandedImageUrl = ref('');
 const sortMenu = ref(false);
 const isConfigDialogOpen = ref(false);
 
 defineOptions({
-  name: "ColecaoDetalhadaPage"
+  name: 'ColecaoDetalhadaPage'
 });
 
 onMounted(async () => {
@@ -136,7 +129,7 @@ onMounted(async () => {
     colecao.value = await ColecaoService.getById(colecaoId);
     vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {
-    console.error("Erro ao buscar detalhes da coleção:", error);
+    console.error('Erro ao buscar detalhes da coleção:', error);
   }
 });
 
@@ -165,7 +158,7 @@ const handleSort = async ({ key, order }: SortParams) => {
   try {
     vias.value = await ColecaoService.sortVias(vias.value, { key, order });
   } catch (error) {
-    console.error("Erro ao ordenar vias:", error);
+    console.error('Erro ao ordenar vias:', error);
   }
 };
 
@@ -174,16 +167,9 @@ const resetSort = async () => {
     const colecaoId = route.params.id as string;
     vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {
-    console.error("Erro ao redefinir a ordenação:", error);
+    console.error('Erro ao redefinir a ordenação:', error);
   }
 };
-
-const startEditing = () => {
-  colecaoEdit.value.nome = colecao.value?.nome || "";
-  colecaoEdit.value.descricao = colecao.value?.descricao || "";
-  isEditFormOpen.value = true;
-};
-
 const confirmDeletion = () => {
   isDeleteConfirmOpen.value = true;
 };
@@ -192,22 +178,31 @@ const deleteCollection = async () => {
   if (colecao.value) {
     try {
       await ColecaoService.delete(colecao.value.id);
-      router.push("/colecoes");
+      router.push('/colecoes');
     } catch (error) {
-      console.error("Erro ao excluir a coleção:", error);
+      console.error('Erro ao excluir a coleção:', error);
     }
   }
 };
 
-const editCollection = async () => {
+const submitEditCollection = () => {
+  if (colecao.value) {
+    editCollection({
+      nome: colecaoEdit.value.nome,
+      descricao: colecaoEdit.value.descricao
+    });
+  }
+};
+
+const editCollection = async (data: { nome: string; descricao: string }) => {
   if (colecao.value) {
     try {
-      await ColecaoService.update(colecao.value.id, colecaoEdit.value);
-      colecao.value.nome = colecaoEdit.value.nome;
-      colecao.value.descricao = colecaoEdit.value.descricao;
+      await ColecaoService.update(colecao.value.id, data);
+      colecao.value.nome = data.nome;
+      colecao.value.descricao = data.descricao;
       isEditFormOpen.value = false;
     } catch (error) {
-      console.error("Erro ao editar a coleção:", error);
+      console.error('Erro ao editar a coleção:', error);
     }
   }
 };
@@ -216,9 +211,19 @@ const openAddViaModal = () => {
   isAddViaModalOpen.value = true;
 };
 
-const addVia = async () => {
-  // Lógica para adicionar via
-  isAddViaModalOpen.value = false;
+const updateIsAddViaModalOpen = (value: boolean) => {
+  isAddViaModalOpen.value = value;
+};
+
+const viaAdded = async (via: Via) => {
+  if (colecao.value) {
+    try {
+      await ColecaoService.addViaToColecao(colecao.value.id, via.id);
+      vias.value.push(via);
+    } catch (error) {
+      console.error('Erro ao adicionar via à coleção:', error);
+    }
+  }
 };
 </script>
 

@@ -24,39 +24,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits } from 'vue';
 
-const emits = defineEmits(["apply-filters"]);
+const emits = defineEmits(['apply-filters']);
 
 const filters = ref({
-  nome: "",
-  grau: "",
-  montanha: "",
-  bairro: "",
+  nome: '',
+  grau: '',
+  montanha: '',
+  bairro: '',
   extensaoMin: null,
   extensaoMax: null
 });
 
 const grauOptions = [
-  { label: "5", value: "5" },
-  { label: "6", value: "6" },
-  { label: "7", value: "7" }
+  { label: '5', value: '5' },
+  { label: '6', value: '6' },
+  { label: '7', value: '7' }
   // Adicione outras opções conforme necessário
 ];
 
 const montanhaOptions = [
-  { label: "Montanha 1", value: "montanha1" },
-  { label: "Montanha 2", value: "montanha2" }
+  { label: 'Montanha 1', value: 'montanha1' },
+  { label: 'Montanha 2', value: 'montanha2' }
   // Adicione outras opções conforme necessário
 ];
 
 const bairroOptions = [
-  { label: "Bairro 1", value: "bairro1" },
-  { label: "Bairro 2", value: "bairro2" }
+  { label: 'Bairro 1', value: 'bairro1' },
+  { label: 'Bairro 2', value: 'bairro2' }
   // Adicione outras opções conforme necessário
 ];
 
 const onSubmit = () => {
-  emits("apply-filters", filters.value);
+  emits('apply-filters', filters.value);
 };
 </script>

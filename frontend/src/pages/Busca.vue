@@ -19,22 +19,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import ViaService from "../services/ViaService";
-import ViaLista from "components/Via/ViaLista.vue";
-import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
-import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
-import { Via } from "src/models/Via";
+import { onMounted, ref } from 'vue';
+import ViaService from '../services/ViaService';
+import ViaLista from 'components/Via/ViaLista.vue';
+import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
+import ModalViaDetalhada from 'components/Via/ModalViaDetalhada.vue';
+import { Via } from 'src/models/Via';
 
-const searchQuery = ref("");
-const vias = ref<Via[]>([]);
 const isFilterModalOpen = ref(false);
 const isViaModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
 const appliedFilters = ref({});
+const searchQuery = ref('');
+const vias = ref<Via[]>([]);
+const totalPages = ref(1);
+const currentPage = ref(1);
 
 defineOptions({
-  name: "BuscaPage"
+  name: 'BuscaPage'
 });
 
 onMounted(async () => {
@@ -43,13 +45,17 @@ onMounted(async () => {
 
 const searchVias = async () => {
   try {
-    if (searchQuery.value.trim() === "" && Object.keys(appliedFilters.value).length === 0) {
-      vias.value = await ViaService.getAllVias();
+    if (searchQuery.value.trim() === '') {
+      const result = await ViaService.getAllVias(currentPage.value);
+      vias.value = result.vias;
+      totalPages.value = Math.ceil(result.total / 10);
     } else {
-      vias.value = await ViaService.searchVias(searchQuery.value, appliedFilters.value);
+      const result = await ViaService.searchVias(searchQuery.value, { page: currentPage.value });
+      vias.value = result.vias;
+      totalPages.value = Math.ceil(result.total / 10);
     }
   } catch (error) {
-    console.error("Erro ao buscar vias:", error);
+    console.error('Erro ao buscar vias:', error);
   }
 };
 

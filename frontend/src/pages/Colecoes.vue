@@ -54,39 +54,39 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import AuthenticateService from "src/services/AuthenticateService";
-import ColecaoService from "src/services/ColecaoService";
-import { Colecao } from "src/models/Colecao";
-import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import AuthenticateService from 'src/services/AuthenticateService';
+import ColecaoService from 'src/services/ColecaoService';
+import { Colecao } from 'src/models/Colecao';
+import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
 
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
-const searchQuery = ref("");
+const searchQuery = ref('');
 const isFilterModalOpen = ref(false);
 const isAddColecaoModalOpen = ref(false);
-const novaColecao = ref<Omit<Colecao, "id">>({
-  nome: "",
-  descricao: "",
-  usuario_id: Number(localStorage.getItem("userId")) || 0,
-  imagem: { id: 0, url: "", descricao: "", fonte: { autor: "", id: 0, referencia: "" }, tipo_entidade: "" } // Inicialize com um valor padrão válido
+const novaColecao = ref({
+  nome: '',
+  descricao: '',
+  usuario_id: Number(localStorage.getItem('userId')) || 0,
+  imagem_id: 1
 });
 
 defineOptions({
-  name: "ColecoesPage"
+  name: 'ColecoesPage'
 });
 
 onMounted(async () => {
   if (!AuthenticateService.isAuthenticated()) {
-    await router.push("/auth/login");
+    await router.push('/auth/login');
     return;
   }
 
   try {
     colecoes.value = await ColecaoService.getByUsuarioId();
   } catch (error) {
-    console.error("Erro ao buscar coleções:", error);
+    console.error('Erro ao buscar coleções:', error);
   }
 });
 
@@ -98,7 +98,7 @@ const searchColecoes = async () => {
       colecoes.value = await ColecaoService.getByUsuarioId();
     }
   } catch (error) {
-    console.error("Erro ao buscar coleções:", error);
+    console.error('Erro ao buscar coleções:', error);
   }
 };
 
@@ -110,7 +110,7 @@ const applyFilters = async (filters: any) => {
   try {
     colecoes.value = await ColecaoService.search(filters);
   } catch (error) {
-    console.error("Erro ao aplicar filtros:", error);
+    console.error('Erro ao aplicar filtros:', error);
   }
 };
 
@@ -128,15 +128,16 @@ const addColecao = async () => {
     colecoes.value = await ColecaoService.getByUsuarioId();
     isAddColecaoModalOpen.value = false;
     novaColecao.value = {
-      nome: "",
-      descricao: "",
-      usuario_id: Number(localStorage.getItem("userId")) || 0,
-      imagem: { id: 0, url: "", descricao: "", fonte: { autor: "", id: 0, referencia: "" }, tipo_entidade: "" }
+      nome: '',
+      descricao: '',
+      usuario_id: Number(localStorage.getItem('userId')) || 0,
+      imagem_id: 1
     };
   } catch (error) {
-    console.error("Erro ao adicionar coleção:", error);
+    console.error('Erro ao adicionar coleção:', error);
   }
 };
+
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
 // src/services/UsuarioService.ts
 
-import { api } from "boot/axios";
-import { Usuario } from "src/models/Usuario";
-import { adjustImageUrl } from "src/services/ImagemService";
+import { api } from 'boot/axios';
+import { Usuario } from 'src/models/Usuario';
+import { adjustImageUrl } from 'src/services/ImagemService';
 
 class UsuarioService {
   async getById (id: number) {
@@ -10,22 +10,22 @@ class UsuarioService {
       const response = await api.get(`/usuarios/${id}`);
       return response.data as Usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar usuário");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar usuário');
     }
   }
 
   async getAll () {
     try {
-      const response = await api.get("/usuarios");
+      const response = await api.get('/usuarios');
       return response.data as Usuario[];
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar usuários");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar usuários');
     }
   }
 
   async create (nome: string, email: string, password: string) {
     try {
-      const response = await api.post("/auth/register", {
+      const response = await api.post('/auth/register', {
         nome,
         email,
         password
@@ -35,16 +35,16 @@ class UsuarioService {
       if (error.response && error.response.data && error.response.data.error) {
         throw new Error(error.response.data.error);
       } else {
-        throw new Error("Erro desconhecido ao criar usuário");
+        throw new Error('Erro desconhecido ao criar usuário');
       }
     }
   }
 
   async getPerfil () {
     try {
-      const response = await api.get("/perfil", {
+      const response = await api.get('/perfil', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
       });
       const usuario = response.data as Usuario;
@@ -53,7 +53,7 @@ class UsuarioService {
       }
       return usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar perfil");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar perfil');
     }
   }
 
@@ -62,12 +62,12 @@ class UsuarioService {
       const response = await api.put(`/usuarios/${usuario.id}`, usuario);
       return response.data as Usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao atualizar usuário");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao atualizar usuário');
     }
   }
 
   logout () {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem('authToken');
   }
 }
 

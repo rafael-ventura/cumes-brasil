@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from "vue";
+import { defineEmits } from 'vue';
 
-const emits = defineEmits(["close"]);
+const emits = defineEmits(['close']);
 
 const emitClose = () => {
-  emits("close");
+  emits('close');
 };
 </script>

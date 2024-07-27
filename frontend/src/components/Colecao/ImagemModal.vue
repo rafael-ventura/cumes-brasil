@@ -5,10 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, ref } from "vue";
+import { defineProps, defineEmits, watch, ref } from 'vue';
 
 const props = defineProps<{ isOpen: boolean; imageUrl: string }>();
-const emits = defineEmits(["update:isOpen"]);
+const emits = defineEmits(['update:isOpen']);
 
 const localIsOpen = ref(props.isOpen);
 
@@ -17,7 +17,7 @@ watch(() => props.isOpen, (newVal) => {
 });
 
 const closeModal = () => {
-  emits("update:isOpen", false);
+  emits('update:isOpen', false);
 };
 </script>
 

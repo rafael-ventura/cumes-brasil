@@ -41,7 +41,7 @@ module.exports = {
   rules: {
     'comma-dangle': ['warn', 'never'],
     'semi': ['warn', 'always'],
-    'quotes': ['warn', 'double'],
+    'quotes': ['warn', 'single'],
     'vue/html-indent': ['warn', 2],
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',

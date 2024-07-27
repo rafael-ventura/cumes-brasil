@@ -34,15 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { Croqui } from "src/models/Croqui";
+import { ref } from 'vue';
+import { Croqui } from 'src/models/Croqui';
 
 const props = defineProps({
   croquis: Array as () => Croqui[]
 });
 const slide = ref(-1);
 const dialog = ref(false);
-const selectedImage = ref("");
+const selectedImage = ref('');
 
 function openDialog (imageUrl: string) {
   selectedImage.value = imageUrl;

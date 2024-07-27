@@ -1,6 +1,6 @@
-import { ColecaoService } from "../../Application/services/ColecaoService";
-import { Colecao } from "../../Domain/entities/Colecao";
-import { Request, Response } from "express";
+import { ColecaoService } from '../../Application/services/ColecaoService';
+import { Colecao } from '../../Domain/entities/Colecao';
+import { Request, Response } from 'express';
 
 export class ColecaoController {
     private service: ColecaoService;
@@ -92,17 +92,28 @@ export class ColecaoController {
      */
     createColecao = async (req: Request, res: Response) => {
         try {
-            const colecao: Colecao = req.body;
+            const {
+                nome,
+                descricao,
+                usuario_id,
+                imagem_id
+            } = req.body;
+            const colecao = new Colecao();
+            colecao.nome = nome;
+            colecao.descricao = descricao;
+            colecao.usuario = usuario_id;
+            colecao.imagem = imagem_id || 1;
+
             await this.service.createColecao(colecao);
-            res.status(201).json({message: "Colecao criada com sucesso."});
+            res.status(201).json({ message: 'Colecao criada com sucesso.' });
         } catch (error) {
             if (error instanceof Error) {
-                res.status(500).json({error: error.message});
+                res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createColecao"});
+                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller createColecao' });
             }
         }
-    }
+    };
 
     /**
      * @route PUT /colecoes

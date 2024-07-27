@@ -19,21 +19,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from "vue";
-import { Usuario } from "src/models/Usuario";
+import { defineEmits, defineProps, ref } from 'vue';
+import { Usuario } from 'src/models/Usuario';
 
 const props = defineProps<{ user: Usuario, title: string, submitLabel: string }>();
-const emits = defineEmits(["submit"]);
+const emits = defineEmits(['submit']);
 
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);
-const senha = ref("");
+const senha = ref('');
 const fotoPerfil = ref(props.user.foto_perfil?.url);
 
-const senhaPlaceholder = props.user.password_hash ? "Deixe em branco para manter a senha atual" : "Senha";
+const senhaPlaceholder = props.user.password_hash ? 'Deixe em branco para manter a senha atual' : 'Senha';
 
 const onSubmit = () => {
-  emits("submit", {
+  emits('submit', {
     ...props.user,
     nome: nome.value,
     email: email.value,

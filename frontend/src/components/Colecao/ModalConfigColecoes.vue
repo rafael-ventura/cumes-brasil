@@ -51,43 +51,55 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from "vue";
+import { defineEmits, defineProps, ref, watch } from 'vue';
 
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
+  collectionData: {
+    type: Object,
+    required: true
+  }
 });
 
-const emits = defineEmits(["update:modelValue", "edit", "delete"]);
+const emits = defineEmits(['update:modelValue', 'edit', 'delete']);
 
-const currentView = ref("main");
-const collectionName = ref("");
-const collectionDescription = ref("");
+const currentView = ref('main');
+const collectionName = ref(props.collectionData.nome);
+const collectionDescription = ref(props.collectionData.descricao);
+
+watch(() => props.collectionData, (newData) => {
+  collectionName.value = newData.nome;
+  collectionDescription.value = newData.descricao;
+}, { immediate: true });
 
 const emitEdit = () => {
-  emits("edit");
+  emits('edit', {
+    nome: collectionName.value,
+    descricao: collectionDescription.value
+  });
   closeDialog();
 };
 
 const emitDelete = () => {
-  emits("delete");
+  emits('delete');
   closeDialog();
 };
 
 const closeDialog = () => {
-  currentView.value = "main";
-  emits("update:modelValue", false);
+  currentView.value = 'main';
+  emits('update:modelValue', false);
 };
 
 const showEditView = () => {
-  currentView.value = "edit";
+  currentView.value = 'edit';
 };
 
 const showDeleteView = () => {
-  currentView.value = "delete";
+  currentView.value = 'delete';
 };
 
 const showMainView = () => {
-  currentView.value = "main";
+  currentView.value = 'main';
 };
 </script>
 

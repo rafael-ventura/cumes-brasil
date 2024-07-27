@@ -70,18 +70,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import ViaService from "src/services/ViaService";
-import BotaoVoltar from "components/BotaoVoltar.vue";
-import { Via } from "src/models/Via";
-import CarrosselCroquis from "components/Croquis/CarrosselCroquis.vue";
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import ViaService from 'src/services/ViaService';
+import BotaoVoltar from 'components/BotaoVoltar.vue';
+import { Via } from 'src/models/Via';
+import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
 
 const route = useRoute();
 const via = ref<Via>();
 
 defineOptions({
-  name: "ViaDetalhadaPage"
+  name: 'ViaDetalhadaPage'
 });
 
 onMounted(async () => {
@@ -89,7 +89,7 @@ onMounted(async () => {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
   } catch (error) {
-    console.error("Erro ao buscar detalhes da via:", error);
+    console.error('Erro ao buscar detalhes da via:', error);
   }
 });
 </script>

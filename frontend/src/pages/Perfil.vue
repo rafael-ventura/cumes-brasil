@@ -40,14 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import UserService from "src/services/UsuarioService";
-import ColecaoService from "src/services/ColecaoService";
-import AuthenticateService from "src/services/AuthenticateService";
-import PerfilEditarForm from "components/Perfil/PerfilEditaForm.vue";
-import { Usuario } from "src/models/Usuario";
-import { dom } from "quasar";
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import UserService from 'src/services/UsuarioService';
+import ColecaoService from 'src/services/ColecaoService';
+import AuthenticateService from 'src/services/AuthenticateService';
+import PerfilEditarForm from 'components/Perfil/PerfilEditaForm.vue';
+import { Usuario } from 'src/models/Usuario';
+import { dom } from 'quasar';
 import width = dom.width;
 
 const router = useRouter();
@@ -56,16 +56,16 @@ const numColecoes = ref(0);
 const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 const isImageModalOpen = ref(false);
-const expandedImageUrl = ref("");
+const expandedImageUrl = ref('');
 
 defineOptions({
-  name: "PerfilPage"
+  name: 'PerfilPage'
 });
 
 onMounted(async () => {
   try {
     if (!AuthenticateService.isAuthenticated()) {
-      await router.push("/auth/login");
+      await router.push('/auth/login');
     } else {
       user.value = await UserService.getPerfil();
       const colecoes = await ColecaoService.getByUsuarioId();
@@ -82,7 +82,7 @@ const openEditDialog = () => {
 
 const logout = () => {
   UserService.logout();
-  router.push("/auth/login");
+  router.push('/auth/login');
 };
 
 const updateUser = async (updatedUser: Usuario) => {

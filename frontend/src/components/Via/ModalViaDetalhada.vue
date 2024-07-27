@@ -18,18 +18,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import { Via } from "src/models/Via";
-import BotaoFechar from "components/BotaoFechar.vue";
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { Via } from 'src/models/Via';
+import BotaoFechar from 'components/BotaoFechar.vue';
 
 const props = defineProps<{ isOpen: boolean, via: Via }>();
-const emits = defineEmits(["update:isOpen"]);
+const emits = defineEmits(['update:isOpen']);
 
 const router = useRouter();
 
 const closeModal = () => {
-  emits("update:isOpen", false);
+  emits('update:isOpen', false);
 };
 
 const goToDetails = () => {
@@ -39,7 +39,7 @@ const goToDetails = () => {
 
 const grauConcatenado = computed(() => {
   const { grau, crux, artificial, duracao, exposicao } = props.via;
-  return [grau, crux, artificial, duracao, exposicao].filter(Boolean).join(", ");
+  return [grau, crux, artificial, duracao, exposicao].filter(Boolean).join(', ');
 });
 </script>
 
