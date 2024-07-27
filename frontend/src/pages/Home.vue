@@ -27,24 +27,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
-const search = ref('');
-const highlights = ref([{ id: 1, name: 'Via Láctea', image: 'path/to/image.jpg', description: 'Ideal para iniciantes.' }]);
+const search = ref("");
+const highlights = ref([{
+  id: 1,
+  name: "Via Láctea",
+  image: "path/to/image.jpg",
+  description: "Ideal para iniciantes."
+}]);
 
-function searchRoutes() {
+defineOptions({
+  name: "HomePage"
+});
+
+function searchRoutes () {
   // Lógica para buscar vias
 }
 
-function goToRoute() {
+function goToRoute () {
   // Lógica para abrir a página de detalhes da via
 }
 
-function saveRoute() {
+function saveRoute () {
   // Lógica para salvar a via na coleção do usuário
 }
 
-function markAsClimbed() {
+function markAsClimbed () {
   // Lógica para marcar a via como escalada
 }
 </script>
