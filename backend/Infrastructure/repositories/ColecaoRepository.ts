@@ -2,7 +2,9 @@ import {AppDataSource} from "../config/db";
 import {Colecao} from "../../Domain/entities/Colecao";
 import {Via} from "../../Domain/entities/Via";
 import {ColecaoVia} from "../../Domain/entities/ColecaoVia";
+import {Service} from "typedi";
 
+@Service()
 export class ColecaoRepository {
     private repository = AppDataSource.getRepository(Colecao);
     private colecaoViaRepository = AppDataSource.getRepository(ColecaoVia);
