@@ -31,6 +31,10 @@ export class ColecaoService {
   }
 
   async deleteColecao(id: number): Promise<void> {
+    const colecao = await this.colecaoRepo.getById(id);
+    if (!colecao) {
+      throw new Error('Coleção não encontrada');
+    }
     await this.colecaoRepo.delete(id);
   }
 

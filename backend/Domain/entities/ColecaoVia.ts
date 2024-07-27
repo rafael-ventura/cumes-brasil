@@ -11,11 +11,12 @@ export class ColecaoVia {
   @PrimaryColumn()
   via_id: number;
 
-  @ManyToOne(() => Colecao, colecao => colecao.viasColecoes)
+  @ManyToOne(() => Colecao, colecao => colecao.viasColecoes, { onDelete: "CASCADE" })
   @JoinColumn({ name: "colecao_id" })
   colecao: Colecao;
 
-  @ManyToOne(() => Via, via => via.viasColecoes)
+  @ManyToOne(() => Via, via => via.viasColecoes, { onDelete: "CASCADE" })
   @JoinColumn({ name: "via_id" })
   via: Via;
+
 }

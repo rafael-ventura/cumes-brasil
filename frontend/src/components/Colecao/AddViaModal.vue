@@ -1,17 +1,12 @@
 <template>
   <q-dialog v-model="dialogOpen" :persistent="false" @hide="handleHide">
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Adicionar Via</div>
-        <q-input v-model="searchQuery" label="Buscar vias" @input="searchVias" debounce="300" />
-      </q-card-section>
+    <q-card class="q-dialog-plugin">
       <q-card-section>
         <via-sugestao :vias="suggestedVias" @add-via="addVia" />
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat label="Cancelar" @click="closeDialog" />
       </q-card-actions>
-      <q-pagination v-if="totalPages > 1" v-model="currentPage" :max="totalPages" @update:model-value="onPageChange" />
     </q-card>
   </q-dialog>
 </template>
@@ -96,5 +91,9 @@ const onPageChange = (page: number) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.q-dialog-plugin {
+  height: 60%;
 }
 </style>
