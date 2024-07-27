@@ -66,7 +66,12 @@ const colecoes = ref<Colecao[]>([]);
 const searchQuery = ref("");
 const isFilterModalOpen = ref(false);
 const isAddColecaoModalOpen = ref(false);
-const novaColecao = ref({ nome: "", descricao: "" });
+const novaColecao = ref<Omit<Colecao, "id">>({
+  nome: "",
+  descricao: "",
+  usuario_id: Number(localStorage.getItem("userId")) || 0,
+  imagem: { id: 0, url: "", descricao: "", fonte: { autor: "", id: 0, referencia: "" }, tipo_entidade: "" } // Inicialize com um valor padrão válido
+});
 
 defineOptions({
   name: "ColecoesPage"
@@ -122,7 +127,12 @@ const addColecao = async () => {
     await ColecaoService.create(novaColecao.value);
     colecoes.value = await ColecaoService.getByUsuarioId();
     isAddColecaoModalOpen.value = false;
-    novaColecao.value = { nome: "", descricao: "" };
+    novaColecao.value = {
+      nome: "",
+      descricao: "",
+      usuario_id: Number(localStorage.getItem("userId")) || 0,
+      imagem: { id: 0, url: "", descricao: "", fonte: { autor: "", id: 0, referencia: "" }, tipo_entidade: "" }
+    };
   } catch (error) {
     console.error("Erro ao adicionar coleção:", error);
   }
