@@ -1,5 +1,6 @@
 import { api } from "boot/axios";
 import { Via } from "src/models/Via";
+import { CroquiService } from "src/services/CroquiService";
 import { RouteParamValue } from "vue-router";
 import { adjustImageUrl } from "src/services/ImagemService";
 
@@ -8,10 +9,15 @@ class ViaService {
     try {
       const response = await api.get(`/vias/${id}`);
       const via = response.data as Via;
-
-      if (via.imagem?.url) {
-        via.imagem.url = adjustImageUrl(via.imagem.url);
-      }
+      const croquiService = new CroquiService();
+      const croquis = await croquiService.getCroquiByViaId(via.id);
+      via.croquis = croquis.map(croqui => {
+        if (croqui.imagem?.url) {
+          croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
+        }
+        return croqui;
+      });
+      console.log(via);
       return via;
     } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar via");
@@ -24,7 +30,7 @@ class ViaService {
       const vias = response.data as Via[];
 
       for (const via of vias) {
-        if (via.imagem?.url) {
+        if (via.imagem?.id) {
           via.imagem.url = adjustImageUrl(via.imagem.url);
         }
       }

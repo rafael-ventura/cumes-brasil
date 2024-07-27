@@ -60,7 +60,8 @@
         <q-card class="q-ma-md bg-grey-3 rounded-borders">
           <q-card-section>
             <!-- Placeholder para o carrossel de fotos -->
-            <p><strong>Croquis:</strong> {{ via?.croquis }}</p>
+            <p><strong>Croquis:</strong></p>
+            <CarrosselCroquis :croquis="via?.croquis" />
           </q-card-section>
         </q-card>
       </div>
@@ -74,6 +75,7 @@ import { useRoute } from "vue-router";
 import ViaService from "src/services/ViaService";
 import BotaoVoltar from "components/BotaoVoltar.vue";
 import { Via } from "src/models/Via";
+import CarrosselCroquis from "components/Croquis/CarrosselCroquis.vue";
 
 const route = useRoute();
 const via = ref<Via>();
@@ -83,7 +85,6 @@ defineOptions({
 });
 
 onMounted(async () => {
-  console.log("teste");
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
