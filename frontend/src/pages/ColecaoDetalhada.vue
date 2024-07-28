@@ -42,7 +42,7 @@
       </q-card>
     </div>
     <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event" />
-    <q-dialog v-model="isModalOpen" @hide="closeModal" persistent>
+    <q-dialog v-model="isModalOpen" @hide="closeModal">
       <ModalViaDetalhada :isOpen="isModalOpen" :via="<Via>selectedVia" @update:isOpen="isModalOpen = $event" />
     </q-dialog>
 
