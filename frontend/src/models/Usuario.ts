@@ -1,7 +1,7 @@
 // src/models/Usuario.ts
 
-import { Imagem } from "src/models/Imagem";
-import { Colecao } from "src/models/Colecao";
+import { Imagem } from 'src/models/Imagem';
+import { Colecao } from 'src/models/Colecao';
 
 export interface Usuario {
   id: number;

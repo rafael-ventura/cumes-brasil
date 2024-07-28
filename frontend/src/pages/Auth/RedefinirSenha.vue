@@ -24,13 +24,13 @@
 </template>
 
 <script setup lang="ts">
-import AuthenticateService from "../../services/AuthenticateService";
-import { ref } from "vue";
+import AuthenticateService from '../../services/AuthenticateService';
+import { ref } from 'vue';
 
-const email = ref("");
+const email = ref('');
 
 defineOptions({
-  name: "ResetPasswordPage"
+  name: 'ResetPasswordPage'
 });
 
 const onResetPassword = async () => {
@@ -38,7 +38,7 @@ const onResetPassword = async () => {
     const response = await AuthenticateService.resetPassword(email.value);
     console.log(response.data);
   } catch (error: any) {
-    console.error("Erro ao redefinir senha:", error.message);
+    console.error('Erro ao redefinir senha:', error.message);
   }
 };
 </script>

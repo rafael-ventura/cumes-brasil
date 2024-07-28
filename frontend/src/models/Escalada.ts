@@ -1,5 +1,5 @@
-import { Via } from "src/models/Via";
-import { Usuario } from "src/models/Usuario";
+import { Via } from 'src/models/Via';
+import { Usuario } from 'src/models/Usuario';
 
 export interface Escalada {
   usuario: Usuario;

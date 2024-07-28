@@ -1,7 +1,6 @@
-import { api } from "boot/axios";
-import { Croqui } from "src/models/Croqui";
-import { RouteParamValue } from "vue-router";
-import { adjustImageUrl } from "src/services/ImageService";
+import { api } from 'boot/axios';
+import { Croqui } from 'src/models/Croqui';
+import { adjustImageUrl } from 'src/services/ImagemService';
 
 export class CroquiService {
   async getCroquiById (id: number | string): Promise<Croqui> {
@@ -14,13 +13,13 @@ export class CroquiService {
       }
       return croqui;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar croqui");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croqui');
     }
   }
 
   async getAllCroquis (): Promise<Croqui[]> {
     try {
-      const response = await api.get("/croquis/");
+      const response = await api.get('/croquis/');
       const croquis = response.data as Croqui[];
 
       for (const croqui of croquis) {
@@ -30,7 +29,7 @@ export class CroquiService {
       }
       return croquis;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar croquis");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croquis');
     }
   }
 
@@ -46,7 +45,7 @@ export class CroquiService {
       }
       return croquis;
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar croquis");
+      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croquis');
     }
   }
 }

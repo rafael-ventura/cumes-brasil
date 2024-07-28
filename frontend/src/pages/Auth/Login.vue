@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import AuthenticateService from "../../services/AuthenticateService";
-import LoginForm from "components/Auth/LoginForm.vue";
+import { useRouter } from 'vue-router';
+import AuthenticateService from '../../services/AuthenticateService';
+import LoginForm from 'components/Auth/LoginForm.vue';
 
 defineOptions({
-  name: "LoginPage"
+  name: 'LoginPage'
 });
 
 const router = useRouter();
@@ -33,17 +33,17 @@ const onLogin = async ({
   try {
     const response = await AuthenticateService.login(email, senha);
     console.log(response.data);
-    await router.push("/");
+    await router.push('/');
   } catch (error: any) {
     console.error(error.message);
   }
 };
 
 const goToResetPassword = () => {
-  router.push("/auth/reset-password");
+  router.push('/auth/reset-password');
 };
 
 const goToSignUp = () => {
-  router.push("/auth/register");
+  router.push('/auth/register');
 };
 </script>

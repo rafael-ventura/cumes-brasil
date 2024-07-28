@@ -6,6 +6,6 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "HomePage"
+  name: 'HomePage'
 });
 </script>

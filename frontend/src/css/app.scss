@@ -119,7 +119,9 @@ body {
 }
 
 .btn-back {
-  color: black;
+  color: white;
+  background-color: #1c1c1c;
+  opacity: 0.6;
 
   &:hover {
     background-color: lightgray;
