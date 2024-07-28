@@ -11,7 +11,8 @@ class AuthenticateService {
       });
       // Salvar token de autenticação, se houver
       if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem("authToken", response.data.token.token);
+        localStorage.setItem("userId", response.data.token.userId);
       }
       return response;
     } catch (error) {

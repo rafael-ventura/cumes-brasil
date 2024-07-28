@@ -1,9 +1,14 @@
 import { Usuario } from "../../Domain/entities/Usuario";
 import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
 import bcrypt from "bcrypt";
+import {Colecao} from "../../Domain/entities/Colecao";
+import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
+import {Container, Service} from "typedi";
 
+@Service()
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
+    private colecaoRepo = Container.get(ColecaoRepository);
 
     constructor (usuarioRepo: UsuarioRepository) {
         this.usuarioRepo = usuarioRepo;
@@ -23,7 +28,18 @@ export class UsuarioService {
             throw new Error("Email já cadastrado");
         }
         const senhaHash = await bcrypt.hash(senha, 10);
-        await this.usuarioRepo.create(nome, email, senhaHash);
+        const user = await this.usuarioRepo.create(nome, email, senhaHash);
+        // depois de criar o usuario, cria a coleção padrão
+        this.createDefaultCollection(user);
+    }
+
+    private createDefaultCollection(user: Usuario): void {
+        const collection = new Colecao();
+        collection.nome = "Escaladas";
+        collection.descricao = "Vias que escalei";
+        collection.usuario = user.id;
+        collection.imagem = 1;
+        this.colecaoRepo.create(collection);
     }
 
     async updateUsuario (usuario: Usuario): Promise<void> {
@@ -45,7 +61,7 @@ export class UsuarioService {
     }
 
     async getPerfil (id: number): Promise<Usuario | null> {
-        return this.usuarioRepo.getPerfil(id);
+        return this.usuarioRepo.getPerfilSemHash(id);
     }
 }
 

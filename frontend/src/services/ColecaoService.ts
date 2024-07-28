@@ -37,9 +37,10 @@ class ColecaoService {
     }
   }
 
-  async getAll (): Promise<Colecao[]> {
+  async getColecaoByUsuarioId (): Promise<Colecao[]> {
+    const userId = localStorage.getItem("userId");
     try {
-      const response = await api.get("/colecoes");
+      const response = await api.get(`/colecoes/usuario/${userId}`);
       const colecoes = response.data;
 
       for (const colecao of colecoes) {
@@ -120,7 +121,11 @@ class ColecaoService {
         return order === "asc" ? aDur - bDur : bDur - aDur;
       });
     } else if (key === "extensao" && order !== null) {
-      sortedVias.sort((a, b) => order === "asc" ? a.extensao! - b.extensao! : b.extensao! - a.extensao!);
+      sortedVias.sort((a, b) => {
+        const extensaoA = a.extensao ?? 0; // Usa 0 como valor padrão se a.extensao for null ou undefined
+        const extensaoB = b.extensao ?? 0; // Usa 0 como valor padrão se b.extensao for null ou undefined
+        return order === "asc" ? extensaoA - extensaoB : extensaoB - extensaoA;
+      });
     } else if (key === "data" && order !== null) {
       sortedVias.sort((a, b) => order === "asc" ? a.id - b.id : b.id - a.id);
     }

@@ -1,6 +1,7 @@
 import { Usuario } from "../../Domain/entities/Usuario";
 import { AppDataSource } from "../config/db";
-import { ObjectLiteral } from "typeorm";
+import {ObjectLiteral, Repository} from "typeorm";
+import {Service} from "typedi";
 
 export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
@@ -18,8 +19,8 @@ export class UsuarioRepository {
           .getMany();
     }
 
-    async create (nome: string, email: string, senhaHash: string): Promise<void> {
-        await this.repository.insert({
+    async create (nome: string, email: string, senhaHash: string): Promise<Usuario> {
+        return await this.repository.save({
             nome: nome,
             email: email,
             password_hash: senhaHash
@@ -39,11 +40,19 @@ export class UsuarioRepository {
         return user ?? null;
     }
 
-    async getPerfil (id: number): Promise<Usuario | null> {
+    async getPerfilComHash (id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
           .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
           .where("usuario.id = :id", { id })
           .getOne();
+    }
+
+    async getPerfilSemHash (id: number): Promise<Usuario | null> {
+        return this.repository.createQueryBuilder("usuario")
+            .select(["usuario.nome", "usuario.email", "usuario.foto_perfil"])
+            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
+            .where("usuario.id = :id", { id })
+            .getOne();
     }
 }
 

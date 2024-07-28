@@ -30,6 +30,7 @@
     "sqlite3": "^5.1.7",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0",
+    "typedi": "^0.10.0",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
