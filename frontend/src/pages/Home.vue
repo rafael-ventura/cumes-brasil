@@ -76,7 +76,7 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch(filter: string) {
+function goToFilteredSearch (filter: string) {
   // Implementar navegação ou outra lógica aqui se necessário
   console.log(`Navigate to: ${filter}`);
 }
