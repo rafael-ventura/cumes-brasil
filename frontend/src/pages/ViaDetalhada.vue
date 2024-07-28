@@ -3,6 +3,8 @@
     <BotaoVoltar/>
     <div class="text-h2 q-mb-md title-margin">{{ via?.nome }}</div>
     <div class="text-subtitle1 q-mb-md title-margin">{{ via?.montanha.nome }}, {{ via?.face.nome }}</div>
+    <q-btn class="btn-criar-escalada" flat @click="toggleForm">Criar Escalada</q-btn>
+
     <div class="row q-col-gutter-none">
 
       <!-- Bloco Duração e Extensão -->
@@ -65,16 +67,10 @@
           </q-card-section>
         </q-card>
       </div>
-
-      <q-card-actions vertical align="left">
-          <q-btn flat @click="toggleForm">Criar Escalada</q-btn>
-      </q-card-actions>
     </div>
+    <!-- Testar passar como propriedade o showForm e utilizar o v-show a partir dele -->
+    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
   </q-page>
-
-  <!-- Testar passar como propriedade o showForm e utilizar o v-show a partir dele -->
-  <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
-
 </template>
 
 <script setup lang="ts">
@@ -119,4 +115,7 @@ const toggleForm = () => {
   margin-left: 20px;
 }
 
+.btn-criar-escalada {
+  margin: 0 auto;
+}
 </style>

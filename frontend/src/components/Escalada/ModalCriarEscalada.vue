@@ -18,6 +18,7 @@
           label="Data da Escalada"
           v-model="data"
           class="input"
+          hint="dd-mm-yyyy"
           mask="##-##-####"
           lazy-rules
           :rules="[ val => !!val || 'Campo obrigatório' ]"
@@ -96,18 +97,16 @@
 import { Escalada } from "src/models/Escalada";
 import { Participante } from "src/models/Participante";
 import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import EscaladaService from "src/services/EscaladaService";
 
 const observacao = ref("");
 const qtdParticipantes = ref(1);
 const route = useRoute();
-const data = ref('');
+const router = useRouter();
+const data = ref("");
 const participantes = ref<Participante[]>([{ nome: "", tipo: "", email: "" }]);
 const props = defineProps<{ isOpen: boolean }>();
-
-console.log("Teste, ModalCriarEscalada foi criado com sucesso");
-console.log("show form: ", props.isOpen);
 
 const participanteTipoOptions = [
   "GUIA", "PARTICIPANTE", "MISTO"
@@ -134,20 +133,20 @@ const onSubmit = async () => {
     viaId,
     data: data.value,
     observacao: observacao.value,
-    participantes: participantes.value,
+    participantes: participantes.value
   };
-  console.log("FORM DATA", escalada);
-  
-  try {
-    await EscaladaService.createEscalada(escalada);
 
-  }catch(error: any){
-    console.error(error.message);
+  const authToken = localStorage.getItem("authToken");
+  if (!authToken) {
+    await router.push("/auth/login");
   }
 
-  // let authToken = localStorage.getItem("authToken");
-  // console.log(authToken);
-
+  try {
+    await EscaladaService.createEscalada(escalada, authToken);
+    onReset();
+  } catch (error: any) {
+    console.error(error.message);
+  }
 };
 
 const onReset = () => {
