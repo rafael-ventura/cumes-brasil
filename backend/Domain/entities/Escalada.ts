@@ -18,8 +18,8 @@ export class Escalada extends BaseEntity {
   participantes: Participante[];
 
   @ManyToOne(() => Usuario, usuario => usuario.escaladas)
-  usuario: number;
+  usuarioId: number;
 
   @ManyToOne(() => Via, via => via.escaladas)
-  via: number;
+  viaId: number;
 }
