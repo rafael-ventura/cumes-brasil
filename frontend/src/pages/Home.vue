@@ -38,7 +38,7 @@ const highlights = ref([{
 }]);
 
 defineOptions({
-  name: "HomePage"
+  name: 'HomePage'
 });
 
 function searchRoutes () {

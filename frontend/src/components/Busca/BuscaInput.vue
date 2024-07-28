@@ -3,17 +3,17 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from "vue";
+import { defineProps, defineEmits, ref } from 'vue';
 
 const props = defineProps({
   label: String
 });
 
-const emits = defineEmits(["update:query"]);
+const emits = defineEmits(['update:query']);
 
-const query = ref("");
+const query = ref('');
 
 const updateQuery = () => {
-  emits("update:query", query.value);
+  emits('update:query', query.value);
 };
 </script>

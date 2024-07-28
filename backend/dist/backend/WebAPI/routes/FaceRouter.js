@@ -20,5 +20,5 @@ FaceRouter.get("/:id", faceController.getFaceById);
 FaceRouter.get("/", faceController.getAllFace);
 FaceRouter.post("/", faceController.createFace);
 FaceRouter.put("/:id", faceController.updateFace);
-FaceRouter.delete("/:id", faceController.deleteFace);
+FaceRouter.delete('/:id');
 exports.default = FaceRouter;

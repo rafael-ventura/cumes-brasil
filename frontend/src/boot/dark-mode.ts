@@ -1,5 +1,5 @@
-import { boot } from "quasar/wrappers";
-import { Dark } from "quasar";
+import { boot } from 'quasar/wrappers';
+import { Dark } from 'quasar';
 
 export default boot(({ app }) => {
   // Initialize dark mode based on user preference or system settings

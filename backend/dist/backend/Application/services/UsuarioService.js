@@ -22,7 +22,7 @@ class UsuarioService {
             throw new Error("Email já cadastrado");
         }
         const senhaHash = await bcrypt_1.default.hash(senha, 10);
-        await this.usuarioRepo.create(nome, email, senhaHash);
+        await this.usuarioRepo.create(nome);
     }
     async updateUsuario(usuario) {
         await this.usuarioRepo.update(usuario.id, usuario);

@@ -1,9 +1,12 @@
 <template>
-  <router-view />
+  <router-view/>
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: "App"
-});
 </script>
+
+<style>
+html, body, #q-app {
+  height: 100%;
+}
+</style>

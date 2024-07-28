@@ -25,6 +25,6 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "ErrorNotFoundPage"
+  name: 'ErrorNotFoundPage'
 });
 </script>
