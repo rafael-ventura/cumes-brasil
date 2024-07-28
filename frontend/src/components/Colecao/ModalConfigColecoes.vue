@@ -20,24 +20,24 @@
 
       <q-dialog v-model="isEdite">
         <q-card style="min-width: 300px;">
-        <q-card-section>
-          <q-input v-model="collectionName" label="Nome da Coleção" />
-          <q-input v-model="collectionDescription" label="Descrição da Coleção" />
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Salvar" color="primary" @click="emitEdit" />
-        </q-card-actions>
+          <q-card-section>
+            <q-input v-model="collectionName" label="Nome da Coleção" />
+            <q-input v-model="collectionDescription" label="Descrição da Coleção" />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Salvar" color="primary" @click="emitEdit" />
+          </q-card-actions>
         </q-card>
       </q-dialog>
 
       <q-dialog v-model="isDelete">
         <q-card>
-        <q-card-section>
-          Tem certeza que deseja excluir esta coleção?
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Sim" color="red" @click="emitDelete" />
-        </q-card-actions>
+          <q-card-section>
+            Tem certeza que deseja excluir esta coleção?
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Sim" color="red" @click="emitDelete" />
+          </q-card-actions>
         </q-card>
       </q-dialog>
     </q-card>

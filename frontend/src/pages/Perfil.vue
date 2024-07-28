@@ -21,7 +21,7 @@
       <q-card>
         <q-card-section>
           <q-btn flat label="Editar Dados" @click="isEditDialogOpen = true">
-              <q-icon name="edit" />
+            <q-icon name="edit" />
           </q-btn>
           <q-btn flat label="Logout" color="negative" @click="logout"/>
         </q-card-section>
@@ -49,8 +49,6 @@ import ColecaoService from 'src/services/ColecaoService';
 import AuthenticateService from 'src/services/AuthenticateService';
 import PerfilEditarForm from 'components/Perfil/PerfilEditaForm.vue';
 import { Usuario } from 'src/models/Usuario';
-import { dom } from 'quasar';
-import width = dom.width;
 
 const router = useRouter();
 const user = ref<Usuario | null>(null);
