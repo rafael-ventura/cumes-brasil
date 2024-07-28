@@ -20,7 +20,9 @@
     <q-dialog v-model="isConfigDialogOpen">
       <q-card>
         <q-card-section>
-          <q-btn flat label="Editar Dados" @click="openEditDialog"/>
+          <q-btn flat label="Editar Dados" @click="isEditDialogOpen = true">
+              <q-icon name="edit" />
+          </q-btn>
           <q-btn flat label="Logout" color="negative" @click="logout"/>
         </q-card-section>
       </q-card>
@@ -75,10 +77,6 @@ onMounted(async () => {
     console.error(error);
   }
 });
-
-const openEditDialog = () => {
-  isEditDialogOpen.value = true;
-};
 
 const logout = () => {
   UserService.logout();

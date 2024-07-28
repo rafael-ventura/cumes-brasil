@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isOpen" persistent>
+  <q-dialog v-model="isOpen">
     <q-card class="modal-card q-pa-md">
       <q-card-section class="q-pa-none">
         <div class="sort-options">
@@ -87,7 +87,6 @@
           </q-list>
           <div class="buttons q-mt-md q-row items-center justify-between">
             <q-btn flat icon="refresh" label="Redefinir" @click="resetaOrdenacoes" class="q-mr-md"/>
-            <q-btn flat icon="close" @click="fechaMenuOrdenacao"/>
           </div>
         </div>
       </q-card-section>

@@ -2,10 +2,12 @@
   <q-dialog v-model="dialogOpen" :persistent="false" @hide="handleHide">
     <q-card class="q-dialog-plugin">
       <q-card-section>
+        <div class="text-h6">Adicionar Via</div>
+        <q-input v-model="searchQuery" label="Buscar vias" @input="searchVias" debounce="300" />
         <via-sugestao :vias="suggestedVias" @add-via="addVia" />
       </q-card-section>
-      <q-card-actions align="right">
-        <q-btn flat label="Cancelar" @click="closeDialog" />
+      <q-card-actions align="center">
+        <q-btn v-if="currentPage < totalPages" @click="loadMoreVias" label="Carregar mais" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -61,8 +63,19 @@ const searchVias = async () => {
 
 const loadVias = async () => {
   const result = await ColecaoService.getViasNotIn(props.colecaoId, currentPage.value, 10);
-  suggestedVias.value = result.vias.map((via: ViaWithAdded) => ({ ...via, added: false }));
+  if (currentPage.value === 1) {
+    suggestedVias.value = result.vias.map((via: ViaWithAdded) => ({ ...via, added: false }));
+  } else {
+    suggestedVias.value.push(...result.vias.map((via: ViaWithAdded) => ({ ...via, added: false })));
+  }
   totalPages.value = Math.ceil(result.total / 10);
+};
+
+const loadMoreVias = async () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+    await loadVias();
+  }
 };
 
 const addVia = (via: ViaWithAdded) => {

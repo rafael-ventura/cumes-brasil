@@ -10,8 +10,8 @@
               <div class="text-subtitle1">{{ colecao?.descricao }}</div>
               <div class="text-caption">{{ vias?.length || "0" }} vias</div>
             </div>
-            <div>
-              <q-icon name="settings" size="2rem" @click.stop="openConfigDialogModal" />
+            <div class="icons-container">
+              <q-icon name="settings" size="2rem" @click.stop="isConfigDialogOpen = true" />
               <br>
               <q-icon name="sort" size="2rem" @click.stop="toggleSortMenu" />
             </div>
@@ -25,7 +25,7 @@
       @edit="editCollection"
       @delete="confirmDeletion"
     />
-    <ViasOrdena v-if="sortMenu" @sort="handleSort" @reset="resetSort" @close="toggleSortMenu" />
+    <ViasOrdena v-model="sortMenu" @sort="handleSort" @reset="resetSort" @close="toggleSortMenu" />
     <div class="via-list">
       <q-card v-for="via in vias" :key="via.id" class="via-card" clickable @click="goToViaDetalhada(via.id)">
         <q-img :src="via.imagem?.url || 'https://via.placeholder.com/150x150'" class="via-image" alt="via image" />
@@ -135,10 +135,6 @@ onMounted(async () => {
 
 const goToViaDetalhada = (id: number) => {
   router.push(`/vias/${id}`);
-};
-
-const openConfigDialogModal = () => {
-  isConfigDialogOpen.value = true;
 };
 
 const closeModal = () => {
@@ -267,6 +263,15 @@ const viaAdded = async (via: Via) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.icons-container {
+  position: relative;
+  z-index: 20; /* Garante que os ícones estejam acima do cabeçalho */
+}
+
+.icons-container q-icon {
+  cursor: pointer;
 }
 
 .via-list {

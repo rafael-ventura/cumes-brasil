@@ -6,12 +6,10 @@
         <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300"/>
       </div>
       <div class="col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal"/>
+        <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true"/>
       </div>
     </div>
-    <q-dialog v-model="isFilterModalOpen" persistent>
-      <BuscaAvancada @apply-filters="applyFilters"/>
-    </q-dialog>
+    <BuscaAvancada @apply-filters="applyFilters" v-model="isFilterModalOpen"/>
     <q-list >
       <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
         <q-item-section avatar>
@@ -32,11 +30,11 @@
       icon="add"
       color="blue"
       class="fixed-bottom-right"
-      @click="openAddColecaoModal"
+      @click="isAddColecaoModalOpen = true"
     />
 
-    <q-dialog v-model="isAddColecaoModalOpen" persistent>
-      <q-card>
+    <q-dialog v-model="isAddColecaoModalOpen">
+      <q-card style="min-width: 300px;">
         <q-card-section>
           <div class="text-h6">Adicionar Coleção</div>
         </q-card-section>
@@ -119,10 +117,6 @@ const searchColecoes = async () => {
   }
 };
 
-const openFilterModal = () => {
-  isFilterModalOpen.value = true;
-};
-
 const applyFilters = async (filters: any) => {
   try {
     colecoes.value = await ColecaoService.search(filters);
@@ -133,10 +127,6 @@ const applyFilters = async (filters: any) => {
 
 const goToColecaoDetalhada = (colecao: Colecao) => {
   router.push(`/colecoes/${colecao.id}`);
-};
-
-const openAddColecaoModal = () => {
-  isAddColecaoModalOpen.value = true;
 };
 
 </script>
