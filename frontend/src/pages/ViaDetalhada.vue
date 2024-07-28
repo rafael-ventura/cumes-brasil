@@ -87,7 +87,7 @@ const via = ref<Via>();
 const showForm = ref(false);
 
 defineOptions({
-  name: "ViaDetalhadaPage"
+  name: 'ViaDetalhadaPage'
 });
 
 onMounted(async () => {
@@ -95,7 +95,7 @@ onMounted(async () => {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
   } catch (error) {
-    console.error("Erro ao buscar detalhes da via:", error);
+    console.error('Erro ao buscar detalhes da via:', error);
   }
 });
 

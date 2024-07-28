@@ -43,7 +43,7 @@ class EscaladaService {
         else if (isNaN(usuario_id)) {
             throw new Error("ID do usuário inválido");
         }
-        return this.repository.getByUserId(usuario_id);
+        return this.repository.getByUsuarioId(usuario_id);
     }
     async getEscaladasDaVia(via_id) {
         if (!via_id) {

@@ -21,7 +21,7 @@ const ColecaoRouter = Router();
 ColecaoRouter.get("/:id", colecaoController.getById);
 ColecaoRouter.get("/", colecaoController.getAllColecao);
 ColecaoRouter.post("/", colecaoController.createColecao);
-ColecaoRouter.put("/", colecaoController.updateColecao);
+ColecaoRouter.put("/:id", colecaoController.updateColecao);
 ColecaoRouter.delete("/:id", colecaoController.deleteColecao);
 ColecaoRouter.post("/adicionarVia", colecaoController.adicionarVia);
 ColecaoRouter.delete("/:id/via/:viaId", colecaoController.removeVia);

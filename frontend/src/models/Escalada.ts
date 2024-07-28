@@ -1,5 +1,5 @@
 // import { Via } from "src/models/Via";
-import { Usuario } from "src/models/Usuario";
+// import { Usuario } from "src/models/Usuario";
 import { Participante } from "./Participante";
 
 export interface Escalada {

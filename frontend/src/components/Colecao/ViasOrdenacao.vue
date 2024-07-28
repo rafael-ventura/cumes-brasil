@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isOpen" persistent>
+  <q-dialog v-model="isOpen">
     <q-card class="modal-card q-pa-md">
       <q-card-section class="q-pa-none">
         <div class="sort-options">
@@ -87,7 +87,6 @@
           </q-list>
           <div class="buttons q-mt-md q-row items-center justify-between">
             <q-btn flat icon="refresh" label="Redefinir" @click="resetaOrdenacoes" class="q-mr-md"/>
-            <q-btn flat icon="close" @click="fechaMenuOrdenacao"/>
           </div>
         </div>
       </q-card-section>
@@ -96,8 +95,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
-import { Via } from "src/models/Via";
+import { ref, defineEmits } from 'vue';
+import { Via } from 'src/models/Via';
 
 const isOpen = ref(true); // Controla se o modal está aberto ou não
 const grauAtivo = ref(false);
@@ -105,66 +104,66 @@ const duracaoAtivo = ref(false);
 const extensaoAtivo = ref(false);
 const dataAtivo = ref(false); // Ordenação padrão inativa
 
-const ordemGrau = ref<"asc" | "desc">("desc");
-const ordemDuracao = ref<"asc" | "desc">("desc");
-const ordemExtensao = ref<"asc" | "desc">("desc");
-const ordemData = ref<"asc" | "desc">("asc");
+const ordemGrau = ref<'asc' | 'desc'>('desc');
+const ordemDuracao = ref<'asc' | 'desc'>('desc');
+const ordemExtensao = ref<'asc' | 'desc'>('desc');
+const ordemData = ref<'asc' | 'desc'>('asc');
 
 const toggleAtivo = (key: string) => {
-  if (key === "grau") {
+  if (key === 'grau') {
     grauAtivo.value = !grauAtivo.value;
     duracaoAtivo.value = false;
     extensaoAtivo.value = false;
     dataAtivo.value = false;
-  } else if (key === "duracao") {
+  } else if (key === 'duracao') {
     duracaoAtivo.value = !duracaoAtivo.value;
     grauAtivo.value = false;
     extensaoAtivo.value = false;
     dataAtivo.value = false;
-  } else if (key === "extensao") {
+  } else if (key === 'extensao') {
     extensaoAtivo.value = !extensaoAtivo.value;
     grauAtivo.value = false;
     duracaoAtivo.value = false;
     dataAtivo.value = false;
-  } else if (key === "data") {
+  } else if (key === 'data') {
     dataAtivo.value = !dataAtivo.value;
     grauAtivo.value = false;
     duracaoAtivo.value = false;
     extensaoAtivo.value = false;
   }
   if (!grauAtivo.value && !duracaoAtivo.value && !extensaoAtivo.value && !dataAtivo.value) {
-    emit("reset");
+    emit('reset');
   } else {
     aplicaOrdenacoes();
   }
 };
 
 const toggleOrdem = (key: keyof Via) => {
-  if (key === "grau" && grauAtivo.value) {
-    ordemGrau.value = ordemGrau.value === "desc" ? "asc" : "desc";
-  } else if (key === "duracao" && duracaoAtivo.value) {
-    ordemDuracao.value = ordemDuracao.value === "desc" ? "asc" : "desc";
-  } else if (key === "extensao" && extensaoAtivo.value) {
-    ordemExtensao.value = ordemExtensao.value === "desc" ? "asc" : "desc";
-  } else if (key === "data" && dataAtivo.value) {
-    ordemData.value = ordemData.value === "desc" ? "asc" : "desc";
+  if (key === 'grau' && grauAtivo.value) {
+    ordemGrau.value = ordemGrau.value === 'desc' ? 'asc' : 'desc';
+  } else if (key === 'duracao' && duracaoAtivo.value) {
+    ordemDuracao.value = ordemDuracao.value === 'desc' ? 'asc' : 'desc';
+  } else if (key === 'extensao' && extensaoAtivo.value) {
+    ordemExtensao.value = ordemExtensao.value === 'desc' ? 'asc' : 'desc';
+  } else if (key === 'data' && dataAtivo.value) {
+    ordemData.value = ordemData.value === 'desc' ? 'asc' : 'desc';
   }
   aplicaOrdenacoes();
 };
 
 const aplicaOrdenacoes = () => {
-  let orderParams: { key: keyof Via; order: "asc" | "desc" } | null = null;
+  let orderParams: { key: keyof Via; order: 'asc' | 'desc' } | null = null;
   if (grauAtivo.value) {
-    orderParams = { key: "grau", order: ordemGrau.value };
+    orderParams = { key: 'grau', order: ordemGrau.value };
   } else if (duracaoAtivo.value) {
-    orderParams = { key: "duracao", order: ordemDuracao.value };
+    orderParams = { key: 'duracao', order: ordemDuracao.value };
   } else if (extensaoAtivo.value) {
-    orderParams = { key: "extensao", order: ordemExtensao.value };
+    orderParams = { key: 'extensao', order: ordemExtensao.value };
   } else if (dataAtivo.value) {
-    orderParams = { key: "data", order: ordemData.value };
+    orderParams = { key: 'data', order: ordemData.value };
   }
   if (orderParams) {
-    emit("sort", orderParams);
+    emit('sort', orderParams);
   }
 };
 
@@ -173,18 +172,18 @@ const resetaOrdenacoes = () => {
   duracaoAtivo.value = false;
   extensaoAtivo.value = false;
   dataAtivo.value = false;
-  ordemGrau.value = "desc";
-  ordemDuracao.value = "desc";
-  ordemExtensao.value = "desc";
-  ordemData.value = "asc";
-  emit("reset");
+  ordemGrau.value = 'desc';
+  ordemDuracao.value = 'desc';
+  ordemExtensao.value = 'desc';
+  ordemData.value = 'asc';
+  emit('reset');
 };
 
 const fechaMenuOrdenacao = () => {
-  emit("close");
+  emit('close');
 };
 
-const emit = defineEmits<{(e: "sort", params: { key: keyof Via; order: "asc" | "desc" }): void; (e: "reset"): void; (e: "close"): void }>();
+const emit = defineEmits<{(e: 'sort', params: { key: keyof Via; order: 'asc' | 'desc' }): void; (e: 'reset'): void; (e: 'close'): void }>();
 </script>
 
 <style scoped>

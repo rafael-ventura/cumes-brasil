@@ -11,9 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { Dark } from "quasar";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Dark } from 'quasar';
 
 const router = useRouter();
 const isDarkMode = ref(Dark.isActive);
@@ -31,6 +31,7 @@ const toggleDarkMode = () => {
 <style scoped>
 .q-toolbar {
   justify-content: space-around;
+  z-index: 1; /* Garante que a navbar esteja sempre acima do conteúdo */
 }
 
 .q-footer {

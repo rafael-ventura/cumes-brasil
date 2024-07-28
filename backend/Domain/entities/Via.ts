@@ -7,15 +7,14 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
-} from "typeorm";
-import { Croqui } from "./Croqui";
-import { Montanha } from "./Montanha";
-import { Fonte } from "./Fonte";
-import { Face } from "./Face";
-import { Colecao } from "./Colecao";
-import { Imagem } from "./Imagem";
-import { Escalada } from "./Escalada";
-import { ColecaoVia } from "./ColecaoVia";
+} from 'typeorm';
+import { Croqui } from './Croqui';
+import { Montanha } from './Montanha';
+import { Fonte } from './Fonte';
+import { Face } from './Face';
+import { Imagem } from './Imagem';
+import { Escalada } from './Escalada';
+import { ColecaoVia } from './ColecaoVia';
 
 @Entity()
 export class Via extends BaseEntity {
@@ -92,7 +91,10 @@ export class Via extends BaseEntity {
   })
   croquis: Croqui[];
 
-  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.via)
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.via, {
+    cascade: true,
+    onDelete: 'CASCADE'
+  })
   viasColecoes: ColecaoVia[];
 
   @OneToMany(() => Escalada, escalada => escalada.viaId)
