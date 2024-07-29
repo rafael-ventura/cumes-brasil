@@ -3,7 +3,7 @@ module.exports = {
 
   parserOptions: {
     parser: require.resolve('@typescript-eslint/parser'),
-    project: ['./tsconfig.json'],
+    project: ['./tsconfig.json', './src-pwa/tsconfig.json'],
     extraFileExtensions: ['.vue']
   },
 
@@ -69,5 +69,14 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['warn'],
     'no-unused-vars': 'warn',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
-  }
-}
+  },
+
+  overrides: [
+    {
+      files: ['postcss.config.cjs'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
+  ]
+};
