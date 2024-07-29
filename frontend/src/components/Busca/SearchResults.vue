@@ -44,10 +44,6 @@ const emit = defineEmits(["select"]);
 const selectItem = (item: Via | Colecao) => {
   emit("select", item);
 };
-
-const log = () => {
-  console.log("Results:", props.results);
-};
 </script>
 
 <style scoped>

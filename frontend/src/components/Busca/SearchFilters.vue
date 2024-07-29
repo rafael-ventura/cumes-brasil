@@ -36,7 +36,9 @@ const localFilters = ref<SearchRequest>({
   searchQuery: "",
   selectedMountain: null,
   selectedDifficulty: null,
-  selectedExposure: null
+  selectedExposure: null,
+  page: 1,
+  itemsPerPage: 10
 });
 
 const difficulties = ["I", "II", "III", "IV", "V", "A1", "A2", "A3"];
@@ -55,7 +57,9 @@ const clearFilters = () => {
     searchQuery: "",
     selectedMountain: null,
     selectedDifficulty: null,
-    selectedExposure: null
+    selectedExposure: null,
+    page: 1,
+    itemsPerPage: 10
   };
   console.log("Cleared filters, emitting empty filters.");
   emit("applyFilters", localFilters.value);

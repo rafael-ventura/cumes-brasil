@@ -2,7 +2,7 @@
   <div>
     <slot name="filters" :filters="filters" />
     <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
-    <q-pagination v-model="page" :max="totalPages" @update:model-value="searchEntities" />
+    <q-pagination v-model="filters.page as number" :max="totalPages" @update:model-value="searchEntities" />
   </div>
 </template>
 
@@ -16,9 +16,7 @@ const props = defineProps<{
   entity: "via" | "colecao";
 }>();
 
-const emit = defineEmits<{(event: "select", item: any): void;
-  (event: "update-results", results: any[]): void;
-}>();
+const emit = defineEmits<{(event: "select", item: any): void; (event: "update-results", results: any[]): void;}>();
 
 const filters = ref<SearchRequest>({
   searchQuery: "",
@@ -30,18 +28,14 @@ const filters = ref<SearchRequest>({
 });
 
 const results = ref<any[]>([]);
-const page = ref(1);
 const totalPages = ref(1);
-const totalItems = ref(1);
 
 onMounted(() => {
-  // Execute a busca inicial
   searchEntities();
 });
 
 const searchEntities = async () => {
   try {
-    // Monta o searchRequest com o entityType incluído
     const searchRequest: SearchRequest = {
       ...filters.value,
       entityType: props.entity
@@ -49,7 +43,6 @@ const searchEntities = async () => {
     const searchResult = await searchService.search(searchRequest);
     results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
-    totalItems.value = searchResult.totalItems;
     console.log("Search results:", results.value);
     emit("update-results", results.value);
   } catch (error) {
@@ -58,7 +51,7 @@ const searchEntities = async () => {
 };
 
 const handleApplyFilters = (newFilters: SearchRequest) => {
-  filters.value = { ...filters.value, ...newFilters };
+  filters.value = { ...filters.value, ...newFilters, page: 1 }; // Reset page when filters are updated
   searchEntities();
 };
 
