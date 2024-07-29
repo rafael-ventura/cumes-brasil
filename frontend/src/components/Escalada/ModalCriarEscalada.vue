@@ -1,5 +1,5 @@
 <template>
-  <q-dialog :model-value="isOpen" >
+  <q-dialog :model-value="props.isOpen" >
     <q-card class="scroll card-style">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6" style="margin-bottom: 5vh;">Criar Escalada</div>
@@ -142,7 +142,7 @@ const onSubmit = async () => {
   }
 
   try {
-    await EscaladaService.createEscalada(escalada, authToken);
+    await EscaladaService.createEscalada(escalada);
     onReset();
   } catch (error: any) {
     console.error(error.message);
@@ -171,12 +171,6 @@ const onReset = () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.input-date {
-  width: min-content;
-  margin: 2vh auto;
-  height: min-content;
 }
 
 .input {

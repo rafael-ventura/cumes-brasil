@@ -1,9 +1,9 @@
-import { Usuario } from "../../Domain/entities/Usuario";
-import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
-import bcrypt from "bcrypt";
-import {Colecao} from "../../Domain/entities/Colecao";
-import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
-import {Container, Service} from "typedi";
+import { Usuario } from '../../Domain/entities/Usuario';
+import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
+import bcrypt from 'bcrypt';
+import { Colecao } from '../../Domain/entities/Colecao';
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { Container, Service } from 'typedi';
 
 @Service()
 export class UsuarioService {
@@ -29,17 +29,23 @@ export class UsuarioService {
         }
         const senhaHash = await bcrypt.hash(senha, 10);
         const user = await this.usuarioRepo.create(nome, email, senhaHash);
-        // depois de criar o usuario, cria a coleção padrão
-        this.createDefaultCollection(user);
+        await this.createDefaultCollections(user);
     }
 
-    private createDefaultCollection(user: Usuario): void {
-        const collection = new Colecao();
-        collection.nome = "Escaladas";
-        collection.descricao = "Vias que escalei";
-        collection.usuario = user.id;
-        collection.imagem = 1;
-        this.colecaoRepo.create(collection);
+    private async createDefaultCollections (user: Usuario): Promise<void> {
+        const escaladasCollection = new Colecao();
+        escaladasCollection.nome = 'Escaladas';
+        escaladasCollection.descricao = 'Vias que escalei';
+        escaladasCollection.usuario = user.id;
+        escaladasCollection.imagem = 1;
+        await this.colecaoRepo.create(escaladasCollection);
+
+        const favoritasCollection = new Colecao();
+        favoritasCollection.nome = 'Vias Favoritas';
+        favoritasCollection.descricao = 'Vias favoritadas por você';
+        favoritasCollection.usuario = user.id;
+        favoritasCollection.imagem = 1;
+        await this.colecaoRepo.create(favoritasCollection);
     }
 
     async updateUsuario (usuario: Usuario): Promise<void> {
@@ -54,12 +60,6 @@ export class UsuarioService {
 
         await this.usuarioRepo.delete(id);
     }
-
-    async getUsuarioByEmail (email: string): Promise<any> {
-        return this.usuarioRepo.findByEmail(email);
-
-    }
-
     async getPerfil (id: number): Promise<Usuario | null> {
         return this.usuarioRepo.getPerfilSemHash(id);
     }
