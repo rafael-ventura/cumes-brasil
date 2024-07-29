@@ -1,6 +1,5 @@
 import { Via } from 'src/models/Via';
 import { Imagem } from 'src/models/Imagem';
-import { ref } from 'vue';
 
 export interface Colecao {
   id: number;

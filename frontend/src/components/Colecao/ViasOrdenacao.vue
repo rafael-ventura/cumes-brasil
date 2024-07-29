@@ -179,10 +179,6 @@ const resetaOrdenacoes = () => {
   emit('reset');
 };
 
-const fechaMenuOrdenacao = () => {
-  emit('close');
-};
-
 const emit = defineEmits<{(e: 'sort', params: { key: keyof Via; order: 'asc' | 'desc' }): void; (e: 'reset'): void; (e: 'close'): void }>();
 </script>
 

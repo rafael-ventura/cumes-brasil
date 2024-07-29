@@ -34,18 +34,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Croqui } from 'src/models/Croqui';
 
-const props = defineProps({
-  croquis: Array as () => Croqui[]
-});
+const props = defineProps<{ croquis?: Croqui[] }>();
+
 const slide = ref(-1);
 const dialog = ref(false);
 const selectedImage = ref('');
+
+// Usar computed para fornecer um valor padrão se croquis for undefined
+const croquis = computed(() => props.croquis ?? []);
 
 function openDialog (imageUrl: string) {
   selectedImage.value = imageUrl;
   dialog.value = true;
 }
 </script>
+
+<style scoped>
+</style>
