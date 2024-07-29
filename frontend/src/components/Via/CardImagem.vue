@@ -1,7 +1,9 @@
 <template>
-  <q-item class="q-ma-md bg-grey-3 rounded-borders">
-    <q-img :src="src" alt="Imagem da via" class="via-img" @click="expandImage(src || 'https://via.placeholder.com/150')"/>
-  </q-item>
+  <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+    <q-item class="q-ma-md">
+      <q-img :src="src" alt="Imagem da via" class="via-img" @click="expandImage(src || 'https://via.placeholder.com/150')"/>
+    </q-item>
+  </q-card>
   <q-dialog v-model="isImageModalOpen">
     <q-card>
       <q-card-section class="q-pa-none">

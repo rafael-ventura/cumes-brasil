@@ -25,58 +25,80 @@
       </div>
 
       <!-- Bloco Duração e Extensão -->
-      <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
-          <q-card-section>
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Duração:</strong> {{ via?.duracao }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
-          </q-card-section>
+            </q-card>
+          </q-item>
         </q-card>
       </div>
       <!-- Bloco Grau, Crux, Artificial e Exposição -->
-      <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
-          <q-card-section>
+      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Grau:</strong> {{ via?.grau }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Crux:</strong> {{ via?.crux }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
-          </q-card-section>
+            </q-card>
+          </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Detalhes -->
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-4">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
-          <q-card-section>
+      <div class="col-xs-12 col-sm-8 col-md-12 col-lg-3 col-xl-4">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
             <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
-          </q-card-section>
+            </q-card>
+          </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Fonte e Conquistadores -->
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-10">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
-          <q-card-section>
-            <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
-            <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
-            <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
-          </q-card-section>
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
+            </q-card>
+          </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Data -->
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
-          <q-card-section>
-            <p><strong>Data do cadastro:</strong> {{ via?.data }}</p>
-          </q-card-section>
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Data do cadastro:</strong> {{ via?.data }}</p>
+            </q-card>
+          </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Croquis -->
       <div class="col-12">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
           <q-card-section>
             <!-- Placeholder para o carrossel de fotos -->
             <p><strong>Croquis:</strong></p>
@@ -181,6 +203,11 @@ const addToCollection = () => {
 </script>
 
 <style scoped>
+.rounded-borders {
+  border-radius: 15px;
+  color: black;
+}
+
 .title-margin {
   margin-left: 20px;
 }
@@ -189,5 +216,26 @@ const addToCollection = () => {
   display: flex;
   gap: 10px;
   justify-content: center;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os itens se movam para a próxima linha se necessário */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 93%; /* Garante que o card ocupe toda a altura disponível da coluna */
+}
+
+.q-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Garante que o conteúdo do card se distribua igualmente */
+}
+
+.card-parametro{
+  width: 100%;
 }
 </style>
