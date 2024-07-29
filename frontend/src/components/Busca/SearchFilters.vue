@@ -21,6 +21,7 @@
       outlined
     />
     <q-btn label="Buscar" @click="emitFilters" />
+    <q-btn label="Clear" color="secondary" @click="clearFilters" />
   </div>
 </template>
 
@@ -48,6 +49,17 @@ onMounted(async () => {
     console.error("Error getting mountains:", error);
   }
 });
+
+const clearFilters = () => {
+  localFilters.value = {
+    searchQuery: "",
+    selectedMountain: null,
+    selectedDifficulty: null,
+    selectedExposure: null
+  };
+  console.log("Cleared filters, emitting empty filters.");
+  emit("applyFilters", localFilters.value);
+};
 
 const emitFilters = () => {
   console.log("Emitting filters:", localFilters.value);

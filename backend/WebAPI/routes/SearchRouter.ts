@@ -6,7 +6,7 @@ import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
 const router = Router();
 const viaRepository = new ViaRepository();
-const searchService = new SearchService(viaRepository);
+new SearchService(viaRepository);
 const searchController = new SearchController();
 
 router.post('/', searchController.searchEntities);

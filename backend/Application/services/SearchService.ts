@@ -9,16 +9,23 @@ export class SearchService<T> {
     }
 
     async search(filters: any): Promise<ISearchResult<T>> {
-        // Aqui você deve ajustar o retorno para seguir a interface ISearchResult
-        console.log("Searching for entities with filters: ", filters);
-        const items = await this.repository.search(filters);
-        const totalItems = await this.repository.count(filters);
-        const totalPages = Math.ceil(totalItems / (filters.itemsPerPage || 10)); // Ajuste a lógica conforme necessário
+        try {
+            console.log("Searching for entities with filters: ", filters);
 
-        return {
-            items,
-            totalPages,
-            totalItems
-        };
+            // Chama o método de pesquisa do repositório
+            const { items, totalItems, totalPages }: any = await this.repository.search(filters);
+
+            console.log("Search result:", items);
+            console.log("Total items:", totalItems);
+
+            return {
+                items,
+                totalPages,
+                totalItems
+            };
+        } catch (error) {
+            console.error("Error in search method:", error);
+            throw error;
+        }
     }
 }

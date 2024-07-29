@@ -2,6 +2,7 @@ import {AppDataSource} from "../config/db";
 import {Colecao} from "../../Domain/entities/Colecao";
 import {ColecaoVia} from "../../Domain/entities/ColecaoVia";
 import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
+import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
 
 export class ColecaoRepository implements ISearchRepository<Colecao> {
     private repository = AppDataSource.getRepository(Colecao);
@@ -71,7 +72,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
 
     }
 
-    async search(query: any): Promise<Colecao[]> {
+    async search(query: any): Promise<ISearchResult<Colecao>> {
         const { nomeColecao, nomeVia, nomeMontanha } = query;
 
         let qb = this.repository.createQueryBuilder('colecao')
@@ -90,28 +91,10 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
             qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
 
-        return await qb.getMany();
-    }
-
-    async count(query: any): Promise<number> {
-        const { nomeColecao, nomeVia, nomeMontanha } = query;
-
-        let qb = this.repository.createQueryBuilder('colecao')
-            .leftJoinAndSelect('colecao.vias', 'via')
-            .leftJoinAndSelect('via.montanha', 'montanha');
-
-        if (nomeColecao) {
-            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        return {
+            items: await qb.getMany(),
+            totalItems: await qb.getCount(),
+            totalPages: 1
         }
-
-        if (nomeVia) {
-            qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
-        }
-
-        if (nomeMontanha) {
-            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
-        }
-
-        return await qb.getCount();
     }
 }

@@ -2,6 +2,7 @@
 import { Via } from "../../Domain/entities/Via";
 import { AppDataSource } from "../config/db";
 import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
+import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
 
 export class ViaRepository implements ISearchRepository<Via>{
 
@@ -55,19 +56,20 @@ export class ViaRepository implements ISearchRepository<Via>{
   }
 
 
-  async search(query: any): Promise<Via[]> {
+  async search(query: any): Promise<ISearchResult<Via>> {
     console.log("Query received:", query); // Adicione esta linha para depuração
 
-    const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;
+    const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure, page = 1, itemsPerPage = 10 } = query;
 
-    let qb = this.repository.createQueryBuilder('via');
+    let qb = this.repository.createQueryBuilder('via')
+        .leftJoinAndSelect('via.montanha', 'montanha'); // Junção com a tabela Montanha
 
     if (searchQuery) {
       qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
     }
 
     if (selectedMountain) {
-      qb = qb.andWhere('via.montanha_id = :selectedMountain', { selectedMountain });
+      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain }); // Filtra pelo nome da montanha
     }
 
     if (selectedDifficulty) {
@@ -78,34 +80,23 @@ export class ViaRepository implements ISearchRepository<Via>{
       qb = qb.andWhere('via.exposicao = :selectedExposure', { selectedExposure });
     }
 
-    // Para garantir que a consulta está correta
-    console.log("Generated SQL Query: ", qb.getSql());
+    // Contar o total de itens
+    const totalItems = await qb.getCount();
 
-    return await qb.getMany();
+    // Buscar itens paginados
+    const items = await qb
+        .skip((page - 1) * itemsPerPage)
+        .take(itemsPerPage)
+        .getMany();
+
+    // Calcular total de páginas
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    console.log("Query result:", { items, totalItems, totalPages });
+    return {
+      items,
+      totalPages,
+      totalItems
+    };
   }
-
-  async count(filters: any): Promise<number> {
-    console.log("Counting entities with filters: ", filters); // Adicione esta linha para depuração
-
-    let qb = this.repository.createQueryBuilder('via');
-
-    if (filters.searchQuery) {
-      qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${filters.searchQuery}%` });
-    }
-
-    if (filters.selectedMountain) {
-      qb = qb.andWhere('via.montanha_id = :selectedMountain', { selectedMountain: filters.selectedMountain });
-    }
-
-    if (filters.selectedDifficulty) {
-      qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty: filters.selectedDifficulty });
-    }
-
-    if (filters.selectedExposure) {
-      qb = qb.andWhere('via.exposicao = :selectedExposure', { selectedExposure: filters.selectedExposure });
-    }
-
-    return await qb.getCount();
-  }
-
 }

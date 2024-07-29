@@ -32,6 +32,7 @@ const filters = ref<SearchRequest>({
 const results = ref<any[]>([]);
 const page = ref(1);
 const totalPages = ref(1);
+const totalItems = ref(1);
 
 onMounted(() => {
   // Execute a busca inicial
@@ -48,6 +49,8 @@ const searchEntities = async () => {
     const searchResult = await searchService.search(searchRequest);
     results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
+    totalItems.value = searchResult.totalItems;
+    console.log("Search results:", results.value);
     emit("update-results", results.value);
   } catch (error) {
     console.error("Error searching entities:", error);

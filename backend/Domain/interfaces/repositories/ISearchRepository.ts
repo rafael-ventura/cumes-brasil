@@ -1,5 +1,6 @@
 // ISearchRepository.ts
+import {ISearchResult} from "../models/ISearchResult";
+
 export interface ISearchRepository<T> {
-    search(query: any): Promise<T[]>;
-    count(query: any): Promise<number>;
+    search(query: any): Promise<ISearchResult<T>>;
 }
