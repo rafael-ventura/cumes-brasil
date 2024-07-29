@@ -149,9 +149,9 @@ module.exports = configure(function (/* ctx */) {
       manifestFilename: 'manifest.json',
       useCredentialsForManifestTag: false,
       manifest: {
-        name: `Cumes Brasil - App`,
-        short_name: `Cumes Brasil`,
-        description: `Aplicativo de acervo de Vias de Escalada do Brasil`,
+        name: 'Cumes Brasil - App',
+        short_name: 'Cumes Brasil',
+        description: 'Aplicativo de acervo de Vias de Escalada do Brasil',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',

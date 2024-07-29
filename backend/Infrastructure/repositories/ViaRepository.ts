@@ -95,4 +95,19 @@ export class ViaRepository {
       total
     };
   }
+
+  async getAllWithoutPagination (): Promise<{ vias: Via[], total: number }> {
+    const [vias, total] = await this.repository.createQueryBuilder('via')
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .leftJoinAndSelect('via.croquis', 'croquis')
+      .getManyAndCount();
+    return {
+      vias,
+      total
+    };
+  }
 }

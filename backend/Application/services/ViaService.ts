@@ -16,8 +16,12 @@ export class ViaService {
     return via;
   }
 
-  async getVias(page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    return this.viaRepo.getAll(page, limit);
+  async getVias(page?: number, limit?: number): Promise<{ vias: Via[], total: number }> {
+    if (page !== undefined && limit !== undefined) {
+      return this.viaRepo.getAll(page, limit);
+    } else {
+      return this.viaRepo.getAllWithoutPagination();
+    }
   }
 
   async createVia(viaData: Partial<Via>): Promise<void> {

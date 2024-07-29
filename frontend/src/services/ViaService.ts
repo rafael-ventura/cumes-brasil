@@ -22,14 +22,13 @@ class ViaService {
     }
   }
 
-  async getAllVias (page = 1, limit = 10): Promise<{ vias: Via[], total: number }> {
+  async getAllVias (page?: number, limit?: number): Promise<{ vias: Via[], total: number }> {
     try {
-      const response = await api.get('/vias/', {
-        params: {
-          page,
-          limit
-        }
-      });
+      const params: any = {};
+      if (page !== undefined) params.page = page;
+      if (limit !== undefined) params.limit = limit;
+
+      const response = await api.get('/vias/', { params });
       const vias = response.data.vias as Via[];
       const total = response.data.total as number;
 
