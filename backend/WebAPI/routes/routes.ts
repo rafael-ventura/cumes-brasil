@@ -26,7 +26,7 @@ routes.use("/faces", FaceRouter);
 routes.use("/croquis", CroquiRouter);
 routes.use("/usuarios", UsuarioRouter);
 routes.use("/imagens", ImagemRouter);
+routes.use("/escaladas", authenticateToken, EscaladaRouter);
 routes.use('/colecoes', authenticateToken, ColecaoRouter);
-routes.use("/escaladas", EscaladaRouter);
 routes.use("/perfil", authenticateToken, PerfilRouter);
 export default routes;

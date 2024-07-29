@@ -1,10 +1,12 @@
-import { Via } from 'src/models/Via';
-import { Usuario } from 'src/models/Usuario';
+// import { Via } from "src/models/Via";
+// import { Usuario } from "src/models/Usuario";
+import { Participante } from "./Participante";
 
 export interface Escalada {
-  usuario: Usuario;
-  Via: Via;
+  // usuario: Usuario;
+  viaId: number;
   data: string;
-  id: number;
+  id?: number;
   observacao?: string;
+  participantes: Participante[];
 }

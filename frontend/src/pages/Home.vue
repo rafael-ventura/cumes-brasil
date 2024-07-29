@@ -31,7 +31,7 @@
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias com Exposição até E2</div>
-                <div class="text-caption">{{ exposicaoE2Vias.length }} vias encontradas</div>
+                <div class="text-caption">{{ exposicaoE2Vias.values.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>

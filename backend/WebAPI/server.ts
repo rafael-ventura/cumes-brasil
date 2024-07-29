@@ -1,13 +1,13 @@
-import * as dotenv from "dotenv";
-import express from "express";
-import swaggerUi from "swagger-ui-express";
-import routes from "./routes/routes";
-import "reflect-metadata";
-import swaggerDocument from "../swagger_output.json";
-import { AppDataSource } from "../Infrastructure/config/db";
-import { loadData } from "../Infrastructure/sql_scripts/initialLoad";
-import { Via } from "../Domain/entities/Via";
-import path from "path";
+import * as dotenv from 'dotenv';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import routes from './routes/routes';
+import 'reflect-metadata';
+import swaggerDocument from '../swagger_output.json';
+import { AppDataSource } from '../Infrastructure/config/db';
+import { loadData } from '../Infrastructure/sql_scripts/initialLoad';
+import { Via } from '../Domain/entities/Via';
+import path from 'path';
 
 dotenv.config();
 const cors = require("cors");
@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 4020;
 const allowedOrigins = [
     "http://localhost:4020",
     "http://localhost:9000",
+    'http://localhost:9200',
     "http://localhost:8080",
     "http://192.168.1.147:4020",
     "http://192.168.1.147:9000"

@@ -6,8 +6,8 @@ export class EscaladaRepository {
 
     async getById(id: number): Promise<Escalada | null> {
         return this.repository.createQueryBuilder("escalada")
-            .leftJoinAndSelect("escalada.usuario", "usuario")
-            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("escalada.usuarioId", "usuario")
+            .leftJoinAndSelect("escalada.viaId", "via")
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("escalada.id = :id", { id })
             .getOne();
@@ -15,8 +15,8 @@ export class EscaladaRepository {
 
     async getAll(): Promise<Escalada[]> {
         return this.repository.createQueryBuilder("escalada")
-            .leftJoinAndSelect("escalada.usuario", "usuario")
-            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("escalada.usuarioId", "usuario")
+            .leftJoinAndSelect("escalada.viaId", "via")
             .leftJoinAndSelect("escalada.participantes", "participante")
             .getMany();
     }
@@ -31,10 +31,10 @@ export class EscaladaRepository {
     }
 
     async getByUserId(userId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { usuario: userId } });
+        return this.repository.find({ where: { usuarioId: userId } });
     }
 
     async getByViaId(viaId: number): Promise<Escalada[]> {
-        return this.repository.find({ where: { via: viaId } });
+        return this.repository.find({ where: { viaId: viaId } });
     }
 }
