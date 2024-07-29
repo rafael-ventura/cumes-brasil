@@ -8,11 +8,10 @@
         <q-btn flat icon="filter_list" label="Filtros" @click="openFilterModal"/>
       </div>
     </div>
-    <ViaLista :vias="vias" @show-details="showViaDetails"/>
+    <ViaLista :vias="vias" />
     <q-dialog v-model="isFilterModalOpen" persistent>
       <BuscaAvancada @apply-filters="applyFilters"/>
     </q-dialog>
-    <ModalViaDetalhada :isOpen="isViaModalOpen" :via="<Via>selectedVia" @update:isOpen="isViaModalOpen = $event"/>
   </q-page>
 </template>
 
@@ -21,14 +20,11 @@ import { onMounted, ref } from "vue";
 import ViaService from "../services/ViaService";
 import ViaLista from "components/Via/ViaLista.vue";
 import BuscaAvancada from "components/Busca/BuscaAvancada.vue";
-import ModalViaDetalhada from "components/Via/ModalViaDetalhada.vue";
 import { Via } from "src/models/Via";
 
 const searchQuery = ref("");
 const vias = ref<Via[]>([]);
 const isFilterModalOpen = ref(false);
-const isViaModalOpen = ref(false);
-const selectedVia = ref<Via | null>(null);
 const appliedFilters = ref({});
 
 defineOptions({
@@ -44,7 +40,7 @@ const searchVias = async () => {
     if (searchQuery.value.trim() === "" && Object.keys(appliedFilters.value).length === 0) {
       vias.value = await ViaService.getAllVias();
     } else {
-      vias.value = await ViaService.searchVias(searchQuery.value, appliedFilters.value);
+      vias.value = await ViaService.search(searchQuery.value);
     }
   } catch (error) {
     console.error("Erro ao buscar vias:", error);
@@ -59,10 +55,5 @@ const applyFilters = async (filters: any) => {
   appliedFilters.value = filters;
   await searchVias();
   isFilterModalOpen.value = false;
-};
-
-const showViaDetails = (via: Via) => {
-  selectedVia.value = via;
-  isViaModalOpen.value = true;
 };
 </script>

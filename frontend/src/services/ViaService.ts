@@ -2,8 +2,9 @@ import { api } from "boot/axios";
 import { Via } from "src/models/Via";
 import { RouteParamValue } from "vue-router";
 import { adjustImageUrl } from "src/services/ImageService";
+import { SearchService } from "src/models/SearchService";
 
-class ViaService {
+class ViaService implements SearchService<Via> {
   async getViaById (id: number | string): Promise<Via> {
     try {
       const response = await api.get(`/vias/${id}`);
@@ -50,9 +51,9 @@ class ViaService {
     }
   }
 
-  async searchVias (query: string, filters: any): Promise<Via[]> {
+  async search (query: any): Promise<Via[]> {
     try {
-      const response = await api.get("/vias/search", { params: { name: query, ...filters } });
+      const response = await api.get("/vias/search", { params: query });
       const vias = response.data as Via[];
 
       for (const via of vias) {
@@ -60,7 +61,6 @@ class ViaService {
           via.imagem.url = adjustImageUrl(via.imagem.url);
         }
       }
-
       return vias;
     } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");

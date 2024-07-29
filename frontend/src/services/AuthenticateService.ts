@@ -3,8 +3,6 @@ import { api } from "boot/axios";
 class AuthenticateService {
   async login (email: string, password: string) {
     try {
-      console.log("o caminho do endpoint eh", api.defaults.baseURL);
-      console.log("o caminho do endpoint eh", api.name);
       const response = await api.post("/auth/login", {
         email,
         password
@@ -35,8 +33,6 @@ class AuthenticateService {
 
   async register (nome: string, email: string, senha: string) {
     try {
-      console.log("o caminho do endpoint eh", api.defaults.baseURL);
-      console.log("o caminho do endpoint eh", api.name);
       return await api.post("/auth/register", {
         nome,
         email,
@@ -53,10 +49,6 @@ class AuthenticateService {
     } catch (error) {
       throw new Error("Erro ao redefinir senha: " + error);
     }
-  }
-
-  logout () {
-    localStorage.removeItem("authToken");
   }
 
   isAuthenticated () {

@@ -1,9 +1,9 @@
 import {AppDataSource} from "../config/db";
 import {Colecao} from "../../Domain/entities/Colecao";
-import {Via} from "../../Domain/entities/Via";
 import {ColecaoVia} from "../../Domain/entities/ColecaoVia";
+import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
 
-export class ColecaoRepository {
+export class ColecaoRepository implements ISearchRepository<Colecao> {
     private repository = AppDataSource.getRepository(Colecao);
     private colecaoViaRepository = AppDataSource.getRepository(ColecaoVia);
 
@@ -69,5 +69,49 @@ export class ColecaoRepository {
             colecao_id
         });
 
+    }
+
+    async search(query: any): Promise<Colecao[]> {
+        const { nomeColecao, nomeVia, nomeMontanha } = query;
+
+        let qb = this.repository.createQueryBuilder('colecao')
+            .leftJoinAndSelect('colecao.vias', 'via')
+            .leftJoinAndSelect('via.montanha', 'montanha');
+
+        if (nomeColecao) {
+            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        }
+
+        if (nomeVia) {
+            qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
+        }
+
+        if (nomeMontanha) {
+            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
+        }
+
+        return await qb.getMany();
+    }
+
+    async count(query: any): Promise<number> {
+        const { nomeColecao, nomeVia, nomeMontanha } = query;
+
+        let qb = this.repository.createQueryBuilder('colecao')
+            .leftJoinAndSelect('colecao.vias', 'via')
+            .leftJoinAndSelect('via.montanha', 'montanha');
+
+        if (nomeColecao) {
+            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        }
+
+        if (nomeVia) {
+            qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
+        }
+
+        if (nomeMontanha) {
+            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
+        }
+
+        return await qb.getCount();
     }
 }

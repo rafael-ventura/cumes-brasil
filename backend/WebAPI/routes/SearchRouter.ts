@@ -1,15 +1,14 @@
-import {Router} from 'express';
-import {SearchService} from '../../Application/services/SearchService';
-import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+// src/Infrastructure/routes/searchRouter.ts
+import { Router } from 'express';
+import { SearchService } from '../../Application/services/SearchService';
 import {SearchController} from "../Controllers/SearchController";
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
-const searchRepository = new SearchRepository(dbConnection);
-const viaRepository = new ViaRepository(dbConnection);
-const viaService = new SearchService(searchRepository, viaRepository);
-const searchController = new SearchController(viaService);
+const router = Router();
+const viaRepository = new ViaRepository();
+const searchService = new SearchService(viaRepository);
+const searchController = new SearchController();
 
-const ViaRouter = Router();
+router.post('/', searchController.searchEntities);
 
-ViaRouter.get('/', searchController.searchRoutes);
-
-export default ViaRouter;
+export default router;

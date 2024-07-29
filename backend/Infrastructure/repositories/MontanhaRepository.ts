@@ -1,33 +1,35 @@
 import { AppDataSource } from "../config/db";
 import { Montanha } from "../../Domain/entities/Montanha";
+import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
+import {query} from "express";
 
-export class MontanhaRepository {
+export class MontanhaRepository implements ISearchRepository<Montanha> {
     private repository = AppDataSource.getRepository(Montanha);
 
-    async getById (id: number): Promise<Montanha | null> {
+    async getById(id: number): Promise<Montanha | null> {
         return this.repository.createQueryBuilder("montanha")
-          .leftJoinAndSelect("montanha.fonte", "fonte")
-          .leftJoinAndSelect("montanha.imagens", "imagem")
-          .where("montanha.id = :id", { id })
-          .getOne();
+            .leftJoinAndSelect("montanha.fonte", "fonte")
+            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
+            .where("montanha.id = :id", { id })
+            .getOne();
     }
 
-    async getAll (): Promise<Montanha[]> {
+    async getAll(): Promise<Montanha[]> {
         return this.repository.createQueryBuilder("montanha")
-          .leftJoinAndSelect("montanha.fonte", "fonte")
-          .leftJoinAndSelect("montanha.imagens", "imagem")
-          .getMany();
+            .leftJoinAndSelect("montanha.fonte", "fonte")
+            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
+            .getMany();
     }
 
-    async create (montanha: Partial<Montanha>): Promise<void> {
-        await this.repository.insert(montanha);
+    search(query: any): Promise<Montanha[]> {
+        return this.repository.createQueryBuilder("montanha")
+            .leftJoinAndSelect("montanha.fonte", "fonte")
+            .leftJoinAndSelect("montanha.imagem", "imagem")
+            .where("montanha.nome like :nome", { nome: `%${query.nome}%` })
+            .getMany();
     }
 
-    async update (id: number, montanhaData: Partial<Montanha>): Promise<void> {
-        await this.repository.update(id as any, montanhaData);
-    }
-
-    async delete (id: number): Promise<void> {
-        await this.repository.delete(id as any);
+    count(query: any): Promise<number> {
+        return Promise.resolve(0);
     }
 }

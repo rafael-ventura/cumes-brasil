@@ -56,6 +56,8 @@ export class ViaRepository implements ISearchRepository<Via>{
 
 
   async search(query: any): Promise<Via[]> {
+    console.log("Query received:", query); // Adicione esta linha para depuração
+
     const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure } = query;
 
     let qb = this.repository.createQueryBuilder('via');
@@ -76,6 +78,34 @@ export class ViaRepository implements ISearchRepository<Via>{
       qb = qb.andWhere('via.exposicao = :selectedExposure', { selectedExposure });
     }
 
+    // Para garantir que a consulta está correta
+    console.log("Generated SQL Query: ", qb.getSql());
+
     return await qb.getMany();
   }
+
+  async count(filters: any): Promise<number> {
+    console.log("Counting entities with filters: ", filters); // Adicione esta linha para depuração
+
+    let qb = this.repository.createQueryBuilder('via');
+
+    if (filters.searchQuery) {
+      qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${filters.searchQuery}%` });
+    }
+
+    if (filters.selectedMountain) {
+      qb = qb.andWhere('via.montanha_id = :selectedMountain', { selectedMountain: filters.selectedMountain });
+    }
+
+    if (filters.selectedDifficulty) {
+      qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty: filters.selectedDifficulty });
+    }
+
+    if (filters.selectedExposure) {
+      qb = qb.andWhere('via.exposicao = :selectedExposure', { selectedExposure: filters.selectedExposure });
+    }
+
+    return await qb.getCount();
+  }
+
 }

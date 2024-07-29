@@ -1,3 +1,3 @@
-interface ISearchService<T> {
+export interface SearchService<T> {
   search(query: any): Promise<T[]>;
 }

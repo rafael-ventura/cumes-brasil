@@ -7,5 +7,5 @@ export interface Colecao {
   descricao?: string;
   usuario_id: number;
   imagem: Imagem;
-  vias?: Via[];
+  vias?: Via[] | null;
 }
