@@ -94,6 +94,19 @@ class ColecaoService {
     }
   }
 
+  async getCollecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
+    colecoes: Colecao[],
+    total: number
+  }> {
+    const response = await api.get(`/colecoes/not-containing-via/${viaId}`, {
+      params: {
+        page,
+        limit
+      }
+    });
+    return response.data;
+  }
+
   async searchByName (query: string): Promise<Colecao[]> {
     try {
       const response = await api.get('/colecoes/search', { params: { name: query } });

@@ -98,22 +98,12 @@
     <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
 
     <!-- Modal para adicionar via a coleções -->
-    <q-dialog v-model="showAddToCollectionModal">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Adicionar Via a uma Coleção</div>
-        </q-card-section>
-
-        <q-card-section>
-          <!-- Conteúdo do modal, como uma lista de coleções -->
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" v-close-popup />
-          <q-btn flat label="Adicionar" color="primary" @click="addToCollection" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <ModalAddToCollection
+      :isOpen="showAddToCollectionModal"
+      :viaId="<number>via?.id"
+      @update:isOpen="showAddToCollectionModal = $event"
+      @colecao-added="handleColecaoAdded"
+    />
   </q-page>
 </template>
 
@@ -130,6 +120,8 @@ import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
 import { adjustImageUrl } from 'src/services/ImagemService';
 import AuthenticateService from 'src/services/AuthenticateService';
+import ModalAddToCollection from 'components/Via/AddColecaoModal.vue';
+import { Colecao } from 'src/models/Colecao';
 
 const route = useRoute();
 const router = useRouter();
@@ -185,9 +177,13 @@ const openAddToCollectionModal = () => {
   showAddToCollectionModal.value = true;
 };
 
-const addToCollection = () => {
-  // Lógica para adicionar a coleção
-  console.log('Adicionar a coleção');
+const handleColecaoAdded = (colecao: Colecao) => {
+  Notify.create({
+    type: 'positive',
+    message: `Via adicionada à coleção ${colecao.nome} com sucesso!`,
+    position: 'top-right',
+    timeout: 3000
+  });
 };
 </script>
 
