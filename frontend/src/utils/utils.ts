@@ -1,3 +1,6 @@
+import { adjustImageUrl } from 'src/services/ImagemService';
+import { Via } from 'src/models/Via';
+
 export function romanToInt (roman: string): number {
   const romanMap: { [key: string]: number } = {
     I: 1,
@@ -52,4 +55,39 @@ export function intToRoman (num: number): string {
     }
   }
   return roman;
+}
+
+type ViaKey = keyof Via;
+
+export function formatVia (via: Via): Via {
+  // Ajustar URL da imagem da via
+  if (via.imagem?.url) {
+    via.imagem.url = adjustImageUrl(via.imagem.url);
+  }
+
+  // Ajustar URLs das imagens de croqui
+  via.croquis?.forEach(croqui => {
+    if (croqui.imagem?.url) {
+      croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
+    }
+  });
+
+  // Mascarar data
+  if (via.data) {
+    via.data = new Date(via.data).toLocaleDateString('pt-BR');
+  }
+
+  // Preencher valores vazios com "N/A"
+  const keys = Object.keys(via) as ViaKey[];
+  for (const key of keys) {
+    if (via[key] === '' || via[key] === null || via[key] === undefined) {
+      via[key] = 'N/A' as never;
+    }
+  }
+
+  if (via.conquistadores) {
+    via.conquistadores = via.conquistadores.split(';').join('; ');
+  }
+
+  return via;
 }

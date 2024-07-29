@@ -3,7 +3,7 @@ import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
 import { RouteParamValue } from 'vue-router';
 import { adjustImageUrl } from 'src/services/ImagemService';
-import { romanToInt } from 'src/utils/utils';
+import { formatVia, romanToInt } from 'src/utils/utils';
 import { UnwrapRef } from 'vue';
 
 class ColecaoService {
@@ -70,13 +70,7 @@ class ColecaoService {
     try {
       const response = await api.get(`/vias/colecao/${colecaoId}`);
       const { vias } = response.data;
-
-      for (const via of vias) {
-        if (via.imagem?.url) {
-          via.imagem.url = adjustImageUrl(via.imagem.url);
-        }
-      }
-      return vias;
+      return vias.map(formatVia);
     } catch (error: any) {
       throw new Error('Erro ao buscar vias da coleção: ' + error.message);
     }
@@ -91,12 +85,10 @@ class ColecaoService {
         }
       });
 
-      for (const via of response.data.vias) {
-        if (via.imagem?.url) {
-          via.imagem.url = adjustImageUrl(via.imagem.url);
-        }
-      }
-      return response.data;
+      return {
+        vias: response.data.vias.map(formatVia),
+        total: response.data.total
+      };
     } catch (error: any) {
       throw new Error('Erro ao buscar vias não adicionadas à coleção: ' + error.message);
     }
@@ -173,7 +165,7 @@ class ColecaoService {
         via_id: viaId
       });
     } catch (error: any) {
-      throw new Error('Erro ao adicionar via à coleção: ' + error.message);
+      throw new Error('Erro ao adicionar via à coleção: ' + error.response?.data?.message || error.message);
     }
   }
 }

@@ -1,8 +1,8 @@
-import { Usuario } from "../../Domain/entities/Usuario";
-import { AppDataSource } from "../config/db";
-import {ObjectLiteral, Repository} from "typeorm";
-import {Service} from "typedi";
+import { Usuario } from '../../Domain/entities/Usuario';
+import { AppDataSource } from '../config/db';
+import { Service } from 'typedi';
 
+@Service()
 export class UsuarioRepository {
     private repository = AppDataSource.getRepository(Usuario);
 
@@ -13,46 +13,38 @@ export class UsuarioRepository {
           .getOne();
     }
 
-    async getAll () {
+    async getAll (): Promise<Usuario[]> {
         return this.repository.createQueryBuilder("usuario")
           .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
           .getMany();
     }
 
     async create (nome: string, email: string, senhaHash: string): Promise<Usuario> {
-        return await this.repository.save({
-            nome: nome,
-            email: email,
+        return this.repository.save({
+            nome,
+            email,
             password_hash: senhaHash
         });
     }
 
     async update (id: number, usuarioData: Partial<Usuario>): Promise<void> {
-        await this.repository.update(id as any, usuarioData);
+        await this.repository.update(id, usuarioData);
     }
 
     async delete (id: number): Promise<void> {
-        await this.repository.delete(id as any);
+        await this.repository.delete(id);
     }
 
-    async findByEmail (email: string): Promise<ObjectLiteral | null> {
+    async findByEmail (email: string): Promise<Usuario | null> {
         const user = await this.repository.findOne({ where: { email } });
         return user ?? null;
     }
 
-    async getPerfilComHash (id: number): Promise<Usuario | null> {
-        return this.repository.createQueryBuilder("usuario")
-          .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
-          .where("usuario.id = :id", { id })
-          .getOne();
-    }
-
     async getPerfilSemHash (id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-            .select(["usuario.nome", "usuario.email", "usuario.foto_perfil"])
-            .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
-            .where("usuario.id = :id", { id })
-            .getOne();
+          .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil'])
+          .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
+          .where('usuario.id = :id', { id })
+          .getOne();
     }
 }
-
