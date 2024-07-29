@@ -1,21 +1,21 @@
-import { AppDataSource } from "../config/db";
-import { Fonte } from "../../Domain/entities/Fonte";
-import { Montanha } from "../../Domain/entities/Montanha";
-import { Face } from "../../Domain/entities/Face";
-import { Via } from "../../Domain/entities/Via";
-import { Croqui } from "../../Domain/entities/Croqui";
-import { Imagem } from "../../Domain/entities/Imagem";
-import { Usuario } from "../../Domain/entities/Usuario";
-import { Colecao} from "../../Domain/entities/Colecao";
+import { AppDataSource } from '../config/db';
+import { Fonte } from '../../Domain/entities/Fonte';
+import { Montanha } from '../../Domain/entities/Montanha';
+import { Face } from '../../Domain/entities/Face';
+import { Via } from '../../Domain/entities/Via';
+import { Croqui } from '../../Domain/entities/Croqui';
+import { Imagem } from '../../Domain/entities/Imagem';
+import { Usuario } from '../../Domain/entities/Usuario';
+import { ViaCroqui } from '../../Domain/entities/ViaCroqui';
 
-import viasJson from "../../../database/json/vias.json";
-import croquisJson from "../../../database/json/croquis.json";
-import facesJson from "../../../database/json/faces.json";
-import montanhasJson from "../../../database/json/montanhas.json";
-import fontesJson from "../../../database/json/fontes.json";
-import imagensJson from "../../../database/json/imagens.json";
-import usuariosJson from "../../../database/json/usuarios.json";
-import colecoesJson from "../../../database/json/colecoes.json";
+import viasJson from '../../../database/json/vias.json';
+import croquisJson from '../../../database/json/croquis.json';
+import facesJson from '../../../database/json/faces.json';
+import montanhasJson from '../../../database/json/montanhas.json';
+import fontesJson from '../../../database/json/fontes.json';
+import imagensJson from '../../../database/json/imagens.json';
+import usuariosJson from '../../../database/json/usuarios.json';
+import viasCroquisJson from '../../../database/json/via_croquis.json';
 
 export async function loadData () {
   const queryRunner = AppDataSource.createQueryRunner();
@@ -31,7 +31,7 @@ export async function loadData () {
     const croquiRepository = queryRunner.manager.getRepository(Croqui);
     const imagemRepository = queryRunner.manager.getRepository(Imagem);
     const usuarioRepository = queryRunner.manager.getRepository(Usuario);
-    const colecaoRepository = queryRunner.manager.getRepository(Colecao);
+    const viacroquiRepository = queryRunner.manager.getRepository(ViaCroqui);
 
     const fontes = fonteRepository.create(fontesJson.fontes);
     await fonteRepository.save(fontes);
@@ -54,8 +54,8 @@ export async function loadData () {
     const usuarios = usuarioRepository.create(usuariosJson.usuarios);
     await usuarioRepository.save(usuarios);
 
-    const colecoes = colecaoRepository.create(colecoesJson.colecoes);
-    await colecaoRepository.save(colecoes);
+    const viasCroquis = viacroquiRepository.create(viasCroquisJson.via_croquis);
+    await viacroquiRepository.save(viasCroquis);
 
     await queryRunner.commitTransaction();
   } catch (error) {
