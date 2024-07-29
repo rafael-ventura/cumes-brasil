@@ -45,4 +45,11 @@ export class ColecaoService {
   async removeViaFromColecao(viaId: number, colecaoId: number): Promise<void> {
     await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
   }
+
+  async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
+    colecoes: Colecao[],
+    total: number
+  }> {
+    return this.colecaoRepo.getColecoesNotContainingVia(viaId, page, limit);
+  }
 }

@@ -1,8 +1,7 @@
-import {AppDataSource} from "../config/db";
-import {Colecao} from "../../Domain/entities/Colecao";
-import {Via} from "../../Domain/entities/Via";
-import {ColecaoVia} from "../../Domain/entities/ColecaoVia";
-import {Service} from "typedi";
+import { AppDataSource } from '../config/db';
+import { Colecao } from '../../Domain/entities/Colecao';
+import { ColecaoVia } from '../../Domain/entities/ColecaoVia';
+import { Service } from 'typedi';
 
 @Service()
 export class ColecaoRepository {
@@ -70,6 +69,34 @@ export class ColecaoRepository {
             via_id,
             colecao_id
         });
-
     }
+
+    async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
+        colecoes: Colecao[],
+        total: number
+    }> {
+        const offset = (page - 1) * limit;
+        const [colecoes, total] = await this.repository.createQueryBuilder('colecao')
+          .leftJoinAndSelect('colecao.viasColecoes', 'viasColecoes')
+          .leftJoinAndSelect('colecao.imagem', 'imagem')
+          .leftJoinAndSelect('colecao.usuario', 'usuario')
+          .where('viasColecoes.via_id IS NULL OR viasColecoes.via_id != :viaId', { viaId })
+          .andWhere((qb) => {
+              const subQuery = qb.subQuery()
+                .select('colecao.id')
+                .from('colecao', 'colecao')
+                .leftJoin('colecao.viasColecoes', 'viasColecoes')
+                .where('viasColecoes.via_id = :viaId')
+                .getQuery();
+              return 'colecao.id NOT IN ' + subQuery;
+          })
+          .skip(offset)
+          .take(limit)
+          .getManyAndCount();
+
+        return {
+            colecoes,
+            total
+        };
+    };
 }

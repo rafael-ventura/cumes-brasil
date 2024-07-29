@@ -164,6 +164,28 @@ export class ColecaoController {
     }
 
     /**
+     * @route GET /colecoes/not-containing-via/:viaId
+     * @group Colecoes - Operações relacionadas a Colecoes
+     * @returns {Array.<Colecao>} 200 - Colecoes encontradas
+     * @returns {Error} 500 - Erro desconhecido
+     */
+    getColecoesNotContainingVia = async (req: Request, res: Response) => {
+        try {
+            const viaId = Number(req.params.viaId);
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
+            const result = await this.service.getColecoesNotContainingVia(viaId, page, limit);
+            res.json(result);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller getColecoesNotContainingVia' });
+            }
+        }
+    };
+
+    /**
      * @route POST Via /colecoes/adicionarVia
      * @group Colecoes - Operações relacionadas a colecoes
      * @returns {object} 200 - Via adicionada com sucesso
