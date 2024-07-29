@@ -20,77 +20,91 @@
 
     <div class="row q-col-gutter-none">
       <!-- Bloco Imagem da Via -->
-      <div class="col-12">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4">
         <CardImagem :src="via?.imagem?.url || adjustImageUrl('/assets/default-via.jpg')" />
       </div>
 
-      <!-- Bloco Duração, Extensão, Data da Conquista e Conquistadores -->
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Duração:</strong> {{ via?.duracao }}</p>
-        </CardDetalhe>
+      <!-- Bloco Duração e Extensão -->
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Duração:</strong> {{ via?.duracao }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
+            </q-card>
+          </q-item>
+        </q-card>
       </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Data da Conquista:</strong> {{ via?.data }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
-        </CardDetalhe>
-      </div>
-
       <!-- Bloco Grau, Crux, Artificial e Exposição -->
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Grau:</strong> {{ via?.grau }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Crux:</strong> {{ via?.crux }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
-        </CardDetalhe>
+      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Grau:</strong> {{ via?.grau }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Crux:</strong> {{ via?.crux }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
+            </q-card>
+          </q-item>
+        </q-card>
       </div>
 
-      <!-- Bloco Detalhes, Fonte e Referência da Fonte -->
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
-        </CardDetalhe>
+      <!-- Bloco Detalhes -->
+      <div class="col-xs-12 col-sm-8 col-md-12 col-lg-3 col-xl-4">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
+            </q-card>
+          </q-item>
+        </q-card>
       </div>
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
-        </CardDetalhe>
+
+      <!-- Bloco Fonte e Conquistadores -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-10">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
+            </q-card>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
+            </q-card>
+          </q-item>
+        </q-card>
       </div>
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
-        </CardDetalhe>
+
+      <!-- Bloco Data -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-item>
+            <q-card class="q-ma-sm card-parametro">
+              <p><strong>Data do cadastro:</strong> {{ via?.data }}</p>
+            </q-card>
+          </q-item>
+        </q-card>
       </div>
 
       <!-- Bloco Croquis -->
       <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Croquis:</strong></p>
-          <CarrosselCroquis :croquis="via?.croquis" />
-        </CardDetalhe>
+        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+          <q-card-section>
+            <!-- Placeholder para o carrossel de fotos -->
+            <p><strong>Croquis:</strong></p>
+            <CarrosselCroquis :croquis="via?.croquis" />
+          </q-card-section>
+        </q-card>
       </div>
     </div>
 
@@ -98,12 +112,22 @@
     <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
 
     <!-- Modal para adicionar via a coleções -->
-    <ModalAddToCollection
-      :isOpen="showAddToCollectionModal"
-      :viaId="<number>via?.id"
-      @update:isOpen="showAddToCollectionModal = $event"
-      @colecao-added="handleColecaoAdded"
-    />
+    <q-dialog v-model="showAddToCollectionModal">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Adicionar Via a uma Coleção</div>
+        </q-card-section>
+
+        <q-card-section>
+          <!-- Conteúdo do modal, como uma lista de coleções -->
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn flat label="Adicionar" color="primary" @click="addToCollection" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -114,14 +138,11 @@ import { Notify } from 'quasar';
 import ViaService from 'src/services/ViaService';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
-import CardDetalhe from 'components/Via/CardDetalhe.vue';
 import CardImagem from 'components/Via/CardImagem.vue';
 import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
 import { adjustImageUrl } from 'src/services/ImagemService';
 import AuthenticateService from 'src/services/AuthenticateService';
-import ModalAddToCollection from 'components/Via/AddColecaoModal.vue';
-import { Colecao } from 'src/models/Colecao';
 
 const route = useRoute();
 const router = useRouter();
@@ -137,8 +158,6 @@ onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
-    console.log('Detalhes da via:', via.value);
-    console.log('Croquis:', via.value?.croquis);
   } catch (error) {
     console.error('Erro ao buscar detalhes da via:', error);
   }
@@ -162,10 +181,10 @@ const addToFavorites = async () => {
       });
     }
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || 'Erro desconhecido';
+    const errorMessage = error || 'Erro desconhecido';
     Notify.create({
       type: 'negative',
-      message: 'Erro ao adicionar a favoritos: ' + errorMessage,
+      message: '' + errorMessage,
       position: 'top-right',
       timeout: 3000
     });
@@ -177,17 +196,18 @@ const openAddToCollectionModal = () => {
   showAddToCollectionModal.value = true;
 };
 
-const handleColecaoAdded = (colecao: Colecao) => {
-  Notify.create({
-    type: 'positive',
-    message: `Via adicionada à coleção ${colecao.nome} com sucesso!`,
-    position: 'top-right',
-    timeout: 3000
-  });
+const addToCollection = () => {
+  // Lógica para adicionar a coleção
+  console.log('Adicionar a coleção');
 };
 </script>
 
 <style scoped>
+.rounded-borders {
+  border-radius: 15px;
+  color: black;
+}
+
 .title-margin {
   margin-left: 20px;
 }
@@ -196,5 +216,26 @@ const handleColecaoAdded = (colecao: Colecao) => {
   display: flex;
   gap: 10px;
   justify-content: center;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os itens se movam para a próxima linha se necessário */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 93%; /* Garante que o card ocupe toda a altura disponível da coluna */
+}
+
+.q-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Garante que o conteúdo do card se distribua igualmente */
+}
+
+.card-parametro{
+  width: 100%;
 }
 </style>
