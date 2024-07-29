@@ -32,9 +32,7 @@ class HomeService {
 
     const normalizedGrau = grau.replace(/\s+/g, '').toLowerCase();
 
-    const terceiroGrauRepresentations = [
-      '3', '3.0', 'iii', '3sup', 'iii sup', 'iiisup'
-    ];
+    const terceiroGrauRepresentations = ['3', '3.0', 'iii', '3sup', 'iii sup', 'iiisup'];
 
     return terceiroGrauRepresentations.includes(normalizedGrau);
   }
