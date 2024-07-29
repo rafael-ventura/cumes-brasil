@@ -15,12 +15,7 @@
       class="bg-grey-9 shadow-2 rounded-borders"
     >
       <q-carousel-slide
-        :name="-1"
-        img-src="https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png"
-        @click="openDialog('https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png')"
-      />
-      <q-carousel-slide
-        v-for="(croqui, index) in croquis"
+        v-for="(croqui, index) in computedCroquis"
         :key="index"
         :name="index"
         :img-src="croqui.imagem.url"
@@ -34,17 +29,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 import { Croqui } from 'src/models/Croqui';
 
 const props = defineProps<{ croquis?: Croqui[] }>();
 
-const slide = ref(-1);
+const slide = ref(0);
 const dialog = ref(false);
 const selectedImage = ref('');
 
-// Usar computed para fornecer um valor padrão se croquis for undefined
-const croquis = computed(() => props.croquis ?? []);
+const defaultCroqui: { imagem: { url: string } } = {
+  imagem: { url: 'https://mlabs-wordpress-site.s3.amazonaws.com/wp-content/uploads/2020/12/google-ads.png' }
+};
+
+// Computed property to provide a default croqui if croquis is empty or undefined
+const computedCroquis = computed(() => (props.croquis && props.croquis.length > 0) ? props.croquis : [defaultCroqui]);
 
 function openDialog (imageUrl: string) {
   selectedImage.value = imageUrl;
@@ -53,4 +52,7 @@ function openDialog (imageUrl: string) {
 </script>
 
 <style scoped>
+.rounded-borders {
+  border-radius: 15px;
+}
 </style>
