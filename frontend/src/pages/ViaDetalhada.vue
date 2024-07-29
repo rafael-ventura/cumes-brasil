@@ -29,10 +29,10 @@
         <q-card class="q-ma-md bg-grey-3 rounded-borders card">
           <q-item>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Duração:</strong> {{ via?.duracao }}</p>
+              <p><strong>Duração:</strong> {{ via?.duracao }}</p>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
+              <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
             </q-card>
           </q-item>
         </q-card>
@@ -42,16 +42,16 @@
         <q-card class="q-ma-md bg-grey-3 rounded-borders card">
           <q-item>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Grau:</strong> {{ via?.grau }}</p>
+              <p><strong>Grau:</strong> {{ via?.grau }}</p>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Crux:</strong> {{ via?.crux }}</p>
+              <p><strong>Crux:</strong> {{ via?.crux }}</p>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
+              <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
+              <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
             </q-card>
           </q-item>
         </q-card>
@@ -62,7 +62,7 @@
         <q-card class="q-ma-md bg-grey-3 rounded-borders card">
           <q-item>
             <q-card class="q-ma-sm card-parametro">
-            <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
+              <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
             </q-card>
           </q-item>
         </q-card>
