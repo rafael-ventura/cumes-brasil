@@ -94,22 +94,22 @@
 </template>
 
 <script setup lang="ts">
-import { Escalada } from "src/models/Escalada";
-import { Participante } from "src/models/Participante";
-import { ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import EscaladaService from "src/services/EscaladaService";
+import { Escalada } from 'src/models/Escalada';
+import { Participante } from 'src/models/Participante';
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import EscaladaService from 'src/services/EscaladaService';
 
-const observacao = ref("");
+const observacao = ref('');
 const qtdParticipantes = ref(1);
 const route = useRoute();
 const router = useRouter();
-const data = ref("");
-const participantes = ref<Participante[]>([{ nome: "", tipo: "", email: "" }]);
+const data = ref('');
+const participantes = ref<Participante[]>([{ nome: '', tipo: '', email: '' }]);
 const props = defineProps<{ isOpen: boolean }>();
 
 const participanteTipoOptions = [
-  "GUIA", "PARTICIPANTE", "MISTO"
+  'GUIA', 'PARTICIPANTE', 'MISTO'
 ];
 
 const onQtdParticipantesChange = () => {
@@ -118,7 +118,7 @@ const onQtdParticipantesChange = () => {
 
   if (newLength > currentLength) {
     for (let i = currentLength; i < newLength; i++) {
-      participantes.value.push({ nome: "", tipo: "", email: "" });
+      participantes.value.push({ nome: '', tipo: '', email: '' });
     }
   } else {
     participantes.value.length = newLength;
@@ -136,9 +136,9 @@ const onSubmit = async () => {
     participantes: participantes.value
   };
 
-  const authToken = localStorage.getItem("authToken");
+  const authToken = localStorage.getItem('authToken');
   if (!authToken) {
-    await router.push("/auth/login");
+    await router.push('/auth/login');
   }
 
   try {
@@ -150,10 +150,10 @@ const onSubmit = async () => {
 };
 
 const onReset = () => {
-  observacao.value = "";
-  data.value = "";
+  observacao.value = '';
+  data.value = '';
   qtdParticipantes.value = 1;
-  participantes.value = [{ nome: "", tipo: "", email: "" }];
+  participantes.value = [{ nome: '', tipo: '', email: '' }];
 };
 
 </script>

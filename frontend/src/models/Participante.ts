@@ -1,6 +1,5 @@
-
 export interface Participante {
     tipo: 'GUIA' | 'PARTICIPANTE' | 'MISTO' | '';
-    nome: String;
-    email: String;
+    nome: string;
+    email: string;
 }

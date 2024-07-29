@@ -7,7 +7,7 @@
 
       <div class="row q-gutter-md justify-center">
         <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('urca')">
+          <q-card class="hover-card" @click="goToFilteredSearch('leme')">
             <q-img :src="urcaImage" alt="Vias na Urca">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias na Urca</div>
@@ -31,7 +31,7 @@
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias com Exposição até E2</div>
-                <div class="text-caption">{{ exposicaoE2Vias.values.length }} vias encontradas</div>
+                <div class="text-caption">{{ exposicaoE2Vias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
@@ -60,8 +60,11 @@ defineOptions({
 
 onMounted(async () => {
   urcaVias.value = await HomeService.getViasNaUrca();
+  console.log('urcaVias', urcaVias.value);
   terceiroGrauVias.value = await HomeService.getViasDeTerceiroGrau();
+  console.log('terceiroGrauVias', terceiroGrauVias.value);
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
+  console.log('exposicaoE2Vias', exposicaoE2Vias.value);
 
   if (urcaVias.value.length > 0 && urcaVias.value[0].imagem?.url) {
     urcaImage.value = adjustImageUrl(urcaVias.value[0].imagem.url);

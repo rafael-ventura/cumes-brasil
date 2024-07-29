@@ -26,8 +26,8 @@ export class ViaController {
 
 	getAllVia = async (req: Request, res: Response) => {
 		try {
-			const page = parseInt(req.query.page as string) || 1;
-			const limit = parseInt(req.query.limit as string) || 10;
+			const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+			const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 			const result = await this.service.getVias(page, limit);
 			console.log('Endpoint GET /vias foi chamado');
 			res.status(200).json(result);
