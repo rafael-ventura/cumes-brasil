@@ -6,7 +6,7 @@
     <q-separator spaced />
 
     <!-- Botões de ação -->
-    <div class="action-buttons q-col-12">
+    <div class="row action-buttons q-col-12">
       <q-btn rounded color="primary" icon="add_circle" @click="toggleForm">
         <div>Registrar uma escalada</div>
       </q-btn>
@@ -20,77 +20,69 @@
 
     <div class="row q-col-gutter-none">
       <!-- Bloco Imagem da Via -->
-      <div class="col-12">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4">
         <CardImagem :src="via?.imagem?.url || adjustImageUrl('/assets/default-via.jpg')" />
       </div>
 
-      <!-- Bloco Duração, Extensão, Data da Conquista e Conquistadores -->
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Duração:</strong> {{ via?.duracao }}</p>
-        </CardDetalhe>
+      <!-- Bloco Duração e Extensão -->
+      <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <p><strong>Duração:</strong> {{ via?.duracao }}</p>
+            <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
+          </q-card-section>
+        </q-card>
       </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Data da Conquista:</strong> {{ via?.data }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
-        </CardDetalhe>
-      </div>
-
       <!-- Bloco Grau, Crux, Artificial e Exposição -->
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Grau:</strong> {{ via?.grau }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Crux:</strong> {{ via?.crux }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
-        </CardDetalhe>
-      </div>
-      <div class="col-6 col-md-3">
-        <CardDetalhe>
-          <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
-        </CardDetalhe>
+      <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <p><strong>Grau:</strong> {{ via?.grau }}</p>
+            <p><strong>Crux:</strong> {{ via?.crux }}</p>
+            <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
+            <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
+          </q-card-section>
+        </q-card>
       </div>
 
-      <!-- Bloco Detalhes, Fonte e Referência da Fonte -->
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
-        </CardDetalhe>
+      <!-- Bloco Detalhes -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-4">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
+          </q-card-section>
+        </q-card>
       </div>
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
-        </CardDetalhe>
+
+      <!-- Bloco Fonte e Conquistadores -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-10">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
+            <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
+            <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
+          </q-card-section>
+        </q-card>
       </div>
-      <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
-        </CardDetalhe>
+
+      <!-- Bloco Data -->
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <p><strong>Data do cadastro:</strong> {{ via?.data }}</p>
+          </q-card-section>
+        </q-card>
       </div>
 
       <!-- Bloco Croquis -->
       <div class="col-12">
-        <CardDetalhe>
-          <p><strong>Croquis:</strong></p>
-          <CarrosselCroquis :croquis="via?.croquis" />
-        </CardDetalhe>
+        <q-card class="q-ma-md bg-grey-3 rounded-borders">
+          <q-card-section>
+            <!-- Placeholder para o carrossel de fotos -->
+            <p><strong>Croquis:</strong></p>
+            <CarrosselCroquis :croquis="via?.croquis" />
+          </q-card-section>
+        </q-card>
       </div>
     </div>
 
@@ -124,7 +116,6 @@ import { Notify } from 'quasar';
 import ViaService from 'src/services/ViaService';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
-import CardDetalhe from 'components/Via/CardDetalhe.vue';
 import CardImagem from 'components/Via/CardImagem.vue';
 import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
