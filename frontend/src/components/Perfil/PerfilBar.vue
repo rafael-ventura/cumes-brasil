@@ -7,25 +7,11 @@
     </q-card-section>
     <q-card-section class="col text-left q-ml-md">
       <div class="text-h6">{{ user?.nome }}</div>
-      <div class="row items-center">
-        <q-icon name="mail" class="small-icon right-margem"/>
-        <div class="text-subtitle1">{{ user?.email }}</div>
-      </div>
-      <div class="row items-center">
-        <q-icon name="calendar_month" class="small-icon right-margem"/>
-        <div class="text-subtitle1">Escalando desde: {{ user?.data_atividade}}</div>
-      </div>
-      <div class="row items-center">
-        <q-icon name="groups_2" class="small-icon right-margem"/>
-        <div class="text-subtitle1">Meu Clube/Organização: {{ user?.clube_organizacao}}</div>
-      </div>
-      <div class="row items-center">
-        <q-icon name="perm_media" class="small-icon right-margem"/>
-        <div class="text-subtitle1">Minha Via favorita: {{ user?.via_favorita?.nome}}</div>
-      </div>
-      <div class="row items-center">
-        <q-icon name="flag_circle" class="small-icon right-margem"/>
-        <div class="text-subtitle1">De onde eu sou: {{ user?.localizacao}}</div>
+      <div class="info-list">
+        <div v-for="(info, index) in userInfo" :key="index" class="info-item row items-center">
+          <q-icon :name="info.icon" class="small-icon right-margem"/>
+          <div class="text-subtitle1 info-text">{{ info.text }}</div>
+        </div>
       </div>
     </q-card-section>
   </div>
@@ -35,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import { Usuario } from 'src/models/Usuario';
 
-defineProps<{ user: Usuario }>();
+const props = defineProps<{ user: Usuario }>();
 const expandedImageUrl = ref('');
 const isImageModalOpen = ref(false);
 
@@ -46,6 +32,15 @@ const expandImage = (url: string) => {
   expandedImageUrl.value = url;
   isImageModalOpen.value = true;
 };
+
+// Lista de informações do usuário para exibição
+const userInfo = computed(() => [
+  { icon: 'mail', text: props.user?.email || 'Email não disponível' },
+  { icon: 'calendar_month', text: `Escalando desde: ${props.user?.data_atividade || 'Data não disponível'}` },
+  { icon: 'groups_2', text: `Meu Clube/Organização: ${props.user?.clube_organizacao || 'Não disponível'}` },
+  { icon: 'perm_media', text: `Minha Via favorita: ${props.user?.via_favorita?.nome || 'Não disponível'}` },
+  { icon: 'flag_circle', text: `De onde eu sou: ${props.user?.localizacao || 'Localização não disponível'}` }
+]);
 </script>
 
 <style scoped>
@@ -64,9 +59,27 @@ const expandImage = (url: string) => {
 }
 
 .shadow-item {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
-  display: flex; /* Torna o item um contêiner flexível */
-  height: 100%; /* Faz com que o item ocupe toda a altura disponível da coluna */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  height: 100%;
 }
 
+.info-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start; /* Alinha o ícone e o texto no topo */
+}
+
+.right-margem {
+  margin-right: 8px;
+}
+
+.info-text {
+  flex: 1; /* Permite que o texto ocupe o espaço restante */
+  word-wrap: break-word; /* Quebra o texto se for muito longo */
+}
 </style>
