@@ -2,25 +2,23 @@
   <div>
     <!-- Renderiza ViaCard se entityType for 'via' -->
     <div v-if="entityType === 'via'">
-      <ViaLista :vias="results as Via[]" />
+      <ViaLista :vias="results as Via[]"/>
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
     <div v-else-if="entityType === 'colecao'">
-      <ColecaoCard
-        v-for="item in results as Colecao[]"
-        :key="item.id + 'colecao'"
-        :colecao="item"
-        @click-item="selectItem"
-        :via="item.vias ? item.vias[0] : null"
-      />
-    </div>
-    <!-- Mensagem se não houver resultados -->
-    <div v-if="results && results.length === 0">
-      <p>No results found.</p>
-    </div>
-    <!-- Exibe a quantidade total de itens -->
-    <div v-if="totalItems !== undefined">
-      <p>Total Items Found: {{ totalItems }}</p>
+      <div v-for="item in results as Colecao[]" :key="item.id">
+        <div v-if="item.vias">
+          <ColecaoCard v-for="via in item.vias" :key="via.id" :via="via"/>
+        </div>
+      </div>
+      <!-- Mensagem se não houver resultados -->
+      <div v-if="results && results.length === 0">
+        <p>No results found.</p>
+      </div>
+      <!-- Exibe a quantidade total de itens -->
+      <div v-if="totalItems !== undefined">
+        <p>Total Items Found: {{ totalItems }}</p>
+      </div>
     </div>
   </div>
 </template>

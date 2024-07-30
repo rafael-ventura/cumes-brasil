@@ -22,7 +22,8 @@ const filters = ref<SearchRequest>({
   searchQuery: "",
   selectedMountain: null,
   selectedDifficulty: null,
-  selectedExposure: null,
+  selectedExtensionCategory: null,
+  selectedCrux: null,
   page: 1,
   itemsPerPage: 10
 });
