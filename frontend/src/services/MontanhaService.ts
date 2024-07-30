@@ -1,31 +1,41 @@
 // services/ViaService.ts
 
-import apiClient from "./apiService";
-import { MontanhaModel } from "@/models/montanhaModel";
+import { api } from "boot/axios";
+import { Montanha } from "src/models/Montanha";
 
 export class MontanhaService {
   // Chamadas da API de vias
   async getById (id: number | string) {
     try {
-      const response = await apiClient.get(`/montanhas/${id}`);
+      const response = await api.get(`/montanhas/${id}`);
       return response.data;
     } catch (error: any) { // Definindo o tipo como 'any'
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar montanha");
     }
   }
 
-  async getAll (): Promise<MontanhaModel[]> {
+  async getAll (): Promise<Montanha[]> {
     try {
-      const response = await apiClient.get("/montanhas");
+      const response = await api.get("/montanhas");
       return response.data;
     } catch (error: any) { // Definindo o tipo como 'any'
+      throw new Error(error.response.data.error || "Erro desconhecido ao buscar montanha");
+    }
+  }
+
+  async getAllName (): Promise<string[]> {
+    try {
+      console.log("requiesting all Montanha names");
+      const response = await api.get("/montanhas");
+      return response.data.map((montanha: Montanha) => montanha.nome);
+    } catch (error: any) {
       throw new Error(error.response.data.error || "Erro desconhecido ao buscar montanha");
     }
   }
 
   async create (via: any) {
     try {
-      await apiClient.post("/montanhas", via);
+      await api.post("/montanhas", via);
     } catch (error: any) { // Definindo o tipo como 'any'
       throw new Error(error.response.data.error || "Erro desconhecido ao criar montanha");
     }

@@ -58,8 +58,7 @@ export class ViaRepository implements ISearchRepository<Via>{
 
   async search(query: any): Promise<ISearchResult<Via>> {
     console.log("Query received:", query); // Adicione esta linha para depuração
-
-    const { searchQuery, selectedMountain, selectedDifficulty, selectedExposure, page = 1, itemsPerPage = 10 } = query;
+    const { searchQuery, selectedMountain, selectedDifficulty, selectedCrux, selectedExtensionCategory, page = 1, itemsPerPage = 10 } = query;
 
     let qb = this.repository.createQueryBuilder('via')
         .leftJoinAndSelect('via.montanha', 'montanha'); // Junção com a tabela Montanha
@@ -76,8 +75,15 @@ export class ViaRepository implements ISearchRepository<Via>{
       qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty });
     }
 
-    if (selectedExposure) {
-      qb = qb.andWhere('via.exposicao = :selectedExposure', { selectedExposure });
+    if (selectedCrux) {
+        qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
+    }
+
+    if (selectedExtensionCategory) {
+      qb = qb.andWhere('via.extensao >= :minExtension AND via.extensao <= :maxExtension', {
+        minExtension: selectedExtensionCategory[0],
+        maxExtension: selectedExtensionCategory[1]
+      });
     }
 
     // Contar o total de itens

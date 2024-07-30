@@ -3,6 +3,7 @@ import { SearchService } from "../../Application/services/SearchService";
 import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
 import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
 import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
+import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
 
 export class SearchController {
 	private serviceMap: { [key: string]: SearchService<any> };
@@ -11,6 +12,7 @@ export class SearchController {
 		this.serviceMap = {
 			'via': new SearchService(new ViaRepository()),
 			'montanha': new SearchService(new MontanhaRepository()),
+			'colecao': new SearchService<ColecaoRepository>(new ColecaoRepository()),
 			// Adicione mais serviços para outras entidades conforme necessário
 		};
 	}
@@ -18,7 +20,16 @@ export class SearchController {
 	searchEntities = async (req: Request, res: Response) => {
 		try {
 			console.log("Search request received: ", req.body);
-			const { entityType, searchQuery, selectedMountain, selectedDifficulty, selectedExposure, page, itemsPerPage } = req.body;
+			const {
+				entityType,
+				searchQuery,
+				selectedMountain,
+				selectedDifficulty,
+				selectedExtensionCategory,
+				selectedCrux,
+				page,
+				itemsPerPage
+			} = req.body;
 
 			console.log("Search request received: ", req.body);
 
@@ -32,7 +43,8 @@ export class SearchController {
 				searchQuery,
 				selectedMountain,
 				selectedDifficulty,
-				selectedExposure,
+				selectedExtensionCategory,
+				selectedCrux,
 				page,
 				itemsPerPage
 			};
