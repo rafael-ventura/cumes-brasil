@@ -53,12 +53,39 @@ class UsuarioService {
     }
   }
 
-  async update (usuario: Usuario) {
+  async update (id: number, updatedUser: Partial<Usuario>): Promise<Usuario> {
     try {
-      const response = await api.put(`/usuarios/${usuario.id}`, usuario);
+      const response = await api.put(`/usuarios/${id}`, updatedUser);
       return response.data as Usuario;
     } catch (error: any) {
       throw new Error(error.response.data.error || 'Erro desconhecido ao atualizar usuário');
+    }
+  }
+
+  async editarDados (usuario: {
+    localizacao: string | null;
+    via_favorita: { id: number | string } | null;
+    data_atividade: string | null;
+    biografia: string | null;
+    foto_perfil: { url: string } | null;
+    nome: string;
+    clube_organizacao: string | null;
+    email: string;
+  }) {
+    try {
+      const response = await api.put('/perfil', usuario);
+      return response.data as Usuario;
+    } catch (error: any) {
+      throw new Error(error.response.data.error || 'Erro desconhecido ao editar dados');
+    }
+  }
+
+  async editarBio (biografia: string) {
+    try {
+      const response = await api.put('/perfil', { biografia });
+      return response.data as Usuario;
+    } catch (error: any) {
+      throw new Error(error.response.data.error || 'Erro desconhecido ao editar biografia');
     }
   }
 

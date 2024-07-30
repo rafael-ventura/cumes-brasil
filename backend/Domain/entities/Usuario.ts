@@ -1,7 +1,8 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
 import { Escalada } from "./Escalada";
+import { Via } from "./Via";
 
 @Entity()
 export class Usuario extends BaseEntity {
@@ -16,6 +17,22 @@ export class Usuario extends BaseEntity {
 
   @Column({ nullable: false })
   password_hash: string;
+
+  @Column({ nullable: true })
+  data_atividade: Date;
+
+  @Column({ nullable: true })
+  clube_organizacao: string;
+
+  @Column({ nullable: true })// cidade, estado e país
+  localizacao: string;
+
+  @Column({ nullable: true })
+  biografia: string;
+
+  @ManyToOne(() => Via , { nullable: true })
+  @JoinColumn({ name: "via_favorita" })
+  via_favorita: Via;
 
   @ManyToOne(() => Imagem, imagem => imagem.usuarios)
   foto_perfil: number;

@@ -1,15 +1,15 @@
 <template>
   <q-page>
-    <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true"/>
-    <PerfilBar :user="<Usuario>user" class="q-pa-md"/>
-    <q-card class="q-pa-md q-mb-md no-wrap">
+    <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" color="primary"/>
+    <PerfilBar v-if="user" :user="<Usuario>user"/>
+    <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
       <div class="row q-col-gutter-sm q-gutter-md justify-center">
         <div v-for="(item, index) in items" :key="index" class="col-xs-5 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-          <q-item flat :label="item.label" clickable :to="item.to" class="shadow-item">
+          <q-item flat :label="item.label" clickable :to="item.to" class="shadow-item box-item">
             <q-item-section class="q-column items-center text-center">
               <div class="row items-center justify-center">
                 <div :style="{ color: item.color }" class="large-text">{{ item.num }}</div>
-                <q-icon :color="item.color" :name="item.icon" class="large-icon"/>
+                <q-icon :color="item.color" :name="item.icon" class="large-icon left-margem"/>
               </div>
               <div class="text-h5" :style="{ color: item.color }">{{ item.label }}</div>
             </q-item-section>
@@ -36,8 +36,9 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="isEditDialogOpen">
-      <PerfilEditarForm :user="<Usuario>user" title="Editar Perfil" submitLabel="Salvar" @submit="updateUser"/>
+      <PerfilEditarForm v-if="user" :user="<Usuario>user" title="Editar Dados" @submit="handleEditSubmit"/>
     </q-dialog>
+    <PerfilBio v-if="user" :user="<Usuario>user" @bio-updated="updateUserBio" />
   </q-page>
 </template>
 <script setup lang="ts">
@@ -49,6 +50,7 @@ import AuthenticateService from 'src/services/AuthenticateService';
 import PerfilEditarForm from 'components/Perfil/PerfilEditaForm.vue';
 import { Usuario } from 'src/models/Usuario';
 import PerfilBar from 'components/Perfil/PerfilBar.vue';
+import PerfilBio from 'components/Perfil/PerfilBio.vue';
 
 const router = useRouter();
 const user = ref<Usuario | null>(null);
@@ -59,11 +61,10 @@ const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 
 const items = ref([
-  { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: 'pink', to: '/escaladas' },
-  { label: 'Coleções', num: numColecoes.value, icon: 'style', color: 'blue', to: '/colecoes' },
-  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: 'green', to: '/colecoes' },
-  { label: 'Da Semana', num: null, icon: 'event', color: 'orange', to: '/colecoes' },
-  { label: 'Nova Escalada', num: null, icon: 'add_location', color: 'purple', to: '/colecoes' }
+  { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: 'blue', to: '/escaladas' },
+  { label: 'Coleções', num: numColecoes.value, icon: 'style', color: 'purple', to: '/colecoes' },
+  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: 'orange', to: '/colecoes' },
+  { label: 'Nova Escalada', num: null, icon: 'add_location', color: 'green', to: '/colecoes' }
 ]);
 
 defineOptions({
@@ -95,14 +96,17 @@ const logout = () => {
   router.push('/auth/login');
 };
 
-const updateUser = async (updatedUser: Usuario) => {
-  try {
-    user.value = await UserService.update(updatedUser);
-    isEditDialogOpen.value = false;
-  } catch (error) {
-    console.error(error);
+const handleEditSubmit = (updatedUser: Usuario) => {
+  user.value = updatedUser;
+  isEditDialogOpen.value = false;
+};
+
+const updateUserBio = (newBio: string) => {
+  if (user.value) {
+    user.value.biografia = newBio;
   }
 };
+
 </script>
 <style scoped>
 .settings-btn {
@@ -112,18 +116,12 @@ const updateUser = async (updatedUser: Usuario) => {
   height: 50px;
 }
 
-.large-icon {
-  font-size: 56px; /* Ajuste o tamanho conforme necessário */
-  margin-left: 8px; /* Espaçamento entre o valor numérico e o ícone */
-}
-
 .large-text {
   font-size: 42px; /* Ajuste o tamanho conforme necessário */
   font-weight: bold; /* Opcional: para deixar o texto mais destacado */
 }
 
-.shadow-item {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+.box-item {
   display: flex; /* Torna o item um contêiner flexível */
   align-items: center; /* Alinha o conteúdo verticalmente no centro */
   justify-content: center; /* Alinha o conteúdo horizontalmente no centro */
