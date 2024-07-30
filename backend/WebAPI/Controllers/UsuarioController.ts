@@ -77,6 +77,7 @@ export class UsuarioController {
     getPerfil = async (req: Request, res: Response) => {
         try {
             const userId = parseInt(req.user.userId);
+            console.log('Usuario Id getPerfil: ',userId);
             const resultado = await this.service.getPerfil(userId);
             if (!resultado) {
                 return res.status(404).json({ message: 'Perfil não encontrado.' });
@@ -86,4 +87,19 @@ export class UsuarioController {
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
         }
     };
+
+    editarDados = async (req: Request, res: Response) => {
+        try {
+            const userId = parseInt(req.user.userId);
+            console.log('Usuario Id editarDados: ',userId);
+            const usuario: Usuario = req.body;
+            await this.service.editarDados(userId, usuario);
+            res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Perfil não encontrado') {
+                return res.status(404).json({ message: error.message });
+            }
+            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+        }
+    }
 }

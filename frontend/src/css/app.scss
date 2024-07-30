@@ -7,6 +7,16 @@ $secondary: #ffab00; // Mountaineering yellow
 $dark: #1c1c1c; // Dark mode background
 $light: #f5f5f5; // Light mode background
 
+// Define Cume custom colors
+$c-color-yellow: #ffab00;
+$c-color-green: #1b5e20;
+$c-color-red: #d32f2f;
+$c-color-blue: #1976d2;
+$c-color-purple: #7b1fa2;
+$c-color-orange: #ff6f00;
+$c-color-brown: #6d4c41;
+$c-color-grey: #757575;
+
 // Include Quasar variables
 $body-bg-color: $light;
 $header-bg-color: $primary;
@@ -150,3 +160,49 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.shadow-item {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+}
+
+.top-margem {
+  margin-top: 8px;
+}
+
+.bottom-margem {
+  margin-bottom: 8px;
+}
+
+.left-margem {
+  margin-left: 8px;
+}
+
+.right-margem {
+  margin-right: 8px;
+}
+
+.large-icon {
+  font-size: 56px;
+}
+
+.medium-icon {
+  font-size: 32px;
+}
+
+.small-icon {
+  font-size: 26px;
+}
+
+.border-radius-small {
+  border-radius: 8px;
+}
+
+.border-radius-medium {
+  border-radius: 16px;
+}
+
+.border-radius-large {
+  border-radius: 24px;
+}
+
+

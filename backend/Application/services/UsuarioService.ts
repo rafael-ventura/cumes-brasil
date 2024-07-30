@@ -60,8 +60,13 @@ export class UsuarioService {
 
         await this.usuarioRepo.delete(id);
     }
+
     async getPerfil (id: number): Promise<Usuario | null> {
         return this.usuarioRepo.getPerfilSemHash(id);
+    }
+
+    async editarDados (id: number, usuario: Usuario): Promise<void> {
+        await this.usuarioRepo.update(id, usuario);
     }
 }
 
