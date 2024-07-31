@@ -5,7 +5,7 @@ import { formatVia } from 'src/utils/utils';
 import ColecaoService from 'src/services/ColecaoService';
 import AuthenticateService from 'src/services/AuthenticateService';
 
-class ViaService implements SearchService<Via> {
+class ViaService {
   async getViaById (id: number | string): Promise<Via> {
     try {
       const response = await api.get(`/vias/${id}`);

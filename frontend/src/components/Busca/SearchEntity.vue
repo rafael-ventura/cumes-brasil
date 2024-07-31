@@ -7,19 +7,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted, defineExpose } from "vue";
-import searchService from "src/services/SearchService";
-import { SearchRequest } from "src/models/SearchRequest";
-import SearchResults from "components/Busca/SearchResults.vue";
+import { ref, defineProps, defineEmits, onMounted, defineExpose } from 'vue';
+import searchService from 'src/services/SearchService';
+import { SearchRequest } from 'src/models/SearchRequest';
+import SearchResults from 'components/Busca/SearchResults.vue';
 
 const props = defineProps<{
-  entity: "via" | "colecao";
+  entity: 'via' | 'colecao';
 }>();
 
-const emit = defineEmits<{(event: "select", item: any): void; (event: "update-results", results: any[]): void;}>();
+const emit = defineEmits<{(event: 'select', item: any): void; (event: 'update-results', results: any[]): void;}>();
 
 const filters = ref<SearchRequest>({
-  searchQuery: "",
+  searchQuery: '',
   selectedMountain: null,
   selectedDifficulty: null,
   selectedExtensionCategory: null,
@@ -44,10 +44,10 @@ const searchEntities = async () => {
     const searchResult = await searchService.search(searchRequest);
     results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
-    console.log("Search results:", results.value);
-    emit("update-results", results.value);
+    console.log('Search results:', results.value);
+    emit('update-results', results.value);
   } catch (error) {
-    console.error("Error searching entities:", error);
+    console.error('Error searching entities:', error);
   }
 };
 
@@ -59,7 +59,7 @@ const handleApplyFilters = (newFilters: SearchRequest) => {
 defineExpose({ handleApplyFilters });
 
 const selectItem = (item: any) => {
-  console.log("Item selecionado:", item);
-  emit("select", item);
+  console.log('Item selecionado:', item);
+  emit('select', item);
 };
 </script>

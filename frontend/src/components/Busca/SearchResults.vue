@@ -24,23 +24,23 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-import ColecaoCard from "components/Colecao/ColecaoCard.vue";
-import ViaLista from "components/Via/ViaLista.vue";
-import { Via } from "src/models/Via";
-import { Colecao } from "src/models/Colecao";
+import { defineProps, defineEmits } from 'vue';
+import ColecaoCard from 'components/Colecao/ColecaoCard.vue';
+import ViaLista from 'components/Via/ViaLista.vue';
+import { Via } from 'src/models/Via';
+import { Colecao } from 'src/models/Colecao';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
   results:(Via | Colecao)[];
-  entityType: "via" | "colecao";
+  entityType: 'via' | 'colecao';
   totalItems?: number;
 }>();
 
-const emit = defineEmits(["select"]);
+const emit = defineEmits(['select']);
 
 const selectItem = (item: Via | Colecao) => {
-  emit("select", item);
+  emit('select', item);
 };
 </script>
 

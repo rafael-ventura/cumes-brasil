@@ -19,16 +19,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from "vue";
-import { Via } from "src/models/Via";
-import { useRouter } from "vue-router";
+import { defineEmits, defineProps } from 'vue';
+import { Via } from 'src/models/Via';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const props = defineProps<{ via: Via | null }>();
-const emits = defineEmits(["click"]);
+const emits = defineEmits(['click']);
 
 const emitClick = () => {
-  emits("click");
+  emits('click');
   if (props.via) {
     router.push(`/vias/${props.via.id}`);
   }
