@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="filter-buttons">
-      <q-btn :class="{ active: activeFilters.searchQuery }" round icon="search" icsize="sm" @click="toggleFilter('searchQuery')" label="Nome da Via"/>
-      <q-btn :class="{ active: activeFilters.selectedMountain }" round icon="terrain" @click="toggleFilter('selectedMountain')" label="Montanha"/>
-      <q-btn :class="{ active: activeFilters.selectedDifficulty }" round icon="signal_cellular_alt" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
-      <q-btn :class="{ active: activeFilters.selectedExtension }" round icon="height" @click="toggleFilter('selectedExtension')" label="Extensão"/>
-      <q-btn :class="{ active: activeFilters.selectedCrux }" round icon="trending_up" @click="toggleFilter('selectedCrux')" label="Crux"/>
+      <q-btn :class="{ active: activeFilters.searchQuery }" round icon="search" size="sm" @click="toggleFilter('searchQuery')" label="Nome da Via"/>
+      <q-btn :class="{ active: activeFilters.selectedMountain }" round icon="terrain" size="sm" @click="toggleFilter('selectedMountain')" label="Montanha"/>
+      <q-btn :class="{ active: activeFilters.selectedDifficulty }" round icon="signal_cellular_alt" size="sm" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
+      <q-btn :class="{ active: activeFilters.selectedExtension }" round icon="height" size="sm" @click="toggleFilter('selectedExtension')" label="Extensão"/>
+      <q-btn :class="{ active: activeFilters.selectedCrux }" round icon="trending_up" size="sm" @click="toggleFilter('selectedCrux')" label="Crux"/>
     </div>
     <!-- Filter inputs -->
     <div v-if="showFilterInput.searchQuery" class="q-pt-lg">
@@ -49,7 +49,7 @@
         outlined
       />
     </div>
-    <div class="action-buttons" v-if="Object.values(showFilterInput).some(value => value)">
+    <div class="action-buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
       <q-btn label="Buscar" @click="emitFilters"/>
       <q-btn label="Limpar" color="secondary" @click="clearFilters"/>
     </div>
@@ -138,6 +138,7 @@ const clearFilters = () => {
   Object.keys(showFilterInput.value).forEach(key => {
     showFilterInput.value[key as FilterKey] = false;
   });
+  showExtensionFilters.value = false;
   emit('applyFilters', localFilters.value);
 };
 
