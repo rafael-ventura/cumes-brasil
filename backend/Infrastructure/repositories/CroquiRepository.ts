@@ -48,25 +48,27 @@ export class CroquiRepository {
       .then((croquis) => croquis.map(croqui => croqui.id));
   }
 
-  async getByViaId (via_id: number): Promise<ObjectLiteral[]> {
+  async getByViaId(via_id: number): Promise<Croqui[]> {
     return this.repository.createQueryBuilder("croqui")
+        .leftJoinAndSelect("croqui.fonte", "fonte")
+        .leftJoinAndSelect("croqui.imagem", "imagem")
         .leftJoin("croqui.vias", "via")
         .where("via.id = :via_id", { via_id })
-        .getRawMany();
+        .getMany();
   }
 
   async associarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
-      .of(croqui_id)
-      .add(via_id);
+      .of(via_id)
+      .add(croqui_id);
   }
 
   async desassociarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
-      .of(croqui_id)
-      .remove(via_id);
+      .of(via_id)
+      .remove(croqui_id);
   }
 }
 

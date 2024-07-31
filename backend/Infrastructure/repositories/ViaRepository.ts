@@ -1,12 +1,12 @@
-//src/Infrastructure/repositories/ViaRepository.ts
-import { Via } from "../../Domain/entities/Via";
-import { AppDataSource } from "../config/db";
-import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
+import { Via } from '../../Domain/entities/Via';
+import { AppDataSource } from '../config/db';
+import {ISearchRepository} from '../../Domain/interfaces/repositories/ISearchRepository';
 import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
 
 export class ViaRepository implements ISearchRepository<Via>{
 
   private repository = AppDataSource.getRepository(Via);
+
   async getById (id: number): Promise<Via | null> {
     return this.repository.createQueryBuilder("via")
       .leftJoinAndSelect("via.montanha", "montanha")
@@ -19,15 +19,21 @@ export class ViaRepository implements ISearchRepository<Via>{
       .getOne();
   }
 
-  async getAll (): Promise<Via[]> {
-    return await this.repository.createQueryBuilder("via")
-      .leftJoinAndSelect("via.montanha", "montanha")
-      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-      .leftJoinAndSelect("via.fonte", "fonte")
-      .leftJoinAndSelect("via.face", "face")
-      .leftJoinAndSelect("via.imagem", "imagem")
-      .leftJoinAndSelect("via.croquis", "croquis")
-      .getMany();
+  async getAll (page: number, limit: number): Promise<{ vias: Via[], total: number }> {
+    const [vias, total] = await this.repository.createQueryBuilder('via')
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .leftJoinAndSelect('via.croquis', 'croquis')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+    return {
+      vias,
+      total
+    };
   }
 
   async create (via: Partial<Via>): Promise<void> {
@@ -42,8 +48,8 @@ export class ViaRepository implements ISearchRepository<Via>{
     await this.repository.delete(id as any);
   }
 
-  async getViasByColecaoId (colecaoId: number): Promise<Via[]> {
-    return await this.repository.createQueryBuilder("via")
+  async getViasByColecaoId (colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
+    const [vias, total] = await this.repository.createQueryBuilder('via')
       .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
       .leftJoinAndSelect("via.montanha", "montanha")
       .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
@@ -52,9 +58,60 @@ export class ViaRepository implements ISearchRepository<Via>{
       .leftJoinAndSelect("via.imagem", "imagem")
       .leftJoinAndSelect("via.croquis", "croquis")
       .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
-      .getMany();
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+    return {
+      vias,
+      total
+    };
   }
 
+  async getViasNotInColecaoId (colecaoId: number, page: number, limit: number): Promise<{
+    vias: Via[],
+    total: number
+  }> {
+    const [vias, total] = await this.repository.createQueryBuilder('via')
+      .leftJoinAndSelect('via.viasColecoes', 'viasColecoes')
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .leftJoinAndSelect('via.croquis', 'croquis')
+      .where('viasColecoes.colecao_id IS NULL OR viasColecoes.colecao_id != :colecaoId', { colecaoId })
+      .andWhere((qb) => {
+        const subQuery = qb.subQuery()
+          .select('via.id')
+          .from('via', 'via')
+          .leftJoin('via.viasColecoes', 'viasColecoes')
+          .where('viasColecoes.colecao_id = :colecaoId')
+          .getQuery();
+        return 'via.id NOT IN ' + subQuery;
+      })
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+    return {
+      vias,
+      total
+    };
+  }
+
+  async getAllWithoutPagination (): Promise<{ vias: Via[], total: number }> {
+    const [vias, total] = await this.repository.createQueryBuilder('via')
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .leftJoinAndSelect('via.croquis', 'croquis')
+      .getManyAndCount();
+    return {
+      vias,
+      total
+    };
+  }
 
   async search(query: any): Promise<ISearchResult<Via>> {
     console.log("Query received:", query); // Adicione esta linha para depuração

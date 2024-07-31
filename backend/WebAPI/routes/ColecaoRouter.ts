@@ -1,12 +1,12 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { ColecaoController } from "../Controllers/ColecaoController";
-import { ColecaoService } from "../../Application/services/ColecaoService";
-import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
-import { ViaService } from "../../Application/services/ViaService";
-import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
-import { UsuarioService } from "../../Application/services/UsuarioService";
-import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
+import { ColecaoController } from '../Controllers/ColecaoController';
+import { ColecaoService } from '../../Application/services/ColecaoService';
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { ViaService } from '../../Application/services/ViaService';
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { UsuarioService } from '../../Application/services/UsuarioService';
+import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 
 const viaRepository = new ViaRepository();
 const colecaoRepository = new ColecaoRepository();
@@ -21,10 +21,11 @@ const ColecaoRouter = Router();
 ColecaoRouter.get("/:id", colecaoController.getById);
 ColecaoRouter.get("/", colecaoController.getAllColecao);
 ColecaoRouter.post("/", colecaoController.createColecao);
-ColecaoRouter.put("/", colecaoController.updateColecao);
+ColecaoRouter.put("/:id", colecaoController.updateColecao);
 ColecaoRouter.delete("/:id", colecaoController.deleteColecao);
 ColecaoRouter.post("/adicionarVia", colecaoController.adicionarVia);
 ColecaoRouter.delete("/:id/via/:viaId", colecaoController.removeVia);
 ColecaoRouter.get("/usuario/:id", colecaoController.getByUsuarioId);
+ColecaoRouter.get('/not-containing-via/:viaId', colecaoController.getColecoesNotContainingVia);
 
 export default ColecaoRouter;

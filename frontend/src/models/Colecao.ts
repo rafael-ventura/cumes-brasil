@@ -1,5 +1,5 @@
-import { Via } from "src/models/Via";
-import { Imagem } from "src/models/Imagem";
+import { Via } from 'src/models/Via';
+import { Imagem } from 'src/models/Imagem';
 
 export interface Colecao {
   id: number;

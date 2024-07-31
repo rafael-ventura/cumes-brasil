@@ -1,4 +1,4 @@
-import { Fonte } from "src/models/Fonte";
+import { Fonte } from 'src/models/Fonte';
 
 export interface Imagem {
   id: number;

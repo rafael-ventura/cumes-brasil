@@ -21,14 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from "vue";
-import { Via } from "src/models/Via";
+import { defineEmits, defineProps } from 'vue';
+import { Via } from 'src/models/Via';
 
 const props = defineProps<{ via: Via }>();
-const emits = defineEmits(["click"]);
+const emits = defineEmits(['click']);
 
 const emitClick = () => {
   props.via.nome &&
-  emits("click");
+  emits('click');
 };
 </script>

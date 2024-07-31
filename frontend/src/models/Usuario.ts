@@ -1,13 +1,19 @@
 // src/models/Usuario.ts
 
-import { Imagem } from "src/models/Imagem";
-import { Colecao } from "src/models/Colecao";
+import { Imagem } from 'src/models/Imagem';
+import { Colecao } from 'src/models/Colecao';
+import { Via } from 'src/models/Via';
 
 export interface Usuario {
   id: number;
   nome: string;
   email: string;
   password_hash: string;
-  foto_perfil?: Imagem;
-  colecoes?: Colecao[];
+  data_atividade?: Date | null;
+  clube_organizacao?: string | null;
+  localizacao?: string | null;
+  biografia?: string | null;
+  via_favorita?: Via | null;
+  foto_perfil?: Imagem | null;
+  colecoes?: Colecao[] | null;
 }

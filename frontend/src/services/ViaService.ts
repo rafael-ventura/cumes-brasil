@@ -1,70 +1,75 @@
-import { api } from "boot/axios";
-import { Via } from "src/models/Via";
-import { RouteParamValue } from "vue-router";
-import { adjustImageUrl } from "src/services/ImageService";
-import { SearchService } from "src/models/SearchService";
+import { Via } from 'src/models/Via';
+import { api } from 'boot/axios';
+import { CroquiService } from 'src/services/CroquiService';
+import { formatVia } from 'src/utils/utils';
+import ColecaoService from 'src/services/ColecaoService';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 class ViaService implements SearchService<Via> {
   async getViaById (id: number | string): Promise<Via> {
     try {
       const response = await api.get(`/vias/${id}`);
       const via = response.data as Via;
-
-      if (via.imagem?.url) {
-        via.imagem.url = adjustImageUrl(via.imagem.url);
-      }
-      return via;
+      const croquiService = new CroquiService();
+      via.croquis = await croquiService.getCroquiByViaId(via.id);
+      return formatVia(via);
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar via");
+      throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar via');
     }
   }
 
-  async getAllVias (): Promise<Via[]> {
+  async getAllVias (page?: number, limit?: number): Promise<{ vias: Via[], total: number }> {
     try {
-      const response = await api.get("/vias/");
-      const vias = response.data as Via[];
+      const params: any = {};
+      if (page !== undefined) params.page = page;
+      if (limit !== undefined) params.limit = limit;
 
-      for (const via of vias) {
-        if (via.imagem?.url) {
-          via.imagem.url = adjustImageUrl(via.imagem.url);
-        }
-      }
-      return vias;
+      const response = await api.get('/vias/', { params });
+      const vias = response.data.vias as Via[];
+      const total = response.data.total as number;
+
+      return {
+        vias: vias.map(formatVia),
+        total
+      };
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
+      throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar vias');
     }
   }
 
-  async getViasInColecao (colecaoId: string | RouteParamValue[], filters?: any): Promise<Via[]> {
+  async searchVias (query: string, filters?: any): Promise<{ vias: Via[], total: number }> {
     try {
-      const response = await api.get(`/vias/colecao/${colecaoId}`, { params: filters });
-      const vias = response.data as Via[];
+      const response = await api.get('/vias/search', { params: { name: query, ...filters } });
+      const vias = response.data.vias as Via[];
+      const total = response.data.total as number;
 
-      for (const via of vias) {
-        if (via.imagem?.url) {
-          via.imagem.url = adjustImageUrl(via.imagem.url);
-        }
-      }
-      return vias;
+      return {
+        vias: vias.map(formatVia),
+        total
+      };
     } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias da coleção");
+      throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar vias');
     }
   }
 
-  async search (query: any): Promise<Via[]> {
-    try {
-      const response = await api.get("/vias/search", { params: query });
-      const vias = response.data as Via[];
-
-      for (const via of vias) {
-        if (via.imagem?.url) {
-          via.imagem.url = adjustImageUrl(via.imagem.url);
-        }
-      }
-      return vias;
-    } catch (error: any) {
-      throw new Error(error.response.data.error || "Erro desconhecido ao buscar vias");
+  async addToFavorites (viaId: number): Promise<void> {
+    if (!AuthenticateService.isAuthenticated()) {
+      throw new Error('Usuario não autenticado');
     }
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      throw new Error('Usuario não encontrado');
+    }
+
+    const colecoes = await ColecaoService.getByUsuarioId();
+    const favoritosColecao = colecoes.find(colecao => colecao.nome === 'Vias Favoritas');
+
+    if (!favoritosColecao) {
+      throw new Error('Coleção de favoritos não encontrada');
+    }
+
+    await ColecaoService.addViaToColecao(favoritosColecao.id, viaId);
   }
 }
 

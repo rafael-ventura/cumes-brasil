@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["WebWorker", "ESNext"]
+  },
+  "include": [
+    "*.ts",
+    "*.d.ts",
+    "custom-service-worker.ts",
+    ".eslintrc.js",
+    "postcss.config.cjs"
+  ]
+}

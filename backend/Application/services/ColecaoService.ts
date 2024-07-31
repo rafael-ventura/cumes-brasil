@@ -1,5 +1,5 @@
-import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
-import { Colecao } from "../../Domain/entities/Colecao";
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { Colecao } from '../../Domain/entities/Colecao';
 
 export class ColecaoService {
   constructor(
@@ -23,10 +23,18 @@ export class ColecaoService {
   }
 
   async updateColecao(id: number, colecaoData: Partial<Colecao>): Promise<void> {
+    const colecao = await this.colecaoRepo.getById(id);
+    if (!colecao) {
+      throw new Error('Coleção não encontrada');
+    }
     await this.colecaoRepo.update(id, colecaoData);
   }
 
   async deleteColecao(id: number): Promise<void> {
+    const colecao = await this.colecaoRepo.getById(id);
+    if (!colecao) {
+      throw new Error('Coleção não encontrada');
+    }
     await this.colecaoRepo.delete(id);
   }
 
@@ -36,5 +44,12 @@ export class ColecaoService {
 
   async removeViaFromColecao(viaId: number, colecaoId: number): Promise<void> {
     await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
+  }
+
+  async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
+    colecoes: Colecao[],
+    total: number
+  }> {
+    return this.colecaoRepo.getColecoesNotContainingVia(viaId, page, limit);
   }
 }

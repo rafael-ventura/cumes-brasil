@@ -3,7 +3,7 @@ module.exports = {
 
   parserOptions: {
     parser: require.resolve('@typescript-eslint/parser'),
-    project: ['./tsconfig.json'],
+    project: ['./tsconfig.json', './src-pwa/tsconfig.json'],
     extraFileExtensions: ['.vue']
   },
 
@@ -39,14 +39,10 @@ module.exports = {
   },
 
   rules: {
-    'comma-dangle': ['error', 'never'],
-    'semi': ['error', 'always'],
-    'quotes': ['error', 'double'],
-    'vue/html-indent': ['error', 2],
-    /* 'vue/max-attributes-per-line': ['error', {
-      'singleline': 1,
-      'multiline': 1
-    }], */
+    'comma-dangle': ['warn', 'never'],
+    'semi': ['warn', 'always'],
+    'quotes': ['warn', 'single'],
+    'vue/html-indent': ['warn', 2],
     'vue/singleline-html-element-content-newline': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',
@@ -57,9 +53,9 @@ module.exports = {
     'no-void': 'off',
     'multiline-ternary': 'off',
     'import/first': 'off',
-    'import/namespace': 'error',
-    'import/default': 'error',
-    'import/export': 'error',
+    'import/namespace': 'warn',
+    'import/default': 'warn',
+    'import/export': 'warn',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
@@ -70,7 +66,17 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    'no-unused-vars': 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
-}
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    'no-unused-vars': 'warn',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+  },
+
+  overrides: [
+    {
+      files: ['postcss.config.cjs'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off'
+      }
+    }
+  ]
+};

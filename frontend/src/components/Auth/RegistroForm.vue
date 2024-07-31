@@ -31,21 +31,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { defineEmits, defineProps, ref } from 'vue';
 
 const props = defineProps({
   title: String,
   submitLabel: String
 });
 
-const emits = defineEmits(["submit"]);
+const emits = defineEmits(['submit']);
 
-const nome = ref("");
-const email = ref("");
-const senha = ref("");
+const nome = ref('');
+const email = ref('');
+const senha = ref('');
 
 const onSubmit = () => {
-  emits("submit", {
+  emits('submit', {
     nome: nome.value,
     email: email.value,
     senha: senha.value

@@ -30,6 +30,6 @@ export class Colecao extends BaseEntity {
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
   imagem: number;
 
-  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.colecao)
-  viasColecoes: ColecaoVia[]
+  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.colecao, { cascade: true, onDelete: "CASCADE" })
+  viasColecoes: ColecaoVia[];
 }

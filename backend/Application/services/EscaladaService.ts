@@ -1,4 +1,5 @@
 import { Escalada } from "../../Domain/entities/Escalada";
+import EscaladaValidation from "../../Domain/interfaces/validations/EscaladaValidation";
 import { EscaladaRepository } from "../../Infrastructure/repositories/EscaladaRepository";
 import { UsuarioService } from "./UsuarioService";
 import { ViaService } from "./ViaService";
@@ -33,6 +34,7 @@ export class EscaladaService {
 	}
 
 	async create(escalada: Escalada): Promise<void> {
+		EscaladaValidation.valida(escalada);
 		return this.repository.createOrUpdate(escalada);
 	}
 
