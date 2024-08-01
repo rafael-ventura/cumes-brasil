@@ -65,30 +65,19 @@ export class ViaRepository {
     };
   }
 
-  async getViasNotInColecaoId (colecaoId: number, page: number, limit: number): Promise<{
-    vias: Via[],
-    total: number
-  }> {
+  async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     const [vias, total] = await this.repository.createQueryBuilder('via')
-      .leftJoinAndSelect('via.montanha', 'montanha')
-      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-      .leftJoinAndSelect('via.fonte', 'fonte')
-      .leftJoinAndSelect('via.face', 'face')
-      .leftJoinAndSelect('via.imagem', 'imagem')
-      .leftJoinAndSelect('via.croquis', 'croquis')
-      .where('viasColecoes.colecao_id IS NULL OR viasColecoes.colecao_id != :colecaoId', { colecaoId })
-      .andWhere((qb) => {
-        const subQuery = qb.subQuery()
-          .select('via.id')
-          .from('via', 'via')
-          .leftJoin('via.viasColecoes', 'viasColecoes')
-          .where('viasColecoes.colecao_id = :colecaoId')
-          .getQuery();
-        return 'via.id NOT IN ' + subQuery;
-      })
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+        .leftJoinAndSelect('via.montanha', 'montanha')
+        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+        .leftJoinAndSelect('via.fonte', 'fonte')
+        .leftJoinAndSelect('via.face', 'face')
+        .leftJoinAndSelect('via.imagem', 'imagem')
+        .leftJoin('via.colecoes', 'colecoes')
+        .where('colecoes.id IS NULL OR colecoes.id != :colecaoId', { colecaoId })
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getManyAndCount();
+
     return {
       vias,
       total
