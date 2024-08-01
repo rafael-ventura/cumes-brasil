@@ -30,7 +30,7 @@ import ViaLista from 'components/Via/ViaLista.vue';
 import { Via } from 'src/models/Via';
 import { Colecao } from 'src/models/Colecao';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const props = defineProps<{
   results:(Via | Colecao)[];
   entityType: 'via' | 'colecao';
@@ -39,6 +39,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['select']);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const selectItem = (item: Via | Colecao) => {
   emit('select', item);
 };
