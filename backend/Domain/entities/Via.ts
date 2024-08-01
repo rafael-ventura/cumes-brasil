@@ -14,7 +14,7 @@ import { Fonte } from './Fonte';
 import { Face } from './Face';
 import { Imagem } from './Imagem';
 import { Escalada } from './Escalada';
-import { ColecaoVia } from './ColecaoVia';
+import {Colecao} from "./Colecao";
 
 @Entity()
 export class Via extends BaseEntity {
@@ -91,11 +91,8 @@ export class Via extends BaseEntity {
   })
   croquis: Croqui[];
 
-  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.via, {
-    cascade: true,
-    onDelete: 'CASCADE'
-  })
-  viasColecoes: ColecaoVia[];
+  @ManyToMany(() => Colecao, colecao => colecao.vias)
+  colecoes: Colecao[];
 
   @OneToMany(() => Escalada, escalada => escalada.viaId)
   escaladas: Escalada[];

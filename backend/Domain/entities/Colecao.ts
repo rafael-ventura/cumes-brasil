@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne, OneToMany,
@@ -11,7 +10,6 @@ import {
 import { Via } from "./Via";
 import { Imagem } from "./Imagem";
 import { Usuario } from "./Usuario";
-import { ColecaoVia } from "./ColecaoVia";
 
 @Entity()
 export class Colecao extends BaseEntity {
@@ -30,6 +28,17 @@ export class Colecao extends BaseEntity {
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
   imagem: number;
 
-  @OneToMany(() => ColecaoVia, colecaoVia => colecaoVia.colecao, { cascade: true, onDelete: "CASCADE" })
-  viasColecoes: ColecaoVia[];
+  @ManyToMany(() => Via, via => via.colecoes)
+  @JoinTable({
+    name: "via_colecao",
+    joinColumn: {
+      name: "colecao_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "via_id",
+      referencedColumnName: "id"
+    }
+  })
+  vias: Via[];
 }

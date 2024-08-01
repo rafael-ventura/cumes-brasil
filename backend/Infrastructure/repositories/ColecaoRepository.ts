@@ -1,20 +1,19 @@
-import { AppDataSource } from "../config/db";
-import { Colecao } from "../../Domain/entities/Colecao";
-import { ColecaoVia } from "../../Domain/entities/ColecaoVia";
-import { Service } from "typedi";
+import { AppDataSource } from '../config/db';
+import { Colecao } from '../../Domain/entities/Colecao';
+import { Service } from 'typedi';
 import { ISearchRepository } from "../../Domain/interfaces/repositories/ISearchRepository";
 import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
     private repository = AppDataSource.getRepository(Colecao);
-    private colecaoViaRepository = AppDataSource.getRepository(ColecaoVia);
 
     async getById(id: number): Promise<Colecao | null> {
         return this.repository.createQueryBuilder("colecao")
             .leftJoin("colecao.usuario", "usuario")
             .addSelect("usuario.id", "usuario_id")
             .leftJoinAndSelect("colecao.imagem", "imagem")
+            .leftJoinAndSelect("colecao.vias", "vias")
             .where("colecao.id = :id", {id})
             .getOne();
     }
@@ -24,6 +23,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
             .leftJoin("colecao.usuario", "usuario")
             .addSelect("usuario.id", "usuario_id")
             .leftJoinAndSelect("colecao.imagem", "imagem")
+            .leftJoinAndSelect("colecao.vias", "vias")
             .getMany();
     }
 
@@ -32,6 +32,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
             .leftJoin("colecao.usuario", "usuario")
             .addSelect("usuario.id", "usuario_id")
             .leftJoinAndSelect("colecao.imagem", "imagem")
+            .leftJoinAndSelect("colecao.vias", "vias")
             .where("usuario.id = :usuario_id", {usuario_id})
             .getMany();
     }
@@ -48,29 +49,18 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         await this.repository.delete(id);
     }
 
-    async addViaToColecao(via_id: number, colecao_id: number): Promise<void> {
-        const existingEntry = await this.colecaoViaRepository.findOne({
-            where: {
-                via_id,
-                colecao_id
-            }
-        });
-
-        if (existingEntry) {
-            throw new Error("A via já está presente nesta coleção.");
-        }
-        const colecaoVia = this.colecaoViaRepository.create({
-            via_id,
-            colecao_id
-        });
-        await this.colecaoViaRepository.save(colecaoVia);
+    async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
+        return this.repository.createQueryBuilder()
+            .relation(Colecao, 'vias')
+            .of(colecao_id)
+            .add(via_id);
     }
 
     async removeViaFromColecao(via_id: number, colecao_id: number): Promise<void> {
-        await this.colecaoViaRepository.delete({
-            via_id,
-            colecao_id
-        });
+        return this.repository.createQueryBuilder()
+            .relation(Colecao, 'vias')
+            .of(colecao_id)
+            .remove(via_id);
     }
 
     async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{

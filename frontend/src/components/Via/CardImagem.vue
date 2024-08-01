@@ -31,7 +31,6 @@ const expandImage = (url: string) => {
 <style scoped>
 .rounded-borders {
   border-radius: 15px;
-  color: black;
 }
 
 </style>
