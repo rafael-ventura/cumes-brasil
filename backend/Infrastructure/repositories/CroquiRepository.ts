@@ -32,11 +32,11 @@ export class CroquiRepository {
   }
 
   async update (id: number, croquiData: Partial<Croqui>): Promise<void> {
-    await this.repository.update(id as any, croquiData);
+    await this.repository.update(id, croquiData);
   }
 
   async delete (id: number): Promise<void> {
-    await this.repository.delete(id as any);
+    await this.repository.delete(id);
   }
 
   async getIdsByViaId (via_id: number): Promise<number[] | null> {
@@ -60,15 +60,15 @@ export class CroquiRepository {
   async associarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
-      .of(via_id)
-      .add(croqui_id);
+      .of(croqui_id)
+      .add(via_id);
   }
 
   async desassociarVia (croqui_id: number, via_id: number): Promise<void> {
     return this.repository.createQueryBuilder()
       .relation(Croqui, "vias")
-      .of(via_id)
-      .remove(croqui_id);
+      .of(croqui_id)
+      .remove(via_id);
   }
 }
 

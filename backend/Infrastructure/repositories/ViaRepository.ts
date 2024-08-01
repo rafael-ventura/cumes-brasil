@@ -46,19 +46,19 @@ export class ViaRepository {
     await this.repository.delete(id as any);
   }
 
-  async getViasByColecaoId (colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
+  async getViasByColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     const [vias, total] = await this.repository.createQueryBuilder('via')
-      .leftJoinAndSelect("via.viasColecoes", "viasColecoes")
-      .leftJoinAndSelect("via.montanha", "montanha")
-      .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-      .leftJoinAndSelect("via.fonte", "fonte")
-      .leftJoinAndSelect("via.face", "face")
-      .leftJoinAndSelect("via.imagem", "imagem")
-      .leftJoinAndSelect("via.croquis", "croquis")
-      .where("viasColecoes.colecao_id = :colecaoId", { colecaoId })
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+        .leftJoinAndSelect('via.montanha', 'montanha')
+        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+        .leftJoinAndSelect('via.fonte', 'fonte')
+        .leftJoinAndSelect('via.face', 'face')
+        .leftJoinAndSelect('via.imagem', 'imagem')
+        .leftJoin('via.colecoes', 'colecoes')
+        .where('colecoes.id = :colecaoId', { colecaoId })
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getManyAndCount();
+
     return {
       vias,
       total
@@ -70,7 +70,6 @@ export class ViaRepository {
     total: number
   }> {
     const [vias, total] = await this.repository.createQueryBuilder('via')
-      .leftJoinAndSelect('via.viasColecoes', 'viasColecoes')
       .leftJoinAndSelect('via.montanha', 'montanha')
       .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
       .leftJoinAndSelect('via.fonte', 'fonte')

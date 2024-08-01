@@ -173,10 +173,8 @@ class ColecaoService {
 
   async addViaToColecao (colecaoId: number, viaId: number): Promise<void> {
     try {
-      await api.post('/colecoes/adicionarVia', {
-        colecao_id: colecaoId,
-        via_id: viaId
-      });
+      const url = `/colecoes/adicionarVia?colecao_id=${colecaoId}&via_id=${viaId}`;
+      await api.post(url);
     } catch (error: any) {
       throw new Error('Erro ao adicionar via à coleção: ' + error.response?.data?.message || error.message);
     }

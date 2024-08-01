@@ -194,12 +194,8 @@ export class ColecaoController {
      */
     adicionarVia = async (req: Request, res: Response) => {
         try {
-            const {
-                colecao_id,
-                via_id
-            } = req.body;
-            const colecaoId: number = colecao_id;
-            const viaId: number = via_id;
+            const colecaoId = parseInt(req.query.colecao_id as string);
+            const viaId = parseInt(req.query.via_id as string);
             await this.service.addViaToColecao(viaId, colecaoId);
             res.status(201).json({ message: "Via adicionada à coleção com sucesso." });
         } catch (error) {
@@ -229,8 +225,8 @@ export class ColecaoController {
      */
     removeVia = async (req: Request, res: Response) => {
         try {
-            const colecaoId = parseInt(req.params.id);
-            const viaId = parseInt(req.params.viaId);
+            const colecaoId = parseInt(req.query.colecao_id as string);
+            const viaId = parseInt(req.query.via_id as string);
             await this.service.removeViaFromColecao(viaId, colecaoId);
             res.status(200).json({ message: "Via removida da coleção com sucesso." });
         } catch (error) {

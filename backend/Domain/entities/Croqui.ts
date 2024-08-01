@@ -27,16 +27,5 @@ export class Croqui extends BaseEntity {
   imagem: number;
 
   @ManyToMany(() => Via, via => via.croquis)
-  @JoinTable({
-    name: "via_croqui",
-    joinColumn: {
-      name: "croqui_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    }
-  })
   vias: Via[];
 }

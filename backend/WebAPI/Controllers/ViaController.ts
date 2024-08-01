@@ -108,6 +108,7 @@ export class ViaController {
 			const colecaoId = parseInt(req.params.id);
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;
+			console.log("Endpoint GET /vias/colecao/:id foi chamado", colecaoId, "page", page, "limit", limit);
 			const result = await this.service.getViasIdByColecaoId(colecaoId, page, limit);
 			res.status(200).json(result);
 		} catch (error) {

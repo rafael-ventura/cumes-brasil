@@ -13,12 +13,13 @@ export class CroquiService {
     }
 
     async getCroquiById (id: number): Promise<Croqui | null> {
+        const croqui = await this.croquiRepository.getById(id);
         if (!id) {
             throw new Error("ID da Fonte não fornecido");
         } else if (isNaN(id)) {
             throw new Error("ID da Fonte inválido");
         }
-        return this.croquiRepository.getById(id);
+        return croqui;
     }
 
     async getCroquis (): Promise<Croqui[]> {
@@ -58,12 +59,12 @@ export class CroquiService {
         await this.croquiRepository.delete(id);
     }
 
-    async associarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
-        return this.croquiRepository.associarVia(croqui_id, via_id);
+    async associarCroquiEmVia (croquiId: number, viaId: number): Promise<void> {
+        return this.croquiRepository.associarVia(croquiId, viaId);
     }
 
-    async desassociarCroquiEmVia (croqui_id: number, via_id: number): Promise<void> {
-        return this.croquiRepository.desassociarVia(croqui_id, via_id);
+    async desassociarCroquiEmVia (croquiId: number, viaId: number): Promise<void> {
+        return this.croquiRepository.desassociarVia(croquiId, viaId);
     }
     async getCroquisByViaId (id: number): Promise<Croqui[]> {
         return this.croquiRepository.getByViaId(id);

@@ -6,7 +6,6 @@ import { Via } from '../../Domain/entities/Via';
 import { Croqui } from '../../Domain/entities/Croqui';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
-import { ViaCroqui } from '../../Domain/entities/ViaCroqui';
 
 import viasJson from '../../../database/json/vias.json';
 import croquisJson from '../../../database/json/croquis.json';
@@ -31,7 +30,6 @@ export async function loadData () {
     const croquiRepository = queryRunner.manager.getRepository(Croqui);
     const imagemRepository = queryRunner.manager.getRepository(Imagem);
     const usuarioRepository = queryRunner.manager.getRepository(Usuario);
-    const viacroquiRepository = queryRunner.manager.getRepository(ViaCroqui);
 
     const fontes = fonteRepository.create(fontesJson.fontes);
     await fonteRepository.save(fontes);
@@ -54,8 +52,14 @@ export async function loadData () {
     const usuarios = usuarioRepository.create(usuariosJson.usuarios);
     await usuarioRepository.save(usuarios);
 
-    const viasCroquis = viacroquiRepository.create(viasCroquisJson.via_croquis);
-    await viacroquiRepository.save(viasCroquis);
+    for (const viaCroqui of viasCroquisJson.via_croquis) {
+      const via = await viaRepository.findOne({ where: { id: viaCroqui.via_id } });
+      const croqui = await croquiRepository.findOne({ where: { id: viaCroqui.croqui_id } });
+      if (via && croqui) {
+        via.croquis = [...(via.croquis || []), croqui];
+        await viaRepository.save(via);
+      }
+    }
 
     await queryRunner.commitTransaction();
   } catch (error) {
