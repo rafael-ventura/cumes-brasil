@@ -16,6 +16,6 @@ export class ViaCroqui {
   via: Via;
 
   @ManyToOne(() => Croqui, croqui => croqui.vias, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'colecao_id' })
+  @JoinColumn({ name: 'croqui_id' })
   croqui: Croqui;
 }
