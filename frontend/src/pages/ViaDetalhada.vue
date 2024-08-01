@@ -26,71 +26,118 @@
 
       <!-- Bloco Duração e Extensão -->
       <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
-          <q-item>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Duração:</strong> {{ via?.duracao }}</p>
+        <q-card class="q-ma-md rounded-borders card">
+          <q-item class="row">
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="alarm" class="medium-icon col-4"></q-icon>
+                <div class="text-h4 col-4 center">{{ via?.duracao }}</div>
+              </div>
+              <div class="text-h6 center">DURAÇÃO</div>
             </q-card>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Extensão:</strong> {{ via?.extensao }}</p>
+            <q-separator spaced />
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="open_in_full" class="medium-icon col-4"></q-icon>
+                <div class="text-h4 col-4 center">{{ via?.extensao }}</div>
+              </div>
+              <div class="text-h6 center">EXTENSÃO</div>
             </q-card>
           </q-item>
         </q-card>
       </div>
       <!-- Bloco Grau, Crux, Artificial e Exposição -->
       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
-          <q-item>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Grau:</strong> {{ via?.grau }}</p>
+        <q-card class="q-ma-md rounded-borders card">
+          <q-item class="row">
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="rotate_90_degrees_cw" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <div class="text-h4 col-4 center">{{ via?.grau }}</div>
+              </div>
+              <div class="text-h6 center">GRAU</div>
             </q-card>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Crux:</strong> {{ via?.crux }}</p>
+            <q-separator spaced />
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="map" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <div class="text-h4 col-4 center">{{ via?.crux }}</div>
+              </div>
+              <div class="text-h6 center">CRUX</div>
             </q-card>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Artificial:</strong> {{ via?.artificial }}</p>
+            <q-separator spaced />
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="precision_manufacturing" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <div class="text-h4 col-4 center">{{ via?.artificial }}</div>
+              </div>
+              <div class="text-h6 center">ARTIFICIAL</div>
             </q-card>
-            <q-card class="q-ma-sm card-parametro">
-              <p><strong>Exposição:</strong> {{ via?.exposicao }}</p>
+            <q-separator spaced />
+            <q-card class="col-12 margem">
+              <div class="top-margem row">
+                <q-icon name="sunny" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <div class="text-h4 col-4 center">{{ via?.exposicao }}</div>
+              </div>
+              <div class="text-h6 center">EXPOSIÇÃO</div>
             </q-card>
           </q-item>
         </q-card>
       </div>
-
       <!-- Bloco Detalhes -->
       <div class="col-xs-12 col-sm-8 col-md-12 col-lg-3 col-xl-4">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+        <q-card class="q-ma-md rounded-borders card">
           <q-item>
             <q-card class="q-ma-sm card-parametro">
-              <p><strong>Detalhes:</strong> {{ via?.detalhes }}</p>
+              <div class="top-margem row">
+                <q-icon name="format_list_bulleted" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <div class="text-h6 col-4">{{ via?.detalhes }}</div>
+              </div>
+              <div class="text-h6 center">DETALHES</div>
             </q-card>
           </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Fonte e Conquistadores -->
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-10">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
-          <q-item>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9 col-xl-10">
+        <q-card class="q-ma-md rounded-borders card">
+          <q-item class="row">
             <q-card class="q-ma-sm card-parametro">
-              <p><strong>Fonte:</strong> {{ via?.fonte.autor }}</p>
+              <div class="top-margem row">
+                <q-icon name="auto_stories" class="medium-icon col-4"></q-icon>
+                <div class="text-h6 col-4 center">{{ via?.fonte.autor }}</div>
+              </div>
+              <div class="text-h6 center">FONTE</div>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-              <p><strong>Conquistadores:</strong> {{ via?.conquistadores }}</p>
+              <div class="top-margem row">
+                <q-icon name="groups_2" class="medium-icon col-4"></q-icon>
+                <div class="text-h6 col-4 center">{{ via?.conquistadores }}</div>
+              </div>
+              <div class="text-h6 center">CONQUISTADORES</div>
             </q-card>
             <q-card class="q-ma-sm card-parametro">
-              <p><strong>Referência da Fonte:</strong> {{ via?.fonte.referencia }}</p>
+              <div class="top-margem row">
+                <q-icon name="menu_book" class="medium-icon col-4"></q-icon>
+                <div class="text-h6 col-4 center">{{ via?.fonte.referencia }}</div>
+              </div>
+              <div class="text-h6 center">REFERÊNCIAS</div>
             </q-card>
           </q-item>
         </q-card>
       </div>
 
       <!-- Bloco Data -->
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-2 col-xl-2">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-2">
+        <q-card class="q-ma-md rounded-borders card">
           <q-item>
             <q-card class="q-ma-sm card-parametro">
-              <p><strong>Data do cadastro:</strong> {{ via?.data }}</p>
+              <div class="top-margem row">
+                <q-icon name="pending_actions" class="medium-icon col-4"></q-icon>
+                <div class="text-h6 col-4 center">{{ via?.data }}</div>
+              </div>
+              <div class="text-h6 center">DATA DO CADASTRO</div>
             </q-card>
           </q-item>
         </q-card>
@@ -98,7 +145,7 @@
 
       <!-- Bloco Croquis -->
       <div class="col-12">
-        <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+        <q-card class="q-ma-md rounded-borders card">
           <q-card-section>
             <!-- Placeholder para o carrossel de fotos -->
             <p><strong>Croquis:</strong></p>
@@ -238,4 +285,13 @@ const addToCollection = () => {
 .card-parametro{
   width: 100%;
 }
+
+.center{
+  text-align: center;
+}
+
+.margem{
+  margin: 8px 0px 8px 0px;
+}
+
 </style>
