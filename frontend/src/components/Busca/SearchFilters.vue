@@ -41,7 +41,7 @@
       <q-btn class="q-pr-md" @click="filterByExtension('Entre 200 e 300 metros')" label="Entre 200 e 300 metros"/>
       <q-btn class="q-pr-md" @click="filterByExtension('Mais de 300 metros')" label="Mais de 300 metros"/>
     </div>
-    <div v-if="showFilterInput.selectedCrux">
+    <div v-if="showFilterInput.selectedCrux" class="q-pt-lg">
       <q-input
         v-model="localFilters.selectedCrux"
         label="Crux"

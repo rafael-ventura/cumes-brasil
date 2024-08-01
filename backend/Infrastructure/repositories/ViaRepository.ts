@@ -118,7 +118,8 @@ export class ViaRepository implements ISearchRepository<Via>{
     const { searchQuery, selectedMountain, selectedDifficulty, selectedCrux, selectedExtensionCategory, page = 1, itemsPerPage = 10 } = query;
 
     let qb = this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha'); // Junção com a tabela Montanha
+        .leftJoinAndSelect('via.montanha', 'montanha')
+        .leftJoinAndSelect('via.imagem', 'imagem');
 
     if (searchQuery) {
       qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });

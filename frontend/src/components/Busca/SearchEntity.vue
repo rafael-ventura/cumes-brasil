@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="search-header">
+      <h2>Busca</h2>
+    </div>
     <slot name="filters" :filters="filters" />
     <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
     <q-pagination v-model="filters.page as number" :max="totalPages" @update:model-value="searchEntities" />
@@ -11,6 +14,8 @@ import { ref, defineProps, defineEmits, onMounted, defineExpose } from 'vue';
 import searchService from 'src/services/SearchService';
 import { SearchRequest } from 'src/models/SearchRequest';
 import SearchResults from 'components/Busca/SearchResults.vue';
+import { formatVia } from 'src/utils/utils';
+import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   entity: 'via' | 'colecao';
@@ -42,6 +47,12 @@ const searchEntities = async () => {
       entityType: props.entity
     };
     const searchResult = await searchService.search(searchRequest);
+
+    // Formatar as entidades do tipo Via
+    if (props.entity === 'via') {
+      searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
+    }
+
     results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
     console.log('Search results:', results.value);
@@ -63,3 +74,15 @@ const selectItem = (item: any) => {
   emit('select', item);
 };
 </script>
+
+<style scoped>
+.search-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.search-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>

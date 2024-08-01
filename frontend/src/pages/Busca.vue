@@ -1,70 +1,40 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row items-center q-my-md">
-      <div class="col-12 col-md">
-        <q-input v-model="searchQuery" label="Buscar vias de escalada" @input="searchVias" debounce="300"/>
-      </div>
-      <div class="col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true"/>
-      </div>
-    </div>
-    <ViaLista :vias="vias" @show-details="showViaDetails"/>
-    <BuscaAvancada @apply-filters="applyFilters" v-model="isFilterModalOpen"/>
-    <q-dialog v-model="isViaModalOpen" persistent>
-      <ModalViaDetalhada :via="<Via>selectedVia" is-open/>
-    </q-dialog>
+  <q-page>
+    <SearchEntity
+      ref="searchEntityRef"
+      entity="via"
+      @select="goViaDetalhadaView($event.id)"
+      @update-results="updateSearchResults"
+    >
+      <template #filters="{ filters }">
+        <SearchFilters :filters="filters" @applyFilters="applyFilters" />
+      </template>
+    </SearchEntity>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import ViaService from '../services/ViaService';
-import ViaLista from 'components/Via/ViaLista.vue';
-import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
-import ModalViaDetalhada from 'components/Via/ModalViaDetalhada.vue';
-import { Via } from 'src/models/Via';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import SearchFilters from 'components/Busca/SearchFilters.vue';
+import SearchEntity from 'components/Busca/SearchEntity.vue';
 
-const isFilterModalOpen = ref(false);
-const isViaModalOpen = ref(false);
-const selectedVia = ref<Via | null>(null);
-const appliedFilters = ref({});
-const searchQuery = ref('');
-const vias = ref<Via[]>([]);
-const totalPages = ref(1);
-const currentPage = ref(1);
+const router = useRouter();
+const searchEntityRef = ref();
 
-defineOptions({
-  name: 'BuscaPage'
-});
-
-onMounted(async () => {
-  await searchVias();
-});
-
-const searchVias = async () => {
-  try {
-    if (searchQuery.value.trim() === '') {
-      const result = await ViaService.getAllVias(currentPage.value);
-      vias.value = result.vias;
-      totalPages.value = Math.ceil(result.total / 10);
-    } else {
-      const result = await ViaService.searchVias(searchQuery.value, { page: currentPage.value });
-      vias.value = result.vias;
-      totalPages.value = Math.ceil(result.total / 10);
-    }
-  } catch (error) {
-    console.error('Erro ao buscar vias:', error);
+const applyFilters = (filters: any) => {
+  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
+    searchEntityRef.value.handleApplyFilters(filters);
+  } else {
+    console.error('SearchEntity ref not found or handleApplyFilters not defined');
   }
 };
 
-const applyFilters = async (filters: any) => {
-  appliedFilters.value = filters;
-  await searchVias();
-  isFilterModalOpen.value = false;
+const updateSearchResults = (results: any[]) => {
+  console.log('Search results updated:', results);
 };
 
-const showViaDetails = (via: Via) => {
-  selectedVia.value = via;
-  isViaModalOpen.value = true;
+const goViaDetalhadaView = (id: number) => {
+  router.push(`/vias/${id}`);
 };
 </script>

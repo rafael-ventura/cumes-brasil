@@ -1,12 +1,21 @@
 import { api } from 'boot/axios';
 import { SearchResult } from 'src/models/SearchResult';
+import { formatVia } from 'src/utils/utils';
+import { Via } from 'src/models/Via';
 
 class SearchService {
   async search (searchRequest: any) {
     try {
       console.log('Search request received: ', searchRequest);
       const response = await api.post('/search', searchRequest);
-      return response.data as SearchResult<any>;
+      const searchResult = response.data as SearchResult<any>;
+
+      // Formatar as entidades do tipo Via
+      if (searchRequest.entityType === 'Via') {
+        searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
+      }
+
+      return searchResult;
     } catch (error) {
       console.error('API error: ', error);
       throw error;

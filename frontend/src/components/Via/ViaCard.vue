@@ -7,7 +7,10 @@
         </div>
         <div class="card-info">
           <div class="text-h6">{{ via.nome }}</div>
-          <div class="text-subtitle1">{{ via.montanha.nome }}</div>
+          <div class="text-subtitle1">
+            <q-icon name="terrain" />
+            {{ via.montanha.nome }}
+          </div>
           <q-badge color="primary" :label="'Grau: ' + via.grau"/>
           <q-badge color="secondary" :label="'Crux: ' + via.crux" class="q-ml-sm"/>
           <q-badge color="info" :label="'Artificial: ' + via.artificial" class="q-ml-sm"/>

@@ -2,7 +2,7 @@
   <div>
     <!-- Renderiza ViaCard se entityType for 'via' -->
     <div v-if="entityType === 'via'">
-      <ViaLista :vias="results as Via[]"/>
+      <ViaLista :vias="<Via[]>results" />
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
     <div v-else-if="entityType === 'colecao'">
