@@ -36,13 +36,13 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="isEditDialogOpen">
-      <PerfilEditarForm v-if="user" :user="<Usuario>user" title="Editar Dados" @submit="handleEditSubmit"/>
+      <PerfilEditarForm v-if="user" :user="<Usuario>user" @submit="handleEditSubmit"/>
     </q-dialog>
     <PerfilBio v-if="user" :user="<Usuario>user" @bio-updated="updateUserBio" />
   </q-page>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import UserService from 'src/services/UsuarioService';
 import ColecaoService from 'src/services/ColecaoService';
@@ -57,19 +57,16 @@ const user = ref<Usuario | null>(null);
 const numColecoes = ref(0);
 const numEscaladas = ref(0);
 const numFavoritas = ref(0);
+const colecaoId = ref(0);
 const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 
-const items = ref([
+const items = computed(() => [
   { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: 'blue', to: '/escaladas' },
   { label: 'Coleções', num: numColecoes.value, icon: 'style', color: 'purple', to: '/colecoes' },
-  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: 'orange', to: '/colecoes' },
+  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: 'orange', to: `/colecoes/${colecaoId.value}` },
   { label: 'Nova Escalada', num: null, icon: 'add_location', color: 'green', to: '/colecoes' }
 ]);
-
-defineOptions({
-  name: 'PerfilPage'
-});
 
 onMounted(async () => {
   try {
@@ -78,13 +75,11 @@ onMounted(async () => {
     } else {
       user.value = await UserService.getPerfil();
       const colecoes = await ColecaoService.getByUsuarioId();
-      // const escaladas = await EscaladaService.getAll();
+      const favorita = colecoes.filter((colecao) => colecao.nome === 'Vias Favoritas');
+      colecaoId.value = favorita[0].id;
+      const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value.toString());
+      numFavoritas.value = colecaoFavoritas.length;
       numColecoes.value = colecoes.length;
-      // numEscaladas.value = escaladas.length;
-
-      // Update items with the new counts
-      items.value[0].num = numEscaladas.value;
-      items.value[1].num = numColecoes.value;
     }
   } catch (error) {
     console.error(error);
@@ -99,6 +94,7 @@ const logout = () => {
 const handleEditSubmit = (updatedUser: Usuario) => {
   user.value = updatedUser;
   isEditDialogOpen.value = false;
+  isConfigDialogOpen.value = false;
 };
 
 const updateUserBio = (newBio: string) => {
@@ -106,6 +102,10 @@ const updateUserBio = (newBio: string) => {
     user.value.biografia = newBio;
   }
 };
+
+defineOptions({
+  name: 'PerfilPage'
+});
 
 </script>
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-ma-md bg-grey-3 rounded-borders card">
+  <q-card class="q-ma-md rounded-borders card">
     <q-item class="q-ma-md">
       <q-img :src="src" alt="Imagem da via" class="via-img" @click="expandImage(src || 'https://via.placeholder.com/150')"/>
     </q-item>

@@ -21,7 +21,7 @@
     <div class="row q-col-gutter-none">
       <!-- Bloco Imagem da Via -->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4">
-        <CardImagem :src="via?.imagem?.url || adjustImageUrl('/assets/default-via.jpg')" />
+        <CardImagemVia :src="via?.imagem?.url || adjustImageUrl('/assets/default-via.jpg')" />
       </div>
 
       <!-- Bloco Duração e Extensão -->
@@ -185,7 +185,7 @@ import { Notify } from 'quasar';
 import ViaService from 'src/services/ViaService';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
-import CardImagem from 'components/Via/CardImagem.vue';
+import CardImagemVia from 'components/Via/CardImagemVia.vue';
 import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
 import { adjustImageUrl } from 'src/services/ImagemService';

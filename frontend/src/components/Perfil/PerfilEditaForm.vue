@@ -1,7 +1,7 @@
 <template>
   <q-card class="my-card">
     <q-card-section>
-      <div class="text-h6">{{ title }}</div>
+      <div class="text-h6">Editar Dados:</div>
     </q-card-section>
 
     <q-card-section>
@@ -12,10 +12,18 @@
         <q-input v-model="clubeOrganizacao" label="Clube ou Organização" type="text" />
         <q-input v-model="localizacao" label="Localização" type="text" />
         <q-input v-model="biografia" label="Biografia" type="textarea" />
-        <q-input v-model="viaFavoritaId" label="Via Favorita" type="text" />
-        <q-btn flat label="Alterar Foto de Perfil" class="q-mt-md right-margem"/>
+        <q-separator spaced />
+        <div class="row">
+          <q-btn class="col-6" label="Via Predileta" color="secondary" @click="isAddPreferidaModalOpen = true" />
+          <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
+        </div>
+        <q-separator spaced />
+        <q-btn flat label="Alterar Foto de Perfil" class="q-mt-md right-margem" />
         <q-btn type="submit" label="Salvar" color="primary" class="q-mt-md" />
       </q-form>
+      <q-dialog v-model="isAddPreferidaModalOpen">
+        <AddPreferidaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate" />
+      </q-dialog>
     </q-card-section>
   </q-card>
 </template>
@@ -24,9 +32,11 @@
 import { defineEmits, defineProps, ref, watch } from 'vue';
 import { Usuario } from 'src/models/Usuario';
 import UserService from 'src/services/UsuarioService';
+import AddPreferidaModal from 'components/Perfil/AddPreferidaModal.vue';
+import { Via } from 'src/models/Via';
 
-const props = defineProps<{ user: Usuario; title: string }>();
-const emits = defineEmits(['submit']);
+const props = defineProps<{ user: Usuario }>();
+const emits = defineEmits(['submit', 'waiting']);
 
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);
@@ -34,7 +44,11 @@ const fotoPerfil = ref(props.user.foto_perfil?.url);
 const clubeOrganizacao = ref(props.user.clube_organizacao || '');
 const localizacao = ref(props.user.localizacao || '');
 const biografia = ref(props.user.biografia || '');
-const viaFavoritaId = ref(props.user.via_favorita?.id || '');
+const viaPreferidaId = ref(props.user.via_favorita?.id.toString() || '');
+const viaPreferidaNome = ref(props.user.via_favorita?.nome || '');
+const viaPreferida = ref(props.user.via_favorita || null);
+
+const isAddPreferidaModalOpen = ref(false);
 
 const formattedDataAtividade = ref(
   props.user.data_atividade
@@ -48,6 +62,13 @@ watch(formattedDataAtividade, (newVal) => {
 
 const dataAtividade = ref(props.user.data_atividade ? new Date(props.user.data_atividade) : null);
 
+const viaPreferidaUpdate = (newPreferida: Via) => {
+  viaPreferida.value = newPreferida;
+  viaPreferidaId.value = newPreferida.id.toString();
+  viaPreferidaNome.value = newPreferida.nome;
+  isAddPreferidaModalOpen.value = false;
+};
+
 const onSubmit = async () => {
   try {
     const updatedUser = {
@@ -59,7 +80,7 @@ const onSubmit = async () => {
       clube_organizacao: clubeOrganizacao.value || null,
       localizacao: localizacao.value || null,
       biografia: biografia.value || null,
-      via_favorita: viaFavoritaId.value ? { id: viaFavoritaId.value } : null
+      via_favorita: viaPreferida.value ? { id: viaPreferidaId.value, nome: viaPreferidaNome.value } : null
     };
     await UserService.editarDados(updatedUser);
     emits('submit', updatedUser);
@@ -79,5 +100,10 @@ const onSubmit = async () => {
 }
 .right-margem {
   margin-right: 16px;
+}
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
