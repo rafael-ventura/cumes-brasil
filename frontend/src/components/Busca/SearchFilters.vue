@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <div class="filter-buttons">
-      <q-btn :class="{ active: activeFilters.searchQuery }" round icon="search" size="sm" @click="toggleFilter('searchQuery')" label="Nome da Via"/>
-      <q-btn :class="{ active: activeFilters.selectedMountain }" round icon="terrain" size="sm" @click="toggleFilter('selectedMountain')" label="Montanha"/>
-      <q-btn :class="{ active: activeFilters.selectedDifficulty }" round icon="signal_cellular_alt" size="sm" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
-      <q-btn :class="{ active: activeFilters.selectedExtension }" round icon="height" size="sm" @click="toggleFilter('selectedExtension')" label="Extensão"/>
-      <q-btn :class="{ active: activeFilters.selectedCrux }" round icon="trending_up" size="sm" @click="toggleFilter('selectedCrux')" label="Crux"/>
+  <div class="margem">
+    <div class="row q-col-gutter-sm q-gutter-md justify-center">
+      <q-btn :class="{ active: activeFilters.searchQuery }" rounded icon="search" size="md" @click="toggleFilter('searchQuery')" label="Nome da Via"/>
+      <q-btn :class="{ active: activeFilters.selectedMountain }" rounded icon="terrain" size="md" @click="toggleFilter('selectedMountain')" label="Montanha"/>
+      <q-btn :class="{ active: activeFilters.selectedDifficulty }" rounded icon="signal_cellular_alt" size="md" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
+      <q-btn :class="{ active: activeFilters.selectedExtension }" rounded icon="height" size="md" @click="toggleFilter('selectedExtension')" label="Extensão"/>
+      <q-btn :class="{ active: activeFilters.selectedCrux }" rounded icon="trending_up" size="md" @click="toggleFilter('selectedCrux')" label="Crux"/>
     </div>
     <!-- Filter inputs -->
     <div v-if="showFilterInput.searchQuery" class="q-pt-lg">
@@ -34,7 +34,7 @@
         outlined
       />
     </div>
-    <div v-if="showExtensionFilters" class="q-pt-lg">
+    <div v-if="showExtensionFilters" class="q-pt-lg row q-col-gutter-sm q-gutter-md justify-center">
       <q-btn class="q-pr-md" @click="filterByExtension('Menor que 50 metros')" label="Menor que 50 metros"/>
       <q-btn class="q-pr-md" @click="filterByExtension('Entre 50 e 100 metros')" label="Entre 50 e 100 metros"/>
       <q-btn class="q-pr-md" @click="filterByExtension('Entre 100 e 200 metros')" label="Entre 100 e 200 metros"/>
@@ -49,10 +49,11 @@
         outlined
       />
     </div>
-    <div class="action-buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
-      <q-btn label="Buscar" @click="emitFilters"/>
-      <q-btn label="Limpar" color="secondary" @click="clearFilters"/>
+    <div class="buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
+      <q-btn class="right-margem" label="Limpar" color="secondary" @click="clearFilters"/>
+      <q-btn label="Buscar" color="primary" @click="emitFilters"/>
     </div>
+    <q-separator spaced />
   </div>
 </template>
 
@@ -162,25 +163,16 @@ const filterByExtension = (category: ExtensionCategory) => {
 </script>
 
 <style scoped>
-.filter-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: space-around;
+.margem{
+  margin: 16px;
 }
-
-.filter-buttons q-btn {
-  margin-bottom: 8px;
-}
-
-.filter-buttons q-btn.active {
-  background-color: gray;
-  color: white;
-}
-
-.action-buttons {
+.buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
+}
+.active {
+  background-color: gray;
+  color: white;
 }
 </style>
