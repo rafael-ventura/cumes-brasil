@@ -36,7 +36,7 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="isEditDialogOpen">
-      <PerfilEditarForm v-if="user" :user="<Usuario>user" title="Editar Dados" @submit="handleEditSubmit"/>
+      <PerfilEditarForm v-if="user" :user="<Usuario>user" @submit="handleEditSubmit"/>
     </q-dialog>
     <PerfilBio v-if="user" :user="<Usuario>user" @bio-updated="updateUserBio" />
   </q-page>
@@ -75,14 +75,11 @@ onMounted(async () => {
     } else {
       user.value = await UserService.getPerfil();
       const colecoes = await ColecaoService.getByUsuarioId();
-
       const favorita = colecoes.filter((colecao) => colecao.nome === 'Vias Favoritas');
       colecaoId.value = favorita[0].id;
-      console.log(colecaoId.value);
       const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value.toString());
       numFavoritas.value = colecaoFavoritas.length;
       numColecoes.value = colecoes.length;
-      numEscaladas.value = colecoes.length; // Este valor está sendo usado, mas não foi atualizado no seu código original
     }
   } catch (error) {
     console.error(error);
@@ -97,6 +94,7 @@ const logout = () => {
 const handleEditSubmit = (updatedUser: Usuario) => {
   user.value = updatedUser;
   isEditDialogOpen.value = false;
+  isConfigDialogOpen.value = false;
 };
 
 const updateUserBio = (newBio: string) => {
