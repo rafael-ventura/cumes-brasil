@@ -8,7 +8,7 @@ export class UsuarioRepository {
 
     async getById (id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-            .leftJoinAndSelect('usuario.via_favorita', 'via_favorita')
+            .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
           .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
           .where("usuario.id = :id", { id })
           .getOne();
@@ -43,8 +43,8 @@ export class UsuarioRepository {
 
     async getPerfilSemHash (id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-          .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_favorita'])
-          .leftJoinAndSelect('usuario.via_favorita', 'via_favorita')
+          .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
+          .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
           .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
           .where('usuario.id = :id', { id })
           .getOne();

@@ -64,7 +64,7 @@ class UsuarioService {
 
   async editarDados (usuario: {
     localizacao: string | null;
-    via_favorita: { id: number | string } | null;
+    via_preferida: { id: number | string } | null;
     data_atividade: string | null;
     biografia: string | null;
     foto_perfil: { url: string } | null;
