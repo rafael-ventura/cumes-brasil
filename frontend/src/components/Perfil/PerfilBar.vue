@@ -38,7 +38,7 @@ const userInfo = computed(() => [
   { icon: 'mail', text: props.user?.email || 'Email não disponível' },
   { icon: 'calendar_month', text: `Escalando desde: ${props.user?.data_atividade || 'Data não disponível'}` },
   { icon: 'groups_2', text: `Meu Clube/Organização: ${props.user?.clube_organizacao || 'Não disponível'}` },
-  { icon: 'perm_media', text: `Minha Predileta: ${props.user?.via_favorita?.nome || 'Não disponível'}` },
+  { icon: 'perm_media', text: `Minha Predileta: ${props.user?.via_preferida?.nome || 'Não disponível'}` },
   { icon: 'flag_circle', text: `De onde eu sou: ${props.user?.localizacao || 'Localização não disponível'}` }
 ]);
 </script>

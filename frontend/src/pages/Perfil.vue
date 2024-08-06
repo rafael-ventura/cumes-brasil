@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" color="primary"/>
-    <PerfilBar v-if="user" :user="<Usuario>user"/>
+    <PerfilBar :user="<Usuario>user"/>
     <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
       <div class="row q-col-gutter-sm q-gutter-md justify-center">
         <div v-for="(item, index) in items" :key="index" class="col-xs-5 col-sm-3 col-md-3 col-lg-2 col-xl-2">
@@ -38,7 +38,7 @@
     <q-dialog v-model="isEditDialogOpen">
       <PerfilEditarForm v-if="user" :user="<Usuario>user" @submit="handleEditSubmit"/>
     </q-dialog>
-    <PerfilBio v-if="user" :user="<Usuario>user" @bio-updated="updateUserBio" />
+    <PerfilBio :user="<Usuario>user" @bio-updated="updateUserBio" />
   </q-page>
 </template>
 <script setup lang="ts">

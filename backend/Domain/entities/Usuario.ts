@@ -19,7 +19,7 @@ export class Usuario extends BaseEntity {
   password_hash: string;
 
   @Column({ nullable: true })
-  data_atividade: Date;
+  data_atividade: string;
 
   @Column({ nullable: true })
   clube_organizacao: string;
@@ -31,8 +31,8 @@ export class Usuario extends BaseEntity {
   biografia: string;
 
   @ManyToOne(() => Via , { nullable: true })
-  @JoinColumn({ name: "via_favorita" })
-  via_favorita: Via;
+  @JoinColumn({ name: "via_preferida" })
+  via_preferida: Via;
 
   @ManyToOne(() => Imagem, imagem => imagem.usuarios)
   foto_perfil: number;

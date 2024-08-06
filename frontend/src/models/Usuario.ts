@@ -9,11 +9,11 @@ export interface Usuario {
   nome: string;
   email: string;
   password_hash: string;
-  data_atividade?: Date | null;
+  data_atividade?: string | null; // Formato dd/mm/aaaa
   clube_organizacao?: string | null;
   localizacao?: string | null;
   biografia?: string | null;
-  via_favorita?: Via | null;
+  via_preferida?: Via | null;
   foto_perfil?: Imagem | null;
   colecoes?: Colecao[] | null;
 }
