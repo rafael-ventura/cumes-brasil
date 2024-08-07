@@ -17,7 +17,7 @@ const Fonte_1 = require("./Fonte");
 const Face_1 = require("./Face");
 const Imagem_1 = require("./Imagem");
 const Escalada_1 = require("./Escalada");
-const ColecaoVia_1 = require("./ColecaoVia");
+const Colecao_1 = require("./Colecao");
 let Via = class Via extends typeorm_1.BaseEntity {
 };
 exports.Via = Via;
@@ -113,11 +113,11 @@ __decorate([
     __metadata("design:type", Array)
 ], Via.prototype, "croquis", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ColecaoVia_1.ColecaoVia, colecaoVia => colecaoVia.via),
+    (0, typeorm_1.ManyToMany)(() => Colecao_1.Colecao, colecao => colecao.vias),
     __metadata("design:type", Array)
-], Via.prototype, "viasColecoes", void 0);
+], Via.prototype, "colecoes", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Escalada_1.Escalada, escalada => escalada.via),
+    (0, typeorm_1.OneToMany)(() => Escalada_1.Escalada, escalada => escalada.viaId),
     __metadata("design:type", Array)
 ], Via.prototype, "escaladas", void 0);
 exports.Via = Via = __decorate([

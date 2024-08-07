@@ -10,7 +10,4 @@ const montanhaController = new MontanhaController_1.MontanhaController(montanhaS
 const MontanhaRouter = (0, express_1.Router)();
 MontanhaRouter.get("/:id", montanhaController.getMontanhaById);
 MontanhaRouter.get("/", montanhaController.getAllMontanha);
-MontanhaRouter.post("/", montanhaController.createMontanha);
-MontanhaRouter.put("/:id", montanhaController.updateMontanha);
-MontanhaRouter.delete('/:id');
 exports.default = MontanhaRouter;

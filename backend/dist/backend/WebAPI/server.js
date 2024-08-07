@@ -28,47 +28,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = __importStar(require("dotenv"));
 const express_1 = __importDefault(require("express"));
-const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const routes_1 = __importDefault(require("./routes/routes"));
 require("reflect-metadata");
-const swagger_output_json_1 = __importDefault(require("../swagger_output.json"));
 const db_1 = require("../Infrastructure/config/db");
 const initialLoad_1 = require("../Infrastructure/sql_scripts/initialLoad");
 const Via_1 = require("../Domain/entities/Via");
 const path_1 = __importDefault(require("path"));
 dotenv.config();
-const cors = require('cors');
+const cors = require("cors");
 const app = (0, express_1.default)();
-const isDevelopment = process.env.NODE_ENV === 'development';
+const PORT = process.env.PORT || 4020;
+const allowedOrigins = [
+    "http://localhost:4020",
+    "http://localhost:9000",
+    'http://localhost:9200',
+    "http://localhost:8080",
+    "http://192.168.1.147:4020",
+    "http://192.168.1.147:9000"
+];
 const corsOptions = {
-    origin: isDevelopment
-        ? 'http://localhost:9000'
-        : 'http://192.168.1.147:9000'
+    origin: function (origin, callback) {
+        // Permitir requests sem origin, como apps móveis ou curl requests
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
 };
 app.use(cors(corsOptions));
-const PORT = process.env.PORT || 4020;
-// Servir arquivos estáticos da pasta assets
-const assetsPath = path_1.default.join(__dirname, '../../assets');
-console.log('Servidor está servindo arquivos estáticos no diretório:', assetsPath);
-app.use('/assets', express_1.default.static(assetsPath));
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
 app.use(express_1.default.json());
+// Servir arquivos estáticos da pasta assets
+const assetsPath = path_1.default.join(__dirname, "../../assets");
+console.log("Servidor está servindo arquivos estáticos no diretório:", assetsPath);
+app.use("/assets", express_1.default.static(assetsPath));
 app.use('/api', routes_1.default);
 db_1.AppDataSource.initialize().then(async () => {
-    console.log('Conexão com o banco de dados estabelecida com sucesso');
+    console.log("Conexão com o banco de dados estabelecida com sucesso");
     const viaRepository = db_1.AppDataSource.getRepository(Via_1.Via);
     const count = await viaRepository.count();
     if (count === 0) {
-        console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
-        (0, initialLoad_1.loadData)().then(() => console.log('Carga inicial realizada com sucesso'))
-            .catch(e => console.log('Erro na carga de dados:', e));
+        console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
+        (0, initialLoad_1.loadData)().then(() => console.log("Carga inicial realizada com sucesso"))
+            .catch(e => console.log("Erro na carga de dados:", e));
     }
     else {
-        console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
+        console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
     }
-}).catch(error => console.log('Erro ao conectar com o banco de dados:', error));
+}).catch(error => console.log("Erro ao conectar com o banco de dados:", error));
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-    console.log(`Swagger UI disponível em http://localhost:${PORT}/api-docs`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log("The server is running in", process.env.NODE_ENV, "mode");
+    console.log("The CORS origin is", corsOptions.origin);
     console.log(process.cwd());
 });

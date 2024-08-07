@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EscaladaController = void 0;
+const EscaladaValidation_1 = __importDefault(require("../../Domain/interfaces/validations/EscaladaValidation"));
 class EscaladaController {
     constructor(escaladaService) {
         /**
@@ -62,7 +66,8 @@ class EscaladaController {
          */
         this.createEscalada = async (req, res) => {
             try {
-                const escalada = req.body;
+                let escalada = req.body;
+                escalada.usuarioId = Number(req.user.userId);
                 await this.service.create(escalada);
                 res.status(201).json({ message: "Escalada criada com sucesso" });
             }
@@ -92,6 +97,7 @@ class EscaladaController {
         this.updateEscalada = async (req, res) => {
             try {
                 const escalada = req.body;
+                EscaladaValidation_1.default.valida(escalada);
                 await this.service.update(escalada);
                 res.status(200).json({ message: "Escalada atualizada com sucesso" });
             }

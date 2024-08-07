@@ -19,7 +19,7 @@ EscaladaRouter.get("/:id", escaladaController.getEscaladaById);
 EscaladaRouter.get("/", escaladaController.getAllEscalada);
 EscaladaRouter.post("/", escaladaController.createEscalada);
 EscaladaRouter.put("/:id", escaladaController.updateEscalada);
-EscaladaRouter.delete('/:id');
+EscaladaRouter.delete("/:id", escaladaController.deleteEscalada);
 EscaladaRouter.get("/usuario/:id", escaladaController.getByUsuarioId);
 EscaladaRouter.get("/via/:id", escaladaController.getByViaId);
 exports.default = EscaladaRouter;

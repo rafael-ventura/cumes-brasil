@@ -18,9 +18,17 @@ class ColecaoService {
         await this.colecaoRepo.create(colecaoData);
     }
     async updateColecao(id, colecaoData) {
+        const colecao = await this.colecaoRepo.getById(id);
+        if (!colecao) {
+            throw new Error('Coleção não encontrada');
+        }
         await this.colecaoRepo.update(id, colecaoData);
     }
     async deleteColecao(id) {
+        const colecao = await this.colecaoRepo.getById(id);
+        if (!colecao) {
+            throw new Error('Coleção não encontrada');
+        }
         await this.colecaoRepo.delete(id);
     }
     async addViaToColecao(viaId, colecaoId) {
@@ -28,6 +36,9 @@ class ColecaoService {
     }
     async removeViaFromColecao(viaId, colecaoId) {
         await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
+    }
+    async getColecoesNotContainingVia(viaId, page, limit) {
+        return this.colecaoRepo.getColecoesNotContainingVia(viaId, page, limit);
     }
 }
 exports.ColecaoService = ColecaoService;

@@ -10,24 +10,15 @@ class MontanhaRepository {
     async getById(id) {
         return this.repository.createQueryBuilder("montanha")
             .leftJoinAndSelect("montanha.fonte", "fonte")
-            .leftJoinAndSelect("montanha.imagens", "imagem")
+            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
             .where("montanha.id = :id", { id })
             .getOne();
     }
     async getAll() {
         return this.repository.createQueryBuilder("montanha")
             .leftJoinAndSelect("montanha.fonte", "fonte")
-            .leftJoinAndSelect("montanha.imagens", "imagem")
+            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
             .getMany();
-    }
-    async create(montanha) {
-        await this.repository.insert(montanha);
-    }
-    async update(id, montanhaData) {
-        await this.repository.update(id, montanhaData);
-    }
-    async delete(id) {
-        await this.repository.delete(id);
     }
 }
 exports.MontanhaRepository = MontanhaRepository;

@@ -11,5 +11,7 @@ UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.get("/", usuarioController.getAll);
 UsuarioRouter.post("/", usuarioController.registrar);
 UsuarioRouter.put("/:id", usuarioController.update);
-UsuarioRouter.delete('/:id');
+UsuarioRouter.delete("/:id", usuarioController.delete);
+// perfil do usuario
+UsuarioRouter.get('/perfil/:id', usuarioController.getPerfil);
 exports.default = UsuarioRouter;

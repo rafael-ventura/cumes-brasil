@@ -3,63 +3,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ViaController = void 0;
 class ViaController {
     constructor(service) {
-        /**
-         * @route GET /vias/:id
-         * @group Vias - Operações relacionadas a vias
-         * @returns {Via.model} 200 - Via encontrada
-         * @returns {object} 404 - Via não encontrada
-         * @returns {Error} 500 - Erro desconhecido
-         */
         this.getViaById = async (req, res) => {
             try {
                 const id = parseInt(req.params.id);
                 const via = await this.service.getViaById(id);
-                if (!via) {
-                    return res.status(404).json({ message: "Via não encontrada" });
-                }
+                console.log("Endpoint GET /vias/:id foi chamado");
                 res.status(200).json(via);
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Via não encontrada") {
-                        return res.status(400).json({ message: error.message });
-                    }
-                    else {
-                        return res.status(500).json({ error: error.message });
-                    }
+                    return res.status(500).json({ error: error.message });
+                }
+                else {
+                    return res.status(500).json({ error: "An unknown error occurred" });
                 }
             }
         };
-        /**
-         * @route GET /vias
-         * @group Vias - Operações relacionadas a vias
-         * @returns {Array.<Via>} 200 - Vias encontradas
-         * @returns {Error} 500 - Erro desconhecido
-         * @returns {object} 404 - Via não encontrada
-         * @returns {Error} 500 - Erro desconhecido
-         */
-        this.getAllVia = async (_, resposta) => {
+        this.getAllVia = async (req, res) => {
             try {
-                const vias = await this.service.getVias();
-                resposta.json(vias);
+                const page = req.query.page ? parseInt(req.query.page) : undefined;
+                const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
+                const result = await this.service.getVias(page, limit);
+                console.log('Endpoint GET /vias foi chamado');
+                res.status(200).json(result);
             }
             catch (error) {
                 if (error instanceof Error) {
-                    if (error.message === "Nenhuma via encontrada") {
-                        return resposta.status(404).json({ error: error.message });
-                    }
+                    res.status(500).json({ error: error.message });
                 }
                 else {
-                    resposta.status(500).json({ error: "Ocorreu um erro desconhecido em controller getAllVia" });
+                    res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller getAllVia' });
                 }
             }
         };
-        /**
-         * @route POST /vias
-         * @group Vias - Operações relacionadas a vias
-         * @returns {object} 201 - Via criada com sucesso
-         * @returns {Error} 500 - Erro desconhecido
-         */
         this.createVia = async (requisicao, resposta) => {
             try {
                 const via = requisicao.body;
@@ -89,12 +65,6 @@ class ViaController {
                 }
             }
         };
-        /**
-         * @route PUT /vias
-         * @group Vias - Operações relacionadas a vias
-         * @returns {object} 200 - Via atualizada com sucesso
-         * @returns {Error} 500 - Erro desconhecido
-         */
         this.updateVia = async (requisicao, resposta) => {
             try {
                 const via = requisicao.body;
@@ -124,13 +94,6 @@ class ViaController {
                 }
             }
         };
-        /**
-         * @route DELETE /vias/:id
-         * @group Vias - Operações relacionadas a vias
-         * @returns {object} 200 - Via deletada com sucesso
-         * @returns {Error} 500 - Erro desconhecido
-         * @returns {object} 404 - Via não encontrada
-         */
         this.deleteVia = async (requisicao, resposta) => {
             try {
                 const id = parseInt(requisicao.params.id);
@@ -146,18 +109,14 @@ class ViaController {
                 }
             }
         };
-        /**
-         * @route GET /vias/colecao/:id
-         * @group Vias - Operações relacionadas a vias
-         * @returns {Array.<Via>} 200 - Vias encontradas
-         * @returns {Error} 500 - Erro desconhecido
-         * @returns {object} 404 - Via não encontrada
-         */
         this.getViasInColecao = async (req, res) => {
             try {
                 const colecaoId = parseInt(req.params.id);
-                const vias = await this.service.getViasIdByColecaoId(colecaoId);
-                res.status(200).json(vias);
+                const page = parseInt(req.query.page) || 1;
+                const limit = parseInt(req.query.limit) || 10;
+                console.log("Endpoint GET /vias/colecao/:id foi chamado", colecaoId, "page", page, "limit", limit);
+                const result = await this.service.getViasIdByColecaoId(colecaoId, page, limit);
+                res.status(200).json(result);
             }
             catch (error) {
                 if (error instanceof Error) {
@@ -170,6 +129,28 @@ class ViaController {
                 }
                 else {
                     res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasIn" });
+                }
+            }
+        };
+        this.getViasNotInColecao = async (req, res) => {
+            try {
+                const colecaoId = parseInt(req.params.id);
+                const page = parseInt(req.query.page) || 1;
+                const limit = parseInt(req.query.limit) || 10;
+                const result = await this.service.getViasNotInColecaoId(colecaoId, page, limit);
+                res.status(200).json(result);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    if (error.message === "Nenhuma via encontrada") {
+                        return res.status(404).json({ error: error.message });
+                    }
+                    else {
+                        res.status(500).json({ error: error.message });
+                    }
+                }
+                else {
+                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasNotIn" });
                 }
             }
         };

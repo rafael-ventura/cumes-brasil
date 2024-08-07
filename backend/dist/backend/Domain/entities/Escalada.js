@@ -13,6 +13,7 @@ exports.Escalada = void 0;
 const typeorm_1 = require("typeorm");
 const Via_1 = require("./Via");
 const Usuario_1 = require("./Usuario");
+const Participante_1 = require("./Participante");
 let Escalada = class Escalada extends typeorm_1.BaseEntity {
 };
 exports.Escalada = Escalada;
@@ -29,13 +30,17 @@ __decorate([
     __metadata("design:type", String)
 ], Escalada.prototype, "observacao", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => Participante_1.Participante, participante => participante.escalada, { cascade: true }),
+    __metadata("design:type", Array)
+], Escalada.prototype, "participantes", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Usuario_1.Usuario, usuario => usuario.escaladas),
     __metadata("design:type", Number)
-], Escalada.prototype, "usuario", void 0);
+], Escalada.prototype, "usuarioId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Via_1.Via, via => via.escaladas),
     __metadata("design:type", Number)
-], Escalada.prototype, "via", void 0);
+], Escalada.prototype, "viaId", void 0);
 exports.Escalada = Escalada = __decorate([
     (0, typeorm_1.Entity)()
 ], Escalada);

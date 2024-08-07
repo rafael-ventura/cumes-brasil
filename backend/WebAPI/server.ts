@@ -1,9 +1,7 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
 import routes from './routes/routes';
 import 'reflect-metadata';
-import swaggerDocument from '../swagger_output.json';
 import { AppDataSource } from '../Infrastructure/config/db';
 import { loadData } from '../Infrastructure/sql_scripts/initialLoad';
 import { Via } from '../Domain/entities/Via';
@@ -36,7 +34,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 
 // Servir arquivos estáticos da pasta assets

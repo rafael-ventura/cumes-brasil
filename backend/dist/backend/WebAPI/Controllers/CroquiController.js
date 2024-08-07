@@ -138,9 +138,8 @@ class CroquiController {
          */
         this.associarVia = async (req, res) => {
             try {
-                const { via_id, croqui_id } = req.body;
-                const viaId = parseInt(via_id);
-                const croquiId = parseInt(croqui_id);
+                const viaId = parseInt(req.query.via_id);
+                const croquiId = parseInt(req.query.croqui_id);
                 await this.service.associarCroquiEmVia(croquiId, viaId);
                 res.status(201).json({ message: "Croqui associado a Via com sucesso" });
             }
@@ -164,8 +163,8 @@ class CroquiController {
          */
         this.desassociarVia = async (req, res) => {
             try {
-                const viaId = parseInt(req.params.viaId);
-                const croquiId = parseInt(req.params.croquiId);
+                const viaId = parseInt(req.query.via_id);
+                const croquiId = parseInt(req.query.croqui_id);
                 await this.service.desassociarCroquiEmVia(croquiId, viaId);
                 res.status(201).json({ message: "Croqui desassociado a Via com sucesso" });
             }

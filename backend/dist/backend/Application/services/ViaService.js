@@ -6,10 +6,19 @@ class ViaService {
         this.viaRepo = viaRepo;
     }
     async getViaById(id) {
-        return this.viaRepo.getById(id);
+        const via = await this.viaRepo.getById(id);
+        if (!via) {
+            throw new Error("Via não encontrada");
+        }
+        return via;
     }
-    async getVias() {
-        return this.viaRepo.getAll();
+    async getVias(page, limit) {
+        if (page !== undefined && limit !== undefined) {
+            return this.viaRepo.getAll(page, limit);
+        }
+        else {
+            return this.viaRepo.getAllWithoutPagination();
+        }
     }
     async createVia(viaData) {
         return this.viaRepo.create(viaData);
@@ -20,8 +29,11 @@ class ViaService {
     async deleteVia(id) {
         await this.viaRepo.delete(id);
     }
-    async getViasIdByColecaoId(colecaoId) {
-        return this.viaRepo.getViasByColecaoId(colecaoId);
+    async getViasIdByColecaoId(colecaoId, page, limit) {
+        return this.viaRepo.getViasByColecaoId(colecaoId, page, limit);
+    }
+    async getViasNotInColecaoId(colecaoId, page, limit) {
+        return this.viaRepo.getViasNotInColecaoId(colecaoId, page, limit);
     }
 }
 exports.ViaService = ViaService;

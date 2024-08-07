@@ -9,31 +9,30 @@ class EscaladaRepository {
     }
     async getById(id) {
         return this.repository.createQueryBuilder("escalada")
-            .leftJoinAndSelect("escalada.usuario", "usuario")
-            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("escalada.usuarioId", "usuario")
+            .leftJoinAndSelect("escalada.viaId", "via")
+            .leftJoinAndSelect("escalada.participantes", "participante")
             .where("escalada.id = :id", { id })
             .getOne();
     }
     async getAll() {
         return this.repository.createQueryBuilder("escalada")
-            .leftJoinAndSelect("escalada.usuario", "usuario")
-            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("escalada.usuarioId", "usuario")
+            .leftJoinAndSelect("escalada.viaId", "via")
+            .leftJoinAndSelect("escalada.participantes", "participante")
             .getMany();
     }
-    async create(escalada) {
-        await this.repository.insert(escalada);
+    async createOrUpdate(escalada) {
+        await this.repository.save(escalada);
     }
-    async update(id, escaladaData) {
-        await this.repository.update(id, escaladaData);
-    }
-    async delete(id) {
-        await this.repository.delete(id);
+    async remove(escalada) {
+        await this.repository.remove(escalada);
     }
     async getByUserId(userId) {
-        return this.repository.find({ where: { usuario: userId } });
+        return this.repository.find({ where: { usuarioId: userId } });
     }
     async getByViaId(viaId) {
-        return this.repository.find({ where: { via: viaId } });
+        return this.repository.find({ where: { viaId: viaId } });
     }
 }
 exports.EscaladaRepository = EscaladaRepository;

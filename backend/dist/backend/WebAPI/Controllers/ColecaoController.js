@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ColecaoController = void 0;
+const Colecao_1 = require("../../Domain/entities/Colecao");
 class ColecaoController {
     constructor(colecaoaService) {
         /**
@@ -90,16 +91,21 @@ class ColecaoController {
          */
         this.createColecao = async (req, res) => {
             try {
-                const colecao = req.body;
+                const { nome, descricao, usuario_id, imagem_id } = req.body;
+                const colecao = new Colecao_1.Colecao();
+                colecao.nome = nome;
+                colecao.descricao = descricao;
+                colecao.usuario = usuario_id;
+                colecao.imagem = imagem_id || 1;
                 await this.service.createColecao(colecao);
-                res.status(201).json({ message: "Colecao criada com sucesso." });
+                res.status(201).json({ message: 'Colecao criada com sucesso.' });
             }
             catch (error) {
                 if (error instanceof Error) {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller createColecao" });
+                    res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller createColecao' });
                 }
             }
         };
@@ -111,8 +117,9 @@ class ColecaoController {
          */
         this.updateColecao = async (req, res) => {
             try {
+                const id = parseInt(req.params.id);
                 const colecao = req.body;
-                await this.service.updateColecao(colecao.id, colecao);
+                await this.service.updateColecao(id, colecao);
                 res.status(200).json({ message: "Colecao atualizada com sucesso." });
             }
             catch (error) {
@@ -123,7 +130,7 @@ class ColecaoController {
                     res.status(500).json({ error: error.message });
                 }
                 else {
-                    res.status(500).json({ error: "Ocorreu um erro desconhecido em controller update" });
+                    res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller update' });
                 }
             }
         };
@@ -153,6 +160,29 @@ class ColecaoController {
             }
         };
         /**
+         * @route GET /colecoes/not-containing-via/:viaId
+         * @group Colecoes - Operações relacionadas a Colecoes
+         * @returns {Array.<Colecao>} 200 - Colecoes encontradas
+         * @returns {Error} 500 - Erro desconhecido
+         */
+        this.getColecoesNotContainingVia = async (req, res) => {
+            try {
+                const viaId = Number(req.params.viaId);
+                const page = Number(req.query.page) || 1;
+                const limit = Number(req.query.limit) || 10;
+                const result = await this.service.getColecoesNotContainingVia(viaId, page, limit);
+                res.json(result);
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    res.status(500).json({ error: error.message });
+                }
+                else {
+                    res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller getColecoesNotContainingVia' });
+                }
+            }
+        };
+        /**
          * @route POST Via /colecoes/adicionarVia
          * @group Colecoes - Operações relacionadas a colecoes
          * @returns {object} 200 - Via adicionada com sucesso
@@ -161,9 +191,8 @@ class ColecaoController {
          */
         this.adicionarVia = async (req, res) => {
             try {
-                const { colecao_id, via_id } = req.body;
-                const colecaoId = colecao_id;
-                const viaId = via_id;
+                const colecaoId = parseInt(req.query.colecao_id);
+                const viaId = parseInt(req.query.via_id);
                 await this.service.addViaToColecao(viaId, colecaoId);
                 res.status(201).json({ message: "Via adicionada à coleção com sucesso." });
             }
@@ -197,8 +226,8 @@ class ColecaoController {
          */
         this.removeVia = async (req, res) => {
             try {
-                const colecaoId = parseInt(req.params.id);
-                const viaId = parseInt(req.params.viaId);
+                const colecaoId = parseInt(req.query.colecao_id);
+                const viaId = parseInt(req.query.via_id);
                 await this.service.removeViaFromColecao(viaId, colecaoId);
                 res.status(200).json({ message: "Via removida da coleção com sucesso." });
             }
