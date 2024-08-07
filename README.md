@@ -44,6 +44,54 @@ Cumes Brasil é construído com as seguintes tecnologias:
 
 Os dados do Cumes Brasil são uma compilação de várias fontes, com créditos especiais para **André Ilha** pelas vias da Zona Sul, Pedro Bugim por seu blog querido e para a **Companhia da Escalada** e **Daflon** por diversas contribuições valiosas.
 
+## 🚀 Passos para os Desenvolvedores
+
+Siga os passos abaixo para configurar o ambiente de desenvolvimento:
+
+### Clonar o Repositório
+
+````bash
+git clone https://seu-repositorio.git
+cd cumes-brasil
+````
+
+### Rodar Apenas o Banco de Dados Usando Docker Compose
+````bash
+Copiar código
+docker-compose up -d db
+````
+
+### Atualizar o Arquivo .env Localmente
+
+**Certifique-se de que o arquivo .env do seu PC esteja configurado para usar o banco de dados no contêiner Docker**
+
+````env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=cumesbr
+DB_PASSWORD=sua_senha
+DB_NAME=cumes_brasil
+````
+
+### Rodar o Backend e o Frontend Localmente
+
+**Backend**
+
+````bash
+Copiar código
+cd backend
+npm install
+npm start
+````
+
+**Frontend**
+
+````bash
+
+cd frontend
+npm install
+quasar dev -m pwa
+````
 
 ## 🤝 Contribua
 
