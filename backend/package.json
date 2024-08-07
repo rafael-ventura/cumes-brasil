@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "build": "tsc && echo 'Build concluido com sucesso!'",
+    "start": "ts-node WebAPI/server.js",
     "back-dev": "cross-env NODE_ENV=development ts-node WebAPI/server.ts",
     "back-homol": "cross-env NODE_ENV=homol ts-node WebAPI/server.ts",
     "back-prod": "cross-env NODE_ENV=production node dist/backend/WebAPI/server.js"

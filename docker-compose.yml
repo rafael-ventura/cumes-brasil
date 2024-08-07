@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_cumes
+    environment:
+      POSTGRES_USER: cumesbr
+      POSTGRES_PASSWORD: jardineiros.2024
+      POSTGRES_DB: cumes_brasil
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
