@@ -8,7 +8,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./ --fix",
     "test": "echo \"No test specified\" && exit 0",
-    "build": "quasar build -m pwa && quasar serve dist/pwa",
+    "build": "quasar build -m pwa",
     "dev": "quasar dev -m pwa",
     "front-dev": "cross-env NODE_ENV=development eslint --ext .js,.ts,.vue ./ --fix && quasar dev -m pwa ",
     "front-homol": "cross-env NODE_ENV=homol eslint --ext .js,.ts,.vue ./ --fix && quasar dev -m pwa"
