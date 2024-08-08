@@ -9,34 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Croqui = void 0;
+exports.Participante = void 0;
 const typeorm_1 = require("typeorm");
-const Via_1 = require("./Via");
-const Fonte_1 = require("./Fonte");
-const Imagem_1 = require("./Imagem");
-let Croqui = class Croqui extends typeorm_1.BaseEntity {
+const Escalada_1 = require("./Escalada");
+let Participante = class Participante extends typeorm_1.BaseEntity {
 };
-exports.Croqui = Croqui;
+exports.Participante = Participante;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Croqui.prototype, "id", void 0);
+], Participante.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
-], Croqui.prototype, "nome", void 0);
+], Participante.prototype, "tipo", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Fonte_1.Fonte, fonte => fonte.croquis),
-    __metadata("design:type", Number)
-], Croqui.prototype, "fonte", void 0);
+    (0, typeorm_1.Column)({ nullable: false }),
+    __metadata("design:type", String)
+], Participante.prototype, "nome", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Imagem_1.Imagem, imagem => imagem.croquis),
-    __metadata("design:type", Number)
-], Croqui.prototype, "imagem", void 0);
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Participante.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Via_1.Via, via => via.croquis),
-    __metadata("design:type", Array)
-], Croqui.prototype, "vias", void 0);
-exports.Croqui = Croqui = __decorate([
+    (0, typeorm_1.ManyToOne)(() => Escalada_1.Escalada, escalada => escalada.participantes, { onDelete: "CASCADE" }),
+    __metadata("design:type", Escalada_1.Escalada)
+], Participante.prototype, "escalada", void 0);
+exports.Participante = Participante = __decorate([
     (0, typeorm_1.Entity)()
-], Croqui);
+], Participante);

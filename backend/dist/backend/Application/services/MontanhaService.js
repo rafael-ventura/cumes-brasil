@@ -11,14 +11,5 @@ class MontanhaService {
     async getMontanhas() {
         return this.montanhaRepository.getAll();
     }
-    async createMontanha(montanha) {
-        return this.montanhaRepository.create(montanha);
-    }
-    async updateMontanha(id, montanhaData) {
-        await this.montanhaRepository.update(id, montanhaData);
-    }
-    async deleteMontanha(id) {
-        await this.montanhaRepository.delete(id);
-    }
 }
 exports.MontanhaService = MontanhaService;

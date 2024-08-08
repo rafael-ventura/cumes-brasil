@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Colecao = void 0;
 const typeorm_1 = require("typeorm");
+const Via_1 = require("./Via");
 const Imagem_1 = require("./Imagem");
 const Usuario_1 = require("./Usuario");
-const ColecaoVia_1 = require("./ColecaoVia");
 let Colecao = class Colecao extends typeorm_1.BaseEntity {
 };
 exports.Colecao = Colecao;
@@ -38,9 +38,20 @@ __decorate([
     __metadata("design:type", Number)
 ], Colecao.prototype, "imagem", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ColecaoVia_1.ColecaoVia, colecaoVia => colecaoVia.colecao),
+    (0, typeorm_1.ManyToMany)(() => Via_1.Via, via => via.colecoes),
+    (0, typeorm_1.JoinTable)({
+        name: "via_colecao",
+        joinColumn: {
+            name: "colecao_id",
+            referencedColumnName: "id"
+        },
+        inverseJoinColumn: {
+            name: "via_id",
+            referencedColumnName: "id"
+        }
+    }),
     __metadata("design:type", Array)
-], Colecao.prototype, "viasColecoes", void 0);
+], Colecao.prototype, "vias", void 0);
 exports.Colecao = Colecao = __decorate([
     (0, typeorm_1.Entity)()
 ], Colecao);

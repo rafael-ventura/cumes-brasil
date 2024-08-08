@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EscaladaService = void 0;
+const EscaladaValidation_1 = __importDefault(require("../../Domain/interfaces/validations/EscaladaValidation"));
 class EscaladaService {
     constructor(repository, usuarioService, viaService) {
         this.repository = repository;
@@ -14,27 +18,34 @@ class EscaladaService {
         else if (isNaN(id)) {
             throw new Error("ID da Fonte inválido");
         }
-        return this.repository.getById(id);
+        return await this.repository.getById(id);
     }
     async get() {
-        return this.repository.getAll();
+        return await this.repository.getAll();
     }
     async create(escalada) {
-        return this.repository.create(escalada);
+        EscaladaValidation_1.default.valida(escalada);
+        return this.repository.createOrUpdate(escalada);
     }
     async update(escalada) {
         const escaladaExiste = await this.repository.getById(escalada.id);
         if (!escaladaExiste) {
             throw new Error("Escalada não encontrada");
         }
-        return this.repository.update(escalada.id, escalada);
+        // Atualizar valores de escaladaExiste com valores dentro de escalada
+        escaladaExiste.data = escalada.data;
+        escaladaExiste.observacao = escalada.observacao;
+        // Muito importante remover os participantes anteriores, pois senão continuaram existindo na tabela com escalaId = NULL
+        escaladaExiste.participantes.forEach(participante => participante.remove());
+        escaladaExiste.participantes = escalada.participantes;
+        return this.repository.createOrUpdate(escaladaExiste);
     }
     async delete(id) {
         const escaladaExiste = await this.repository.getById(id);
         if (!escaladaExiste) {
             throw new Error("Escalada não encontrada");
         }
-        return this.repository.delete(id);
+        return this.repository.remove(escaladaExiste);
     }
     async getEscaladasDoUsuario(usuario_id) {
         if (!usuario_id) {
@@ -43,7 +54,7 @@ class EscaladaService {
         else if (isNaN(usuario_id)) {
             throw new Error("ID do usuário inválido");
         }
-        return this.repository.getByUsuarioId(usuario_id);
+        return this.repository.getByUserId(usuario_id);
     }
     async getEscaladasDaVia(via_id) {
         if (!via_id) {

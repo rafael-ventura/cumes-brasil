@@ -12,6 +12,7 @@ ViaRouter.get("/:id", viaController.getViaById);
 ViaRouter.get("/", viaController.getAllVia);
 ViaRouter.post("/", viaController.createVia);
 ViaRouter.put("/:id", viaController.updateVia);
-ViaRouter.delete('/:id');
+ViaRouter.delete("/:id", viaController.deleteVia);
 ViaRouter.get("/colecao/:id", viaController.getViasInColecao);
+ViaRouter.get('/colecao/not/:id', viaController.getViasNotInColecao);
 exports.default = ViaRouter;

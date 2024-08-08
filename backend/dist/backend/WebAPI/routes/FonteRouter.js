@@ -11,5 +11,5 @@ FonteRouter.get("/:id", fonteController.getFonteById);
 FonteRouter.get("/", fonteController.getAllFonte);
 FonteRouter.post("/", fonteController.createFonte);
 FonteRouter.put("/:d", fonteController.updateFonte);
-FonteRouter.delete('/:id');
+FonteRouter.delete('/:id', fonteController.deleteFonte);
 exports.default = FonteRouter;

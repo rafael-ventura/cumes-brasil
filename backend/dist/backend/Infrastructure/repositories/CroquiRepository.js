@@ -46,9 +46,11 @@ class CroquiRepository {
     }
     async getByViaId(via_id) {
         return this.repository.createQueryBuilder("croqui")
+            .leftJoinAndSelect("croqui.fonte", "fonte")
+            .leftJoinAndSelect("croqui.imagem", "imagem")
             .leftJoin("croqui.vias", "via")
             .where("via.id = :via_id", { via_id })
-            .getRawMany();
+            .getMany();
     }
     async associarVia(croqui_id, via_id) {
         return this.repository.createQueryBuilder()
