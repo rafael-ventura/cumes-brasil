@@ -62,9 +62,11 @@ Antes de iniciar, certifique-se de ter os seguintes itens instalados:
 
 ### Clonar o Repositório
 
-````bash
+````git
 git clone https://seu-repositorio.git
+````
 
+````bash
 cd cumes-brasil
 ````
 
