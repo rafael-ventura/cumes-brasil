@@ -42,10 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
-import {adjustImageUrl} from 'src/services/ImagemService';
-import {Via} from 'src/models/Via';
+import { adjustImageUrl } from 'src/services/ImagemService';
+import { Via } from 'src/models/Via';
 
 const urcaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
