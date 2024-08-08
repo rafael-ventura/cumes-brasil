@@ -1,0 +1,25 @@
+# Linguist documentation
+*.md linguist-documentation
+*.txt linguist-documentation
+
+# Frontend related
+/frontend/ios/** linguist-vendored
+/frontend/macos/** linguist-vendored
+/frontend/linux/** linguist-vendored
+/frontend/web/** linguist-vendored
+/frontend/windows/** linguist-vendored
+/frontend/android/** linguist-vendored
+
+# Backend related
+/backend/node_modules/** linguist-vendored
+/backend/dist/** linguist-vendored
+
+# Database related
+/database/mysql/** linguist-vendored
+/database/migrations/** linguist-vendored
+
+# Tests
+/tests/** linguist-vendored
+
+# Vendor
+/vendor/** linguist-vendored

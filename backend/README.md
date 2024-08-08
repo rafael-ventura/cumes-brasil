@@ -1,176 +1,147 @@
-# API Cumes Brasil 🏞️
+<h1 align="center">
+    <img alt="Cumes Brasil Logo" src="assets/logo.png" width="200px" />
+    <br>
+    🏞️ Cumes Brasil 🧗‍♂️
+</h1>
 
-API RESTful dedicada ao catálogo digital de vias de escalada do Brasil, proporcionando um meio para acessar, criar, atualizar e deletar informações sobre vias, montanhas, faces de montanha, usuários e croquis.
+<p align="center">
+    Seu Catálogo Digital de Escalada.
+</p>
 
-## Início Rápido
+<div align="center">
 
-Para iniciar o projeto localmente, siga estas etapas:
+![Badge](https://img.shields.io/badge/status-in%20development-yellow)
+![Badge](https://img.shields.io/badge/platform-web-blue)
+![Badge](https://img.shields.io/badge/license-MIT-green)
 
-1. Clone o repositório:
-2. Instale as dependências:
-3. Configure as variáveis de ambiente conforme necessário em `.env`.
-4. Inicie o servidor:
+</div>
 
+## 📜 Sobre
 
-## Tecnologias Utilizadas
+Cumes Brasil é um aplicativo PWA (Progressive Web Application) dedicado à comunidade de escalada no Brasil. Nosso objetivo é fornecer acesso rápido e offline a informações sobre vias de escalada, permitindo que escaladores de todos os níveis encontrem vias novas e desafiadoras.
+
+## 🚧 Aviso
+
+:warning: Escalada é um esporte de risco. Avalie sempre as condições de uma via e esteja devidamente preparado.
+
+## 🚀 Funcionalidades
+
+- 🧗‍♂️ **Exploração de Vias de Escalada:** Descubra vias com detalhes como graduação, extensão, e mais. 
+- 📜 **Informações Detalhadas:** Cada via possui informações sobre conquistadores e ano de conquista. 
+- 📱 **PWA Intuitivo:** Suporte offline para acessar informações sem conexão à internet. 
+- 🌐 **Compartilhamento e Colaboração:** Colabore com a comunidade de escalada compartilhando suas experiências.
+
+## 🔧 Tecnologias
+
+Cumes Brasil é construído com as seguintes tecnologias:
+
+![Vue Badge](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)
+![Vite Badge](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Quasar Badge](https://img.shields.io/badge/Quasar-1976D2?style=for-the-badge&logo=quasar&logoColor=white)
+![Node.js Badge](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![Typescript Badge](https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Express.js Badge](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![Docker Badge](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![PostgreSQL Badge](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![Postman Badge](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+
+## 📚 Créditos
+
+Os dados do Cumes Brasil são uma compilação de várias fontes, com créditos especiais para **André Ilha** pelas vias da Zona Sul, Pedro Bugim por seu blog querido e para a **Companhia da Escalada** e **Daflon** por diversas contribuições valiosas.
+
+## 🚀 Passos para os Desenvolvedores
+
+### Pré-requisitos
+
+Antes de iniciar, certifique-se de ter os seguintes itens instalados:
 
 - Node.js
-- Express.js
-- TypeScript
-- SQLite (com planos de migração para um banco de dados mais robusto)
-- Swagger para documentação da API
+- npm ou yarn
+- Docker
+- Git
 
-## Arquitetura
+### Clonar o Repositório
 
-A API segue uma arquitetura em camadas, incluindo:
+````git
+git clone https://seu-repositorio.git
+````
 
-- **Controllers**: Gerenciam as requisições e respostas HTTP.
-- **Services**: Contêm a lógica de negócios e chamam os repositories para acesso aos dados.
-- **Repositories**: Interagem diretamente com o banco de dados para realizar operações CRUD.
-- **Models**: Representam as entidades do domínio e são usadas pelos repositories.
+````bash
+cd cumes-brasil
+````
 
-## Endpoints
+### Configurar o Banco de Dados
 
-A seguir, são apresentados os principais endpoints disponíveis na API:
+Você pode optar por rodar o banco de dados localmente ou via Docker.
 
-### Vias
+#### Usando Docker
 
-- `GET /api/vias`: Retorna todas as vias cadastradas.
-- `GET /api/vias/{id}`: Retorna uma via específica pelo ID.
-- `POST /api/vias`: Cria uma nova via.
-- `PUT /api/vias/{id}`: Atualiza uma via existente.
-- `DELETE /api/vias/{id}`: Deleta uma via pelo ID.
+1. **Rodar Apenas o Banco de Dados Usando Docker Compose**
 
-### Montanhas
+   `docker-compose up -d db`
 
-- `GET /api/montanhas`: Lista todas as montanhas.
-- `GET /api/montanhas/{id}`: Retorna uma montanha específica pelo ID.
-- `POST /api/montanhas`: Cria uma nova montanha.
-- `PUT /api/montanhas/{id}`: Atualiza uma montanha existente.
-- `DELETE /api/montanhas/{id}`: Deleta uma montanha pelo ID.
+2. **Atualizar o Arquivo `.env` para Docker**
 
-### Faces
+   **Certifique-se de que o arquivo `.env` do seu PC esteja configurado para usar o banco de dados no contêiner Docker**
 
-- `GET /api/faces`: Lista todas as faces de montanha.
-- `GET /api/faces/{id}`: Retorna uma Face de montanha específica pelo ID.
-- `POST /api/faces`: Cria uma nova Face de montanha.
-- `PUT /api/faces/{id}`: Atualiza uma Face de montanha existente.
-- `DELETE /api/faces/{id}`: Deleta uma Face de montanha pelo ID.
+````env
+   DB_HOST=db
+   DB_PORT=5432  
+   DB_USERNAME=cumesbr
+   DB_PASSWORD=sua_senha
+   DB_NAME=cumes_brasil
+````
 
-### Fontes
+#### Usando Localhost
 
-- `GET /api/fontes`: Lista todas as fontes.
-- `GET /api/fontes/{id}`: Retorna uma Fonte específica pelo ID.
-- `POST /api/fontes`: Cria uma nova Fonte.
-- `PUT /api/fontes/{id}`: Atualiza uma Fonte existente.
-- `DELETE /api/fontes/{id}`: Deleta uma Fonte pelo ID.
+1. **Instalar e Configurar PostgreSQL Localmente**
 
-### Usuários
+   Certifique-se de que o PostgreSQL está rodando em sua máquina.
 
-- `GET /api/usuarios`: Lista todos os usuários.
-- `GET /api/usuarios/{id}`: Retorna um usuário específico pelo ID.
-- `POST /api/usuarios`: Cria um novo usuário.
-- `PUT /api/usuarios/{id}`: Atualiza um usuário existente.
-- `DELETE /api/usuarios/{id}`: Deleta um usuário pelo ID.
-- `POST /api/usuarios/login`: Autentica um usuário e retorna um token JWT.
-- `POST /api/usuarios/logout`: Invalida o token JWT de um usuário autenticado.
+2. **Atualizar o Arquivo `.env` para Localhost**
 
-### Croquis
+   **Certifique-se de que o arquivo `.env` do seu PC esteja configurado para usar o banco de dados local**
 
-- `GET /api/croquis`: Lista todos os croquis.
-- `GET /api/croquis/{id}`: Retorna um croqui específico pelo ID.
-- `POST /api/croquis`: Cria um novo croqui.
-- `PUT /api/croquis/{id}`: Atualiza um croqui existente.
-- `DELETE /api/croquis/{id}`: Deleta um croqui pelo ID.
+````env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=seu_usuario
+   DB_PASSWORD=sua_senha 
+   DB_NAME=cumes_brasil
+````
 
+### Rodar o Backend e o Frontend Localmente
 
-## Documentação da API
+**Backend**
 
-Para mais detalhes sobre os endpoints, parâmetros, corpos de requisição e respostas, acesse a documentação Swagger da API em `http://localhost:4200/api-docs`.
+````bash
+cd backend
+npm install
+npm start
+````
 
-## Modelos de Dados
+**Frontend**
 
-## Modelos de Dados
+````bash
+cd frontend
+npm install
+`quasar dev -m pwa`
+````
 
-A API Cumes Brasil organiza informações sobre vias de escalada e elementos relacionados em várias tabelas interconectadas, conforme descrito abaixo:
+## 🤝 Contribua
 
-### `Fonte`
-Armazena informações sobre as fontes de dados ou referências para as informações das vias, montanhas, faces, e croquis.
+Sua contribuição é muito bem-vinda! Veja como:
 
-- **id**: Identificador único da Fonte.
-- **autor**: Nome do autor ou da entidade que forneceu a informação.
-- **referencia**: Detalhes da referência ou como a informação pode ser verificada.
+1. **Fork** o projeto.
+2. Crie sua **Feature Branch**: `git checkout -b minha-feature`
+3. **Commit** suas mudanças: `git commit -m 'Add: minha nova feature'`
+4. **Push** para a branch: `git push origin minha-feature`
+5. Abra um **Pull Request**.
 
-### `montanha`
-Representa as montanhas que contêm as vias de escalada.
+## 🤝 Participantes
 
-- **id**: Identificador único da montanha.
-- **nome**: Nome da montanha.
-- **localizacao**: Localização geográfica da montanha.
-- **altura**: Altura da montanha em metros.
-- **fonte**: Referência à Fonte das informações da montanha.
+Pessoas que contribuíram para o projeto Cumes Brasil:
 
-### `Face`
-Descreve as diferentes faces de uma montanha, onde as vias de escalada estão localizadas.
-
-- **id**: Identificador único da Face.
-- **nome**: Nome da Face da montanha.
-- **montanha_id**: Referência à montanha à qual a Face pertence.
-- **fonte**: Referência à Fonte das informações da Face.
-
-### `Via`
-Contém informações sobre as vias de escalada individuais.
-
-- **id**: Identificador único da via.
-- **nome**: Nome da via de escalada.
-- **grau**, **crux**, **artificial**, **duracao**, **exposicao**, **extensao**: Características técnicas da via, como dificuldade, ponto mais desafiador, se há passagens artificiais, duração estimada, exposição ao risco e extensão total da via.
-- **conquistadores**: Informações sobre os escaladores que abriram a via.
-- **detalhes**: Outros detalhes relevantes da via.
-- **data**: Data de conquista ou abertura da via.
-- **montanha_id**: Referência à montanha onde a via está localizada.
-- **face_id**: Referência à Face específica da montanha.
-- **via_principal_id**: Em caso de vias secundárias, referencia a via principal associada.
-- **fonte**: Referência à Fonte das informações da via.
-
-### `Croqui`
-Fornece representações gráficas ou croquis das vias de escalada.
-
-- **id**: Identificador único do croqui.
-- **nome**: Nome associado ao croqui.
-- **imagemUrl**: URL para a Imagem do croqui.
-- **autor**: Quem criou o croqui.
-- **descricao**: Descrição ou anotações adicionais sobre o croqui.
-- **fonte**: Referência à Fonte das informações do croqui.
-
-### `Usuario`
-Armazena informações sobre os usuários da plataforma.
-
-- **id**: Identificador único do usuário.
-- **nome**: Nome do usuário.
-- **email**: Email do usuário, utilizado para login e comunicação.
-- **fotoPerfil**: URL para a foto de perfil do usuário.
-
-### Coleções
-Gerenciam as coleções criadas pelos usuários, como vias favoritas e escaladas realizadas.
-
-#### `ColecaoBase`
-- **id**: Identificador único da coleção.
-- **nome**, **descricao**: Nome e descrição da coleção.
-- **usuario_id**: Referência ao usuário que criou a coleção.
-
-#### `ColecaoEscaladas`
-- **id**: Identificador único da coleção de escaladas.
-- **via_id**: Referência às vias incluídas na coleção.
-- **data**, **observacao**: Data da escalada e observações adicionais.
-
-#### `ColecaoFavoritos`
-- **colecaoBase_id**: Identificador da coleção base associada aos favoritos.
-
-### Relações entre as Tabelas
-- **vias_croquis**: Associação muitos-para-muitos entre vias e croquis.
-- **vias_colecoes**: Associação muitos-para-muitos entre vias e coleções base.
-
-## Licença
-
-Este projeto está sob a Licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
-
+| <img src="https://avatars.githubusercontent.com/u/28628701?s=100&v=4" alt="Foto do Participante 1" width="100px" height="100px" /> | <img src="https://avatars.githubusercontent.com/u/69773445?s=100&v=4" alt="Foto do Participante 2" width="100px" height="100px" /> | <img src="https://avatars.githubusercontent.com/u/88738275?s=100&v=4" alt="Foto do Participante 3" width="100px" height="100px" /> | <img src="https://avatars.githubusercontent.com/u/22893710?s=100&v=4" alt="Foto do Participante 4" width="100px" height="100px" /> | <img src="https://avatars.githubusercontent.com/u/13644652?v=4" alt="Foto do Participante 5" width="100px" height="100px" /> |
+|:-----------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------:|
+|                          [Rafael Ventura](https://github.com/rafael-ventura)                          |                            [Igor Costa](https://github.com/igordeo-costa)                             |                             [Vitor Indio](https://github.com/vitorindio)                              |                               [Elmo Junior](https://github.com/elmojuh)                               |                               [Luiz Fernando](https://github.com/luizfcneto)                               |

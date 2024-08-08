@@ -2,13 +2,13 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend do projeto Cume Brasil",
-  "main": "server.ts",
+  "main": "src/WebAPI/server.ts",
   "scripts": {
     "build": "tsc && echo 'Build concluido com sucesso!'",
-    "start": "ts-node WebAPI/server.js",
-    "back-dev": "cross-env NODE_ENV=development ts-node WebAPI/server.ts",
-    "back-homol": "cross-env NODE_ENV=homol ts-node WebAPI/server.ts",
-    "back-prod": "cross-env NODE_ENV=production node dist/backend/WebAPI/server.js"
+    "start": "ts-node src/WebAPI/server.ts",
+    "back-dev": "cross-env NODE_ENV=development ts-node src/WebAPI/server.ts",
+    "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
+    "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js"
   },
   "keywords": [],
   "author": "",
