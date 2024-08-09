@@ -13,16 +13,20 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strictPropertyInitialization": false,
-    "types": ["reflect-metadata"]
+    "types": [
+      "reflect-metadata"
+    ]
   },
   "include": [
-    "WebAPI/**/*.ts",
-    "Infrastructure/**/*.ts",
-    "Application/**/*.ts",
-    "Domain/**/*.ts",
-    "index.ts",
+    "src/WebAPI/**/*.ts",
+    "src/Infrastructure/**/*.ts",
+    "src/Application/**/*.ts",
+    "src/Domain/**/*.ts",
+    "src/server.ts",
     "../shared/**/*.ts",
     "@types"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

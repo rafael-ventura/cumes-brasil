@@ -7,16 +7,16 @@ import { Croqui } from '../../Domain/entities/Croqui';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
 
-import viasJson from '../../../database/json/vias.json';
-import croquisJson from '../../../database/json/croquis.json';
-import facesJson from '../../../database/json/faces.json';
-import montanhasJson from '../../../database/json/montanhas.json';
-import fontesJson from '../../../database/json/fontes.json';
-import imagensJson from '../../../database/json/imagens.json';
-import usuariosJson from '../../../database/json/usuarios.json';
-import viasCroquisJson from '../../../database/json/via_croquis.json';
+import viasJson from '../../../../database/json/vias.json';
+import croquisJson from '../../../../database/json/croquis.json';
+import facesJson from '../../../../database/json/faces.json';
+import montanhasJson from '../../../../database/json/montanhas.json';
+import fontesJson from '../../../../database/json/fontes.json';
+import imagensJson from '../../../../database/json/imagens.json';
+import usuariosJson from '../../../../database/json/usuarios.json';
+import viasCroquisJson from '../../../../database/json/via_croquis.json';
 
-export async function loadData () {
+export async function loadData() {
   const queryRunner = AppDataSource.createQueryRunner();
 
   await queryRunner.connect();
