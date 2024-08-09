@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv';
 import express from 'express';
 import routes from './routes/routes';
 import 'reflect-metadata';
@@ -6,8 +5,10 @@ import { AppDataSource } from '../Infrastructure/config/db';
 import { loadData } from '../Infrastructure/sql_scripts/initialLoad';
 import { Via } from '../Domain/entities/Via';
 import path from 'path';
+import { initializeEnvConfig } from '../Infrastructure/config/envinronment';
 
-dotenv.config();
+initializeEnvConfig();
+
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 4020;
@@ -50,7 +51,7 @@ AppDataSource.initialize().then(async () => {
     if (count === 0) {
         console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
         loadData().then(() => console.log("Carga inicial realizada com sucesso"))
-          .catch(e => console.log("Erro na carga de dados:", e));
+            .catch(e => console.log("Erro na carga de dados:", e));
     } else {
         console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
     }

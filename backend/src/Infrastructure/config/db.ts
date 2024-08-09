@@ -9,9 +9,9 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Escalada } from '../../Domain/entities/Escalada';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Participante } from '../../Domain/entities/Participante';
-import * as dotenv from 'dotenv';
+import { initializeEnvConfig } from './envinronment';
 
-dotenv.config();
+initializeEnvConfig();
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
