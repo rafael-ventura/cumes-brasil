@@ -38,7 +38,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Servir arquivos estáticos da pasta assets
-const assetsPath = path.join(__dirname, "../../assets");
+const assetsPath = path.join(__dirname, '../../../assets');
 console.log("Servidor está servindo arquivos estáticos no diretório:", assetsPath);
 app.use("/assets", express.static(assetsPath));
 app.use('/api', routes);

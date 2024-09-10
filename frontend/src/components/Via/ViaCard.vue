@@ -4,6 +4,7 @@
       <q-card-section>
         <div v-if="via.imagem">
           <img :src="via.imagem.url" class="card-image" alt="via image"/>
+          {{via.imagem.url}}
         </div>
         <div class="card-info">
           <div class="text-h6">{{ via.nome }}</div>
