@@ -53,7 +53,7 @@
             <q-card class="col-12 margem">
               <div class="top-margem row">
                 <q-icon name="rotate_90_degrees_cw" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
-                <div class="text-h4 col-4 center">{{ via?.grau }}</div>
+                <div class="text-h4 col-4 center">{{ via?.grau }}°</div>
               </div>
               <div class="text-h6 center">GRAU</div>
             </q-card>
