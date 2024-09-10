@@ -27,8 +27,6 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.1.14",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
     "typedi": "^0.10.0",
     "typeorm": "^0.3.20"
   },
