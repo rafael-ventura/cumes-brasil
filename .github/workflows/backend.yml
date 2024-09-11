@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies (including devDependencies)
+        run: npm install --include=dev  # Inclui as devDependencies
         working-directory: ./backend
 
       - name: Build Backend
@@ -48,7 +48,7 @@ jobs:
       # Executa as migrações no RDS
       - name: Run TypeORM Migrations on RDS
         run: |
-          npx typeorm-ts-node-commonjs migration:run -d src/Infrastructure/config/db.ts
+          npx typeorm migration:run -d src/Infrastructure/config/db.ts  # Ajuste no comando de migração
         working-directory: ./backend
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
