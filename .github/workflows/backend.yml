@@ -1,11 +1,10 @@
 # .github/workflows/deploy-backend.yml
-
 name: Deploy Backend
 
 on:
   push:
     branches:
-      - main  # Aciona o pipeline para a branch main
+      - main
 
 jobs:
   build:
@@ -36,11 +35,21 @@ jobs:
       - name: Deploy to EC2 via CodeDeploy
         run: |
           aws deploy create-deployment \
-            --application-name YOUR_CODEDEPLOY_APP_NAME \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name YOUR_DEPLOYMENT_GROUP_NAME \
+            --application-name cumes-backend-app \
+            --deployment-group-name cumes-backend-group \
             --github-location repository=rafael-ventura/cumes-brasil,commitId=${{ github.sha }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
+
+      - name: Run TypeORM Migrations
+        run: |
+          npm run typeorm migration:run
+        working-directory: ./backend
+        env:
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
