@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies (including devDependencies)
-        run: npm install --include=dev  # Inclui as devDependencies
+        run: npm install --include=dev
         working-directory: ./backend
 
       - name: Build Backend
