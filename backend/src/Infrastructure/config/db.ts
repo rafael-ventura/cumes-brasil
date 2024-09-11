@@ -20,8 +20,9 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: true,
+    synchronize: false, // Desabilitar em produção para usar migrações
     logging: false,
+    schema: 'public',  // Defina o esquema que você quer usar (pode ser 'public' ou outro que você criar)
     entities: [
         Colecao,
         Croqui,
@@ -33,5 +34,6 @@ export const AppDataSource = new DataSource({
         Usuario,
         Via,
         Participante
-    ]
+    ],
+    migrations: ['src/Infrastructure/migrations/*.ts'] // Caminho das migrações
 });

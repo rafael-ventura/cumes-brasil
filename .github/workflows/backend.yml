@@ -1,5 +1,4 @@
-# .github/workflows/deploy-backend.yml
-name: Deploy Backend
+name: Deploy Backend and Migrate Database
 
 on:
   push:
@@ -23,11 +22,18 @@ jobs:
         run: npm install
         working-directory: ./backend
 
+      - name: Build Backend
+        run: npm run build
+        working-directory: ./backend
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
       - name: Deploy to EC2 via CodeDeploy
         run: |
           aws deploy create-deployment \
@@ -39,10 +45,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
-      - name: Run TypeORM Migrations
+      # Running migrations on RDS
+      - name: Run TypeORM Migrations on RDS
         run: |
-          npm run typeorm migration:run
-        working-directory: ./backend
+          npx typeorm-ts-node-commonjs migration:run -d src/Infrastructure/config/db.ts
+        working-directory: ./backend  # Ajuste do diretório correto
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
