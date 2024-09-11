@@ -10,9 +10,8 @@
     "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
     "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js",
     "test": "echo 'Error: no test specified' && exit 1",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migration:generate": "npm run typeorm migration:generate -- -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/MigrationName",
-    "migration:run": "npm run typeorm migration:run -d src/Infrastructure/config/db.ts"
+    "migration:generate": "npx typeorm-ts-node-commonjs migration:generate src/Infrastructure/migrations/InitialMigration",
+    "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/Infrastructure/config/db.ts"
   },
   "keywords": [],
   "author": "",
