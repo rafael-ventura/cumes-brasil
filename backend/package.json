@@ -8,7 +8,8 @@
     "start": "ts-node src/WebAPI/server.ts",
     "back-dev": "cross-env NODE_ENV=development ts-node src/WebAPI/server.ts",
     "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
-    "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js"
+    "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js",
+    "test": "echo 'Error: no test specified' && exit 1"
   },
   "keywords": [],
   "author": "",
