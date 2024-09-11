@@ -18,13 +18,7 @@
     ]
   },
   "include": [
-    "src/WebAPI/**/*.ts",
-    "src/Infrastructure/**/*.ts",
-    "src/Application/**/*.ts",
-    "src/Domain/**/*.ts",
-    "src/server.ts",
-    "../shared/**/*.ts",
-    "@types"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

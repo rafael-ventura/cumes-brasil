@@ -48,7 +48,7 @@ jobs:
       # Executa as migrações no RDS
       - name: Run TypeORM Migrations on RDS
         run: |
-          npx typeorm migration:run -d src/Infrastructure/config/db.ts  # Ajuste no comando de migração
+          npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/Infrastructure/config/db.ts
         working-directory: ./backend
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
