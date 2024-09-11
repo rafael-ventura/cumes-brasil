@@ -3,7 +3,7 @@
   "short_name": "Cumes Brasil",
   "description": "Aplicativo de acervo de Vias de Escalada do Brasil",
   "display": "standalone",
-  "start_url": "/home",
+  "start_url": "./index.html",
   "background_color": "#ffffff",
   "theme_color": "#027be3",
   "orientation": "portrait",

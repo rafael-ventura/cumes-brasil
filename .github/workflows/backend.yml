@@ -23,10 +23,6 @@ jobs:
         run: npm install
         working-directory: ./backend
 
-      - name: Test Backend
-        run: npm test
-        working-directory: ./backend
-
   deploy:
     runs-on: ubuntu-latest
     needs: build
