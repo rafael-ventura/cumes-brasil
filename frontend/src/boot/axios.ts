@@ -1,7 +1,8 @@
 import { boot } from 'quasar/wrappers';
 import axios from 'axios';
 
-const api = axios.create({ baseURL: 'http://localhost:4020/api' });
+// Base URL ajustada para o IP público ou DNS da instância EC2
+const api = axios.create({ baseURL: 'http://18.212.219.139:8080/api' });
 
 api.interceptors.response.use(
   response => response,

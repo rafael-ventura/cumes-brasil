@@ -45,14 +45,20 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
-      # Running migrations on RDS
+      # Executa as migrações no RDS
       - name: Run TypeORM Migrations on RDS
         run: |
           npx typeorm-ts-node-commonjs migration:run -d src/Infrastructure/config/db.ts
-        working-directory: ./backend  # Ajuste do diretório correto
+        working-directory: ./backend
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+
+      # Logging do Endpoint da API para testes
+      - name: Log API Endpoint
+        run: |
+          echo "🚀 Backend deployed successfully!"
+          echo "🔗 Test the API endpoint at: http://18.212.219.139:8080/api/conexao"

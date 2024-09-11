@@ -11,14 +11,13 @@ initializeEnvConfig();
 
 const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 4020;
+const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
-    "http://localhost:4020",
+    'http://localhost:8080',
     "http://localhost:9000",
     'http://localhost:9200',
-    "http://localhost:8080",
-    "http://192.168.1.147:4020",
+    'http://192.168.1.147:8080',
     "http://192.168.1.147:9000"
 ];
 
@@ -51,7 +50,7 @@ AppDataSource.initialize().then(async () => {
     if (count === 0) {
         console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
         loadData().then(() => console.log("Carga inicial realizada com sucesso"))
-            .catch(e => console.log("Erro na carga de dados:", e));
+          .catch(e => console.log('Erro na carga de dados:', e));
     } else {
         console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
     }
