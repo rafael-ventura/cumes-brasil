@@ -5,12 +5,8 @@ declare const self: ServiceWorkerGlobalScope &
   typeof globalThis & { skipWaiting: () => void };
 
 import { clientsClaim } from 'workbox-core';
-import {
-  precacheAndRoute,
-  cleanupOutdatedCaches,
-  createHandlerBoundToURL
-} from 'workbox-precaching';
-import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
+import { NavigationRoute, registerRoute } from 'workbox-routing';
 
 // Force the service worker to activate as soon as it's finished installing
 self.skipWaiting();
