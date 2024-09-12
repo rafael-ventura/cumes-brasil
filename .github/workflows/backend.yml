@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -23,7 +25,7 @@ jobs:
         working-directory: ./backend
 
       - name: Archive the whole repository
-        run: zip -r backend.zip ./*  # Zipa todo o conteúdo do repositório, não apenas a pasta backend
+        run: zip -r backend.zip ./*  # Zipa todo o conteúdo do repositório
 
       - name: Upload backend to S3
         run: |

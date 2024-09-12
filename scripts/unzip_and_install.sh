@@ -5,7 +5,7 @@ echo "Descompactando backend.zip..."
 unzip /home/ec2-user/cumes-backend/backend.zip -d /home/ec2-user/cumes-backend
 
 # Navega até o diretório backend
-cd /home/ec2-user/cumes-backend || exit 1
+cd /home/ec2-user/cumes-backend/backend || exit 1
 
 # Instala o Node.js se necessário
 if ! command -v node &> /dev/null; then

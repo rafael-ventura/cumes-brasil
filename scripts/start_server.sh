@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Navega até o diretório backend
-cd /home/ec2-user/cumes-backend || exit 1
+cd /home/ec2-user/cumes-backend/backend || exit 1
 
 # Inicia a aplicação
 echo "Iniciando o servidor Node.js..."

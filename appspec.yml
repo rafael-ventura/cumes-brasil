@@ -1,6 +1,7 @@
 version: 0.0
 os: linux
 files:
+  # Copia o conteúdo do backend.zip (incluindo backend e assets) para o destino correto
   - source: s3://cumes-backend-deployments/backend.zip
     destination: /home/ec2-user/cumes-backend
     overwrite: true
