@@ -1,14 +1,13 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: s3://cumes-backend-deployments/dist.zip
     destination: /home/ec2-user/cumes-backend
-    overwrite: true  # Sobrescreve arquivos já existentes
 
 hooks:
   BeforeInstall:
     - location: scripts/install_dependencies.sh
-      timeout: 100
+      timeout: 300
       runas: ec2-user
 
   ApplicationStart:
