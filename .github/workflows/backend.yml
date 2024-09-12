@@ -45,7 +45,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
-      # Executa as migrações diretamente na instância
       - name: Run TypeORM Migrations
         run: npm run migration:run
         working-directory: ./backend
@@ -55,9 +54,3 @@ jobs:
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-
-      # Logging do Endpoint da API para testes
-      - name: Log API Endpoint
-        run: |
-          echo "🚀 Backend deployed successfully"
-          echo "🔗 Test the API endpoint at: http://18.212.219.139:8080/api/conexao"
