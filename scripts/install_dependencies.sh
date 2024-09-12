@@ -20,4 +20,5 @@ sudo yum install -y nodejs --best --allowerasing
 rm -rf node_modules package-lock.json
 
 # Instala as dependências do projeto na pasta backend
-npm install
+sudo npm install --legacy-peer-deps
+
