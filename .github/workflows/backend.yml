@@ -22,17 +22,13 @@ jobs:
         run: npm install --include=dev
         working-directory: ./backend
 
-      - name: Build Backend
-        run: npm run build
+      - name: Archive the whole backend folder
+        run: zip -r backend.zip ./
         working-directory: ./backend
 
-      - name: Archive dist Folder
-        run: zip -r dist.zip dist/
-        working-directory: ./backend
-
-      - name: Upload build to S3
+      - name: Upload backend to S3
         run: |
-          aws s3 cp ./backend/dist.zip s3://cumes-backend-deployments/
+          aws s3 cp ./backend/backend.zip s3://cumes-backend-deployments/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -51,7 +47,7 @@ jobs:
           aws deploy create-deployment \
             --application-name cumes-backend-app \
             --deployment-group-name cumes-backend-group \
-            --s3-location bucket=cumes-backend-deployments,bundleType=zip,key=dist.zip
+            --s3-location bucket=cumes-backend-deployments,bundleType=zip,key=backend.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

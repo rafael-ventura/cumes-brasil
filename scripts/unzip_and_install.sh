@@ -1,14 +1,8 @@
 #!/bin/bash
 
-# Verifica se o ZIP do S3 foi baixado
-if [ ! -f "/home/ec2-user/cumes-backend/dist.zip" ]; then
-  echo "Arquivo dist.zip não encontrado!"
-  exit 1
-fi
-
-# Descompacta o arquivo ZIP
-echo "Descompactando dist.zip..."
-unzip /home/ec2-user/cumes-backend/dist.zip -d /home/ec2-user/cumes-backend
+# Descompacta o arquivo backend.zip
+echo "Descompactando backend.zip..."
+unzip /home/ec2-user/cumes-backend/backend.zip -d /home/ec2-user/cumes-backend
 
 # Navega até o diretório backend
 cd /home/ec2-user/cumes-backend || exit 1
