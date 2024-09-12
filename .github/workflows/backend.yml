@@ -22,11 +22,8 @@ jobs:
         run: npm install --include=dev
         working-directory: ./backend
 
-      - name: Create deployment package
-        run: |
-          # Cria o zip incluindo o appspec.yml e scripts
-          zip -r backend.zip appspec.yml scripts/ backend/
-        working-directory: ./backend
+      - name: Archive the whole repository
+        run: zip -r backend.zip ./*  # Zipa todo o conteúdo do repositório, não apenas a pasta backend
 
       - name: Upload backend to S3
         run: |
@@ -57,6 +54,9 @@ jobs:
     needs: deploy
 
     steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
       - name: Run TypeORM Migrations
         run: npm run migration:run
         working-directory: ./backend
