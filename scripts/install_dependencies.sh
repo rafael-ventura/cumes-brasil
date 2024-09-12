@@ -9,6 +9,9 @@ npm cache clean --force
 # Remove qualquer versão anterior do Node.js e do npm que possa causar conflitos
 sudo yum remove -y nodejs nodejs-full-i18n nodejs-npm
 
+# Limpa pacotes em cache do yum
+sudo yum clean packages
+
 # Configura o repositório e instala o Node.js 20
 curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -
 sudo yum install -y nodejs --best --allowerasing
