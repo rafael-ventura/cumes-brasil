@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/cumes-backend  # Certifique-se de que isso corresponda ao caminho correto do seu projeto
+    destination: /home/ec2-user/cumes-backend
 
 hooks:
   BeforeInstall:

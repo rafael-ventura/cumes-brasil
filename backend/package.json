@@ -8,10 +8,10 @@
     "start": "ts-node src/WebAPI/server.ts",
     "back-dev": "cross-env NODE_ENV=development ts-node src/WebAPI/server.ts",
     "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
-    "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js",
+    "back-prod": "node dist/WebAPI/server.js",
     "test": "echo 'Error: no test specified' && exit 1",
     "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/InitialMigration",
-    "migration:run": "npx typeorm migration:run -d src/Infrastructure/config/db.ts"
+    "migration:run": "npx typeorm migration:run -d dist/Infrastructure/config/db.js"
   },
   "keywords": [],
   "author": "",
