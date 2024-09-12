@@ -45,10 +45,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
-      # Executa as migrações no RDS
+      # Executa as migrações no RDS usando o JavaScript compilado
       - name: Run TypeORM Migrations on RDS
         run: |
-          npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/Infrastructure/config/db.ts
+          npx typeorm migration:run -d dist/Infrastructure/config/db.js
         working-directory: ./backend
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
