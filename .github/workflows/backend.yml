@@ -1,4 +1,4 @@
-name: Deploy Backend and Migrate Database
+name: Build, Deploy and Migrate Backend
 
 on:
   push:
@@ -26,6 +26,18 @@ jobs:
         run: npm run build
         working-directory: ./backend
 
+      - name: Archive dist Folder
+        run: zip -r dist.zip dist/
+        working-directory: ./backend
+
+      - name: Upload build to S3
+        run: |
+          aws s3 cp ./backend/dist.zip s3://cumes-backend-deployments/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'us-east-1'
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -34,16 +46,24 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Deploy to EC2 via CodeDeploy
+      - name: Create Deployment via CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name cumes-backend-app \
             --deployment-group-name cumes-backend-group \
-            --github-location repository=rafael-ventura/cumes-brasil,commitId=${{ github.sha }}
+            --s3-location bucket=cumes-backend-deployments,bundleType=zip,key=dist.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
+
+  migrations:
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
       - name: Run TypeORM Migrations
         run: npm run migration:run
