@@ -25,7 +25,7 @@ jobs:
         working-directory: ./backend
 
       - name: Archive the whole repository
-        run: zip -r backend.zip ./*  # Zipa todo o conteúdo do repositório
+        run: zip -r backend.zip ./*
 
       - name: Upload backend to S3
         run: |
