@@ -1,9 +1,8 @@
 version: 0.0
 os: linux
 files:
-  # Copia o conteúdo do backend.zip (incluindo backend e assets) para o destino correto
   - source: s3://cumes-backend-deployments/backend.zip
-    destination: /home/ec2-user/cumes-backend
+    destination: /opt/codedeploy-agent/deployment-root/deployment-archive
     overwrite: true
 
 hooks:
