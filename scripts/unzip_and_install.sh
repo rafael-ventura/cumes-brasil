@@ -10,9 +10,9 @@ if [ ! -f "$ZIP_FILE" ]; then
     exit 1
 fi
 
-# Descompacta o arquivo backend.zip
+# Descompacta o arquivo backend.zip, forçando a sobrescrita de arquivos existentes
 echo "Descompactando $ZIP_FILE no diretório $DEPLOY_DIR..."
-unzip "$ZIP_FILE" -d "$DEPLOY_DIR"
+unzip -o "$ZIP_FILE" -d "$DEPLOY_DIR"
 
 # Verifica se a descompactação foi bem-sucedida
 if [ $? -ne 0 ]; then
