@@ -4,7 +4,7 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/WebAPI/server.js",
   "scripts": {
-    "build": "rm -rf dist && tsc && cp -R src/WebAPI dist/WebAPI && echo 'Build concluído com sucesso!'"
+    "build": "rm -rf dist && tsc && cp -R src/WebAPI dist/WebAPI && echo 'Build concluído com sucesso!'",
     "start": "ts-node src/WebAPI/server.ts",
     "back-dev": "cross-env NODE_ENV=development ts-node src/WebAPI/server.ts",
     "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
