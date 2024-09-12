@@ -45,10 +45,15 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
+      - name: List dist directory contents
+        run: |
+          ls -la dist/Infrastructure/config
+        working-directory: ./backend
+
       # Executa as migrações no RDS usando o JavaScript compilado
       - name: Run TypeORM Migrations on RDS
         run: |
-          npx typeorm migration:run -d dist/Infrastructure/config/db.js
+          npx typeorm migration:run -d /home/runner/work/cumes-brasil/cumes-brasil/backend/dist/Infrastructure/config/db.js
         working-directory: ./backend
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
