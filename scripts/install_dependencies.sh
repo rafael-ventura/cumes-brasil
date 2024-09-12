@@ -1,7 +1,13 @@
 #!/bin/bash
 
-# Navega até o diretório do backend
-cd /home/ec2-user/cumes-backend/backend || exit 1
+# Verifica se o diretório correto existe e o cria se necessário
+if [ ! -d "/home/ec2-user/cumes-backend/dist/WebAPI" ]; then
+    echo "Criando diretório /home/ec2-user/cumes-backend/dist/WebAPI..."
+    mkdir -p /home/ec2-user/cumes-backend/dist/WebAPI
+fi
+
+# Navega até o diretório dist/WebAPI
+cd /home/ec2-user/cumes-backend/dist/WebAPI || exit 1
 
 # Limpa o cache do npm para evitar problemas de dependências, caso o npm já esteja instalado
 if command -v npm &> /dev/null; then
@@ -38,7 +44,7 @@ fi
 echo "Removendo node_modules e package-lock.json, se existirem..."
 rm -rf node_modules package-lock.json
 
-# Instala as dependências do projeto na pasta backend
+# Instala as dependências do projeto
 echo "Instalando dependências do projeto..."
 npm install --legacy-peer-deps
 
