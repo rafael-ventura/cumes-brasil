@@ -3,6 +3,7 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/cumes-backend
+    overwrite: true  # Sobrescreve arquivos já existentes
 
 hooks:
   BeforeInstall:
