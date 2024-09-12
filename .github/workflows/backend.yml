@@ -23,11 +23,11 @@ jobs:
         working-directory: ./backend
 
       - name: Archive the whole backend folder
-        run: zip -r backend.zip ./  # Certifique-se de que o arquivo ZIP é criado corretamente
+        run: zip -r backend.zip ./backend/  # Certifique-se de que o arquivo ZIP é criado corretamente
 
       - name: Upload backend to S3
         run: |
-          aws s3 cp ./backend.zip s3://cumes-backend-deployments/backend.zip
+          aws s3 cp backend.zip s3://cumes-backend-deployments/backend.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -38,9 +38,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
-
       - name: Create Deployment via CodeDeploy
         run: |
           aws deploy create-deployment \
