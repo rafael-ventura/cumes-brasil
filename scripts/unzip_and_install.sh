@@ -1,7 +1,13 @@
 #!/bin/bash
 
-# Define o caminho da pasta onde o CodeDeploy baixa os arquivos
-DEPLOY_DIR=/opt/codedeploy-agent/deployment-root/deployment-archive
+# Define o diretório temporário padrão onde o CodeDeploy armazena o backend.zip
+DEPLOY_DIR=$(pwd)  # O CodeDeploy geralmente executa o script no diretório correto
+
+# Verifica se o arquivo backend.zip existe
+if [ ! -f "$DEPLOY_DIR/backend.zip" ]; then
+    echo "Arquivo backend.zip não encontrado no diretório $DEPLOY_DIR"
+    exit 1
+fi
 
 # Descompacta o arquivo backend.zip
 echo "Descompactando backend.zip..."
@@ -14,7 +20,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Navega até o diretório backend
-cd /home/ec2-user/cumes-backend/backend || exit 1
+cd /home/ec2-user/cumes-backend || exit 1
 
 # Instala o Node.js se necessário
 if ! command -v node &> /dev/null; then

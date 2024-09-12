@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: s3://cumes-backend-deployments/backend.zip
-    destination: /opt/codedeploy-agent/deployment-root/deployment-archive
+    destination: /home/ec2-user/cumes-backend
     overwrite: true
 
 hooks:
