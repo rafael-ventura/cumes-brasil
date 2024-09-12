@@ -45,10 +45,16 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-east-1'
 
-      # Executa as migrações no RDS (dentro da VM EC2)
+      # Adicionar chave SSH e rodar as migrações
+      - name: Add SSH key
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/cumes-backend-key
+          chmod 600 ~/.ssh/cumes-backend-key
+          ssh-keyscan -H 18.212.219.139 >> ~/.ssh/known_hosts
+
       - name: Run TypeORM Migrations on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@18.212.219.139 "cd /home/ec2-user/cumes-backend/backend && npm run migration:run"
+          ssh -i ~/.ssh/cumes-backend-key ec2-user@18.212.219.139 "cd /home/ec2-user/cumes-backend/backend && npm run migration:run"
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
