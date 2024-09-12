@@ -1,27 +1,27 @@
 #!/bin/bash
 
-# Define o diretório onde o backend.zip foi salvo
+# Diretório onde o arquivo backend.zip será salvo
 DEPLOY_DIR="/home/ec2-user/cumes-backend"
+ZIP_FILE="$DEPLOY_DIR/backend.zip"
 
-# Descompacta o arquivo backend.zip
-echo "Descompactando backend.zip no diretório $DEPLOY_DIR..."
-unzip "$DEPLOY_DIR/backend.zip" -d "$DEPLOY_DIR"
-
-# Verifica se a descompactação foi bem-sucedida
-if [ $? -ne 0 ]; then
-    echo "Falha ao descompactar o backend.zip"
+# Verifica se o arquivo backend.zip está no diretório certo
+if [ ! -f "$ZIP_FILE" ]; then
+    echo "Arquivo $ZIP_FILE não encontrado!"
     exit 1
 fi
 
-# Navega até o diretório backend (dentro do diretório descompactado)
-cd "$DEPLOY_DIR/backend" || exit 1
+# Descompacta o arquivo backend.zip
+echo "Descompactando $ZIP_FILE no diretório $DEPLOY_DIR..."
+unzip "$ZIP_FILE" -d "$DEPLOY_DIR"
 
-# Instala o Node.js se necessário
-if ! command -v node &> /dev/null; then
-    echo "Instalando Node.js..."
-    curl -sL https://rpm.nodesource.com/setup_20.x | sudo bash -
-    sudo yum install -y nodejs
+# Verifica se a descompactação foi bem-sucedida
+if [ $? -ne 0 ]; then
+    echo "Falha ao descompactar o arquivo $ZIP_FILE"
+    exit 1
 fi
+
+# Navega até o diretório backend
+cd "$DEPLOY_DIR/backend" || exit 1
 
 # Instala as dependências do projeto
 echo "Instalando dependências do projeto..."
