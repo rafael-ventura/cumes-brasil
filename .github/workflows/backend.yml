@@ -60,5 +60,5 @@ jobs:
       # Logging do Endpoint da API para testes
       - name: Log API Endpoint
         run: |
-          echo "🚀 Backend deployed successfully!"
+          echo "🚀 Backend deployed successfully"
           echo "🔗 Test the API endpoint at: http://18.212.219.139:8080/api/conexao"
