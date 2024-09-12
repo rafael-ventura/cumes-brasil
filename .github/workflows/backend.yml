@@ -22,13 +22,15 @@ jobs:
         run: npm install --include=dev
         working-directory: ./backend
 
-      - name: Archive the whole backend folder
-        run: zip -r backend.zip ./
+      - name: Create deployment package
+        run: |
+          # Cria o zip incluindo o appspec.yml e scripts
+          zip -r backend.zip appspec.yml scripts/ backend/
         working-directory: ./backend
 
       - name: Upload backend to S3
         run: |
-          aws s3 cp ./backend/backend.zip s3://cumes-backend-deployments/
+          aws s3 cp backend.zip s3://cumes-backend-deployments/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -39,9 +41,6 @@ jobs:
     needs: build
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
-
       - name: Create Deployment via CodeDeploy
         run: |
           aws deploy create-deployment \
@@ -58,9 +57,6 @@ jobs:
     needs: deploy
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
-
       - name: Run TypeORM Migrations
         run: npm run migration:run
         working-directory: ./backend
