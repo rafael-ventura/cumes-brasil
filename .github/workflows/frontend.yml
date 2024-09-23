@@ -60,4 +60,4 @@ jobs:
           aws s3 sync build s3://cumes-brasil-front --delete --acl public-read
 
       - name: Notify deployment URL
-        run: echo "🚀 Deploy realizado com sucesso! Acesse o site em: http://cumes-brasil-front.s3-website-us-east-1.amazonaws.com"
+        run: "🚀 Deploy realizado com sucesso! Acesse o site em: http://cumes-brasil-front.s3-website-us-east-1.amazonaws.com"
