@@ -7,37 +7,60 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
         working-directory: ./frontend
+        run: npm install
 
       - name: Build project
-        run: npm run build
         working-directory: ./frontend
+        run: npm run build
 
-      - name: Deploy to S3
-        run: |
-          aws s3 sync ./frontend/dist/pwa s3://cumes-brasil-frontend --delete
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: ./frontend/dist/pwa
 
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Necessário para OIDC
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-files
+          path: build
+
+      - name: Configure AWS credentials from OpenID Connect
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::156041409339:role/s3
+          aws-region: us-east-1
+
+      - name: Sync files to S3
+        uses: aws-actions/s3-sync@v1
+        with:
+          source-dir: build
+          destination: s3://cumes-brasil-front
+          delete: true
 
       - name: Notify deployment URL
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const url = 'https://cumes-brasil-frontend.s3.amazonaws.com/pwa/index.html';
-            core.notice(`🚀 Deploy realizado com sucesso! Acesse o site em: ${url}`);
+        run: "Deploy realizado com sucesso! Acesse o site em: http://cumes-brasil-front.s3-website-us-east-1.amazonaws.com"
