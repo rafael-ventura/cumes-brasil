@@ -36,10 +36,7 @@ export const AppDataSource = new DataSource({
         Participante
     ],
     migrations: ['src/Infrastructure/migrations/*.ts'],
-    ssl: true, // Habilita SSL
-    extra: {
-        ssl: {
-            rejectUnauthorized: false
-        }
+    ssl: {
+        rejectUnauthorized: false
     }
 });
