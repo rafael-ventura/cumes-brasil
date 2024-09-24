@@ -20,9 +20,9 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: false, // Desabilitar em produção para usar migrações
+    synchronize: true,
     logging: false,
-    schema: 'public',  // Defina o esquema que você quer usar (pode ser 'public' ou outro que você criar)
+    schema: 'public',  
     entities: [
         Colecao,
         Croqui,
