@@ -22,7 +22,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    schema: 'public',  
+    schema: 'public',
     entities: [
         Colecao,
         Croqui,
@@ -35,5 +35,11 @@ export const AppDataSource = new DataSource({
         Via,
         Participante
     ],
-    migrations: ['src/Infrastructure/migrations/*.ts'] // Caminho das migrações
+    migrations: ['src/Infrastructure/migrations/*.ts'],
+    ssl: true, // Habilita SSL
+    extra: {
+        ssl: {
+            rejectUnauthorized: false
+        }
+    }
 });
