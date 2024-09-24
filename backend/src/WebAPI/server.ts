@@ -12,7 +12,12 @@ initializeEnvConfig();
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 8080;
-
+console.log("Variáveis de ambiente carregadas:");
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_USERNAME:", process.env.DB_USERNAME);
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+console.log("DB_NAME:", process.env.DB_NAME);
+console.log("DB_PORT:", process.env.DB_PORT);
 const allowedOrigins = [
     'http://localhost:8080',
     "http://localhost:9000",
@@ -42,12 +47,7 @@ console.log("Servidor está servindo arquivos estáticos no diretório:", assets
 app.use("/assets", express.static(assetsPath));
 app.use('/api', routes);
 
-console.log("Variáveis de ambiente carregadas:");
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USERNAME:", process.env.DB_USERNAME);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_NAME:", process.env.DB_NAME);
-console.log("DB_PORT:", process.env.DB_PORT);
+
 
 
 AppDataSource.initialize()
