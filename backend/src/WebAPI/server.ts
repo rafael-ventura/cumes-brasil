@@ -12,12 +12,7 @@ initializeEnvConfig();
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 8080;
-console.log("Variáveis de ambiente carregadas:");
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USERNAME:", process.env.DB_USERNAME);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_NAME:", process.env.DB_NAME);
-console.log("DB_PORT:", process.env.DB_PORT);
+
 const allowedOrigins = [
     'http://localhost:8080',
     "http://localhost:9000",
@@ -74,6 +69,13 @@ AppDataSource.initialize()
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("The server is running in", process.env.NODE_ENV, "mode");
-    console.log("The CORS origin is", corsOptions.origin);
+  console.log("Variáveis de ambiente carregadas:");
+  console.log("DB_HOST:", process.env.DB_HOST);
+  console.log("DB_USERNAME:", process.env.DB_USERNAME);
+  console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+  console.log("DB_NAME:", process.env.DB_NAME);
+  console.log("DB_PORT:", process.env.DB_PORT);
+
+  console.log("The CORS origin is", corsOptions.origin);
     console.log(process.cwd());
 });
