@@ -26,7 +26,7 @@ else
 fi
 
 # Verifica novamente a versão do Node.js instalada
-echo "Versão atual do Node.js:"
+echo "Versão atual do Node.js"
 node -v
 
 # Instalar dependências apenas se houver mudanças no package-lock.json
