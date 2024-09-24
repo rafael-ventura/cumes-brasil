@@ -42,19 +42,26 @@ console.log("Servidor está servindo arquivos estáticos no diretório:", assets
 app.use("/assets", express.static(assetsPath));
 app.use('/api', routes);
 
-AppDataSource.initialize().then(async () => {
-    console.log("Conexão com o banco de dados estabelecida com sucesso");
+AppDataSource.initialize()
+  .then(async () => {
+      console.log('Conexão com o banco de dados estabelecida com sucesso');
 
-    const viaRepository = AppDataSource.getRepository(Via);
-    const count = await viaRepository.count();
-    if (count === 0) {
-        console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
-        loadData().then(() => console.log("Carga inicial realizada com sucesso"))
-          .catch(e => console.log('Erro na carga de dados:', e));
-    } else {
-        console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
-    }
-}).catch(error => console.log("Erro ao conectar com o banco de dados:", error));
+      const viaRepository = AppDataSource.getRepository(Via);
+      const count = await viaRepository.count();
+      if (count === 0) {
+          console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
+          await loadData();
+          console.log('Carga inicial realizada com sucesso');
+      } else {
+          console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
+      }
+  })
+  .catch(error => {
+      console.error('Erro ao conectar com o banco de dados:', error.message);
+      console.error(error.stack); // Adiciona a stack trace do erro
+      process.exit(1); // Encerra o processo se a conexão falhar
+  });
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
