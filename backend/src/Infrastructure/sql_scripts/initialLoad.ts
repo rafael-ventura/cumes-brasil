@@ -7,14 +7,23 @@ import { Croqui } from '../../Domain/entities/Croqui';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
 
-import viasJson from '../../../../database/json/vias.json';
-import croquisJson from '../../../../database/json/croquis.json';
-import facesJson from '../../../../database/json/faces.json';
-import montanhasJson from '../../../../database/json/montanhas.json';
-import fontesJson from '../../../../database/json/fontes.json';
-import imagensJson from '../../../../database/json/imagens.json';
-import usuariosJson from '../../../../database/json/usuarios.json';
-import viasCroquisJson from '../../../../database/json/via_croquis.json';
+import path from 'path';
+import fs from 'fs';
+
+// Função para carregar os dados dos arquivos JSON
+function loadJson(filePath: string) {
+  const absolutePath = path.resolve(__dirname, '../../../../database/json', filePath);
+  return JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
+}
+
+const viasJson = loadJson('vias.json');
+const croquisJson = loadJson('croquis.json');
+const facesJson = loadJson('faces.json');
+const montanhasJson = loadJson('montanhas.json');
+const fontesJson = loadJson('fontes.json');
+const imagensJson = loadJson('imagens.json');
+const usuariosJson = loadJson('usuarios.json');
+const viasCroquisJson = loadJson('via_croquis.json');
 
 export async function loadData() {
   const queryRunner = AppDataSource.createQueryRunner();
@@ -63,12 +72,9 @@ export async function loadData() {
 
     await queryRunner.commitTransaction();
   } catch (error) {
-
     console.error("Erro ao carregar dados:", error);
     await queryRunner.rollbackTransaction();
-
   } finally {
-
     await queryRunner.release();
   }
 }
