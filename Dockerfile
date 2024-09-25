@@ -7,14 +7,17 @@ WORKDIR /usr/src/app
 # Copiar o package.json e package-lock.json para o diretório de trabalho
 COPY package*.json ./
 
-# Instalar as dependências de produção
-RUN npm install --production
+# Instalar todas as dependências (incluindo devDependencies)
+RUN npm install
 
 # Copiar o restante do código da aplicação
 COPY . .
 
-# Compilar o código TypeScript (se aplicável)
+# Compilar o código TypeScript
 RUN npm run build
+
+# Remover as devDependencies para otimizar a imagem
+RUN npm prune --production
 
 # Expor a porta que a aplicação usará
 EXPOSE 8080
