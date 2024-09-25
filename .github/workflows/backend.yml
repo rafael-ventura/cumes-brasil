@@ -25,7 +25,7 @@ jobs:
 
       - name: Zip files
         run: |
-          zip -r backend.zip . -x '*.git*' -x '*node_modules/*' -x '*.github/*'
+          zip -r backend.zip . -x '*.git*' -x '*node_modules/*' -x '*.github/*' -x 'frontend/*'
 
       - name: Upload to S3
         run: |
