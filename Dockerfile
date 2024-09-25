@@ -3,25 +3,28 @@ FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+# Copia o conteúdo da pasta backend
+COPY backend/package*.json ./backend/
+
+WORKDIR /usr/src/app/backend
 
 RUN npm install
 
-COPY . .
+COPY backend .
 
 RUN npm run build
 
 # Etapa de produção
 FROM node:20-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/backend
 
-COPY package*.json ./
+COPY backend/package*.json ./
 
 RUN npm install --production
 
-COPY --from=builder /usr/src/app/dist ./dist
-COPY --from=builder /usr/src/app/assets ./assets
+COPY --from=builder /usr/src/app/backend/dist ./dist
+COPY --from=builder /usr/src/app/backend/assets ./assets
 
 EXPOSE 8080
 
