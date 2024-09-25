@@ -1,0 +1,69 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Backend and Frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Necessário para OIDC
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Build Frontend
+      - name: Install Frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Frontend project
+        working-directory: ./frontend
+        run: npm run build
+
+      # Build Backend
+      - name: Install Backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Build Backend project
+        working-directory: ./backend
+        run: npm run build
+
+      # Empacotar tudo em um único zip
+      - name: Zip backend and frontend files
+        run: |
+          zip -r application.zip \
+            ./backend \
+            ./frontend \
+            ./database \
+            ./docker-compose.yml \
+            ./Dockerfile \
+            ./assets \
+            -x '*.git*' \
+            -x '*node_modules/*' \
+            -x '*.github/*'
+
+      # Upload para S3
+      - name: Upload to S3
+        run: |
+          aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
+
+      # Criar Deployment no CodeDeploy
+      - name: Create deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name cumes-backend-frontend-app \
+            --deployment-group-name cumes-backend-frontend-deployment-group \
+            --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip

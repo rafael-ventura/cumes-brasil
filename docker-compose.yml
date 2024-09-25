@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -13,13 +15,15 @@ services:
       - cumes-network
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: cumes-api
     restart: always
     environment:
       NODE_ENV: production
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      DB_HOST: postgres
+      DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
@@ -27,6 +31,19 @@ services:
       - '8080:8080'
     depends_on:
       - postgres
+    networks:
+      - cumes-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: cumes-frontend
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - api
     networks:
       - cumes-network
 

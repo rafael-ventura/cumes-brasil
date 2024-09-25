@@ -2,16 +2,17 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/cumes-brasil/backend
-    overwrite: yes
+    destination: /home/ec2-user/cumes-brasil
+
 permissions:
-  - object: /home/ec2-user/cumes-brasil/backend
+  - object: /home/ec2-user/cumes-brasil
     owner: ec2-user
     group: ec2-user
     mode: 755
+
 hooks:
   BeforeInstall:
-    - location: scripts/stop_server.sh
+    - location: scripts/stop_services.sh
       timeout: 300
       runas: ec2-user
   AfterInstall:
@@ -19,6 +20,6 @@ hooks:
       timeout: 300
       runas: ec2-user
   ApplicationStart:
-    - location: scripts/install_dependencies.sh
+    - location: scripts/start_services.sh
       timeout: 300
       runas: ec2-user
