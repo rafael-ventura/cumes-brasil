@@ -15,14 +15,13 @@ initializeEnvConfig();
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    username: process.env.DB_USERNAME || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'postgres',
     synchronize: true,
     logging: false,
-    schema: 'public',
     entities: [
         Colecao,
         Croqui,
@@ -36,7 +35,5 @@ export const AppDataSource = new DataSource({
         Participante
     ],
     migrations: ['src/Infrastructure/migrations/*.ts'],
-    ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: false // Desabilita SSL
 });
