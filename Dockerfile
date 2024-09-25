@@ -30,8 +30,11 @@ RUN npm install --production
 # Copiar a pasta 'database/json' para o local correto na etapa de produção
 COPY --from=builder /usr/src/app/backend/database/json ./database/json
 
+# Copiar a pasta de distribuição
 COPY --from=builder /usr/src/app/backend/dist ./dist
-COPY --from=builder /usr/src/app/backend/assets ./assets
+
+# Copiar a pasta 'assets' da raiz
+COPY assets ./assets
 
 EXPOSE 8080
 
