@@ -1,29 +1,30 @@
-# Usar uma imagem base oficial do Node.js correspondente à sua versão
-FROM node:20-alpine
+# Etapa de build
+FROM node:20-alpine AS builder
 
-# Definir o diretório de trabalho dentro do contêiner
 WORKDIR /usr/src/app
 
-# Copiar o package.json e package-lock.json para o diretório de trabalho
 COPY package*.json ./
 
-# Instalar todas as dependências (incluindo devDependencies)
 RUN npm install
 
-# Copiar o restante do código da aplicação
 COPY . .
 
-# Compilar o código TypeScript
 RUN npm run build
 
-# Remover as devDependencies para otimizar a imagem
-RUN npm prune --production
+# Etapa de produção
+FROM node:20-alpine
 
-# Expor a porta que a aplicação usará
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --production
+
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/assets ./assets
+
 EXPOSE 8080
 
-# Definir a variável de ambiente NODE_ENV como 'production'
 ENV NODE_ENV=production
 
-# Comando para iniciar a aplicação
 CMD ["node", "dist/WebAPI/server.js"]
