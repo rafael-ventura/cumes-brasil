@@ -13,8 +13,8 @@ RUN npm install
 # Copiar todo o código do backend
 COPY backend ./
 
-# Copiar a pasta 'database/json' para o backend
-COPY backend/database/json ./database/json
+# Copiar a pasta 'database/json' da raiz do projeto
+COPY database/json ./database/json
 
 # Executar o build do backend
 RUN npm run build
