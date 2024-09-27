@@ -17,6 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
+          aws-region: us-east-1
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
@@ -51,6 +57,8 @@ jobs:
             ./docker-compose.yml \
             ./Dockerfile \
             ./assets \
+            appspec.yml \
+            scripts/ \
             -x '*.git*' \
             -x '*node_modules/*' \
             -x '*.github/*'
@@ -64,6 +72,6 @@ jobs:
       - name: Create deployment
         run: |
           aws deploy create-deployment \
-            --application-name cumes-backend-frontend-app \
-            --deployment-group-name cumes-backend-frontend-deployment-group \
+            --application-name cumes-backend-app \
+            --deployment-group-name cumes-backend-deployment-group \
             --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip
