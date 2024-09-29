@@ -12,7 +12,7 @@ import fs from 'fs';
 
 // Função para carregar os dados dos arquivos JSON
 function loadJson(filePath: string) {
-  const absolutePath = path.resolve(__dirname, '../../../../database/json', filePath);
+  const absolutePath = path.resolve(process.cwd(), 'database/json', filePath);
   return JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
 }
 
