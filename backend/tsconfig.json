@@ -18,7 +18,8 @@
     ]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../database/json/**/*"
   ],
   "exclude": [
     "node_modules"

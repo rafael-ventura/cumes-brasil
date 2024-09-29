@@ -2,7 +2,7 @@ import express from 'express';
 import routes from './routes/routes';
 import 'reflect-metadata';
 import { AppDataSource } from '../Infrastructure/config/db';
-import { loadData } from '../../../database/json/initialLoad';
+import { loadData } from '../Infrastructure/sql_scripts/initialLoad';
 import { Via } from '../Domain/entities/Via';
 import path from 'path';
 import { initializeEnvConfig } from '../Infrastructure/config/envinronment';
