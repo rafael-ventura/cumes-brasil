@@ -15,11 +15,7 @@ hooks:
     - location: scripts/stop_services.sh
       timeout: 300
       runas: ec2-user
-  AfterInstall:
-    - location: scripts/install_dependencies.sh
-      timeout: 300
-      runas: ec2-user
   ApplicationStart:
     - location: scripts/start_services.sh
-      timeout: 600
+      timeout: 1000
       runas: ec2-user

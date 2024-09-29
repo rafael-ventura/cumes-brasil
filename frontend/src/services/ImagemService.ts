@@ -1,5 +1,4 @@
-/// @ts-ignore
-const serverIp = 'http://localhost:4020';
+const serverIp = import.meta.env.VITE_APP_SERVER_IP;
 
 export function adjustImageUrl (url: string): string {
   if (url) {

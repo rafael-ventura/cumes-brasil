@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Build and Deploy Application
 
 on:
   push:
@@ -47,18 +47,17 @@ jobs:
         working-directory: ./backend
         run: npm run build
 
-      # Empacotar tudo em um único zip
-      - name: Zip backend and frontend files
+      # Empacotar apenas os arquivos necessários
+      - name: Zip backend and frontend built files
         run: |
           zip -r application.zip \
-            ./backend \
-            ./frontend \
-            ./database \
-            ./docker-compose.yml \
-            ./Dockerfile \
-            ./assets \
+            backend/package*.json \
+            backend/dist \
+            frontend/dist \
+            docker-compose.yml \
             appspec.yml \
             scripts/ \
+            assets/ \
             -x '*.git*' \
             -x '*node_modules/*' \
             -x '*.github/*'
