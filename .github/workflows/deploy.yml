@@ -29,6 +29,11 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # Clean Frontend dist folder
+      - name: Clean Frontend dist folder
+        working-directory: ./frontend
+        run: rm -rf dist
+
       # Build Frontend
       - name: Install Frontend dependencies
         working-directory: ./frontend
@@ -38,6 +43,11 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
+      # Clean Backend dist folder
+      - name: Clean Backend dist folder
+        working-directory: ./backend
+        run: rm -rf dist
+
       # Build Backend
       - name: Install Backend dependencies
         working-directory: ./backend
@@ -46,6 +56,12 @@ jobs:
       - name: Build Backend project
         working-directory: ./backend
         run: npm run build
+
+      # Verify that dist folders exist
+      - name: Verify dist folders
+        run: |
+          ls -l frontend/dist
+          ls -l backend/dist
 
       # Empacotar apenas os arquivos necessários
       - name: Zip backend and frontend built files
@@ -59,12 +75,16 @@ jobs:
             frontend/dist \
             docker-compose.yml \
             appspec.yml \
-            database/ \
+            database/json/*.json \
             scripts/ \
             assets/ \
             -x '*.git*' \
             -x '*node_modules/*' \
             -x '*.github/*'
+
+      # List contents of application.zip
+      - name: List contents of application.zip
+        run: unzip -l application.zip
 
       # Upload para S3
       - name: Upload to S3
