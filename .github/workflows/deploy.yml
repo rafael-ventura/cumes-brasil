@@ -53,6 +53,9 @@ jobs:
           zip -r application.zip \
             backend/package*.json \
             backend/dist \
+            backend/Dockerfile \
+            frontend/package*.json \
+            frontend/Dockerfile \
             frontend/dist \
             docker-compose.yml \
             appspec.yml \
