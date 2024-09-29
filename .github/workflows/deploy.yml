@@ -59,6 +59,7 @@ jobs:
             frontend/dist \
             docker-compose.yml \
             appspec.yml \
+            database/ \
             scripts/ \
             assets/ \
             -x '*.git*' \
