@@ -1,30 +1,21 @@
-import { AppDataSource } from '../config/db';
-import { Fonte } from '../../Domain/entities/Fonte';
-import { Montanha } from '../../Domain/entities/Montanha';
-import { Face } from '../../Domain/entities/Face';
-import { Via } from '../../Domain/entities/Via';
-import { Croqui } from '../../Domain/entities/Croqui';
-import { Imagem } from '../../Domain/entities/Imagem';
-import { Usuario } from '../../Domain/entities/Usuario';
-
-import path from 'path';
+import { AppDataSource } from '../../backend/src/Infrastructure/config/db';
+import { Fonte } from '../../backend/src/Domain/entities/Fonte';
+import { Montanha } from '../../backend/src/Domain/entities/Montanha';
+import { Face } from '../../backend/src/Domain/entities/Face';
+import { Via } from '../../backend/src/Domain/entities/Via';
+import { Croqui } from '../../backend/src/Domain/entities/Croqui';
+import { Imagem } from '../../backend/src/Domain/entities/Imagem';
+import { Usuario } from '../../backend/src/Domain/entities/Usuario';
 import fs from 'fs';
 
-// Função para carregar os dados dos arquivos JSON
-function loadJson(filePath: string) {
-  const absolutePath = path.resolve(process.cwd(), 'database/json', filePath);
-  return JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
-}
-
-const viasJson = loadJson('vias.json');
-const croquisJson = loadJson('croquis.json');
-const facesJson = loadJson('faces.json');
-const montanhasJson = loadJson('montanhas.json');
-const fontesJson = loadJson('fontes.json');
-const imagensJson = loadJson('imagens.json');
-const usuariosJson = loadJson('usuarios.json');
-const viasCroquisJson = loadJson('via_croquis.json');
-
+const viasJson = JSON.parse(fs.readFileSync('vias.json', 'utf8'));
+const croquisJson = JSON.parse(fs.readFileSync('croquis.json', 'utf8'));
+const facesJson = JSON.parse(fs.readFileSync('faces.json', 'utf8'));
+const montanhasJson = JSON.parse(fs.readFileSync('montanhas.json', 'utf8'));
+const fontesJson = JSON.parse(fs.readFileSync('fontes.json', 'utf8'));
+const imagensJson = JSON.parse(fs.readFileSync('imagens.json', 'utf8'));
+const usuariosJson = JSON.parse(fs.readFileSync('usuarios.json', 'utf8'));
+const viasCroquisJson = JSON.parse(fs.readFileSync('vias_croquis.json', 'utf8'));
 export async function loadData() {
   const queryRunner = AppDataSource.createQueryRunner();
 

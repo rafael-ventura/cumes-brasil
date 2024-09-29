@@ -2,7 +2,7 @@ import express from 'express';
 import routes from './routes/routes';
 import 'reflect-metadata';
 import { AppDataSource } from '../Infrastructure/config/db';
-import { loadData } from '../Infrastructure/sql_scripts/initialLoad';
+import { loadData } from '../../../database/json/initialLoad';
 import { Via } from '../Domain/entities/Via';
 import path from 'path';
 import { initializeEnvConfig } from '../Infrastructure/config/envinronment';
@@ -69,12 +69,12 @@ AppDataSource.initialize()
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("The server is running in", process.env.NODE_ENV, "mode");
-  console.log("Variáveis de ambiente carregadas:");
-  console.log("DB_HOST:", process.env.DB_HOST);
-  console.log("DB_USERNAME:", process.env.DB_USERNAME);
-  console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-  console.log("DB_NAME:", process.env.DB_NAME);
-  console.log("DB_PORT:", process.env.DB_PORT);
+    console.log("Variáveis de ambiente carregadas:");
+    console.log("DB_HOST:", process.env.DB_HOST);
+    console.log("DB_USERNAME:", process.env.DB_USERNAME);
+    console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+    console.log("DB_NAME:", process.env.DB_NAME);
+    console.log("DB_PORT:", process.env.DB_PORT);
 
   console.log("The CORS origin is", corsOptions.origin);
     console.log(process.cwd());
