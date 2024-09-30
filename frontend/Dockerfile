@@ -1,11 +1,17 @@
-# Usar Nginx como servidor
-FROM nginx:alpine
+# Usar a imagem base mínima do Node.js
+FROM node:20-alpine
 
-# Copiar os arquivos construídos para o Nginx
-COPY frontend/dist /usr/share/nginx/html
+# Definir diretório de trabalho
+WORKDIR /usr/src/app
 
-# Expor a porta do front-end
-EXPOSE 80
+# Copiar apenas a pasta `dist` gerada pelo build do frontend na EC2
+COPY frontend/dist ./dist
 
-# Comando para iniciar o Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Instalar o pacote 'serve' globalmente
+RUN npm install -g serve
+
+# Expor a porta que o servidor usará
+EXPOSE 3000
+
+# Comando para iniciar o servidor estático
+CMD ["serve", "-s", "dist", "-l", "3000"]

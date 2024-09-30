@@ -29,6 +29,24 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # Clean Frontend dist folder
+      - name: Clean Frontend dist folder
+        working-directory: ./frontend
+        run: rm -rf dist
+
+      # Build Frontend
+      - name: Install Frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Frontend project
+        working-directory: ./frontend
+        run: npm run build
+
+      # Clean Backend dist folder
+      - name: Clean Backend dist folder
+        working-directory: ./backend
+        run: rm -rf dist
       # Build Backend
       - name: Install Backend dependencies
         working-directory: ./backend
