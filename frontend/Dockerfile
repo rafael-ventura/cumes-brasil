@@ -17,4 +17,4 @@ COPY frontend/dist ./dist
 EXPOSE 3000
 
 # Comando para iniciar o servidor estático
-CMD ["npx", "serve", "-s", "dist", "-l", "3000"]
+CMD ["npx", "serve", "-s", "dist/pwa", "-l", "3000"]
