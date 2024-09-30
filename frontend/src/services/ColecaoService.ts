@@ -2,7 +2,7 @@ import { api } from 'boot/axios';
 import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
 import { RouteParamValue } from 'vue-router';
-import { adjustImageUrl } from 'src/services/ImagemService';
+import { getFullImageUrl } from 'src/services/ImagemService';
 import { formatVia, romanToInt } from 'src/utils/utils';
 import { UnwrapRef } from 'vue';
 
@@ -15,7 +15,7 @@ class ColecaoService {
 
       for (const colecao of colecoes) {
         if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
+          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
         }
       }
       return colecoes;
@@ -57,7 +57,7 @@ class ColecaoService {
       const colecao = response.data;
 
       if (colecao.imagem?.url) {
-        colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
+        colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
       }
 
       return colecao;
@@ -114,7 +114,7 @@ class ColecaoService {
 
       for (const colecao of colecoes) {
         if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
+          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
         }
       }
 
@@ -131,7 +131,7 @@ class ColecaoService {
 
       for (const colecao of colecoes) {
         if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
+          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
         }
       }
 

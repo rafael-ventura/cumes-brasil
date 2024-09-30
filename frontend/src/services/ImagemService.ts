@@ -1,8 +1,4 @@
-const serverIp = import.meta.env.VITE_APP_SERVER_IP;
-
-export function adjustImageUrl (url: string): string {
-  if (url) {
-    return `${serverIp}/assets${url.split('/assets').pop()}`;
-  }
-  return url;
+export function getFullImageUrl (relativeUrl: string): string {
+  const serverIp = import.meta.env.VITE_APP_SERVER_IP || 'http://localhost:8080';
+  return `${serverIp}${relativeUrl}`;
 }

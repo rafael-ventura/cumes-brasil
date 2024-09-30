@@ -1,6 +1,6 @@
 import { api } from 'boot/axios';
 import { Croqui } from 'src/models/Croqui';
-import { adjustImageUrl } from 'src/services/ImagemService';
+import { getFullImageUrl } from 'src/services/ImagemService';
 
 export class CroquiService {
   async getCroquiById (id: number | string): Promise<Croqui> {
@@ -9,7 +9,7 @@ export class CroquiService {
       const croqui = response.data as Croqui;
 
       if (croqui.imagem?.url) {
-        croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
+        croqui.imagem.url = getFullImageUrl(croqui.imagem.url);
       }
       return croqui;
     } catch (error: any) {
@@ -24,7 +24,7 @@ export class CroquiService {
 
       for (const croqui of croquis) {
         if (croqui.imagem?.url) {
-          croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
+          croqui.imagem.url = getFullImageUrl(croqui.imagem.url);
         }
       }
       return croquis;
@@ -40,7 +40,7 @@ export class CroquiService {
 
       for (const croqui of croquis) {
         if (croqui.imagem?.url) {
-          croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
+          croqui.imagem.url = getFullImageUrl(croqui.imagem.url);
         }
       }
       return croquis;

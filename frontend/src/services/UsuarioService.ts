@@ -2,7 +2,7 @@
 
 import { api } from 'boot/axios';
 import { Usuario } from 'src/models/Usuario';
-import { adjustImageUrl } from 'src/services/ImagemService';
+import { getFullImageUrl } from 'src/services/ImagemService';
 
 class UsuarioService {
   async getById (id: number) {
@@ -45,7 +45,7 @@ class UsuarioService {
       const response = await api.get('/perfil');
       const usuario = response.data as Usuario;
       if (usuario.foto_perfil?.url) {
-        usuario.foto_perfil.url = adjustImageUrl(usuario.foto_perfil.url);
+        usuario.foto_perfil.url = getFullImageUrl(usuario.foto_perfil.url);
       }
       return usuario;
     } catch (error: any) {

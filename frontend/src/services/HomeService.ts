@@ -1,7 +1,7 @@
 // src/services/HomeService.ts
 import ViaService from './ViaService';
 import { Via } from 'src/models/Via';
-import { adjustImageUrl } from 'src/services/ImagemService';
+import { getFullImageUrl } from 'src/services/ImagemService';
 
 class HomeService {
   async getViasNaUrca (): Promise<Via[]> {
@@ -9,7 +9,7 @@ class HomeService {
 
     for (const via of vias) {
       if (via.imagem?.url) {
-        via.imagem.url = adjustImageUrl(via.imagem.url);
+        via.imagem.url = getFullImageUrl(via.imagem.url);
       }
     }
     return vias.filter((via: Via) => via.montanha?.bairro?.toLowerCase() === 'leme');
@@ -20,7 +20,7 @@ class HomeService {
 
     for (const via of vias) {
       if (via.imagem?.url) {
-        via.imagem.url = adjustImageUrl(via.imagem.url);
+        via.imagem.url = getFullImageUrl(via.imagem.url);
       }
     }
 
@@ -42,7 +42,7 @@ class HomeService {
 
     for (const via of vias) {
       if (via.imagem?.url) {
-        via.imagem.url = adjustImageUrl(via.imagem.url);
+        via.imagem.url = getFullImageUrl(via.imagem.url);
       }
     }
     return vias.filter((via: Via) => via.exposicao?.toLowerCase() === 'e2' || via.exposicao?.toLowerCase() === 'e1');
