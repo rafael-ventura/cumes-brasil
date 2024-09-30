@@ -73,6 +73,7 @@ jobs:
             frontend/package*.json \
             frontend/Dockerfile \
             frontend/dist \
+            frontend/src \
             docker-compose.yml \
             appspec.yml \
             database/json/*.json \
