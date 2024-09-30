@@ -3,6 +3,8 @@ import axios from 'axios';
 
 const api = axios.create({ baseURL: import.meta.env.VITE_APP_API_URL });
 
+console.log('Axios boot file loaded with baseURL:', api.defaults.baseURL);
+
 api.interceptors.response.use(
   response => response,
   error => {

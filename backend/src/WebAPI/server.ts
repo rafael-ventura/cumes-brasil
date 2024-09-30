@@ -33,7 +33,8 @@ const corsOptions = {
     }
 };
 
-app.use(cors(corsOptions));
+app.use(cors()); // Permite todas as origens
+
 app.use(express.json());
 
 // Servir arquivos estáticos da pasta assets
