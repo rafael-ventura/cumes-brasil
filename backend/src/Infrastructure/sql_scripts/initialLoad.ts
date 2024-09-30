@@ -8,9 +8,10 @@ import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
 import fs from 'fs';
 
-// Função auxiliar para carregar um arquivo JSON diretamente a partir do mesmo diretório
+// Função auxiliar para carregar um arquivo JSON a partir do diretório correto
 function loadJson(filename: string) {
-  return JSON.parse(fs.readFileSync(filename, 'utf8'));
+  const filePath = `../Infrastructure/sql_scripts/${filename}`;
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 // Carregar os dados dos arquivos JSON
