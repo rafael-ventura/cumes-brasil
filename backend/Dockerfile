@@ -11,9 +11,6 @@ RUN npm install --only=production
 # Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
 COPY backend/dist ./dist
 
-# Copiar os arquivos JSON da pasta 'dist/Infrastructure/sql_scripts'
-COPY backend/dist/Infrastructure/sql_scripts/*.json ./dist/Infrastructure/sql_scripts/
-
 # Copiar a pasta 'assets' da raiz do projeto para dentro de 'dist/assets'
 COPY assets ./dist/assets
 
