@@ -41,6 +41,9 @@ jobs:
 
       - name: Build Frontend project
         working-directory: ./frontend
+        env:
+          VITE_APP_API_URL: "http://54.236.242.52:8080/api/"
+          VITE_APP_SERVER_IP: "http://54.236.242.52:8080/"
         run: npm run build
 
       # Clean Backend dist folder

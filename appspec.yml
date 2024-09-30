@@ -16,9 +16,6 @@ hooks:
       timeout: 400
       runas: ec2-user
   ApplicationStart:
-    - location: scripts/build_frontend.sh
-      timeout: 700
-      runas: ec2-user
     - location: scripts/start_services.sh
       timeout: 1000
       runas: ec2-user
