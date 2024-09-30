@@ -13,7 +13,7 @@ RUN npm install --only=production
 # Copiar os arquivos construídos para o diretório atual
 COPY frontend/dist ./dist
 
-# Expor a porta que o 'serve' usará
+# Expor a porta que o servidor usará
 EXPOSE 3000
 
 # Comando para iniciar o servidor estático
