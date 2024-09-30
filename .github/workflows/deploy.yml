@@ -70,10 +70,7 @@ jobs:
             backend/package*.json \
             backend/dist \
             backend/Dockerfile \
-            frontend/package*.json \
-            frontend/Dockerfile \
-            frontend/dist \
-            frontend/src \
+            frontend/ \
             docker-compose.yml \
             appspec.yml \
             database/json/*.json \
