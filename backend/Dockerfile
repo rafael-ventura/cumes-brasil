@@ -5,13 +5,13 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 
 # Copiar package.json e instalar dependências de produção
-COPY backend/package*.json ./
+COPY package*.json ./
 RUN npm install --production
 
-# Copiar a pasta 'dist' já construída
+# Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
 COPY backend/dist ./dist
 
-# Copiar a pasta 'assets' para dentro de 'dist/assets'
+# Copiar a pasta 'assets' da raiz do projeto para dentro de 'dist/assets'
 COPY assets ./dist/assets
 
 # Copiar os arquivos JSON para o local correto dentro do contêiner
