@@ -1,1 +1,0 @@
-import{v as c,x as e,y as r,A as t,Q as n}from"./index.6959b9b0.js";const u=c({__name:"BotaoVoltar",setup(s){const o=t(),a=()=>{o.back()};return(_,k)=>(e(),r(n,{round:"",icon:"arrow_back",size:"1.1rem",class:"btn-back",onClick:a}))}});export{u as _};
