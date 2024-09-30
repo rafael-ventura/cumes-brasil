@@ -1,20 +1,11 @@
-# Usar a imagem base mínima do Node.js
-FROM node:20-alpine
+# Usar Nginx como servidor
+FROM nginx:alpine
 
-# Definir diretório de trabalho
-WORKDIR /usr/src/app
+# Copiar os arquivos construídos para o Nginx
+COPY frontend/dist /usr/share/nginx/html
 
-# Copiar o package.json e package-lock.json
-COPY frontend/package*.json ./
+# Expor a porta do front-end
+EXPOSE 80
 
-# Instalar apenas as dependências de produção
-RUN npm install --only=production
-
-# Copiar os arquivos construídos para o diretório atual
-COPY frontend/dist ./dist
-
-# Expor a porta que o servidor usará
-EXPOSE 3000
-
-# Comando para iniciar o servidor estático
-CMD ["npx", "serve", "-s", "dist/pwa", "-l", "3000"]
+# Comando para iniciar o Nginx
+CMD ["nginx", "-g", "daemon off;"]
