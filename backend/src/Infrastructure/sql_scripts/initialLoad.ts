@@ -7,10 +7,11 @@ import { Croqui } from '../../Domain/entities/Croqui';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
 import fs from 'fs';
+import path from 'path';
 
 // Função auxiliar para carregar um arquivo JSON a partir do diretório correto
 function loadJson(filename: string) {
-  const filePath = `../Infrastructure/sql_scripts/${filename}`;
+  const filePath = path.join(__dirname, filename);
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 

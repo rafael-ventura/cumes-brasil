@@ -14,6 +14,9 @@ COPY backend/dist ./dist
 # Copiar a pasta 'assets' para dentro de 'dist/assets'
 COPY assets ./dist/assets
 
+# Copiar os arquivos JSON para o local correto dentro do contêiner
+COPY backend/src/Infrastructure/sql_scripts/*.json ./dist/Infrastructure/sql_scripts/
+
 # Expor a porta do back-end
 EXPOSE 8080
 
