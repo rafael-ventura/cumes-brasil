@@ -6,13 +6,11 @@ import { Via } from '../../Domain/entities/Via';
 import { Croqui } from '../../Domain/entities/Croqui';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Usuario } from '../../Domain/entities/Usuario';
-import path from 'path';
 import fs from 'fs';
 
-// Função auxiliar para carregar um arquivo JSON a partir do mesmo diretório
-function loadJson (filename: string) {
-  const filePath = path.join(__dirname, filename);
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+// Função auxiliar para carregar um arquivo JSON diretamente a partir do mesmo diretório
+function loadJson(filename: string) {
+  return JSON.parse(fs.readFileSync(filename, 'utf8'));
 }
 
 // Carregar os dados dos arquivos JSON
