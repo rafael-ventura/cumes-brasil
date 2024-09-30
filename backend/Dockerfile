@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # Copiar package.json e instalar dependências de produção
 COPY package*.json ./
-RUN npm install --production
+RUN npm install --only=production
 
 # Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
 COPY backend/dist ./dist
