@@ -14,11 +14,10 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
-    'http://localhost:8080',
-    "http://localhost:9000",
-    'http://localhost:9200',
-    'http://192.168.1.147:8080',
-    "http://192.168.1.147:9000"
+  'http://localhost:8080',
+  'http://localhost:9000',
+  'http://localhost:9200',
+  'http://54.236.242.52'
 ];
 
 const corsOptions = {
