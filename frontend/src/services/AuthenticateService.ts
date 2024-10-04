@@ -1,4 +1,5 @@
 import { api } from 'boot/axios';
+import { handleApiError } from 'src/utils/utils';
 
 class AuthenticateService {
   async login (email: string, password: string) {
@@ -7,14 +8,10 @@ class AuthenticateService {
         email,
         password
       });
-      // Salvar token de autenticação, se houver
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token.token);
-        localStorage.setItem('userId', response.data.token.userId);
-      }
+      this.saveToken(response.data.token);
       return response;
     } catch (error) {
-      throw new Error('Erro ao fazer login: ' + error);
+      handleApiError(error, 'Erro ao fazer login');
     }
   }
 
@@ -22,13 +19,10 @@ class AuthenticateService {
   async authenticateWithGoogle (googleTokenId: string) {
     try {
       const response = await api.post('/auth/google-login', { token: googleTokenId });
-      // Salvar token de autenticação, se houver
-      if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
-      }
+      this.saveToken(response.data.token);
       return response;
     } catch (error) {
-      throw new Error('Erro ao autenticar com o Google: ' + error);
+      handleApiError(error, 'Erro ao fazer login com Google');
     }
   }
 
@@ -40,7 +34,7 @@ class AuthenticateService {
         senha
       });
     } catch (error) {
-      throw new Error('Erro ao fazer cadastro: ' + error);
+      handleApiError(error, 'Erro ao criar usuário');
     }
   }
 
@@ -48,13 +42,27 @@ class AuthenticateService {
     try {
       return await api.post('/auth/reset-password', { email });
     } catch (error) {
-      throw new Error('Erro ao redefinir senha: ' + error);
+      handleApiError(error, 'Erro ao resetar senha');
     }
   }
 
-  isAuthenticated () {
+  isAuthenticated (): boolean {
     const token = localStorage.getItem('authToken');
     return !!token;
+  }
+
+  logout (): void {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+  }
+
+  private saveToken (token: { token: string; userId: string } | string): void {
+    if (typeof token === 'string') {
+      localStorage.setItem('authToken', token);
+    } else {
+      localStorage.setItem('authToken', token.token);
+      localStorage.setItem('userId', token.userId);
+    }
   }
 }
 

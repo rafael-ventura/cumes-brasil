@@ -10,12 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted, defineExpose } from 'vue';
+import { defineEmits, defineExpose, defineProps, onMounted, ref } from 'vue';
 import searchService from 'src/services/SearchService';
 import { SearchRequest } from 'src/models/SearchRequest';
 import SearchResults from 'components/Busca/SearchResults.vue';
 import { formatVia } from 'src/utils/utils';
 import { Via } from 'src/models/Via';
+import ImagemService from 'src/services/ImagemService';
 
 const props = defineProps<{
   entity: 'via' | 'colecao';
@@ -47,10 +48,12 @@ const searchEntities = async () => {
       entityType: props.entity
     };
     const searchResult = await searchService.search(searchRequest);
-
-    // Formatar as entidades do tipo Via
     if (props.entity === 'via') {
-      searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
+      searchResult.items = searchResult.items.map((item: any) => {
+        const via = formatVia(item as Via);
+        via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        return via;
+      });
     }
 
     results.value = searchResult.items;

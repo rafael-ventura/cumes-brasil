@@ -21,7 +21,7 @@
     <div class="row q-col-gutter-none">
       <!-- Bloco Imagem da Via -->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4">
-        <CardImagemVia :src="via?.imagem?.url" :alt="via?.nome" />
+        <CardImagemVia :src="via?.imagem.url!" :alt="via?.nome" />
       </div>
 
       <!-- Bloco Duração e Extensão -->
