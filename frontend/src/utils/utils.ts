@@ -1,4 +1,3 @@
-import { getFullImageUrl } from 'src/services/ImagemService';
 import { Via } from 'src/models/Via';
 
 export function romanToInt (roman: string): number {
@@ -60,18 +59,6 @@ export function intToRoman (num: number): string {
 type ViaKey = keyof Via;
 
 export function formatVia (via: Via): Via {
-  // Ajustar URL da imagem da via
-  if (via.imagem?.url) {
-    via.imagem.url = getFullImageUrl(via.imagem.url);
-  }
-
-  // Ajustar URLs das imagens de croqui
-  via.croquis?.forEach(croqui => {
-    if (croqui.imagem?.url) {
-      croqui.imagem.url = getFullImageUrl(croqui.imagem.url);
-    }
-  });
-
   // Mascarar data
   if (via.data) {
     via.data = new Date(via.data).toLocaleDateString('pt-BR');

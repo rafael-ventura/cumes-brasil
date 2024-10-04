@@ -21,7 +21,7 @@
     <div class="row q-col-gutter-none">
       <!-- Bloco Imagem da Via -->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 col-xl-4">
-        <CardImagemVia :src="via?.imagem?.url || getFullImageUrl('/assets/default-via.jpg')" />
+        <CardImagemVia :src="via?.imagem?.url" :alt="via?.nome" />
       </div>
 
       <!-- Bloco Duração e Extensão -->
@@ -188,7 +188,6 @@ import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import CardImagemVia from 'components/Via/CardImagemVia.vue';
 import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
-import { getFullImageUrl } from 'src/services/ImagemService';
 import AuthenticateService from 'src/services/AuthenticateService';
 
 const route = useRoute();

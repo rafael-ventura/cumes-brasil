@@ -12,6 +12,7 @@ class ViaService {
       const via = response.data as Via;
       const croquiService = new CroquiService();
       via.croquis = await croquiService.getCroquiByViaId(via.id);
+      console.log('via', via);
       return formatVia(via);
     } catch (error: any) {
       throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar via');

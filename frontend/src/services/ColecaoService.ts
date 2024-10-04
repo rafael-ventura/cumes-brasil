@@ -2,7 +2,6 @@ import { api } from 'boot/axios';
 import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
 import { RouteParamValue } from 'vue-router';
-import { getFullImageUrl } from 'src/services/ImagemService';
 import { formatVia, romanToInt } from 'src/utils/utils';
 import { UnwrapRef } from 'vue';
 
@@ -11,14 +10,7 @@ class ColecaoService {
     const userId = localStorage.getItem('userId');
     try {
       const response = await api.get(`/colecoes/usuario/${userId}`);
-      const colecoes = response.data;
-
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
-        }
-      }
-      return colecoes;
+      return response.data;
     } catch (error: any) {
       throw new Error('Erro ao buscar coleções: ' + error.message);
     }
@@ -54,13 +46,7 @@ class ColecaoService {
   async getById (id: string | RouteParamValue[]): Promise<Colecao> {
     try {
       const response = await api.get(`/colecoes/${id}`);
-      const colecao = response.data;
-
-      if (colecao.imagem?.url) {
-        colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
-      }
-
-      return colecao;
+      return response.data;
     } catch (error: any) {
       throw new Error('Erro ao buscar detalhes da coleção: ' + error.message);
     }
@@ -110,15 +96,7 @@ class ColecaoService {
   async searchByName (query: string): Promise<Colecao[]> {
     try {
       const response = await api.get('/colecoes/search', { params: { name: query } });
-      const colecoes = response.data;
-
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
-        }
-      }
-
-      return colecoes;
+      return response.data;
     } catch (error: any) {
       throw new Error('Erro ao buscar coleções: ' + error.message);
     }
@@ -127,15 +105,7 @@ class ColecaoService {
   async search (filters: any): Promise<Colecao[]> {
     try {
       const response = await api.get('/colecoes/search', { params: filters });
-      const colecoes = response.data;
-
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = getFullImageUrl(colecao.imagem.url);
-        }
-      }
-
-      return colecoes;
+      return response.data;
     } catch (error: any) {
       throw new Error('Erro ao buscar coleções: ' + error.message);
     }

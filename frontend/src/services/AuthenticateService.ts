@@ -18,6 +18,7 @@ class AuthenticateService {
     }
   }
 
+  // TODO: Implementar autenticação com Google
   async authenticateWithGoogle (googleTokenId: string) {
     try {
       const response = await api.post('/auth/google-login', { token: googleTokenId });

@@ -14,6 +14,7 @@ import { initializeEnvConfig } from './envinronment';
 initializeEnvConfig();
 
 export const AppDataSource = new DataSource({
+    schema: 'public',
     type: 'postgres',
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
