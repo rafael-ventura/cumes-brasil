@@ -1,64 +1,88 @@
-// src/services/UsuarioService.ts
-
 import { api } from 'boot/axios';
 import { Usuario } from 'src/models/Usuario';
-import { getFullImageUrl } from 'src/services/ImagemService';
+import { adjustImageUrls, handleApiError } from 'src/utils/utils';
 
 class UsuarioService {
-  async getById (id: number) {
+  async getById (id: number): Promise<Usuario> {
     try {
       const response = await api.get(`/usuarios/${id}`);
-      return response.data as Usuario;
+      const usuario = response.data as Usuario;
+
+      // Ajustando URL da imagem do perfil do usuário
+      if (usuario.foto_perfil) {
+        adjustImageUrls({ imagem: usuario.foto_perfil });
+      }
+
+      return usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar usuário');
+      handleApiError(error, 'Erro ao buscar usuário');
     }
   }
 
-  async getAll () {
+  async getAll (): Promise<Usuario[]> {
     try {
       const response = await api.get('/usuarios');
-      return response.data as Usuario[];
+      const usuarios = response.data as Usuario[];
+
+      // Ajustando URLs das imagens dos usuários
+      usuarios.forEach(usuario => {
+        if (usuario.foto_perfil) {
+          adjustImageUrls({ imagem: usuario.foto_perfil });
+        }
+      });
+
+      return usuarios;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar usuários');
+      handleApiError(error, 'Erro ao buscar usuários');
     }
   }
 
-  async create (nome: string, email: string, password: string) {
+  async create (nome: string, email: string, password: string): Promise<Usuario> {
     try {
       const response = await api.post('/auth/register', {
         nome,
         email,
         password
       });
-      return response.data as Usuario;
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        throw new Error(error.response.data.error);
-      } else {
-        throw new Error('Erro desconhecido ao criar usuário');
+      const usuario = response.data as Usuario;
+
+      if (usuario.foto_perfil) {
+        adjustImageUrls({ imagem: usuario.foto_perfil });
       }
+
+      return usuario;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao criar usuário');
     }
   }
 
-  async getPerfil () {
+  async getPerfil (): Promise<Usuario> {
     try {
       const response = await api.get('/perfil');
       const usuario = response.data as Usuario;
-      if (usuario.foto_perfil?.url) {
-        usuario.foto_perfil.url = getFullImageUrl(usuario.foto_perfil.url);
+
+      if (usuario.foto_perfil) {
+        adjustImageUrls({ imagem: usuario.foto_perfil });
       }
+
       return usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar perfil');
+      handleApiError(error, 'Erro ao buscar perfil');
     }
   }
 
   async update (id: number, updatedUser: Partial<Usuario>): Promise<Usuario> {
     try {
       const response = await api.put(`/usuarios/${id}`, updatedUser);
-      return response.data as Usuario;
+      const usuario = response.data as Usuario;
+
+      if (usuario.foto_perfil) {
+        adjustImageUrls({ imagem: usuario.foto_perfil });
+      }
+
+      return usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao atualizar usuário');
+      handleApiError(error, 'Erro ao atualizar usuário');
     }
   }
 
@@ -76,7 +100,7 @@ class UsuarioService {
       const response = await api.put('/perfil', usuario);
       return response.data as Usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao editar dados');
+      handleApiError(error, 'Erro ao atualizar dados');
     }
   }
 
@@ -85,11 +109,11 @@ class UsuarioService {
       const response = await api.put('/perfil', { biografia });
       return response.data as Usuario;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao editar biografia');
+      handleApiError(error, 'Erro ao atualizar biografia');
     }
   }
 
-  logout () {
+  logout (): void {
     localStorage.removeItem('authToken');
   }
 }

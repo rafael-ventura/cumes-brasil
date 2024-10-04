@@ -1,6 +1,8 @@
 // src/models/SearchResult.ts
-export interface SearchResult<T> {
-  items: T[];
+import { Via } from 'src/models/Via';
+
+export interface SearchResult {
+  items: Via[];
   totalPages: number;
   totalItems: number;
   currentPage: number;

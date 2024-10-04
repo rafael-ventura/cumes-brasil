@@ -8,10 +8,10 @@
       <div class="row q-gutter-md justify-center">
         <div class="col-12 col-md-6 col-lg-4">
           <q-card class="hover-card" @click="goToFilteredSearch('leme')">
-            <q-img :src="urcaImage" alt="Vias na Urca">
+            <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias na Urca</div>
-                <div class="text-caption">{{ urcaVias.length }} vias encontradas</div>
+                <div class="text-h6">Vias em Copacabana</div>
+                <div class="text-caption">{{ copacabanaVias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
@@ -44,43 +44,42 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
-import { getFullImageUrl } from 'src/services/ImagemService';
 import { Via } from 'src/models/Via';
 
-const urcaVias = ref<Via[]>([]);
+const copacabanaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
 const exposicaoE2Vias = ref<Via[]>([]);
-const urcaImage = ref<string>(getFullImageUrl('/assets/montanha-default-01.jpg'));
-const terceiroGrauImage = ref<string>(getFullImageUrl('/assets/via-default-01.jpg'));
-const exposicaoE2Image = ref<string>(getFullImageUrl('/assets/via-default-02.jpg'));
+const copacabanaImage = ref<string>('assets/via-default-01.jpg');
+const terceiroGrauImage = ref<string>(('/assets/via-default-01.jpg'));
+const exposicaoE2Image = ref<string>(('/assets/via-default-02.jpg'));
 
 defineOptions({
   name: 'HomePage'
 });
 
 onMounted(async () => {
-  urcaVias.value = await HomeService.getViasNaUrca();
-  console.log('urcaVias', urcaVias.value);
+  copacabanaVias.value = await HomeService.getViasEmCopa();
+  console.log('copacabanaVias', copacabanaVias.value);
   terceiroGrauVias.value = await HomeService.getViasDeTerceiroGrau();
   console.log('terceiroGrauVias', terceiroGrauVias.value);
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
   console.log('exposicaoE2Vias', exposicaoE2Vias.value);
 
-  if (urcaVias.value.length > 0 && urcaVias.value[0].imagem?.url) {
-    urcaImage.value = getFullImageUrl(urcaVias.value[0].imagem.url);
+  if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
+    copacabanaImage.value = copacabanaVias.value[0].imagem.url;
   }
 
   if (terceiroGrauVias.value.length > 0 && terceiroGrauVias.value[0].imagem?.url) {
-    terceiroGrauImage.value = getFullImageUrl(terceiroGrauVias.value[0].imagem.url);
+    terceiroGrauImage.value = terceiroGrauVias.value[0].imagem.url;
   }
 
   if (exposicaoE2Vias.value.length > 0 && exposicaoE2Vias.value[0].imagem?.url) {
-    exposicaoE2Image.value = getFullImageUrl(exposicaoE2Vias.value[0].imagem.url);
+    exposicaoE2Image.value = exposicaoE2Vias.value[0].imagem.url;
   }
 });
 
 function goToFilteredSearch (filter: string) {
-  // Implementar navegação ou outra lógica aqui se necessário
+  // TODO: Filter search do @Vitor
   console.log(`Navigate to: ${filter}`);
 }
 </script>

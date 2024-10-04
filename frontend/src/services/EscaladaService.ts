@@ -1,14 +1,13 @@
 import { api } from 'boot/axios';
 import { Escalada } from 'src/models/Escalada';
+import { handleApiError } from 'src/utils/utils';
 
 class EscaladaService {
-  async createEscalada (escalada: Escalada) {
+  async createEscalada (escalada: Escalada): Promise<void> {
     try {
       await api.post('/escaladas/', escalada);
-      return true;
     } catch (error: any) {
-      console.error(error.message);
-      throw new Error(error.message);
+      handleApiError(error, 'Erro ao criar escalada');
     }
   }
 }

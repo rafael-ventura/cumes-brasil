@@ -1,5 +1,5 @@
-import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
-import { Via } from "../../Domain/entities/Via";
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { Via } from '../../Domain/entities/Via';
 
 export class ViaService {
   private viaRepo: ViaRepository;
