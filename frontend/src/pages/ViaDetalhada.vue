@@ -158,23 +158,24 @@
     <!-- Modal para registrar uma nova escalada dessa via -->
     <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
 
-    <!-- Modal para adicionar via a coleções -->
     <q-dialog v-model="showAddToCollectionModal">
-      <q-card>
+      <q-card style="min-width: 400px;">
         <q-card-section>
           <div class="text-h6">Adicionar Via a uma Coleção</div>
         </q-card-section>
-
         <q-card-section>
-          <!-- Conteúdo do modal, como uma lista de coleções -->
+          <ItemSugestao
+            :items="colecoes"
+            itemType="colecao"
+            @add-item="addToCollection"
+          />
         </q-card-section>
-
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" v-close-popup />
-          <q-btn flat label="Adicionar" color="primary" @click="addToCollection" />
         </q-card-actions>
       </q-card>
     </q-dialog>
+
   </q-page>
 </template>
 
@@ -189,10 +190,14 @@ import CardImagemVia from 'components/Via/CardImagemVia.vue';
 import { Via } from 'src/models/Via';
 import CarrosselCroquis from 'components/Croquis/CarrosselCroquis.vue';
 import AuthenticateService from 'src/services/AuthenticateService';
+import ColecaoService from 'src/services/ColecaoService';
+import { Colecao } from 'src/models/Colecao';
+import ItemSugestao from 'components/ItemSugestao.vue';
 
 const route = useRoute();
 const router = useRouter();
 const via = ref<Via>();
+const colecoes = ref<Colecao[]>([]);
 const showForm = ref(false);
 const showAddToCollectionModal = ref(false);
 
@@ -208,6 +213,17 @@ onMounted(async () => {
     console.error('Erro ao buscar detalhes da via:', error);
   }
 });
+
+const loadColecoesNotContainingVia = async () => {
+  if (via.value) {
+    try {
+      const result = await ColecaoService.getCollecoesNotContainingVia(via.value.id, 1, 10);
+      colecoes.value = result.colecoes;
+    } catch (error) {
+      console.error('Erro ao buscar coleções:', error);
+    }
+  }
+};
 
 const toggleForm = () => {
   showForm.value = !showForm.value;
@@ -238,14 +254,37 @@ const addToFavorites = async () => {
   }
 };
 
-const openAddToCollectionModal = () => {
+const openAddToCollectionModal = async () => {
   showAddToCollectionModal.value = true;
+  await loadColecoesNotContainingVia();
 };
 
-const addToCollection = () => {
-  // Lógica para adicionar a coleção
-  console.log('Adicionar a coleção');
+const addToCollection = async (colecao: Colecao) => {
+  try {
+    if (via.value) {
+      await ColecaoService.addViaToColecao(colecao.id, via.value.id);
+      Notify.create({
+        type: 'positive',
+        message: 'Via adicionada à coleção com sucesso!',
+        position: 'top-right',
+        timeout: 3000
+      });
+      // Marcar como adicionada
+      colecoes.value = colecoes.value.map(c => {
+        if (c.id === colecao.id) {
+          return {
+            ...c,
+            added: true
+          };
+        }
+        return c;
+      });
+    }
+  } catch (error) {
+    console.error('Erro ao adicionar a coleção:', error);
+  }
 };
+
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
-import { Participante } from "../../entities/Participante";
-import { ParticipanteTipo } from "../enum/EParticipanteTipo";
+import { Participante } from "../../Domain/entities/Participante";
+import { ParticipanteTipo } from "../../Domain/enum/EParticipanteTipo";
 
 const PARTICIPANTE_INVALIDO_MESSAGE_ERROR = "Valor de participante inválido";
 

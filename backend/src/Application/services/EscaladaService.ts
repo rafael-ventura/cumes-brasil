@@ -1,5 +1,5 @@
 import { Escalada } from "../../Domain/entities/Escalada";
-import EscaladaValidation from "../../Domain/interfaces/validations/EscaladaValidation";
+import EscaladaValidation from "../validations/EscaladaValidation";
 import { EscaladaRepository } from "../../Infrastructure/repositories/EscaladaRepository";
 import { UsuarioService } from "./UsuarioService";
 import { ViaService } from "./ViaService";

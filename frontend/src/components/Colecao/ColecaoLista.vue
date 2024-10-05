@@ -29,14 +29,20 @@ import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
 
 const route = useRoute();
-const colecao = ref<Colecao>(await ColecaoService.getById(route.params.id));
+const colecao = ref<Colecao>(await ColecaoService.getById(Number(route.params.id)));
 const vias = ref<Via[]>([]);
 const isModalOpen = ref(false);
 const selectedVia = ref<Via | null>(null);
 
 onMounted(async () => {
   try {
-    const colecaoId = route.params.id;
+    const colecaoId = Number(route.params.id);
+
+    if (isNaN(colecaoId)) {
+      console.error('Invalid colecaoId');
+      return;
+    }
+
     colecao.value = await ColecaoService.getById(colecaoId);
     vias.value = await ColecaoService.getViasIn(colecaoId);
   } catch (error) {

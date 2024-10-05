@@ -11,7 +11,7 @@ class ColecaoService {
     return this.getColecoes(`/colecoes/usuario/${userId}`);
   }
 
-  async getById (id: string | RouteParamValue[]): Promise<Colecao> {
+  async getById (id: number): Promise<Colecao> {
     return this.getColecao(`/colecoes/${id}`);
   }
 
@@ -42,11 +42,11 @@ class ColecaoService {
     }
   }
 
-  async getViasIn (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
+  async getViasIn (colecaoId: number | RouteParamValue[]): Promise<Via[]> {
     return this.getVias(`/vias/colecao/${colecaoId}`);
   }
 
-  async getViasNotIn (colecaoId: string, page: number, limit = 10): Promise<{ vias: Via[]; total: number }> {
+  async getViasNotIn (colecaoId: number, page: number, limit = 10): Promise<{ vias: Via[]; total: number }> {
     try {
       const response = await api.get(`/vias/colecao/not/${colecaoId}`, {
         params: {
