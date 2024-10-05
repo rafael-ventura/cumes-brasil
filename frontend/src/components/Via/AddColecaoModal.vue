@@ -9,8 +9,8 @@
           @add-item="addCollection"
         />
       </q-card-section>
-      <q-card-actions align="center">
-        <q-btn v-if="currentPage < totalPages" @click="loadMoreCollections" label="Carregar mais" />
+      <q-card-actions align="right">
+        <q-btn flat label="Cancelar" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -29,11 +29,8 @@ interface ColecaoWithAdded extends Colecao {
 const props = defineProps<{ isOpen: boolean; viaId: number }>();
 const emit = defineEmits(['update:isOpen', 'colecao-added']);
 
-const colecoes = ref<ColecaoWithAdded[]>([]);
 const localIsOpen = ref(props.isOpen);
-const currentPage = ref(1);
-const totalPages = ref(1);
-const searchQuery = ref('');
+const colecoes = ref<ColecaoWithAdded[]>([]);
 
 watch(() => props.isOpen, (newVal) => {
   localIsOpen.value = newVal;
@@ -43,28 +40,15 @@ watch(localIsOpen, (newVal) => {
   emit('update:isOpen', newVal);
 });
 
-const resetPagination = () => {
-  currentPage.value = 1;
-  colecoes.value = [];
-};
-
-const loadCollections = async () => {
+const loadColecoesNotContainingVia = async () => {
   try {
-    const result = await ColecaoService.getCollecoesNotContainingVia(props.viaId, currentPage.value, 10);
+    const result = await ColecaoService.getCollecoesNotContainingVia(props.viaId, 1, 10);
     colecoes.value = result.colecoes.map(colecao => ({
       ...colecao,
       added: false
     }));
-    totalPages.value = Math.ceil(result.total / 10);
   } catch (error) {
-    console.error('Erro ao carregar coleções:', error);
-  }
-};
-
-const loadMoreCollections = async () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-    await loadCollections();
+    console.error('Erro ao buscar coleções:', error);
   }
 };
 
@@ -72,6 +56,8 @@ const addCollection = async (colecao: ColecaoWithAdded) => {
   try {
     await ColecaoService.addViaToColecao(colecao.id, props.viaId);
     colecao.added = true;
+    // Remover a coleção da lista após adicionar
+    colecoes.value = colecoes.value.filter(c => c.id !== colecao.id);
     emit('colecao-added', colecao);
   } catch (error) {
     console.error('Erro ao adicionar via à coleção:', error);
@@ -84,21 +70,19 @@ const handleHide = () => {
 
 onMounted(() => {
   if (props.isOpen) {
-    resetPagination();
-    loadCollections();
+    loadColecoesNotContainingVia();
   }
 });
 
 watch(() => props.isOpen, (newValue) => {
   if (newValue) {
-    resetPagination();
-    loadCollections();
+    loadColecoesNotContainingVia();
   }
 });
 </script>
 
 <style scoped>
 .q-dialog-plugin {
-  height: 60%;
+  min-width: 400px;
 }
 </style>

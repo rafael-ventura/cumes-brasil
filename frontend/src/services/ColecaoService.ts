@@ -62,6 +62,10 @@ class ColecaoService {
       };
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar vias');
+      return {
+        vias: [],
+        total: 0
+      };
     }
   }
 

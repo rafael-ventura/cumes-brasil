@@ -6,7 +6,6 @@
       outlined
       debounce="300"
       class="q-ma-md"
-      @input="filterItems"
     />
     <q-list separator>
       <q-item v-for="item in filteredItems" :key="item.id" clickable class="q-pa-xs">
@@ -40,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { computed, defineEmits, defineProps, ref } from 'vue';
 
 interface Item {
   id: number;
@@ -58,22 +57,21 @@ const props = defineProps<{
 const emit = defineEmits(['add-item']);
 
 const searchQuery = ref('');
-const filteredItems = ref<Item[]>(props.items);
 
 const placeholderImage = props.placeholderImage || 'https://via.placeholder.com/50';
 
 const searchLabel = props.itemType === 'via' ? 'Buscar vias' : 'Buscar coleções';
 
-const filterItems = () => {
+const filteredItems = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
   if (query) {
-    filteredItems.value = props.items.filter(item =>
+    return props.items.filter(item =>
       item.nome.toLowerCase().includes(query)
     );
   } else {
-    filteredItems.value = props.items;
+    return props.items;
   }
-};
+});
 
 const addItem = (item: Item) => {
   if (!item.added) {
@@ -90,10 +88,6 @@ const itemInfo = (item: Item) => {
   }
   return '';
 };
-
-watch(() => props.items, (newItems) => {
-  filteredItems.value = newItems;
-});
 </script>
 
 <style scoped>
