@@ -67,14 +67,11 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         colecoes: Colecao[],
         total: number
     }> {
-        const offset = (page - 1) * limit;
-
-        // Obter coleções que não possuem a via associada
         const [colecoes, total] = await this.repository.createQueryBuilder('colecao')
-          .leftJoinAndSelect('colecao.vias', 'via')
+          .leftJoinAndSelect('colecao.vias', 'vias')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .where((qb) => {
+          .where(qb => {
               const subQuery = qb.subQuery()
                 .select('via_colecao.colecao_id')
                 .from('via_colecao', 'via_colecao')
@@ -83,7 +80,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
               return `colecao.id NOT IN ${subQuery}`;
           })
           .setParameter('viaId', viaId)
-          .skip(offset)
+          .skip((page - 1) * limit)
           .take(limit)
           .getManyAndCount();
 

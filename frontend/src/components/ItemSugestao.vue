@@ -46,7 +46,8 @@ interface Item {
   nome: string;
   imagem?: { url: string };
   added?: boolean;
-  [key: string]: any; // Permite propriedades adicionais
+
+  [key: string]: any;
 }
 
 const props = defineProps<{
@@ -91,5 +92,4 @@ const itemInfo = (item: Item) => {
 </script>
 
 <style scoped>
-/* Seu estilo aqui */
 </style>
