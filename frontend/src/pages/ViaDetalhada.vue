@@ -7,13 +7,16 @@
 
     <!-- Botões de ação -->
     <div class="action-buttons q-col-12">
-      <q-btn rounded color="primary" icon="add_circle" @click="toggleForm">
+      <!-- Verifica se o usuário está autenticado antes de permitir registrar uma escalada -->
+      <q-btn rounded color="primary" icon="add_circle" @click="checkAuthentication('registerEscalada')">
         <div>Registrar uma escalada</div>
       </q-btn>
-      <q-btn rounded color="secondary" icon="star_border" @click="addToFavorites">
+      <!-- Verifica se o usuário está autenticado antes de permitir adicionar a favoritos -->
+      <q-btn rounded color="secondary" icon="star_border" @click="checkAuthentication('addFavorites')">
         <div>Adicionar a Favoritas</div>
       </q-btn>
-      <q-btn rounded color="accent" icon="style" @click="openAddToCollectionModal">
+      <!-- Verifica se o usuário está autenticado antes de permitir adicionar a uma coleção -->
+      <q-btn rounded color="accent" icon="style" @click="checkAuthentication('addToCollection')">
         <div>Adicionar a uma Coleção</div>
       </q-btn>
     </div>
@@ -214,13 +217,20 @@ onMounted(async () => {
   }
 });
 
-const loadColecoesNotContainingVia = async () => {
-  if (via.value) {
-    try {
-      const result = await ColecaoService.getCollecoesNotContainingVia(via.value.id, 1, 10);
-      colecoes.value = result.colecoes;
-    } catch (error) {
-      console.error('Erro ao buscar coleções:', error);
+const checkAuthentication = (action: string) => {
+  if (!AuthenticateService.isAuthenticated()) {
+    router.push('/auth/login');
+  } else {
+    switch (action) {
+      case 'registerEscalada':
+        toggleForm();
+        break;
+      case 'addFavorites':
+        addToFavorites();
+        break;
+      case 'addToCollection':
+        openAddToCollectionModal();
+        break;
     }
   }
 };
@@ -231,26 +241,31 @@ const toggleForm = () => {
 
 const addToFavorites = async () => {
   try {
-    if (!AuthenticateService.isAuthenticated()) {
-      router.push('/auth/login');
-    } else {
-      await ViaService.addToFavorites(Number(route.params.id));
-      Notify.create({
-        type: 'positive',
-        message: 'Via adicionada a favoritos com sucesso!',
-        position: 'top-right',
-        timeout: 3000
-      });
-    }
-  } catch (error: any) {
-    const errorMessage = error || 'Erro desconhecido';
+    await ViaService.addToFavorites(Number(route.params.id));
     Notify.create({
-      type: 'negative',
-      message: '' + errorMessage,
+      type: 'positive',
+      message: 'Via adicionada a favoritos com sucesso!',
       position: 'top-right',
       timeout: 3000
     });
-    console.error('Erro ao adicionar a favoritos:', error);
+  } catch (error: any) {
+    Notify.create({
+      type: 'negative',
+      message: error.message || 'Erro desconhecido',
+      position: 'top-right',
+      timeout: 3000
+    });
+  }
+};
+
+const loadColecoesNotContainingVia = async () => {
+  if (via.value) {
+    try {
+      const result = await ColecaoService.getCollecoesNotContainingVia(via.value.id, 1, 10);
+      colecoes.value = result.colecoes;
+    } catch (error) {
+      console.error('Erro ao buscar coleções:', error);
+    }
   }
 };
 
