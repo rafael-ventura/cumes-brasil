@@ -1,28 +1,18 @@
 <template>
   <q-page class="page-padding">
     <div class="text-h6 q-mb-md">Minhas Coleções</div>
-    <div class="row items-center q-my-md">
-      <div class="col-12 col-md">
-        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300"/>
-      </div>
-      <div class="col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true"/>
-      </div>
-    </div>
-    <BuscaAvancada @apply-filters="applyFilters" v-model="isFilterModalOpen"/>
-    <q-list >
-      <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)">
-        <q-item-section avatar>
-          <q-avatar square size="150px" class="custom-avatar" color="primary" text-color="white">
-            <q-img :src="colecao.imagem?.url" cover style="width: 100%; height: 100%;" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label class="text-h6 break-word">{{ colecao.nome }}</q-item-label>
-          <q-item-label caption class="text-body1">{{ colecao.descricao }}</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+
+    <!-- Integração com o SearchEntity para buscar e aplicar filtros -->
+    <SearchEntity
+      ref="searchEntityRef"
+      entity="colecao"
+      @select="goToColecaoDetalhada"
+      @update-results="updateSearchResults"
+    >
+      <template #filters="{ filters }">
+        <SearchFilters :filters="filters" @applyFilters="applyFilters" />
+      </template>
+    </SearchEntity>
 
     <!-- Botão de adicionar coleção -->
     <q-btn
@@ -33,6 +23,7 @@
       @click="isAddColecaoModalOpen = true"
     />
 
+    <!-- Modal para adicionar nova coleção -->
     <q-dialog v-model="isAddColecaoModalOpen">
       <q-card style="min-width: 300px;">
         <q-card-section>
@@ -57,7 +48,6 @@ import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
 import SearchFilters from 'components/Busca/SearchFilters.vue';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
 
