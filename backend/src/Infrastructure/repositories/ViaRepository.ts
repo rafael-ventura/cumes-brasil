@@ -1,7 +1,7 @@
 import { Via } from '../../Domain/entities/Via';
 import { AppDataSource } from '../config/db';
-import {ISearchRepository} from '../../Domain/interfaces/repositories/ISearchRepository';
-import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
+import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
+import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 
 export class ViaRepository implements ISearchRepository<Via>{
 
@@ -69,16 +69,23 @@ export class ViaRepository implements ISearchRepository<Via>{
 
   async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     const [vias, total] = await this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoin('via.colecoes', 'colecoes')
-        .where('colecoes.id IS NULL OR colecoes.id != :colecaoId', { colecaoId })
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .where(qb => {
+        const subQuery = qb.subQuery()
+          .select('via_colecao.via_id')
+          .from('via_colecao', 'via_colecao')
+          .where('via_colecao.colecao_id = :colecaoId')
+          .getQuery();
+        return `via.id NOT IN ${subQuery}`;
+      })
+      .setParameter('colecaoId', colecaoId)
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
 
     return {
       vias,

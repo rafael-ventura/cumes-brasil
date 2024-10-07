@@ -77,7 +77,7 @@ onMounted(async () => {
       const colecoes = await ColecaoService.getByUsuarioId();
       const favorita = colecoes.filter((colecao) => colecao.nome === 'Vias Favoritas');
       colecaoId.value = favorita[0].id;
-      const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value.toString());
+      const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value);
       numFavoritas.value = colecaoFavoritas.length;
       numColecoes.value = colecoes.length;
     }

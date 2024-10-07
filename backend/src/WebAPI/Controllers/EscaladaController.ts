@@ -1,6 +1,6 @@
 import { EscaladaService } from "../../Application/services/EscaladaService";
 import { Request, Response } from "express";
-import EscaladaValidation from "../../Domain/interfaces/validations/EscaladaValidation";
+import EscaladaValidation from "../../Application/validations/EscaladaValidation";
 
 export class EscaladaController {
 	private service: EscaladaService;
