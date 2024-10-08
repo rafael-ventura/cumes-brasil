@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'colecoes',
-        component: () => import('pages/Colecoes.vue')
+        component: () => import('pages/ColecoesBusca.vue')
       },
       {
         path: 'colecoes/:id',

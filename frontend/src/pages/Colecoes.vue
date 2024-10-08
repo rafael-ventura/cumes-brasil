@@ -3,7 +3,7 @@
     <div class="text-h6 q-mb-md">Minhas Coleções</div>
     <div class="row items-center q-my-md">
       <div class="col-12 col-md">
-        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300"/>
+        <!--        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300"/>-->
       </div>
       <div class="col-auto">
         <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true"/>
