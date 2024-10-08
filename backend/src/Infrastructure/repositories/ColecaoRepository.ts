@@ -1,8 +1,8 @@
 import { AppDataSource } from '../config/db';
 import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
-import { ISearchRepository } from "../../Domain/interfaces/repositories/ISearchRepository";
-import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
+import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
+import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
@@ -67,22 +67,20 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         colecoes: Colecao[],
         total: number
     }> {
-        const offset = (page - 1) * limit;
         const [colecoes, total] = await this.repository.createQueryBuilder('colecao')
-          .leftJoinAndSelect('colecao.viasColecoes', 'viasColecoes')
+          .leftJoinAndSelect('colecao.vias', 'vias')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .where('viasColecoes.via_id IS NULL OR viasColecoes.via_id != :viaId', { viaId })
-          .andWhere((qb) => {
+          .where(qb => {
               const subQuery = qb.subQuery()
-                .select('colecao.id')
-                .from('colecao', 'colecao')
-                .leftJoin('colecao.viasColecoes', 'viasColecoes')
-                .where('viasColecoes.via_id = :viaId')
+                .select('via_colecao.colecao_id')
+                .from('via_colecao', 'via_colecao')
+                .where('via_colecao.via_id = :viaId')
                 .getQuery();
-              return 'colecao.id NOT IN ' + subQuery;
+              return `colecao.id NOT IN ${subQuery}`;
           })
-          .skip(offset)
+          .setParameter('viaId', viaId)
+          .skip((page - 1) * limit)
           .take(limit)
           .getManyAndCount();
 
@@ -90,7 +88,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
             colecoes,
             total
         };
-    };
+    }
 
     async search(query: any): Promise<ISearchResult<Colecao>> {
         const { nomeColecao, nomeVia, nomeMontanha } = query;

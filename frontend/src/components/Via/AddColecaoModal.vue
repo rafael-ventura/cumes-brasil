@@ -1,13 +1,16 @@
 <template>
-  <q-dialog v-model="dialogOpen" @hide="handleHide">
+  <q-dialog v-model="localIsOpen" @hide="handleHide">
     <q-card class="q-dialog-plugin">
       <q-card-section>
         <div class="text-h6">Adicionar a uma Coleção</div>
-        <q-input v-model="searchQuery" label="Buscar coleções" @input="searchCollections" debounce="300" />
-        <ColecaoSugestao :colecoes="suggestedCollections" @add-colecao="addCollection" />
+        <ItemSugestao
+          :items="colecoes"
+          itemType="colecao"
+          @add-item="addCollection"
+        />
       </q-card-section>
-      <q-card-actions align="center">
-        <q-btn v-if="currentPage < totalPages" @click="loadMoreCollections" label="Carregar mais" />
+      <q-card-actions align="right">
+        <q-btn flat label="Cancelar" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -17,50 +20,44 @@
 import { onMounted, ref, watch } from 'vue';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import ColecaoSugestao from 'components/Via/ColecaoSugestao.vue';
+import ItemSugestao from './ItemSugestao.vue';
+
+interface ColecaoWithAdded extends Colecao {
+  added?: boolean;
+}
 
 const props = defineProps<{ isOpen: boolean; viaId: number }>();
 const emit = defineEmits(['update:isOpen', 'colecao-added']);
 
-const searchQuery = ref('');
-const suggestedCollections = ref<Colecao[]>([]);
-const dialogOpen = ref(props.isOpen);
-const currentPage = ref(1);
-const totalPages = ref(1);
+const localIsOpen = ref(props.isOpen);
+const colecoes = ref<ColecaoWithAdded[]>([]);
 
-const resetPagination = () => {
-  currentPage.value = 1;
-  suggestedCollections.value = [];
-};
+watch(() => props.isOpen, (newVal) => {
+  localIsOpen.value = newVal;
+});
 
-const loadCollections = async () => {
-  const result = await ColecaoService.getCollecoesNotContainingVia(props.viaId, currentPage.value, 10);
-  suggestedCollections.value = currentPage.value === 1 ? result.colecoes : [...suggestedCollections.value, ...result.colecoes];
-  totalPages.value = Math.ceil(result.total / 10);
-};
+watch(localIsOpen, (newVal) => {
+  emit('update:isOpen', newVal);
+});
 
-const searchCollections = async () => {
-  resetPagination();
-  if (searchQuery.value.trim()) {
+const loadColecoesNotContainingVia = async () => {
+  try {
     const result = await ColecaoService.getCollecoesNotContainingVia(props.viaId, 1, 10);
-    suggestedCollections.value = result.colecoes.filter(colecao =>
-      colecao.nome.toLowerCase().includes(searchQuery.value.trim().toLowerCase())
-    );
-  } else {
-    await loadCollections();
+    colecoes.value = result.colecoes.map(colecao => ({
+      ...colecao,
+      added: false
+    }));
+  } catch (error) {
+    console.error('Erro ao buscar coleções:', error);
   }
 };
 
-const loadMoreCollections = async () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-    await loadCollections();
-  }
-};
-
-const addCollection = async (colecao: Colecao) => {
+const addCollection = async (colecao: ColecaoWithAdded) => {
   try {
     await ColecaoService.addViaToColecao(colecao.id, props.viaId);
+    colecao.added = true;
+    // Remover a coleção da lista após adicionar
+    colecoes.value = colecoes.value.filter(c => c.id !== colecao.id);
     emit('colecao-added', colecao);
   } catch (error) {
     console.error('Erro ao adicionar via à coleção:', error);
@@ -68,34 +65,24 @@ const addCollection = async (colecao: Colecao) => {
 };
 
 const handleHide = () => {
-  dialogOpen.value = false;
   emit('update:isOpen', false);
 };
 
-watch(() => props.isOpen, (newValue) => {
-  dialogOpen.value = newValue;
-  if (newValue) {
-    resetPagination();
-    loadCollections();
-  }
-});
-
-watch(dialogOpen, (newValue) => {
-  if (!newValue) {
-    emit('update:isOpen', false);
-  }
-});
-
 onMounted(() => {
   if (props.isOpen) {
-    resetPagination();
-    loadCollections();
+    loadColecoesNotContainingVia();
+  }
+});
+
+watch(() => props.isOpen, (newValue) => {
+  if (newValue) {
+    loadColecoesNotContainingVia();
   }
 });
 </script>
 
 <style scoped>
 .q-dialog-plugin {
-  height: 60%;
+  min-width: 400px;
 }
 </style>

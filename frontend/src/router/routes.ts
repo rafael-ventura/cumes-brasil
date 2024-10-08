@@ -27,6 +27,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'colecoes/:id',
+        name: 'ColecaoDetalhada',
         component: () => import('pages/ColecaoDetalhada.vue')
       },
       {
