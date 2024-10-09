@@ -99,6 +99,8 @@ import { Participante } from 'src/models/Participante';
 import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
+import { Notify } from 'quasar';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const observacao = ref('');
 const qtdParticipantes = ref(1);
@@ -108,11 +110,13 @@ const data = ref('');
 const participantes = ref<Participante[]>([{ nome: '', tipo: '', email: '' }]);
 const props = defineProps<{ isOpen: boolean }>();
 
+const emit = defineEmits<{(e: 'closeModal'): void;}>();
+
 const participanteTipoOptions = [
   'GUIA', 'PARTICIPANTE', 'MISTO'
 ];
 
-const onQtdParticipantesChange = () => {
+const onQtdParticipantesChange = (): void => {
   const currentLength = participantes.value.length;
   const newLength = Number(qtdParticipantes.value);
 
@@ -126,30 +130,50 @@ const onQtdParticipantesChange = () => {
 };
 watch(qtdParticipantes, onQtdParticipantesChange);
 
-const onSubmit = async () => {
+const onSubmit = async (): Promise<void> => {
   const viaId = Number(route.params.id);
 
   const escalada: Escalada = {
     viaId,
-    data: data.value,
+    data: convertStringToDate(data.value),
     observacao: observacao.value,
     participantes: participantes.value
   };
-
-  const authToken = localStorage.getItem('authToken');
-  if (!authToken) {
+  
+  if (!AuthenticateService.isAuthenticated()) {
     await router.push('/auth/login');
-  }
+  } else {
+      try {
+      await EscaladaService.createEscalada(escalada);
+      onReset();
 
-  try {
-    await EscaladaService.createEscalada(escalada);
-    onReset();
-  } catch (error: any) {
-    console.error(error.message);
+      Notify.create({
+        type: 'positive',
+        message: 'Escalada registrada com sucesso!',
+        position: 'top-right',
+        timeout: 3000,
+      });
+
+      emit('closeModal');
+    } catch (error: any) {
+      const errorMessage = 'Ocorreu um erro no servidor, tente novamente mais tarde';
+      
+      Notify.create({
+        type: 'negative',
+        message: '' + errorMessage,
+        position: 'top-right',
+        timeout: 3000
+      });
+    }
   }
 };
 
-const onReset = () => {
+const convertStringToDate = (date: string): Date => {
+  const formattedDate = date.trim().split('-').reverse().join('-');
+  return new Date(formattedDate);
+};
+
+const onReset = (): void => {
   observacao.value = '';
   data.value = '';
   qtdParticipantes.value = 1;

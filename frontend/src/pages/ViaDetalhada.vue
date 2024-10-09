@@ -159,7 +159,7 @@
     </div>
 
     <!-- Modal para registrar uma nova escalada dessa via -->
-    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
+    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event" @closeModal="closeEscaladaForm"/>
 
     <q-dialog v-model="showAddToCollectionModal">
       <q-card style="min-width: 400px;">
@@ -238,6 +238,10 @@ const checkAuthentication = (action: string) => {
 const toggleForm = () => {
   showForm.value = !showForm.value;
 };
+
+const closeEscaladaForm = () => {
+  showForm.value = false;
+}
 
 const addToFavorites = async () => {
   try {

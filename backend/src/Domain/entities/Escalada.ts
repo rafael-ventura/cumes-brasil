@@ -8,8 +8,8 @@ export class Escalada extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
-  data: string;
+  @Column({ nullable: false, type: "date" })
+  data: Date;
 
   @Column({ nullable: true })
   observacao: string;

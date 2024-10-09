@@ -5,7 +5,7 @@ import { Participante } from './Participante';
 export interface Escalada {
   // usuario: Usuario;
   viaId: number;
-  data: string;
+  data: Date;
   id?: number;
   observacao?: string;
   participantes: Participante[];
