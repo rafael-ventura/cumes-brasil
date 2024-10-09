@@ -41,9 +41,19 @@ export class EscaladaController {
 	 * @returns {object} 404 - Escalada não encontrada
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
-	getAllEscalada = async (_: Request, res: Response) => {
+	getAllEscalada = async (req: Request, res: Response) => {
+		const { viaId, limit } = req.query as { viaId: string, limit: string };
 		try {
-			const escaladas = await this.service.get();
+			let escaladas;
+			const parsedLimit = limit ? parseInt(limit, 10) : undefined;
+
+			if (viaId) {
+				const parsedViaId = parseInt(viaId, 10);
+				escaladas = await this.service.getEscaladasDaVia(parsedViaId, parsedLimit);
+			} else {
+				escaladas = await this.service.getAll(parsedLimit);
+			}
+
 			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -144,10 +154,20 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getByUsuarioId = async (req: Request, res: Response) => {
+		const { viaId, limit } = req.query as { viaId: string, limit: string };
+		const userId = parseInt(req.user.userId, 10);
+
 		try {
-			const usuarioId = parseInt(req.params.id);
-			const result = await this.service.getEscaladasDoUsuario(usuarioId);
-			res.json(result);
+			let escaladas = [];
+			if (viaId) {
+				const parsedViaId = parseInt(viaId, 10);
+				const parsedLimit = limit ? parseInt(limit, 10) : undefined;
+				escaladas = await this.service.getEscaladasDaViaDoUsuario(userId, parsedViaId, parsedLimit);
+
+			} else {
+				escaladas = await this.service.getEscaladasDoUsuario(userId);
+			}
+			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
 				if (error.message === "Nenhuma escalada encontrada para este usuário") {

@@ -29,13 +29,13 @@ export class EscaladaService {
 		return await this.repository.getById(id);
 	}
 
-	async get(): Promise<Escalada[]> {
-		return await this.repository.getAll();
+	async getAll(limit?: number | undefined): Promise<Escalada[] | null> {
+		return await this.repository.getAll(limit);
 	}
 
 	async create(escalada: Escalada): Promise<void> {
 		EscaladaValidation.valida(escalada);
-		return this.repository.createOrUpdate(escalada);
+		return this.repository.save(escalada);
 	}
 
 	async update(escalada: Escalada): Promise<void> {
@@ -43,15 +43,13 @@ export class EscaladaService {
 		if (!escaladaExiste) {
 			throw new Error("Escalada não encontrada");
 		}
-		// Atualizar valores de escaladaExiste com valores dentro de escalada
+
 		escaladaExiste.data = escalada.data;
 		escaladaExiste.observacao = escalada.observacao;
-
-		// Muito importante remover os participantes anteriores, pois senão continuaram existindo na tabela com escalaId = NULL
 		escaladaExiste.participantes.forEach(participante => participante.remove());
 		escaladaExiste.participantes = escalada.participantes;
 
-		return this.repository.createOrUpdate(escaladaExiste);
+		return this.repository.save(escaladaExiste);
 	}
 
 	async delete(id: number): Promise<void> {
@@ -71,12 +69,26 @@ export class EscaladaService {
 		return this.repository.getByUserId(usuario_id);
 	}
 
-	async getEscaladasDaVia(via_id: number): Promise<ObjectLiteral[]> {
+	async getEscaladasDaVia(via_id: number, limit?: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
 			throw new Error("ID da via não fornecido");
 		} else if (isNaN(via_id)) {
 			throw new Error("ID da via inválido");
 		}
-		return this.repository.getByViaId(via_id);
+		console.log("via_id: ", via_id, "limit: ", limit);
+		return this.repository.getByViaId(via_id, limit);
+	}
+
+	async getEscaladasDaViaDoUsuario(usuario_id: number, via_id: number, limit?: number): Promise<ObjectLiteral[]> {
+		if (!via_id) {
+			throw new Error("ID da via não fornecido");
+		} else if (isNaN(via_id)) {
+			throw new Error("ID da via inválido");
+		} else if (!usuario_id) {
+			throw new Error("ID do usuário não fornecido");
+		} else if (isNaN(usuario_id)) {
+			throw new Error("ID do usuário inválido");
+		}
+		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit);
 	}
 }
