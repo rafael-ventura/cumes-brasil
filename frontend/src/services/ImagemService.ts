@@ -1,10 +1,30 @@
-/// @ts-ignore
-const serverIp = 'http://localhost:4020';
+import { api } from 'boot/axios';
 
-export function adjustImageUrl (url: string): string {
-  if (url) {
-    return `${serverIp}/assets${url.split('assets')[1]}`;
+class ImageService {
+  private baseUrl: string;
+
+  constructor () {
+    this.baseUrl = import.meta.env.PROD
+      ? import.meta.env.VITE_APP_API_URL || ''
+      : import.meta.env.VITE_APP_SERVER_IP || 'http://localhost:8080';
   }
-  console.log('a url eh: ', url);
-  return url;
+
+  getFullImageUrl (relativePath: string): string {
+    if (!relativePath) {
+      console.warn('O caminho relativo da imagem não foi fornecido.');
+      return '';
+    }
+    return `${this.baseUrl}${relativePath}`;
+  }
+
+  async getImageById (id: number): Promise<any> {
+    try {
+      const response = await api.get(`/imagens/${id}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar imagem');
+    }
+  }
 }
+
+export default new ImageService();

@@ -1,51 +1,41 @@
 import { api } from 'boot/axios';
 import { Croqui } from 'src/models/Croqui';
-import { adjustImageUrl } from 'src/services/ImagemService';
+import { adjustImageUrls, handleApiError } from 'src/utils/utils';
 
 export class CroquiService {
   async getCroquiById (id: number | string): Promise<Croqui> {
-    try {
-      const response = await api.get(`/croquis/${id}`);
-      const croqui = response.data as Croqui;
-
-      if (croqui.imagem?.url) {
-        croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
-      }
-      return croqui;
-    } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croqui');
-    }
+    return this.fetchCroqui(`/croquis/${id}`);
   }
 
   async getAllCroquis (): Promise<Croqui[]> {
-    try {
-      const response = await api.get('/croquis/');
-      const croquis = response.data as Croqui[];
-
-      for (const croqui of croquis) {
-        if (croqui.imagem?.url) {
-          croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
-        }
-      }
-      return croquis;
-    } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croquis');
-    }
+    return this.fetchCroquisCollection('/croquis/');
   }
 
   async getCroquiByViaId (viaId: number | string): Promise<Croqui[]> {
+    return this.fetchCroquisCollection(`/croquis/via/${viaId}`);
+  }
+
+  private async fetchCroqui (url: string): Promise<Croqui> {
     try {
-      const response = await api.get(`/croquis/via/${viaId}`);
+      const response = await api.get(url);
+      const croqui = response.data as Croqui;
+
+      adjustImageUrls(croqui);
+      return croqui;
+    } catch (error: any) {
+      handleApiError(error, 'Erro desconhecido ao buscar croqui');
+    }
+  }
+
+  private async fetchCroquisCollection (url: string): Promise<Croqui[]> {
+    try {
+      const response = await api.get(url);
       const croquis = response.data as Croqui[];
 
-      for (const croqui of croquis) {
-        if (croqui.imagem?.url) {
-          croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
-        }
-      }
+      croquis.forEach(adjustImageUrls);
       return croquis;
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar croquis');
+      handleApiError(error, 'Erro desconhecido ao buscar croquis');
     }
   }
 }

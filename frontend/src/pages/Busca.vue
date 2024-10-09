@@ -22,6 +22,10 @@ import SearchEntity from 'components/Busca/SearchEntity.vue';
 const router = useRouter();
 const searchEntityRef = ref();
 
+defineOptions({
+  name: 'ViasPage'
+});
+
 const applyFilters = (filters: any) => {
   if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
     searchEntityRef.value.handleApplyFilters(filters);

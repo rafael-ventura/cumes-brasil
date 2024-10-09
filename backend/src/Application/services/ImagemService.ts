@@ -1,5 +1,5 @@
-import { Imagem } from "../../Domain/entities/Imagem";
-import { ImagemRepository } from "../../Infrastructure/repositories/ImagemRepository";
+import { Imagem } from '../../Domain/entities/Imagem';
+import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 
 export class ImagemService {
   private imagemRepository: ImagemRepository;
@@ -9,12 +9,15 @@ export class ImagemService {
   }
 
   async getImagemById (id: number): Promise<Imagem | null> {
+    let imagem;
     if (!id) {
       throw new Error("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
       throw new Error("ID da Imagem inválido");
     }
-    return this.imagemRepository.getById(id);
+    imagem = await this.imagemRepository.getById(id);
+    console.log('A url da imagem é:', imagem?.url);
+    return imagem;
   }
 
   async getImagens (): Promise<Imagem[]> {

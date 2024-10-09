@@ -3,7 +3,7 @@
     "target": "ES2020",
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "../",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -18,13 +18,8 @@
     ]
   },
   "include": [
-    "src/WebAPI/**/*.ts",
-    "src/Infrastructure/**/*.ts",
-    "src/Application/**/*.ts",
-    "src/Domain/**/*.ts",
-    "src/server.ts",
-    "../shared/**/*.ts",
-    "@types"
+    "src/**/*",
+    "../database/json/**/*"
   ],
   "exclude": [
     "node_modules"

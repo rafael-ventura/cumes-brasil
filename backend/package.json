@@ -2,13 +2,13 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend do projeto Cume Brasil",
-  "main": "src/WebAPI/server.ts",
+  "main": "dist/WebAPI/server.js",
   "scripts": {
-    "build": "tsc && echo 'Build concluido com sucesso!'",
+    "build": "rm -rf dist && tsc && cp -R src/WebAPI dist/WebAPI && cp -R src/Infrastructure/sql_scripts/. dist/Infrastructure/sql_scripts && echo 'Build concluído com sucesso!'",
     "start": "ts-node src/WebAPI/server.ts",
-    "back-dev": "cross-env NODE_ENV=development ts-node src/WebAPI/server.ts",
-    "back-homol": "cross-env NODE_ENV=homol ts-node src/WebAPI/server.ts",
-    "back-prod": "cross-env NODE_ENV=production node src/dist/backend/WebAPI/server.js"
+    "test": "echo 'Error: no test specified' && exit 1",
+    "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/InitialMigration",
+    "migration:run": "npx typeorm migration:run -d dist/Infrastructure/config/db.js"
   },
   "keywords": [],
   "author": "",
@@ -26,8 +26,6 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.1.14",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7",
     "typedi": "^0.10.0",
     "typeorm": "^0.3.20"
   },

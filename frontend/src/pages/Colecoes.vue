@@ -43,8 +43,8 @@
           <q-input v-model="novaColecao.descricao" label="Descrição da Coleção" />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Adicionar" color="primary" @click="addColecao" />
           <q-btn flat label="Cancelar" @click="isAddColecaoModalOpen = false" />
+          <q-btn flat label="Adicionar" color="primary" @click="addColecao" />
         </q-card-actions>
       </q-card>
     </q-dialog>

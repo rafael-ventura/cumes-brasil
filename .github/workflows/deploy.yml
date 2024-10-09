@@ -1,0 +1,90 @@
+name: Build and Deploy Application
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy Backend and Frontend
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Necessário para OIDC
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
+          aws-region: us-east-1
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Clean Frontend dist folder
+      - name: Clean Frontend dist folder
+        working-directory: ./frontend
+        run: rm -rf dist
+
+      # Build Frontend
+      - name: Install Frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Frontend project
+        working-directory: ./frontend
+        env:
+          VITE_APP_API_URL: "http://54.236.242.52:8080/api/"
+          VITE_APP_SERVER_IP: "http://54.236.242.52:8080"
+        run: npm run build
+
+      # Clean Backend dist folder
+      - name: Clean Backend dist folder
+        working-directory: ./backend
+        run: rm -rf dist
+      # Build Backend
+      - name: Install Backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Build Backend project
+        working-directory: ./backend
+        run: npm run build
+
+      # Empacotar apenas os arquivos necessários
+      - name: Zip backend and frontend built files
+        run: |
+          zip -r application.zip \
+            backend/package*.json \
+            backend/dist \
+            backend/Dockerfile \
+            frontend/ \
+            docker-compose.yml \
+            appspec.yml \
+            database/json/*.json \
+            scripts/ \
+            assets/ \
+            -x '*.git*' \
+            -x '*node_modules/*' \
+            -x '*.github/*'
+
+      # Upload para S3
+      - name: Upload to S3
+        run: |
+          aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
+
+      # Criar Deployment no CodeDeploy
+      - name: Create deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name cumes-backend-app \
+            --deployment-group-name cumes-backend-deployment-group \
+            --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip

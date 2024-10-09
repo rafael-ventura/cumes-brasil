@@ -2,33 +2,24 @@ import { api } from 'boot/axios';
 import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
 import { RouteParamValue } from 'vue-router';
-import { adjustImageUrl } from 'src/services/ImagemService';
-import { formatVia, romanToInt } from 'src/utils/utils';
+import { adjustImageUrls, formatVia, handleApiError, romanToInt } from 'src/utils/utils';
 import { UnwrapRef } from 'vue';
 
 class ColecaoService {
   async getByUsuarioId (): Promise<Colecao[]> {
     const userId = localStorage.getItem('userId');
-    try {
-      const response = await api.get(`/colecoes/usuario/${userId}`);
-      const colecoes = response.data;
+    return this.getColecoes(`/colecoes/usuario/${userId}`);
+  }
 
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
-        }
-      }
-      return colecoes;
-    } catch (error: any) {
-      throw new Error('Erro ao buscar coleções: ' + error.message);
-    }
+  async getById (id: number): Promise<Colecao> {
+    return this.getColecao(`/colecoes/${id}`);
   }
 
   async create (colecao: { nome: string; descricao: string; usuario_id: number; imagem_id: number }): Promise<void> {
     try {
       await api.post('/colecoes', colecao);
     } catch (error: any) {
-      throw new Error('Erro ao criar coleção: ' + error.message);
+      handleApiError(error, 'Erro ao criar coleção');
     }
   }
 
@@ -36,47 +27,26 @@ class ColecaoService {
     try {
       await api.delete(`/colecoes/${colecaoId}`);
     } catch (error: any) {
-      throw new Error('Erro ao deletar coleção: ' + error.message);
+      handleApiError(error, 'Erro ao deletar coleção');
     }
   }
 
-  async update (colecaoId: UnwrapRef<Colecao['id']>, colecao: UnwrapRef<{
-    nome: string;
-    descricao: string
-  }>): Promise<void> {
+  async update (
+    colecaoId: UnwrapRef<Colecao['id']>,
+    colecao: UnwrapRef<{ nome: string; descricao: string }>
+  ): Promise<void> {
     try {
       await api.put(`/colecoes/${colecaoId}`, colecao);
     } catch (error: any) {
-      throw new Error('Erro ao atualizar coleção: ' + error.message);
+      handleApiError(error, 'Erro ao atualizar coleção');
     }
   }
 
-  async getById (id: string | RouteParamValue[]): Promise<Colecao> {
-    try {
-      const response = await api.get(`/colecoes/${id}`);
-      const colecao = response.data;
-
-      if (colecao.imagem?.url) {
-        colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
-      }
-
-      return colecao;
-    } catch (error: any) {
-      throw new Error('Erro ao buscar detalhes da coleção: ' + error.message);
-    }
+  async getViasIn (colecaoId: number | RouteParamValue[]): Promise<Via[]> {
+    return this.getVias(`/vias/colecao/${colecaoId}`);
   }
 
-  async getViasIn (colecaoId: string | RouteParamValue[]): Promise<Via[]> {
-    try {
-      const response = await api.get(`/vias/colecao/${colecaoId}`);
-      const { vias } = response.data;
-      return vias.map(formatVia);
-    } catch (error: any) {
-      throw new Error('Erro ao buscar vias da coleção: ' + error.message);
-    }
-  }
-
-  async getViasNotIn (colecaoId: string, page: number, limit = 10): Promise<{ vias: Via[], total: number }> {
+  async getViasNotIn (colecaoId: number, page: number, limit = 10): Promise<{ vias: Via[]; total: number }> {
     try {
       const response = await api.get(`/vias/colecao/not/${colecaoId}`, {
         params: {
@@ -84,18 +54,23 @@ class ColecaoService {
           limit
         }
       });
-
+      const vias = response.data.vias as Via[];
+      vias.forEach(adjustImageUrls);
       return {
-        vias: response.data.vias.map(formatVia),
+        vias: vias.map(formatVia),
         total: response.data.total
       };
     } catch (error: any) {
-      throw new Error('Erro ao buscar vias não adicionadas à coleção: ' + error.message);
+      handleApiError(error, 'Erro ao buscar vias');
+      return {
+        vias: [],
+        total: 0
+      };
     }
   }
 
   async getCollecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
-    colecoes: Colecao[],
+    colecoes: Colecao[];
     total: number
   }> {
     const response = await api.get(`/colecoes/not-containing-via/${viaId}`, {
@@ -104,40 +79,28 @@ class ColecaoService {
         limit
       }
     });
+    response.data.colecoes.forEach(adjustImageUrls);
     return response.data;
   }
 
   async searchByName (query: string): Promise<Colecao[]> {
-    try {
-      const response = await api.get('/colecoes/search', { params: { name: query } });
-      const colecoes = response.data;
-
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
-        }
-      }
-
-      return colecoes;
-    } catch (error: any) {
-      throw new Error('Erro ao buscar coleções: ' + error.message);
-    }
+    return this.search({ name: query });
   }
 
   async search (filters: any): Promise<Colecao[]> {
+    return this.getColecoes('/colecoes/search', filters);
+  }
+
+  async addViaToColecao (colecaoId: number, viaId: number): Promise<void> {
     try {
-      const response = await api.get('/colecoes/search', { params: filters });
-      const colecoes = response.data;
-
-      for (const colecao of colecoes) {
-        if (colecao.imagem?.url) {
-          colecao.imagem.url = adjustImageUrl(colecao.imagem.url);
+      await api.post('/colecoes/adicionarVia', null, {
+        params: {
+          colecao_id: colecaoId,
+          via_id: viaId
         }
-      }
-
-      return colecoes;
+      });
     } catch (error: any) {
-      throw new Error('Erro ao buscar coleções: ' + error.message);
+      handleApiError(error, 'Erro ao adicionar via à coleção');
     }
   }
 
@@ -145,39 +108,89 @@ class ColecaoService {
     key,
     order
   }: { key: keyof Via; order: 'asc' | 'desc' | null }): Promise<Via[]> {
-    const sortedVias = [...vias];
-    if (key === 'grau' && order !== null) {
-      sortedVias.sort((a, b) => {
-        const grauA = a.grau ? romanToInt(a.grau) : 0;
-        const grauB = b.grau ? romanToInt(b.grau) : 0;
-        return order === 'asc' ? grauA - grauB : grauB - grauA;
-      });
-    } else if (key === 'duracao' && order !== null) {
-      const durationMap: Record<string, number> = { D1: 1, D2: 2, D3: 3, D4: 4 };
-      sortedVias.sort((a, b) => {
-        const aDur = durationMap[a.duracao || ''] || 0;
-        const bDur = durationMap[b.duracao || ''] || 0;
-        return order === 'asc' ? aDur - bDur : bDur - aDur;
-      });
-    } else if (key === 'extensao' && order !== null) {
-      sortedVias.sort((a, b) => {
-        const extensaoA = a.extensao ?? 0;
-        const extensaoB = b.extensao ?? 0;
-        return order === 'asc' ? extensaoA - extensaoB : extensaoB - extensaoA;
-      });
-    } else if (key === 'data' && order !== null) {
-      sortedVias.sort((a, b) => order === 'asc' ? a.id - b.id : b.id - a.id);
-    }
-    return sortedVias;
+    if (!order) return vias;
+
+    const compare = this.getComparator(order, key);
+    return [...vias].sort(compare);
   }
 
-  async addViaToColecao (colecaoId: number, viaId: number): Promise<void> {
+  // Métodos privados para evitar redundância e melhorar a manutenção
+  private async getColecao (url: string): Promise<Colecao> {
     try {
-      const url = `/colecoes/adicionarVia?colecao_id=${colecaoId}&via_id=${viaId}`;
-      await api.post(url);
+      const response = await api.get(url);
+      const colecao = response.data as Colecao;
+      adjustImageUrls(colecao);
+      return colecao;
     } catch (error: any) {
-      throw new Error('Erro ao adicionar via à coleção: ' + error.response?.data?.message || error.message);
+      handleApiError(error, 'Erro ao buscar coleção');
     }
+  }
+
+  private async getColecoes (url: string, params?: any): Promise<Colecao[]> {
+    try {
+      const response = await api.get(url, { params });
+      const colecoes = response.data as Colecao[];
+      colecoes.forEach(adjustImageUrls);
+      return colecoes;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar coleções');
+    }
+  }
+
+  private async getVias (url: string): Promise<Via[]> {
+    try {
+      const response = await api.get(url);
+      const vias = response.data.vias as Via[];
+      vias.forEach(adjustImageUrls);
+      return vias.map(formatVia);
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar vias');
+    }
+  }
+
+  private getComparator (order: 'asc' | 'desc', key: keyof Via): (a: Via, b: Via) => number {
+    switch (key) {
+      case 'grau':
+        return (a, b) => this.compareRomanValues(order, a.grau, b.grau);
+      case 'duracao':
+        return (a, b) => this.compareDuration(order, a.duracao, b.duracao);
+      case 'extensao':
+        return (a, b) => this.compareValues(order, a.extensao, b.extensao);
+      case 'data':
+        return (a, b) => this.compareDates(order, a.data, b.data);
+      default:
+        return () => 0;
+    }
+  }
+
+  private compareDates (order: 'asc' | 'desc', a?: string, b?: string): number {
+    const valueA = a ? new Date(a).getTime() : 0;
+    const valueB = b ? new Date(b).getTime() : 0;
+    return order === 'asc' ? valueA - valueB : valueB - valueA;
+  }
+
+  private compareRomanValues (order: 'asc' | 'desc', a?: string, b?: string): number {
+    const valueA = a ? romanToInt(a) : 0;
+    const valueB = b ? romanToInt(b) : 0;
+    return order === 'asc' ? valueA - valueB : valueB - valueA;
+  }
+
+  private compareDuration (order: 'asc' | 'desc', a?: string, b?: string): number {
+    const durationMap: Record<string, number> = {
+      D1: 1,
+      D2: 2,
+      D3: 3,
+      D4: 4
+    };
+    const valueA = durationMap[a || ''] || 0;
+    const valueB = durationMap[b || ''] || 0;
+    return order === 'asc' ? valueA - valueB : valueB - valueA;
+  }
+
+  private compareValues (order: 'asc' | 'desc', a?: number, b?: number): number {
+    const valueA = a ?? 0;
+    const valueB = b ?? 0;
+    return order === 'asc' ? valueA - valueB : valueB - valueA;
   }
 }
 

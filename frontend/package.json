@@ -10,14 +10,13 @@
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build -m pwa",
     "serve": "quasar serve dist/pwa && quasar run",
-    "dev": "quasar dev -m pwa",
-    "front-dev": "cross-env NODE_ENV=development eslint --ext .js,.ts,.vue ./ --fix && quasar dev -m pwa ",
-    "front-homol": "cross-env NODE_ENV=homol eslint --ext .js,.ts,.vue ./ --fix && quasar dev -m pwa"
+    "dev": "quasar dev -m pwa"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.7.1",
     "quasar": "^2.16.0",
+    "serve": "^14.2.3",
     "src": "^1.1.2",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"

@@ -11,15 +11,14 @@ initializeEnvConfig();
 
 const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 4020;
+const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
-    "http://localhost:4020",
-    "http://localhost:9000",
-    'http://localhost:9200',
-    "http://localhost:8080",
-    "http://192.168.1.147:4020",
-    "http://192.168.1.147:9000"
+  'http://localhost:8080',
+  'http://localhost:9000',
+  'http://localhost:9200',
+  'http://54.236.242.52',
+  'http://54.236.242.52:8080'
 ];
 
 const corsOptions = {
@@ -34,32 +33,51 @@ const corsOptions = {
     }
 };
 
-app.use(cors(corsOptions));
+app.use(cors()); // Permite todas as origens
+
 app.use(express.json());
 
 // Servir arquivos estáticos da pasta assets
-const assetsPath = path.join(__dirname, "../../assets");
-console.log("Servidor está servindo arquivos estáticos no diretório:", assetsPath);
-app.use("/assets", express.static(assetsPath));
+const assetsPath = path.resolve(__dirname, '../../assets');
+app.use('/assets', express.static(assetsPath));
+console.log('Serving static files from', assetsPath);
 app.use('/api', routes);
 
-AppDataSource.initialize().then(async () => {
-    console.log("Conexão com o banco de dados estabelecida com sucesso");
 
-    const viaRepository = AppDataSource.getRepository(Via);
-    const count = await viaRepository.count();
-    if (count === 0) {
-        console.log("Nenhum registro encontrado na tabela Via, iniciando carga de dados...");
-        loadData().then(() => console.log("Carga inicial realizada com sucesso"))
-            .catch(e => console.log("Erro na carga de dados:", e));
-    } else {
-        console.log("Registros já existentes na tabela Via, pulando a carga de dados.");
-    }
-}).catch(error => console.log("Erro ao conectar com o banco de dados:", error));
+
+
+
+AppDataSource.initialize()
+  .then(async () => {
+      console.log('Conexão com o banco de dados estabelecida com sucesso');
+
+      const viaRepository = AppDataSource.getRepository(Via);
+      const count = await viaRepository.count();
+      if (count === 0) {
+          console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
+          await loadData();
+          console.log('Carga inicial realizada com sucesso');
+      } else {
+          console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
+      }
+  })
+  .catch(error => {
+      console.error('Erro ao conectar com o banco de dados:', error.message);
+      console.error(error.stack); // Adiciona a stack trace do erro
+      process.exit(1); // Encerra o processo se a conexão falhar
+  });
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("The server is running in", process.env.NODE_ENV, "mode");
-    console.log("The CORS origin is", corsOptions.origin);
+    console.log("Variáveis de ambiente carregadas:");
+    console.log("DB_HOST:", process.env.DB_HOST);
+    console.log("DB_USERNAME:", process.env.DB_USERNAME);
+    console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+    console.log("DB_NAME:", process.env.DB_NAME);
+    console.log("DB_PORT:", process.env.DB_PORT);
+
+  console.log("The CORS origin is", corsOptions.origin);
     console.log(process.cwd());
 });

@@ -14,6 +14,6 @@ export interface Usuario {
   localizacao?: string | null;
   biografia?: string | null;
   via_preferida?: Via | null;
-  foto_perfil?: Imagem | null;
+  foto_perfil: Imagem ;
   colecoes?: Colecao[] | null;
 }

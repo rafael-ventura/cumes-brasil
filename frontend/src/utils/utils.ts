@@ -1,5 +1,6 @@
-import { adjustImageUrl } from 'src/services/ImagemService';
 import { Via } from 'src/models/Via';
+import ImagemService from 'src/services/ImagemService';
+import { Imagem } from 'src/models/Imagem';
 
 export function romanToInt (roman: string): number {
   const romanMap: { [key: string]: number } = {
@@ -60,19 +61,10 @@ export function intToRoman (num: number): string {
 type ViaKey = keyof Via;
 
 export function formatVia (via: Via): Via {
-  // Ajustar URL da imagem da via
-  if (via.imagem?.url) {
-    via.imagem.url = adjustImageUrl(via.imagem.url);
+  if (via.grau) {
+    via.grau = intToRoman(parseInt(via.grau));
   }
 
-  // Ajustar URLs das imagens de croqui
-  via.croquis?.forEach(croqui => {
-    if (croqui.imagem?.url) {
-      croqui.imagem.url = adjustImageUrl(croqui.imagem.url);
-    }
-  });
-
-  // Mascarar data
   if (via.data) {
     via.data = new Date(via.data).toLocaleDateString('pt-BR');
   }
@@ -88,6 +80,16 @@ export function formatVia (via: Via): Via {
   if (via.conquistadores) {
     via.conquistadores = via.conquistadores.split(';').join('; ');
   }
-
   return via;
+}
+
+export function adjustImageUrls (entity: { imagem?: Imagem }) {
+  if (entity.imagem) {
+    entity.imagem.url = ImagemService.getFullImageUrl(entity.imagem.url);
+  }
+}
+
+export function handleApiError (error: any, defaultMessage: string): never {
+  const message = error?.response?.data?.error || defaultMessage;
+  throw new Error(message);
 }

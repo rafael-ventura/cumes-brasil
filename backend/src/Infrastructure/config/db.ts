@@ -14,12 +14,13 @@ import { initializeEnvConfig } from './envinronment';
 initializeEnvConfig();
 
 export const AppDataSource = new DataSource({
+    schema: 'public',
     type: 'postgres',
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432', 10),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    username: process.env.DB_USERNAME || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'postgres',
     synchronize: true,
     logging: false,
     entities: [
@@ -33,5 +34,7 @@ export const AppDataSource = new DataSource({
         Usuario,
         Via,
         Participante
-    ]
+    ],
+    migrations: ['src/Infrastructure/migrations/*.ts'],
+    ssl: false // Desabilita SSL
 });

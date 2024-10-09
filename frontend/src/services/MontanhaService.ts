@@ -1,32 +1,46 @@
 import { api } from 'boot/axios';
 import { Montanha } from 'src/models/Montanha';
+import { adjustImageUrls, handleApiError } from 'src/utils/utils';
 
 export class MontanhaService {
-  async getById (id: number | string) {
-    try {
-      const response = await api.get(`/montanhas/${id}`);
-      return response.data;
-    } catch (error: any) { // Definindo o tipo como 'any'
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar montanha');
-    }
+  async getById (id: number | string): Promise<Montanha> {
+    return this.fetchMontanha(`/montanhas/${id}`);
   }
 
   async getAll (): Promise<Montanha[]> {
-    try {
-      const response = await api.get('/montanhas');
-      return response.data;
-    } catch (error: any) { // Definindo o tipo como 'any'
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar montanha');
-    }
+    return this.fetchMontanhasCollection('/montanhas');
   }
 
   async getAllName (): Promise<string[]> {
     try {
-      console.log('requiesting all Montanha names');
-      const response = await api.get('/montanhas');
-      return response.data.map((montanha: Montanha) => montanha.nome);
+      const montanhas = await this.fetchMontanhasCollection('/montanhas');
+      return montanhas.map((montanha: Montanha) => montanha.nome);
     } catch (error: any) {
-      throw new Error(error.response.data.error || 'Erro desconhecido ao buscar montanha');
+      handleApiError(error, 'Erro desconhecido ao buscar nomes de montanhas');
+    }
+  }
+
+  private async fetchMontanha (url: string): Promise<Montanha> {
+    try {
+      const response = await api.get(url);
+      const montanha = response.data as Montanha;
+
+      adjustImageUrls(montanha);
+      return montanha;
+    } catch (error: any) {
+      handleApiError(error, 'Erro desconhecido ao buscar montanha');
+    }
+  }
+
+  private async fetchMontanhasCollection (url: string): Promise<Montanha[]> {
+    try {
+      const response = await api.get(url);
+      const montanhas = response.data as Montanha[];
+
+      montanhas.forEach(adjustImageUrls);
+      return montanhas;
+    } catch (error: any) {
+      handleApiError(error, 'Erro desconhecido ao buscar montanhas');
     }
   }
 }
