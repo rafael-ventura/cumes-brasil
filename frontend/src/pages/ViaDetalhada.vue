@@ -156,7 +156,7 @@
     </div>
 
     <!-- Modal para registrar uma nova escalada dessa via -->
-    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event"/>
+    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event" @closeModal="closeEscaladaForm"/>
 
     <!-- Modal para adicionar via a coleções -->
     <q-dialog v-model="showAddToCollectionModal">
@@ -213,6 +213,10 @@ onMounted(async () => {
 const toggleForm = () => {
   showForm.value = !showForm.value;
 };
+
+const closeEscaladaForm = () => {
+  showForm.value = false;
+}
 
 const addToFavorites = async () => {
   try {
