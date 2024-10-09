@@ -49,9 +49,9 @@ import { Via } from 'src/models/Via';
 const copacabanaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
 const exposicaoE2Vias = ref<Via[]>([]);
-const copacabanaImage = ref<string>('assets/via-default-01.jpg');
-const terceiroGrauImage = ref<string>(('/assets/via-default-01.jpg'));
-const exposicaoE2Image = ref<string>(('/assets/via-default-02.jpg'));
+const copacabanaImage = ref<string>();
+const terceiroGrauImage = ref<string>();
+const exposicaoE2Image = ref<string>();
 
 defineOptions({
   name: 'HomePage'
