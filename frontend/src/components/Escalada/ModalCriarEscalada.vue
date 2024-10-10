@@ -12,7 +12,6 @@
         @reset="onReset"
         class="q-gutter-md form-all-container"
       >
-
         <q-input
           outlined
           label="Data da Escalada"
@@ -139,25 +138,23 @@ const onSubmit = async (): Promise<void> => {
     observacao: observacao.value,
     participantes: participantes.value
   };
-  
+
   if (!AuthenticateService.isAuthenticated()) {
     await router.push('/auth/login');
   } else {
-      try {
+    try {
       await EscaladaService.createEscalada(escalada);
       onReset();
-
       Notify.create({
         type: 'positive',
         message: 'Escalada registrada com sucesso!',
         position: 'top-right',
-        timeout: 3000,
+        timeout: 3000
       });
 
       emit('closeModal');
     } catch (error: any) {
       const errorMessage = 'Ocorreu um erro no servidor, tente novamente mais tarde';
-      
       Notify.create({
         type: 'negative',
         message: '' + errorMessage,

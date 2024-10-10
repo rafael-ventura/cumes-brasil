@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" color="primary"/>
+    <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" />
     <PerfilBar :user="<Usuario>user"/>
     <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
       <div class="row q-col-gutter-sm q-gutter-md justify-center">
@@ -114,6 +114,8 @@ defineOptions({
   top: 16px;
   right: 16px;
   height: 50px;
+  color: #af8355;
+  background-color: #fcbd7b;
 }
 
 .large-text {
@@ -126,6 +128,10 @@ defineOptions({
   align-items: center; /* Alinha o conteúdo verticalmente no centro */
   justify-content: center; /* Alinha o conteúdo horizontalmente no centro */
   height: 100%; /* Faz com que o item ocupe toda a altura disponível da coluna */
+}
+
+.q-card {
+  background-color: #96c589;
 }
 
 </style>

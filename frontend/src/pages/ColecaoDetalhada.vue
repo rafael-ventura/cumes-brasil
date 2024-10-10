@@ -81,8 +81,7 @@
       <q-btn
         fab
         icon="add"
-        color="blue"
-        class="fixed-bottom-right"
+        class="botao-add fixed-bottom-right"
         @click="openAddViaModal"
       />
 
@@ -325,4 +324,5 @@ const viaAdded = (via: Via) => {
   right: 16px;
   z-index: 2; /* Garante que o botão esteja acima do conteúdo */
 }
+
 </style>

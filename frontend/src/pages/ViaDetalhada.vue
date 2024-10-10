@@ -8,15 +8,15 @@
     <!-- Botões de ação -->
     <div class="action-buttons q-col-12">
       <!-- Verifica se o usuário está autenticado antes de permitir registrar uma escalada -->
-      <q-btn rounded color="primary" icon="add_circle" @click="checkAuthentication('registerEscalada')">
+      <q-btn rounded class="btn-actions-escalada" icon="add_circle" @click="checkAuthentication('registerEscalada')">
         <div>Registrar uma escalada</div>
       </q-btn>
       <!-- Verifica se o usuário está autenticado antes de permitir adicionar a favoritos -->
-      <q-btn rounded color="secondary" icon="star_border" @click="checkAuthentication('addFavorites')">
+      <q-btn rounded class="btn-actions-favorito" icon="star_border" @click="checkAuthentication('addFavorites')">
         <div>Adicionar a Favoritas</div>
       </q-btn>
       <!-- Verifica se o usuário está autenticado antes de permitir adicionar a uma coleção -->
-      <q-btn rounded color="accent" icon="style" @click="checkAuthentication('addToCollection')">
+      <q-btn rounded class="btn-actions-colecao" icon="style" @click="checkAuthentication('addToCollection')">
         <div>Adicionar a uma Coleção</div>
       </q-btn>
     </div>
@@ -55,7 +55,8 @@
           <q-item class="row">
             <q-card class="col-12 margem">
               <div class="top-margem row">
-                <q-icon name="rotate_90_degrees_cw" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <q-icon name="rotate_90_degrees_cw" class="medium-icon col-4"></q-icon>
+                <!-- Substitua o nome do ícone conforme necessário -->
                 <div class="text-h4 col-4 center">{{ via?.grau }}°</div>
               </div>
               <div class="text-h6 center">GRAU</div>
@@ -63,7 +64,8 @@
             <q-separator spaced />
             <q-card class="col-12 margem">
               <div class="top-margem row">
-                <q-icon name="map" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <q-icon name="map" class="medium-icon col-4"></q-icon>
+                <!-- Substitua o nome do ícone conforme necessário -->
                 <div class="text-h4 col-4 center">{{ via?.crux }}</div>
               </div>
               <div class="text-h6 center">CRUX</div>
@@ -71,7 +73,8 @@
             <q-separator spaced />
             <q-card class="col-12 margem">
               <div class="top-margem row">
-                <q-icon name="precision_manufacturing" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <q-icon name="precision_manufacturing" class="medium-icon col-4"></q-icon>
+                <!-- Substitua o nome do ícone conforme necessário -->
                 <div class="text-h4 col-4 center">{{ via?.artificial }}</div>
               </div>
               <div class="text-h6 center">ARTIFICIAL</div>
@@ -79,7 +82,8 @@
             <q-separator spaced />
             <q-card class="col-12 margem">
               <div class="top-margem row">
-                <q-icon name="sunny" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <q-icon name="sunny" class="medium-icon col-4"></q-icon>
+                <!-- Substitua o nome do ícone conforme necessário -->
                 <div class="text-h4 col-4 center">{{ via?.exposicao }}</div>
               </div>
               <div class="text-h6 center">EXPOSIÇÃO</div>
@@ -93,7 +97,8 @@
           <q-item>
             <q-card class="q-ma-sm card-parametro">
               <div class="top-margem row">
-                <q-icon name="format_list_bulleted" class="medium-icon col-4"></q-icon> <!-- Substitua o nome do ícone conforme necessário -->
+                <q-icon name="format_list_bulleted" class="medium-icon col-4"></q-icon>
+                <!-- Substitua o nome do ícone conforme necessário -->
                 <div class="text-h6 col-4">{{ via?.detalhes }}</div>
               </div>
               <div class="text-h6 center">DETALHES</div>
@@ -159,7 +164,7 @@
     </div>
 
     <!-- Modal para registrar uma nova escalada dessa via -->
-    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event" @closeModal="closeEscaladaForm"/>
+    <ModalCriarEscalada :isOpen="showForm" @update:isOpen="showForm = $event" @closeModal="closeEscaladaForm" />
 
     <q-dialog v-model="showAddToCollectionModal">
       <q-card style="min-width: 400px;">
@@ -241,7 +246,7 @@ const toggleForm = () => {
 
 const closeEscaladaForm = () => {
   showForm.value = false;
-}
+};
 
 const addToFavorites = async () => {
   try {
@@ -349,6 +354,18 @@ const addToCollection = async (colecao: Colecao) => {
 
 .margem{
   margin: 8px 0px 8px 0px;
+}
+
+.btn-actions-escalada {
+  background-color: #bce9b4;
+}
+
+.btn-actions-favorito {
+  background-color: #fcbd7b;
+}
+
+.btn-actions-colecao {
+  background-color: palevioletred;
 }
 
 </style>

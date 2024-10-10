@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="q-pa-md" style="max-width: 700px">
       <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md"/>
-      <div class="text-h3 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
+      <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
       <div class="row q-gutter-md justify-center">
@@ -101,5 +101,13 @@ function goToFilteredSearch (filter: string) {
   width: 100%;
   padding: 10px;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.text-h2 {
+  color: #bce9b4;
+}
+
+.text-h5 {
+  color: #bce9b4;
 }
 </style>

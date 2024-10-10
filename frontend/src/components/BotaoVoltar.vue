@@ -11,3 +11,10 @@ const goBack = () => {
   router.back();
 };
 </script>
+
+<style scoped>
+.btn-back {
+  background-color: #af8355
+}
+
+</style>
