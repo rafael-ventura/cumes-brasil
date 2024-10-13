@@ -28,7 +28,7 @@ export class UsuarioService {
             throw new Error("Email já cadastrado");
         }
         const senhaHash = await bcrypt.hash(senha, 10);
-        const user = await this.usuarioRepo.create(nome, email, senhaHash);
+        const user = await this.usuarioRepo.create(nome, email, senhaHash, 3);
         await this.createDefaultCollections(user);
     }
 

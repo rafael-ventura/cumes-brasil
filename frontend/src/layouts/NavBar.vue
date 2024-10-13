@@ -42,13 +42,14 @@
       />
 
       <!-- Dark mode toggle -->
-      <q-btn
+      <!--  <q-btn
         flat
         round
         size="lg"
         :icon="isDarkMode ? 'brightness_7' : 'brightness_4'"
         @click="toggleDarkMode"
       />
+      -->
     </q-toolbar>
   </q-footer>
 </template>
