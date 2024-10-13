@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue';
+import { computed, defineEmits, defineProps, ref, watch } from 'vue';
 import { Usuario } from 'src/models/Usuario';
 import UserService from 'src/services/UsuarioService';
 import AddPreferidaModal from 'components/Perfil/AddPreferidaModal.vue';
@@ -54,12 +54,6 @@ import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
 import ImageService from 'src/services/ImagemService';
 import { QRejectedEntry, useQuasar } from 'quasar';
-
-interface CustomRejectedEntry {
-  failedPropValidation: boolean;
-  file: File;
-  reason: 'size' | 'type' | 'extension' | string;
-}
 
 const props = defineProps<{ user: Usuario }>();
 const emits = defineEmits(['submit', 'waiting']);
@@ -74,22 +68,40 @@ const viaPreferidaNome = ref(props.user.via_preferida?.nome || '');
 const viaPreferida = ref(props.user.via_preferida || null);
 const isAddPreferidaModalOpen = ref(false);
 const $q = useQuasar();
-
-// Novas refs para upload de foto
 const fotoFile = ref<File | null>(null);
 const fotoPerfil = ref(
   props.user.foto_perfil?.url ? ImageService.getFullImageUrl(props.user.foto_perfil.url) : ''
 );
-
 const fotoPreview = computed(() => {
   if (fotoFile.value) {
     return URL.createObjectURL(fotoFile.value);
   } else if (fotoPerfil.value) {
     return fotoPerfil.value;
   } else {
-    return 'caminho/para/imagem/padrao.png'; // Forneça o caminho para uma imagem padrão
+    return '/assets/usuario-default-01.jpg';
   }
 });
+
+watch(
+  () => props.user,
+  (newUser) => {
+    if (newUser) {
+      nome.value = newUser.nome;
+      email.value = newUser.email;
+      dataAtividade.value = newUser.data_atividade;
+      clubeOrganizacao.value = newUser.clube_organizacao || '';
+      localizacao.value = newUser.localizacao || '';
+      biografia.value = newUser.biografia || '';
+      viaPreferidaId.value = newUser.via_preferida?.id.toString() || '';
+      viaPreferidaNome.value = newUser.via_preferida?.nome || '';
+      fotoPerfil.value = newUser.foto_perfil?.url ? ImageService.getFullImageUrl(newUser.foto_perfil.url) : '';
+    }
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+);
 
 const formattedDataAtividade = ref(
   dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : ''
@@ -117,21 +129,21 @@ interface ExtendedQRejectedEntry extends QRejectedEntry {
 const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
   rejectedEntries.forEach(entry => {
     const extendedEntry = entry as ExtendedQRejectedEntry;
-    let message = '';
+    let msg = '';
     switch (extendedEntry.reason) {
       case 'size':
-        message = `O arquivo "${entry.file.name}" é muito grande.`;
+        msg = `O arquivo "${entry.file.name}" é muito grande.`;
         break;
       case 'type':
       case 'extension':
-        message = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
+        msg = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
         break;
       default:
-        message = `O arquivo "${entry.file.name}" foi rejeitado.`;
+        msg = `O arquivo "${entry.file.name}" foi rejeitado.`;
     }
     $q.notify({
       type: 'negative',
-      message: message
+      message: msg
     });
   });
 };
@@ -141,7 +153,6 @@ const onSubmit = async () => {
     const formData = new FormData();
     formData.append('nome', nome.value);
     formData.append('email', email.value);
-
     if (formattedDataAtividade.value) {
       formData.append('data_atividade', formatDateToDDMMYYYY(formattedDataAtividade.value));
     }
@@ -165,11 +176,26 @@ const onSubmit = async () => {
       console.log('Nenhum arquivo para anexar');
     }
 
-    // Chamar o serviço com FormData
-    await UserService.editarDados(formData);
+    // Chamar o serviço com FormData e obter o usuário atualizado
+    const updatedUser = await UserService.editarDados(formData);
 
-    // Atualizar o usuário
-    emits('submit' /* Dados atualizados do usuário */);
+    nome.value = updatedUser.nome;
+    email.value = updatedUser.email;
+    dataAtividade.value = updatedUser.data_atividade;
+    formattedDataAtividade.value = updatedUser.data_atividade
+      ? formatDateToYYYYMMDD(updatedUser.data_atividade)
+      : '';
+    clubeOrganizacao.value = updatedUser.clube_organizacao || '';
+    localizacao.value = updatedUser.localizacao || '';
+    biografia.value = updatedUser.biografia || '';
+    viaPreferidaId.value = updatedUser.via_preferida?.id.toString() || '';
+    viaPreferidaNome.value = updatedUser.via_preferida?.nome || '';
+    viaPreferida.value = updatedUser.via_preferida || null;
+    fotoPerfil.value = updatedUser.foto_perfil?.url
+      ? ImageService.getFullImageUrl(updatedUser.foto_perfil.url)
+      : '';
+    console.log('Foto de perfil atualizada:', fotoPerfil.value);
+    emits('submit', updatedUser);
   } catch (error) {
     console.error(error);
   }

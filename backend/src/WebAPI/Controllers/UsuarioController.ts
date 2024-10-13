@@ -90,6 +90,7 @@ export class UsuarioController {
 
     editarDados = async (req: Request, res: Response) => {
         try {
+            console.log("ENDPOINT EDITAR DADOS");
             const userId = parseInt(req.user.userId);
             const usuarioDados: Partial<Usuario> = req.body;
             const file = req.file;

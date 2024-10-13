@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     crypto.randomBytes(16, (err, hash) => {
       if (err) cb(err, '');
       const usuarioid = req.user.userId;
-      const fileName = `foto_perfil-${usuarioid}-${file.originalname}`;
+      const fileName = `foto_perfil-userId-${usuarioid}`;
       cb(null, fileName);
     });
   }

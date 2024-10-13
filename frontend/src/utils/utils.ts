@@ -69,7 +69,6 @@ export function formatVia (via: Via): Via {
     via.data = new Date(via.data).toLocaleDateString('pt-BR');
   }
 
-  // Preencher valores vazios com "N/A"
   const keys = Object.keys(via) as ViaKey[];
   for (const key of keys) {
     if (via[key] === '' || via[key] === null || via[key] === undefined) {

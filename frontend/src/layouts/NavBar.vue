@@ -61,17 +61,10 @@ import { Dark } from 'quasar';
 
 const router = useRouter();
 const route = useRoute();
-const isDarkMode = ref(Dark.isActive);
-
+ref(Dark.isActive);
 const goTo = (path: string) => {
   router.push(path);
 };
-
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value;
-  Dark.set(isDarkMode.value);
-};
-
 const isSelected = (path: string) => {
   return route.path === path;
 };
