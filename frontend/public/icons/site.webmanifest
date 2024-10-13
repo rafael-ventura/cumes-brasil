@@ -28,20 +28,20 @@
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/index.html",
-  "scope": "/",
+  "scope": "/index.html",
   "screenshots": [
-    {
-      "src": "/screenshots/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    },
-    {
-      "src": "/screenshots/screenshot-mobile.png",
-      "sizes": "640x360",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ]
+  {
+  "src": "/screenshots/screenshot-wide.png",
+        "sizes": "1280x720",
+        "type": "image/png",
+        "form_factor": "wide"
+      },
+      {
+        "src": "/screenshots/screenshot-mobile.png",
+        "sizes": "640x360",
+        "type": "image/png",
+        "form_factor": "narrow"
+      }
+    ]
+  }
 }
-

@@ -69,7 +69,6 @@ export function formatVia (via: Via): Via {
     via.data = new Date(via.data).toLocaleDateString('pt-BR');
   }
 
-  // Preencher valores vazios com "N/A"
   const keys = Object.keys(via) as ViaKey[];
   for (const key of keys) {
     if (via[key] === '' || via[key] === null || via[key] === undefined) {
@@ -93,3 +92,16 @@ export function handleApiError (error: any, defaultMessage: string): never {
   const message = error?.response?.data?.error || defaultMessage;
   throw new Error(message);
 }
+
+export const formatDateToYYYYMMDD = (dateString: string) => {
+  const [day, month, year] = dateString.split('/');
+  return `${year}-${month}-${day}`;
+};
+
+export const formatDateToDDMMYYYY = (dateString: string) => {
+  const date = new Date(dateString + 'T00:00:00');
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};

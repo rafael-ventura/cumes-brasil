@@ -11,12 +11,12 @@
             <q-icon name="terrain" />
             {{ via.montanha.nome }}
           </div>
-          <q-badge color="primary" :label="'Grau: ' + via.grau"/>
-          <q-badge color="secondary" :label="'Crux: ' + via.crux" class="q-ml-sm"/>
-          <q-badge color="info" :label="'Artificial: ' + via.artificial" class="q-ml-sm"/>
-          <q-badge color="accent" :label="'Duração: ' + via.duracao" class="q-ml-sm"/>
-          <q-badge color="warning" :label="'Exposição: ' + via.exposicao" class="q-ml-sm"/>
-          <q-badge color="info" :label="'Extensão: ' + via.extensao + 'm'" class="q-mt-sm"/>
+          <q-badge color="primary" :label="'Grau: ' + via.grau" text-color="black" />
+          <q-badge color="secondary" :label="'Crux: ' + via.crux" class="q-ml-sm" text-color="black" />
+          <q-badge color="info" :label="'Artificial: ' + via.artificial" class="q-ml-sm" text-color="black" />
+          <q-badge color="accent" :label="'Duração: ' + via.duracao" class="q-ml-sm" text-color="black" />
+          <q-badge color="warning" :label="'Exposição: ' + via.exposicao" class="q-ml-sm" text-color="black" />
+          <q-badge color="info" :label="'Extensão: ' + via.extensao + 'm'" class="q-mt-sm" text-color="black" />
         </div>
       </q-card-section>
     </q-card>
@@ -35,3 +35,30 @@ const emitClick = () => {
   emits('click');
 };
 </script>
+
+<style scoped>
+.card-item {
+  border-radius: 10px;
+  background-color: #daffd3;
+}
+
+.card-info {
+  background-color: #bce9b4;
+}
+
+.text-h6 {
+  background-color: #bce9b4;
+  color: black;
+}
+
+.text-subtitle1 {
+  background-color: #bce9b4;
+  color: black;
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+</style>

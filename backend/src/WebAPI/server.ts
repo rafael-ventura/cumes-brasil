@@ -43,14 +43,9 @@ app.use('/assets', express.static(assetsPath));
 console.log('Serving static files from', assetsPath);
 app.use('/api', routes);
 
-
-
-
-
 AppDataSource.initialize()
   .then(async () => {
       console.log('Conexão com o banco de dados estabelecida com sucesso');
-
       const viaRepository = AppDataSource.getRepository(Via);
       const count = await viaRepository.count();
       if (count === 0) {
@@ -67,17 +62,13 @@ AppDataSource.initialize()
       process.exit(1); // Encerra o processo se a conexão falhar
   });
 
-
-app.listen(PORT, () => {
+if (typeof PORT === 'number') {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
-    console.log("The server is running in", process.env.NODE_ENV, "mode");
-    console.log("Variáveis de ambiente carregadas:");
     console.log("DB_HOST:", process.env.DB_HOST);
     console.log("DB_USERNAME:", process.env.DB_USERNAME);
     console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
     console.log("DB_NAME:", process.env.DB_NAME);
     console.log("DB_PORT:", process.env.DB_PORT);
-
-  console.log("The CORS origin is", corsOptions.origin);
-    console.log(process.cwd());
 });
+}

@@ -64,6 +64,7 @@ export class UsuarioController {
     delete = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
+            console.log(id);
             await this.service.deleteUsuario(id);
             res.status(200).json({ message: 'Usuario deletado com sucesso.' });
         } catch (error) {
@@ -77,7 +78,6 @@ export class UsuarioController {
     getPerfil = async (req: Request, res: Response) => {
         try {
             const userId = parseInt(req.user.userId);
-            console.log('Usuario Id getPerfil: ',userId);
             const resultado = await this.service.getPerfil(userId);
             if (!resultado) {
                 return res.status(404).json({ message: 'Perfil não encontrado.' });
@@ -90,10 +90,11 @@ export class UsuarioController {
 
     editarDados = async (req: Request, res: Response) => {
         try {
+            console.log("ENDPOINT EDITAR DADOS");
             const userId = parseInt(req.user.userId);
-            console.log('Usuario Id editarDados: ',userId);
-            const usuario: Usuario = req.body;
-            await this.service.editarDados(userId, usuario);
+            const usuarioDados: Partial<Usuario> = req.body;
+            const file = req.file;
+            await this.service.editarDados(userId, usuarioDados, file);
             res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
         } catch (error) {
             if (error instanceof Error && error.message === 'Perfil não encontrado') {
@@ -101,5 +102,5 @@ export class UsuarioController {
             }
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
         }
-    }
+    };
 }

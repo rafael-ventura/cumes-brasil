@@ -20,11 +20,12 @@ export class UsuarioRepository {
           .getMany();
     }
 
-    async create (nome: string, email: string, senhaHash: string, ): Promise<Usuario> {
+    async create (nome: string, email: string, senhaHash: string, imagemId: number): Promise<Usuario> {
         return this.repository.save({
             nome,
             email,
-            password_hash: senhaHash
+            password_hash: senhaHash,
+            foto_perfil: imagemId
         });
     }
 
@@ -48,5 +49,9 @@ export class UsuarioRepository {
           .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
           .where('usuario.id = :id', { id })
           .getOne();
+    }
+
+    async findOne (param: { where: { id: number }; relations: string[] }) {
+        return this.repository.findOne(param);
     }
 }

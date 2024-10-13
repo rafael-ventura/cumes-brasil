@@ -11,5 +11,4 @@ class EscaladaService {
     }
   }
 }
-
 export default new EscaladaService();

@@ -59,9 +59,9 @@ const userInfo = computed(() => [
 }
 
 .shadow-item {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   display: flex;
-  height: 100%;
+  height: 10%;
 }
 
 .info-list {
@@ -81,5 +81,9 @@ const userInfo = computed(() => [
 .info-text {
   flex: 1; /* Permite que o texto ocupe o espaço restante */
   word-wrap: break-word; /* Quebra o texto se for muito longo */
+}
+
+.profile-header-container{
+  background-color: #bce9b4;
 }
 </style>

@@ -7,10 +7,6 @@ class HomeService {
     return this.getViasByBairro('copacabana');
   }
 
-  async getViasNoBairro (bairro: string): Promise<Via[]> {
-    return this.getViasByBairro(bairro.toLowerCase());
-  }
-
   async getViasDeTerceiroGrau (): Promise<Via[]> {
     const { vias } = await ViaService.getAllVias();
     return vias.filter((via: Via) => this.isTerceiroGrau(via.grau));

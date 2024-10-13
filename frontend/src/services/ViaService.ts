@@ -10,10 +10,7 @@ class ViaService {
     try {
       const response = await api.get(`/vias/${id}`);
       let via = response.data as Via;
-
-      console.log(via.imagem.url);
       via = await this.adjustAndFormatVia(via);
-
       return via;
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar via');
@@ -29,9 +26,7 @@ class ViaService {
       const response = await api.get('/vias/', { params });
       const vias = response.data.vias as Via[];
       const total = response.data.total as number;
-
       vias.forEach(via => adjustImageUrls(via));
-
       return {
         vias,
         total

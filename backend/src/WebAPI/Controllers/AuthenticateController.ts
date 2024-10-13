@@ -1,8 +1,7 @@
 // controllers/auth.controller.ts
 
 import { Request, Response } from 'express';
-import AuthService from '../../Application/services/AuthenticateService';
-import { createAuthService } from '../../Application/services/AuthenticateService';
+import AuthService, { createAuthService } from '../../Application/services/AuthenticateService';
 
 class AuthController {
     private authService: AuthService;
@@ -17,7 +16,7 @@ class AuthController {
         try {
             const { email, password } = req.body;
             const token = await this.authService.login(email, password);
-            res.json({ token }); // Retorna o token gerado
+            res.json({ token });
         } catch (error) {
             res.status(400).json({ message: error });
         }

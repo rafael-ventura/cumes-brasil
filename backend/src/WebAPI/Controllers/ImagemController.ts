@@ -19,7 +19,7 @@ export class ImagemController {
   getImagemById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const result = await this.service.getImagemById(id);
+      const result = await this.service.getById(id);
       if (!result) {
         return res.status(404).json({ error: "Imagem não encontrada" });
       }
@@ -28,7 +28,7 @@ export class ImagemController {
       if (error instanceof Error) {
         res.status(500).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getImagemById" });
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getById" });
       }
     }
 
@@ -43,7 +43,7 @@ export class ImagemController {
    */
   getAllImagem = async (_: Request, res: Response) => {
     try {
-      const result: Imagem[] | null = await this.service.getImagens();
+      const result: Imagem[] | null = await this.service.getAll();
       if (result?.length === 0) {
         return res.status(404).json({ error: "Nenhuma Imagem encontrada" });
       }
@@ -68,13 +68,13 @@ export class ImagemController {
   createImagem = async (req: Request, res: Response) => {
     try {
       const imagem: Imagem = req.body;
-      await this.service.createImagem(imagem);
+      await this.service.create(imagem);
       res.status(201).send();
     } catch (error) {
       if (error instanceof Error) {
         res.status(500).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller createImagem" });
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller create" });
       }
     }
   };
@@ -90,13 +90,13 @@ export class ImagemController {
   updateImagem = async (req: Request, res: Response) => {
     try {
       const imagem: Imagem = req.body;
-      await this.service.updateImagem(imagem.id, imagem);
+      await this.service.update(imagem.id, imagem);
       res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
         res.status(500).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller updateImagem" });
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller update" });
       }
     }
   };
@@ -111,7 +111,7 @@ export class ImagemController {
   deleteImagem = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      await this.service.deleteImagem(id);
+      await this.service.delete(id);
       res.status(204).send();
     } catch (error) {
       if (error instanceof Error) {
@@ -120,7 +120,7 @@ export class ImagemController {
         }
         res.status(500).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller deleteImagem" });
+        res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
       }
     }
   };

@@ -27,7 +27,7 @@ routes.use("/faces", FaceRouter);
 routes.use("/croquis", CroquiRouter);
 routes.use("/usuarios", UsuarioRouter);
 routes.use("/imagens", ImagemRouter);
-routes.use("/escaladas", authenticateToken, EscaladaRouter);
+routes.use("/escaladas", EscaladaRouter);
 routes.use('/colecoes', authenticateToken, ColecaoRouter);
 routes.use("/perfil", authenticateToken, PerfilRouter);
 routes.use("/search", SearchRouter);

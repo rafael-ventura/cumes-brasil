@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <div class="q-pa-md" style="max-width: 700px">
       <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md"/>
-      <div class="text-h3 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
+      <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
       <div class="row q-gutter-md justify-center">
@@ -49,9 +49,9 @@ import { Via } from 'src/models/Via';
 const copacabanaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
 const exposicaoE2Vias = ref<Via[]>([]);
-const copacabanaImage = ref<string>('assets/via-default-01.jpg');
-const terceiroGrauImage = ref<string>(('/assets/via-default-01.jpg'));
-const exposicaoE2Image = ref<string>(('/assets/via-default-02.jpg'));
+const copacabanaImage = ref<string>();
+const terceiroGrauImage = ref<string>();
+const exposicaoE2Image = ref<string>();
 
 defineOptions({
   name: 'HomePage'
@@ -101,5 +101,13 @@ function goToFilteredSearch (filter: string) {
   width: 100%;
   padding: 10px;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.text-h2 {
+  color: #bce9b4;
+}
+
+.text-h5 {
+  color: #bce9b4;
 }
 </style>

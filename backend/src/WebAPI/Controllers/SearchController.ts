@@ -19,7 +19,6 @@ export class SearchController {
 
 	searchEntities = async (req: Request, res: Response) => {
 		try {
-			console.log("Search request received: ", req.body);
 			const {
 				entityType,
 				searchQuery,
@@ -30,9 +29,6 @@ export class SearchController {
 				page,
 				itemsPerPage
 			} = req.body;
-
-			console.log("Search request received: ", req.body);
-
 
 			if (!entityType || !this.serviceMap[entityType]) {
 				return res.status(400).json({ error: 'Invalid entity type' });
@@ -51,9 +47,6 @@ export class SearchController {
 
 			// Aplique os filtros na consulta ao banco de dados
 			const searchResult = await this.serviceMap[entityType].search(filters) as ISearchResult<any>;
-
-			console.log("Query result:", searchResult);
-
 			// Adicione o totalItems ao resultado
 			res.json({
 				items: searchResult.items,

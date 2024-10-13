@@ -4,14 +4,20 @@ import bcrypt from 'bcrypt';
 import { Colecao } from '../../Domain/entities/Colecao';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Container, Service } from 'typedi';
+import { Imagem } from '../../Domain/entities/Imagem';
+import { ImagemService } from './ImagemService';
+import path from 'path';
+import * as fs from 'node:fs';
 
 @Service()
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
+    private imagemService: ImagemService;
 
-    constructor (usuarioRepo: UsuarioRepository) {
+    constructor (usuarioRepo: UsuarioRepository, imagemService: ImagemService) {
         this.usuarioRepo = usuarioRepo;
+        this.imagemService = imagemService;
     }
 
     async getUsuarioById (id: number): Promise<Usuario | null> {
@@ -28,23 +34,15 @@ export class UsuarioService {
             throw new Error("Email já cadastrado");
         }
         const senhaHash = await bcrypt.hash(senha, 10);
-        const user = await this.usuarioRepo.create(nome, email, senhaHash);
+        const user = await this.usuarioRepo.create(nome, email, senhaHash, 3);
         await this.createDefaultCollections(user);
     }
 
     private async createDefaultCollections (user: Usuario): Promise<void> {
-        const escaladasCollection = new Colecao();
-        escaladasCollection.nome = 'Escaladas';
-        escaladasCollection.descricao = 'Vias que escalei';
-        escaladasCollection.usuario = user.id;
-        escaladasCollection.imagem = 1;
+        const escaladasCollection = new Colecao('Escaladas', 'Vias que escalei', user.id, 1);
         await this.colecaoRepo.create(escaladasCollection);
 
-        const favoritasCollection = new Colecao();
-        favoritasCollection.nome = 'Vias Favoritas';
-        favoritasCollection.descricao = 'Vias favoritadas por você';
-        favoritasCollection.usuario = user.id;
-        favoritasCollection.imagem = 1;
+        const favoritasCollection = new Colecao('Vias Favoritas', 'Vias favoritadas por você', user.id, 1);
         await this.colecaoRepo.create(favoritasCollection);
     }
 
@@ -65,9 +63,63 @@ export class UsuarioService {
         return this.usuarioRepo.getPerfilSemHash(id);
     }
 
-    async editarDados (id: number, usuario: Usuario): Promise<void> {
-        await this.usuarioRepo.update(id, usuario);
+    async editarDados (id: number, usuarioDados: Partial<Usuario>, file?: Express.Multer.File): Promise<void> {
+        const usuario = await this.usuarioRepo.findOne({
+            where: { id },
+            relations: ['foto_perfil']
+        });
+
+        if (!usuario) {
+            throw new Error('Usuário não encontrado');
+        }
+
+        this.atualizarDadosUsuario(usuario, usuarioDados);
+        if (file) {
+            console.log('Entrou no if com o arquivo:', file);
+            await this.atualizarFotoPerfil(usuario, file);
+        }
+    }
+
+    private atualizarDadosUsuario (usuario: Usuario, usuarioDados: Partial<Usuario>) {
+        usuario.nome = usuarioDados.nome || usuario.nome;
+        usuario.email = usuarioDados.email || usuario.email;
+        usuario.data_atividade = usuarioDados.data_atividade || usuario.data_atividade;
+        usuario.clube_organizacao = usuarioDados.clube_organizacao || usuario.clube_organizacao;
+        usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
+        usuario.biografia = usuarioDados.biografia || usuario.biografia;
+        if (usuarioDados.via_preferida) {
+            usuario.via_preferida = usuarioDados.via_preferida;
+        }
+    }
+
+    private async atualizarFotoPerfil (usuario: Usuario, file: Express.Multer.File) {
+        const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
+
+        const novaImagem = new Imagem();
+        novaImagem.url = `/assets/${file.filename}`;
+        novaImagem.tipo_entidade = 'usuario';
+        novaImagem.descricao = `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`;
+        await this.imagemService.create(novaImagem);
+        usuario.foto_perfil = novaImagem.id;
+
+        await this.usuarioRepo.update(usuario.id, usuario);
+        if (imagemAtual) {
+            await this.excluirImagemAntiga(imagemAtual);
+        }
+    }
+
+    private async excluirImagemAntiga (imagemAtual: Imagem) {
+        console.log('Imagem atual:', imagemAtual);
+        if (imagemAtual.url !== '/assets/usuario-default-01.jpg') {
+            const oldImagePath = path.resolve(__dirname, '..', '..', '..', 'assets', imagemAtual.url.replace('/assets/', ''));
+            console.log('Caminho corrigido da imagem:', oldImagePath);
+            fs.unlink(oldImagePath, (err) => {
+                if (err) {
+                    console.error('Erro ao apagar imagem antiga:', err);
+                }
+            });
+
+            await this.imagemService.delete(imagemAtual.id);
+        }
     }
 }
-
-export default new UsuarioService(new UsuarioRepository());

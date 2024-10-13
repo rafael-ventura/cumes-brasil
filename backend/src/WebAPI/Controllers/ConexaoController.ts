@@ -18,7 +18,7 @@ export class ConexaoController {
     checkDatabaseHealth = async (_: Request, res: Response) => {
         const isHealthy = await this.internalService.healthCheck();
         if (isHealthy) {
-            res.status(200).json({ status: "ok" });
+            res.status(200).json({ status: "API está conectada ao banco de dados e responde corretamente" });
         } else {
             res.status(500).json({ status: "error", message: "Database not responding" });
         }

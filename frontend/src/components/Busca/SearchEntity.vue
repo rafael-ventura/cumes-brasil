@@ -1,9 +1,11 @@
 <template>
   <div>
     <div class="search-header">
-      <h2>Busca</h2>
+      <div class="text-h2"> Busca</div>
     </div>
-    <slot name="filters" :filters="filters" />
+    <div class=" slot-container">
+      <slot name="filters" :filters="filters" />
+    </div>
     <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
     <q-pagination v-model="filters.page as number" :max="totalPages" @update:model-value="searchEntities" />
   </div>
@@ -87,5 +89,23 @@ const selectItem = (item: any) => {
 .search-header h2 {
   font-size: 24px;
   font-weight: bold;
+  color: #fcbd7b;
 }
+
+.slot-container {
+  border: 2px solid #bce9b4; /* Cor da borda */
+  padding: 16px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #2c2c2c; /* Cor de fundo para destacar o conteúdo */
+}
+
+.slot-container * {
+  color: #fcbd7b;
+
+}
+
+.text-h2 {
+  color: #fcbd7b;
+}
+
 </style>

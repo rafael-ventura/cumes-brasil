@@ -50,8 +50,8 @@
       />
     </div>
     <div class="buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
-      <q-btn class="right-margem" label="Limpar" color="secondary" @click="clearFilters"/>
-      <q-btn label="Buscar" color="primary" @click="emitFilters"/>
+      <q-btn class="right-margem" label="Limpar" @click="clearFilters" />
+      <q-btn class="right-margem2" label="Buscar" @click="emitFilters" />
     </div>
     <q-separator spaced />
   </div>
@@ -174,5 +174,15 @@ const filterByExtension = (category: ExtensionCategory) => {
 .active {
   background-color: gray;
   color: white;
+}
+
+.right-margem {
+  margin-right: 16px;
+  background-color: #bce9b4;
+}
+
+.right-margem2 {
+  margin-right: 0;
+  background-color: #daffd3;
 }
 </style>
