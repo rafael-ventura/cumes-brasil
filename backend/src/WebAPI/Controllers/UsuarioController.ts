@@ -91,13 +91,9 @@ export class UsuarioController {
     editarDados = async (req: Request, res: Response) => {
         try {
             const userId = parseInt(req.user.userId);
-            console.log('Usuario Id editarDados: ', userId);
-            console.log('req.file:', req.file);
-            console.log('req.body:', req.body);
             const usuarioDados: Partial<Usuario> = req.body;
             const file = req.file;
             await this.service.editarDados(userId, usuarioDados, file);
-            console.log('Perfil atualizado com sucesso.');
             res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
         } catch (error) {
             if (error instanceof Error && error.message === 'Perfil não encontrado') {

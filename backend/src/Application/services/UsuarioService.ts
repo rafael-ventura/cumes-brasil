@@ -106,9 +106,6 @@ export class UsuarioService {
                 throw error;
             }
         }
-
         await this.usuarioRepo.update(id, usuario);
     }
 }
-
-export default new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()));
