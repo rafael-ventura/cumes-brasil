@@ -59,7 +59,7 @@ class AuthService {
             if (!user) {
                 // Criar um novo usuário se necessário
                 const passwordHash = await bcrypt.hash(googleToken, 10);
-                await this.userRepository.create(name, email, passwordHash);
+                await this.userRepository.create(name, email, passwordHash, 3);
                 user = await this.userRepository.findByEmail(email);
             }
 
