@@ -50,4 +50,8 @@ export class UsuarioRepository {
           .where('usuario.id = :id', { id })
           .getOne();
     }
+
+    async findOne (param: { where: { id: number }; relations: string[] }) {
+        return this.repository.findOne(param);
+    }
 }

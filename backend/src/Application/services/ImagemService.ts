@@ -16,7 +16,6 @@ export class ImagemService {
       throw new Error("ID da Imagem inválido");
     }
     imagem = await this.imagemRepository.getById(id);
-    console.log('A url da imagem é:', imagem?.url);
     return imagem;
   }
 

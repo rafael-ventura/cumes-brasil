@@ -4,14 +4,19 @@ import bcrypt from 'bcrypt';
 import { Colecao } from '../../Domain/entities/Colecao';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Container, Service } from 'typedi';
+import { Imagem } from '../../Domain/entities/Imagem';
+import { ImagemService } from './ImagemService';
+import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 
 @Service()
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
+    private imagemService: ImagemService;
 
-    constructor (usuarioRepo: UsuarioRepository) {
+    constructor (usuarioRepo: UsuarioRepository, imagemService: ImagemService) {
         this.usuarioRepo = usuarioRepo;
+        this.imagemService = imagemService;
     }
 
     async getUsuarioById (id: number): Promise<Usuario | null> {
@@ -65,9 +70,45 @@ export class UsuarioService {
         return this.usuarioRepo.getPerfilSemHash(id);
     }
 
-    async editarDados (id: number, usuario: Usuario): Promise<void> {
+    async editarDados (id: number,
+      usuarioDados: Partial<Usuario>,
+      file?: Express.Multer.File
+    ): Promise<void> {
+        const usuario = await this.usuarioRepo.findOne({
+            where: { id },
+            relations: ['foto_perfil']
+        });
+        if (!usuario) {
+            throw new Error('Usuário não encontrado');
+        }
+
+        usuario.nome = usuarioDados.nome || usuario.nome;
+        usuario.email = usuarioDados.email || usuario.email;
+        usuario.data_atividade = usuarioDados.data_atividade || usuario.data_atividade;
+        usuario.clube_organizacao = usuarioDados.clube_organizacao || usuario.clube_organizacao;
+        usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
+        usuario.biografia = usuarioDados.biografia || usuario.biografia;
+
+        if (usuarioDados.via_preferida) {
+            usuario.via_preferida = usuarioDados.via_preferida;
+        }
+
+        if (file) {
+            try {
+                const imagem = new Imagem();
+                imagem.url = `/assets/${file.filename}`;
+                imagem.tipo_entidade = 'usuario';
+                imagem.descricao = 'Foto de perfil do usuário ' + usuario.nome + ' (' + usuario.id + ')';
+                await this.imagemService.createImagem(imagem);
+                usuario.foto_perfil = imagem.id;
+            } catch (error) {
+                console.error('Erro ao salvar a imagem:', error);
+                throw error;
+            }
+        }
+
         await this.usuarioRepo.update(id, usuario);
     }
 }
 
-export default new UsuarioService(new UsuarioRepository());
+export default new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()));
