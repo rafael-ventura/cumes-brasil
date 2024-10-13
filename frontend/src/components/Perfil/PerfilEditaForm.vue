@@ -20,8 +20,23 @@
           <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
         </div>
         <q-separator spaced />
-        <q-btn flat label="Alterar Foto de Perfil" class="q-mt-md right-margem" />
+
+        <!-- Seção de Upload da Foto de Perfil -->
+        <div class="q-mt-md">
+          <q-img :src="fotoPreview" :ratio="1" class="my-profile-pic" />
+          <q-file
+            v-model="fotoFile"
+            label="Escolha uma nova foto de perfil"
+            accept=".jpg, image/*"
+            :max-file-size="2097152"
+            @change="onFotoChange"
+            @rejected="onFotoRejected"
+          />
+        </div>
+
+        <!-- Botão de Submissão -->
         <q-btn type="submit" label="Salvar" color="primary" class="q-mt-md" />
+
       </q-form>
       <q-dialog v-model="isAddPreferidaModalOpen">
         <AddPreferidaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate" />
@@ -31,18 +46,25 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue';
+import { computed, defineEmits, defineProps, ref } from 'vue';
 import { Usuario } from 'src/models/Usuario';
 import UserService from 'src/services/UsuarioService';
 import AddPreferidaModal from 'components/Perfil/AddPreferidaModal.vue';
 import { Via } from 'src/models/Via';
+import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
+import ImageService from 'src/services/ImagemService';
+import { QRejectedEntry, useQuasar } from 'quasar';
+
+interface CustomRejectedEntry {
+  failedPropValidation: boolean;
+  file: File;
+  reason: 'size' | 'type' | 'extension' | string;
+}
 
 const props = defineProps<{ user: Usuario }>();
 const emits = defineEmits(['submit', 'waiting']);
-
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);
-const fotoPerfil = ref(props.user.foto_perfil?.url);
 const dataAtividade = ref(props.user.data_atividade);
 const clubeOrganizacao = ref(props.user.clube_organizacao || '');
 const localizacao = ref(props.user.localizacao || '');
@@ -50,24 +72,30 @@ const biografia = ref(props.user.biografia || '');
 const viaPreferidaId = ref(props.user.via_preferida?.id.toString() || '');
 const viaPreferidaNome = ref(props.user.via_preferida?.nome || '');
 const viaPreferida = ref(props.user.via_preferida || null);
-
 const isAddPreferidaModalOpen = ref(false);
+const $q = useQuasar();
 
-const formatDateToYYYYMMDD = (dateString: string) => {
-  const [day, month, year] = dateString.split('/');
-  return `${year}-${month}-${day}`;
-};
+// Novas refs para upload de foto
+const fotoFile = ref<File | null>(null);
+const fotoPerfil = ref(
+  props.user.foto_perfil?.url ? ImageService.getFullImageUrl(props.user.foto_perfil.url) : ''
+);
 
-const formatDateToDDMMYYYY = (dateString: string) => {
-  const date = new Date(dateString + 'T00:00:00');
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+const fotoPreview = computed(() => {
+  if (fotoFile.value) {
+    return URL.createObjectURL(fotoFile.value);
+  } else if (fotoPerfil.value) {
+    return fotoPerfil.value;
+  } else {
+    return 'caminho/para/imagem/padrao.png'; // Forneça o caminho para uma imagem padrão
+  }
+});
 
-const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
+const formattedDataAtividade = ref(
+  dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : ''
+);
 
+// Métodos
 const viaPreferidaUpdate = (newPreferida: Via) => {
   viaPreferida.value = newPreferida;
   viaPreferidaId.value = newPreferida.id.toString();
@@ -75,21 +103,73 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
   isAddPreferidaModalOpen.value = false;
 };
 
+const onFotoChange = () => {
+  if (fotoFile.value) {
+    // Se um novo arquivo for selecionado, limpe a URL existente de fotoPerfil
+    fotoPerfil.value = '';
+  }
+};
+
+interface ExtendedQRejectedEntry extends QRejectedEntry {
+  reason: 'size' | 'type' | 'extension' | string;
+}
+
+const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
+  rejectedEntries.forEach(entry => {
+    const extendedEntry = entry as ExtendedQRejectedEntry;
+    let message = '';
+    switch (extendedEntry.reason) {
+      case 'size':
+        message = `O arquivo "${entry.file.name}" é muito grande.`;
+        break;
+      case 'type':
+      case 'extension':
+        message = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
+        break;
+      default:
+        message = `O arquivo "${entry.file.name}" foi rejeitado.`;
+    }
+    $q.notify({
+      type: 'negative',
+      message: message
+    });
+  });
+};
+
 const onSubmit = async () => {
   try {
-    const updatedUser = {
-      ...props.user,
-      nome: nome.value,
-      email: email.value,
-      foto_perfil: fotoPerfil.value ? { url: fotoPerfil.value } : null,
-      data_atividade: formattedDataAtividade.value ? formatDateToDDMMYYYY(formattedDataAtividade.value) : null,
-      clube_organizacao: clubeOrganizacao.value || null,
-      localizacao: localizacao.value || null,
-      biografia: biografia.value || null,
-      via_preferida: viaPreferida.value ? { id: viaPreferidaId.value, nome: viaPreferidaNome.value } : null
-    };
-    await UserService.editarDados(updatedUser);
-    emits('submit', updatedUser);
+    const formData = new FormData();
+    formData.append('nome', nome.value);
+    formData.append('email', email.value);
+
+    if (formattedDataAtividade.value) {
+      formData.append('data_atividade', formatDateToDDMMYYYY(formattedDataAtividade.value));
+    }
+    if (clubeOrganizacao.value) {
+      formData.append('clube_organizacao', clubeOrganizacao.value);
+    }
+    if (localizacao.value) {
+      formData.append('localizacao', localizacao.value);
+    }
+    if (biografia.value) {
+      formData.append('biografia', biografia.value);
+    }
+    if (viaPreferidaId.value) {
+      formData.append('via_preferida_id', viaPreferidaId.value);
+    }
+
+    if (fotoFile.value) {
+      console.log('Anexando arquivo ao FormData:', fotoFile.value);
+      formData.append('foto_perfil', fotoFile.value);
+    } else {
+      console.log('Nenhum arquivo para anexar');
+    }
+
+    // Chamar o serviço com FormData
+    await UserService.editarDados(formData);
+
+    // Atualizar o usuário
+    emits('submit' /* Dados atualizados do usuário */);
   } catch (error) {
     console.error(error);
   }
@@ -104,9 +184,7 @@ const onSubmit = async () => {
 .q-mt-md {
   margin-top: 16px;
 }
-.right-margem {
-  margin-right: 16px;
-}
+
 .align-center {
   display: flex;
   justify-content: center;
