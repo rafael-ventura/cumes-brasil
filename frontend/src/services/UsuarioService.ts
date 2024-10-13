@@ -86,18 +86,12 @@ class UsuarioService {
     }
   }
 
-  async editarDados (usuario: {
-    localizacao: string | null;
-    via_preferida: { id: number | string } | null;
-    data_atividade: string | null;
-    biografia: string | null;
-    foto_perfil: { url: string } | null;
-    nome: string;
-    clube_organizacao: string | null;
-    email: string;
-  }) {
+  async editarDados (formData: FormData) {
     try {
-      const response = await api.put('/perfil', usuario);
+      const response = await api.put('/perfil', formData);
+      if (response.data.foto_perfil) {
+        adjustImageUrls({ imagem: response.data.foto_perfil });
+      }
       return response.data as Usuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar dados');

@@ -46,7 +46,6 @@ app.use('/api', routes);
 AppDataSource.initialize()
   .then(async () => {
       console.log('Conexão com o banco de dados estabelecida com sucesso');
-
       const viaRepository = AppDataSource.getRepository(Via);
       const count = await viaRepository.count();
       if (count === 0) {
@@ -66,7 +65,6 @@ AppDataSource.initialize()
 if (typeof PORT === 'number') {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
-    console.log("Variáveis de ambiente carregadas:");
     console.log("DB_HOST:", process.env.DB_HOST);
     console.log("DB_USERNAME:", process.env.DB_USERNAME);
     console.log("DB_PASSWORD:", process.env.DB_PASSWORD);

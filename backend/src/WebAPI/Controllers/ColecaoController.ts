@@ -98,12 +98,8 @@ export class ColecaoController {
                 usuario_id,
                 imagem_id
             } = req.body;
-            const colecao = new Colecao();
-            colecao.nome = nome;
-            colecao.descricao = descricao;
-            colecao.usuario = usuario_id;
-            colecao.imagem = imagem_id || 1;
-
+            //TODO: Rever essa logica de transformação da requisição em objeto dentro do controller
+            const colecao = new Colecao(nome, descricao, usuario_id, imagem_id);
             await this.service.createColecao(colecao);
             res.status(201).json({ message: 'Colecao criada com sucesso.' });
         } catch (error) {

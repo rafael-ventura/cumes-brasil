@@ -109,7 +109,6 @@ export class ViaRepository implements ISearchRepository<Via>{
   }
 
   async search(query: any): Promise<ISearchResult<Via>> {
-    console.log("Query received:", query); // Adicione esta linha para depuração
     const { searchQuery, selectedMountain, selectedDifficulty, selectedCrux, selectedExtensionCategory, page = 1, itemsPerPage = 10 } = query;
 
     let qb = this.repository.createQueryBuilder('via')
@@ -150,8 +149,6 @@ export class ViaRepository implements ISearchRepository<Via>{
 
     // Calcular total de páginas
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    console.log("Query result:", { items, totalItems, totalPages });
     return {
       items,
       totalPages,
