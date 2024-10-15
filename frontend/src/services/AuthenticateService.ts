@@ -10,8 +10,8 @@ class AuthenticateService {
       });
       this.saveToken(response.data.token);
       return response;
-    } catch (error) {
-      handleApiError(error, 'Erro ao fazer login');
+    } catch (error: any) {
+      handleApiError(error, error.response?.data?.message);
     }
   }
 
