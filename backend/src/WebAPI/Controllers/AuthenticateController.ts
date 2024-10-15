@@ -2,6 +2,10 @@
 
 import { Request, Response } from 'express';
 import AuthService, { createAuthService } from '../../Application/services/AuthenticateService';
+import NotFoundError from '../../Application/errors/NotFoundError';
+import UnauthorizedError from '../../Application/errors/UnauthorizedError';
+import { errorsMessage } from '../../Application/errors/constants';
+import BadRequestError from '../../Application/errors/BadRequestError';
 
 class AuthController {
     private authService: AuthService;
@@ -18,7 +22,21 @@ class AuthController {
             const token = await this.authService.login(email, password);
             res.json({ token });
         } catch (error) {
-            res.status(400).json({ message: error });
+            if (error instanceof NotFoundError) {
+                res.status(error.status).json({
+                    message: error.message
+                });
+            } else if (error instanceof UnauthorizedError) {
+                res.status(error.status).json({
+                    message: error.message
+                });
+            } else if (error instanceof BadRequestError) {
+                res.status(error.status).json({
+                    message: error.message
+                });
+            } else {
+                res.status(500).json({ message: errorsMessage.INTERNAL_SERVER_ERROR });
+            }
         }
     }
 
