@@ -75,7 +75,6 @@ export class EscaladaService {
 		} else if (isNaN(via_id)) {
 			throw new Error("ID da via inválido");
 		}
-		console.log("via_id: ", via_id, "limit: ", limit);
 		return this.repository.getByViaId(via_id, limit);
 	}
 

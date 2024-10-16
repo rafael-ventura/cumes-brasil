@@ -35,8 +35,7 @@ defineOptions({
 
 const onResetPassword = async () => {
   try {
-    const response = await AuthenticateService.resetPassword(email.value);
-    console.log(response.data);
+    await AuthenticateService.resetPassword(email.value);
   } catch (error: any) {
     console.error('Erro ao redefinir senha:', error.message);
   }
