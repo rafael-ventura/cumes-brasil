@@ -1,37 +1,37 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="q-pa-md" style="max-width: 700px">
-      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md"/>
+  <q-page>
+    <div class="q-pa-md">
+      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho"/>
       <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
-      <div class="row q-gutter-md justify-center">
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch()">
+      <div class="card-list">
+        <div class="card">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias em Copacabana</div>
-                <div class="text-caption">{{ copacabanaVias.length }} vias encontradas</div>
+                <div class="text-h4">Vias em Copacabana</div>
+                <div class="text-h6">{{ copacabanaVias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch()">
+        <div class="">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias de Terceiro Grau</div>
-                <div class="text-caption">{{ terceiroGrauVias.length }} vias encontradas</div>
+                <div class="text-h4">Vias de Terceiro Grau</div>
+                <div class="text-h6">{{ terceiroGrauVias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch()">
+        <div class="">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias com Exposição até E2</div>
-                <div class="text-caption">{{ exposicaoE2Vias.length }} vias encontradas</div>
+                <div class="text-h4">Vias com Exposição até E2</div>
+                <div class="text-h6">{{ exposicaoE2Vias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
@@ -80,14 +80,23 @@ function goToFilteredSearch () {
 }
 </script>
 
-<style scoped>
-.hover-card {
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
+.logo-tamanho{
+  width: 310px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.card {
   cursor: pointer;
   transition: transform 0.3s;
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
-.hover-card:hover {
+.card:hover {
   transform: scale(1.05);
 }
 
@@ -95,15 +104,37 @@ function goToFilteredSearch () {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 10px;
+  padding: 24px;
   background: rgba(0, 0, 0, 0.5);
 }
 
 .text-h2 {
-  color: #bce9b4;
+  color: $tertiary;
 }
 
 .text-h5 {
-  color: #bce9b4;
+  color: $tertiary;
+}
+
+.text-h4 {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+
+  @media (max-width: 425px){
+    font-size: 1.8rem;
+
+  }
+}
+
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 10px;
+  justify-content: center;
+  margin: 0 auto;
 }
 </style>
