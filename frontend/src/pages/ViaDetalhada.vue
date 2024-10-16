@@ -6,18 +6,27 @@
     <q-separator spaced />
 
     <!-- Botões de ação -->
-    <div class="action-buttons q-col-12">
+    <div class="action-buttons">
       <!-- Verifica se o usuário está autenticado antes de permitir registrar uma escalada -->
-      <q-btn rounded class="btn-actions-escalada" icon="add_circle" @click="checkAuthentication('registerEscalada')">
-        <div>Registrar uma escalada</div>
+      <q-btn rounded class="btn-actions-escalada icon-padding" @click="checkAuthentication('registerEscalada')">
+        <div class="btn-content">
+          <q-icon name="add_circle" class="icon-spacing"></q-icon>
+          <div class="btn-text">Registrar uma escalada</div>
+        </div>
       </q-btn>
       <!-- Verifica se o usuário está autenticado antes de permitir adicionar a favoritos -->
-      <q-btn rounded class="btn-actions-favorito" icon="star_border" @click="checkAuthentication('addFavorites')">
-        <div>Adicionar a Favoritas</div>
+      <q-btn rounded class="btn-actions-favorito icon-padding" @click="checkAuthentication('addFavorites')">
+        <div class="btn-content">
+          <q-icon name="star_border" class="icon-spacing"></q-icon>
+          <div>Adicionar a Favoritas</div>
+        </div>
       </q-btn>
       <!-- Verifica se o usuário está autenticado antes de permitir adicionar a uma coleção -->
-      <q-btn rounded class="btn-actions-colecao" icon="style" @click="checkAuthentication('addToCollection')">
-        <div>Adicionar a uma Coleção</div>
+      <q-btn rounded class="btn-actions-colecao icon-padding" @click="checkAuthentication('addToCollection')">
+        <div class="btn-content">
+          <q-icon name="style" class="icon-spacing"></q-icon>
+          <div>Adicionar a uma Coleção</div>
+        </div>
       </q-btn>
     </div>
 
@@ -311,7 +320,8 @@ const addToCollection = async (colecao: Colecao) => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .rounded-borders {
   border-radius: 15px;
   color: black;
@@ -319,12 +329,14 @@ const addToCollection = async (colecao: Colecao) => {
 
 .title-margin {
   margin-left: 20px;
+  color: $primary;
 }
 
 .action-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
+  padding: 0 10px;
 }
 
 .row {
@@ -356,6 +368,10 @@ const addToCollection = async (colecao: Colecao) => {
   margin: 8px 0px 8px 0px;
 }
 
+.icon-spacing {
+  font-size: 2.125em;
+}
+
 .btn-actions-escalada {
   background-color: #bce9b4;
 }
@@ -368,4 +384,27 @@ const addToCollection = async (colecao: Colecao) => {
   background-color: palevioletred;
 }
 
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Para telas grandes, ícone ao lado do texto
+  @media (min-width: 600px) {
+    flex-direction: row;
+    margin-right: 12px;
+    .icon-spacing {
+      margin: 10px 10px; // Separar o ícone do texto
+    }
+  }
+
+  // Para telas pequenas, ícone em cima do texto
+  @media (max-width: 599px) {
+    flex-direction: column;
+    margin: 6px 0;
+    .icon-spacing {
+      margin: 4px 0;
+    }
+  }
+}
 </style>

@@ -36,23 +36,24 @@ const emitClick = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .card-item {
   border-radius: 10px;
-  background-color: #daffd3;
+  background-color: $tertiary-light;
 }
 
 .card-info {
-  background-color: #bce9b4;
+  background-color: $tertiary;
 }
 
 .text-h6 {
-  background-color: #bce9b4;
+  background-color: $tertiary;
   color: black;
 }
 
 .text-subtitle1 {
-  background-color: #bce9b4;
+  background-color: $tertiary;
   color: black;
 }
 
