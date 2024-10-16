@@ -12,25 +12,43 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary   : #fcbd7b;
-$secondary : #bce9b4;
-$accent    : #9C27B0;
 
-$dark      : #1D1D1D;
-$dark-page : #121212;
+// quasar.variables.scss
+
+// Define custom colors
+$primary: #fcbd7b; // Adventure green
+$secondary: #bce9b4; // Mountaineering yellow
+$tertiary: #da7093; // Palevioletred
+
+$primary-light: #ffca91;
+$secondary-light: #cbf8c4;
+$tertiary-light: #f186aa;
+
+$primary-dark: #c48b5d;
+$secondary-dark: #8fd28f;
+$tertiary-dark: #c71585;
+
+$dark: #1c1c1c; // Dark mode background
+$light: #f5f5f5; // Light mode background
+
+
+// Define Cume custom colors
+$c-color-yellow: #fffd5e;
+$c-color-green: #5ccc62;
+$c-color-red: #ff5858;
+$c-color-blue: #52a2f3;
+$c-color-purple: #ca74ef;
+$c-color-pink: #ff7497;
+$c-color-orange: #fcbd7b;
+$c-color-brown: #e4a16a;
+$c-color-grey: #757575;
+
 
 $positive  : #21BA45;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
 
-// quasar.variables.scss
-
-// Define custom colors
-$primary: #1b5e20; // Adventure green
-$secondary: #ffab00; // Mountaineering yellow
-$dark: #1c1c1c; // Dark mode background
-$light: #f5f5f5; // Light mode background
 
 // Include Quasar variables
 $body-bg-color: $light;
