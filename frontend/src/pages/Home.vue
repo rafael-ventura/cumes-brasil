@@ -6,32 +6,32 @@
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
       <div class="card-list">
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('leme')">
+        <div class="card">
+          <q-card class="card" @click="goToFilteredSearch('leme')">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias em Copacabana</div>
-                <div class="text-caption">{{ copacabanaVias.length }} vias encontradas</div>
+                <div class="text-h4">Vias em Copacabana</div>
+                <div class="text-h6">{{ copacabanaVias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('terceiro-grau')">
+        <div class="">
+          <q-card class="card" @click="goToFilteredSearch('terceiro-grau')">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias de Terceiro Grau</div>
-                <div class="text-caption">{{ terceiroGrauVias.length }} vias encontradas</div>
+                <div class="text-h4">Vias de Terceiro Grau</div>
+                <div class="text-h6">{{ terceiroGrauVias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
         </div>
-        <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('exposicao-e2')">
+        <div class="">
+          <q-card class="card" @click="goToFilteredSearch('exposicao-e2')">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h6">Vias com Exposição até E2</div>
-                <div class="text-caption">{{ exposicaoE2Vias.length }} vias encontradas</div>
+                <div class="text-h4">Vias com Exposição até E2</div>
+                <div class="text-h6">{{ exposicaoE2Vias.length }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
@@ -93,13 +93,14 @@ function goToFilteredSearch (filter: string) {
   display: flex;
 }
 
-.hover-card {
+.card {
   cursor: pointer;
   transition: transform 0.3s;
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
-.hover-card:hover {
+.card:hover {
   transform: scale(1.05);
 }
 
@@ -107,7 +108,7 @@ function goToFilteredSearch (filter: string) {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 10px;
+  padding: 24px;
   background: rgba(0, 0, 0, 0.5);
 }
 
@@ -119,7 +120,7 @@ function goToFilteredSearch (filter: string) {
   color: $tertiary;
 }
 
-.text-h6 {
+.text-h4 {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,8 +130,10 @@ function goToFilteredSearch (filter: string) {
 
 .card-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 10px;
+  justify-content: center;
+  margin: 0 auto;
 }
 </style>
