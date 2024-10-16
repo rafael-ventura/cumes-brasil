@@ -9,16 +9,21 @@
         <q-input v-model="nome"
                  label="Nome"
                  type="text"
-                 required/>
+                 lazy-rules
+                 :rules="[ val => !!val || 'Campo obrigatório' ]"
+        />
         <q-input v-model="email"
                  label="Email"
                  type="email"
-                 required/>
+                 lazy-rules
+                 :rules="[ val => !!val || 'Campo obrigatório' ]"
+        />
         <q-input v-model="senha"
                  label="Senha"
                  type="password"
-                 required/>
-
+                 lazy-rules
+                 :rules="[ val => !!val || 'Campo obrigatório' ]"
+        />
         <slot></slot>
 
         <q-btn type="submit"
