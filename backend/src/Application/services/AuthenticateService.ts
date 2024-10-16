@@ -3,27 +3,33 @@ import jwt from "jsonwebtoken";
 import { UsuarioRepository } from "../../Infrastructure/repositories/UsuarioRepository";
 import { OAuth2Client } from "google-auth-library";
 import { ObjectLiteral } from "typeorm";
+import NotFoundError from "../errors/NotFoundError";
+import UnauthorizedError from "../errors/UnauthorizedError";
+import { errorsMessage } from "../errors/constants";
+import AuthenticateValidation from "../validations/AuthenticateValidation";
 
 class AuthService {
     private userRepository: UsuarioRepository;
     private secretKey: string = "";
     private client: OAuth2Client;
 
-    constructor () {
+    constructor() {
         this.userRepository = new UsuarioRepository();
         this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     }
 
-    async login (email: string, password: string): Promise<any> {
+    async login(email: string, password: string): Promise<any> {
+        AuthenticateValidation.valida(email, password);
+
         const user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
-        if (!user) throw new Error("Nenhum usuário com esse Email encontrado");
+        if (!user) throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
 
         const isValidPassword = await bcrypt.compare(password, user.password_hash);
-        if (!isValidPassword) throw new Error("Senha inválida");
+        if (!isValidPassword) throw new UnauthorizedError(errorsMessage.BAD_CREDENTIALS);
 
         const token = this.generateToken(user.id.toString());
 
-        return {"token": token, "userId": user.id, auth: true};
+        return { "token": token, "userId": user.id, auth: true };
     }
 
     async googleLogin(googleToken: string): Promise<any> {
@@ -70,14 +76,14 @@ class AuthService {
             // Gerar um token JWT para o usuário
             const token = this.generateToken(user.id.toString());
 
-            return {"token": token, "userId": user.id, auth: true};
+            return { "token": token, "userId": user.id, auth: true };
         } catch (error) {
             throw new Error("Erro ao autenticar com o Google: " + error);
         }
     }
 
     generateToken(userId: string): string {
-        return jwt.sign({userId}, this.secretKey);
+        return jwt.sign({ userId }, this.secretKey);
     }
 
 

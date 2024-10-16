@@ -59,11 +59,8 @@ defineOptions({
 
 onMounted(async () => {
   copacabanaVias.value = await HomeService.getViasEmCopa();
-  console.log('copacabanaVias', copacabanaVias.value);
   terceiroGrauVias.value = await HomeService.getViasDeTerceiroGrau();
-  console.log('terceiroGrauVias', terceiroGrauVias.value);
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
-  console.log('exposicaoE2Vias', exposicaoE2Vias.value);
 
   if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
     copacabanaImage.value = copacabanaVias.value[0].imagem.url;
@@ -78,9 +75,8 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch (filter: string) {
+function goToFilteredSearch () {
   // TODO: Filter search do @Vitor
-  console.log(`Navigate to: ${filter}`);
 }
 </script>
 

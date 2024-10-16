@@ -19,6 +19,7 @@
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 import LoginForm from 'components/Auth/LoginForm.vue';
+import { Notify } from 'quasar';
 
 defineOptions({
   name: 'LoginPage'
@@ -31,11 +32,15 @@ const onLogin = async ({
   senha
 }: { email: string, senha: string }) => {
   try {
-    const response = await AuthenticateService.login(email, senha);
-    console.log(response.data);
+    await AuthenticateService.login(email, senha);
     await router.push('/');
   } catch (error: any) {
-    console.error(error.message);
+    Notify.create({
+      type: 'negative',
+      message: '' + error.message,
+      position: 'center',
+      timeout: 3000
+    });
   }
 };
 

@@ -64,7 +64,6 @@ export class UsuarioController {
     delete = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
-            console.log(id);
             await this.service.deleteUsuario(id);
             res.status(200).json({ message: 'Usuario deletado com sucesso.' });
         } catch (error) {
@@ -90,7 +89,6 @@ export class UsuarioController {
 
     editarDados = async (req: Request, res: Response) => {
         try {
-            console.log("ENDPOINT EDITAR DADOS");
             const userId = parseInt(req.user.userId);
             const usuarioDados: Partial<Usuario> = req.body;
             const file = req.file;
