@@ -7,7 +7,7 @@
 
       <div class="card-list">
         <div class="card">
-          <q-card class="card" @click="goToFilteredSearch('leme')">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias em Copacabana</div>
@@ -17,7 +17,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch('terceiro-grau')">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias de Terceiro Grau</div>
@@ -27,7 +27,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch('exposicao-e2')">
+          <q-card class="card" @click="goToFilteredSearch()">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias com Exposição até E2</div>
