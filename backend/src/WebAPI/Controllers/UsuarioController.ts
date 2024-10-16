@@ -1,11 +1,12 @@
 import { UsuarioService } from '../../Application/services/UsuarioService';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Usuario } from '../../Domain/entities/Usuario';
+import HandleErrors from '../../Application/errors/HandleErrors';
 
 export class UsuarioController {
     private service: UsuarioService;
 
-    constructor (service: UsuarioService) {
+    constructor(service: UsuarioService) {
         this.service = service;
     }
 
@@ -34,7 +35,7 @@ export class UsuarioController {
         }
     };
 
-    registrar = async (req: Request, res: Response) => {
+    registrar = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {
                 nome,
@@ -44,7 +45,7 @@ export class UsuarioController {
             await this.service.register(nome, email, senha);
             res.status(201).json({ message: 'Usuario criado com sucesso.' });
         } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            HandleErrors.handleErrors(error, req, res, next);
         }
     };
 
