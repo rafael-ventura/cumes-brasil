@@ -75,7 +75,6 @@ export class UsuarioService {
 
         this.atualizarDadosUsuario(usuario, usuarioDados);
         if (file) {
-            console.log('Entrou no if com o arquivo:', file);
             await this.atualizarFotoPerfil(usuario, file);
         }
     }
@@ -109,10 +108,8 @@ export class UsuarioService {
     }
 
     private async excluirImagemAntiga (imagemAtual: Imagem) {
-        console.log('Imagem atual:', imagemAtual);
         if (imagemAtual.url !== '/assets/usuario-default-01.jpg') {
             const oldImagePath = path.resolve(__dirname, '..', '..', '..', 'assets', imagemAtual.url.replace('/assets/', ''));
-            console.log('Caminho corrigido da imagem:', oldImagePath);
             fs.unlink(oldImagePath, (err) => {
                 if (err) {
                     console.error('Erro ao apagar imagem antiga:', err);

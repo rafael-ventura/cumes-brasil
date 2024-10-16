@@ -35,6 +35,7 @@ const applyFilters = (filters: any) => {
 };
 
 const updateSearchResults = (results: any[]) => {
+  // TODO: Revisar se é necessário
   console.log('Search results updated:', results);
 };
 
