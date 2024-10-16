@@ -121,7 +121,12 @@ function goToFilteredSearch () {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100%; /* Ajuste conforme necessário */
+  max-width: 100%;
+
+  @media (max-width: 425px){
+    font-size: 1.8rem;
+
+  }
 }
 
 .card-list {
