@@ -1,11 +1,11 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="q-pa-md" style="max-width: 700px">
-      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md"/>
+  <q-page>
+    <div class="q-pa-md">
+      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho"/>
       <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
-      <div class="row q-gutter-md justify-center">
+      <div class="card-list">
         <div class="col-12 col-md-6 col-lg-4">
           <q-card class="hover-card" @click="goToFilteredSearch('leme')">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
@@ -84,7 +84,15 @@ function goToFilteredSearch (filter: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
+.logo-tamanho{
+  width: 310px;
+  margin: 0 auto;
+  display: flex;
+}
+
 .hover-card {
   cursor: pointer;
   transition: transform 0.3s;
@@ -104,10 +112,25 @@ function goToFilteredSearch (filter: string) {
 }
 
 .text-h2 {
-  color: #bce9b4;
+  color: $tertiary;
 }
 
 .text-h5 {
-  color: #bce9b4;
+  color: $tertiary;
+}
+
+.text-h6 {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%; /* Ajuste conforme necessário */
+}
+
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px;
 }
 </style>
