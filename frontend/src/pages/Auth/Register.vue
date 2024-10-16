@@ -39,8 +39,7 @@ const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, s
   }
 
   try {
-    const response = await AuthenticateService.register(nome, email, senha);
-    console.log(response.data);
+    await AuthenticateService.register(nome, email, senha);
     await router.push('/auth/login');
   } catch (error: any) {
     errorMessage.value = 'Erro ao cadastrar usuário: ' + error.message;

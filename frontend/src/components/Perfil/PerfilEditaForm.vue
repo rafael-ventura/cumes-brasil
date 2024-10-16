@@ -170,10 +170,9 @@ const onSubmit = async () => {
     }
 
     if (fotoFile.value) {
-      console.log('Anexando arquivo ao FormData:', fotoFile.value);
       formData.append('foto_perfil', fotoFile.value);
     } else {
-      console.log('Nenhum arquivo para anexar');
+      console.error('Sem arquivo anexado');
     }
 
     // Chamar o serviço com FormData e obter o usuário atualizado
@@ -194,7 +193,6 @@ const onSubmit = async () => {
     fotoPerfil.value = updatedUser.foto_perfil?.url
       ? ImageService.getFullImageUrl(updatedUser.foto_perfil.url)
       : '';
-    console.log('Foto de perfil atualizada:', fotoPerfil.value);
     emits('submit', updatedUser);
   } catch (error) {
     console.error(error);

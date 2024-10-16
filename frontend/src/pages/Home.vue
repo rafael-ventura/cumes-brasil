@@ -7,7 +7,7 @@
 
       <div class="row q-gutter-md justify-center">
         <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('leme')">
+          <q-card class="hover-card" @click="goToFilteredSearch()">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias em Copacabana</div>
@@ -17,7 +17,7 @@
           </q-card>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('terceiro-grau')">
+          <q-card class="hover-card" @click="goToFilteredSearch()">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias de Terceiro Grau</div>
@@ -27,7 +27,7 @@
           </q-card>
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-          <q-card class="hover-card" @click="goToFilteredSearch('exposicao-e2')">
+          <q-card class="hover-card" @click="goToFilteredSearch()">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h6">Vias com Exposição até E2</div>
@@ -59,11 +59,8 @@ defineOptions({
 
 onMounted(async () => {
   copacabanaVias.value = await HomeService.getViasEmCopa();
-  console.log('copacabanaVias', copacabanaVias.value);
   terceiroGrauVias.value = await HomeService.getViasDeTerceiroGrau();
-  console.log('terceiroGrauVias', terceiroGrauVias.value);
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
-  console.log('exposicaoE2Vias', exposicaoE2Vias.value);
 
   if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
     copacabanaImage.value = copacabanaVias.value[0].imagem.url;
@@ -78,9 +75,8 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch (filter: string) {
+function goToFilteredSearch () {
   // TODO: Filter search do @Vitor
-  console.log(`Navigate to: ${filter}`);
 }
 </script>
 
