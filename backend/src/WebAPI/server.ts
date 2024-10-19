@@ -12,28 +12,7 @@ initializeEnvConfig();
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 8080;
-
-const allowedOrigins = [
-  'http://localhost:8080',
-  'http://localhost:9000',
-  'http://localhost:9200',
-  'http://54.236.242.52',
-  'http://54.236.242.52:8080'
-];
-
-const corsOptions = {
-    origin: function (origin: any, callback: any) {
-        // Permitir requests sem origin, como apps móveis ou curl requests
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-};
-
-app.use(cors()); // Permite todas as origens
+app.use(cors());
 
 app.use(express.json());
 
@@ -57,9 +36,9 @@ AppDataSource.initialize()
       }
   })
   .catch(error => {
-      console.error('Erro ao conectar com o banco de dados:', error.message);
-      console.error(error.stack); // Adiciona a stack trace do erro
-      process.exit(1); // Encerra o processo se a conexão falhar
+    console.error('Erro ao conectar com o banco de dados:', error.message);
+    console.error(error.stack);
+    process.exit(1);
   });
 
 if (typeof PORT === 'number') {

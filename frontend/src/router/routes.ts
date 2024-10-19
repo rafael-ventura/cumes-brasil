@@ -50,6 +50,15 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Auth/RedefinirSenha.vue')
           }
         ]
+      },
+      {
+        path: 'admin',
+        children: [
+          {
+            path: 'exemple420',
+            component: () => import('pages/ExempleCume420.vue')
+          }
+        ]
       }
     ]
   },

@@ -7,7 +7,6 @@ import ImagemService from 'src/services/ImagemService';
 class SearchService {
   async search (searchRequest: any) {
     try {
-      console.log('Search request received: ', searchRequest);
       const response = await api.post('/search', searchRequest);
       console.log(response);
       const searchResult = response.data as SearchResult;

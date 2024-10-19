@@ -60,7 +60,6 @@ const searchEntities = async () => {
 
     results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
-    console.log('Search results:', results.value);
     emit('update-results', results.value);
   } catch (error) {
     console.error('Error searching entities:', error);
@@ -75,7 +74,6 @@ const handleApplyFilters = (newFilters: SearchRequest) => {
 defineExpose({ handleApplyFilters });
 
 const selectItem = (item: any) => {
-  console.log('Item selecionado:', item);
   emit('select', item);
 };
 </script>

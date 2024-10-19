@@ -4,7 +4,6 @@
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
-      @update-results="updateSearchResults"
     >
       <template #filters="{ filters }">
         <SearchFilters :filters="filters" @applyFilters="applyFilters" />
@@ -32,10 +31,6 @@ const applyFilters = (filters: any) => {
   } else {
     console.error('SearchEntity ref not found or handleApplyFilters not defined');
   }
-};
-
-const updateSearchResults = (results: any[]) => {
-  console.log('Search results updated:', results);
 };
 
 const goViaDetalhadaView = (id: number) => {

@@ -1,11 +1,12 @@
 import { UsuarioService } from '../../Application/services/UsuarioService';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Usuario } from '../../Domain/entities/Usuario';
+import HandleErrors from '../../Application/errors/HandleErrors';
 
 export class UsuarioController {
     private service: UsuarioService;
 
-    constructor (service: UsuarioService) {
+    constructor(service: UsuarioService) {
         this.service = service;
     }
 
@@ -34,7 +35,7 @@ export class UsuarioController {
         }
     };
 
-    registrar = async (req: Request, res: Response) => {
+    registrar = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {
                 nome,
@@ -44,7 +45,7 @@ export class UsuarioController {
             await this.service.register(nome, email, senha);
             res.status(201).json({ message: 'Usuario criado com sucesso.' });
         } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            HandleErrors.handleErrors(error, req, res, next);
         }
     };
 
@@ -64,7 +65,6 @@ export class UsuarioController {
     delete = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
-            console.log(id);
             await this.service.deleteUsuario(id);
             res.status(200).json({ message: 'Usuario deletado com sucesso.' });
         } catch (error) {
@@ -90,7 +90,6 @@ export class UsuarioController {
 
     editarDados = async (req: Request, res: Response) => {
         try {
-            console.log("ENDPOINT EDITAR DADOS");
             const userId = parseInt(req.user.userId);
             const usuarioDados: Partial<Usuario> = req.body;
             const file = req.file;

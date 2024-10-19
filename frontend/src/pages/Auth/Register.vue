@@ -8,12 +8,13 @@
       <q-input v-model="confirmPassword"
                label="Confirmar Senha"
                type="password"
-               required />
+               lazy-rules
+               :rules="[ val => !!val || 'Campo obrigatório' ]"
+      />
       <q-btn flat
              label="Já tem uma conta?"
              @click="goToLogin" />
     </register-form>
-    <AuthError :message="errorMessage" />
   </q-page>
 </template>
 
@@ -22,28 +23,52 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 import RegisterForm from 'components/Auth/RegistroForm.vue';
-import AuthError from 'components/Auth/AutenticacaoErro.vue';
+import { Notify } from 'quasar';
 
 defineOptions({
   name: 'RegisterPage'
 });
 
 const confirmPassword = ref('');
-const errorMessage = ref<string | null>(null);
 const router = useRouter();
 
 const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, senha: string }) => {
   if (senha !== confirmPassword.value) {
-    errorMessage.value = 'Senhas não conferem';
+    Notify.create({
+      type: 'negative',
+      message: 'Senhas não conferem',
+      position: 'center',
+      timeout: 3000
+    });
+    return;
+  }
+
+  if (senha.length < 4) {
+    Notify.create({
+      type: 'negative',
+      message: 'A senha deve conter pelo menos 4 caracteres',
+      position: 'center',
+      timeout: 3000
+    });
     return;
   }
 
   try {
-    const response = await AuthenticateService.register(nome, email, senha);
-    console.log(response.data);
+    await AuthenticateService.register(nome, email, senha);
     await router.push('/auth/login');
+    Notify.create({
+      type: 'positive',
+      message: 'Cadastro realizado com sucesso!',
+      position: 'center',
+      timeout: 3000
+    });
   } catch (error: any) {
-    errorMessage.value = 'Erro ao cadastrar usuário: ' + error.message;
+    Notify.create({
+      type: 'negative',
+      message: '' + error.message,
+      position: 'center',
+      timeout: 3000
+    });
   }
 };
 
