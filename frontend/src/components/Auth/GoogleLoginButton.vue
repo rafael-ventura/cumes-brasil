@@ -1,11 +1,6 @@
 <template>
-  <!-- Botão do Google renderizado -->
-  <div id="google-login-btn" class="hidden-button"></div>
-  <!-- Botão customizado para abrir o login do Google -->
-  <q-btn flat id="google-login-btn2" class="q-mt-md btn-google custom-bottom" @click="onGoogleLogin">
-    <q-icon name="g_mobiledata" class="large-icon" />
-    <span>Login com Google</span>
-  </q-btn>
+  <div class="text-h6">Com Google</div>
+  <div id="google-login-btn" class="centered-button"></div>
 </template>
 
 <script setup lang="ts">
@@ -13,7 +8,7 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 
-const googleClientId = '176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com';
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const router = useRouter();
 
 interface GoogleCredentialResponse {
@@ -39,29 +34,21 @@ onMounted(() => {
 
   // Renderiza o botão do Google
   window.google.accounts.id.renderButton(
-    document.getElementById('google-login-btn2'),
-    { theme: 'outline', size: 'large' }
+    document.getElementById('google-login-btn'),
+    { theme: 'filled_black', size: 'large', shape: 'square', text: 'continue_with', logo_alignment: 'center' }
   );
 });
 
-const onGoogleLogin = () => {
-  // Renderiza o botão do Google
-  window.google.accounts.id.initialize({
-    client_id: googleClientId,
-    callback: handleCredentialResponse
-  });
-};
-
 </script>
-
-<style scoped>
-.hidden-button {
-  display: none;
+<style scoped lang="scss">
+@import "src/css/app.scss";
+.centered-button {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.custom-bottom {
-  margin-right: 10px;
-}
-.large-icon {
-  font-size: 42px;
+.text-h6 {
+  color: $secondary;
 }
 </style>

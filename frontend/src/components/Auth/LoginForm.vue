@@ -9,16 +9,18 @@
         <q-input v-model="email"
                  label="Email"
                  type="email"
+                 color="dark"
                  required/>
         <q-input v-model="senha"
                  label="Senha"
                  type="password"
+                 color="dark"
                  required/>
+        <slot></slot> <!-- Slot para botões adicionais -->
         <q-btn type="submit"
                :label="submitLabel"
                class="q-mt-md btn"
         />
-        <slot></slot>
       </q-form>
     </q-card-section>
   </q-card>
@@ -48,5 +50,6 @@ const onSubmit = () => {
 .login-card {
   max-width: 400px;
   margin: auto;
+  background-color: rgba(255, 255, 255, 0.76);
 }
 </style>
