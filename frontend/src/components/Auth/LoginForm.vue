@@ -1,7 +1,7 @@
 <template>
-  <q-card class="my-card">
+  <q-card class="login-card">
     <q-card-section>
-      <div class="text-h6">{{ props.title }}</div>
+      <div class="text-h6">Login</div>
     </q-card-section>
 
     <q-card-section>
@@ -9,18 +9,18 @@
         <q-input v-model="email"
                  label="Email"
                  type="email"
+                 color="dark"
                  required/>
         <q-input v-model="senha"
                  label="Senha"
                  type="password"
+                 color="dark"
                  required/>
-
-        <slot></slot>
-
+        <slot></slot> <!-- Slot para botões adicionais -->
         <q-btn type="submit"
                :label="submitLabel"
-               color="primary"
-               class="q-mt-md"/>
+               class="q-mt-md btn"
+        />
       </q-form>
     </q-card-section>
   </q-card>
@@ -29,8 +29,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue';
 
-const props = defineProps({
-  title: String,
+defineProps({
   submitLabel: String
 });
 
@@ -48,8 +47,9 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
-.my-card {
+.login-card {
   max-width: 400px;
   margin: auto;
+  background-color: rgba(255, 255, 255, 0.76);
 }
 </style>

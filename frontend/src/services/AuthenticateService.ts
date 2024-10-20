@@ -19,7 +19,7 @@ class AuthenticateService {
   async authenticateWithGoogle (googleTokenId: string) {
     try {
       const response = await api.post('/auth/google-login', { token: googleTokenId });
-      this.saveToken(response.data.token);
+      this.saveToken(response.data.token); // Salva o JWT gerado no backend
       return response;
     } catch (error) {
       handleApiError(error, 'Erro ao fazer login com Google');
