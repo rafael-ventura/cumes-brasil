@@ -91,28 +91,49 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
     }
 
     async search(query: any): Promise<ISearchResult<Colecao>> {
-        const { nomeColecao, nomeVia, nomeMontanha } = query;
+        const { searchQuery, colecaoId, nomeVia, nomeMontanha, page = 1, itemsPerPage = 10 } = query;
 
+        // Criar a query builder da coleção, incluindo as vias e montanhas associadas
         let qb = this.repository.createQueryBuilder('colecao')
-            .leftJoinAndSelect('colecao.vias', 'via')
-            .leftJoinAndSelect('via.montanha', 'montanha');
+            .leftJoinAndSelect('colecao.vias', 'via') // Associa as vias à coleção
+            .leftJoinAndSelect('via.montanha', 'montanha'); // Associa a montanha à via
 
-        if (nomeColecao) {
-            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        // Filtro por ID da coleção
+        if (colecaoId) {
+            qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
         }
 
+        // Filtro por nome da coleção
+        if (searchQuery) {
+            qb = qb.andWhere('colecao.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+        }
+
+        // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
         if (nomeVia) {
             qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
+        // Filtro por nome da montanha caso você queira buscar coleções que tenham vias em uma determinada montanha)
         if (nomeMontanha) {
             qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
 
+        // Contar o total de itens (coleções) correspondentes
+        const totalItems = await qb.getCount();
+
+        // Buscar coleções paginadas
+        const items = await qb
+            .skip((page - 1) * itemsPerPage)
+            .take(itemsPerPage)
+            .getMany();
+
+        // Calcular total de páginas
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
         return {
-            items: await qb.getMany(),
-            totalItems: await qb.getCount(),
-            totalPages: 1
-        }
+            items,
+            totalPages,
+            totalItems
+        };
     }
 }

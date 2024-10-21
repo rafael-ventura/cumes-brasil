@@ -3,7 +3,7 @@
     <div class="text-h2 q-mb-md">Minhas Coleções</div>
     <div class="row items-center q-my-md">
       <div class="busca-input col-12 col-md">
-        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300" />
+<!--        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300" />-->
       </div>
       <div class="busca-button col-auto">
         <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true" text-color="#af8355" />
@@ -78,9 +78,6 @@ import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
 import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
-
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
@@ -136,9 +133,9 @@ const applyFilters = (filters: any) => {
   }
 };
 
-const updateSearchResults = (results: any[]) => {
+/* const updateSearchResults = (results: any[]) => {
   console.log('Search results updated:', results);
-};
+};*/
 
 const goToColecaoDetalhada = (colecao: Colecao) => {
   router.push(`/colecoes/${colecao.id}`);

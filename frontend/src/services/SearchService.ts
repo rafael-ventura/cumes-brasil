@@ -8,7 +8,6 @@ class SearchService {
   async search (searchRequest: any) {
     try {
       const response = await api.post('/search', searchRequest);
-      console.log(response);
       const searchResult = response.data as SearchResult;
 
       // Formatar as entidades do tipo Via

@@ -1,6 +1,6 @@
 <template>
   <q-page class="page-padding">
-    <div class="text-h6 q-mb-md">Minhas Coleções</div>
+    <div class="text-h2 q-mb-md">Minhas Coleções</div>
 
     <!-- Integração com o SearchEntity para buscar e aplicar filtros -->
     <SearchEntity
@@ -10,7 +10,8 @@
       @update-results="updateSearchResults"
     >
       <template #filters="{ filters }">
-        <SearchFilters :filters="filters" @applyFilters="applyFilters" />
+        <!-- Passando apenas o filtro 'searchQuery' (Nome da Coleção) -->
+        <SearchFilters :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" />
       </template>
     </SearchEntity>
 
@@ -18,24 +19,41 @@
     <q-btn
       fab
       icon="add"
-      color="blue"
-      class="fixed-bottom-right"
+      class="botao-add fixed-bottom-right"
       @click="isAddColecaoModalOpen = true"
     />
-
-    <!-- Modal para adicionar nova coleção -->
-    <q-dialog v-model="isAddColecaoModalOpen">
-      <q-card style="min-width: 300px;">
+    <q-dialog v-model="isAddColecaoModalOpen" class="modal-add-colecao q-pa-md">
+      <q-card style="min-width: 300px;" class="modal-add-colecao q-pa-md">
         <q-card-section>
           <div class="text-h6">Adicionar Coleção</div>
         </q-card-section>
-        <q-card-section>
-          <q-input v-model="novaColecao.nome" label="Nome da Coleção" />
-          <q-input v-model="novaColecao.descricao" label="Descrição da Coleção" />
-        </q-card-section>
+        <div>
+          <q-card-section>
+            <q-input
+              class="input-white"
+              v-model="novaColecao.nome"
+              label="Nome da Coleção"
+              color="white"
+              label-color="white"
+              aria-valuetext="white"
+              outlined
+              dense
+            />
+
+            <q-input
+              class="input-white"
+              v-model="novaColecao.descricao"
+              label="Descrição da Coleção"
+              color="white" label-color="white"
+              outlined
+              dense
+              lie
+            />
+          </q-card-section>
+        </div>
         <q-card-actions align="right">
-          <q-btn flat label="Adicionar" color="primary" @click="addColecao" />
           <q-btn flat label="Cancelar" @click="isAddColecaoModalOpen = false" />
+          <q-btn flat label="Adicionar" @click="addColecao" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -48,14 +66,12 @@ import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/SearchFilters.vue';
 
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
-const searchQuery = ref('');
-const isFilterModalOpen = ref(false);
 const isAddColecaoModalOpen = ref(false);
 const novaColecao = ref({
   nome: '',
