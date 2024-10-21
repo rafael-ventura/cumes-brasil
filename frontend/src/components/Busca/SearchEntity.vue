@@ -7,12 +7,12 @@
       <slot name="filters" :filters="filters" />
     </div>
     <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
-    <q-pagination v-model="filters.page as number" :max="totalPages" @update:model-value="searchEntities" />
   </div>
+  <div ref="observer" class="observer-element"></div>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineExpose, defineProps, onMounted, ref } from 'vue';
+import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref } from 'vue';
 import searchService from 'src/services/SearchService';
 import { SearchRequest } from 'src/models/SearchRequest';
 import SearchResults from 'components/Busca/SearchResults.vue';
@@ -33,15 +33,47 @@ const filters = ref<SearchRequest>({
   selectedExtensionCategory: null,
   selectedCrux: null,
   page: 1,
-  itemsPerPage: 10
+  itemsPerPage: 12
 });
 
 const results = ref<any[]>([]);
 const totalPages = ref(1);
+const observer = ref<HTMLElement | null>(null); // Elemento observado
+let observerInstance: IntersectionObserver | null = null;
 
 onMounted(() => {
   searchEntities();
+  createObserver(); // Cria o IntersectionObserver
 });
+
+onUnmounted(() => {
+  if (observerInstance) {
+    observerInstance.disconnect(); // Desconecta o observer ao desmontar o componente
+  }
+});
+
+const createObserver = () => {
+  // Cria o IntersectionObserver
+  observerInstance = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (!filters.value.page) {
+      filters.value.page = 1;
+    }
+    if (entry.isIntersecting && filters.value.page < totalPages.value) {
+      filters.value.page++;
+      searchEntities(); // Carrega mais resultados
+    }
+  }, {
+    root: null, // Usa o viewport como root
+    rootMargin: '0px',
+    threshold: 1.0 // Aciona quando 100% do elemento está visível
+  });
+
+  // Conecta o observer ao elemento
+  if (observer.value) {
+    observerInstance.observe(observer.value);
+  }
+};
 
 const searchEntities = async () => {
   try {
@@ -57,8 +89,11 @@ const searchEntities = async () => {
         return via;
       });
     }
-
-    results.value = searchResult.items;
+    if (filters.value.page === 1) {
+      results.value = searchResult.items;
+    } else {
+      results.value = [...results.value, ...searchResult.items];
+    }
     totalPages.value = searchResult.totalPages;
     emit('update-results', results.value);
   } catch (error) {
@@ -78,7 +113,8 @@ const selectItem = (item: any) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .search-header {
   text-align: center;
   margin-bottom: 16px;
@@ -98,12 +134,26 @@ const selectItem = (item: any) => {
 }
 
 .slot-container * {
-  color: #fcbd7b;
+  color: $primary;
 
 }
 
 .text-h2 {
-  color: #fcbd7b;
+  color: $primary;
 }
 
+.end-of-list-card {
+  margin-top: 16px;
+  padding: 16px;
+  text-align: center;
+  background-color: $dark;
+  border: 2px solid $secondary;
+  border-radius: 8px;
+}
+
+.end-of-list-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: $primary;
+}
 </style>
