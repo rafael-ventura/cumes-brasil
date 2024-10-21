@@ -66,12 +66,12 @@ jobs:
             backend/package*.json \
             backend/dist \
             backend/Dockerfile \
+            backend/assets/ \
             frontend/ \
             docker-compose.yml \
             appspec.yml \
             database/json/*.json \
             scripts/ \
-            assets/ \
             -x '*.git*' \
             -x '*node_modules/*' \
             -x '*.github/*'
