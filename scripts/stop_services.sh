@@ -16,4 +16,6 @@ docker volume prune -f
 # Remover redes não utilizadas
 docker network prune -f
 
+docker rmi cumes-brasil-frontend cumes-brasil-api
+
 echo "Serviços antigos parados e limpos com sucesso!"
