@@ -1,69 +1,59 @@
 <template>
   <div class="margem">
-    <div class="row q-col-gutter-sm q-gutter-md justify-center">
-      <q-btn :class="{ active: activeFilters.searchQuery }" rounded icon="search" size="md" @click="toggleFilter('searchQuery')" label="Nome da Via"/>
-      <q-btn :class="{ active: activeFilters.selectedMountain }" rounded icon="terrain" size="md" @click="toggleFilter('selectedMountain')" label="Montanha"/>
-      <q-btn :class="{ active: activeFilters.selectedDifficulty }" rounded icon="signal_cellular_alt" size="md" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
-      <q-btn :class="{ active: activeFilters.selectedExtension }" rounded icon="height" size="md" @click="toggleFilter('selectedExtension')" label="Extensão"/>
-      <q-btn :class="{ active: activeFilters.selectedCrux }" rounded icon="trending_up" size="md" @click="toggleFilter('selectedCrux')" label="Crux"/>
-    </div>
-    <!-- Filter inputs -->
-    <div v-if="showFilterInput.searchQuery" class="q-pt-lg">
+    <!-- Campo de busca unificado -->
+    <div class="q-pt-lg">
       <q-input
-        v-model="localFilters.searchQuery"
-        label="Buscar via por nome"
+        v-model="localFilters.unifiedSearch"
+        label="Buscar por nome, bairro ou montanha"
         debounce="300"
         outlined
-      />
+        rounded
+        @change="onInputChange"
+      >
+        <template #append>
+          <!-- Ícone de lixeira para limpar -->
+          <q-icon
+            name="delete"
+            class="cursor-pointer text-negative"
+            @click="clearFilters"
+          />
+        </template>
+      </q-input>
     </div>
-    <div v-if="showFilterInput.selectedMountain" class="q-pt-lg">
-      <q-select
-        v-model="localFilters.selectedMountain"
-        :options="mountainOptions"
-        option-label="name"
-        option-value="id"
-        label="Montanha"
-        outlined
-      />
+
+    <!-- Outros filtros continuam como botões, caso seja necessário -->
+    <div class="row q-col-gutter-sm q-gutter-md justify-center">
+      <q-btn v-if="enabledFilters.includes('selectedDifficulty')" :class="{ active: activeFilters.selectedDifficulty }"
+             rounded icon="signal_cellular_alt" size="md" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
+      <q-btn v-if="enabledFilters.includes('selectedExtension')" :class="{ active: activeFilters.selectedExtension }"
+             rounded icon="height" size="md" @click="toggleFilter('selectedExtension')" label="Extensão"/>
+      <q-btn v-if="enabledFilters.includes('selectedCrux')" :class="{ active: activeFilters.selectedCrux }" rounded
+             icon="trending_up" size="md" @click="toggleFilter('selectedCrux')" label="Crux"/>
     </div>
+
+    <!-- Renderiza os inputs para os filtros selecionados -->
     <div v-if="showFilterInput.selectedDifficulty" class="q-pt-lg">
       <q-select
         v-model="localFilters.selectedDifficulty"
         :options="difficulties"
         label="Grau"
         outlined
+        @update:model-value="emitFilters"
       />
     </div>
-    <div v-if="showExtensionFilters" class="q-pt-lg row q-col-gutter-sm q-gutter-md justify-center">
-      <q-btn class="q-pr-md" @click="filterByExtension('Menor que 50 metros')" label="Menor que 50 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 50 e 100 metros')" label="Entre 50 e 100 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 100 e 200 metros')" label="Entre 100 e 200 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 200 e 300 metros')" label="Entre 200 e 300 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Mais de 300 metros')" label="Mais de 300 metros"/>
-    </div>
-    <div v-if="showFilterInput.selectedCrux" class="q-pt-lg">
-      <q-input
-        v-model="localFilters.selectedCrux"
-        label="Crux"
-        debounce="300"
-        outlined
-      />
-    </div>
-    <div class="buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
-      <q-btn class="right-margem" label="Limpar" @click="clearFilters" />
-      <q-btn class="right-margem2" label="Buscar" @click="emitFilters" />
-    </div>
-    <q-separator spaced />
+
+    <!-- Separador e botão de limpar -->
+    <q-separator spaced/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, onMounted, ref } from 'vue';
+import { defineEmits, onMounted, ref, watch } from 'vue';
 import { SearchRequest } from 'src/models/SearchRequest';
 import montanhaService from 'src/services/MontanhaService';
 
 type FilterKey =
-  'searchQuery'
+  'unifiedSearch'
   | 'selectedMountain'
   | 'selectedDifficulty'
   | 'selectedExtension'
@@ -75,10 +65,13 @@ type ExtensionCategory = 'Menor que 50 metros'
   | 'Entre 200 e 300 metros'
   | 'Mais de 300 metros';
 
+// Props e emissões
+const props = defineProps<{ enabledFilters: string[], staticFilters?: Partial<any> }>();
 const emit = defineEmits(['applyFilters']);
+
 const showExtensionFilters = ref(false);
 const localFilters = ref<SearchRequest>({
-  searchQuery: '',
+  unifiedSearch: '',
   selectedMountain: null,
   selectedDifficulty: null,
   selectedExtension: null,
@@ -87,14 +80,14 @@ const localFilters = ref<SearchRequest>({
   itemsPerPage: 10
 });
 const showFilterInput = ref<Record<FilterKey, boolean>>({
-  searchQuery: false,
+  unifiedSearch: false,
   selectedMountain: false,
   selectedDifficulty: false,
   selectedExtension: false,
   selectedCrux: false
 });
 const activeFilters = ref<Record<FilterKey, boolean>>({
-  searchQuery: false,
+  unifiedSearch: false,
   selectedMountain: false,
   selectedDifficulty: false,
   selectedExtension: false,
@@ -115,6 +108,7 @@ const extensionCategories = ref({
   'Mais de 300 metros': [300, Infinity]
 });
 
+// Inicializa as montanhas
 onMounted(async () => {
   try {
     mountainOptions.value = await montanhaService.getAllName();
@@ -123,57 +117,61 @@ onMounted(async () => {
   }
 });
 
+// Atualiza a busca automaticamente a partir de 2 letras
+const onInputChange = (value: string) => {
+  if (value.length >= 2) {
+    emitFilters();
+  }
+};
+
+// Dispara a busca ao selecionar um filtro
+watch(
+  () => localFilters.value,
+  (newFilters, oldFilters) => {
+    if (JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+      emitFilters();
+    }
+  },
+  { deep: true }
+);
+
 const clearFilters = () => {
+  console.log(props.staticFilters);
   localFilters.value = {
-    searchQuery: '',
+    unifiedSearch: '',
     selectedMountain: null,
     selectedDifficulty: null,
     selectedExtension: null,
     selectedCrux: null,
     page: 1,
-    itemsPerPage: 10
+    itemsPerPage: 10,
+    ...props.staticFilters // Mantém os filtros estáticos
   };
   Object.keys(activeFilters.value).forEach(key => {
-    activeFilters.value[key as FilterKey] = false;
+    activeFilters.value[key as keyof typeof activeFilters.value] = false;
   });
-  Object.keys(showFilterInput.value).forEach(key => {
-    showFilterInput.value[key as FilterKey] = false;
-  });
-  showExtensionFilters.value = false;
   emit('applyFilters', localFilters.value);
 };
 
 const emitFilters = () => {
-  emit('applyFilters', localFilters.value);
+  const filtersToEmit = {
+    ...localFilters.value,
+    ...props.staticFilters // Inclui os filtros estáticos
+  };
+  emit('applyFilters', filtersToEmit);
 };
 
+// Controla a exibição dos filtros
 const toggleFilter = (filter: FilterKey) => {
-  if (filter === 'selectedExtension') {
-    showExtensionFilters.value = !showExtensionFilters.value;
-  } else {
-    showFilterInput.value[filter] = !showFilterInput.value[filter];
-  }
   activeFilters.value[filter] = !activeFilters.value[filter];
-};
-
-const filterByExtension = (category: ExtensionCategory) => {
-  localFilters.value.selectedExtensionCategory = extensionCategories.value[category];
-  emitFilters();
 };
 </script>
 
 <style scoped>
-.margem{
-  margin: 16px;
-}
 .buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
-}
-.active {
-  background-color: gray;
-  color: white;
 }
 
 .right-margem {
@@ -182,7 +180,6 @@ const filterByExtension = (category: ExtensionCategory) => {
 }
 
 .right-margem2 {
-  margin-right: 0;
   background-color: #daffd3;
 }
 </style>

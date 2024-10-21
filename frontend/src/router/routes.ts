@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'busca',
+        name: 'busca', // Adiciona o nome à rota
         component: () => import('pages/Busca.vue')
       },
       {
@@ -23,7 +24,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'colecoes',
-        component: () => import('pages/Colecoes.vue')
+        component: () => import('pages/ColecoesBusca.vue')
       },
       {
         path: 'colecoes/:id',

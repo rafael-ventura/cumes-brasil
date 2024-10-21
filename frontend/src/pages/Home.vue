@@ -7,7 +7,7 @@
 
       <div class="card-list">
         <div class="card">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('copacabana')">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias em Copacabana</div>
@@ -17,7 +17,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('terceiroGrau')">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias de Terceiro Grau</div>
@@ -27,7 +27,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('exposicaoE2')">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias com Exposição até E2</div>
@@ -45,7 +45,9 @@
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
 import { Via } from 'src/models/Via';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const copacabanaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
 const exposicaoE2Vias = ref<Via[]>([]);
@@ -75,8 +77,21 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch () {
-  // TODO: Filter search do @Vitor
+function goToFilteredSearch (filterType: string) {
+  let filters = {};
+
+  if (filterType === 'copacabana') {
+    filters = { bairro: 'Copacabana' }; // Filtro por bairro
+  } else if (filterType === 'terceiroGrau') {
+    filters = { selectedDifficulty: 'III' }; // Filtro por grau
+  } else if (filterType === 'exposicaoE2') {
+    filters = { selectedExtensionCategory: [0, 50] }; // Filtro por extensão
+  }
+
+  router.push({
+    name: 'busca',
+    query: filters
+  });
 }
 </script>
 

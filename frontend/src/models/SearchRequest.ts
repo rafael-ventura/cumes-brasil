@@ -1,5 +1,5 @@
 export interface SearchRequest {
-  searchQuery?: string;
+  unifiedSearch?: string; // searchQuery
   selectedMountain?: number | null;
   selectedDifficulty?: string | null;
   selectedExtension?: string | null;
@@ -8,4 +8,5 @@ export interface SearchRequest {
   page?: number;
   itemsPerPage?: number;
   entityType?: string;
+  colecaoId?: number;
 }

@@ -2,7 +2,7 @@
 import { Via } from 'src/models/Via';
 
 export interface SearchResult {
-  items: Via[];
+  items: Via[] | any[];
   totalPages: number;
   totalItems: number;
   currentPage: number;
