@@ -13,10 +13,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(cors());
-
 app.use(express.json());
-
-// Servir arquivos estáticos da pasta assets
 const assetsPath = path.resolve(__dirname, '../../assets');
 app.use('/assets', express.static(assetsPath));
 console.log('Serving static files from', assetsPath);
