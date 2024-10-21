@@ -11,8 +11,8 @@ RUN npm install --only=production
 # Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
 COPY backend/dist ./dist
 
-# Copiar a pasta 'assets' da raiz do projeto para dentro da pasta de trabalho
-COPY assets ./assets
+# Copiar a pasta 'assets' do diretório 'backend'
+COPY backend/assets ./assets
 
 # Expor a porta do back-end
 EXPOSE 8080
