@@ -26,6 +26,7 @@ export class SearchController {
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
 				colecaoId,
 				bairro, // Adiciona o filtro de bairro
 				page,
@@ -43,6 +44,7 @@ export class SearchController {
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
 				colecaoId,
 				bairro, // Adiciona o filtro de bairro
 				page,

@@ -98,18 +98,12 @@ import { useRoute, useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
 import { Via } from 'src/models/Via';
-import ModalViaDetalhada from 'components/Via/ModalViaDetalhada.vue';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import SearchFilters from 'components/Busca/SearchFilters.vue';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
-
-type SortParams = {
-  key: keyof Via;
-  order: 'asc' | 'desc';
-};
 
 const route = useRoute();
 const router = useRouter();
@@ -120,12 +114,10 @@ const colecaoEdit = ref({
   descricao: ''
 });
 const vias = ref<Via[]>([]);
-const isModalOpen = ref(false);
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
 const isEditFormOpen = ref(false);
 const isAddViaModalOpen = ref(false);
-const selectedVia = ref<Via | null>(null);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
 
@@ -146,10 +138,6 @@ const applyFilters = (filters: any) => {
 
 const goToViaDetalhada = (id: any) => {
   router.push(`/vias/${id}`);
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
 };
 
 const expandImage = (url: string) => {

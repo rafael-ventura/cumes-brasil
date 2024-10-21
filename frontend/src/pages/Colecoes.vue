@@ -1,29 +1,19 @@
 <template>
   <q-page class="page-padding">
     <div class="text-h2 q-mb-md">Minhas Coleções</div>
-    <div class="row items-center q-my-md">
-      <div class="busca-input col-12 col-md">
-<!--        <q-input v-model="searchQuery" label="Buscar minhas coleções" @input="searchColecoes" debounce="300" />-->
-      </div>
-      <div class="busca-button col-auto">
-        <q-btn flat icon="filter_list" label="Filtros" @click="isFilterModalOpen = true" text-color="#af8355" />
-      </div>
-    </div>
-    <BuscaAvancada @apply-filters="applyFilters" v-model="isFilterModalOpen" />
-    <q-list>
-      <q-item v-for="colecao in colecoes" :key="colecao.id" clickable @click="goToColecaoDetalhada(colecao)"
-              class="colecao-item">
-        <q-item-section avatar>
-          <q-avatar square size="150px" class="custom-avatar" color="primary" text-color="white">
-            <q-img class="img-colecao" :src="colecao.imagem?.url" cover style="width: 100%; height: 100%;" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section class="info-section">
-          <q-item-label class="text-h5 break-word">{{ colecao.nome }}</q-item-label>
-          <q-item-label caption class="text-body1">{{ colecao.descricao }}</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+
+    <!-- Integração com o SearchEntity para buscar e aplicar filtros -->
+    <SearchEntity
+      ref="searchEntityRef"
+      entity="colecao"
+      @select="goToColecaoDetalhada"
+      @update-results="updateSearchResults"
+    >
+      <template #filters="{ filters }">
+        <!-- Passando apenas o filtro 'searchQuery' (Nome da Coleção) -->
+        <SearchFilters :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" />
+      </template>
+    </SearchEntity>
 
     <!-- Botão de adicionar coleção -->
     <q-btn
@@ -32,7 +22,6 @@
       class="botao-add fixed-bottom-right"
       @click="isAddColecaoModalOpen = true"
     />
-
     <q-dialog v-model="isAddColecaoModalOpen" class="modal-add-colecao q-pa-md">
       <q-card style="min-width: 300px;" class="modal-add-colecao q-pa-md">
         <q-card-section>
@@ -77,18 +66,18 @@ import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import BuscaAvancada from 'components/Busca/BuscaAvancada.vue';
+import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/SearchFilters.vue';
+
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
-const searchQuery = ref('');
-const isFilterModalOpen = ref(false);
 const isAddColecaoModalOpen = ref(false);
 const novaColecao = ref({
   nome: '',
   descricao: '',
   usuario_id: Number(localStorage.getItem('userId')) || 0,
-  imagem_id: 1
+  imagem_id: 1 // Defina a imagem padrão aqui, se necessário
 });
 
 const addColecao = async () => {
@@ -101,7 +90,7 @@ const addColecao = async () => {
       nome: '',
       descricao: '',
       usuario_id: Number(localStorage.getItem('userId')) || 0,
-      imagem_id: 1
+      imagem_id: 1 // Defina a imagem padrão aqui, se necessário
     };
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);
@@ -133,9 +122,9 @@ const applyFilters = (filters: any) => {
   }
 };
 
-/* const updateSearchResults = (results: any[]) => {
+const updateSearchResults = (results: any[]) => {
   console.log('Search results updated:', results);
-};*/
+};
 
 const goToColecaoDetalhada = (colecao: Colecao) => {
   router.push(`/colecoes/${colecao.id}`);
@@ -170,50 +159,5 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 
 .break-word {
   word-break: break-all;
-}
-
-.q-item, .botao-add {
-  background-color: #daffd3;;
-}
-
-.busca-button, .busca-input {
-  color: #fcbd7b;
-}
-
-.modal-add-colecao {
-  background-color: #2c2c2c;
-  color: white;
-}
-
-.info-section {
-  background-color: #bce9b4;
-  border-radius: 2px;
-  padding-bottom: 4%;
-  padding-left: 1%;
-  padding-top: 1px;
-}
-
-.colecao-item {
-  padding-right: 6%;
-}
-
-.text-body1 {
-  color: black;
-  font-style: oblique;
-  padding-top: 2%;
-}
-
-.text-h6 {
-  color: black;
-}
-
-.text-h2 {
-  color: #fcbd7b;
-}
-
-.img-colecao {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
 }
 </style>

@@ -41,8 +41,27 @@
         @update:model-value="emitFilters"
       />
     </div>
+    <div v-if="showExtensionFilters" class="q-pt-lg row q-col-gutter-sm q-gutter-md justify-center">
+      <q-btn class="q-pr-md" @click="filterByExtension('Menor que 50 metros')" label="Menor que 50 metros"/>
+      <q-btn class="q-pr-md" @click="filterByExtension('Entre 50 e 100 metros')" label="Entre 50 e 100 metros"/>
+      <q-btn class="q-pr-md" @click="filterByExtension('Entre 100 e 200 metros')" label="Entre 100 e 200 metros"/>
+      <q-btn class="q-pr-md" @click="filterByExtension('Entre 200 e 300 metros')" label="Entre 200 e 300 metros"/>
+      <q-btn class="q-pr-md" @click="filterByExtension('Mais de 300 metros')" label="Mais de 300 metros"/>
+    </div>
+    <div v-if="showFilterInput.selectedCrux" class="q-pt-lg">
+      <q-input
+        v-model="localFilters.selectedCrux"
+        label="Crux"
+        debounce="300"
+        outlined
+        @input="emitFilters"
+      />
+    </div>
 
     <!-- Separador e botão de limpar -->
+    <div class="buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
+      <q-btn class="right-margem" label="Limpar" @click="clearFilters" />
+    </div>
     <q-separator spaced/>
   </div>
 </template>
@@ -54,7 +73,6 @@ import montanhaService from 'src/services/MontanhaService';
 
 type FilterKey =
   'unifiedSearch'
-  | 'selectedMountain'
   | 'selectedDifficulty'
   | 'selectedExtension'
   | 'selectedCrux';
@@ -81,14 +99,12 @@ const localFilters = ref<SearchRequest>({
 });
 const showFilterInput = ref<Record<FilterKey, boolean>>({
   unifiedSearch: false,
-  selectedMountain: false,
   selectedDifficulty: false,
   selectedExtension: false,
   selectedCrux: false
 });
 const activeFilters = ref<Record<FilterKey, boolean>>({
   unifiedSearch: false,
-  selectedMountain: false,
   selectedDifficulty: false,
   selectedExtension: false,
   selectedCrux: false
@@ -135,22 +151,28 @@ watch(
   { deep: true }
 );
 
+// Limpa filtros e fecha campos
 const clearFilters = () => {
-  console.log(props.staticFilters);
   localFilters.value = {
     unifiedSearch: '',
     selectedMountain: null,
+    bairro: '',
+    selectedExposicao: null,
     selectedDifficulty: null,
     selectedExtension: null,
     selectedCrux: null,
     page: 1,
     itemsPerPage: 10,
-    ...props.staticFilters // Mantém os filtros estáticos
+    ...props.staticFilters
   };
   Object.keys(activeFilters.value).forEach(key => {
     activeFilters.value[key as keyof typeof activeFilters.value] = false;
   });
-  emit('applyFilters', localFilters.value);
+  showFilterInput.value.selectedDifficulty = false;
+  showFilterInput.value.selectedCrux = false;
+  showFilterInput.value.selectedExtension = false;
+  showExtensionFilters.value = false;
+  emitFilters();
 };
 
 const emitFilters = () => {
@@ -163,7 +185,16 @@ const emitFilters = () => {
 
 // Controla a exibição dos filtros
 const toggleFilter = (filter: FilterKey) => {
-  activeFilters.value[filter] = !activeFilters.value[filter];
+  if (filter === 'selectedExtension') {
+    showExtensionFilters.value = !showExtensionFilters.value;
+  } else {
+    showFilterInput.value[filter] = !showFilterInput.value[filter];
+  }
+};
+
+const filterByExtension = (category: ExtensionCategory) => {
+  localFilters.value.selectedExtensionCategory = extensionCategories.value[category];
+  emitFilters();
 };
 </script>
 

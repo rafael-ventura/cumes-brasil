@@ -33,6 +33,7 @@ const filters = ref(<SearchRequest>{
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
+  selectedExposicao: null,
   page: 1,
   itemsPerPage: 10,
   ...props.staticFilters, // Inicializa os filtros com os filtros estáticos
@@ -44,6 +45,12 @@ const totalPages = ref(1);
 
 // Inicializa com initialData ou faz a busca inicial
 onMounted(() => {
+  // Verifica se há filtros passados pela rota (query)
+  if (route.query) {
+    console.log('Filtros passados pela rota:', route.query);
+    Object.assign(filters.value, route.query);
+  }
+
   if (props.initialData && props.initialData.length) {
     results.value = props.initialData;
     emit('update-results', results.value);

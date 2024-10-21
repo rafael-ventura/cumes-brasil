@@ -78,19 +78,19 @@ onMounted(async () => {
 });
 
 function goToFilteredSearch (filterType: string) {
-  let filters = {};
+  let query = {};
 
   if (filterType === 'copacabana') {
-    filters = { bairro: 'Copacabana' }; // Filtro por bairro
+    query = { bairro: 'Copacabana' }; // Filtro por bairro
   } else if (filterType === 'terceiroGrau') {
-    filters = { selectedDifficulty: 'III' }; // Filtro por grau
+    query = { selectedDifficulty: 'III' }; // Filtro por grau
   } else if (filterType === 'exposicaoE2') {
-    filters = { selectedExtensionCategory: [0, 50] }; // Filtro por extensão
+    query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
   }
 
   router.push({
     name: 'busca',
-    query: filters
+    query
   });
 }
 </script>

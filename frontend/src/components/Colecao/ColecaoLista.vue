@@ -1,7 +1,7 @@
 <template>
   <div class="colecao-list-container">
     <div class="colecao-list">
-      <ColecaoCard v-for="colecao in colecoes" :key="colecao.id" :colecao="colecao" @click="showDetails(colecao)" />
+      <ColecaoCard v-for="colecao in props.colecoes" :key="colecao.id" :colecao="colecao" @click="showDetails(colecao)" />
     </div>
   </div>
 </template>

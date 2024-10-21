@@ -115,6 +115,7 @@ export class ViaRepository implements ISearchRepository<Via>{
       selectedDifficulty,
       selectedCrux,
       selectedExtensionCategory,
+      selectedExposicao,
       colecaoId, // Adicionando colecaoId ao destructuring
       bairro, // Adiciona filtro por bairro
       page = 1,
@@ -171,6 +172,16 @@ export class ViaRepository implements ISearchRepository<Via>{
         minExtension: selectedExtensionCategory[0],
         maxExtension: selectedExtensionCategory[1]
       });
+    }
+
+    // Filtro por exposição
+    if (selectedExposicao) {
+      // add um toLower case tanto no valor do banco quanto no valor do filtro, e buscar os valores menores ou iguais 'e2' fazendo um IN
+      if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
+        qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
+      } else {
+        qb = qb.andWhere('via.exposicao = :selectedExposicao', { selectedExposicao: selectedExposicao.toLowerCase() });
+      }
     }
 
     // Contar o total de itens
