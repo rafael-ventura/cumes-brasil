@@ -63,8 +63,9 @@ jobs:
       - name: Zip backend and frontend built files
         run: |
           zip -r application.zip \
+            backend/ \
             backend/package*.json \
-            backend/dist \
+            backend/dist/ \
             backend/Dockerfile \
             backend/assets/ \
             frontend/ \

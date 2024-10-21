@@ -9,7 +9,7 @@ COPY backend/package*.json ./
 RUN npm install --only=production
 
 # Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
-COPY backend/dist ./dist
+COPY backend/dist ./dist'
 
 # Copiar a pasta 'assets' do diretório 'backend'
 COPY backend/assets ./assets
