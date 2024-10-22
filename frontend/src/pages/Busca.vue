@@ -6,7 +6,7 @@
       @select="goViaDetalhadaView($event.id)"
     >
       <template #filters="{ filters }">
-        <SearchFilters :filters="filters" @applyFilters="applyFilters" />
+        <SearchFilters :filters="filters" :enabledFilters="['searchQuery', 'selectedMountain', 'selectedDifficulty']" @applyFilters="applyFilters" />
       </template>
     </SearchEntity>
   </q-page>

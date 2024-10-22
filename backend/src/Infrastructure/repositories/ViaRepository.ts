@@ -109,33 +109,72 @@ export class ViaRepository implements ISearchRepository<Via>{
   }
 
   async search(query: any): Promise<ISearchResult<Via>> {
-    const { searchQuery, selectedMountain, selectedDifficulty, selectedCrux, selectedExtensionCategory, page = 1, itemsPerPage = 10 } = query;
+    const {
+      unifiedSearch,
+      selectedMountain,
+      selectedDifficulty,
+      selectedCrux,
+      selectedExtensionCategory,
+      selectedExposicao,
+      colecaoId,
+      bairro,
+      page = 1,
+      itemsPerPage = 10
+    } = query;
 
     let qb = this.repository.createQueryBuilder('via')
         .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.imagem', 'imagem');
+        .leftJoinAndSelect('via.imagem', 'imagem')
+        .leftJoin('via.colecoes', 'colecao');
 
-    if (searchQuery) {
-      qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+    // Filtro por colecaoId (aplicado inicialmente)
+    if (colecaoId) {
+      qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
     }
 
+    // Filtro de busca unificada
+    if (unifiedSearch) {
+      qb = qb.andWhere(
+          '(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)',
+          { unifiedSearch: `%${unifiedSearch}%` }
+      );
+    }
+
+    // Filtro por bairro da montanha
+    if (bairro) {
+      qb = qb.andWhere('montanha.bairro = :bairro', { bairro });
+    }
+
+    // Filtro por nome da montanha
     if (selectedMountain) {
-      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain }); // Filtra pelo nome da montanha
+      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain });
     }
 
+    // Filtro por dificuldade da via
     if (selectedDifficulty) {
       qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty });
     }
 
+    // Filtro por crux da via
     if (selectedCrux) {
-        qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
+      qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
     }
 
+    // Filtro por categoria de extensão
     if (selectedExtensionCategory) {
       qb = qb.andWhere('via.extensao >= :minExtension AND via.extensao <= :maxExtension', {
         minExtension: selectedExtensionCategory[0],
         maxExtension: selectedExtensionCategory[1]
       });
+    }
+
+    // Filtro por exposição
+    if (selectedExposicao) {
+      if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
+        qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
+      } else {
+        qb = qb.andWhere('via.exposicao = :selectedExposicao', { selectedExposicao: selectedExposicao.toLowerCase() });
+      }
     }
 
     // Contar o total de itens
