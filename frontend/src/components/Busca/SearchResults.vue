@@ -5,6 +5,7 @@
         v-model="currentSortOption"
         :options="sortOptions"
         label="Ordenar por"
+        option-label="label"
         outlined
         dense
         @update:model-value="applySorting"

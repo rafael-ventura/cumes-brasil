@@ -25,11 +25,10 @@ const props = defineProps<{
   entity: 'via' | 'colecao';
   initialData?: any[]; // Novo parâmetro para dados iniciais
   staticFilters?: Partial<any>
-  defaultOrder?: { field: string, direction: 'asc' | 'desc' };
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
-const route = useRoute(); // Captura a rota atual
+const route = useRoute();
 
 // Opções de ordenação
 const sortOptions = ref([
@@ -41,8 +40,6 @@ const sortOptions = ref([
 
 const filters = ref(<SearchRequest>{
   unifiedSearch: '', // Campo unificado de busca
-  orderBy: props.defaultOrder ? props.defaultOrder.field : 'nome',
-  orderDirection: props.defaultOrder ? props.defaultOrder.direction : 'asc',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
@@ -58,14 +55,6 @@ const totalPages = ref(1);
 const loading = ref(false);
 const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
-
-// Atualiza a ordenação ao selecionar no dropdown
-const updateOrder = (sortOption: any) => {
-  filters.value.orderBy = sortOption.field;
-  filters.value.orderDirection = sortOption.direction;
-  filters.value.page = 1;
-  searchEntities(true);
-};
 
 onMounted(() => {
   // Verifica se há filtros passados pela rota (query)
