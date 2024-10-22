@@ -7,7 +7,7 @@ export interface SearchRequest {
   selectedExtensionCategory?: number[] | null;
   selectedCrux?: string | null;
   selectedExposicao?: string | null;
-  page?: number;
+  page: number;
   itemsPerPage?: number;
   entityType?: string;
   colecaoId?: number;

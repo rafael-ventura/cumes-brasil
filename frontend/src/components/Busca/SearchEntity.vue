@@ -15,44 +15,61 @@
 import { ref, defineEmits, defineExpose, defineProps, onMounted, onUnmounted, watch } from 'vue';
 import searchService from 'src/services/SearchService';
 import SearchResults from 'components/Busca/SearchResults.vue';
-import { formatVia } from 'src/utils/utils';
-import { Via } from 'src/models/Via';
-import ImagemService from 'src/services/ImagemService';
 import { SearchRequest } from 'src/models/SearchRequest';
+import ImagemService from 'src/services/ImagemService';
+import { formatVia } from 'src/utils/utils';
 import { useRoute } from 'vue-router';
+import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   entity: 'via' | 'colecao';
   initialData?: any[]; // Novo parâmetro para dados iniciais
-  staticFilters?: Partial<any> // Adicionando a prop para filtros estáticos
+  staticFilters?: Partial<any>
+  defaultOrder?: { field: string, direction: 'asc' | 'desc' };
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
 const route = useRoute(); // Captura a rota atual
 
+// Opções de ordenação
+const sortOptions = ref([
+  { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
+  { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
+  { label: 'Data de Adição (Mais recente)', value: { field: 'data_adicao', direction: 'desc' } },
+  { label: 'Data de Adição (Mais antiga)', value: { field: 'data_adicao', direction: 'asc' } }
+]);
+
 const filters = ref(<SearchRequest>{
   unifiedSearch: '', // Campo unificado de busca
-  selectedMountain: null,
+  orderBy: props.defaultOrder ? props.defaultOrder.field : 'nome',
+  orderDirection: props.defaultOrder ? props.defaultOrder.direction : 'asc',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
   selectedExposicao: null,
   page: 1,
-  itemsPerPage: 12,
+  itemsPerPage: 20,
   ...props.staticFilters, // Inicializa os filtros com os filtros estáticos
   ...route.query // Inclui os filtros passados pela rota
 });
 
 const results = ref();
 const totalPages = ref(1);
-const observer = ref<HTMLElement | null>(null); // Elemento observado
+const loading = ref(false);
+const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
 
-// Inicializa com initialData ou faz a busca inicial
+// Atualiza a ordenação ao selecionar no dropdown
+const updateOrder = (sortOption: any) => {
+  filters.value.orderBy = sortOption.field;
+  filters.value.orderDirection = sortOption.direction;
+  filters.value.page = 1;
+  searchEntities(true);
+};
+
 onMounted(() => {
   // Verifica se há filtros passados pela rota (query)
   if (route.query) {
-    console.log('Filtros passados pela rota:', route.query);
     Object.assign(filters.value, route.query);
   }
 
@@ -60,19 +77,20 @@ onMounted(() => {
     results.value = props.initialData;
     emit('update-results', results.value);
   } else {
-    searchEntities();
+    searchEntities(true);
   }
+  createObserver();
 });
 
-// Observa a mudança no initialData e atualiza os resultados
-watch(() => props.initialData, (newData) => {
-  if (newData && newData.length) {
-    results.value = newData;
-    emit('update-results', results.value);
-  }
-  searchEntities();
-  createObserver(); // Cria o IntersectionObserver
-});
+watch(
+  () => filters.value,
+  (newFilters, oldFilters) => {
+    if (newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+      searchEntities(true);
+    }
+  },
+  { deep: true }
+);
 
 onUnmounted(() => {
   if (observerInstance) {
@@ -81,57 +99,66 @@ onUnmounted(() => {
 });
 
 const createObserver = () => {
-  // Cria o IntersectionObserver
   observerInstance = new IntersectionObserver((entries) => {
     const entry = entries[0];
-    if (!filters.value.page) {
-      filters.value.page = 1;
-    }
-    if (entry.isIntersecting && filters.value.page < totalPages.value) {
+    if (entry.isIntersecting && filters.value.page < totalPages.value && !loading.value) {
       filters.value.page++;
-      searchEntities(); // Carrega mais resultados
+      searchEntities(false); // Passa 'false' para não resetar resultados
     }
   }, {
-    root: null, // Usa o viewport como root
+    root: null,
     rootMargin: '0px',
-    threshold: 1.0 // Aciona quando 100% do elemento está visível
+    threshold: 1.0
   });
 
-  // Conecta o observer ao elemento
   if (observer.value) {
     observerInstance.observe(observer.value);
   }
 };
 
-const searchEntities = async () => {
+const searchEntities = async (reset = false) => {
+  if (loading.value) return;
+  loading.value = true;
+
   try {
-    const searchRequest = { ...filters.value, entityType: props.entity };
+    const searchRequest = {
+      ...filters.value,
+      ...props.staticFilters,
+      entityType: props.entity
+    };
     const searchResult = await searchService.search(searchRequest);
 
-    if (filters.value.page === 1) {
+    if (props.entity === 'via') {
+      searchResult.items = searchResult.items.map((item: any) => {
+        const via = formatVia(item as Via);
+        via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        return via;
+      });
+    }
+
+    if (reset) {
       results.value = searchResult.items;
     } else {
       results.value = [...results.value, ...searchResult.items];
     }
 
-    results.value = searchResult.items;
     totalPages.value = searchResult.totalPages;
-
     emit('update-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
+  } finally {
+    loading.value = false;
   }
 };
 
 const handleApplyFilters = (newFilters: SearchRequest) => {
-  console.log('filtros static:', props.staticFilters);
   filters.value = {
     ...filters.value, // Mantém os filtros atuais
     ...props.staticFilters, // Garante que os filtros estáticos sejam incluídos
     ...newFilters,
     page: 1
   };
-  searchEntities();
+  searchEntities(true);
 };
 
 defineExpose({ handleApplyFilters });

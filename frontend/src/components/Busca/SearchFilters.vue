@@ -10,7 +10,17 @@
         rounded
         @change="onInputChange"
       >
+        <!-- Botão de filtros avançados -->
+        <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
+          <q-btn
+            flat
+            dense
+            round
+            icon="tune"
+            class="filter-btn"
+            @click="showFilterModal = true"
+          />
           <!-- Ícone de lixeira para limpar -->
           <q-icon
             name="delete"
@@ -21,15 +31,58 @@
       </q-input>
     </div>
 
-    <!-- Outros filtros continuam como botões, caso seja necessário -->
-    <div class="row q-col-gutter-sm q-gutter-md justify-center">
-      <q-btn v-if="enabledFilters.includes('selectedDifficulty')" :class="{ active: activeFilters.selectedDifficulty }"
-             rounded icon="signal_cellular_alt" size="md" @click="toggleFilter('selectedDifficulty')" label="Grau"/>
-      <q-btn v-if="enabledFilters.includes('selectedExtension')" :class="{ active: activeFilters.selectedExtension }"
-             rounded icon="height" size="md" @click="toggleFilter('selectedExtension')" label="Extensão"/>
-      <q-btn v-if="enabledFilters.includes('selectedCrux')" :class="{ active: activeFilters.selectedCrux }" rounded
-             icon="trending_up" size="md" @click="toggleFilter('selectedCrux')" label="Crux"/>
-    </div>
+    <!-- Filtros avançados -->
+    <!-- Modal de Filtros Avançados -->
+    <q-dialog v-model="showFilterModal" persistent>
+      <q-card class="filter-modal">
+        <q-card-section class="q-pb-none">
+          <div class="modal-header">Filtros Avançados</div>
+        </q-card-section>
+
+        <q-card-section>
+          <div class="modal-filters">
+            <q-btn
+              class="filter-btn"
+              :class="{ active: activeFilters.selectedDifficulty }"
+              icon="signal_cellular_alt"
+              label="Grau"
+              @click="toggleFilter('selectedDifficulty')"
+              rounded
+            />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: activeFilters.selectedExtension }"
+              icon="height"
+              label="Extensão"
+              @click="toggleFilter('selectedExtension')"
+              rounded
+            />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: activeFilters.selectedCrux }"
+              icon="trending_up"
+              label="Crux"
+              @click="toggleFilter('selectedCrux')"
+              rounded
+            />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: activeFilters.selectedExposicao }"
+              icon="warning"
+              label="Exposição"
+              @click="toggleFilter('selectedExposicao')"
+              rounded
+            />
+          </div>
+        </q-card-section>
+
+        <!-- Botões de Ação -->
+        <q-card-actions align="right">
+          <q-btn flat label="Aplicar" color="primary" @click="applyFilterChanges" />
+          <q-btn flat label="Fechar" color="negative" @click="showFilterModal = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
     <!-- Renderiza os inputs para os filtros selecionados -->
     <div v-if="showFilterInput.selectedDifficulty" class="q-pt-lg">
@@ -42,11 +95,41 @@
       />
     </div>
     <div v-if="showExtensionFilters" class="q-pt-lg row q-col-gutter-sm q-gutter-md justify-center">
-      <q-btn class="q-pr-md" @click="filterByExtension('Menor que 50 metros')" label="Menor que 50 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 50 e 100 metros')" label="Entre 50 e 100 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 100 e 200 metros')" label="Entre 100 e 200 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Entre 200 e 300 metros')" label="Entre 200 e 300 metros"/>
-      <q-btn class="q-pr-md" @click="filterByExtension('Mais de 300 metros')" label="Mais de 300 metros"/>
+      <q-btn
+        class="q-pr-md"
+        size="sm"
+        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Menor que 50 metros'] }"
+        @click="filterByExtension('Menor que 50 metros')"
+        label="Menor que 50 metros"
+      />
+      <q-btn
+        class="q-pr-md"
+        size="sm"
+        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 50 e 100 metros'] }"
+        @click="filterByExtension('Entre 50 e 100 metros')"
+        label="Entre 50 e 100 metros"
+      />
+      <q-btn
+        class="q-pr-md"
+        size="sm"
+        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 100 e 200 metros'] }"
+        @click="filterByExtension('Entre 100 e 200 metros')"
+        label="Entre 100 e 200 metros"
+      />
+      <q-btn
+        class="q-pr-md"
+        size="sm"
+        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 200 e 300 metros'] }"
+        @click="filterByExtension('Entre 200 e 300 metros')"
+        label="Entre 200 e 300 metros"
+      />
+      <q-btn
+        class="q-pr-md"
+        size="sm"
+        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Mais de 300 metros'] }"
+        @click="filterByExtension('Mais de 300 metros')"
+        label="Mais de 300 metros"
+      />
     </div>
     <div v-if="showFilterInput.selectedCrux" class="q-pt-lg">
       <q-input
@@ -58,16 +141,12 @@
       />
     </div>
 
-    <!-- Separador e botão de limpar -->
-    <div class="buttons" v-if="Object.values(showFilterInput).some(value => value) || showExtensionFilters">
-      <q-btn class="right-margem" label="Limpar" @click="clearFilters" />
-    </div>
     <q-separator spaced/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, onMounted, ref, watch } from 'vue';
+import { computed, defineEmits, onMounted, ref, watch } from 'vue';
 import { SearchRequest } from 'src/models/SearchRequest';
 import montanhaService from 'src/services/MontanhaService';
 
@@ -75,6 +154,7 @@ type FilterKey =
   'unifiedSearch'
   | 'selectedDifficulty'
   | 'selectedExtension'
+  | 'selectedExposicao'
   | 'selectedCrux';
 
 type ExtensionCategory = 'Menor que 50 metros'
@@ -86,7 +166,6 @@ type ExtensionCategory = 'Menor que 50 metros'
 // Props e emissões
 const props = defineProps<{ enabledFilters: string[], staticFilters?: Partial<any> }>();
 const emit = defineEmits(['applyFilters']);
-
 const showExtensionFilters = ref(false);
 const localFilters = ref<SearchRequest>({
   unifiedSearch: '',
@@ -97,18 +176,22 @@ const localFilters = ref<SearchRequest>({
   page: 1,
   itemsPerPage: 10
 });
-const showFilterInput = ref<Record<FilterKey, boolean>>({
+const showAdvancedFilters = ref(false); // Controle para exibir filtros avançados
+const showFilterModal = ref(false); // Controle de exibição do modal
+const showFilterInput = ref<Record<string, boolean>>({});
+/* const showFilterInput = ref<Record<FilterKey, boolean>>({
   unifiedSearch: false,
   selectedDifficulty: false,
   selectedExtension: false,
   selectedCrux: false
-});
-const activeFilters = ref<Record<FilterKey, boolean>>({
+}); */
+const activeFilters = ref<Record<string, boolean>>({}); // Filtros ativos
+/* const activeFilters = ref<Record<FilterKey, boolean>>({
   unifiedSearch: false,
   selectedDifficulty: false,
   selectedExtension: false,
   selectedCrux: false
-});
+}); */
 const difficulties = [
   'I', 'Isup', 'II', 'III', 'IV', 'V', 'A1', 'A2', 'A3',
   'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', 'VI', 'VIsup', 'VIIa',
@@ -150,6 +233,22 @@ watch(
   },
   { deep: true }
 );
+
+// Aplica mudanças de filtros no modal
+const applyFilterChanges = () => {
+  emitFilters();
+  showFilterModal.value = false;
+};
+
+// Verifica se há filtros ativos
+const hasActiveFilters = computed(() => {
+  return Object.values(activeFilters.value).some((value) => value);
+});
+
+// Controla a exibição dos filtros avançados
+const toggleAdvancedFilters = () => {
+  showAdvancedFilters.value = !showAdvancedFilters.value;
+};
 
 // Limpa filtros e fecha campos
 const clearFilters = () => {
@@ -199,6 +298,11 @@ const filterByExtension = (category: ExtensionCategory) => {
 </script>
 
 <style scoped>
+.selected {
+  background-color: #bce9b4; /* Cor de destaque */
+  border: 2px solid #2c2c2c; /* Borda de destaque */
+}
+
 .buttons {
   display: flex;
   justify-content: flex-end;

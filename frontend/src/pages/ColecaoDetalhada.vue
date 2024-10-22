@@ -18,7 +18,6 @@
               />
             </div>
             <div class="text-subtitle1">{{ colecao.descricao }}</div>
-            <div class="text-caption">{{ vias.length || 0 }} vias</div>
           </div>
         </div>
       </div>
@@ -27,29 +26,28 @@
       <SearchEntity
         ref="searchEntityRef"
         entity="via"
-        :initialData="vias"
         :staticFilters="{ colecaoId: colecao?.id }"
         @select="goToViaDetalhada"
       >
         <template #filters="{ filters }">
           <SearchFilters
             :filters="filters"
-            :enabledFilters="['searchQuery']"
+            :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
             @applyFilters="applyFilters"
             :staticFilters="{ colecaoId: colecao?.id }"
           />
         </template>
       </SearchEntity>
 
+      <!-- Outros componentes de configuração e modais -->
       <ModalConfigColecoes
         v-model="isConfigDialogOpen"
         :collectionData="colecao"
         @edit="editCollection"
         @delete="confirmDeletion"
       />
-
       <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event" />
-
+      <!-- Confirmar exclusão -->
       <q-dialog v-model="isDeleteConfirmOpen" persistent>
         <q-card>
           <q-card-section>
@@ -61,7 +59,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-
+      <!-- Formulário de edição -->
       <q-dialog v-model="isEditFormOpen" persistent>
         <q-card>
           <q-card-section>
@@ -97,7 +95,6 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import { Via } from 'src/models/Via';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
@@ -113,7 +110,6 @@ const colecaoEdit = ref({
   nome: '',
   descricao: ''
 });
-const vias = ref<Via[]>([]);
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
 const isEditFormOpen = ref(false);
@@ -124,8 +120,6 @@ const isConfigDialogOpen = ref(false);
 onMounted(async () => {
   const colecaoId = Number(route.params.id);
   colecao.value = await ColecaoService.getById(colecaoId);
-  vias.value = await ColecaoService.getViasIn(colecaoId);
-  console.log(vias.value);
 });
 
 const applyFilters = (filters: any) => {
@@ -189,11 +183,11 @@ const updateIsAddViaModalOpen = (value: boolean) => {
   isAddViaModalOpen.value = value;
 };
 
-const viaAdded = (via: Via) => {
-  vias.value.push(via);
+const viaAdded = () => {
+  // Atualize a busca após adicionar uma nova via
+  searchEntityRef.value?.handleApplyFilters({ page: 1 });
 };
 </script>
-
 <style scoped>
 .header-container {
   margin-bottom: 16px;

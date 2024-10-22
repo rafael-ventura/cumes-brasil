@@ -116,8 +116,8 @@ export class ViaRepository implements ISearchRepository<Via>{
       selectedCrux,
       selectedExtensionCategory,
       selectedExposicao,
-      colecaoId, // Adicionando colecaoId ao destructuring
-      bairro, // Adiciona filtro por bairro
+      colecaoId,
+      bairro,
       page = 1,
       itemsPerPage = 10
     } = query;
@@ -125,31 +125,25 @@ export class ViaRepository implements ISearchRepository<Via>{
     let qb = this.repository.createQueryBuilder('via')
         .leftJoinAndSelect('via.montanha', 'montanha')
         .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoin('via.colecoes', 'colecao'); // Join com colecao para filtro
+        .leftJoin('via.colecoes', 'colecao');
 
+    // Filtro por colecaoId (aplicado inicialmente)
+    if (colecaoId) {
+      qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
+    }
 
     // Filtro de busca unificada
     if (unifiedSearch) {
       qb = qb.andWhere(
-          'via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch',
+          '(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)',
           { unifiedSearch: `%${unifiedSearch}%` }
       );
-    }
-
-    // Filtro por colecaoId
-    if (colecaoId) {
-      qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
     }
 
     // Filtro por bairro da montanha
     if (bairro) {
       qb = qb.andWhere('montanha.bairro = :bairro', { bairro });
     }
-
-   /* // Filtro por nome da via
-    if (searchQuery) {
-      qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
-    }*/
 
     // Filtro por nome da montanha
     if (selectedMountain) {
@@ -176,7 +170,6 @@ export class ViaRepository implements ISearchRepository<Via>{
 
     // Filtro por exposição
     if (selectedExposicao) {
-      // add um toLower case tanto no valor do banco quanto no valor do filtro, e buscar os valores menores ou iguais 'e2' fazendo um IN
       if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
         qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
       } else {
