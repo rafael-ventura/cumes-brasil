@@ -3,12 +3,12 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: postgres
+    container_name: cumes-postgres
     restart: always
     environment:
-      POSTGRES_USER: cumesbr
-      POSTGRES_PASSWORD: jardineiros.2024
-      POSTGRES_DB: cumes-brasil
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -24,11 +24,11 @@ services:
       NODE_ENV: production
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_USERNAME: cumesbr
-      DB_PASSWORD: jardineiros.2024
-      DB_NAME: cumes-brasil
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     ports:
-      - '3001:3001'
+      - '8080:8080'  # Mapeia a porta 8080 do contêiner para a porta 8080 do host
     depends_on:
       - postgres
     networks:
@@ -41,7 +41,7 @@ services:
     container_name: cumes-frontend
     restart: always
     ports:
-      - '80:3000'
+      - '80:3000'  # Mapeia a porta 3000 do contêiner para a porta 80 do host
     depends_on:
       - api
     networks:
