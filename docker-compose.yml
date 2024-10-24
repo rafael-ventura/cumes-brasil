@@ -47,6 +47,20 @@ services:
     networks:
       - cumes-network
 
+  nginx:
+    image: nginx:latest
+    container_name: cumes-nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+      - api
+    networks:
+      - cumes-network
+
+
 volumes:
   db-data:
 
