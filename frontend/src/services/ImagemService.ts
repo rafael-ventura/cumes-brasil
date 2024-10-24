@@ -4,9 +4,7 @@ class ImageService {
   private baseUrl: string;
 
   constructor () {
-    this.baseUrl = import.meta.env.PROD
-      ? import.meta.env.VITE_APP_API_URL || ''
-      : import.meta.env.VITE_APP_SERVER_IP || 'http://localhost:8080';
+    this.baseUrl = import.meta.env.PROD ? import.meta.env.VITE_APP_SERVER_IP || 'http://localhost:8080' : 'http://localhost:8080';
   }
 
   getFullImageUrl (relativePath: string): string {
