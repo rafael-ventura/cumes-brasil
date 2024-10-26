@@ -11,12 +11,16 @@ import * as fs from 'node:fs';
 import RegistrarUsuarioValidation from '../validations/RegistrarUsuarioValidation';
 import BadRequestError from '../errors/BadRequestError';
 import { errorsMessage } from '../errors/constants';
+import ResetUserEmailValidation from '../validations/ResetUserEmailValidation';
+import NotFoundError from '../errors/NotFoundError';
+import { MailService } from './MailService';
 
 @Service()
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
     private imagemService: ImagemService;
+    private mailService = Container.get(MailService);
 
     constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService) {
         this.usuarioRepo = usuarioRepo;
@@ -123,5 +127,25 @@ export class UsuarioService {
 
             await this.imagemService.delete(imagemAtual.id);
         }
+    }
+
+    async createResetUserPassword(email: string) {
+        ResetUserEmailValidation.validate(email);
+        console.log("email válido", email);
+
+        const user = await this.usuarioRepo.findByEmail(email);
+        if(!user) {
+            console.log("usuario nao encontrado");
+            throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
+        }
+        console.log("user", user);
+        
+        // Criar lógica de geração de token que será único para o usuario que chamou este serviço com prazo de validade de até 30min
+        const token = "eixn243e9fh2e408f!pmcpowm"
+        const urlResetUserPassword = `${process.env.API_HOSTNAME}:9200/reset/password/${token}`;
+
+        // Utilizar o serviço de email para enviar o email com os seguintes parametros: url de redefinição de senha pronta, nome do usuario e seu email
+        return this.mailService.sendResetUserPassword(user.nome, user.email, urlResetUserPassword);
+
     }
 }

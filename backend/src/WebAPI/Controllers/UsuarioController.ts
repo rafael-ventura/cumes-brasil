@@ -102,4 +102,27 @@ export class UsuarioController {
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
         }
     };
+
+    generateResetUserPasswordToken = async (req: Request, res: Response, next: NextFunction) => {
+        console.log("Gerando token de redefinicao de senha do usuario");
+        console.log(req.body);
+        try {
+            const email = req.body?.email;
+            const response = await this.service.createResetUserPassword(email);
+            res.status(200).json({
+                message: response.message
+            });
+
+        }catch(error: any){
+            console.log(error.name, error.message);
+            HandleErrors.handleErrors(error, req, res, next);
+        }
+    }
+
+    /**
+     * Criar lógica para resetar senha do usuario
+     */
+    resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+
+    }
 }
