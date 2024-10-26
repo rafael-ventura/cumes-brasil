@@ -11,7 +11,8 @@ initializeEnvConfig();
 
 const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
+const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
 app.use(cors());
 app.use(express.json());
 const assetsPath = path.resolve(__dirname, '../../assets');
@@ -39,7 +40,7 @@ AppDataSource.initialize()
   });
 
 if (typeof PORT === 'number') {
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, HOSTNAME, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log("DB_HOST:", process.env.DB_HOST);
     console.log("DB_USERNAME:", process.env.DB_USERNAME);
