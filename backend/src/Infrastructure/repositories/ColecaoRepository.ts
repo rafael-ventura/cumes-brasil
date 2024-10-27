@@ -3,6 +3,9 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import {Via_Colecao} from "../../Domain/entities/ViaColecao";
+import {Via} from "../../Domain/entities/Via";
+import {getRepository} from "typeorm";
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
@@ -49,11 +52,36 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         await this.repository.delete(id);
     }
 
-    async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
-        return this.repository.createQueryBuilder()
-            .relation(Colecao, 'vias')
-            .of(colecao_id)
-            .add(via_id);
+    async addViaToColecao(via_id: number, colecao_id: number): Promise<void> {
+        // Verificar se a coleção existe
+        const colecao = await this.repository.findOne({ where: { id: colecao_id } });
+        if (!colecao) {
+            throw new Error('Coleção não encontrada');
+        }
+
+        // Verificar se a via existe
+        const via = await this.repository.manager.findOne(Via, { where: { id: via_id } });
+        if (!via) {
+            throw new Error('Via não encontrada');
+        }
+
+        // data no formato yyyy-mm-dd
+        const dataAdicao = new Date().toISOString().split('T')[0];
+        try {
+            // Inserir na tabela associativa manualmente
+            await this.repository.manager
+                .createQueryBuilder()
+                .insert()
+                .into('via_colecao')
+                .values({
+                    via_id: via.id,
+                    colecao_id: colecao.id,
+                    data_adicao: dataAdicao
+                })
+                .execute();
+        } catch (error) {
+            throw new Error('Erro ao adicionar via à coleção: ' + error);
+        }
     }
 
     async removeViaFromColecao(via_id: number, colecao_id: number): Promise<void> {

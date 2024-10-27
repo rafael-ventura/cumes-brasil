@@ -4,20 +4,19 @@
     <div class="q-pt-lg">
       <q-input
         v-model="localFilters.unifiedSearch"
-        label="Buscar por nome, bairro ou montanha"
+        :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
         outlined
         rounded
         @change="onInputChange"
       >
-        <!-- Botão de filtros avançados -->
         <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
           <q-btn
             flat
             dense
             round
-            icon="tune"
+            icon="filter_alt"
             class="filter-btn"
             @click="showFilterModal = true"
           />
@@ -31,7 +30,22 @@
       </q-input>
     </div>
 
-    <!-- Filtros avançados -->
+    <!-- Mostrar filtros ativos -->
+    <div v-if="activeFiltersList.length > 0" class="active-filters">
+      <div
+        v-for="filter in activeFiltersList"
+        :key="filter.key"
+        class="filter-tag"
+      >
+        <span class="text-black">{{ filter.label }}</span>
+        <q-icon
+          name="close"
+          class="text-black remove-filter-icon"
+          @click="removeFilter(filter.key)"
+        />
+      </div>
+    </div>
+
     <!-- Modal de Filtros Avançados -->
     <q-dialog v-model="showFilterModal" persistent>
       <q-card class="filter-modal">
@@ -41,37 +55,71 @@
 
         <q-card-section>
           <div class="modal-filters">
+            <!-- Botões de seleção de filtros -->
             <q-btn
               class="filter-btn"
-              :class="{ active: activeFilters.selectedDifficulty }"
+              :class="{ active: showFilterInputInModal.selectedDifficulty }"
               icon="signal_cellular_alt"
               label="Grau"
-              @click="toggleFilter('selectedDifficulty')"
+              @click="toggleFilterInModal('selectedDifficulty')"
               rounded
             />
             <q-btn
               class="filter-btn"
-              :class="{ active: activeFilters.selectedExtension }"
+              :class="{ active: showFilterInputInModal.selectedExtension }"
               icon="height"
               label="Extensão"
-              @click="toggleFilter('selectedExtension')"
+              @click="toggleFilterInModal('selectedExtension')"
               rounded
             />
             <q-btn
               class="filter-btn"
-              :class="{ active: activeFilters.selectedCrux }"
+              :class="{ active: showFilterInputInModal.selectedCrux }"
               icon="trending_up"
               label="Crux"
-              @click="toggleFilter('selectedCrux')"
+              @click="toggleFilterInModal('selectedCrux')"
               rounded
             />
             <q-btn
               class="filter-btn"
-              :class="{ active: activeFilters.selectedExposicao }"
+              :class="{ active: showFilterInputInModal.selectedExposicao }"
               icon="warning"
               label="Exposição"
-              @click="toggleFilter('selectedExposicao')"
+              @click="toggleFilterInModal('selectedExposicao')"
               rounded
+            />
+          </div>
+
+          <!-- Campos dinâmicos de filtros dentro do modal -->
+          <div v-if="showFilterInputInModal.selectedDifficulty" class="q-pt-lg">
+            <q-select
+              v-model="localFilters.selectedDifficulty"
+              :options="difficulties"
+              label="Selecione o Grau"
+              outlined
+              @update:model-value="updateActiveFilters"
+            />
+          </div>
+
+          <div v-if="showFilterInputInModal.selectedExtension" class="q-pt-lg">
+            <q-btn
+              class="q-pr-md"
+              v-for="(range, label) in extensionCategories"
+              :key="label"
+              size="sm"
+              :class="{ 'selected': localFilters.selectedExtensionCategory === range }"
+              @click="filterByExtension(label)"
+              :label="label"
+            />
+          </div>
+
+          <div v-if="showFilterInputInModal.selectedCrux" class="q-pt-lg">
+            <q-input
+              v-model="localFilters.selectedCrux"
+              label="Crux"
+              debounce="300"
+              outlined
+              @input="updateActiveFilters"
             />
           </div>
         </q-card-section>
@@ -83,65 +131,6 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <!-- Renderiza os inputs para os filtros selecionados -->
-    <div v-if="showFilterInput.selectedDifficulty" class="q-pt-lg">
-      <q-select
-        v-model="localFilters.selectedDifficulty"
-        :options="difficulties"
-        label="Grau"
-        outlined
-        @update:model-value="emitFilters"
-      />
-    </div>
-    <div v-if="showExtensionFilters" class="q-pt-lg row q-col-gutter-sm q-gutter-md justify-center">
-      <q-btn
-        class="q-pr-md"
-        size="sm"
-        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Menor que 50 metros'] }"
-        @click="filterByExtension('Menor que 50 metros')"
-        label="Menor que 50 metros"
-      />
-      <q-btn
-        class="q-pr-md"
-        size="sm"
-        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 50 e 100 metros'] }"
-        @click="filterByExtension('Entre 50 e 100 metros')"
-        label="Entre 50 e 100 metros"
-      />
-      <q-btn
-        class="q-pr-md"
-        size="sm"
-        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 100 e 200 metros'] }"
-        @click="filterByExtension('Entre 100 e 200 metros')"
-        label="Entre 100 e 200 metros"
-      />
-      <q-btn
-        class="q-pr-md"
-        size="sm"
-        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Entre 200 e 300 metros'] }"
-        @click="filterByExtension('Entre 200 e 300 metros')"
-        label="Entre 200 e 300 metros"
-      />
-      <q-btn
-        class="q-pr-md"
-        size="sm"
-        :class="{ 'selected': localFilters.selectedExtensionCategory === extensionCategories['Mais de 300 metros'] }"
-        @click="filterByExtension('Mais de 300 metros')"
-        label="Mais de 300 metros"
-      />
-    </div>
-    <div v-if="showFilterInput.selectedCrux" class="q-pt-lg">
-      <q-input
-        v-model="localFilters.selectedCrux"
-        label="Crux"
-        debounce="300"
-        outlined
-        @input="emitFilters"
-      />
-    </div>
-
-    <q-separator spaced/>
   </div>
 </template>
 
@@ -150,21 +139,8 @@ import { computed, defineEmits, onMounted, ref, watch } from 'vue';
 import { SearchRequest } from 'src/models/SearchRequest';
 import montanhaService from 'src/services/MontanhaService';
 
-type FilterKey =
-  'unifiedSearch'
-  | 'selectedDifficulty'
-  | 'selectedExtension'
-  | 'selectedExposicao'
-  | 'selectedCrux';
-
-type ExtensionCategory = 'Menor que 50 metros'
-  | 'Entre 50 e 100 metros'
-  | 'Entre 100 e 200 metros'
-  | 'Entre 200 e 300 metros'
-  | 'Mais de 300 metros';
-
 // Props e emissões
-const props = defineProps<{ enabledFilters: string[], staticFilters?: Partial<any> }>();
+const props = defineProps<{ enabledFilters: string[], staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
 const emit = defineEmits(['applyFilters']);
 const showExtensionFilters = ref(false);
 const localFilters = ref<SearchRequest>({
@@ -176,29 +152,10 @@ const localFilters = ref<SearchRequest>({
   page: 1,
   itemsPerPage: 10
 });
-const showAdvancedFilters = ref(false); // Controle para exibir filtros avançados
+const showFilterInputInModal = ref<Record<string, boolean>>({});
 const showFilterModal = ref(false); // Controle de exibição do modal
 const showFilterInput = ref<Record<string, boolean>>({});
-/* const showFilterInput = ref<Record<FilterKey, boolean>>({
-  unifiedSearch: false,
-  selectedDifficulty: false,
-  selectedExtension: false,
-  selectedCrux: false
-}); */
 const activeFilters = ref<Record<string, boolean>>({}); // Filtros ativos
-/* const activeFilters = ref<Record<FilterKey, boolean>>({
-  unifiedSearch: false,
-  selectedDifficulty: false,
-  selectedExtension: false,
-  selectedCrux: false
-}); */
-const difficulties = [
-  'I', 'Isup', 'II', 'III', 'IV', 'V', 'A1', 'A2', 'A3',
-  'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', 'VI', 'VIsup', 'VIIa',
-  'VIIIa/b', 'VIIIb', 'VIIc', 'VIIIb/c', 'VIIIc', 'IXa', 'III (A1/VIIIa)',
-  'VIIb/c', 'Xa', 'VII(3)', 'VII', 'V(2)', 'VIII', 'VIIIa'
-];
-const mountainOptions = ref<any[]>([]);
 const extensionCategories = ref({
   'Menor que 50 metros': [0, 50],
   'Entre 50 e 100 metros': [50, 100],
@@ -206,6 +163,74 @@ const extensionCategories = ref({
   'Entre 200 e 300 metros': [200, 300],
   'Mais de 300 metros': [300, Infinity]
 });
+type ExtensionCategory = keyof typeof extensionCategories.value;
+
+const difficulties = [
+  'I', 'Isup', 'II', 'III', 'IV', 'V', 'A1', 'A2', 'A3',
+  'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', 'VI', 'VIsup', 'VIIa',
+  'VIIIa/b', 'VIIIb', 'VIIc', 'VIIIb/c', 'VIIIc', 'IXa', 'III (A1/VIIIa)',
+  'VIIb/c', 'Xa', 'VII(3)', 'VII', 'V(2)', 'VIII', 'VIIIa'
+];
+const mountainOptions = ref<any[]>([]);
+
+// Atualiza a lista de filtros ativos
+const updateActiveFilters = () => {
+  emitFilters();
+};
+
+// Lista de filtros ativos
+// Lista de filtros ativos
+const activeFiltersList = computed(() => {
+  const filters: { label: string, key: string }[] = [];
+
+  // Adiciona o filtro de grau se estiver selecionado
+  if (localFilters.value.selectedDifficulty) {
+    filters.push({ label: `Grau: ${localFilters.value.selectedDifficulty}`, key: 'selectedDifficulty' });
+  }
+
+  // Adiciona o filtro de extensão se estiver selecionado
+  if (localFilters.value.selectedExtensionCategory) {
+    const extensionKey = Object.entries(extensionCategories.value).find(
+      ([, range]) => range === localFilters.value.selectedExtensionCategory
+    )?.[0];
+
+    if (extensionKey) {
+      filters.push({ label: `Extensão: ${extensionKey}`, key: 'selectedExtensionCategory' });
+    }
+  }
+
+  // Adiciona o filtro de crux se estiver selecionado
+  if (localFilters.value.selectedCrux) {
+    filters.push({ label: `Crux: ${localFilters.value.selectedCrux}`, key: 'selectedCrux' });
+  }
+
+  return filters;
+});
+
+const removeFilter = (key: string) => {
+  // Remove o filtro selecionado
+  if (key === 'selectedDifficulty') {
+    localFilters.value.selectedDifficulty = null;
+  } else if (key === 'selectedExtensionCategory') {
+    localFilters.value.selectedExtensionCategory = null;
+  } else if (key === 'selectedCrux') {
+    localFilters.value.selectedCrux = '';
+  }
+
+  // Atualiza a lista de filtros e emite a mudança
+  emitFilters();
+};
+
+// Alternar exibição de filtros no modal
+const toggleFilterInModal = (filter: string) => {
+  showFilterInputInModal.value[filter] = !showFilterInputInModal.value[filter];
+};
+
+// Aplicar mudanças de filtros no modal
+const applyFilterChanges = () => {
+  emitFilters();
+  showFilterModal.value = false;
+};
 
 // Inicializa as montanhas
 onMounted(async () => {
@@ -234,22 +259,11 @@ watch(
   { deep: true }
 );
 
-// Aplica mudanças de filtros no modal
-const applyFilterChanges = () => {
-  emitFilters();
-  showFilterModal.value = false;
-};
-
 // Verifica se há filtros ativos
-const hasActiveFilters = computed(() => {
+computed(() => {
   return Object.values(activeFilters.value).some((value) => value);
 });
-
 // Controla a exibição dos filtros avançados
-const toggleAdvancedFilters = () => {
-  showAdvancedFilters.value = !showAdvancedFilters.value;
-};
-
 // Limpa filtros e fecha campos
 const clearFilters = () => {
   localFilters.value = {
@@ -283,38 +297,80 @@ const emitFilters = () => {
 };
 
 // Controla a exibição dos filtros
-const toggleFilter = (filter: FilterKey) => {
+/* const toggleFilter = (filter: FilterKey) => {
   if (filter === 'selectedExtension') {
     showExtensionFilters.value = !showExtensionFilters.value;
   } else {
     showFilterInput.value[filter] = !showFilterInput.value[filter];
   }
-};
+}; */
 
-const filterByExtension = (category: ExtensionCategory) => {
-  localFilters.value.selectedExtensionCategory = extensionCategories.value[category];
-  emitFilters();
+const filterByExtension = (category: string) => {
+  const selectedRange = extensionCategories.value[category as ExtensionCategory];
+  if (selectedRange) {
+    localFilters.value.selectedExtensionCategory = selectedRange;
+    emitFilters();
+  }
 };
 </script>
 
 <style scoped>
-.selected {
-  background-color: #bce9b4; /* Cor de destaque */
-  border: 2px solid #2c2c2c; /* Borda de destaque */
+.filter-modal {
+  background-color: #2c2c2c;
+  border-radius: 8px;
+  padding: 16px;
 }
 
-.buttons {
+.modal-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fcbd7b;
+  margin-bottom: 16px;
+}
+
+.modal-filters {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.active-filters {
   margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.right-margem {
-  margin-right: 16px;
-  background-color: #bce9b4;
+.filter-tag {
+  background-color: #fabc7a; /* Fundo laranja */
+  padding: 4px 8px; /* Espaçamento interno */
+  border-radius: 4px; /* Bordas arredondadas */
+  display: flex;
+  align-items: center; /* Alinha o texto no centro */
+  gap: 4px; /* Espaço entre o texto e o ícone */
 }
 
-.right-margem2 {
-  background-color: #daffd3;
+.remove-filter-icon {
+  font-size: 16px;
+  cursor: pointer;
+  color: #2c2c2c; /* Cor do ícone */
+  border: 1px dotted #2c2c2c; /* Borda do ícone */
+  border-radius: 50%; /* Ícone circular */
+  margin-left: 4px; /* Margem à esquerda */
+}
+
+.q-btn.filter-btn {
+  background-color: #333333;
+  color: #fcbd7b;
+}
+
+.q-btn.filter-btn.active {
+  background-color: #fcbd7b;
+  color: #333333;
+}
+
+.selected {
+  background-color: #fcbd7b;
+  color: #2c2c2c;
 }
 </style>

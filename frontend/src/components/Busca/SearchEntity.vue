@@ -3,7 +3,7 @@
     <div class="search-header">
       <div class="text-h2"> Busca</div>
     </div>
-    <div class="slot-container">
+    <div class="slot-container no-border">
       <slot name="filters" :filters="filters" />
     </div>
     <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
@@ -29,14 +29,6 @@ const props = defineProps<{
 
 const emit = defineEmits(['select', 'update-results']);
 const route = useRoute();
-
-// Opções de ordenação
-const sortOptions = ref([
-  { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
-  { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
-  { label: 'Data de Adição (Mais recente)', value: { field: 'data_adicao', direction: 'desc' } },
-  { label: 'Data de Adição (Mais antiga)', value: { field: 'data_adicao', direction: 'asc' } }
-]);
 
 const filters = ref(<SearchRequest>{
   unifiedSearch: '', // Campo unificado de busca
@@ -116,7 +108,6 @@ const searchEntities = async (reset = false) => {
       entityType: props.entity
     };
     const searchResult = await searchService.search(searchRequest);
-
     if (props.entity === 'via') {
       searchResult.items = searchResult.items.map((item: any) => {
         const via = formatVia(item as Via);

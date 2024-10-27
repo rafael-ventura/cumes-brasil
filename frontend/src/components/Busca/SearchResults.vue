@@ -3,11 +3,13 @@
     <div class="order-container">
       <q-select
         v-model="currentSortOption"
-        :options="sortOptions"
-        label="Ordenar por"
+        :options="filteredSortOptions"
+        option-value="value"
         option-label="label"
+        label="Ordenar por"
         outlined
         dense
+        map-options
         @update:model-value="applySorting"
       />
     </div>
@@ -54,9 +56,19 @@ const sortOptions = ref([
   { label: 'Data de Adição (Mais recente)', value: { field: 'data_adicao', direction: 'desc' } },
   { label: 'Data de Adição (Mais antiga)', value: { field: 'data_adicao', direction: 'asc' } }
 ]);
+// Filtrar as opções de ordenação com base no contexto
+const filteredSortOptions = computed(() => {
+  // Se o contexto for 'via', remover as opções de data_adicao
+  if (props.entityType === 'colecao') {
+    return sortOptions.value.filter(option => option.value.field !== 'data_adicao');
+  }
+  return sortOptions.value;
+});
 
 // Ordenação atual
-const currentSortOption = ref(props.initialSort || { field: 'nome', direction: 'asc' });
+const currentSortOption = ref(
+  props.initialSort ? props.initialSort : sortOptions.value[0].value
+);
 
 // Aplica a ordenação nos resultados
 const sortedResults = computed(() => {
@@ -71,6 +83,7 @@ const sortedResults = computed(() => {
 
     // Ordenação por nome
     if (field === 'nome') {
+      console.log(a.nome, b.nome);
       return direction === 'asc'
         ? a.nome.localeCompare(b.nome)
         : b.nome.localeCompare(a.nome);
@@ -78,6 +91,7 @@ const sortedResults = computed(() => {
 
     // Ordenação por data de adição
     if (field === 'data_adicao') {
+      console.log(a, b);
       const dateA = new Date(a.data_adicao || '');
       const dateB = new Date(b.data_adicao || '');
 
@@ -104,6 +118,7 @@ const selectItem = (item: Via | Colecao) => {
 <style scoped>
 .order-container {
   margin-bottom: 16px;
+  margin-right: 16px;
   display: flex;
   justify-content: flex-end;
 }

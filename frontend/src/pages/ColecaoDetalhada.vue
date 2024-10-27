@@ -35,6 +35,7 @@
             :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
             @applyFilters="applyFilters"
             :staticFilters="{ colecaoId: colecao?.id }"
+            unifiedSearchLabel="Nome da Via"
           />
         </template>
       </SearchEntity>

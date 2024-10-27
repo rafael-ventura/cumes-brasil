@@ -11,7 +11,7 @@
     >
       <template #filters="{ filters }">
         <!-- Passando apenas o filtro 'searchQuery' (Nome da Coleção) -->
-        <SearchFilters :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" />
+        <SearchFilters :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Nome da Coleção" />
       </template>
     </SearchEntity>
 

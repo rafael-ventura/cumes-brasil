@@ -108,7 +108,7 @@ export class ViaRepository implements ISearchRepository<Via>{
     };
   }
 
-  async search(query: any): Promise<ISearchResult<Via>> {
+  async search(query: any): Promise<ISearchResult<any>> {
     const {
       unifiedSearch,
       selectedMountain,
@@ -129,7 +129,20 @@ export class ViaRepository implements ISearchRepository<Via>{
 
     // Filtro por colecaoId (aplicado inicialmente)
     if (colecaoId) {
-      qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
+      qb = qb
+          .innerJoinAndSelect(
+              'via.colecoes',
+              'vc',
+              'vc.id = :colecaoId',
+              { colecaoId }
+          )
+          .addSelect(subQuery => {
+            return subQuery
+                .select('via_colecao.data_adicao', 'data_adicao')
+                .from('via_colecao', 'via_colecao')
+                .where('via_colecao.via_id = via.id')
+                .andWhere('via_colecao.colecao_id = :colecaoId', { colecaoId });
+          }, 'data_adicao');
     }
 
     // Filtro de busca unificada
@@ -184,12 +197,21 @@ export class ViaRepository implements ISearchRepository<Via>{
     const items = await qb
         .skip((page - 1) * itemsPerPage)
         .take(itemsPerPage)
-        .getMany();
+        .getRawAndEntities(); // Busca raw data e entidades
+
+    // Mapear os itens para incluir a data_adicao no resultado final
+    const mappedItems = items.entities.map((item, index) => {
+      const rawData = items.raw[index];
+      return {
+        ...item,
+        data_adicao: rawData.data_adicao || null  // Adicionar a data_adicao ao retorno
+      };
+    });
 
     // Calcular total de páginas
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return {
-      items,
+      items: mappedItems,
       totalPages,
       totalItems
     };
