@@ -42,9 +42,12 @@ jobs:
       - name: Build Frontend project
         working-directory: ./frontend
         env:
-          VITE_APP_API_URL: "http://cumesbrasil.com.br/api/"
-          VITE_APP_SERVER_IP: "http://cumesbrasil.com.br/"
+          VITE_APP_API_URL: "https://api.cumesbrasil.com.br/"
+          VITE_APP_SERVER_IP: "https://cumesbrasil.com.br/assets"
+          VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
+
+
 
       # Clean Backend dist folder
       - name: Clean Backend dist folder
