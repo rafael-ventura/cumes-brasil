@@ -1,17 +1,16 @@
 <template>
-  <q-page class="page-padding">
-    <div class="text-h2 q-mb-md">Minhas Coleções</div>
-
-    <!-- Integração com o SearchEntity para buscar e aplicar filtros -->
+  <q-page>
     <SearchEntity
       ref="searchEntityRef"
       entity="colecao"
       @select="goToColecaoDetalhada"
       @update-results="updateSearchResults"
+      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+      :search-header="'Minhas Coleções'"
     >
       <template #filters="{ filters }">
         <!-- Passando apenas o filtro 'searchQuery' (Nome da Coleção) -->
-        <SearchFilters :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Nome da Coleção" />
+        <SearchFilters :entity="'colecao'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Nome da Coleção" />
       </template>
     </SearchEntity>
 

@@ -1,12 +1,17 @@
 <template>
   <div>
-    <div class="search-header">
-      <div class="text-h2"> Busca</div>
+    <div class="q-pt-md search-header" v-if="!hideHeader">
+      <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
     <div class="slot-container no-border">
-      <slot name="filters" :filters="filters" />
+      <slot name="filters" :filters="filters"/>
     </div>
-    <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
+    <SearchResults
+      :results="results"
+      :entityType="props.entity"
+      @select="selectItem"
+      :enableSortOptions="enableSortOptions"
+    />
   </div>
   <div ref="observer" class="observer-element"></div>
 </template>
@@ -25,6 +30,9 @@ const props = defineProps<{
   entity: 'via' | 'colecao';
   initialData?: any[]; // Novo parâmetro para dados iniciais
   staticFilters?: Partial<any>
+  hideHeader?: boolean
+  searchHeader?: string
+  enableSortOptions?: { field: string, label: string }[];
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
@@ -116,6 +124,13 @@ const searchEntities = async (reset = false) => {
       });
     }
 
+    if (props.entity === 'colecao') {
+      searchResult.items = searchResult.items.map((item: any) => {
+        item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
+        return item;
+      });
+    }
+
     if (reset) {
       results.value = searchResult.items;
     } else {
@@ -150,6 +165,7 @@ const selectItem = (item: any) => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
 .search-header {
   text-align: center;
   margin-bottom: 16px;

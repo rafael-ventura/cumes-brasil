@@ -6,9 +6,10 @@
         v-model="localFilters.unifiedSearch"
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
+        class="unified-search"
         outlined
         rounded
-        @change="onInputChange"
+        @keydown="onInputChange"
       >
         <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
@@ -46,14 +47,14 @@
       </div>
     </div>
 
-    <!-- Modal de Filtros Avançados -->
+    <!-- Modal de Filtros Avançados para Vias -->
     <q-dialog v-model="showFilterModal" persistent>
       <q-card class="filter-modal">
         <q-card-section class="q-pb-none">
           <div class="modal-header">Filtros Avançados</div>
         </q-card-section>
 
-        <q-card-section>
+        <q-card-section v-if="entity == 'via'">
           <div class="modal-filters">
             <!-- Botões de seleção de filtros -->
             <q-btn
@@ -114,12 +115,12 @@
           </div>
 
           <div v-if="showFilterInputInModal.selectedCrux" class="q-pt-lg">
-            <q-input
+            <q-select
               v-model="localFilters.selectedCrux"
-              label="Crux"
-              debounce="300"
+              :options="difficulties"
+              label="Selecione o Crux"
               outlined
-              @input="updateActiveFilters"
+              @update:model-value="updateActiveFilters"
             />
           </div>
         </q-card-section>
@@ -140,7 +141,7 @@ import { SearchRequest } from 'src/models/SearchRequest';
 import montanhaService from 'src/services/MontanhaService';
 
 // Props e emissões
-const props = defineProps<{ enabledFilters: string[], staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
+const props = defineProps<{ entity: string, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
 const emit = defineEmits(['applyFilters']);
 const showExtensionFilters = ref(false);
 const localFilters = ref<SearchRequest>({
@@ -178,7 +179,6 @@ const updateActiveFilters = () => {
   emitFilters();
 };
 
-// Lista de filtros ativos
 // Lista de filtros ativos
 const activeFiltersList = computed(() => {
   const filters: { label: string, key: string }[] = [];
@@ -242,8 +242,14 @@ onMounted(async () => {
 });
 
 // Atualiza a busca automaticamente a partir de 2 letras
-const onInputChange = (value: string) => {
+const onInputChange = (event: KeyboardEvent) => {
+  const value = (event.target as HTMLInputElement).value;
   if (value.length >= 2) {
+    console.log('Buscando >=2:', value);
+    emitFilters();
+  }
+  if (value.length === 0) {
+    console.log('Buscando 0:', value);
     emitFilters();
   }
 };
@@ -315,6 +321,10 @@ const filterByExtension = (category: string) => {
 </script>
 
 <style scoped>
+.unified-search {
+  outline: red;
+}
+
 .filter-modal {
   background-color: #2c2c2c;
   border-radius: 8px;

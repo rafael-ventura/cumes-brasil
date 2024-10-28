@@ -18,6 +18,8 @@
               />
             </div>
             <div class="text-subtitle1">{{ colecao.descricao }}</div>
+            <!-- quantidade de vias na coleção -->
+            <div class="text-caption">Vias: {{ colecao.vias?.length || 0 }}</div>
           </div>
         </div>
       </div>
@@ -28,6 +30,7 @@
         entity="via"
         :staticFilters="{ colecaoId: colecao?.id }"
         @select="goToViaDetalhada"
+        :hideHeader="true"
       >
         <template #filters="{ filters }">
           <SearchFilters
@@ -36,6 +39,7 @@
             @applyFilters="applyFilters"
             :staticFilters="{ colecaoId: colecao?.id }"
             unifiedSearchLabel="Nome da Via"
+            :entity="'via'"
           />
         </template>
       </SearchEntity>

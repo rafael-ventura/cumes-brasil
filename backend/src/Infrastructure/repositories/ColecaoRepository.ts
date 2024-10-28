@@ -66,7 +66,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         }
 
         // data no formato yyyy-mm-dd
-        const dataAdicao = new Date().toISOString().split('T')[0];
+        const dataAdicao = new Date()
         try {
             // Inserir na tabela associativa manualmente
             await this.repository.manager
@@ -76,7 +76,6 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
                 .values({
                     via_id: via.id,
                     colecao_id: colecao.id,
-                    data_adicao: dataAdicao
                 })
                 .execute();
         } catch (error) {
@@ -123,8 +122,9 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
 
         // Criar a query builder da coleção, incluindo as vias e montanhas associadas
         let qb = this.repository.createQueryBuilder('colecao')
-            .leftJoinAndSelect('colecao.vias', 'via') // Associa as vias à coleção
-            .leftJoinAndSelect('via.montanha', 'montanha'); // Associa a montanha à via
+            .leftJoinAndSelect('colecao.vias', 'via')
+            .leftJoinAndSelect('via.montanha', 'montanha')
+            .leftJoinAndSelect('colecao.imagem', 'imagem');
 
         // Filtro por ID da coleção
         if (colecaoId) {

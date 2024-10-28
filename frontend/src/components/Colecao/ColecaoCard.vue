@@ -32,13 +32,16 @@ const emitClick = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .colecao-card {
   max-width: 100%;
   margin: auto;
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
+  background-color: $tertiary-light;
 }
 
 .colecao-image {

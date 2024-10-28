@@ -1,5 +1,5 @@
 <template>
-  <div class="colecao-list-container">
+  <div>
     <div class="colecao-list">
       <ColecaoCard v-for="colecao in props.colecoes" :key="colecao.id" :colecao="colecao" @click="showDetails(colecao)" />
     </div>
@@ -23,11 +23,6 @@ const showDetails = (colecao: Colecao) => {
 </script>
 
 <style scoped>
-.colecao-list-container {
-  padding: 16px;
-  background-color: #f5f5f5;
-}
-
 .colecao-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

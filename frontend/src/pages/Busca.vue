@@ -4,9 +4,11 @@
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
+      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+      :searchHeader="'Catálogo de Vias'"
     >
       <template #filters="{ filters }">
-        <SearchFilters :filters="filters" :enabledFilters="['searchQuery', 'selectedMountain', 'selectedDifficulty']" @applyFilters="applyFilters" />
+        <SearchFilters :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
       </template>
     </SearchEntity>
   </q-page>

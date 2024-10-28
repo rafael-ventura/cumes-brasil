@@ -13,7 +13,6 @@ export class ViaController {
 		try {
 			const id = parseInt(req.params.id);
 			const via = await this.service.getViaById(id);
-			console.log("Endpoint GET /vias/:id foi chamado");
 			res.status(200).json(via);
 		} catch (error) {
 			if (error instanceof Error) {

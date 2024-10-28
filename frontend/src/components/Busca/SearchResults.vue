@@ -45,29 +45,35 @@ const props = defineProps<{
   entityType: 'via' | 'colecao';
   totalItems?: number;
   initialSort?: { field: string, direction: 'asc' | 'desc' };
+  enableSortOptions?: { field: string, label: string }[]; // Novo campo para customizar opções de ordenação
 }>();
 
 const emit = defineEmits(['select']);
 
-// Opções de ordenação
-const sortOptions = ref([
+// Opções padrão de ordenação
+const defaultSortOptions = ref([
   { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
   { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
   { label: 'Data de Adição (Mais recente)', value: { field: 'data_adicao', direction: 'desc' } },
   { label: 'Data de Adição (Mais antiga)', value: { field: 'data_adicao', direction: 'asc' } }
 ]);
-// Filtrar as opções de ordenação com base no contexto
+
+// Filtrar as opções de ordenação com base na configuração do componente pai
 const filteredSortOptions = computed(() => {
-  // Se o contexto for 'via', remover as opções de data_adicao
-  if (props.entityType === 'colecao') {
-    return sortOptions.value.filter(option => option.value.field !== 'data_adicao');
+  if (!props.enableSortOptions) {
+    // Se não houver configuração de opções, usar todas as opções padrão
+    return defaultSortOptions.value;
   }
-  return sortOptions.value;
+
+  // Filtrar as opções com base nas permitidas pelo componente pai
+  return defaultSortOptions.value.filter(option =>
+    props.enableSortOptions?.some(sortOption => sortOption.field === option.value.field)
+  );
 });
 
 // Ordenação atual
 const currentSortOption = ref(
-  props.initialSort ? props.initialSort : sortOptions.value[0].value
+  props.initialSort ? props.initialSort : filteredSortOptions.value[0]?.value
 );
 
 // Aplica a ordenação nos resultados
