@@ -1,39 +1,6 @@
 version: '3.8'
 
 services:
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    restart: always
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs:ro
-      - ./vhost.d:/etc/nginx/vhost.d
-      - ./html:/usr/share/nginx/html
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./backend/assets:/usr/share/nginx/html/assets
-    networks:
-      - cumes-network
-
-  letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-letsencrypt
-    restart: always
-    environment:
-      NGINX_PROXY_CONTAINER: nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./certs:/etc/nginx/certs:rw
-      - ./vhost.d:/etc/nginx/vhost.d
-      - ./html:/usr/share/nginx/html
-    depends_on:
-      - nginx-proxy
-    networks:
-      - cumes-network
-
   postgres:
     image: postgres:16-alpine
     container_name: cumes-postgres
@@ -60,9 +27,6 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      VIRTUAL_HOST: api.cumesbrasil.com.br
-      LETSENCRYPT_HOST: api.cumesbrasil.com.br
-      LETSENCRYPT_EMAIL: admin@cumesbrasil.com.br
     depends_on:
       - postgres
     networks:
@@ -74,12 +38,6 @@ services:
       dockerfile: frontend/Dockerfile
     container_name: cumes-frontend
     restart: always
-    environment:
-      VIRTUAL_HOST: cumesbrasil.com.br
-      LETSENCRYPT_HOST: cumesbrasil.com.br
-      LETSENCRYPT_EMAIL: admin@cumesbrasil.com.br
-    depends_on:
-      - api
     networks:
       - cumes-network
 
