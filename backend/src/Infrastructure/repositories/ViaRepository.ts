@@ -186,7 +186,7 @@ export class ViaRepository implements ISearchRepository<Via>{
       if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
         qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
       } else {
-        qb = qb.andWhere('via.exposicao = :selectedExposicao', { selectedExposicao: selectedExposicao.toLowerCase() });
+        qb = qb.andWhere('via.exposicao LIKE :selectedExposicao', { selectedExposicao: `${selectedExposicao[0]}%` });
       }
     }
 

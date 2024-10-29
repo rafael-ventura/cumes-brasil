@@ -123,6 +123,16 @@
               @update:model-value="updateActiveFilters"
             />
           </div>
+
+          <div v-if="showFilterInputInModal.selectedExposicao" class="q-pt-lg">
+            <q-select
+              v-model="localFilters.selectedExposicao"
+              :options="exposures"
+              label="Selecione a Exposição"
+              outlined
+              @update:model-value="updateActiveFilters"
+            />
+          </div>
         </q-card-section>
 
         <!-- Botões de Ação -->
@@ -172,6 +182,7 @@ const difficulties = [
   'VIIIa/b', 'VIIIb', 'VIIc', 'VIIIb/c', 'VIIIc', 'IXa', 'III (A1/VIIIa)',
   'VIIb/c', 'Xa', 'VII(3)', 'VII', 'V(2)', 'VIII', 'VIIIa'
 ];
+const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
 const mountainOptions = ref<any[]>([]);
 
 // Atualiza a lista de filtros ativos
