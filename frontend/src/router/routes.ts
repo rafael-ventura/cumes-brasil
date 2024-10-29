@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'busca',
+        name: 'busca', // Adiciona o nome à rota
         component: () => import('pages/Busca.vue')
       },
       {

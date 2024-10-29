@@ -1,50 +1,85 @@
 <template>
   <div>
-    <div class="search-header">
-      <div class="text-h2"> Busca</div>
+    <div class="q-pt-md search-header" v-if="!hideHeader">
+      <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
-    <div class=" slot-container">
-      <slot name="filters" :filters="filters" />
+    <div class="slot-container no-border">
+      <slot name="filters" :filters="filters"/>
     </div>
-    <SearchResults :results="results" :entityType="props.entity" @select="selectItem" />
+    <SearchResults
+      :results="results"
+      :entityType="props.entity"
+      @select="selectItem"
+      :enableSortOptions="enableSortOptions"
+    />
   </div>
   <div ref="observer" class="observer-element"></div>
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref } from 'vue';
+import { ref, defineEmits, defineExpose, defineProps, onMounted, onUnmounted, watch } from 'vue';
 import searchService from 'src/services/SearchService';
-import { SearchRequest } from 'src/models/SearchRequest';
 import SearchResults from 'components/Busca/SearchResults.vue';
-import { formatVia } from 'src/utils/utils';
-import { Via } from 'src/models/Via';
+import { SearchRequest } from 'src/models/SearchRequest';
 import ImagemService from 'src/services/ImagemService';
+import { formatVia } from 'src/utils/utils';
+import { useRoute } from 'vue-router';
+import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   entity: 'via' | 'colecao';
+  initialData?: any[]; // Novo parâmetro para dados iniciais
+  staticFilters?: Partial<any>
+  hideHeader?: boolean
+  searchHeader?: string
+  enableSortOptions?: { field: string, label: string }[];
 }>();
 
-const emit = defineEmits<{(event: 'select', item: any): void; (event: 'update-results', results: any[]): void;}>();
+const emit = defineEmits(['select', 'update-results']);
+const route = useRoute();
 
-const filters = ref<SearchRequest>({
-  searchQuery: '',
-  selectedMountain: null,
+const filters = ref(<SearchRequest>{
+  unifiedSearch: '', // Campo unificado de busca
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
+  selectedExposicao: null,
   page: 1,
-  itemsPerPage: 12
+  itemsPerPage: 20,
+  ...props.staticFilters, // Inicializa os filtros com os filtros estáticos
+  ...route.query // Inclui os filtros passados pela rota
 });
 
-const results = ref<any[]>([]);
+const results = ref();
 const totalPages = ref(1);
-const observer = ref<HTMLElement | null>(null); // Elemento observado
+const loading = ref(false);
+const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
 
 onMounted(() => {
-  searchEntities();
-  createObserver(); // Cria o IntersectionObserver
+  // Verifica se há filtros passados pela rota (query)
+  if (route.query) {
+    Object.assign(filters.value, route.query);
+  }
+
+  if (props.initialData && props.initialData.length) {
+    results.value = props.initialData;
+    emit('update-results', results.value);
+  } else {
+    searchEntities(true);
+  }
+  createObserver();
 });
+
+watch(
+  () => filters.value,
+  (newFilters, oldFilters) => {
+    if (newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+      searchEntities(true);
+    }
+  },
+  { deep: true }
+);
 
 onUnmounted(() => {
   if (observerInstance) {
@@ -53,32 +88,31 @@ onUnmounted(() => {
 });
 
 const createObserver = () => {
-  // Cria o IntersectionObserver
   observerInstance = new IntersectionObserver((entries) => {
     const entry = entries[0];
-    if (!filters.value.page) {
-      filters.value.page = 1;
-    }
-    if (entry.isIntersecting && filters.value.page < totalPages.value) {
+    if (entry.isIntersecting && filters.value.page < totalPages.value && !loading.value) {
       filters.value.page++;
-      searchEntities(); // Carrega mais resultados
+      searchEntities(false); // Passa 'false' para não resetar resultados
     }
   }, {
-    root: null, // Usa o viewport como root
+    root: null,
     rootMargin: '0px',
-    threshold: 1.0 // Aciona quando 100% do elemento está visível
+    threshold: 1.0
   });
 
-  // Conecta o observer ao elemento
   if (observer.value) {
     observerInstance.observe(observer.value);
   }
 };
 
-const searchEntities = async () => {
+const searchEntities = async (reset = false) => {
+  if (loading.value) return;
+  loading.value = true;
+
   try {
-    const searchRequest: SearchRequest = {
+    const searchRequest = {
       ...filters.value,
+      ...props.staticFilters,
       entityType: props.entity
     };
     const searchResult = await searchService.search(searchRequest);
@@ -89,21 +123,37 @@ const searchEntities = async () => {
         return via;
       });
     }
-    if (filters.value.page === 1) {
+
+    if (props.entity === 'colecao') {
+      searchResult.items = searchResult.items.map((item: any) => {
+        item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
+        return item;
+      });
+    }
+
+    if (reset) {
       results.value = searchResult.items;
     } else {
       results.value = [...results.value, ...searchResult.items];
     }
+
     totalPages.value = searchResult.totalPages;
     emit('update-results', results.value);
   } catch (error) {
-    console.error('Error searching entities:', error);
+    console.error('Erro ao buscar entidades:', error);
+  } finally {
+    loading.value = false;
   }
 };
 
 const handleApplyFilters = (newFilters: SearchRequest) => {
-  filters.value = { ...filters.value, ...newFilters, page: 1 }; // Reset page when filters are updated
-  searchEntities();
+  filters.value = {
+    ...filters.value, // Mantém os filtros atuais
+    ...props.staticFilters, // Garante que os filtros estáticos sejam incluídos
+    ...newFilters,
+    page: 1
+  };
+  searchEntities(true);
 };
 
 defineExpose({ handleApplyFilters });
@@ -115,6 +165,7 @@ const selectItem = (item: any) => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
 .search-header {
   text-align: center;
   margin-bottom: 16px;

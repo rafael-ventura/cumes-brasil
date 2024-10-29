@@ -21,11 +21,14 @@ export class SearchController {
 		try {
 			const {
 				entityType,
-				searchQuery,
+				unifiedSearch,
 				selectedMountain,
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
+				colecaoId,
+				bairro, // Adiciona o filtro de bairro
 				page,
 				itemsPerPage
 			} = req.body;
@@ -36,11 +39,14 @@ export class SearchController {
 
 			// Construa o objeto de filtros a partir da requisição
 			const filters = {
-				searchQuery,
+				unifiedSearch,
 				selectedMountain,
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
+				colecaoId,
+				bairro, // Adiciona o filtro de bairro
 				page,
 				itemsPerPage
 			};

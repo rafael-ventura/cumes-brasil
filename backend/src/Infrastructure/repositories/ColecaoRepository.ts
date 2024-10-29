@@ -3,6 +3,9 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import {Via_Colecao} from "../../Domain/entities/ViaColecao";
+import {Via} from "../../Domain/entities/Via";
+import {getRepository} from "typeorm";
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
@@ -49,11 +52,35 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         await this.repository.delete(id);
     }
 
-    async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
-        return this.repository.createQueryBuilder()
-            .relation(Colecao, 'vias')
-            .of(colecao_id)
-            .add(via_id);
+    async addViaToColecao(via_id: number, colecao_id: number): Promise<void> {
+        // Verificar se a coleção existe
+        const colecao = await this.repository.findOne({ where: { id: colecao_id } });
+        if (!colecao) {
+            throw new Error('Coleção não encontrada');
+        }
+
+        // Verificar se a via existe
+        const via = await this.repository.manager.findOne(Via, { where: { id: via_id } });
+        if (!via) {
+            throw new Error('Via não encontrada');
+        }
+
+        // data no formato yyyy-mm-dd
+        const dataAdicao = new Date()
+        try {
+            // Inserir na tabela associativa manualmente
+            await this.repository.manager
+                .createQueryBuilder()
+                .insert()
+                .into('via_colecao')
+                .values({
+                    via_id: via.id,
+                    colecao_id: colecao.id,
+                })
+                .execute();
+        } catch (error) {
+            throw new Error('Erro ao adicionar via à coleção: ' + error);
+        }
     }
 
     async removeViaFromColecao(via_id: number, colecao_id: number): Promise<void> {
@@ -91,28 +118,50 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
     }
 
     async search(query: any): Promise<ISearchResult<Colecao>> {
-        const { nomeColecao, nomeVia, nomeMontanha } = query;
+        const { searchQuery, colecaoId, nomeVia, nomeMontanha, page = 1, itemsPerPage = 10 } = query;
 
+        // Criar a query builder da coleção, incluindo as vias e montanhas associadas
         let qb = this.repository.createQueryBuilder('colecao')
             .leftJoinAndSelect('colecao.vias', 'via')
-            .leftJoinAndSelect('via.montanha', 'montanha');
+            .leftJoinAndSelect('via.montanha', 'montanha')
+            .leftJoinAndSelect('colecao.imagem', 'imagem');
 
-        if (nomeColecao) {
-            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        // Filtro por ID da coleção
+        if (colecaoId) {
+            qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
         }
 
+        // Filtro por nome da coleção
+        if (searchQuery) {
+            qb = qb.andWhere('colecao.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+        }
+
+        // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
         if (nomeVia) {
             qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
+        // Filtro por nome da montanha caso você queira buscar coleções que tenham vias em uma determinada montanha)
         if (nomeMontanha) {
             qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
 
+        // Contar o total de itens (coleções) correspondentes
+        const totalItems = await qb.getCount();
+
+        // Buscar coleções paginadas
+        const items = await qb
+            .skip((page - 1) * itemsPerPage)
+            .take(itemsPerPage)
+            .getMany();
+
+        // Calcular total de páginas
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
         return {
-            items: await qb.getMany(),
-            totalItems: await qb.getCount(),
-            totalPages: 1
-        }
+            items,
+            totalPages,
+            totalItems
+        };
     }
 }

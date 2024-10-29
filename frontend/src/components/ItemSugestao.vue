@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <div @scroll="onScroll" class="item-sugestao-container">
+    <!-- Campo de busca unificada -->
     <q-input
-      v-model="searchQuery"
-      :label="searchLabel"
+      v-model="unifiedSearch"
+      label="Buscar por nome, bairro ou montanha"
       outlined
       debounce="300"
       class="q-ma-md"
+      @input="onInputChange"
     />
     <q-list separator>
       <q-item v-for="item in filteredItems" :key="item.id" clickable class="q-pa-xs">
@@ -29,7 +31,14 @@
           />
         </q-item-section>
       </q-item>
-      <q-item v-if="!filteredItems.length">
+      <!-- Mensagem de carregando mais itens -->
+      <q-item v-if="loadingMore">
+        <q-item-section>
+          <q-item-label>Carregando mais itens...</q-item-label>
+        </q-item-section>
+      </q-item>
+      <!-- Mensagem se não houver resultados -->
+      <q-item v-if="!filteredItems.length && !loadingMore">
         <q-item-section>
           <q-item-label>Nenhum item encontrado.</q-item-label>
         </q-item-section>
@@ -45,35 +54,46 @@ interface Item {
   id: number;
   nome: string;
   imagem?: { url: string };
+  montanha?: { nome: string; bairro: string };
   added?: boolean;
-
   [key: string]: any;
 }
 
 const props = defineProps<{
-  items: Item[];
+  items: any[];
   itemType: 'via' | 'colecao';
   placeholderImage?: string;
+  loadMoreItems?:() => Promise<void>; // Agora é opcional
 }>();
 const emit = defineEmits(['add-item']);
 
-const searchQuery = ref('');
-
+// Estados locais
+const unifiedSearch = ref(''); // Busca unificada
 const placeholderImage = props.placeholderImage || 'https://via.placeholder.com/50';
+const loadingMore = ref(false);
 
-const searchLabel = props.itemType === 'via' ? 'Buscar vias' : 'Buscar coleções';
-
+// Lógica de filtragem unificada
 const filteredItems = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase();
+  const query = unifiedSearch.value.trim().toLowerCase();
   if (query) {
-    return props.items.filter(item =>
-      item.nome.toLowerCase().includes(query)
-    );
+    return props.items.filter(item => {
+      return (
+        item.nome.toLowerCase().includes(query) ||
+        (item.montanha?.nome?.toLowerCase().includes(query)) ||
+        (item.montanha?.bairro?.toLowerCase().includes(query))
+      );
+    });
   } else {
     return props.items;
   }
 });
 
+// Método para manipular a entrada do campo de busca
+const onInputChange = (value: string) => {
+  unifiedSearch.value = value;
+};
+
+// Função para adicionar item
 const addItem = (item: Item) => {
   if (!item.added) {
     item.added = true;
@@ -81,6 +101,7 @@ const addItem = (item: Item) => {
   }
 };
 
+// Função para exibir informações do item
 const itemInfo = (item: Item) => {
   if (props.itemType === 'via') {
     return item.montanha?.nome || '';
@@ -89,7 +110,29 @@ const itemInfo = (item: Item) => {
   }
   return '';
 };
+
+// Lógica de carregamento infinito
+const onScroll = async (event: Event) => {
+  const target = event.target as HTMLElement;
+
+  if (
+    target.scrollTop + target.clientHeight >= target.scrollHeight - 20 &&
+    !loadingMore.value &&
+    props.loadMoreItems // Verifica se a função está definida
+  ) {
+    loadingMore.value = true;
+    await props.loadMoreItems(); // Chama a função para carregar mais itens
+    loadingMore.value = false;
+  }
+};
 </script>
 
 <style scoped>
+.item-sugestao-container {
+  max-height: 400px; /* Define uma altura máxima para ativar o scroll */
+  overflow-y: auto;
+}
+.q-ma-md {
+  margin: 16px;
+}
 </style>

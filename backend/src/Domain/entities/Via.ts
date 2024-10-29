@@ -92,6 +92,17 @@ export class Via extends BaseEntity {
   croquis: Croqui[];
 
   @ManyToMany(() => Colecao, colecao => colecao.vias)
+  @JoinTable({
+    name: "via_colecao",
+    joinColumn: {
+      name: "via_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "colecao_id",
+      referencedColumnName: "id"
+    }
+  })
   colecoes: Colecao[];
 
   @OneToMany(() => Escalada, escalada => escalada.viaId)
