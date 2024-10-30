@@ -10,5 +10,18 @@ class EscaladaService {
       handleApiError(error, 'Erro ao criar escalada');
     }
   }
+
+  async getEscaladas (): Promise<Escalada[]> {
+    try {
+      console.log('getEscaladas');
+      const response = await api.get('/escaladas');
+      console.log('fez a request');
+      return response.data;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar escaladas');
+      return [];
+    }
+  }
 }
+
 export default new EscaladaService();

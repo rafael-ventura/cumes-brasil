@@ -42,7 +42,7 @@ import { Colecao } from 'src/models/Colecao';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const props = defineProps<{
   results:(Via | Colecao)[];
-  entityType: 'via' | 'colecao';
+  entityType: 'via' | 'colecao' | 'escalada';
   totalItems?: number;
   initialSort?: { field: string, direction: 'asc' | 'desc' };
   enableSortOptions?: { field: string, label: string }[]; // Novo campo para customizar opções de ordenação

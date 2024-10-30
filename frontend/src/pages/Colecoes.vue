@@ -1,5 +1,8 @@
 <template>
   <q-page>
+    <!-- Sub-navbar -->
+    <SubNavbar />
+
     <SearchEntity
       ref="searchEntityRef"
       entity="colecao"
@@ -43,7 +46,7 @@
               class="input-white"
               v-model="novaColecao.descricao"
               label="Descrição da Coleção"
-              color="white" label-color="white"
+              color="white"
               outlined
               dense
               lie
@@ -67,21 +70,34 @@ import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
 import SearchFilters from 'components/Busca/SearchFilters.vue';
+import SubNavbar from 'layouts/SubNavbar.vue';
 
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
+const activeTab = ref('colecoes');
 const isAddColecaoModalOpen = ref(false);
 const novaColecao = ref({
   nome: '',
   descricao: '',
   usuario_id: Number(localStorage.getItem('userId')) || 0,
-  imagem_id: 1 // Defina a imagem padrão aqui, se necessário
+  imagem_id: 1
 });
+
+const navigateToTab = (tabName: string) => {
+  activeTab.value = tabName;
+  if (tabName === 'colecoes') {
+    router.push('/colecoes');
+  } else if (tabName === 'favoritas') {
+    router.push('/favoritas');
+  } else if (tabName === 'escaladas') {
+    router.push('/escaladas');
+  }
+};
 
 const addColecao = async () => {
   try {
-    novaColecao.value.usuario_id = Number(localStorage.getItem('userId')) || 0; // Assegure que o usuário está sendo passado
+    novaColecao.value.usuario_id = Number(localStorage.getItem('userId')) || 0;
     await ColecaoService.create(novaColecao.value);
     colecoes.value = await ColecaoService.getByUsuarioId();
     isAddColecaoModalOpen.value = false;
@@ -89,7 +105,7 @@ const addColecao = async () => {
       nome: '',
       descricao: '',
       usuario_id: Number(localStorage.getItem('userId')) || 0,
-      imagem_id: 1 // Defina a imagem padrão aqui, se necessário
+      imagem_id: 1
     };
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);
@@ -103,14 +119,7 @@ defineOptions({
 onMounted(async () => {
   if (!AuthenticateService.isAuthenticated()) {
     await router.push('/auth/login');
-    // return;
   }
-
-  /* try {
-    colecoes.value = await ColecaoService.getByUsuarioId();
-  } catch (error) {
-    console.error('Erro ao buscar coleções:', error);
-  } */
 });
 
 const applyFilters = (filters: any) => {
@@ -151,7 +160,7 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 
 .fixed-bottom-right {
   position: fixed;
-  bottom: 120px; /* Ajuste a posição para ficar acima da navbar */
+  bottom: 120px;
   right: 16px;
   z-index: 2; /* Garante que o botão esteja acima do conteúdo */
 }

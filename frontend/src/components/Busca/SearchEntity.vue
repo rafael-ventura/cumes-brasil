@@ -27,7 +27,7 @@ import { useRoute } from 'vue-router';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{
-  entity: 'via' | 'colecao';
+  entity: 'via' | 'colecao' | 'escalada';
   initialData?: any[]; // Novo parâmetro para dados iniciais
   staticFilters?: Partial<any>
   hideHeader?: boolean

@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'busca',
-        name: 'busca', // Adiciona o nome à rota
+        name: 'busca',
         component: () => import('pages/Busca.vue')
       },
       {
@@ -30,6 +30,14 @@ const routes: RouteRecordRaw[] = [
         path: 'colecoes/:id',
         name: 'ColecaoDetalhada',
         component: () => import('pages/ColecaoDetalhada.vue')
+      },
+      {
+        path: 'favoritas',
+        component: () => import('pages/Favoritas.vue')
+      },
+      {
+        path: 'escaladas',
+        component: () => import('pages/Escaladas.vue')
       },
       {
         path: 'perfil',
@@ -51,21 +59,9 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Auth/RedefinirSenha.vue')
           }
         ]
-      },
-      {
-        path: 'admin',
-        children: [
-          {
-            path: 'exemple420',
-            component: () => import('pages/ExempleCume420.vue')
-          }
-        ]
       }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
