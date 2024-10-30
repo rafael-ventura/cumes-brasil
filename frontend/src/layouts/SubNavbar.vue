@@ -44,5 +44,6 @@ watch(
 
 .q-tabs {
   margin-bottom: 8px;
+  background-color: #373636;
 }
 </style>

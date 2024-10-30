@@ -1,7 +1,8 @@
 <template>
   <div class="observacao-container">
     <q-item-label class="observacao-label">Observação</q-item-label>
-    <q-input class="q-input"
+    <q-input
+      class="q-input"
       v-model="localValue"
       dense
       resizable
@@ -9,7 +10,6 @@
       disable
     />
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -53,7 +53,14 @@ defineOptions({
 
 .q-input {
   font-size: 20px;
-  color: white;
-  background-color: transparent;
+  color: white !important; /* Garante que o texto do input seja branco */
+  background-color: transparent !important; /* Mantém o fundo transparente */
+  border: none; /* Remove qualquer borda que esteja sendo aplicada */
+  outline: none; /* Remove o contorno ao focar */
+  resize: none; /* Impede redimensionamento */
+}
+
+.q-input__inner {
+  color: white; /* Garante que o texto digitado seja branco */
 }
 </style>

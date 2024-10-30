@@ -1,11 +1,13 @@
 <template>
-  <div class="escalada-card q-mb-md">
+  <div class="escalada-card">
     <!-- Título da Escalada -->
     <q-item-label class="titulo-escalada">{{ via?.nome }}</q-item-label>
 
     <!-- Grau da Via -->
     <div class="grau-container">
-      <q-item-label class="grau">{{ via?.grau || 'Grau não informado' }}</q-item-label>
+      <div class="grau-btn">
+        {{ via?.grau || 'Grau não informado' }}
+      </div>
     </div>
 
     <!-- Detalhes da Escalada -->
@@ -17,26 +19,36 @@
       </div>
 
       <!-- Participantes -->
-      <div class="detalhe-item">
-        <q-icon name="people" size="md" />
-        <q-item-label class="label-text">Participantes</q-item-label>
-        <q-expansion-item expand-separator class="dropdown">
-          <q-list>
-            <q-item v-for="participante in escaladaLocal.participantes" :key="participante.nome">
-              <q-item-section>
-                <q-item-label :class="getParticipantClass(participante.tipo)">
-                  {{ participante.nome }}
-                </q-item-label>
-                <q-chip
-                  :color="getParticipantColor(participante.tipo)"
-                  class="q-ml-sm"
-                >
-                  {{ participante.tipo }}
-                </q-chip>
-              </q-item-section>
+      <div :class="['participantes-wrapper', { 'bordered': dropdownOpen }]">
+        <div class="participantes-header" @click="toggleDropdown">
+          <q-icon name="people" size="md" />
+          <q-item-label class="label-text">Participantes</q-item-label>
+          <q-icon name="arrow_drop_down" size="md" class="dropdown-icon" />
+        </div>
+
+        <!-- Dropdown de Participantes -->
+        <div v-if="dropdownOpen" class="participantes-dropdown">
+          <q-list class="participante-list">
+            <q-item
+              v-for="participante in escaladaLocal.participantes"
+              :key="participante.nome"
+              class="participante-item"
+            >
+              <!-- Nome do Participante -->
+              <div class="participante-nome">
+                {{ participante.nome }}
+              </div>
+
+              <!-- Tipo do Participante -->
+              <div
+                :style="{ backgroundColor: getParticipantColor(participante.tipo) }"
+                class="tipo-participante-chip"
+              >
+                {{ participante.tipo }}
+              </div>
             </q-item>
           </q-list>
-        </q-expansion-item>
+        </div>
       </div>
 
       <!-- Observação -->
@@ -61,6 +73,7 @@ const props = defineProps({
 
 const escaladaLocal = ref({ ...props.escalada });
 const via = ref<Via | null>(null);
+const dropdownOpen = ref(false);
 
 onMounted(async () => {
   if (escaladaLocal.value.id) {
@@ -76,35 +89,32 @@ function formatDateToDDMMYY (date: string | Date): string {
   return `${day}/${month}/${year}`;
 }
 
+function toggleDropdown () {
+  dropdownOpen.value = !dropdownOpen.value;
+}
+
 function getParticipantColor (tipo: string) {
-  switch (tipo) {
-    case 'Guia':
-      return 'red';
-    case 'Misto':
-      return 'blue';
-    case 'Participante':
-      return 'green';
+  switch (tipo.toUpperCase()) {
+    case 'GUIA':
+      return '#EF9D9D';
+    case 'MISTO':
+      return '#C0E8AB';
+    case 'PARTICIPANTE':
+      return '#7E9CE8';
     default:
       return 'gray';
   }
-}
-
-function getParticipantClass (tipo: string) {
-  return tipo === 'Participante' ? 'participante-label' : '';
 }
 </script>
 
 <style scoped>
 .escalada-card {
   width: 100%;
-  max-width: 390px; /* Limita a largura máxima a 390px */
   background-color: var(--q-primary);
   padding: 16px;
-  border-radius: 16px; /* Aumenta o arredondamento das bordas */
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto; /* Centraliza o card horizontalmente */
 }
 
 .titulo-escalada {
@@ -115,14 +125,23 @@ function getParticipantClass (tipo: string) {
 }
 
 .grau-container {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  text-align: center;
-  padding: 12px;
-  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.grau-btn {
+  width: 95%;
+  max-width: 300px;
+  padding: 1%;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.10);
+  color: black;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 16px;
+  text-align: center;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .detalhes-container {
@@ -142,27 +161,71 @@ function getParticipantClass (tipo: string) {
   margin-left: 8px;
 }
 
-.label-text {
-  font-size: 19px;
-  font-weight: 600;
+.participantes-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4%;
+}
+
+.bordered {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.participantes-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdown-icon {
   margin-left: 8px;
 }
 
-.observacao-container {
+.participantes-dropdown {
+  background-color: var(--q-primary);
+  margin-top: 4px;
+  margin-bottom: 4%;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px 0 8px; /* Remove padding inferior */
+}
+
+.participante-list {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-40px); /* Sobe a lista */
+}
+
+.participante-item {
   display: flex;
   align-items: center;
-  margin-top: 8px;
+  margin-bottom: -4%; /* Espaço entre os itens */
 }
 
-.q-input {
-  margin-top: 4px;
+.participante-item:last-child {
+  margin-bottom: -20%;
 }
 
-.modal-participantes {
-  max-width: 390px;
-  margin: 0 auto;
-  background-color: var(--q-primary);
-  padding: 16px;
-  border-radius: 8px;
+.participante-nome {
+  flex: 0 0 70%;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.10);
+  color: black;
+  text-align: center;
+  margin-right: 20%;
+  transform: translateX(-20%); /* Move o texto para a esquerda */
+}
+
+.tipo-participante-chip {
+  flex: 0 0 30%;
+  padding: 8px;
+  border-radius: 15px;
+  font-size: 14px;
+  text-align: center;
+  transform: translateX(-20%); /* Move o texto para a esquerda */
 }
 </style>
