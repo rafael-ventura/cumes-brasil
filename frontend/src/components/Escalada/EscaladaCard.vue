@@ -131,7 +131,7 @@ function getParticipantColor (tipo: string) {
 }
 
 .grau-btn {
-  width: 95%;
+  width: 100%;
   max-width: 300px;
   padding: 1%;
   border: 1px solid black;
@@ -189,43 +189,50 @@ function getParticipantColor (tipo: string) {
   margin-bottom: 4%;
   display: flex;
   flex-direction: column;
-  padding: 8px 8px 0 8px; /* Remove padding inferior */
 }
 
 .participante-list {
   display: flex;
   flex-direction: column;
-  transform: translateY(-40px); /* Sobe a lista */
+  transform: translateY(-30px); /* Sobe a lista */
 }
 
 .participante-item {
   display: flex;
   align-items: center;
-  margin-bottom: -4%; /* Espaço entre os itens */
+  justify-content: space-between;
+  padding: 0; /* Remove o padding */
+  margin: 0; /* Remove o margin */
+}
+
+.participante-nome,
+.tipo-participante-chip {
+  margin: 0; /* Remove margin entre nome e tipo */
+  padding: 0; /* Remove padding dentro dos campos */
+  border: none; /* Remove a borda dos campos */
 }
 
 .participante-item:last-child {
-  margin-bottom: -20%;
+  margin-bottom: -15%;
 }
 
 .participante-nome {
-  flex: 0 0 70%;
-  padding: 8px;
+  flex: 0 1 80%; /* Ajuste de largura para caber na linha */
+  padding: 2%;
   border: 1px solid black;
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0.10);
   color: black;
-  text-align: center;
-  margin-right: 20%;
-  transform: translateX(-20%); /* Move o texto para a esquerda */
+  text-align: center; /* Alinha o texto à esquerda */
+  margin-right: 3%;
 }
 
 .tipo-participante-chip {
-  flex: 0 0 30%;
-  padding: 8px;
+  flex: 0 0 30%; /* Ajuste de largura para caber na linha */
+  padding: 1%;
   border-radius: 15px;
   font-size: 14px;
   text-align: center;
-  transform: translateX(-20%); /* Move o texto para a esquerda */
 }
+
 </style>

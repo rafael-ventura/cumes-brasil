@@ -1,20 +1,22 @@
 <template>
-  <q-page>
+  <q-page class="escaladas-page">
     <div class="titulo-pagina">Minhas Escaladas</div>
 
     <!-- Sub-navbar -->
     <SubNavbar />
 
     <!-- Lista de Escaladas -->
-    <q-list>
+    <div class="escaladas-container">
       <EscaladaCard
         v-for="escalada in escaladas"
         :key="escalada.id"
         :escalada="escalada"
+        class="escalada-card"
       />
-    </q-list>
+    </div>
   </q-page>
 </template>
+
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
@@ -44,14 +46,38 @@ defineOptions({
 </script>
 
 <style scoped>
-.page-padding {
-  padding: 16px;
+.escaladas-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+}
+
+.escaladas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 4%
 }
 
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
   color: var(--q-primary);
+}
+
+.escalada-card {
+  width: 100%;
+  max-width: 800px; /* Limita a largura máxima para legibilidade */
   margin-bottom: 16px;
+  border: 1px solid var(--q-primary);
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
 }
 </style>

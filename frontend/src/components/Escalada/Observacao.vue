@@ -2,12 +2,11 @@
   <div class="observacao-container">
     <q-item-label class="observacao-label">Observação</q-item-label>
     <q-input
-      class="q-input"
       v-model="localValue"
-      dense
-      resizable
       type="textarea"
-      disable
+      dense
+      class="q-input-custom"
+      readonly
     />
   </div>
 </template>
@@ -43,24 +42,10 @@ defineOptions({
   padding: 8px;
   border-radius: 8px;
 }
-
 .observacao-label {
   font-size: 19px;
   font-weight: bolder;
   color: var(--q-primary);
   margin-bottom: 4px;
-}
-
-.q-input {
-  font-size: 20px;
-  color: white !important; /* Garante que o texto do input seja branco */
-  background-color: transparent !important; /* Mantém o fundo transparente */
-  border: none; /* Remove qualquer borda que esteja sendo aplicada */
-  outline: none; /* Remove o contorno ao focar */
-  resize: none; /* Impede redimensionamento */
-}
-
-.q-input__inner {
-  color: white; /* Garante que o texto digitado seja branco */
 }
 </style>
