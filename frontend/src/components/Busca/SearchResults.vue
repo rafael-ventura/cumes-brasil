@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from 'vue';
+import { computed, defineEmits, defineProps, ref } from 'vue';
 import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';

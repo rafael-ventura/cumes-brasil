@@ -75,7 +75,7 @@ import SubNavbar from 'layouts/SubNavbar.vue';
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<Colecao[]>([]);
-const activeTab = ref('colecoes');
+ref('colecoes');
 const isAddColecaoModalOpen = ref(false);
 const novaColecao = ref({
   nome: '',
@@ -83,18 +83,6 @@ const novaColecao = ref({
   usuario_id: Number(localStorage.getItem('userId')) || 0,
   imagem_id: 1
 });
-
-const navigateToTab = (tabName: string) => {
-  activeTab.value = tabName;
-  if (tabName === 'colecoes') {
-    router.push('/colecoes');
-  } else if (tabName === 'favoritas') {
-    router.push('/favoritas');
-  } else if (tabName === 'escaladas') {
-    router.push('/escaladas');
-  }
-};
-
 const addColecao = async () => {
   try {
     novaColecao.value.usuario_id = Number(localStorage.getItem('userId')) || 0;

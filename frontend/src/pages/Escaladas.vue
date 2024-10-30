@@ -1,7 +1,10 @@
 <template>
   <q-page>
+    <div class="titulo-pagina">Minhas Escaladas</div>
+
     <!-- Sub-navbar -->
     <SubNavbar />
+
     <!-- Lista de Escaladas -->
     <q-list>
       <EscaladaCard
@@ -17,12 +20,10 @@
 import { onMounted, ref } from 'vue';
 import EscaladaCard from 'src/components/Escalada/EscaladaCard.vue';
 import SubNavbar from 'src/layouts/SubNavbar.vue';
-import { useRouter } from 'vue-router';
 import { Escalada } from 'src/models/Escalada';
 import EscaladaService from 'src/services/EscaladaService';
 
 const escaladas = ref<Escalada[]>([]);
-const router = useRouter();
 
 onMounted(async () => {
   try {
@@ -36,10 +37,21 @@ onMounted(async () => {
     console.error('Erro ao buscar escaladas:', error);
   }
 });
+
+defineOptions({
+  name: 'EscaladasPage'
+});
 </script>
 
 <style scoped>
 .page-padding {
   padding: 16px;
+}
+
+.titulo-pagina {
+  font-size: 40px;
+  text-align: center;
+  color: var(--q-primary);
+  margin-bottom: 16px;
 }
 </style>
