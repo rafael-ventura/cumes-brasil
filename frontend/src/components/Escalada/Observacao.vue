@@ -1,6 +1,9 @@
 <template>
   <div class="observacao-container">
-    <q-item-label class="observacao-label">Observação</q-item-label>
+    <div class="observacao-header">
+      <q-icon name="book" size="md" />
+      <q-item-label class="observacao-label">Observação</q-item-label>
+    </div>
     <q-input
       v-model="localValue"
       type="textarea"
@@ -42,10 +45,21 @@ defineOptions({
   padding: 8px;
   border-radius: 8px;
 }
+
+.observacao-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px; /* Espaço entre a linha de título e o campo de texto */
+}
+
+.observacao-header .q-icon {
+  color: var(--q-primary); /* Define a cor do ícone para a cor primária */
+  margin-right: 8px; /* Espaço entre o ícone e a label */
+}
+
 .observacao-label {
   font-size: 19px;
   font-weight: bolder;
   color: var(--q-primary);
-  margin-bottom: 4px;
 }
 </style>

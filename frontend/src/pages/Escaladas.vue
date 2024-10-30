@@ -17,7 +17,6 @@
   </q-page>
 </template>
 
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import EscaladaCard from 'src/components/Escalada/EscaladaCard.vue';
@@ -61,8 +60,7 @@ defineOptions({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  box-sizing: border-box;
-  padding-top: 4%
+  padding-top: 4%;
 }
 
 .titulo-pagina {
@@ -76,8 +74,18 @@ defineOptions({
   max-width: 800px; /* Limita a largura máxima para legibilidade */
   margin-bottom: 16px;
   border: 1px solid var(--q-primary);
-  border-radius: 8px;
-  padding: 16px;
-  box-sizing: border-box;
+  border-radius: 11px;
+  padding: 0; /* Remove padding do card */
+}
+
+.escalada-card img {
+  width: 100%;
+  height: auto;
+  padding: 0; /* Remove padding da imagem */
+  margin: 0; /* Remove margin da imagem */
+  border: 0; /* Remove borda da imagem */
+  border-top-left-radius: 10px; /* Borda arredondada superior esquerda */
+  border-top-right-radius: 10px; /* Borda arredondada superior direita */
+  object-fit: cover; /* Garante que a imagem se ajuste corretamente ao espaço */
 }
 </style>
