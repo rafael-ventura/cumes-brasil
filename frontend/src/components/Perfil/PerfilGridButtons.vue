@@ -8,7 +8,7 @@
               <div class="large-text">{{ item.num }}</div>
               <q-icon :name="item.icon" class="medium-icon left-margem" />
             </div>
-            <div class="texto">{{ item.label }}</div>
+            <div class="texto text-h7">{{ item.label }}</div>
           </q-item-section>
         </q-item>
       </div>
