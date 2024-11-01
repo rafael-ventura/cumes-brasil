@@ -39,7 +39,7 @@ const props = defineProps<{
   hideHeader?: boolean
   searchHeader?: string
   enableSortOptions?: { field: string, label: string }[];
-  isFavoritasCollection?: boolean; // Nova prop para indicar a coleção de favoritas
+  isFavoritasCollection?: boolean;
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
@@ -63,25 +63,35 @@ const loading = ref(false);
 const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
 
-onMounted(() => {
-  // Verifica se há filtros passados pela rota (query)
-  if (route.query) {
-    Object.assign(filters.value, route.query);
-  }
-
-  if (props.initialData && props.initialData.length) {
-    results.value = props.initialData;
-    emit('update-results', results.value);
+onMounted(async () => {
+  // Verifica se é para buscar a coleção de favoritas
+  if (props.isFavoritasCollection && props.entity === 'via') {
+    await fetchFavoritasCollection();
   } else {
-    searchEntities(true);
+    if (props.initialData && props.initialData.length) {
+      results.value = props.initialData;
+      emit('update-results', results.value);
+    } else {
+      searchEntities(true);
+    }
+    createObserver();
   }
-  createObserver();
 });
+
+const fetchFavoritasCollection = async () => {
+  try {
+    const favoritas = await ColecaoService.getFirstByUsuarioId();
+    results.value = favoritas?.vias || [];
+    emit('update-results', results.value);
+  } catch (error) {
+    console.error('Erro ao buscar coleção de favoritas:', error);
+  }
+};
 
 watch(
   () => filters.value,
   (newFilters, oldFilters) => {
-    if (newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+    if (!props.isFavoritasCollection && newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
       searchEntities(true);
     }
   },
@@ -117,40 +127,34 @@ const searchEntities = async (reset = false) => {
   loading.value = true;
 
   try {
-    if (props.isFavoritasCollection && props.entity === 'via') {
-      const favoritas = await ColecaoService.getFirstByUsuarioId(); // Busca a coleção de favoritas
-      results.value = favoritas?.vias || []; // Define as vias da coleção
-      emit('update-results', results.value);
-    } else {
-      const searchRequest = {
-        ...filters.value,
-        ...props.staticFilters,
-        entityType: props.entity
-      };
-      const searchResult = await searchService.search(searchRequest);
-      if (props.entity === 'via') {
-        searchResult.items = searchResult.items.map((item: any) => {
-          const via = formatVia(item as Via);
-          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
-          return via;
-        });
-      }
+    const searchRequest = {
+      ...filters.value,
+      ...props.staticFilters,
+      entityType: props.entity
+    };
+    const searchResult = await searchService.search(searchRequest);
 
-      if (props.entity === 'colecao') {
-        searchResult.items = searchResult.items.map((item: any) => {
-          item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
-          return item;
-        });
-      }
-
-      if (reset) {
-        results.value = searchResult.items;
-      } else {
-        results.value = [...results.value, ...searchResult.items];
-      }
-      totalPages.value = searchResult.totalPages;
-      emit('update-results', results.value);
+    if (props.entity === 'via') {
+      searchResult.items = searchResult.items.map((item: any) => {
+        const via = formatVia(item as Via);
+        via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        return via;
+      });
     }
+
+    if (props.entity === 'colecao') {
+      searchResult.items = searchResult.items.map((item: any) => {
+        item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
+        return item;
+      });
+    }
+    if (reset) {
+      results.value = searchResult.items;
+    } else {
+      results.value = [...results.value, ...searchResult.items];
+    }
+    totalPages.value = searchResult.totalPages;
+    emit('update-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
   } finally {
@@ -190,15 +194,14 @@ const selectItem = (item: any) => {
 }
 
 .slot-container {
-  border: 2px solid #bce9b4; /* Cor da borda */
-  padding: 16px; /* Espaçamento interno */
-  border-radius: 8px; /* Bordas arredondadas */
-  background-color: #2c2c2c; /* Cor de fundo para destacar o conteúdo */
+  border: 2px solid #bce9b4;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #2c2c2c;
 }
 
 .slot-container * {
   color: $primary;
-
 }
 
 .text-h2 {
