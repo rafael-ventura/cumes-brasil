@@ -21,6 +21,14 @@
     <div v-else-if="entityType === 'colecao'">
       <ColecaoLista :colecoes="sortedResults as Colecao[]" />
     </div>
+    <div v-else-if="entityType === 'escalada'">
+      <EscaladaCard
+        v-for="escalada in sortedResults"
+        :key="escalada.id"
+        :escalada="escalada"
+        class="escalada-card"
+      />
+    </div>
     <!-- Mensagem se não houver resultados -->
     <div v-if="results && results.length === 0">
       <p>No results found.</p>
@@ -38,10 +46,12 @@ import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
 import { Colecao } from 'src/models/Colecao';
+import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
+import { Escalada } from 'src/models/Escalada';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const props = defineProps<{
-  results:(Via | Colecao)[];
+  results:(Via | Colecao | Escalada)[];
   entityType: 'via' | 'colecao' | 'escalada';
   totalItems?: number;
   initialSort?: { field: string, direction: 'asc' | 'desc' };
@@ -77,19 +87,19 @@ const currentSortOption = ref(
 );
 
 // Aplica a ordenação nos resultados
-const sortedResults = computed(() => {
+const sortedResults: any = computed(() => {
   if (!props.results || !props.results.length) return [];
 
   // Copia os resultados para não alterar a prop original
   const resultsCopy = [...props.results];
 
+  if (!currentSortOption.value) return resultsCopy;
   return resultsCopy.sort((a: any, b: any) => {
     const field = currentSortOption.value.field;
     const direction = currentSortOption.value.direction;
 
     // Ordenação por nome
-    if (field === 'nome') {
-      console.log(a.nome, b.nome);
+    if (field === 'nome' && a.nome && b.nome) {
       return direction === 'asc'
         ? a.nome.localeCompare(b.nome)
         : b.nome.localeCompare(a.nome);
@@ -116,7 +126,7 @@ const applySorting = (sortOption: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-const selectItem = (item: Via | Colecao) => {
+const selectItem = (item: Via | Colecao | any) => {
   emit('select', item);
 };
 </script>
@@ -135,5 +145,16 @@ const selectItem = (item: Via | Colecao) => {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
   padding: 16px;
+}
+
+.escalada-card img {
+  width: 100%;
+  height: auto;
+  padding: 0; /* Remove padding da imagem */
+  margin: 0; /* Remove margin da imagem */
+  border: 0; /* Remove borda da imagem */
+  border-top-left-radius: 10px; /* Borda arredondada superior esquerda */
+  border-top-right-radius: 10px; /* Borda arredondada superior direita */
+  object-fit: cover; /* Garante que a imagem se ajuste corretamente ao espaço */
 }
 </style>

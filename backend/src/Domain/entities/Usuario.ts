@@ -40,7 +40,7 @@ export class Usuario extends BaseEntity {
   @OneToMany(() => Colecao, colecao => colecao.usuario)
   colecoes: Colecao[];
 
-  @OneToMany(() => Escalada, escalada => escalada.usuarioId)
+  @OneToMany(() => Escalada, escalada => escalada.usuario)
   escaladas: Escalada[];
 
 }

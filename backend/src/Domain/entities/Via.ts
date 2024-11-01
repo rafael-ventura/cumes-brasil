@@ -105,6 +105,6 @@ export class Via extends BaseEntity {
   })
   colecoes: Colecao[];
 
-  @OneToMany(() => Escalada, escalada => escalada.viaId)
+  @OneToMany(() => Escalada, escalada => escalada.via)
   escaladas: Escalada[];
 }

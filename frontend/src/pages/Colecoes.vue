@@ -1,16 +1,18 @@
 <template>
   <q-page>
-    <!-- Sub-navbar -->
-    <SubNavbar />
-
+    <div class="titulo-pagina">Minhas Coleções</div>
     <SearchEntity
       ref="searchEntityRef"
       entity="colecao"
       @select="goToColecaoDetalhada"
       @update-results="updateSearchResults"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
-      :search-header="'Minhas Coleções'"
+      :hideHeader="true"
     >
+      <template #subHeader>
+        <SubNavbar />
+      </template>
+
       <template #filters="{ filters }">
         <!-- Passando apenas o filtro 'searchQuery' (Nome da Coleção) -->
         <SearchFilters :entity="'colecao'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Nome da Coleção" />
@@ -155,5 +157,11 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 
 .break-word {
   word-break: break-all;
+}
+
+.titulo-pagina {
+  font-size: 40px;
+  text-align: center;
+  color: var(--q-primary);
 }
 </style>

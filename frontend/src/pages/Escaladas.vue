@@ -1,33 +1,45 @@
 <template>
   <q-page class="escaladas-page">
+    <!-- Título da página -->
     <div class="titulo-pagina">Minhas Escaladas</div>
 
-    <!-- Sub-navbar -->
-    <SubNavbar />
-
-    <!-- Lista de Escaladas -->
-    <div class="escaladas-container">
-      <EscaladaCard
-        v-for="escalada in escaladas"
-        :key="escalada.id"
-        :escalada="escalada"
-        class="escalada-card"
-      />
-    </div>
+    <SearchEntity
+      ref="searchEntityRef"
+      entity="escalada"
+      @select="goToEscaladaDetalhada"
+      @update-results="updateSearchResults"
+      :hideHeader="true"
+      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+    >
+      <template #subHeader>
+        <SubNavbar />
+      </template>
+      <template #filters="{ filters }">
+        <SearchFilters :entity="'escalada'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Buscar Escalada" />
+      </template>
+    </SearchEntity>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import EscaladaCard from 'src/components/Escalada/EscaladaCard.vue';
 import SubNavbar from 'src/layouts/SubNavbar.vue';
+import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/SearchFilters.vue';
 import { Escalada } from 'src/models/Escalada';
 import EscaladaService from 'src/services/EscaladaService';
+import AuthenticateService from 'src/services/AuthenticateService';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const escaladas = ref<Escalada[]>([]);
+const searchEntityRef = ref();
 
 onMounted(async () => {
-  try {
+  if (!AuthenticateService.isAuthenticated()) {
+    await router.push('/auth/login');
+  }
+  /*try {
     const response = await EscaladaService.getEscaladas();
     if (Array.isArray(response) && response.length > 0) {
       escaladas.value = response;
@@ -36,8 +48,24 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Erro ao buscar escaladas:', error);
-  }
+  }*/
 });
+
+// Funções para gerenciar filtros e navegação
+const applyFilters = (filters: any) => {
+  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
+    searchEntityRef.value.handleApplyFilters(filters);
+  }
+};
+
+const updateSearchResults = (results: any[]) => {
+  escaladas.value = results;
+};
+
+const goToEscaladaDetalhada = (escalada: Escalada) => {
+  // Lógica para navegar para a tela detalhada da escalada
+  console.log('Selecionada:', escalada);
+};
 
 defineOptions({
   name: 'EscaladasPage'

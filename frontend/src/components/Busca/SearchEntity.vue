@@ -3,6 +3,11 @@
     <div class="q-pt-md search-header" v-if="!hideHeader">
       <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
+
+    <div v-if="$slots.subHeader" class="sub-header-slot">
+      <slot name="subHeader" />
+    </div>
+
     <div class="slot-container no-border">
       <slot name="filters" :filters="filters"/>
     </div>
