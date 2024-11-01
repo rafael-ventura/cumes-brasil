@@ -147,6 +147,15 @@ const selectItem = (item: Via | Colecao | any) => {
   padding: 16px;
 }
 
+.escalada-card {
+  width: 100%;
+  max-width: 800px; /* Limita a largura máxima para legibilidade */
+  margin-bottom: 16px;
+  border: 1px solid var(--q-primary);
+  border-radius: 11px;
+  padding: 0; /* Remove padding do card */
+}
+
 .escalada-card img {
   width: 100%;
   height: auto;

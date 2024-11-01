@@ -27,7 +27,6 @@ import SubNavbar from 'src/layouts/SubNavbar.vue';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
 import SearchFilters from 'components/Busca/SearchFilters.vue';
 import { Escalada } from 'src/models/Escalada';
-import EscaladaService from 'src/services/EscaladaService';
 import AuthenticateService from 'src/services/AuthenticateService';
 import { useRouter } from 'vue-router';
 
@@ -39,7 +38,7 @@ onMounted(async () => {
   if (!AuthenticateService.isAuthenticated()) {
     await router.push('/auth/login');
   }
-  /*try {
+  /* try {
     const response = await EscaladaService.getEscaladas();
     if (Array.isArray(response) && response.length > 0) {
       escaladas.value = response;
@@ -48,7 +47,7 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Erro ao buscar escaladas:', error);
-  }*/
+  } */
 });
 
 // Funções para gerenciar filtros e navegação
@@ -95,15 +94,6 @@ defineOptions({
   font-size: 40px;
   text-align: center;
   color: var(--q-primary);
-}
-
-.escalada-card {
-  width: 100%;
-  max-width: 800px; /* Limita a largura máxima para legibilidade */
-  margin-bottom: 16px;
-  border: 1px solid var(--q-primary);
-  border-radius: 11px;
-  padding: 0; /* Remove padding do card */
 }
 
 .escalada-card img {

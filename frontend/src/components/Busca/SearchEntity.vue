@@ -22,8 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineExpose, defineProps, onMounted, onUnmounted, watch } from 'vue';
+import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
+import ColecaoService from 'src/services/ColecaoService';
 import SearchResults from 'components/Busca/SearchResults.vue';
 import { SearchRequest } from 'src/models/SearchRequest';
 import ImagemService from 'src/services/ImagemService';
@@ -33,26 +34,27 @@ import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   entity: 'via' | 'colecao' | 'escalada';
-  initialData?: any[]; // Novo parâmetro para dados iniciais
+  initialData?: any[];
   staticFilters?: Partial<any>
   hideHeader?: boolean
   searchHeader?: string
   enableSortOptions?: { field: string, label: string }[];
+  isFavoritasCollection?: boolean; // Nova prop para indicar a coleção de favoritas
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
 const route = useRoute();
 
 const filters = ref(<SearchRequest>{
-  unifiedSearch: '', // Campo unificado de busca
+  unifiedSearch: '',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
   selectedExposicao: null,
   page: 1,
   itemsPerPage: 20,
-  ...props.staticFilters, // Inicializa os filtros com os filtros estáticos
-  ...route.query // Inclui os filtros passados pela rota
+  ...props.staticFilters,
+  ...route.query
 });
 
 const results = ref();
@@ -88,7 +90,7 @@ watch(
 
 onUnmounted(() => {
   if (observerInstance) {
-    observerInstance.disconnect(); // Desconecta o observer ao desmontar o componente
+    observerInstance.disconnect();
   }
 });
 
@@ -97,7 +99,7 @@ const createObserver = () => {
     const entry = entries[0];
     if (entry.isIntersecting && filters.value.page < totalPages.value && !loading.value) {
       filters.value.page++;
-      searchEntities(false); // Passa 'false' para não resetar resultados
+      searchEntities(false);
     }
   }, {
     root: null,
@@ -115,35 +117,40 @@ const searchEntities = async (reset = false) => {
   loading.value = true;
 
   try {
-    const searchRequest = {
-      ...filters.value,
-      ...props.staticFilters,
-      entityType: props.entity
-    };
-    const searchResult = await searchService.search(searchRequest);
-    if (props.entity === 'via') {
-      searchResult.items = searchResult.items.map((item: any) => {
-        const via = formatVia(item as Via);
-        via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
-        return via;
-      });
-    }
-
-    if (props.entity === 'colecao') {
-      searchResult.items = searchResult.items.map((item: any) => {
-        item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
-        return item;
-      });
-    }
-
-    if (reset) {
-      results.value = searchResult.items;
+    if (props.isFavoritasCollection && props.entity === 'via') {
+      const favoritas = await ColecaoService.getFirstByUsuarioId(); // Busca a coleção de favoritas
+      results.value = favoritas?.vias || []; // Define as vias da coleção
+      emit('update-results', results.value);
     } else {
-      results.value = [...results.value, ...searchResult.items];
-    }
+      const searchRequest = {
+        ...filters.value,
+        ...props.staticFilters,
+        entityType: props.entity
+      };
+      const searchResult = await searchService.search(searchRequest);
+      if (props.entity === 'via') {
+        searchResult.items = searchResult.items.map((item: any) => {
+          const via = formatVia(item as Via);
+          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+          return via;
+        });
+      }
 
-    totalPages.value = searchResult.totalPages;
-    emit('update-results', results.value);
+      if (props.entity === 'colecao') {
+        searchResult.items = searchResult.items.map((item: any) => {
+          item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
+          return item;
+        });
+      }
+
+      if (reset) {
+        results.value = searchResult.items;
+      } else {
+        results.value = [...results.value, ...searchResult.items];
+      }
+      totalPages.value = searchResult.totalPages;
+      emit('update-results', results.value);
+    }
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
   } finally {
@@ -153,8 +160,8 @@ const searchEntities = async (reset = false) => {
 
 const handleApplyFilters = (newFilters: SearchRequest) => {
   filters.value = {
-    ...filters.value, // Mantém os filtros atuais
-    ...props.staticFilters, // Garante que os filtros estáticos sejam incluídos
+    ...filters.value,
+    ...props.staticFilters,
     ...newFilters,
     page: 1
   };
