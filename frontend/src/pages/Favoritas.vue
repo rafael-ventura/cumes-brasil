@@ -3,13 +3,25 @@
     <!-- Título da página -->
     <div class="titulo-pagina">Vias Favoritas</div>
 
-    <!-- Lista de vias favoritas -->
-    <div v-if="vias.length" class="via-list">
-      <ViaLista :vias="vias" />
-    </div>
-    <div v-else>
-      <p class="text-center">Nenhuma via na coleção de favoritas.</p>
-    </div>
+    <!-- Busca por vias na coleção de favoritas -->
+    <SearchEntity
+      ref="searchEntityRef"
+      entity="via"
+      isFavoritasCollection
+      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+      @select="goToViaDetalhada"
+      @update-results="updateSearchResults"
+    >
+      <template #filters="{ filters }">
+        <SearchFilters
+          :filters="filters"
+          :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
+          @applyFilters="applyFilters"
+          unifiedSearchLabel="Buscar Via"
+          :entity="'via'"
+        />
+      </template>
+    </SearchEntity>
 
     <!-- Botão para adicionar vias -->
     <q-btn
@@ -48,22 +60,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import ViaLista from 'components/Via/ViaLista.vue'; // Lista de vias favoritas
+import SearchFilters from 'components/Busca/SearchFilters.vue';
+import SearchEntity from 'components/Busca/SearchEntity.vue';
 
 const router = useRouter();
+const searchEntityRef = ref();
 const colecao = ref<Colecao | null>(null);
-const vias = ref([]); // Armazena as vias da coleção de favoritas
-const colecaoEdit = ref({ nome: '', descricao: '' });
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
-const isEditFormOpen = ref(false);
 const isAddViaModalOpen = ref(false);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
@@ -72,54 +83,67 @@ defineOptions({
   name: 'FavoritasPage'
 });
 
-onMounted(async () => {
-  const result = await ColecaoService.getFirstByUsuarioId();
-  if (result) {
-    colecao.value = result;
-    vias.value = result.vias || []; // Armazena as vias da coleção de favoritas
-  } else {
-    console.error('Coleção de "Vias Favoritas" não encontrada. Verifique se ela foi excluída.');
-  }
-});
-
-const confirmDeletion = () => {
-  isDeleteConfirmOpen.value = true;
-};
-
+// Função para deletar a coleção
 const deleteCollection = async () => {
   if (colecao.value) {
     try {
       await ColecaoService.delete(colecao.value.id);
-      router.push('/colecoes');
+      await router.push('/colecoes');
     } catch (error) {
       console.error('Erro ao excluir a coleção:', error);
     }
   }
 };
 
+// Função para editar a coleção
 const editCollection = async (data: { nome: string; descricao: string }) => {
   if (colecao.value) {
     try {
       await ColecaoService.update(colecao.value.id, data);
       colecao.value.nome = data.nome;
       colecao.value.descricao = data.descricao;
-      isEditFormOpen.value = false;
     } catch (error) {
       console.error('Erro ao editar a coleção:', error);
     }
   }
 };
 
+// Função para abrir o modal de adicionar via
 const openAddViaModal = () => {
   isAddViaModalOpen.value = true;
 };
 
+// Função para redirecionar para a página de detalhes da via
+const goToViaDetalhada = (via: any) => {
+  router.push(`/vias/${via.id}`);
+};
+
+// Função para aplicar filtros na busca
+const applyFilters = (filters: any) => {
+  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
+    searchEntityRef.value.handleApplyFilters(filters);
+  } else {
+    console.error('searchEntityRef ou handleApplyFilters não está definido');
+  }
+};
+
+// Função para atualizar os resultados da busca
+const updateSearchResults = (results: any[]) => {
+  console.log('Resultados da busca atualizados:', results);
+};
+
+// Função para manipular a visibilidade do modal de adição de via
 const updateIsAddViaModalOpen = (value: boolean) => {
   isAddViaModalOpen.value = value;
 };
 
+// Função para adicionar uma nova via à lista de favoritas
 const viaAdded = () => {
-  onMounted(); // Recarrega a lista de vias ao adicionar uma nova via
+  searchEntityRef.value?.handleApplyFilters({ page: 1 });
+};
+
+const confirmDeletion = () => {
+  isDeleteConfirmOpen.value = true;
 };
 </script>
 
@@ -137,11 +161,6 @@ const viaAdded = () => {
   font-size: 40px;
   text-align: center;
   color: var(--q-primary);
-}
-
-.via-list {
-  width: 100%;
-  padding: 16px;
 }
 
 .fixed-bottom-right {
