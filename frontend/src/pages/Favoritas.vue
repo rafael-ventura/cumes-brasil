@@ -11,7 +11,13 @@
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       @select="goToViaDetalhada"
       @update-results="updateSearchResults"
+      :hideHeader="true"
     >
+
+      <template #subHeader>
+        <SubNavbar />
+      </template>
+
       <template #filters="{ filters }">
         <SearchFilters
           :filters="filters"
@@ -69,6 +75,7 @@ import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import SearchFilters from 'components/Busca/SearchFilters.vue';
 import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
