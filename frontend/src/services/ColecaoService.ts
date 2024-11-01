@@ -8,9 +8,10 @@ import { UnwrapRef } from 'vue';
 class ColecaoService {
   async getFirstByUsuarioId (): Promise<Colecao | null> {
     const userId = localStorage.getItem('userId');
+    console.log('userId', userId);
     try {
       const colecoes = await this.getColecoes(`/colecoes/usuario/${userId}`);
-
+      console.log('colecoes', colecoes);
       if (colecoes.length > 0) {
         const primeiraColecao = colecoes[0];
         if (primeiraColecao.nome.includes('Favoritas')) {

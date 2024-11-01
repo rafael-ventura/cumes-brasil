@@ -7,7 +7,6 @@
     <SearchEntity
       ref="searchEntityRef"
       entity="via"
-      isFavoritasCollection
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       @select="goToViaDetalhada"
       @update-results="updateSearchResults"
@@ -19,12 +18,13 @@
       </template>
 
       <template #filters="{ filters }">
-        <SearchFilters
-          :filters="filters"
-          :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
-          @applyFilters="applyFilters"
-          unifiedSearchLabel="Buscar Via"
-          :entity="'via'"
+        <SearchFilters v-if="colecao?.id"
+                       :filters="filters"
+                       :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
+                       @applyFilters="applyFilters"
+                       :staticFilters="{ colecaoId: 14 }"
+                       unifiedSearchLabel="Buscar Via"
+                       :entity="'via'"
         />
       </template>
     </SearchEntity>
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
@@ -79,7 +79,7 @@ import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
-const colecao = ref<Colecao | null>(null);
+const colecao = ref<Colecao | null>();
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
 const isAddViaModalOpen = ref(false);
@@ -90,7 +90,19 @@ defineOptions({
   name: 'FavoritasPage'
 });
 
-// Função para deletar a coleção
+onMounted(async () => {
+  try {
+    colecao.value = await ColecaoService.getFirstByUsuarioId();
+    console.log('Coleção de Vias Favoritas:', colecao.value);
+    console.log('Usuário:', colecao.value?.usuario.id);
+    console.log('Lenght de vias:', colecao.value?.vias?.length);
+    console.log('Colecao ID:', colecao.value?.id);
+  } catch (error) {
+    console.error('Coleção de Vias Favoritas não encontrada:', error);
+    await router.push('/colecoes');
+  }
+});
+
 const deleteCollection = async () => {
   if (colecao.value) {
     try {
