@@ -3,9 +3,7 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
-import {Via_Colecao} from "../../Domain/entities/ViaColecao";
-import {Via} from "../../Domain/entities/Via";
-import {getRepository} from "typeorm";
+import { Via } from '../../Domain/entities/Via';
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
