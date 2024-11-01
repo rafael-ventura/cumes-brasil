@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
 import { Escalada } from "./Escalada";
@@ -30,7 +30,7 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true })
   biografia: string;
 
-  @ManyToOne(() => Via , { nullable: true })
+  @ManyToOne(() => Via, { nullable: true })
   @JoinColumn({ name: "via_preferida" })
   via_preferida: Via;
 
@@ -43,4 +43,9 @@ export class Usuario extends BaseEntity {
   @OneToMany(() => Escalada, escalada => escalada.usuarioId)
   escaladas: Escalada[];
 
+  @Column({ nullable: true })
+  resetPasswordToken: string;
+
+  @Column({ nullable: true })
+  resetPasswordUrl: string;
 }

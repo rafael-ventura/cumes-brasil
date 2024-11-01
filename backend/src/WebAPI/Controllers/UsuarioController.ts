@@ -113,7 +113,7 @@ export class UsuarioController {
                 message: response.message
             });
 
-        }catch(error: any){
+        } catch (error: any) {
             console.log(error.name, error.message);
             HandleErrors.handleErrors(error, req, res, next);
         }
@@ -123,6 +123,14 @@ export class UsuarioController {
      * Criar lógica para resetar senha do usuario
      */
     resetPassword = async (req: Request, res: Response, next: NextFunction) => {
-
+        try {
+            const response = await this.service.updateUserPassword(req.body?.password, req.body?.passwordRepeated, req.params?.token);
+            res.status(201).json({
+                message: response.message
+            });
+        } catch (error: any) {
+            console.log(error.name, error.message);
+            HandleErrors.handleErrors(error, req, res, next);
+        }
     }
 }

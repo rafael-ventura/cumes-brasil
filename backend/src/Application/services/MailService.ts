@@ -12,7 +12,7 @@ export class MailService {
     private mailOptions: any;
     private oauth2Client: OAuth2Client;
 
-    constructor(){}
+    constructor() { }
 
     /**
      * retornar mensagem: E-mail com passo-a-passo de redefinição de senha enviado com sucesso em caso de sucesso
@@ -22,6 +22,7 @@ export class MailService {
      * @returns 
      */
     async sendResetUserPassword(nome: string, email: string, url: string) {
+        url = this.buildFullResetUserPasswordUrl(url);
         console.log("MailService.resetUserPassword executado", nome, email, url);
         this.buildMailService();
         this.buildResetPasswordMailOptions(email, nome, url);
@@ -29,28 +30,28 @@ export class MailService {
         try {
             await this.transporter.sendMail(this.mailOptions);
             return {
-                message: "E-mail com passo-a-passo de redefinição de senha enviado com sucesso"
+                message: errorsMessage.USER_RESET_PASSWORD_TOKEN_SENT
             };
-        }catch(error){
+        } catch (error) {
             throw new InternalServerError(errorsMessage.EMAIL_SERVER_ERROR);
         }
     }
 
     private getBooleanEnv(varName: string, defaultValue = false) {
         const value = process.env[varName];
-        if(value){
+        if (value) {
             return value.toLocaleLowerCase() === 'true';
-        }else {
+        } else {
             return defaultValue;
         }
     }
 
     private buildMailService() {
         const isOauth2Enabled = this.getBooleanEnv('OAUTH2_ENABLED');
-        if(isOauth2Enabled){
+        if (isOauth2Enabled) {
             // this.generateOAUTH2Config();
             this.buildTransporterConfigOAUTH2();
-        }else {
+        } else {
             this.buildTransporterConfigDefault();
         }
     }
@@ -80,15 +81,15 @@ export class MailService {
             auth: {
                 type: 'OAuth2',
                 user: process.env.MAIL_USER ? process.env.MAIL_USER : "junior.fool.skull@gmail.com",
-                clientId: process.env.OAUTH_CLIENT_ID, 
+                clientId: process.env.OAUTH_CLIENT_ID,
                 clientSecret: process.env.OAUTH_CLIENT_SECRET,
                 refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-                accessToken: process.env.OAUTH_ACCESS_TOKEN 
+                accessToken: process.env.OAUTH_ACCESS_TOKEN
             },
         }
     }
 
-    private async buildTransporterConfigDefault(): Promise<void>{
+    private async buildTransporterConfigDefault(): Promise<void> {
         this.transporterConfigOptions = {
             service: 'gmail',
             host: "smtp.gmail.com",
@@ -101,15 +102,24 @@ export class MailService {
         }
     }
 
-    private buildResetPasswordMailOptions(receiverMail: string, receiverName: string, url: string): void{
+    private buildResetPasswordMailOptions(receiverMail: string, receiverName: string, url: string): void {
         this.mailOptions = {
             from: this.transporterConfigOptions.auth.user,
             to: receiverMail,
             subject: 'Alteração de Senha',
             html: `<h1>Olá! ${receiverName}</h1> 
             <p>Recebemos uma solicitação de senha referente ao email ${receiverMail} citado. 
-            Para cadastrar uma nova senha, acesse o link abaixo</p>`
+            Para cadastrar uma nova senha, acesse o link abaixo</p>
+            <a href="${url}" target="_blank"> link </a>`
         }
+    }
+
+    private buildFullResetUserPasswordUrl(tokenUrl: string) {
+        const baseUrl = process.env.WEB_HOSTNAME;
+        const port = process.env.WEB_PORT;
+        const resetPasswordPath = process.env.WEB_USER_RESET_PASSWORD_PATH;
+
+        return `${baseUrl}:${port}/${resetPasswordPath}/${tokenUrl}`;
     }
 
 }

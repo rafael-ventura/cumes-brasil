@@ -21,7 +21,7 @@ UsuarioRouter.delete("/:id", usuarioController.delete);
 // perfil do usuario
 UsuarioRouter.get('/perfil/:id', usuarioController.getPerfil);
 
-UsuarioRouter.post("/generate/reset/password", usuarioController.generateResetUserPasswordToken);
-UsuarioRouter.put("/reset/password", usuarioController.resetPassword);
+UsuarioRouter.post("/generate-reset-password", usuarioController.generateResetUserPasswordToken);
+UsuarioRouter.put("/reset-password/:token", usuarioController.resetPassword);
 
 export default UsuarioRouter;
