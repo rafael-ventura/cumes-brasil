@@ -10,6 +10,7 @@ import { Escalada } from '../../Domain/entities/Escalada';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { Participante } from '../../Domain/entities/Participante';
 import { initializeEnvConfig } from './envinronment';
+import { ViaColecao } from '../../Domain/entities/ViaColecao';
 
 initializeEnvConfig();
 
@@ -33,7 +34,8 @@ export const AppDataSource = new DataSource({
         Montanha,
         Usuario,
         Via,
-        Participante
+        Participante,
+        ViaColecao
     ],
     migrations: ['src/Infrastructure/migrations/*.ts'],
     ssl: false // Desabilita SSL
