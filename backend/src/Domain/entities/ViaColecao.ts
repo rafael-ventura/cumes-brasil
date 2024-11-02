@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Via } from './Via';
 import { Colecao } from './Colecao';
 
 @Entity()
-export class Via_Colecao {
+export class ViaColecao extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Via, via => via.colecoes)
+    @ManyToOne(() => Via, via => via.viaColecoes)
     via: Via;
 
-    @ManyToOne(() => Colecao, colecao => colecao.vias)
+    @ManyToOne(() => Colecao, colecao => colecao.viaColecoes)
     colecao: Colecao;
 
     @CreateDateColumn()

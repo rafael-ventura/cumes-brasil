@@ -3,6 +3,11 @@
     <div class="q-pt-md search-header" v-if="!hideHeader">
       <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
+
+    <div v-if="$slots.subHeader">
+      <slot name="subHeader" />
+    </div>
+
     <div class="slot-container no-border">
       <slot name="filters" :filters="filters"/>
     </div>
@@ -11,13 +16,14 @@
       :entityType="props.entity"
       @select="selectItem"
       :enableSortOptions="enableSortOptions"
+      :totalItems="totalItems"
     />
   </div>
   <div ref="observer" class="observer-element"></div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineExpose, defineProps, onMounted, onUnmounted, watch } from 'vue';
+import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
 import SearchResults from 'components/Busca/SearchResults.vue';
 import { SearchRequest } from 'src/models/SearchRequest';
@@ -27,8 +33,8 @@ import { useRoute } from 'vue-router';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{
-  entity: 'via' | 'colecao';
-  initialData?: any[]; // Novo parâmetro para dados iniciais
+  entity: 'via' | 'colecao' | 'escalada';
+  initialData?: any[];
   staticFilters?: Partial<any>
   hideHeader?: boolean
   searchHeader?: string
@@ -39,29 +45,25 @@ const emit = defineEmits(['select', 'update-results']);
 const route = useRoute();
 
 const filters = ref(<SearchRequest>{
-  unifiedSearch: '', // Campo unificado de busca
+  unifiedSearch: '',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
   selectedCrux: null,
   selectedExposicao: null,
   page: 1,
   itemsPerPage: 20,
-  ...props.staticFilters, // Inicializa os filtros com os filtros estáticos
-  ...route.query // Inclui os filtros passados pela rota
+  ...props.staticFilters,
+  ...route.query
 });
 
 const results = ref();
+const totalItems = ref(0);
 const totalPages = ref(1);
 const loading = ref(false);
 const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
 
-onMounted(() => {
-  // Verifica se há filtros passados pela rota (query)
-  if (route.query) {
-    Object.assign(filters.value, route.query);
-  }
-
+onMounted(async () => {
   if (props.initialData && props.initialData.length) {
     results.value = props.initialData;
     emit('update-results', results.value);
@@ -83,7 +85,7 @@ watch(
 
 onUnmounted(() => {
   if (observerInstance) {
-    observerInstance.disconnect(); // Desconecta o observer ao desmontar o componente
+    observerInstance.disconnect();
   }
 });
 
@@ -92,7 +94,7 @@ const createObserver = () => {
     const entry = entries[0];
     if (entry.isIntersecting && filters.value.page < totalPages.value && !loading.value) {
       filters.value.page++;
-      searchEntities(false); // Passa 'false' para não resetar resultados
+      searchEntities(false);
     }
   }, {
     root: null,
@@ -116,6 +118,7 @@ const searchEntities = async (reset = false) => {
       entityType: props.entity
     };
     const searchResult = await searchService.search(searchRequest);
+
     if (props.entity === 'via') {
       searchResult.items = searchResult.items.map((item: any) => {
         const via = formatVia(item as Via);
@@ -130,14 +133,13 @@ const searchEntities = async (reset = false) => {
         return item;
       });
     }
-
     if (reset) {
       results.value = searchResult.items;
     } else {
       results.value = [...results.value, ...searchResult.items];
     }
-
     totalPages.value = searchResult.totalPages;
+    totalItems.value = searchResult.totalItems;
     emit('update-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
@@ -148,8 +150,8 @@ const searchEntities = async (reset = false) => {
 
 const handleApplyFilters = (newFilters: SearchRequest) => {
   filters.value = {
-    ...filters.value, // Mantém os filtros atuais
-    ...props.staticFilters, // Garante que os filtros estáticos sejam incluídos
+    ...filters.value,
+    ...props.staticFilters,
     ...newFilters,
     page: 1
   };
@@ -178,15 +180,14 @@ const selectItem = (item: any) => {
 }
 
 .slot-container {
-  border: 2px solid #bce9b4; /* Cor da borda */
-  padding: 16px; /* Espaçamento interno */
-  border-radius: 8px; /* Bordas arredondadas */
-  background-color: #2c2c2c; /* Cor de fundo para destacar o conteúdo */
+  border: 2px solid #bce9b4;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #2c2c2c;
 }
 
 .slot-container * {
   color: $primary;
-
 }
 
 .text-h2 {

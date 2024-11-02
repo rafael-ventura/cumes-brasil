@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-pa-sm">
     <SearchEntity
       ref="searchEntityRef"
       entity="via"

@@ -14,7 +14,7 @@ import { Fonte } from './Fonte';
 import { Face } from './Face';
 import { Imagem } from './Imagem';
 import { Escalada } from './Escalada';
-import {Colecao} from "./Colecao";
+import { ViaColecao } from './ViaColecao';
 
 @Entity()
 export class Via extends BaseEntity {
@@ -91,20 +91,9 @@ export class Via extends BaseEntity {
   })
   croquis: Croqui[];
 
-  @ManyToMany(() => Colecao, colecao => colecao.vias)
-  @JoinTable({
-    name: "via_colecao",
-    joinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    }
-  })
-  colecoes: Colecao[];
+  @OneToMany(() => ViaColecao, viaColecao => viaColecao.via)
+  viaColecoes: ViaColecao[];
 
-  @OneToMany(() => Escalada, escalada => escalada.viaId)
+  @OneToMany(() => Escalada, escalada => escalada.via)
   escaladas: Escalada[];
 }
