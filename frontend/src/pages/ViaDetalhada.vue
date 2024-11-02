@@ -11,8 +11,8 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ViaService from 'src/services/ViaService';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
-import CardInfoPrincipal from 'components/via/CardInfoPrincipal.vue';
-import BotoesAcao from 'components/via/BotoesAcao.vue';
+import CardInfoPrincipal from 'components/Via/CardInfoPrincipal.vue';
+import BotoesAcao from 'components/Via/BotoesAcao.vue';
 import { Notify } from 'quasar';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
@@ -23,7 +23,6 @@ const via = ref();
 const colecoes = ref<Colecao[]>([]); // Define colecoes como Colecao[]
 const showForm = ref(false);
 const showAddToCollectionModal = ref(false);
-
 
 onMounted(async () => {
   try {

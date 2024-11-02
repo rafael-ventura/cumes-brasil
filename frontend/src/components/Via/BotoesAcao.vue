@@ -46,3 +46,41 @@ const checkAuthentication = (action: string) => {
   }
 };
 </script>
+
+<style scoped>
+.botoes-acao {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  background-color: var(--q-primary);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.btn-acao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.registrar {
+  background-color: #EF9D9D;
+}
+
+.favoritos {
+  background-color: #C0E8AB;
+}
+
+.colecao {
+  background-color: #7E9CE8;
+}
+
+.q-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+</style>
