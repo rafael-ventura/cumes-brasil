@@ -98,6 +98,8 @@ export class EscaladaRepository {
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
             .leftJoinAndSelect("via.imagem", "imagem") // Acessar a imagem através da via
+            //acessar tambem os participantes
+            .leftJoinAndSelect("escalada.participantes", "participante")
             .orderBy("escalada.data", "DESC");
 
         // Filtrar por nome da via (se necessário)
