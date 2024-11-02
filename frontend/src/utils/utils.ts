@@ -73,6 +73,7 @@ export function formatarGrau (grau: string | number): string {
 }
 
 // --- Função Principal de Formatação de Objetos Via ---
+// --- Função Principal de Formatação de Objetos Via ---
 export function formatVia (via: Via): Via {
   const formattedVia = { ...via };
 
@@ -84,6 +85,11 @@ export function formatVia (via: Via): Via {
   // Formatação da Data
   if (formattedVia.data) {
     formattedVia.data = new Date(formattedVia.data).toLocaleDateString('pt-BR');
+  }
+
+  // Arredondamento e remoção de casas decimais na extensão
+  if (formattedVia.extensao) {
+    formattedVia.extensao = Math.round(Number(formattedVia.extensao));
   }
 
   // Define valores padrão para campos vazios
