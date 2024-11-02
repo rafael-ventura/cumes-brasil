@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
-import ColecaoService from 'src/services/ColecaoService';
 import SearchResults from 'components/Busca/SearchResults.vue';
 import { SearchRequest } from 'src/models/SearchRequest';
 import ImagemService from 'src/services/ImagemService';
@@ -39,7 +38,6 @@ const props = defineProps<{
   hideHeader?: boolean
   searchHeader?: string
   enableSortOptions?: { field: string, label: string }[];
-  isFavoritasCollection?: boolean;
 }>();
 
 const emit = defineEmits(['select', 'update-results']);
@@ -64,34 +62,19 @@ const observer = ref<HTMLElement | null>(null);
 let observerInstance: IntersectionObserver | null = null;
 
 onMounted(async () => {
-  // Verifica se é para buscar a coleção de favoritas
-  if (props.isFavoritasCollection && props.entity === 'via') {
-    await fetchFavoritasCollection();
-  } else {
-    if (props.initialData && props.initialData.length) {
-      results.value = props.initialData;
-      emit('update-results', results.value);
-    } else {
-      searchEntities(true);
-    }
-    createObserver();
-  }
-});
-
-const fetchFavoritasCollection = async () => {
-  try {
-    const favoritas = await ColecaoService.getFirstByUsuarioId();
-    results.value = favoritas?.vias || [];
+  if (props.initialData && props.initialData.length) {
+    results.value = props.initialData;
     emit('update-results', results.value);
-  } catch (error) {
-    console.error('Erro ao buscar coleção de favoritas:', error);
+  } else {
+    await searchEntities(true);
   }
-};
+  createObserver();
+});
 
 watch(
   () => filters.value,
   (newFilters, oldFilters) => {
-    if (!props.isFavoritasCollection && newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+    if (newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
       searchEntities(true);
     }
   },
