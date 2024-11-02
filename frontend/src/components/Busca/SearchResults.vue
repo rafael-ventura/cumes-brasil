@@ -1,12 +1,17 @@
 <template>
   <div>
     <div class="order-container">
+      <div class="total-results" v-if="totalItems">
+        {{ totalItems > 1 ? `${totalItems} resultados` : `${totalItems} resultado` }}
+      </div>
       <q-select
         v-model="currentSortOption"
         :options="filteredSortOptions"
         option-value="value"
         option-label="label"
         label="Ordenar por"
+        label-color="primary"
+        class="q-select-custom"
         outlined
         dense
         map-options
@@ -32,10 +37,6 @@
     <!-- Mensagem se não houver resultados -->
     <div v-if="results && results.length === 0">
       <p>No results found.</p>
-    </div>
-    <!-- Exibe a quantidade total de itens -->
-    <div v-if="totalItems !== undefined">
-      <p>Total Items Found: {{ totalItems }}</p>
     </div>
   </div>
 </template>
@@ -139,6 +140,10 @@ const selectItem = (item: Via | Colecao | any) => {
   justify-content: flex-end;
 }
 
+.order-container .q-field__label {
+  color: #fcbd7b !important; /* Define a cor da label */
+}
+
 .via-list {
   width: 100%;
   display: grid;
@@ -149,11 +154,9 @@ const selectItem = (item: Via | Colecao | any) => {
 
 .escalada-card {
   width: 100%;
-  max-width: 800px; /* Limita a largura máxima para legibilidade */
-  margin-bottom: 16px;
-  border: 1px solid var(--q-primary);
+  margin-bottom: 10%;
   border-radius: 11px;
-  padding: 0; /* Remove padding do card */
+  padding: 0;
 }
 
 .escalada-card img {
@@ -165,5 +168,13 @@ const selectItem = (item: Via | Colecao | any) => {
   border-top-left-radius: 10px; /* Borda arredondada superior esquerda */
   border-top-right-radius: 10px; /* Borda arredondada superior direita */
   object-fit: cover; /* Garante que a imagem se ajuste corretamente ao espaço */
+}
+
+.total-results {
+  color: #fcbd7b; /* Tom de amarelo */
+  font-size: 13px; /* Tamanho pequeno */
+  margin-right: auto; /* Move the total results to the far left */
+  margin-top: auto; /* Espaçamento superior */
+  margin-left: 16px; /* Espaçamento à esquerda */
 }
 </style>

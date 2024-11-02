@@ -1,5 +1,5 @@
 <template>
-  <q-page class="favoritas-page">
+  <q-page class="favoritas-page" v-if="colecao != null && colecao.id != null">
     <!-- Título da página -->
     <div class="titulo-pagina">Vias Favoritas</div>
 
@@ -10,19 +10,19 @@
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       @select="goToViaDetalhada"
       @update-results="updateSearchResults"
+      :staticFilters="{ colecaoId: colecao?.id }"
       :hideHeader="true"
     >
-
       <template #subHeader>
         <SubNavbar />
       </template>
 
       <template #filters="{ filters }">
-        <SearchFilters v-if="colecao?.id"
+        <SearchFilters v-if="colecao && colecao.id"
                        :filters="filters"
                        :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
                        @applyFilters="applyFilters"
-                       :staticFilters="{ colecaoId: 14 }"
+                       :staticFilters="{ colecaoId: colecao.id }"
                        unifiedSearchLabel="Buscar Via"
                        :entity="'via'"
         />
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
@@ -79,12 +79,15 @@ import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
-const colecao = ref<Colecao | null>();
+const colecao = ref<Colecao | null>(null);
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
 const isAddViaModalOpen = ref(false);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
+const staticFilters = computed(() => ({
+  colecaoId: colecao.value?.id,
+}));
 
 defineOptions({
   name: 'FavoritasPage'
@@ -93,13 +96,16 @@ defineOptions({
 onMounted(async () => {
   try {
     colecao.value = await ColecaoService.getFirstByUsuarioId();
-    console.log('Coleção de Vias Favoritas:', colecao.value);
-    console.log('Usuário:', colecao.value?.usuario.id);
-    console.log('Lenght de vias:', colecao.value?.vias?.length);
-    console.log('Colecao ID:', colecao.value?.id);
   } catch (error) {
     console.error('Coleção de Vias Favoritas não encontrada:', error);
     await router.push('/colecoes');
+  }
+});
+
+// Watch for changes in colecao and apply filters when it is loaded
+watch(colecao, (newVal) => {
+  if (newVal && newVal.id) {
+    applyFilters({ staticFilters: { colecaoId: newVal.id } });
   }
 });
 
@@ -167,15 +173,6 @@ const confirmDeletion = () => {
 </script>
 
 <style scoped>
-.favoritas-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  height: 100%;
-}
-
 .titulo-pagina {
   font-size: 40px;
   text-align: center;

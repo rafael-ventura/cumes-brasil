@@ -4,7 +4,7 @@
       <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
 
-    <div v-if="$slots.subHeader" class="sub-header-slot">
+    <div v-if="$slots.subHeader">
       <slot name="subHeader" />
     </div>
 
@@ -16,6 +16,7 @@
       :entityType="props.entity"
       @select="selectItem"
       :enableSortOptions="enableSortOptions"
+      :totalItems="totalItems"
     />
   </div>
   <div ref="observer" class="observer-element"></div>
@@ -56,6 +57,7 @@ const filters = ref(<SearchRequest>{
 });
 
 const results = ref();
+const totalItems = ref(0);
 const totalPages = ref(1);
 const loading = ref(false);
 const observer = ref<HTMLElement | null>(null);
@@ -66,7 +68,7 @@ onMounted(async () => {
     results.value = props.initialData;
     emit('update-results', results.value);
   } else {
-    await searchEntities(true);
+    searchEntities(true);
   }
   createObserver();
 });
@@ -137,6 +139,7 @@ const searchEntities = async (reset = false) => {
       results.value = [...results.value, ...searchResult.items];
     }
     totalPages.value = searchResult.totalPages;
+    totalItems.value = searchResult.totalItems;
     emit('update-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);

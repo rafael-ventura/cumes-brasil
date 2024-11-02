@@ -43,7 +43,8 @@ defineOptions({
 .observacao-container {
   background-color: #2c2c2c;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 11px;
+  border: none;
 }
 
 .observacao-header {

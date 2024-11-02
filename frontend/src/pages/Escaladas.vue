@@ -73,7 +73,6 @@ defineOptions({
 
 <style scoped>
 .escaladas-page {
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
