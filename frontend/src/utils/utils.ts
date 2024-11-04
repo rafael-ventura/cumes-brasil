@@ -2,7 +2,7 @@ import { Via } from 'src/models/Via';
 import ImagemService from 'src/services/ImagemService';
 import { Imagem } from 'src/models/Imagem';
 
-export function romanToInt (roman: string): number {
+export function romanToInt(roman: string): number {
   const romanMap: { [key: string]: number } = {
     I: 1,
     II: 2,
@@ -32,7 +32,7 @@ export function romanToInt (roman: string): number {
   return num;
 }
 
-export function intToRoman (num: number): string {
+export function intToRoman(num: number): string {
   const romanMap: { [key: string]: number } = {
     XIII: 13,
     XII: 12,
@@ -60,7 +60,7 @@ export function intToRoman (num: number): string {
 
 type ViaKey = keyof Via;
 
-export function formatVia (via: Via): Via {
+export function formatVia(via: Via): Via {
   if (via.grau) {
     via.grau = intToRoman(parseInt(via.grau));
   }
@@ -82,13 +82,13 @@ export function formatVia (via: Via): Via {
   return via;
 }
 
-export function adjustImageUrls (entity: { imagem?: Imagem }) {
+export function adjustImageUrls(entity: { imagem?: Imagem }) {
   if (entity.imagem) {
     entity.imagem.url = ImagemService.getFullImageUrl(entity.imagem.url);
   }
 }
 
-export function handleApiError (error: any, defaultMessage: string): never {
+export function handleApiError(error: any, defaultMessage: string): never {
   const message = error?.response?.data?.error || defaultMessage;
   throw new Error(message);
 }
@@ -105,3 +105,13 @@ export const formatDateToDDMMYYYY = (dateString: string) => {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+
+export const showNotify = (type: string, message: string, position: string = 'top-center'): any => {
+  return {
+    type,
+    message,
+    position,
+    timeout: 3000
+  };
+}
