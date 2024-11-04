@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'busca',
         name: 'busca',
-        component: () => import('pages/Busca.vue')
+        component: () => import('pages/CatalogoVias.vue')
       },
       {
         path: 'vias/:id',

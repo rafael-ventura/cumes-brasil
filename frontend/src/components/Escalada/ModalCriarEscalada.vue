@@ -178,7 +178,7 @@ const onReset = () => {
 @import "src/css/app.scss";
 
 .card-style {
-  background-color: $dark;
+  background-color: $background;
   color: $primary;
   width: 100%;
   max-height: 85vh;

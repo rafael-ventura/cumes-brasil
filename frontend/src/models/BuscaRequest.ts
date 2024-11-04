@@ -1,4 +1,4 @@
-export interface SearchRequest {
+export interface BuscaRequest {
   unifiedSearch?: string; // searchQuery
   selectedMountain?: number | null;
   bairro?: string | null;

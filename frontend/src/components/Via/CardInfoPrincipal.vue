@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue';
 import { Via } from 'src/models/Via';
-import GrauBadge from 'components/Via/GrauBadge.vue';
+import GrauBadge from 'src/components/Via/GrauBadge.vue';
 
 const props = defineProps({
   via: {

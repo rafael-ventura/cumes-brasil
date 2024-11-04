@@ -70,8 +70,8 @@ import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
 
 const searchEntityRef = ref();
@@ -130,7 +130,8 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .page-padding {
   padding: 16px;
 }
@@ -162,6 +163,6 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: var(--q-primary);
+  color: $primary;
 }
 </style>

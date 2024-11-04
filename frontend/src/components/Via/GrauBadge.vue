@@ -1,7 +1,7 @@
 <!-- src/components/GrauBadge.vue -->
 <template>
   <div class="grau-badge">
-    <span>{{ grauText }}<span v-if="extensaoText">, {{ extensaoText }}</span></span>
+    <span>{{ props.grauText }}<span v-if="props.extensaoText">, {{ props.extensaoText }}</span></span>
   </div>
 </template>
 
@@ -20,10 +20,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['showInfo']);
-
-const onInfoClick = () => {
-  emit('showInfo');
-};
 </script>
 
 <style scoped lang="scss">
