@@ -86,7 +86,7 @@ const isAddViaModalOpen = ref(false);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
 const staticFilters = computed(() => ({
-  colecaoId: colecao.value?.id,
+  colecaoId: colecao.value?.id
 }));
 
 defineOptions({

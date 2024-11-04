@@ -40,10 +40,10 @@
       </div>
 
       <!-- Fonte - exibe o nome da fonte -->
-      <div class="detalhe-item" v-if="props.via.fonte?.nome">
+      <div class="detalhe-item" v-if="props.via.fonte?.referencia">
         <span>Fonte:</span>
         <div class="fonte-botoes">
-          <q-btn flat>{{ props.via.fonte.nome }}</q-btn>
+          <q-btn flat>{{ props.via.fonte.referencia }}</q-btn>
         </div>
       </div>
 

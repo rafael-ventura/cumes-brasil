@@ -54,6 +54,7 @@ const isValid = (value: any) => value != null && value !== 'N/A';
 const detalhesArray = computed(() => {
   return [
     isValid(props.via?.grau) ? props.via?.grau : null,
+    isValid(props.via?.crux) ? props.via?.crux : null,
     isValid(props.via?.artificial) ? props.via?.artificial : null,
     isValid(props.via?.exposicao) ? props.via?.exposicao : null,
     isValid(props.via?.duracao) ? props.via?.duracao : null
@@ -74,17 +75,16 @@ const extensaoValida = computed(() => {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 6%;
   background-color: var(--q-primary);
   border-radius: 10px;
-  padding: 15px;
+  padding: 0;
 }
 
 .card-imagem {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   object-fit: cover;
-  margin-bottom: 10px;
 }
 
 .via-nome {
