@@ -13,6 +13,7 @@
         label-color="primary"
         class="q-select-custom"
         outlined
+        rounded
         dense
         map-options
         @update:model-value="applySorting"
@@ -149,7 +150,6 @@ const selectItem = (item: Via | Colecao | any) => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
-  padding: 16px;
 }
 
 .escalada-card {
@@ -176,5 +176,9 @@ const selectItem = (item: Via | Colecao | any) => {
   margin-right: auto; /* Move the total results to the far left */
   margin-top: auto; /* Espaçamento superior */
   margin-left: 16px; /* Espaçamento à esquerda */
+}
+
+.q-select-custom {
+  width: 40%;
 }
 </style>

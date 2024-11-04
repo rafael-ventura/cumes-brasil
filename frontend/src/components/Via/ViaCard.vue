@@ -10,11 +10,14 @@
           <q-icon name="terrain" size="20px" />
           {{ via.montanha.nome }}<span v-if="via.face && via.face.nome">, {{ via.face.nome }}</span>
         </div>
-        <GrauBadge :grauText="via.grau!" :extensaoText="via.extensao + 'm'" />
+        <div class="grau-badge-container">
+          <GrauBadge :grauText="via.grau!" :extensaoText="via.extensao + 'm'" />
+        </div>
       </q-card-section>
     </q-card>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { defineEmits, defineProps, onMounted } from 'vue';
@@ -23,10 +26,6 @@ import { Via } from 'src/models/Via';
 
 const props = defineProps<{ via: Via }>();
 const emits = defineEmits(['click']);
-
-onMounted(() => {
-  console.log('Via montanha:', props.via.montanha);
-});
 
 const emitClick = () => {
   props.via.nome &&
@@ -40,7 +39,7 @@ const emitClick = () => {
 .card-item {
   border-radius: 10px;
   background-color: $dark;
-  width: 390px;
+  width: 100%;
   height: 315px;
   margin: 0;
   padding: 0;
@@ -83,5 +82,10 @@ const emitClick = () => {
 
 .montanha-face q-icon {
   margin-right: 5px;
+}
+
+.grau-badge-container {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -1,11 +1,12 @@
 <template>
-  <q-page class="q-pa-sm">
+  <div class="titulo-pagina">Catálogo de Vias</div>
+  <q-page>
     <SearchEntity
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
-      :searchHeader="'Catálogo de Vias'"
+      :hide-header="true"
     >
       <template #filters="{ filters }">
         <SearchFilters :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
@@ -39,3 +40,13 @@ const goViaDetalhadaView = (id: number) => {
   router.push(`/vias/${id}`);
 };
 </script>
+
+<style scoped lang="scss">
+@import 'src/css/app.scss';
+
+.titulo-pagina {
+  font-size: 40px;
+  text-align: center;
+  color: $primary;
+}
+</style>

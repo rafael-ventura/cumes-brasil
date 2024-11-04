@@ -180,10 +180,8 @@ const selectItem = (item: any) => {
 }
 
 .slot-container {
-  border: 2px solid #bce9b4;
   padding: 16px;
-  border-radius: 8px;
-  background-color: #2c2c2c;
+  background-color: $background;
 }
 
 .slot-container * {
@@ -199,7 +197,6 @@ const selectItem = (item: any) => {
   padding: 16px;
   text-align: center;
   background-color: $background;
-  border: 2px solid $secondary;
   border-radius: 8px;
 }
 

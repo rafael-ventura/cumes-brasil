@@ -130,7 +130,8 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .page-padding {
   padding: 16px;
 }
@@ -162,6 +163,6 @@ const goToColecaoDetalhada = (colecao: Colecao) => {
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: var(--q-primary);
+  color: $primary;
 }
 </style>
