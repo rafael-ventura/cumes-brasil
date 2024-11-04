@@ -17,7 +17,6 @@ const router = useRouter();
 const props = defineProps<{ colecoes: Colecao[] }>();
 
 const showDetails = (colecao: Colecao) => {
-  // Função de navegação para a página de detalhes da coleção
   router.push(`/colecoes/${colecao.id}`);
 };
 </script>

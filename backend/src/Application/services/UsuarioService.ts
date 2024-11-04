@@ -44,7 +44,7 @@ export class UsuarioService {
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {
-        const favoritasCollection = new Colecao('Vias Favoritas', 'Vias favoritadas por você', user.id, 1);
+        const favoritasCollection = new Colecao('Vias Favoritas', 'Vias favoritadas por você', user.id);
         await this.colecaoRepo.create(favoritasCollection);
     }
 

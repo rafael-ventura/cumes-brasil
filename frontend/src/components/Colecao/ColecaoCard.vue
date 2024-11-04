@@ -34,31 +34,47 @@ const emitClick = () => {
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
+
 .colecao-card {
-  max-width: 100%;
+  width: 100%;
+  max-width: 892px;
+  height: 132px;
   margin: auto;
-  cursor: pointer;
   display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  background-color: $tertiary-light;
+  align-items: center;
+  background-color: #fcbd7b;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  padding: 8px;
 }
 
 .colecao-image {
-  height: 150px;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
   overflow: hidden;
-}
-
-.colecao-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
 }
 
 .colecao-info {
-  padding: 16px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #2c2c2c;
 }
 </style>

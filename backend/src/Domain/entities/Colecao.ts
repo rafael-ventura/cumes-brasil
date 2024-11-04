@@ -5,7 +5,7 @@ import { ViaColecao } from './ViaColecao';
 
 @Entity()
 export class Colecao extends BaseEntity {
-  constructor (nome: string, descricao: string, usuario: number, imagem: number) {
+  constructor (nome: string, descricao: string, usuario: number, imagem?: number) {
     super();
     this.nome = nome;
     this.descricao = descricao;
@@ -26,7 +26,8 @@ export class Colecao extends BaseEntity {
   usuario: number;
 
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  imagem: number;
+  @Column({ nullable: true })
+  imagem?: number;
 
   @OneToMany(() => ViaColecao, viaColecao => viaColecao.colecao)
   viaColecoes: ViaColecao[];

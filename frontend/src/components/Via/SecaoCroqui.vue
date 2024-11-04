@@ -7,7 +7,6 @@
       </template>
       <template v-else>
         <div class="no-photo">
-          <!-- SVG "Sem Foto" incorporado -->
           <svg
             fill="#000000"
             height="100%"
@@ -36,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{

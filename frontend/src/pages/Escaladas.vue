@@ -3,7 +3,7 @@
     <!-- Título da página -->
     <div class="titulo-pagina">Minhas Escaladas</div>
 
-    <SearchEntity
+    <Busca
       ref="searchEntityRef"
       entity="escalada"
       @select="goToEscaladaDetalhada"
@@ -15,17 +15,17 @@
         <SubNavbar />
       </template>
       <template #filters="{ filters }">
-        <SearchFilters :entity="'escalada'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Buscar Escalada" />
+        <BuscaFiltros :entity="'escalada'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Buscar Escalada" />
       </template>
-    </SearchEntity>
+    </Busca>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import SubNavbar from 'src/layouts/SubNavbar.vue';
-import SearchEntity from 'components/Busca/Busca.vue';
-import SearchFilters from 'components/Busca/BuscaFiltros.vue';
+import Busca from 'components/Busca/Busca.vue';
+import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import { Escalada } from 'src/models/Escalada';
 import AuthenticateService from 'src/services/AuthenticateService';
 import { useRouter } from 'vue-router';

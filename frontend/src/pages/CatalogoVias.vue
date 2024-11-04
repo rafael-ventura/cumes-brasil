@@ -1,7 +1,7 @@
 <template>
   <div class="titulo-pagina">Catálogo de Vias</div>
   <q-page>
-    <SearchEntity
+    <Busca
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
@@ -9,17 +9,17 @@
       :hide-header="true"
     >
       <template #filters="{ filters }">
-        <SearchFilters :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
+        <BuscaFiltros :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
       </template>
-    </SearchEntity>
+    </Busca>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import SearchFilters from 'components/Busca/BuscaFiltros.vue';
-import SearchEntity from 'components/Busca/Busca.vue';
+import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
+import Busca from 'components/Busca/Busca.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
@@ -32,7 +32,7 @@ const applyFilters = (filters: any) => {
   if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
     searchEntityRef.value.handleApplyFilters(filters);
   } else {
-    console.error('SearchEntity ref not found or handleApplyFilters not defined');
+    console.error('Busca ref not found or handleApplyFilters not defined');
   }
 };
 

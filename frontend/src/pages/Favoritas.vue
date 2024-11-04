@@ -4,7 +4,7 @@
     <div class="titulo-pagina">Vias Favoritas</div>
 
     <!-- Busca por vias na coleção de favoritas -->
-    <SearchEntity
+    <Busca
       ref="searchEntityRef"
       entity="via"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
@@ -18,16 +18,16 @@
       </template>
 
       <template #filters="{ filters }">
-        <SearchFilters v-if="colecao && colecao.id"
-                       :filters="filters"
-                       :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
-                       @applyFilters="applyFilters"
-                       :staticFilters="{ colecaoId: colecao.id }"
-                       unifiedSearchLabel="Buscar Via"
-                       :entity="'via'"
+        <BuscaFiltros v-if="colecao && colecao.id"
+                      :filters="filters"
+                      :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
+                      @applyFilters="applyFilters"
+                      :staticFilters="{ colecaoId: colecao.id }"
+                      unifiedSearchLabel="Buscar Via"
+                      :entity="'via'"
         />
       </template>
-    </SearchEntity>
+    </Busca>
 
     <!-- Botão para adicionar vias -->
     <q-btn
@@ -73,8 +73,8 @@ import { Colecao } from 'src/models/Colecao';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import SearchFilters from 'components/Busca/BuscaFiltros.vue';
-import SearchEntity from 'components/Busca/Busca.vue';
+import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
+import Busca from 'components/Busca/Busca.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();

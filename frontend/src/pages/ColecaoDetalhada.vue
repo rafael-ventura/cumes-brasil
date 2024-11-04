@@ -25,7 +25,7 @@
       </div>
 
       <!-- Componente de busca para vias dentro da coleção -->
-      <SearchEntity
+      <Busca
         ref="searchEntityRef"
         entity="via"
         :staticFilters="{ colecaoId: colecao?.id }"
@@ -33,7 +33,7 @@
         :hideHeader="true"
       >
         <template #filters="{ filters }">
-          <SearchFilters
+          <BuscaFiltros
             :filters="filters"
             :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
             @applyFilters="applyFilters"
@@ -42,7 +42,7 @@
             :entity="'via'"
           />
         </template>
-      </SearchEntity>
+      </Busca>
 
       <!-- Outros componentes de configuração e modais -->
       <ModalConfigColecoes
@@ -104,8 +104,8 @@ import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import SearchFilters from 'components/Busca/BuscaFiltros.vue';
-import SearchEntity from 'components/Busca/Busca.vue';
+import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
+import Busca from 'components/Busca/Busca.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -131,7 +131,7 @@ const applyFilters = (filters: any) => {
   if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
     searchEntityRef.value.handleApplyFilters(filters);
   } else {
-    console.error('SearchEntity ref not found or handleApplyFilters not defined');
+    console.error('Busca ref not found or handleApplyFilters not defined');
   }
 };
 
