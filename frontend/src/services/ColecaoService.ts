@@ -128,6 +128,19 @@ class ColecaoService {
     }
   }
 
+  async removeViaFromColecao (colecaoId: number, viaId: number): Promise<void> {
+    try {
+      await api.post('/colecoes/removerVia', null, {
+        params: {
+          colecao_id: colecaoId,
+          via_id: viaId
+        }
+      });
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao remover via da coleção');
+    }
+  }
+
   async sortVias (vias: Via[], {
     key,
     order

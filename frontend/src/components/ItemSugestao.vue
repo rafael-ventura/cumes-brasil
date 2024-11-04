@@ -5,20 +5,22 @@
       v-model="unifiedSearch"
       label="Buscar por nome, bairro ou montanha"
       outlined
+      label-color="primary"
+      color="primary"
       debounce="300"
-      class="q-ma-md"
+      class="search-input"
       @input="onInputChange"
     />
     <q-list separator>
-      <q-item v-for="item in filteredItems" :key="item.id" clickable class="q-pa-xs">
+      <q-item v-for="item in filteredItems" :key="item.id" clickable class="q-pa-xs item-card">
         <q-item-section avatar>
           <q-avatar size="50px">
             <q-img :src="item.imagem?.url || placeholderImage" cover />
           </q-avatar>
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{ item.nome }}</q-item-label>
-          <q-item-label caption>{{ itemInfo(item) }}</q-item-label>
+          <q-item-label class="item-label-primary">{{ item.nome }}</q-item-label>
+          <q-item-label caption class="item-caption">{{ itemInfo(item) }}</q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -32,13 +34,13 @@
         </q-item-section>
       </q-item>
       <!-- Mensagem de carregando mais itens -->
-      <q-item v-if="loadingMore">
+      <q-item v-if="loadingMore" class="loading-item">
         <q-item-section>
           <q-item-label>Carregando mais itens...</q-item-label>
         </q-item-section>
       </q-item>
       <!-- Mensagem se não houver resultados -->
-      <q-item v-if="!filteredItems.length && !loadingMore">
+      <q-item v-if="!filteredItems.length && !loadingMore" class="no-results">
         <q-item-section>
           <q-item-label>Nenhum item encontrado.</q-item-label>
         </q-item-section>
@@ -63,12 +65,12 @@ const props = defineProps<{
   items: any[];
   itemType: 'via' | 'colecao';
   placeholderImage?: string;
-  loadMoreItems?:() => Promise<void>; // Agora é opcional
+  loadMoreItems?:() => Promise<void>;
 }>();
 const emit = defineEmits(['add-item']);
 
 // Estados locais
-const unifiedSearch = ref(''); // Busca unificada
+const unifiedSearch = ref('');
 const placeholderImage = props.placeholderImage || 'https://via.placeholder.com/50';
 const loadingMore = ref(false);
 
@@ -118,21 +120,59 @@ const onScroll = async (event: Event) => {
   if (
     target.scrollTop + target.clientHeight >= target.scrollHeight - 20 &&
     !loadingMore.value &&
-    props.loadMoreItems // Verifica se a função está definida
+    props.loadMoreItems
   ) {
     loadingMore.value = true;
-    await props.loadMoreItems(); // Chama a função para carregar mais itens
+    await props.loadMoreItems();
     loadingMore.value = false;
   }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
 .item-sugestao-container {
-  max-height: 400px; /* Define uma altura máxima para ativar o scroll */
-  overflow-y: auto;
+  max-height: 700px;
+  background-color: $dark;
+  border-radius: 10px;
 }
-.q-ma-md {
-  margin: 16px;
+
+.search-input {
+  margin-bottom: 16px;
+
+  .q-field__label,
+  .q-field__native {
+    color: $primary;
+  }
+}
+
+.item-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  padding: 1%;
+
+  .q-item__section {
+    color: $primary;
+  }
+}
+
+.item-label-primary {
+  color: $primary;
+  font-weight: bold;
+}
+
+.item-caption {
+  color: $primary;
+}
+
+.icon-primary {
+  color: $primary;
+}
+
+.loading-item,
+.no-results {
+  text-align: center;
+  color: $primary;
 }
 </style>

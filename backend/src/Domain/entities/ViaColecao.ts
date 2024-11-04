@@ -1,4 +1,12 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    ObjectLiteral,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { Via } from './Via';
 import { Colecao } from './Colecao';
 
@@ -11,7 +19,7 @@ export class ViaColecao extends BaseEntity {
     via: Via;
 
     @ManyToOne(() => Colecao, colecao => colecao.viaColecoes)
-    colecao: Colecao;
+    colecao: ObjectLiteral;
 
     @CreateDateColumn()
     data_adicao: Date;
