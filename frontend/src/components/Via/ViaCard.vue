@@ -18,10 +18,9 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { defineEmits, defineProps, onMounted } from 'vue';
-import GrauBadge from 'src/components/via/GrauBadge.vue';
+import { defineEmits, defineProps } from 'vue';
+import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{ via: Via }>();

@@ -24,8 +24,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import SubNavbar from 'src/layouts/SubNavbar.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
 import { Escalada } from 'src/models/Escalada';
 import AuthenticateService from 'src/services/AuthenticateService';
 import { useRouter } from 'vue-router';

@@ -148,14 +148,14 @@
 
 <script setup lang="ts">
 import { computed, defineEmits, onMounted, ref, watch } from 'vue';
-import { SearchRequest } from 'src/models/SearchRequest';
+import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 
 // Props e emissões
 const props = defineProps<{ entity: string, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
 const emit = defineEmits(['applyFilters']);
 const showExtensionFilters = ref(false);
-const localFilters = ref<SearchRequest>({
+const localFilters = ref<BuscaRequest>({
   unifiedSearch: '',
   selectedMountain: null,
   selectedDifficulty: null,

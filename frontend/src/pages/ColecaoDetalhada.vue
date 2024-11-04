@@ -104,8 +104,8 @@ import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
 
 const route = useRoute();
 const router = useRouter();

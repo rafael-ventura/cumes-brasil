@@ -73,8 +73,8 @@ import { Colecao } from 'src/models/Colecao';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();
@@ -85,10 +85,9 @@ const isDeleteConfirmOpen = ref(false);
 const isAddViaModalOpen = ref(false);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
-const staticFilters = computed(() => ({
+computed(() => ({
   colecaoId: colecao.value?.id
 }));
-
 defineOptions({
   name: 'FavoritasPage'
 });

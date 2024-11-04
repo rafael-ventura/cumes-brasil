@@ -35,6 +35,7 @@ import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSugestao from 'components/ItemSugestao.vue';
+import { Colecao } from 'src/models/Colecao';
 
 const props = defineProps({
   via: Object,
@@ -45,14 +46,14 @@ const emit = defineEmits(['update:isFavorited']);
 const isFavorited = ref(false);
 const showEscaladaModal = ref(false);
 const showCollectionModal = ref(false);
-const colecoes = ref([]);
+const colecoes = ref<Colecao[]>([]);
 
 // Verifica se a via está na coleção favorita ao montar o componente
 const checkIfFavorited = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
       const favoriteCollection = await ColecaoService.getById(props.favoriteCollectionId);
-      isFavorited.value = favoriteCollection.vias?.some((v) => v.id === props.via.id) ?? false;
+      isFavorited.value = favoriteCollection.vias?.some((v) => v.id === props.via?.id) ?? false;
     } catch (error) {
       console.error('Erro ao verificar se a via é favorita:', error);
     }
@@ -96,19 +97,17 @@ const removeFromFavorites = async () => {
   }
 };
 
-// Atualiza o estado de favorito e exibe notificação
-const updateFavoriteStatus = (status, message) => {
+const updateFavoriteStatus = (status: boolean, message: string) => {
   isFavorited.value = status;
   emit('update:isFavorited', status);
-  if (status === true) {
+  if (status) {
     showNotification(message, 'positive');
   } else {
     showNotification(message, 'negative');
   }
 };
 
-// Exibe notificação com base nos parâmetros de tipo e mensagem
-const showNotification = (message, type) => {
+const showNotification = (message: string, type: string) => {
   Notify.create({
     type,
     message,
@@ -132,7 +131,7 @@ const openCollectionModal = async () => {
   }
 };
 
-const addToCollection = async (colecao) => {
+const addToCollection = async (colecao: Colecao) => {
   if (props.via) {
     try {
       await ColecaoService.addViaToColecao(colecao.id, props.via.id);
@@ -143,6 +142,7 @@ const addToCollection = async (colecao) => {
     }
   }
 };
+
 </script>
 
 <style scoped lang="scss">

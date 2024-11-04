@@ -18,8 +18,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
