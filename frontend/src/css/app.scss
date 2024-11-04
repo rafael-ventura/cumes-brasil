@@ -137,26 +137,8 @@ body {
 
 .btn{
   color: black;
-  background-color: $primary;
   font-weight: bold;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
-
-  &:hover {
-    background-color: $secondary-dark;
-  }
 }
-
-.btn-google{
-  color: black;
-  background-color: $primary;
-  font-weight: bold;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
-
-  &:hover {
-    background-color: $c-color-red;
-    color: white;
-  }
- }
 
 .btn-blue{
   color: black;
@@ -172,7 +154,6 @@ body {
 .btn-text-black{
   color: black !important;
   font-weight: bold;
-  background-color: $primary;
 
   &:hover {
     background-color: lightgray;

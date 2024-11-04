@@ -11,22 +11,16 @@
       {{ via.nome }}
     </h2>
 
-    <p class="via-detalhes">
-      <template v-if="hasDetalhesValidos">
-        <span v-for="(detalhe, index) in detalhesArray" :key="index">
-          {{ detalhe }}
-        </span>
-      </template>
-      <template v-else>
-        Não foi possível encontrar o Grau desta via
-      </template>
-    </p>
+    <!-- Usa o GrauBadge com a string formatada e extensão -->
+    <GrauBadge
+      v-if="formattedGrau || extensaoValida"
+      :grauText="formattedGrau!"
+      :extensaoText="extensaoValida!"
+      @showInfo="showGrauInfo = true"
+      class="grau-container"
+    />
 
-    <!-- Exibe a extensão separadamente -->
-    <p class="via-extensao" v-if="extensaoValida">
-      {{ extensaoValida }}
-    </p>
-
+    <!-- Localização destacada -->
     <p class="via-localizacao">
       <span v-if="via?.montanha?.nome && via.montanha.nome !== 'N/A'">
         {{ via.montanha.nome }}
@@ -39,8 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import { Via } from 'src/models/Via';
+import GrauBadge from 'components/Via/GrauBadge.vue';
 
 const props = defineProps({
   via: {
@@ -49,55 +44,60 @@ const props = defineProps({
   }
 });
 
+const showGrauInfo = ref(false);
+
+// Função de validação
 const isValid = (value: any) => value != null && value !== 'N/A';
 
-const detalhesArray = computed(() => {
-  return [
+// Construção do texto completo do grau
+const formattedGrau = computed(() => {
+  const grauParts = [
     isValid(props.via?.grau) ? props.via?.grau : null,
     isValid(props.via?.crux) ? props.via?.crux : null,
     isValid(props.via?.artificial) ? props.via?.artificial : null,
     isValid(props.via?.exposicao) ? props.via?.exposicao : null,
     isValid(props.via?.duracao) ? props.via?.duracao : null
-    // 'extensao' foi removida daqui
   ].filter(Boolean);
+
+  return grauParts.length > 0 ? grauParts.join(' ') : null;
 });
 
-const hasDetalhesValidos = computed(() => detalhesArray.value.length > 0);
-
 const extensaoValida = computed(() => {
-  return isValid(props.via?.extensao) ? `${props.via.extensao} Metros` : null;
+  return isValid(props.via?.extensao) ? `${props.via?.extensao} Metros` : null;
 });
 </script>
 
 <style scoped lang="scss">
+@import 'src/css/app.scss';
+
 .card-info-principal {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   margin-bottom: 6%;
-  background-color: var(--q-primary);
+  background-color: $primary;
   border-radius: 10px;
-  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card-imagem {
   width: 100%;
+  height: 180px;
   border-radius: 10px 10px 0 0;
   object-fit: cover;
+  margin-bottom: -8%;
+  padding: 0;
 }
 
 .via-nome {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.via-detalhes {
-  font-size: 16px;
+  font-size: 36px;
   font-weight: bold;
-  color: #333;
-  margin: 10px 0;
+  color: black;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px; /* Reduz o espaço */
+  padding-left: 1%;
 }
 
 .via-extensao {
@@ -107,7 +107,16 @@ const extensaoValida = computed(() => {
 }
 
 .via-localizacao {
-  font-size: 14px;
-  color: #666;
+  font-size: 20px; /* Aumenta o tamanho da fonte */
+  font-weight: bold; /* Destaque */
+  color: black;
+  margin-top: 3%;
+  text-align: left;
+  margin-bottom: 3%;
+  padding-left: 1%;
+}
+
+.grau-container {
+  margin: 5px 0; /* Reduz o espaço entre o título e o grau */
 }
 </style>

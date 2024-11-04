@@ -72,7 +72,7 @@ onMounted(() => {
 .q-expansion-item {
   background-color: $primary;
   border-radius: 8px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: black;
 }
