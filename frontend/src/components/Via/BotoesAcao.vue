@@ -18,23 +18,10 @@
 
     <!-- Modal de criação de escalada -->
     <ModalCriarEscalada :isOpen="showEscaladaModal" @closeModal="toggleEscaladaModal" />
-
-    <!-- Modal de confirmação de remoção dos favoritos -->
-    <q-dialog v-model="confirmRemoveFavorite">
-      <q-card>
-        <q-card-section class="text-h6">Remover dos Favoritos?</q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn flat label="Remover" color="negative" @click="removeFromFavorites" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- Modal de adicionar à coleção -->
     <q-dialog v-model="showCollectionModal">
-      <q-card>
-        <q-card-section>Adicionar a Coleção</q-card-section>
-        <q-card-section>
+      <q-card class="collection-card">
+        <q-card-section class="collection-header">Adicionar a Coleção</q-card-section>
+        <q-card-section class="collection-content">
           <ItemSugestao :items="colecoes" @add-item="addToCollection" item-type="colecao" />
         </q-card-section>
       </q-card>
@@ -48,33 +35,39 @@ import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSugestao from 'components/ItemSugestao.vue';
-import { Via } from 'src/models/Via';
-import { Colecao } from 'src/models/Colecao';
 
-const props = defineProps<{
-  via: Via | null;
-  favoriteCollectionId: number | null;
-}>();
-
+const props = defineProps({
+  via: Object,
+  favoriteCollectionId: Number
+});
 const emit = defineEmits(['update:isFavorited']);
+
 const isFavorited = ref(false);
-const confirmRemoveFavorite = ref(false);
 const showEscaladaModal = ref(false);
 const showCollectionModal = ref(false);
-const colecoes = ref<Colecao[]>([]); // Tipo definido como Colecao[]
+const colecoes = ref([]);
 
-onMounted(async () => {
+// Verifica se a via está na coleção favorita ao montar o componente
+const checkIfFavorited = async () => {
   if (props.favoriteCollectionId && props.via) {
-    const favoriteCollection = await ColecaoService.getFirstByUsuarioId();
-    if (favoriteCollection && favoriteCollection.vias?.some(v => v.id === props.via?.id)) {
-      isFavorited.value = true;
+    try {
+      const favoriteCollection = await ColecaoService.getById(props.favoriteCollectionId);
+      isFavorited.value = favoriteCollection.vias?.some((v) => v.id === props.via.id) ?? false;
+    } catch (error) {
+      console.error('Erro ao verificar se a via é favorita:', error);
     }
   }
-});
+};
+
+onMounted(checkIfFavorited);
 
 // Alterna o status de favorito
-const toggleFavoriteStatus = () => {
-  isFavorited.value ? confirmRemoveFavorite.value = true : addToFavorites();
+const toggleFavoriteStatus = async () => {
+  try {
+    isFavorited.value ? await removeFromFavorites() : await addToFavorites();
+  } catch (error) {
+    console.error('Erro ao alternar status de favorito:', error);
+  }
 };
 
 // Adiciona aos favoritos
@@ -82,19 +75,10 @@ const addToFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
       await ColecaoService.addViaToColecao(props.favoriteCollectionId, props.via.id);
-      isFavorited.value = true;
-      emit('update:isFavorited', true);
-      Notify.create({
-        type: 'positive',
-        message: 'Via adicionada a favoritos!',
-        position: 'top-right'
-      });
+      updateFavoriteStatus(true, 'Via adicionada a favoritos!');
     } catch (error) {
       console.error('Erro ao adicionar aos favoritos:', error);
-      Notify.create({
-        type: 'negative',
-        message: 'Erro ao adicionar aos favoritos'
-      });
+      showNotification('Erro ao adicionar aos favoritos', 'negative');
     }
   }
 };
@@ -104,30 +88,34 @@ const removeFromFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
       await ColecaoService.removeViaFromColecao(props.favoriteCollectionId, props.via.id);
-      isFavorited.value = false;
-      confirmRemoveFavorite.value = false;
-      emit('update:isFavorited', false);
-      Notify.create({
-        type: 'positive',
-        message: 'Via removida dos favoritos!',
-        position: 'top-right'
-      });
+      updateFavoriteStatus(false, 'Via removida dos favoritos!');
     } catch (error) {
       console.error('Erro ao remover dos favoritos:', error);
-      Notify.create({
-        type: 'negative',
-        message: 'Erro ao remover dos favoritos'
-      });
+      showNotification('Erro ao remover dos favoritos', 'negative');
     }
   }
 };
 
-// Abre o modal de criação de escalada
+// Atualiza o estado de favorito e exibe notificação
+const updateFavoriteStatus = (status, message) => {
+  isFavorited.value = status;
+  emit('update:isFavorited', status);
+  showNotification(message, 'positive');
+};
+
+// Exibe notificação com base nos parâmetros de tipo e mensagem
+const showNotification = (message, type) => {
+  Notify.create({
+    type,
+    message,
+    position: 'top-right'
+  });
+};
+
 const toggleEscaladaModal = () => {
   showEscaladaModal.value = !showEscaladaModal.value;
 };
 
-// Abre o modal de adicionar à coleção
 const openCollectionModal = async () => {
   if (props.via) {
     try {
@@ -140,31 +128,25 @@ const openCollectionModal = async () => {
   }
 };
 
-// Adiciona à coleção selecionada
-const addToCollection = async (colecao: Colecao) => {
-  try {
-    if (props.via) {
+const addToCollection = async (colecao) => {
+  if (props.via) {
+    try {
       await ColecaoService.addViaToColecao(colecao.id, props.via.id);
-      Notify.create({
-        type: 'positive',
-        message: 'Via adicionada à coleção com sucesso!',
-        position: 'top-right'
-      });
+      showNotification('Via adicionada à coleção com sucesso!', 'positive');
+    } catch (error) {
+      console.error('Erro ao adicionar à coleção:', error);
+      showNotification('Erro ao adicionar à coleção', 'negative');
     }
-  } catch (error) {
-    console.error('Erro ao adicionar à coleção:', error);
-    Notify.create({
-      type: 'negative',
-      message: 'Erro ao adicionar à coleção'
-    });
   }
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
 .botoes-acao {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   justify-content: center;
   padding: 10px;
   border-radius: 8px;
@@ -174,9 +156,12 @@ const addToCollection = async (colecao: Colecao) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  padding: 10px 15px;
+  border-radius: 8px; /* Mantém bordas levemente arredondadas */
+  width: 100px; /* Define a largura para 100px */
+  height: 100px; /* Define a altura para 100px */
+  flex-direction: column; /* Alinha o ícone e o texto verticalmente */
   font-size: 14px;
+  text-align: center;
 }
 
 .registrar {
@@ -191,8 +176,23 @@ const addToCollection = async (colecao: Colecao) => {
   background-color: #7E9CE8;
 }
 
-.q-icon {
-  margin-right: 8px;
+.collection-card {
+  background-color: $dark;
+  color: $primary;
+  border-radius: 8px;
+}
+
+.collection-header {
   font-size: 18px;
+  font-weight: bold;
+  color: $primary;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-bottom: 1px solid $primary;
+}
+
+.collection-content {
+  padding: 16px;
+  color: $primary;
 }
 </style>
