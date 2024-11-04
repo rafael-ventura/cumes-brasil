@@ -133,12 +133,12 @@ const isExpanded = ref(false);
 }
 
 .expansion-content {
-  background-color: $dark;
+  background-color: $background;
 }
 
 .detalhes-container {
   padding: 16px;
-  background-color: $dark;
+  background-color: $background;
   border: 1px solid $primary;
   border-radius: 8px;
   color: $primary;
@@ -186,21 +186,21 @@ const isExpanded = ref(false);
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  color: $dark;
+  color: $background;
 }
 
 .modal-content {
   margin-top: 8px;
   font-size: 14px;
-  color: $dark;
+  color: $background;
 }
 
 .q-button {
-  color: $dark;
+  color: $background;
   font-weight: bolder;
   font-size: 14px;
   padding: 4px 16px;
   border-radius: 10px;
-  border: 1px solid $dark;
+  border: 1px solid $background;
 }
 </style>

@@ -134,7 +134,7 @@ const onScroll = async (event: Event) => {
 
 .item-sugestao-container {
   max-height: 700px;
-  background-color: $dark;
+  background-color: $background;
   border-radius: 10px;
 }
 

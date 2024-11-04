@@ -11,7 +11,7 @@
     <div class="slot-container no-border">
       <slot name="filters" :filters="filters"/>
     </div>
-    <SearchResults
+    <BuscaResultados
       :results="results"
       :entityType="props.entity"
       @select="selectItem"
@@ -25,8 +25,8 @@
 <script setup lang="ts">
 import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
-import SearchResults from 'components/Busca/SearchResults.vue';
-import { SearchRequest } from 'src/models/SearchRequest';
+import BuscaResultados from 'components/Busca/BuscaResultados.vue';
+import { BuscaRequest } from 'src/models/BuscaRequest';
 import ImagemService from 'src/services/ImagemService';
 import { formatVia } from 'src/utils/utils';
 import { useRoute } from 'vue-router';
@@ -41,10 +41,13 @@ const props = defineProps<{
   enableSortOptions?: { field: string, label: string }[];
 }>();
 
+defineOptions({
+  name: 'BuscaComponent'
+});
 const emit = defineEmits(['select', 'update-results']);
 const route = useRoute();
 
-const filters = ref(<SearchRequest>{
+const filters = ref(<BuscaRequest>{
   unifiedSearch: '',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
@@ -148,7 +151,7 @@ const searchEntities = async (reset = false) => {
   }
 };
 
-const handleApplyFilters = (newFilters: SearchRequest) => {
+const handleApplyFilters = (newFilters: BuscaRequest) => {
   filters.value = {
     ...filters.value,
     ...props.staticFilters,
@@ -176,14 +179,12 @@ const selectItem = (item: any) => {
 .search-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #fcbd7b;
+  color: $primary;
 }
 
 .slot-container {
-  border: 2px solid #bce9b4;
   padding: 16px;
-  border-radius: 8px;
-  background-color: #2c2c2c;
+  background-color: $background;
 }
 
 .slot-container * {
@@ -198,8 +199,7 @@ const selectItem = (item: any) => {
   margin-top: 16px;
   padding: 16px;
   text-align: center;
-  background-color: $dark;
-  border: 2px solid $secondary;
+  background-color: $background;
   border-radius: 8px;
 }
 

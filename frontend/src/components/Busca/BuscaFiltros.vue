@@ -6,8 +6,10 @@
         v-model="localFilters.unifiedSearch"
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
-        class="unified-search"
         outlined
+        color="primary"
+        class="unified-search"
+        label-color="primary"
         rounded
         @keydown="onInputChange"
       >
@@ -21,7 +23,6 @@
             class="filter-btn"
             @click="showFilterModal = true"
           />
-          <!-- Ícone de lixeira para limpar -->
           <q-icon
             name="delete"
             class="cursor-pointer text-negative"
@@ -147,14 +148,14 @@
 
 <script setup lang="ts">
 import { computed, defineEmits, onMounted, ref, watch } from 'vue';
-import { SearchRequest } from 'src/models/SearchRequest';
+import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 
 // Props e emissões
 const props = defineProps<{ entity: string, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
 const emit = defineEmits(['applyFilters']);
 const showExtensionFilters = ref(false);
-const localFilters = ref<SearchRequest>({
+const localFilters = ref<BuscaRequest>({
   unifiedSearch: '',
   selectedMountain: null,
   selectedDifficulty: null,
@@ -332,10 +333,6 @@ const filterByExtension = (category: string) => {
 </script>
 
 <style scoped>
-.unified-search {
-  outline: red;
-}
-
 .filter-modal {
   background-color: #2c2c2c;
   border-radius: 8px;
@@ -375,7 +372,7 @@ const filterByExtension = (category: string) => {
   font-size: 16px;
   cursor: pointer;
   color: #2c2c2c; /* Cor do ícone */
-  border: 1px dotted #2c2c2c; /* Borda do ícone */
+  border: 1px solid #fcbd7b;
   border-radius: 50%; /* Ícone circular */
   margin-left: 4px; /* Margem à esquerda */
 }

@@ -1,11 +1,12 @@
 <template>
-  <q-page class="q-pa-sm">
+  <div class="titulo-pagina">Catálogo de Vias</div>
+  <q-page>
     <SearchEntity
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
-      :searchHeader="'Catálogo de Vias'"
+      :hide-header="true"
     >
       <template #filters="{ filters }">
         <SearchFilters :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
@@ -17,8 +18,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import SearchFilters from 'components/Busca/SearchFilters.vue';
-import SearchEntity from 'components/Busca/SearchEntity.vue';
+import SearchFilters from 'components/Busca/BuscaFiltros.vue';
+import SearchEntity from 'components/Busca/Busca.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
@@ -39,3 +40,13 @@ const goViaDetalhadaView = (id: number) => {
   router.push(`/vias/${id}`);
 };
 </script>
+
+<style scoped lang="scss">
+@import 'src/css/app.scss';
+
+.titulo-pagina {
+  font-size: 40px;
+  text-align: center;
+  color: $primary;
+}
+</style>
