@@ -3,7 +3,6 @@
     <BotaoVoltar />
     <CardInfoPrincipal :via="via!" />
 
-    <!-- Componente de Botões de Ação, com todos os controles -->
     <BotoesAcao
       :via="via"
       :favoriteCollectionId="favoriteCollectionId"
@@ -11,9 +10,7 @@
     />
 
     <q-list bordered>
-      <!-- Seção Croquis com carrossel como dropdown -->
       <SecaoCroqui :via="via" />
-      <!-- Seção com mais detalhes da via -->
       <SecaoMaisDetalhes v-if="via" :via="via" />
     </q-list>
   </q-page>
@@ -23,23 +20,24 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import ViaService from 'src/services/ViaService';
+import ColecaoService from 'src/services/ColecaoService';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import CardInfoPrincipal from 'components/Via/CardInfoPrincipal.vue';
 import BotoesAcao from 'components/Via/BotoesAcao.vue';
 import SecaoCroqui from 'components/Via/SecaoCroqui.vue';
-import { Via } from 'src/models/Via';
 import SecaoMaisDetalhes from 'components/Via/SecaoMaisDetalhes.vue';
 
 const route = useRoute();
-
-const via = ref<Via | null>(null);
-const favoriteCollectionId = ref<number | null>(null);
+const via = ref();
+const favoriteCollectionId = ref();
 const isFavorited = ref(false);
 
 onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
+    const collection = await ColecaoService.getFirstByUsuarioId();
+    favoriteCollectionId.value = collection ? collection.id : null;
   } catch (error) {
     console.error('Erro ao buscar detalhes da via:', error);
   }
