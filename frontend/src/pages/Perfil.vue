@@ -109,7 +109,7 @@ defineOptions({
   right: 16px;
   height: 50px;
   color: $dark;
-  background-color: $primary-light;
+  background-color: $primary;
 }
 .card-config{
   background-color: $primary-light;

@@ -14,10 +14,11 @@
         <div class="text-h7">{{props.user?.localizacao}}</div>
         <div class="caixa-escalada border-radius-medium top-margem">
           <div class="text-h5">
-            {{ diasEscalados }} dias
+            {{ diasEscalados }}
+            <div class="text-h8" style="display: inline-block">dias</div>
           </div>
           <div class="text-h7">
-            Desde: {{props.user?.data_atividade}}
+            Desde {{dataFormatada}}
           </div>
         </div>
       </div>
@@ -53,6 +54,14 @@ const diasEscalados = computed(() => {
   return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 });
 
+const dataFormatada = computed(() => {
+  if (!props.user?.data_atividade) return '';
+  const partesData = props.user.data_atividade.split('/');
+  const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
+  const dataString = dataAtividade.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  return dataString.charAt(0).toUpperCase() + dataString.slice(1);
+});
+
 </script>
 
 <style scoped lang="scss">
@@ -77,7 +86,7 @@ const diasEscalados = computed(() => {
 .profile-picture-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-right: 16px;
 }
 
@@ -133,7 +142,7 @@ const diasEscalados = computed(() => {
 
 .caixa-escalada{
   border: $dark solid 2px;
-  max-width: 190px;
+  max-width: 300px;
   padding: 8px;
 }
 </style>

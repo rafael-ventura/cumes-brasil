@@ -49,5 +49,6 @@ defineProps<{
   padding: 5px; /* Remove o espaçamento interno do item */
   min-width: 80px;
   max-width: 140px;
+  min-height: 80px;
 }
 </style>
