@@ -39,19 +39,15 @@
 import { computed, ref, onMounted } from 'vue';
 import { Via } from 'src/models/Via';
 
-// Recebe a via como prop para pegar as imagens de croquis
 const props = defineProps<{
   via: Via | null;
 }>();
 
-// Array de imagens de croquis
 const images = ref<{ url: string; nome: string }[]>([]);
 const currentIndex = ref(0);
 
-// Computed property para a imagem atual
 const currentImage = computed(() => images.value[currentIndex.value] || { url: null, nome: 'Sem Foto' });
 
-// Funções de navegação
 const nextImage = () => {
   currentIndex.value = (currentIndex.value + 1) % images.value.length;
 };
@@ -60,7 +56,6 @@ const prevImage = () => {
   currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length;
 };
 
-// Carrega as imagens de croquis quando o componente é montado
 onMounted(() => {
   if (props.via && props.via.croquis) {
     images.value = props.via.croquis.map((croqui) => ({
