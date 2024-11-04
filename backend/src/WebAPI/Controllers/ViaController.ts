@@ -29,6 +29,7 @@ export class ViaController {
 			const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 			const result = await this.service.getVias(page, limit);
 			console.log('Endpoint GET /vias foi chamado');
+			console.log('vias', result.vias);
 			res.status(200).json(result);
 		} catch (error) {
 			if (error instanceof Error) {

@@ -176,7 +176,7 @@ const selectItem = (item: any) => {
 .search-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #fcbd7b;
+  color: $primary;
 }
 
 .slot-container {
@@ -198,7 +198,7 @@ const selectItem = (item: any) => {
   margin-top: 16px;
   padding: 16px;
   text-align: center;
-  background-color: $dark;
+  background-color: $background;
   border: 2px solid $secondary;
   border-radius: 8px;
 }

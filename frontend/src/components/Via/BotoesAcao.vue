@@ -181,7 +181,7 @@ const addToCollection = async (colecao) => {
 }
 
 .collection-card {
-  background-color: $dark;
+  background-color: $background;
   color: $primary;
   border-radius: 8px;
   width: 100%;
@@ -191,7 +191,7 @@ const addToCollection = async (colecao) => {
   font-size: 20px;
   font-weight: bold;
   color: $primary;
-  background-color: $dark;
+  background-color: $background;
   padding: 5px;
   border-bottom: 1px solid $primary;
 }
