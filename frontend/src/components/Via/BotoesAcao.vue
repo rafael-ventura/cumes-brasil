@@ -100,7 +100,11 @@ const removeFromFavorites = async () => {
 const updateFavoriteStatus = (status, message) => {
   isFavorited.value = status;
   emit('update:isFavorited', status);
-  showNotification(message, 'positive');
+  if (status === true) {
+    showNotification(message, 'positive');
+  } else {
+    showNotification(message, 'negative');
+  }
 };
 
 // Exibe notificação com base nos parâmetros de tipo e mensagem
@@ -180,14 +184,15 @@ const addToCollection = async (colecao) => {
   background-color: $dark;
   color: $primary;
   border-radius: 8px;
+  width: 100%;
 }
 
 .collection-header {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   color: $primary;
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 10px;
+  background-color: $dark;
+  padding: 5px;
   border-bottom: 1px solid $primary;
 }
 
