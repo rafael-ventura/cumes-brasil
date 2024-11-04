@@ -63,12 +63,12 @@ jobs:
             appspec.yml
 
       # Upload to S3 for CodeDeploy
-      - name: Upload Backend to S3
-        run: aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
+      - name: Upload to S3 for CodeDeploy
+        run: aws s3 cp application.zip s3://cumes-brasil-front/backend/application.zip
 
       - name: Create deployment in CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name cumes-backend-app \
             --deployment-group-name cumes-backend-deployment-group \
-            --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip
+            --s3-location bucket=cumes-brasil-front,bundleType=zip,key=backend/application.zip
