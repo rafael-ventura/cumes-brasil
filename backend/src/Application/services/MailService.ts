@@ -3,7 +3,7 @@ import nodemailer, { Transporter } from "nodemailer";
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import InternalServerError from "../errors/InternalServerError";
-import { errorsMessage } from "../errors/constants";
+import { errorsMessage, successMessage } from "../errors/constants";
 
 @Service()
 export class MailService {
@@ -30,7 +30,7 @@ export class MailService {
         try {
             await this.transporter.sendMail(this.mailOptions);
             return {
-                message: errorsMessage.USER_RESET_PASSWORD_TOKEN_SENT
+                message: successMessage.USER_RESET_PASSWORD_TOKEN_SENT
             };
         } catch (error) {
             throw new InternalServerError(errorsMessage.EMAIL_SERVER_ERROR);

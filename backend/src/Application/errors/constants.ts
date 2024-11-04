@@ -1,7 +1,6 @@
 
 export const errorsMessage = {
     USER_RESET_PASSWORD_TOKEN_ALREADY_SENT: "E-mail com passo-a-passo de redefinição de senha já foi enviado, cheque sua caixa de email",
-    USER_RESET_PASSWORD_TOKEN_SENT: "E-mail com passo-a-passo de redefinição de senha enviado com sucesso",
     USER_MAIL_NOT_FOUND: "Nenhum usuário com esse Email encontrado",
     USER_ALREADY_EXISTS: "Usuário com email já cadastrado",
     BAD_CREDENTIALS: "Credenciais inválidas",
@@ -22,3 +21,9 @@ export const jwtTokenErrorMessages: Record<string, string> = {
     "jwt audience invalid. expected:": "Audiência inválida no token",
     "jwt issuer invalid. expected:": "Emissor inválido no token",
 };
+
+export const successMessage = {
+    USER_RESET_PASSWORD_UPDATED: "Senha atualizada com sucesso",
+    USER_RESET_PASSWORD_TOKEN_SENT: "E-mail com passo-a-passo de redefinição de senha enviado com sucesso",
+
+}

@@ -59,7 +59,7 @@ export class UsuarioRepository {
         return this.repository.findOne({ where: { resetPasswordUrl: token } });
     }
 
-    async resetPassword(userUpdated: Usuario) {
-        await this.repository.save(userUpdated);
+    async resetPassword(userId: number, userUpdated: Usuario) {
+        await this.repository.update(userId, userUpdated);
     }
 }

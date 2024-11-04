@@ -114,7 +114,6 @@ export class UsuarioController {
             });
 
         } catch (error: any) {
-            console.log(error.name, error.message);
             HandleErrors.handleErrors(error, req, res, next);
         }
     }
@@ -129,7 +128,6 @@ export class UsuarioController {
                 message: response.message
             });
         } catch (error: any) {
-            console.log(error.name, error.message);
             HandleErrors.handleErrors(error, req, res, next);
         }
     }

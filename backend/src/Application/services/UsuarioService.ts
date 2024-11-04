@@ -9,7 +9,7 @@ import { ImagemService } from './ImagemService';
 import path from 'path';
 import * as fs from 'node:fs';
 import BadRequestError from '../errors/BadRequestError';
-import { errorsMessage } from '../errors/constants';
+import { errorsMessage, successMessage } from '../errors/constants';
 import NotFoundError from '../errors/NotFoundError';
 import { MailService } from './MailService';
 import { Base64 } from 'js-base64';
@@ -159,10 +159,8 @@ export class UsuarioService {
             }
 
         } else {
-            // Criar lógica de geração de token que será único para o usuario que chamou este serviço com prazo de validade de até 12 hrs
             newToken = this.resetUserPasswordTokenService.generate(user);
 
-            // Utilizar o serviço de email para enviar o email com os seguintes parametros: url de redefinição de senha pronta, nome do usuario e seu email
             mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
 
             user.resetPasswordToken = newToken.tokenEncoded;
@@ -187,9 +185,8 @@ export class UsuarioService {
         user.resetPasswordToken = '';
         user.resetPasswordUrl = '';
 
-        // Salvar usuario atualizado no banco kkkkkk
-        this.usuarioRepo.resetPassword(user);
+        this.usuarioRepo.resetPassword(user.id, user);
 
-        return { message: "Senha Atualizada com sucesso" };
+        return { message: successMessage.USER_RESET_PASSWORD_UPDATED };
     }
 }
