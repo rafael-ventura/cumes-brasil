@@ -12,8 +12,6 @@ import BadRequestError from '../errors/BadRequestError';
 import { errorsMessage, successMessage } from '../errors/constants';
 import NotFoundError from '../errors/NotFoundError';
 import { MailService } from './MailService';
-import { Base64 } from 'js-base64';
-import jwt from "jsonwebtoken";
 import UserValidation from '../validations/UserValidation';
 import { ResetUserPasswordTokenService } from './ResetUserPasswordTokenService';
 import TokenValidation from '../validations/TokenValidation';
@@ -141,7 +139,6 @@ export class UsuarioService {
             throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
         }
 
-        let newToken;
         let mailSentResponse;
         if (user.resetPasswordToken || user.resetPasswordUrl) {
             try {
@@ -151,23 +148,22 @@ export class UsuarioService {
                 }
 
             } catch (error: any) {
-                newToken = this.resetUserPasswordTokenService.generate(user);
-                mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
-                user.resetPasswordToken = newToken.tokenEncoded;
-                user.resetPasswordUrl = newToken.smallUrl;
-                this.usuarioRepo.update(user.id, user);
+                mailSentResponse = this.generateTokenAndSendEmail(user);
             }
 
         } else {
-            newToken = this.resetUserPasswordTokenService.generate(user);
-
-            mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
-
-            user.resetPasswordToken = newToken.tokenEncoded;
-            user.resetPasswordUrl = newToken.smallUrl;
-            this.usuarioRepo.update(user.id, user);
+            mailSentResponse = this.generateTokenAndSendEmail(user);
         }
 
+        return mailSentResponse;
+    }
+
+    private async generateTokenAndSendEmail(user: Usuario): Promise<any> {
+        let newToken = this.resetUserPasswordTokenService.generate(user);
+        let mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
+        user.resetPasswordToken = newToken.tokenEncoded;
+        user.resetPasswordUrl = newToken.smallUrl;
+        this.usuarioRepo.update(user.id, user);
         return mailSentResponse;
     }
 

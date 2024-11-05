@@ -104,11 +104,8 @@ export class UsuarioController {
     };
 
     generateResetUserPasswordToken = async (req: Request, res: Response, next: NextFunction) => {
-        console.log("Gerando token de redefinicao de senha do usuario");
-        console.log(req.body);
         try {
-            const email = req.body?.email;
-            const response = await this.service.createResetUserPassword(email);
+            const response = await this.service.createResetUserPassword(req.body?.email);
             res.status(200).json({
                 message: response.message
             });

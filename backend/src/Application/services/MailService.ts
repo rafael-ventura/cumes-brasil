@@ -4,6 +4,9 @@ import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import InternalServerError from "../errors/InternalServerError";
 import { errorsMessage, successMessage } from "../errors/constants";
+import fs from "fs";
+import Handlebars from "handlebars";
+import path from "path";
 
 @Service()
 export class MailService {
@@ -12,7 +15,7 @@ export class MailService {
     private mailOptions: any;
     private oauth2Client: OAuth2Client;
 
-    constructor() { }
+    constructor() {}
 
     /**
      * retornar mensagem: E-mail com passo-a-passo de redefinição de senha enviado com sucesso em caso de sucesso
@@ -23,9 +26,19 @@ export class MailService {
      */
     async sendResetUserPassword(nome: string, email: string, url: string) {
         url = this.buildFullResetUserPasswordUrl(url);
-        console.log("MailService.resetUserPassword executado", nome, email, url);
         this.buildMailService();
-        this.buildResetPasswordMailOptions(email, nome, url);
+
+        const sourceTemplatePath = path.resolve(__dirname, '../../Domain/templates/resetPasswordMailTemplate.html');
+        const sourceTemplate = fs.readFileSync(sourceTemplatePath, 'utf-8').toString();
+        const template = Handlebars.compile(sourceTemplate);
+        const replacements = {
+            nome,
+            email,
+            url,
+        }
+        const htmlWithTemplate = template(replacements);
+
+        this.buildResetPasswordMailOptions(email, nome, url, htmlWithTemplate);
         this.transporter = nodemailer.createTransport(this.transporterConfigOptions);
         try {
             await this.transporter.sendMail(this.mailOptions);
@@ -57,7 +70,8 @@ export class MailService {
     }
 
     /**
-     * Lógica para gerar em tempo de execução o accesstoken pela api do google Não funcionou... Estudarei mais a fundo mais pra frente
+     * Lógica para gerar em tempo de execução o accesstoken pela api do google Não funcionou... 
+     * Fica como melhoria no futuro
      */
     private generateOAUTH2Config(): void {
         const OAuth2 = google.auth.OAuth2;
@@ -74,13 +88,11 @@ export class MailService {
 
     }
 
-    private async buildTransporterConfigOAUTH2(): Promise<void> {
-        // const accessToken = await this.oauth2Client.getAccessToken();
-        // console.log("accessToken", accessToken);
+    private buildTransporterConfigOAUTH2(): void {
         this.transporterConfigOptions = {
             auth: {
                 type: 'OAuth2',
-                user: process.env.MAIL_USER ? process.env.MAIL_USER : "junior.fool.skull@gmail.com",
+                user: process.env.MAIL_USER,
                 clientId: process.env.OAUTH_CLIENT_ID,
                 clientSecret: process.env.OAUTH_CLIENT_SECRET,
                 refreshToken: process.env.OAUTH_REFRESH_TOKEN,
@@ -89,7 +101,7 @@ export class MailService {
         }
     }
 
-    private async buildTransporterConfigDefault(): Promise<void> {
+    private buildTransporterConfigDefault(): void {
         this.transporterConfigOptions = {
             service: 'gmail',
             host: "smtp.gmail.com",
@@ -102,19 +114,17 @@ export class MailService {
         }
     }
 
-    private buildResetPasswordMailOptions(receiverMail: string, receiverName: string, url: string): void {
+    private buildResetPasswordMailOptions(receiverMail: string, receiverName: string, url: string, htmlToSend: string): void {
         this.mailOptions = {
             from: this.transporterConfigOptions.auth.user,
             to: receiverMail,
             subject: 'Alteração de Senha',
-            html: `<h1>Olá! ${receiverName}</h1> 
-            <p>Recebemos uma solicitação de senha referente ao email ${receiverMail} citado. 
-            Para cadastrar uma nova senha, acesse o link abaixo</p>
-            <a href="${url}" target="_blank"> link </a>`
+            text: 'Alteracao de Senha',
+            html: htmlToSend
         }
     }
 
-    private buildFullResetUserPasswordUrl(tokenUrl: string) {
+    private buildFullResetUserPasswordUrl(tokenUrl: string): string {
         const baseUrl = process.env.WEB_HOSTNAME;
         const port = process.env.WEB_PORT;
         const resetPasswordPath = process.env.WEB_USER_RESET_PASSWORD_PATH;
