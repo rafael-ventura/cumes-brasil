@@ -210,7 +210,7 @@ import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
 import { Colecao } from 'src/models/Colecao';
 import ItemSugestao from 'components/ItemSugestao.vue';
-import { showNotify } from 'src/utils/utils';
+import { createNotifyConfig } from 'src/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
@@ -261,9 +261,9 @@ const closeEscaladaForm = () => {
 const addToFavorites = async () => {
   try {
     await ViaService.addToFavorites(Number(route.params.id));
-    Notify.create(showNotify('positive', 'Via adicionada a favoritos com sucesso', 'top-center'));
+    Notify.create(createNotifyConfig('positive', 'Via adicionada a favoritos com sucesso', 'top'));
   } catch (error: any) {
-    Notify.create(showNotify('negative', error.message || 'Erro desconhecido', 'top-right'));
+    Notify.create(createNotifyConfig('negative', error.message || 'Erro desconhecido', 'top-right'));
   }
 };
 
@@ -287,7 +287,7 @@ const addToCollection = async (colecao: Colecao) => {
   try {
     if (via.value) {
       await ColecaoService.addViaToColecao(colecao.id, via.value.id);
-      Notify.create(showNotify('positive', 'Via adicionada à coleção com sucesso', 'top-right'));
+      Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso', 'top-right'));
       // Marcar como adicionada
       colecoes.value = colecoes.value.map(c => {
         if (c.id === colecao.id) {

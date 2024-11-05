@@ -2,7 +2,7 @@ import { api } from 'boot/axios';
 import { handleApiError } from 'src/utils/utils';
 
 class AuthenticateService {
-  async login(email: string, password: string) {
+  async login (email: string, password: string) {
     try {
       const response = await api.post('/auth/login', {
         email,
@@ -16,7 +16,7 @@ class AuthenticateService {
   }
 
   // TODO: Implementar autenticação com Google
-  async authenticateWithGoogle(googleTokenId: string) {
+  async authenticateWithGoogle (googleTokenId: string) {
     try {
       const response = await api.post('/auth/google-login', { token: googleTokenId });
       this.saveToken(response.data.token); // Salva o JWT gerado no backend
@@ -26,7 +26,7 @@ class AuthenticateService {
     }
   }
 
-  async register(nome: string, email: string, senha: string) {
+  async register (nome: string, email: string, senha: string) {
     try {
       return await api.post('/auth/register', {
         nome,
@@ -38,7 +38,7 @@ class AuthenticateService {
     }
   }
 
-  async generateUserResetPassword(email: string) {
+  async generateUserResetPassword (email: string) {
     try {
       return await api.post('/usuarios/generate-reset-password', { email });
     } catch (error: any) {
@@ -46,7 +46,7 @@ class AuthenticateService {
     }
   }
 
-  async resetPassword(password: string, passwordRepeated: string, token: string) {
+  async resetPassword (password: string, passwordRepeated: string, token: string) {
     try {
       return await api.put(`/usuarios/reset-password/${token}`, {
         password,
@@ -57,17 +57,17 @@ class AuthenticateService {
     }
   }
 
-  isAuthenticated(): boolean {
+  isAuthenticated (): boolean {
     const token = localStorage.getItem('authToken');
     return !!token;
   }
 
-  logout(): void {
+  logout (): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
   }
 
-  private saveToken(token: { token: string; userId: string } | string): void {
+  private saveToken (token: { token: string; userId: string } | string): void {
     if (typeof token === 'string') {
       localStorage.setItem('authToken', token);
     } else {

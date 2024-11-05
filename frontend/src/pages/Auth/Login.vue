@@ -43,6 +43,7 @@ import GoogleLoginButton from 'components/Auth/GoogleLoginButton.vue';
 import AuthenticateService from '../../services/AuthenticateService';
 import LoginForm from 'components/Auth/LoginForm.vue';
 import { Notify } from 'quasar';
+import { createNotifyConfig } from 'src/utils/utils';
 
 defineOptions({
   name: 'LoginPage'
@@ -68,12 +69,7 @@ const onLogin = async ({
     await router.push('/');
     showLoginDialog.value = false; // Fecha o pop-up após login bem-sucedido
   } catch (error: any) {
-    Notify.create({
-      type: 'negative',
-      message: '' + error.message,
-      position: 'center',
-      timeout: 3000
-    });
+    Notify.create(createNotifyConfig('negative', error.message));
   }
 };
 
