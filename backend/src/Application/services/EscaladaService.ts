@@ -1,9 +1,9 @@
-import { Escalada } from "../../Domain/entities/Escalada";
-import EscaladaValidation from "../validations/EscaladaValidation";
-import { EscaladaRepository } from "../../Infrastructure/repositories/EscaladaRepository";
-import { UsuarioService } from "./UsuarioService";
-import { ViaService } from "./ViaService";
-import { ObjectLiteral } from "typeorm";
+import { Escalada } from '../../Domain/entities/Escalada';
+import EscaladaValidation from '../validations/EscaladaValidation';
+import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
+import { UsuarioService } from './UsuarioService';
+import { ViaService } from './ViaService';
+import { ObjectLiteral } from 'typeorm';
 
 export class EscaladaService {
 	private repository: EscaladaRepository;

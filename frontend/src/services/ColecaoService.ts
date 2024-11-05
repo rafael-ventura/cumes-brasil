@@ -6,6 +6,28 @@ import { adjustImageUrls, formatVia, handleApiError, romanToInt } from 'src/util
 import { UnwrapRef } from 'vue';
 
 class ColecaoService {
+  async getFirstByUsuarioId (): Promise<Colecao | null> {
+    const userId = localStorage.getItem('userId');
+    try {
+      const colecoes = await this.getColecoes(`/colecoes/usuario/${userId}`);
+      if (colecoes.length > 0) {
+        const primeiraColecao = colecoes[0];
+        if (primeiraColecao.nome.includes('Favoritas')) {
+          return primeiraColecao;
+        }
+        // Fallback: procura uma coleção com nome "Vias Favoritas"
+        const colecaoFavoritas = colecoes.find(colecao => colecao.nome === 'Vias Favoritas');
+        return colecaoFavoritas || null;
+      }
+
+      console.warn('Nenhuma coleção encontrada para este usuário.');
+      return null;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar coleção de favoritas');
+      return null;
+    }
+  }
+
   async getByUsuarioId (): Promise<Colecao[]> {
     const userId = localStorage.getItem('userId');
     return this.getColecoes(`/colecoes/usuario/${userId}`);
@@ -101,6 +123,19 @@ class ColecaoService {
       });
     } catch (error: any) {
       handleApiError(error, 'Erro ao adicionar via à coleção');
+    }
+  }
+
+  async removeViaFromColecao (colecaoId: number, viaId: number): Promise<void> {
+    try {
+      await api.post('/colecoes/removerVia', null, {
+        params: {
+          colecao_id: colecaoId,
+          via_id: viaId
+        }
+      });
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao remover via da coleção');
     }
   }
 

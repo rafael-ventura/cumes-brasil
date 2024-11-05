@@ -62,8 +62,6 @@ class ViaService {
 
   private async adjustAndFormatVia (via: Via): Promise<Via> {
     adjustImageUrls(via);
-
-    // Ajustar imagens dos croquis
     const croquiService = new CroquiService();
     via.croquis = await croquiService.getCroquiByViaId(via.id);
     via.croquis.forEach(croqui => adjustImageUrls(croqui));

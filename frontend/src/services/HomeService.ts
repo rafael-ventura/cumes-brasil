@@ -8,18 +8,18 @@ class HomeService {
   }
 
   async getViasDeTerceiroGrau (): Promise<Via[]> {
-    const { vias } = await ViaService.getAllVias();
+    const { vias } = await ViaService.getAllVias(); // TODO: trocar por select count no banco
     return vias.filter((via: Via) => this.isTerceiroGrau(via.grau));
   }
 
   async getViasComExposicaoMenorOuIgualE2 (): Promise<Via[]> {
-    const { vias } = await ViaService.getAllVias();
+    const { vias } = await ViaService.getAllVias(); // TODO: trocar por select count no banco
     return vias.filter((via: Via) => this.isExposicaoMenorOuIgual(via.exposicao, 'e2'));
   }
 
   // Método privado reutilizável para buscar vias por bairro
   private async getViasByBairro (bairro: string): Promise<Via[]> {
-    const { vias } = await ViaService.getAllVias();
+    const { vias } = await ViaService.getAllVias(); // TODO: trocar por select count no banco
     return vias.filter((via: Via) => via.montanha?.bairro?.toLowerCase() === bairro);
   }
 

@@ -35,6 +35,12 @@
       "descricao": "Croquis da Anibal - Foto das Vias",
       "fonte": 2,
       "tipo_entidade": "croqui"
+    },
+    {
+      "url": "/assets/croquis/croqui_29_dezembro.png",
+      "descricao": "Croqui 29 de Dezembro",
+      "fonte": 1,
+      "tipo_entidade": "croqui"
     }
   ]
 }

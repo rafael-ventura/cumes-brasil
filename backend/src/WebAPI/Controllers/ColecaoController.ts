@@ -92,14 +92,7 @@ export class ColecaoController {
      */
     createColecao = async (req: Request, res: Response) => {
         try {
-            const {
-                nome,
-                descricao,
-                usuario_id,
-                imagem_id
-            } = req.body;
-            //TODO: Rever essa logica de transformação da requisição em objeto dentro do controller
-            const colecao = new Colecao(nome, descricao, usuario_id, imagem_id);
+            const colecao: Colecao = req.body;
             await this.service.createColecao(colecao);
             res.status(201).json({ message: 'Colecao criada com sucesso.' });
         } catch (error) {

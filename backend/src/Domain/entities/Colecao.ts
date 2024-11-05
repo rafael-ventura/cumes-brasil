@@ -1,11 +1,11 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Via } from './Via';
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Imagem } from './Imagem';
 import { Usuario } from './Usuario';
+import { ViaColecao } from './ViaColecao';
 
 @Entity()
 export class Colecao extends BaseEntity {
-  constructor (nome: string, descricao: string, usuario: number, imagem: number) {
+  constructor (nome: string, descricao: string, usuario: number, imagem?: number) {
     super();
     this.nome = nome;
     this.descricao = descricao;
@@ -26,19 +26,10 @@ export class Colecao extends BaseEntity {
   usuario: number;
 
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  imagem: number;
+  @Column({ nullable: true })
+  imagem?: number;
 
-  @ManyToMany(() => Via, via => via.colecoes)
-  @JoinTable({
-    name: "via_colecao",
-    joinColumn: {
-      name: "colecao_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    }
-  })
-  vias: Via[];
+  @OneToMany(() => ViaColecao, viaColecao => viaColecao.colecao)
+  viaColecoes: ViaColecao[];
+
 }

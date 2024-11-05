@@ -1,91 +1,89 @@
 <template>
-  <q-dialog :model-value="props.isOpen" >
-    <q-card class="scroll card-style">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6" style="margin-bottom: 5vh;">Criar Escalada</div>
+  <q-dialog :model-value="props.isOpen">
+    <q-card class="card-style">
+      <q-card-section class="header-section">
+        <div class="title">Criar Escalada</div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
 
-      <q-form
-        @submit="onSubmit"
-        @reset="onReset"
-        class="q-gutter-md form-all-container"
-      >
+      <q-form @submit="onSubmit" @reset="onReset" class="form-container">
         <q-input
+          label-color="primary"
+          color="primary"
           outlined
           label="Data da Escalada"
           v-model="data"
           class="input"
-          hint="dd-mm-yyyy"
           mask="##-##-####"
           lazy-rules
           :rules="[ val => !!val || 'Campo obrigatório' ]"
         >
           <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer">
+            <q-icon name="event" class="cursor-pointer icon-primary">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
-                <q-date v-model="data" mask="DD-MM-YYYY" bordered landscape/>
+                <q-date event-color="primary" text-color="black" color="primary" v-model="data" mask="DD-MM-YYYY" bordered />
               </q-popup-proxy>
             </q-icon>
           </template>
         </q-input>
 
         <q-input
+          label-color="primary"
           filled
           v-model="observacao"
           label="Alguma observação?"
           type="textarea"
-          hint="Observação"
           class="input"
-          lazy-rules
         />
+
+        <div class="spacer"></div> <!-- Espaço extra entre observação e quantidade de participantes -->
 
         <q-input
           filled
           type="number"
           v-model.number="qtdParticipantes"
           label="Quantos participantes na escalada?"
-          hint="participantes"
-          lazy-rules
+          label-color="primary"
+          color="primary"
           min="1"
-          :rules="[
-            val => val > 0 || 'Participante não pode ser menor que zero'
-          ]"
+          :rules="[ val => val > 0 || 'Participante não pode ser menor que zero' ]"
           class="input"
           @input="onQtdParticipantesChange"
         />
 
-        <div v-for="(participante, index) in participantes" :key="index" class="form-all-container">
-          <h5 style="margin-left: 3vh"> Participante {{ index + 1 }}</h5>
+        <div v-for="(participante, index) in participantes" :key="index" class="participante-section">
+          <h5 class="participante-title">Participante {{ index + 1 }}</h5>
           <q-select
             filled
             v-model="participante.tipo"
-            :label="`Tipo do participante`"
+            label="Tipo do participante"
+            label-color="primary"
+            color="primary"
             :options="participanteTipoOptions"
             class="input"
-            behavior="menu"
-            :rules="[val => !!val || 'Por favor, selecione uma opção']"
+            :rules="[ val => !!val || 'Por favor, selecione uma opção' ]"
           />
           <q-input
             filled
             v-model="participante.nome"
-            :label="`Nome do participante`"
-            lazy-rules
-            :rules="[val => val !== '' || 'Nome não pode ser vazio']"
+            label="Nome do participante"
+            label-color="primary"
             class="input"
+            :rules="[ val => val !== '' || 'Nome não pode ser vazio' ]"
           />
           <q-input
             filled
             v-model="participante.email"
-            :label="`Email do participante`"
+            label="Email do participante"
+            label-color="primary"
             class="input"
           />
         </div>
 
-        <div class="form-btn-container">
-          <q-btn label="Criar" type="submit" color="primary" class="btn"/>
-          <q-btn label="Limpar" type="reset" color="primary" flat class="q-ml-sm btn"/>
+        <div class="button-container">
+          <q-btn label="Criar" type="submit" color="primary" class="btn" />
+          <q-btn label="Limpar" type="reset" color="primary" flat class="btn flat" />
         </div>
       </q-form>
     </q-card>
@@ -109,13 +107,11 @@ const data = ref('');
 const participantes = ref<Participante[]>([{ nome: '', tipo: '', email: '' }]);
 const props = defineProps<{ isOpen: boolean }>();
 
-const emit = defineEmits<{(e: 'closeModal'): void;}>();
+const emit = defineEmits<{(e: 'closeModal'): void; }>();
 
-const participanteTipoOptions = [
-  'GUIA', 'PARTICIPANTE', 'MISTO'
-];
+const participanteTipoOptions = ['GUIA', 'PARTICIPANTE', 'MISTO'];
 
-const onQtdParticipantesChange = (): void => {
+const onQtdParticipantesChange = () => {
   const currentLength = participantes.value.length;
   const newLength = Number(qtdParticipantes.value);
 
@@ -129,7 +125,7 @@ const onQtdParticipantesChange = (): void => {
 };
 watch(qtdParticipantes, onQtdParticipantesChange);
 
-const onSubmit = async (): Promise<void> => {
+const onSubmit = async () => {
   const viaId = Number(route.params.id);
 
   const escalada: Escalada = {
@@ -170,45 +166,99 @@ const convertStringToDate = (date: string): Date => {
   return new Date(formattedDate);
 };
 
-const onReset = (): void => {
+const onReset = () => {
   observacao.value = '';
   data.value = '';
   qtdParticipantes.value = 1;
   participantes.value = [{ nome: '', tipo: '', email: '' }];
 };
-
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
 .card-style {
-  width: 80%;
-  max-height: 80vh;
-  max-width: 80vw;
+  background-color: $background;
+  color: $primary;
+  width: 100%;
+  max-height: 85vh;
+  max-width: 600px;
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.form-all-container{
+.header-section {
   display: flex;
-  width: 90%;
+  align-items: center;
+  padding-bottom: 10px;
+  color: $primary;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: $primary;
+}
+
+.form-container {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .input {
-  width: 80%;
-  margin: 2vh auto;
+  width: 90%;
+  color: $primary;
+
+  .q-field__label,
+  .q-field__native,
+  .q-item__label,
+  .q-select__dropdown-icon,
+  .q-date__calendar-day {
+    color: $primary;
+  }
 }
 
-.form-btn-container{
+.spacer {
+  height: 20px; /* Espaçamento entre observação e quantidade de participantes */
+}
+
+.participante-section {
   width: 90%;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  margin-top: 10px;
+}
+
+.participante-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: $primary;
+  text-align: left;
+  margin: 0 0 8px 10px;
+}
+
+.button-container {
   display: flex;
-  flex-direction: row;
+  gap: 10px;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .btn {
   width: 40%;
-  margin-bottom: 2vh;
+  border-radius: 10px;
+  font-weight: bold;
 }
 
+.flat {
+  color: $primary;
+}
+
+.icon-primary {
+  color: $primary;
+}
 </style>

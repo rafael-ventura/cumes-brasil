@@ -1,11 +1,14 @@
-export interface SearchRequest {
-  searchQuery?: string;
+export interface BuscaRequest {
+  unifiedSearch?: string; // searchQuery
   selectedMountain?: number | null;
+  bairro?: string | null;
   selectedDifficulty?: string | null;
   selectedExtension?: string | null;
   selectedExtensionCategory?: number[] | null;
   selectedCrux?: string | null;
-  page?: number;
+  selectedExposicao?: string | null;
+  page: number;
   itemsPerPage?: number;
   entityType?: string;
+  colecaoId?: number;
 }

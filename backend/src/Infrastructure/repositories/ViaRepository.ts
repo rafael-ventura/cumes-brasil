@@ -2,6 +2,7 @@ import { Via } from '../../Domain/entities/Via';
 import { AppDataSource } from '../config/db';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import { ViaColecao } from '../../Domain/entities/ViaColecao';
 
 export class ViaRepository implements ISearchRepository<Via>{
 
@@ -49,40 +50,43 @@ export class ViaRepository implements ISearchRepository<Via>{
   }
 
   async getViasByColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    const [vias, total] = await this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoin('via.colecoes', 'colecoes')
-        .where('colecoes.id = :colecaoId', { colecaoId })
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
+    const subQuery = AppDataSource.getRepository(ViaColecao)
+      .createQueryBuilder('via_colecao')
+      .select('via_colecao.viaId')
+      .where('via_colecao.colecaoId = :colecaoId', { colecaoId });
 
-    return {
-      vias,
-      total
-    };
-  }
-
-  async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     const [vias, total] = await this.repository.createQueryBuilder('via')
+      .where(`via.id IN (${subQuery.getQuery()})`)
+      .setParameters(subQuery.getParameters())
       .leftJoinAndSelect('via.montanha', 'montanha')
       .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
       .leftJoinAndSelect('via.fonte', 'fonte')
       .leftJoinAndSelect('via.face', 'face')
       .leftJoinAndSelect('via.imagem', 'imagem')
-      .where(qb => {
-        const subQuery = qb.subQuery()
-          .select('via_colecao.via_id')
-          .from('via_colecao', 'via_colecao')
-          .where('via_colecao.colecao_id = :colecaoId')
-          .getQuery();
-        return `via.id NOT IN ${subQuery}`;
-      })
-      .setParameter('colecaoId', colecaoId)
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      vias: vias as Via[],
+      total
+    };
+  }
+
+  async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
+    const subQuery = this.repository
+      .createQueryBuilder('via_colecao')
+      .select('via_colecao.viaId')
+      .where('via_colecao.colecaoId = :colecaoId', { colecaoId });
+
+    const [vias, total] = await this.repository.createQueryBuilder('via')
+      .where(`via.id NOT IN (${subQuery.getQuery()})`)
+      .setParameters(subQuery.getParameters())
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+      .leftJoinAndSelect('via.fonte', 'fonte')
+      .leftJoinAndSelect('via.face', 'face')
+      .leftJoinAndSelect('via.imagem', 'imagem')
       .skip((page - 1) * limit)
       .take(limit)
       .getManyAndCount();
@@ -108,29 +112,60 @@ export class ViaRepository implements ISearchRepository<Via>{
     };
   }
 
-  async search(query: any): Promise<ISearchResult<Via>> {
-    const { searchQuery, selectedMountain, selectedDifficulty, selectedCrux, selectedExtensionCategory, page = 1, itemsPerPage = 10 } = query;
+  async search(query: any): Promise<ISearchResult<any>> {
+    const {
+      unifiedSearch,
+      selectedMountain,
+      selectedDifficulty,
+      selectedCrux,
+      selectedExtensionCategory,
+      selectedExposicao,
+      colecaoId,
+      bairro,
+      page = 1,
+      itemsPerPage = 10
+    } = query;
 
     let qb = this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.imagem', 'imagem');
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.imagem', 'imagem');
 
-    if (searchQuery) {
-      qb = qb.andWhere('via.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+    // Filtro por colecaoId (aplicado inicialmente)
+    if (colecaoId) {
+      qb = qb
+        .innerJoin('via.viaColecoes', 'viaColecaoFilter', 'viaColecaoFilter.colecaoId = :colecaoId', { colecaoId })
+        .addSelect('viaColecaoFilter.data_adicao', 'data_adicao');
     }
 
+    // Filtro de busca unificada
+    if (unifiedSearch) {
+      qb = qb.andWhere(
+        '(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)',
+        { unifiedSearch: `%${unifiedSearch}%` }
+      );
+    }
+
+    // Filtro por bairro da montanha
+    if (bairro) {
+      qb = qb.andWhere('montanha.bairro = :bairro', { bairro });
+    }
+
+    // Filtro por nome da montanha
     if (selectedMountain) {
-      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain }); // Filtra pelo nome da montanha
+      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain });
     }
 
+    // Filtro por dificuldade da via
     if (selectedDifficulty) {
       qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty });
     }
 
+    // Filtro por crux da via
     if (selectedCrux) {
-        qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
+      qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
     }
 
+    // Filtro por categoria de extensão
     if (selectedExtensionCategory) {
       qb = qb.andWhere('via.extensao >= :minExtension AND via.extensao <= :maxExtension', {
         minExtension: selectedExtensionCategory[0],
@@ -138,19 +173,37 @@ export class ViaRepository implements ISearchRepository<Via>{
       });
     }
 
+    // Filtro por exposição
+    if (selectedExposicao) {
+      if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
+        qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
+      } else {
+        qb = qb.andWhere('via.exposicao LIKE :selectedExposicao', { selectedExposicao: `${selectedExposicao[0]}%` });
+      }
+    }
+
     // Contar o total de itens
     const totalItems = await qb.getCount();
 
     // Buscar itens paginados
     const items = await qb
-        .skip((page - 1) * itemsPerPage)
-        .take(itemsPerPage)
-        .getMany();
+      .skip((page - 1) * itemsPerPage)
+      .take(itemsPerPage)
+      .getRawAndEntities(); // Busca raw data e entidades
+
+    // Mapear os itens para incluir a data_adicao no resultado final
+    const mappedItems = items.entities.map((item, index) => {
+      const rawData = items.raw[index];
+      return {
+        ...item,
+        data_adicao: rawData.data_adicao || null  // Adicionar a data_adicao ao retorno
+      };
+    });
 
     // Calcular total de páginas
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return {
-      items,
+      items: mappedItems,
       totalPages,
       totalItems
     };

@@ -3,6 +3,8 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import { Via } from '../../Domain/entities/Via';
+import { ViaColecao } from '../../Domain/entities/ViaColecao';
 
 @Service()
 export class ColecaoRepository implements ISearchRepository<Colecao> {
@@ -10,32 +12,33 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
 
     async getById(id: number): Promise<Colecao | null> {
         return this.repository.createQueryBuilder("colecao")
-            .leftJoin("colecao.usuario", "usuario")
-            .addSelect("usuario.id", "usuario_id")
-            .leftJoinAndSelect("colecao.imagem", "imagem")
-            .leftJoinAndSelect("colecao.vias", "vias")
-            .where("colecao.id = :id", {id})
-            .getOne();
+          .leftJoinAndSelect('colecao.usuario', 'usuario')
+          .leftJoinAndSelect('colecao.imagem', 'imagem')
+          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
+          .leftJoinAndSelect('viaColecao.via', 'vias')
+          .where('colecao.id = :id', { id })
+          .getOne();
     }
 
     async getAll(): Promise<Colecao[]> {
         return this.repository.createQueryBuilder("colecao")
-            .leftJoin("colecao.usuario", "usuario")
-            .addSelect("usuario.id", "usuario_id")
-            .leftJoinAndSelect("colecao.imagem", "imagem")
-            .leftJoinAndSelect("colecao.vias", "vias")
-            .getMany();
+          .leftJoinAndSelect('colecao.usuario', 'usuario')
+          .leftJoinAndSelect('colecao.imagem', 'imagem')
+          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
+          .leftJoinAndSelect('viaColecao.via', 'vias')
+          .getMany();
     }
 
     async getByUsuarioId(usuario_id: number): Promise<Colecao[]> {
         return this.repository.createQueryBuilder("colecao")
-            .leftJoin("colecao.usuario", "usuario")
-            .addSelect("usuario.id", "usuario_id")
-            .leftJoinAndSelect("colecao.imagem", "imagem")
-            .leftJoinAndSelect("colecao.vias", "vias")
-            .where("usuario.id = :usuario_id", {usuario_id})
-            .getMany();
+          .leftJoinAndSelect('colecao.usuario', 'usuario')
+          .leftJoinAndSelect('colecao.imagem', 'imagem')
+          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
+          .leftJoinAndSelect('viaColecao.via', 'vias')
+          .where('usuario.id = :usuario_id', { usuario_id })
+          .getMany();
     }
+
 
     async create(colecaoData: Partial<Colecao>): Promise<void> {
         await this.repository.save(colecaoData);
@@ -45,74 +48,112 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         await this.repository.update(id, colecaoData);
     }
 
-    async delete(id: number): Promise<void> {
+    async addViaToColecao(via_id: number, colecao_id: number): Promise<void> {
+        // Verificar se a coleção existe
+        const colecao = await this.repository.findOne({ where: { id: colecao_id } });
+        if (!colecao) {
+            throw new Error('Coleção não encontrada');
+        }
+
+        // Verificar se a via existe
+        const via = await AppDataSource.getRepository(Via).findOne({ where: { id: via_id } });
+        if (!via) {
+            throw new Error('Via não encontrada');
+        }
+
+        // Criar uma nova instância de ViaColecao
+        const viaColecao = new ViaColecao();
+        viaColecao.colecao = colecao;
+        viaColecao.via = via;
+
+        // Salvar a relação usando o repositório de ViaColecao
+        const viaColecaoRepository = AppDataSource.getRepository(ViaColecao);
+        await viaColecaoRepository.save(viaColecao);
+    }
+
+    async delete (id: number): Promise<void> {
         await this.repository.delete(id);
     }
 
-    async addViaToColecao (via_id: number, colecao_id: number): Promise<void> {
-        return this.repository.createQueryBuilder()
-            .relation(Colecao, 'vias')
-            .of(colecao_id)
-            .add(via_id);
+    async removeViaFromColecao(via_id: number, colecao_id: number): Promise<void> {
+        const viaColecaoRepository = AppDataSource.getRepository(ViaColecao);
+        await viaColecaoRepository.delete({
+            via: { id: via_id },
+            colecao: { id: colecao_id }
+        });
     }
 
-    async removeViaFromColecao(via_id: number, colecao_id: number): Promise<void> {
-        return this.repository.createQueryBuilder()
-            .relation(Colecao, 'vias')
-            .of(colecao_id)
-            .remove(via_id);
-    }
 
     async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
         colecoes: Colecao[],
         total: number
     }> {
+        const subQuery = AppDataSource.getRepository(ViaColecao)
+          .createQueryBuilder('via_colecao')
+          .select('via_colecao.colecaoId')
+          .where('via_colecao.viaId = :viaId', { viaId });
+
         const [colecoes, total] = await this.repository.createQueryBuilder('colecao')
-          .leftJoinAndSelect('colecao.vias', 'vias')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .where(qb => {
-              const subQuery = qb.subQuery()
-                .select('via_colecao.colecao_id')
-                .from('via_colecao', 'via_colecao')
-                .where('via_colecao.via_id = :viaId')
-                .getQuery();
-              return `colecao.id NOT IN ${subQuery}`;
-          })
-          .setParameter('viaId', viaId)
+          .where(`colecao.id NOT IN (${subQuery.getQuery()})`)
+          .setParameters(subQuery.getParameters())
           .skip((page - 1) * limit)
           .take(limit)
           .getManyAndCount();
 
         return {
-            colecoes,
+            colecoes: colecoes as Colecao[], // Garantir que o TypeScript entenda o tipo
             total
         };
     }
 
     async search(query: any): Promise<ISearchResult<Colecao>> {
-        const { nomeColecao, nomeVia, nomeMontanha } = query;
+        const { searchQuery, colecaoId, nomeVia, nomeMontanha, page = 1, itemsPerPage = 10 } = query;
 
+        // Ajuste das junções
         let qb = this.repository.createQueryBuilder('colecao')
-            .leftJoinAndSelect('colecao.vias', 'via')
-            .leftJoinAndSelect('via.montanha', 'montanha');
+          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
+          .leftJoinAndSelect('viaColecao.via', 'via')
+          .leftJoinAndSelect('via.montanha', 'montanha')
+          .leftJoinAndSelect('colecao.imagem', 'imagem');
 
-        if (nomeColecao) {
-            qb = qb.andWhere('colecao.nome LIKE :nomeColecao', { nomeColecao: `%${nomeColecao}%` });
+        // Filtro por ID da coleção
+        if (colecaoId) {
+            qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
         }
 
+        // Filtro por nome da coleção
+        if (searchQuery) {
+            qb = qb.andWhere('colecao.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+        }
+
+        // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
         if (nomeVia) {
             qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
+        // Filtro por nome da montanha caso você queira buscar coleções que tenham vias em uma determinada montanha)
         if (nomeMontanha) {
             qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
 
+        // Contar o total de itens (coleções) correspondentes
+        const totalItems = await qb.getCount();
+
+        // Buscar coleções paginadas
+        const items = await qb
+          .skip((page - 1) * itemsPerPage)
+          .take(itemsPerPage)
+          .getMany();
+
+        // Calcular total de páginas
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
         return {
-            items: await qb.getMany(),
-            totalItems: await qb.getCount(),
-            totalPages: 1
-        }
+            items: items as Colecao[], // Garantir que o TypeScript entenda o tipo
+            totalPages,
+            totalItems
+        };
     }
+
 }

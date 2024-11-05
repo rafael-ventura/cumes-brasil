@@ -7,12 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    name: Build and Deploy Backend and Frontend
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write  # Necessário para OIDC
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,29 +22,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'npm'
 
-      # Clean Frontend dist folder
-      - name: Clean Frontend dist folder
-        working-directory: ./frontend
-        run: rm -rf dist
-
-      # Build Frontend
+      # Build Frontend and upload to S3
       - name: Install Frontend dependencies
         working-directory: ./frontend
         run: npm install
 
-      - name: Build Frontend project
+      - name: Build Frontend
         working-directory: ./frontend
         env:
-          VITE_APP_API_URL: "http://44.222.91.8:8080/api/"
-          VITE_APP_SERVER_IP: "http://44.222.91.8:8080"
+          VITE_APP_API_URL: "https://api.cumesbrasil.com.br/"
+          VITE_APP_SERVER_IP: "https://cumesbrasil.com.br/assets"
+          VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
-      # Clean Backend dist folder
-      - name: Clean Backend dist folder
-        working-directory: ./backend
-        run: rm -rf dist
+      - name: Upload Frontend to S3
+        run: aws s3 sync frontend/dist s3://cumes-brasil-front/frontend --acl public-read
+
+      # Upload Backend Assets to S3
+      - name: Upload Assets to S3
+        run: aws s3 sync backend/assets s3://cumes-brasil-front/assets --acl public-read
+
       # Build Backend
       - name: Install Backend dependencies
         working-directory: ./backend
@@ -59,33 +52,23 @@ jobs:
         working-directory: ./backend
         run: npm run build
 
-      # Empacotar apenas os arquivos necessários
-      - name: Zip backend and frontend built files
+      # Zip Backend for Deployment
+      - name: Package Backend for Deployment
         run: |
           zip -r application.zip \
             backend/ \
             backend/package*.json \
             backend/dist/ \
-            backend/Dockerfile \
-            backend/assets/ \
-            frontend/ \
             docker-compose.yml \
-            appspec.yml \
-            database/json/*.json \
-            scripts/ \
-            -x '*.git*' \
-            -x '*node_modules/*' \
-            -x '*.github/*'
+            appspec.yml
 
-      # Upload para S3
-      - name: Upload to S3
-        run: |
-          aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
+      # Upload to S3 for CodeDeploy
+      - name: Upload to S3 for CodeDeploy
+        run: aws s3 cp application.zip s3://cumes-brasil-front/backend/application.zip
 
-      # Criar Deployment no CodeDeploy
-      - name: Create deployment
+      - name: Create deployment in CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name cumes-backend-app \
             --deployment-group-name cumes-backend-deployment-group \
-            --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip
+            --s3-location bucket=cumes-brasil-front,bundleType=zip,key=backend/application.zip
