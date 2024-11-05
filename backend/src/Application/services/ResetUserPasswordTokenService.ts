@@ -15,7 +15,7 @@ export class ResetUserPasswordTokenService {
         },
             process.env.SECRET_KEY ? process.env.SECRET_KEY : "",
             {
-                expiresIn: 3000
+                expiresIn: "12h"
             }
         );
         const token = Base64.encodeURI(jwtToken);
