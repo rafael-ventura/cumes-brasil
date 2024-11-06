@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
+import { defineProps } from 'vue';
 
 const props = defineProps({
   grauText: {
@@ -19,7 +19,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['showInfo']);
+/* const emit = defineEmits(['showInfo']); */
 </script>
 
 <style scoped lang="scss">

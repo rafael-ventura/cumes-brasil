@@ -30,10 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
-import { Colecao } from 'src/models/Colecao';
-import { Imagem } from 'src/models/Imagem';
-import { Usuario } from 'src/models/Usuario';
+import { defineEmits, defineProps, Ref, ref, watch } from 'vue';
 
 const props = defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(['update:isOpen', 'collection-added']);
@@ -49,19 +46,52 @@ watch(
 );
 
 // Defina uma nova coleção com as estruturas `Usuario` e `Imagem` adequadas
-const novaColecao = ref<Colecao>({
+let novaColecao: Ref<{
+  imagem: { tipo_entidade: string; fonte: { id: number; autor: string; referencia: string }; id: number; url: string };
+  nome: string;
+  usuario: {
+    password_hash: string;
+    foto_perfil: {
+      tipo_entidade: string;
+      fonte: { id: number; autor: string; referencia: string };
+      id: number;
+      url: string
+    };
+    nome: string;
+    id: number;
+    email: string
+  };
+  descricao: string
+}> = ref({
   nome: '',
   descricao: '',
   usuario: {
     id: Number(localStorage.getItem('userId')) || 0,
     nome: 'Nome do Usuário',
-    email: 'usuario@example.com',
+    email: '',
     password_hash: '',
-    foto_perfil: { id: 1, url: 'https://via.placeholder.com/300x150' } // Ajuste conforme necessário
+    foto_perfil: {
+      id: 1,
+      url: 'https://via.placeholder.com/300x150',
+      fonte: {
+        autor: 'Autor Desconhecido',
+        id: 0,
+        referencia: 'N/A'
+      },
+      tipo_entidade: 'usuario'
+    } as any
   },
-  imagem: { id: 1, url: 'https://via.placeholder.com/300x150' } // Ajuste conforme necessário
+  imagem: {
+    id: 1,
+    url: 'https://via.placeholder.com/300x150',
+    fonte: {
+      autor: 'Autor Desconhecido',
+      id: 0,
+      referencia: 'N/A'
+    },
+    tipo_entidade: 'colecao'
+  }
 });
-
 // Função para fechar o modal e emitir o evento para o componente pai
 const closeModal = () => {
   emit('update:isOpen', false);
@@ -74,7 +104,7 @@ const addColecao = async () => {
     emit('collection-added', novaColecao.value);
     closeModal();
     // Limpa o estado da nova coleção
-    novaColecao.value = {
+    novaColecao = ref({
       nome: '',
       descricao: '',
       usuario: {
@@ -82,12 +112,31 @@ const addColecao = async () => {
         nome: 'Nome do Usuário',
         email: 'usuario@example.com',
         password_hash: '',
-        foto_perfil: { id: 1, url: 'https://via.placeholder.com/300x150' }
+        foto_perfil: {
+          id: 1,
+          url: 'https://via.placeholder.com/300x150',
+          fonte: {
+            autor: 'Autor Desconhecido',
+            id: 0,
+            referencia: 'N/A'
+          },
+          tipo_entidade: 'usuario'
+        }
       },
-      imagem: { id: 1, url: 'https://via.placeholder.com/300x150' }
-    };
+      imagem: {
+        id: 1,
+        url: 'https://via.placeholder.com/300x150',
+        fonte: {
+          autor: 'Autor Desconhecido',
+          id: 0,
+          referencia: 'N/A'
+        },
+        tipo_entidade: 'colecao'
+      }
+    });
   }
 };
+
 </script>
 
 <style scoped lang="scss">
