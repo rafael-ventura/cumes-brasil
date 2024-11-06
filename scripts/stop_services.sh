@@ -1,6 +1,9 @@
 #!/bin/bash
 echo "Parando e limpando serviços antigos..."
 
+# Remover o diretório node_modules para evitar conflitos
+rm -rf /home/ec2-user/cumes-brasil/backend/node_modules
+
 # Parar e remover todos os contêineres em execução
 docker-compose down
 
