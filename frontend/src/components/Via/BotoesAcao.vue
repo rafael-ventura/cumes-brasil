@@ -36,6 +36,7 @@ import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSugestao from 'components/ItemSugestao.vue';
 import { Colecao } from 'src/models/Colecao';
+import { createNotifyConfig } from 'src/utils/utils';
 
 const props = defineProps({
   via: Object,
@@ -79,7 +80,7 @@ const addToFavorites = async () => {
       updateFavoriteStatus(true, 'Via adicionada a favoritos!');
     } catch (error) {
       console.error('Erro ao adicionar aos favoritos:', error);
-      showNotification('Erro ao adicionar aos favoritos', 'negative');
+      Notify.create(createNotifyConfig('negative', 'Erro ao dicionar aos favoritos', 'top-right'));
     }
   }
 };
@@ -92,7 +93,7 @@ const removeFromFavorites = async () => {
       updateFavoriteStatus(false, 'Via removida dos favoritos!');
     } catch (error) {
       console.error('Erro ao remover dos favoritos:', error);
-      showNotification('Erro ao remover dos favoritos', 'negative');
+      Notify.create(createNotifyConfig('negative', 'Erro ao remover dos favoritos', 'top-right'));
     }
   }
 };
@@ -101,18 +102,10 @@ const updateFavoriteStatus = (status: boolean, message: string) => {
   isFavorited.value = status;
   emit('update:isFavorited', status);
   if (status) {
-    showNotification(message, 'positive');
+    Notify.create(createNotifyConfig('positive', message, 'top-right'));
   } else {
-    showNotification(message, 'negative');
+    Notify.create(createNotifyConfig('negative', message, 'top-right'));
   }
-};
-
-const showNotification = (message: string, type: string) => {
-  Notify.create({
-    type,
-    message,
-    position: 'top-right'
-  });
 };
 
 const toggleEscaladaModal = () => {
@@ -135,10 +128,10 @@ const addToCollection = async (colecao: Colecao) => {
   if (props.via) {
     try {
       await ColecaoService.addViaToColecao(colecao.id, props.via.id);
-      showNotification('Via adicionada à coleção com sucesso!', 'positive');
+      Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
     } catch (error) {
       console.error('Erro ao adicionar à coleção:', error);
-      showNotification('Erro ao adicionar à coleção', 'negative');
+      Notify.create(createNotifyConfig('negative', 'Erro ao adicionar à coleção', 'top-right'));
     }
   }
 };

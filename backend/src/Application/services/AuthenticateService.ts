@@ -6,7 +6,7 @@ import { ObjectLiteral } from "typeorm";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import { errorsMessage } from "../errors/constants";
-import AuthenticateValidation from "../validations/AuthenticateValidation";
+import UserValidation from "../validations/UserValidation";
 
 class AuthService {
     private userRepository: UsuarioRepository;
@@ -19,7 +19,7 @@ class AuthService {
     }
 
     async login(email: string, password: string): Promise<any> {
-        AuthenticateValidation.valida(email, password);
+        UserValidation.authenticateValidation(email, password);
 
         const user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
         if (!user) throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);

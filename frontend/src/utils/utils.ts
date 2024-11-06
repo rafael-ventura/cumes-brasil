@@ -117,7 +117,7 @@ export function adjustImageUrls (entity: { imagem?: Imagem }) {
 
 // --- Tratamento de Erros de API ---
 export function handleApiError (error: any, defaultMessage: string): never {
-  const message = error?.response?.data?.error || defaultMessage;
+  const message = error?.response?.data?.message || defaultMessage;
   throw new Error(message);
 }
 
@@ -133,4 +133,13 @@ export const formatDateToDDMMYYYY = (dateString: string): string => {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
+};
+
+export const createNotifyConfig = (type: string, message: string, position = 'top', timeout = 3000): any => {
+  return {
+    type,
+    message,
+    position,
+    timeout
+  };
 };

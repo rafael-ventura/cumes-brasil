@@ -38,11 +38,22 @@ class AuthenticateService {
     }
   }
 
-  async resetPassword (email: string) {
+  async generateUserResetPassword (email: string) {
     try {
-      return await api.post('/auth/reset-password', { email });
-    } catch (error) {
-      handleApiError(error, 'Erro ao resetar senha');
+      return await api.post('/usuarios/generate-reset-password', { email });
+    } catch (error: any) {
+      handleApiError(error, error.response?.data?.message);
+    }
+  }
+
+  async resetPassword (password: string, passwordRepeated: string, token: string) {
+    try {
+      return await api.put(`/usuarios/reset-password/${token}`, {
+        password,
+        passwordRepeated
+      });
+    } catch (error: any) {
+      handleApiError(error, error.response?.data?.message);
     }
   }
 
