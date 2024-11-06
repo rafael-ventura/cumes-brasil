@@ -32,7 +32,7 @@ jobs:
         working-directory: ./frontend
         env:
           VITE_APP_API_URL: "https://api.cumesbrasil.com.br/"
-          VITE_APP_SERVER_IP: "https://cumesbrasil.com.br/assets"
+          VITE_APP_SERVER_IP: "https://d2s0ypgmbfwmhw.cloudfront.net/assets"
           VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
@@ -60,15 +60,16 @@ jobs:
             backend/package*.json \
             backend/dist/ \
             docker-compose.yml \
-            appspec.yml
+            appspec.yml \
+            scripts/
 
       # Upload to S3 for CodeDeploy
       - name: Upload to S3 for CodeDeploy
-        run: aws s3 cp application.zip s3://cumes-brasil-front/backend/application.zip
+        run: aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
 
       - name: Create deployment in CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name cumes-backend-app \
             --deployment-group-name cumes-backend-deployment-group \
-            --s3-location bucket=cumes-brasil-front,bundleType=zip,key=backend/application.zip
+            --s3-location bucket=cumes-backend-deployment,bundleType=zip,key=application.zip
