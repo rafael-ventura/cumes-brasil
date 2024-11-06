@@ -124,11 +124,11 @@ function goToFilteredSearch (filterType: string) {
 }
 
 .text-h2 {
-  color: $tertiary;
+  color: $primary;
 }
 
 .text-h5 {
-  color: $tertiary;
+  color:  $primary;
 }
 
 .text-h4 {
