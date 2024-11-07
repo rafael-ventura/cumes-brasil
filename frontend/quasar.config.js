@@ -44,22 +44,12 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
-      base: '/frontend/pwa/',
-      distDir: 'dist/pwa',
-      vueRouterMode: 'history',
-      extendViteConf (viteConf) {
-        viteConf.build.rollupOptions = {
-          output: {
-            assetFileNames: '[name].[ext]', // Colocar todos os arquivos no mesmo nível
-            chunkFileNames: '[name].js',
-            entryFileNames: '[name].js'
-          }
-        };
-      },
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
+      distDir: 'dist/pwa',
+      vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -166,7 +156,7 @@ module.exports = configure(function (/* ctx */) {
         description: 'Aplicativo de acervo de Vias de Escalada do Brasil',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
+        background_color: '#2c2c2c',
         theme_color: '#027be3',
         icons: [
           {
