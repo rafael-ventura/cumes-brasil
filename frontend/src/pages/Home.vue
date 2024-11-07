@@ -4,7 +4,6 @@
       <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho"/>
       <!--      <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
             <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>-->
-
       <div class="card-list">
         <div class="card">
           <q-card class="card" @click="goToFilteredSearch('copacabana')">
