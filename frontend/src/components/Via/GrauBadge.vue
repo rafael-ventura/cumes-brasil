@@ -19,7 +19,6 @@ const props = defineProps({
   }
 });
 
-/* const emit = defineEmits(['showInfo']); */
 </script>
 
 <style scoped lang="scss">
