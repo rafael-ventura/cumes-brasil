@@ -44,12 +44,22 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      base: '/frontend/pwa/',
+      distDir: 'dist/pwa',
+      vueRouterMode: 'history',
+      extendViteConf (viteConf) {
+        viteConf.build.rollupOptions = {
+          output: {
+            assetFileNames: '[name].[ext]', // Colocar todos os arquivos no mesmo nível
+            chunkFileNames: '[name].js',
+            entryFileNames: '[name].js'
+          }
+        };
+      },
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
-      distDir: 'dist/pwa',
-      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
