@@ -37,8 +37,8 @@ jobs:
       - name: Build Frontend
         working-directory: ./frontend
         env:
-          VITE_APP_API_URL: "https://cumes-brasil-front.s3.us-east-1.amazonaws.com/asset"
-          VITE_APP_SERVER_IP: "https://d2s0ypgmbfwmhw.cloudfront.net/assets"
+          VITE_APP_API_URL: "http://3.235.59.181:3001/api"
+          VITE_APP_SERVER_IP: "https://cumes-brasil-front.s3.us-east-1.amazonaws.com/assets"
           VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
