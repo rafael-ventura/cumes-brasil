@@ -38,16 +38,16 @@ jobs:
         working-directory: ./frontend
         env:
           VITE_APP_API_URL: "http://3.235.59.181:3001/api"
-          VITE_APP_SERVER_IP: "https://cumes-brasil-front.s3.us-east-1.amazonaws.com/assets"
+          VITE_APP_SERVER_IP: "https://cumes-brasil-front.s3.us-east-1.amazonaws.com/images"
           VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
       - name: Upload Frontend to S3
-        run: aws s3 sync frontend/dist s3://cumes-brasil-front/frontend --acl public-read
+        run: aws s3 sync frontend/dist/pwa s3://cumes-brasil-front/ --acl public-read
 
       # Upload Backend Assets to S3
       - name: Upload Assets to S3
-        run: aws s3 sync backend/assets s3://cumes-brasil-front/assets --acl public-read
+        run: aws s3 sync backend/assets s3://cumes-brasil-front/images --acl public-read
 
       # Build Backend
       - name: Install Backend dependencies

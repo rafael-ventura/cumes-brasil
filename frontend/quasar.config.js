@@ -48,6 +48,8 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
+      base: '', // Remova o './' e deixe vazio ou ajuste conforme necessário
+      publicPath: '/', // Defina como '/' se estiver servindo da raiz do domínio
       distDir: 'dist/pwa',
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
