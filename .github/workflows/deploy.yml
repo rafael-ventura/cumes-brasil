@@ -47,7 +47,7 @@ jobs:
 
       # Upload Assets (Images) to S3 for CloudFront
       - name: Upload Images to S3 for CloudFront
-        run: aws s3 sync backend/assets s3://cumes-brasil-images/ --debug
+        run: aws s3 sync backend/assets s3://cumes-brasil-images/assets --debug
 
       # Build Backend
       - name: Install Backend dependencies
