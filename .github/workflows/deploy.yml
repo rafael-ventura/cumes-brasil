@@ -38,7 +38,7 @@ jobs:
         working-directory: ./frontend
         env:
           VITE_APP_API_URL: "https://api.cumesbrasil.com.br/api"
-          VITE_APP_IMAGE_URL: "https://d1261jj6xox5lv.cloudfront.net"
+          VITE_APP_SERVER_IP: "https://d1261jj6xox5lv.cloudfront.net"
           VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
