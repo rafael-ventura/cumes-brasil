@@ -443,9 +443,9 @@ const viasJson = {
       'grau': '5',
       'crux': 'VI',
       'artificial': 'A0(3)',
-      'duracao': '',
-      'exposicao': 'E2/3',
-      'extensao': 110,
+      'duracao': 'D2',
+      'exposicao': 'E2',
+      'extensao': 125,
       'conquistadores': 'Alfredo Neto;Flávio Abreu;Guilherme \'Piu-Piu\' Fonseca',
       'detalhes': '',
       'data': '2002-10-10',
@@ -3267,6 +3267,20 @@ const croquisJson = {
       imagem: 12,
       autor: 'CEC',
       'fonte': 7
+    },
+    {
+      id: 8,
+      nome: 'Croqui da Via Fissura do Ingles - Resumido',
+      imagem: 13,
+      autor: 'CEC',
+      'fonte': 7
+    },
+    {
+      id: 9,
+      nome: 'Croqui da Via Fissura do Ingles - Detalhado',
+      imagem: 14,
+      autor: 'CEC',
+      'fonte': 7
     }
   ]
 };
@@ -3774,10 +3788,22 @@ const imagensJson = {
       'tipo_entidade': 'croqui'
     },
     {
-      url: '/assets/croquis/croqui_unha_de_gato.jpg',
-      descricao: 'Croqui Via Unha de Gato',
-      fonte: 7,
-      tipo_entidade: 'croqui'
+      'url': '/assets/croquis/croqui_unha_de_gato.jpg',
+      'descricao': 'Croqui Via Unha de Gato',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_fissura_do_ingles.jpg',
+      'descricao': 'Croqui Via Fissura do Ingles - Resumido',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_fissura_do_ingles_02.jpg',
+      'descricao': 'Croqui Via Fissura do Ingles - Detalhado',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
     }
   ]
 };
