@@ -39,7 +39,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ColecaoService from 'src/services/ColecaoService';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import Busca from 'components/Busca/Busca.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
@@ -47,26 +47,19 @@ import AddColecaoModal from 'components/Colecao/AddColecaoModal.vue';
 
 const searchEntityRef = ref();
 const router = useRouter();
-const colecoes = ref<Colecao[]>([]);
+const colecoes = ref<IColecao[] | undefined>([]);
 const isAddColecaoModalOpen = ref(false);
-const novaColecao = ref({
+ref({
   nome: '',
   descricao: '',
-  usuario_id: Number(localStorage.getItem('userId')) || 0,
-  imagem_id: 1
+  usuario_id: Number(localStorage.getItem('userId')) || 0
 });
-const addColecao = async () => {
+const addColecao = async (colecaoPreenchida: IColecao) => {
   try {
-    novaColecao.value.usuario_id = Number(localStorage.getItem('userId')) || 0;
-    await ColecaoService.create(novaColecao.value);
+    console.log('Adicionando coleção:', colecaoPreenchida);
+    await ColecaoService.create(colecaoPreenchida);
     colecoes.value = await ColecaoService.getByUsuarioId();
     isAddColecaoModalOpen.value = false;
-    novaColecao.value = {
-      nome: '',
-      descricao: '',
-      usuario_id: Number(localStorage.getItem('userId')) || 0,
-      imagem_id: 1
-    };
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);
   }
@@ -94,7 +87,7 @@ const updateSearchResults = (results: any[]) => {
   console.log('Search results updated:', results);
 };
 
-const goToColecaoDetalhada = (colecao: Colecao) => {
+const goToColecaoDetalhada = (colecao: IColecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
 

@@ -25,7 +25,7 @@
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
     <div v-else-if="entityType === 'colecao'">
-      <ColecaoLista :colecoes="sortedResults as Colecao[]" />
+      <ColecaoLista :colecoes="sortedResults as IColecao[]" />
     </div>
     <div v-else-if="entityType === 'escalada'">
       <EscaladaCard
@@ -47,13 +47,13 @@ import { computed, defineEmits, defineProps, ref } from 'vue';
 import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
 import { Escalada } from 'src/models/Escalada';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const props = defineProps<{
-  results:(Via | Colecao | Escalada)[];
+  results:(Via | IColecao | Escalada)[];
   entityType: 'via' | 'colecao' | 'escalada';
   totalItems?: number;
   initialSort?: { field: string, direction: 'asc' | 'desc' };
@@ -128,7 +128,7 @@ const applySorting = (sortOption: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-const selectItem = (item: Via | Colecao | any) => {
+const selectItem = (item: Via | IColecao | any) => {
   emit('select', item);
 };
 </script>

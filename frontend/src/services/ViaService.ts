@@ -26,7 +26,7 @@ class ViaService {
       const response = await api.get('/vias/', { params });
       const vias = response.data.vias as Via[];
       const total = response.data.total as number;
-      vias.forEach(via => adjustImageUrls(via));
+      vias.forEach(via => adjustImageUrls(via.imagem));
       return {
         vias,
         total
@@ -42,13 +42,8 @@ class ViaService {
         throw new Error('Usuário não autenticado');
       }
 
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        throw new Error('Usuário não encontrado');
-      }
-
       const colecoes = await ColecaoService.getByUsuarioId();
-      const favoritosColecao = colecoes.find(colecao => colecao.nome === 'Vias Favoritas');
+      const favoritosColecao = colecoes?.find(colecao => colecao.nome === 'Vias Favoritas');
 
       if (!favoritosColecao) {
         throw new Error('Coleção de favoritos não encontrada');

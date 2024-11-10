@@ -1,7 +1,6 @@
 // --- Importações ---
 import { Via } from 'src/models/Via';
 import ImagemService from 'src/services/ImagemService';
-import { Imagem } from 'src/models/Imagem';
 
 type ViaKey = keyof Via;
 
@@ -73,7 +72,6 @@ export function formatarGrau (grau: string | number): string {
 }
 
 // --- Função Principal de Formatação de Objetos Via ---
-// --- Função Principal de Formatação de Objetos Via ---
 export function formatVia (via: Via): Via {
   const formattedVia = { ...via };
 
@@ -109,9 +107,9 @@ export function formatVia (via: Via): Via {
 }
 
 // --- Manipulação de URLs de Imagens ---
-export function adjustImageUrls (entity: { imagem?: Imagem }) {
-  if (entity.imagem) {
-    entity.imagem.url = ImagemService.getFullImageUrl(entity.imagem.url);
+export function adjustImageUrls (entity: any): void {
+  if (entity !== null && entity !== undefined) {
+    entity.url = ImagemService.getFullImageUrl(entity.url);
   }
 }
 

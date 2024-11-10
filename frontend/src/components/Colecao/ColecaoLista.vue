@@ -9,14 +9,14 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import ColecaoCard from 'components/Colecao/ColecaoCard.vue';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const props = defineProps<{ colecoes: Colecao[] }>();
+const props = defineProps<{ colecoes: IColecao[] }>();
 
-const showDetails = (colecao: Colecao) => {
+const showDetails = (colecao: IColecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
 </script>

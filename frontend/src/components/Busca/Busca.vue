@@ -129,13 +129,6 @@ const searchEntities = async (reset = false) => {
         return via;
       });
     }
-
-    if (props.entity === 'colecao') {
-      searchResult.items = searchResult.items.map((item: any) => {
-        item.imagem.url = ImagemService.getFullImageUrl(item.imagem.url);
-        return item;
-      });
-    }
     if (reset) {
       results.value = searchResult.items;
     } else {

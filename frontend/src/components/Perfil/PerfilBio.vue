@@ -18,10 +18,10 @@
 
 <script setup lang="ts">
 import { defineProps, ref, watch, computed, defineEmits } from 'vue';
-import { Usuario } from 'src/models/Usuario';
+import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
 
-const props = defineProps<{ user: Usuario }>();
+const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['bio-updated']);
 
 const isEditing = ref(false);

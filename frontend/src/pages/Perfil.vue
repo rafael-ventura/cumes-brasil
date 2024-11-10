@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" />
-    <PerfilBar :user="<Usuario>user" />
+    <PerfilBar :user="<IUsuario>user" />
     <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
       <div class="row q-col-gutter-sm q-gutter-md justify-center">
         <div v-for="(item, index) in items" :key="index" class="col-xs-5 col-sm-3 col-md-3 col-lg-2 col-xl-2">
@@ -36,9 +36,9 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="isEditDialogOpen">
-      <PerfilEditaForm v-if="user" :user="<Usuario>user" @submit="handleEditSubmit" />
+      <PerfilEditaForm v-if="user" :user="<IUsuario>user" @submit="handleEditSubmit" />
     </q-dialog>
-    <PerfilBio :user="<Usuario>user" @bio-updated="updateUserBio" />
+    <PerfilBio :user="<IUsuario>user" @bio-updated="updateUserBio" />
   </q-page>
 </template>
 <script setup lang="ts">
@@ -48,16 +48,17 @@ import UserService from 'src/services/UsuarioService';
 import ColecaoService from 'src/services/ColecaoService';
 import AuthenticateService from 'src/services/AuthenticateService';
 import PerfilEditaForm from 'components/Perfil/PerfilEditaForm.vue';
-import { Usuario } from 'src/models/Usuario';
+import { IUsuario } from 'src/models/IUsuario';
 import PerfilBar from 'components/Perfil/PerfilBar.vue';
 import PerfilBio from 'components/Perfil/PerfilBio.vue';
+import { IColecao } from 'src/models/IColecao';
 
 const router = useRouter();
-const user = ref<Usuario | null>(null);
-const numColecoes = ref(0);
-const numEscaladas = ref(0);
-const numFavoritas = ref(0);
-const colecaoId = ref(0);
+const user = ref<IUsuario | null>(null);
+const numColecoes = ref();
+const numEscaladas = ref();
+const numFavoritas = ref();
+const colecaoId = ref();
 const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 
@@ -74,12 +75,12 @@ onMounted(async () => {
       await router.push('/auth/login');
     } else {
       user.value = await UserService.getPerfil();
-      const colecoes = await ColecaoService.getByUsuarioId();
-      const favorita = colecoes.filter((colecao) => colecao.nome === 'Vias Favoritas');
-      colecaoId.value = favorita[0].id;
+      const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
+      const favorita = colecoes?.filter((colecao: any) => colecao.nome === 'Vias Favoritas');
+      colecaoId.value = favorita?.[0].id;
       const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value);
-      numFavoritas.value = colecaoFavoritas.length;
-      numColecoes.value = colecoes.length;
+      numFavoritas.value = colecaoFavoritas?.length;
+      numColecoes.value = colecoes?.length;
     }
   } catch (error) {
     console.error(error);

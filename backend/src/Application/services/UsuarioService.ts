@@ -50,7 +50,10 @@ export class UsuarioService {
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {
-        const favoritasCollection = new Colecao('Vias Favoritas', 'Vias favoritadas por você', user.id);
+        const favoritasCollection = new Colecao();
+        favoritasCollection.nome = 'Favoritas';
+        favoritasCollection.descricao = 'Vias favoritas do usuário';
+        favoritasCollection.usuario = user;
         await this.colecaoRepo.create(favoritasCollection);
     }
 

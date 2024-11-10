@@ -75,21 +75,21 @@ export class ViaRepository implements ISearchRepository<Via>{
 
   async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     const subQuery = this.repository
-      .createQueryBuilder('via_colecao')
-      .select('via_colecao.viaId')
-      .where('via_colecao.colecaoId = :colecaoId', { colecaoId });
+        .createQueryBuilder('via_colecao')
+        .select('via_colecao.viaId')  // Referência direta à coluna de chave estrangeira 'viaId'
+        .where('via_colecao.colecaoId = :colecaoId', { colecaoId });  // Referência direta à coluna de chave estrangeira 'colecaoId'
 
     const [vias, total] = await this.repository.createQueryBuilder('via')
-      .where(`via.id NOT IN (${subQuery.getQuery()})`)
-      .setParameters(subQuery.getParameters())
-      .leftJoinAndSelect('via.montanha', 'montanha')
-      .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-      .leftJoinAndSelect('via.fonte', 'fonte')
-      .leftJoinAndSelect('via.face', 'face')
-      .leftJoinAndSelect('via.imagem', 'imagem')
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+        .where(`via.id NOT IN (${subQuery.getQuery()})`)
+        .setParameters(subQuery.getParameters())
+        .leftJoinAndSelect('via.montanha', 'montanha')
+        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
+        .leftJoinAndSelect('via.fonte', 'fonte')
+        .leftJoinAndSelect('via.face', 'face')
+        .leftJoinAndSelect('via.imagem', 'imagem')
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getManyAndCount();
 
     return {
       vias,

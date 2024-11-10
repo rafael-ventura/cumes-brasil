@@ -5,14 +5,6 @@ import { ViaColecao } from './ViaColecao';
 
 @Entity()
 export class Colecao extends BaseEntity {
-  constructor (nome: string, descricao: string, usuario: number, imagem?: number) {
-    super();
-    this.nome = nome;
-    this.descricao = descricao;
-    this.usuario = usuario;
-    this.imagem = imagem;
-  }
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,7 +15,7 @@ export class Colecao extends BaseEntity {
   descricao?: string;
 
   @ManyToOne(() => Usuario, usuario => usuario.colecoes)
-  usuario: number;
+  usuario: Usuario;
 
   @ManyToOne(() => Imagem, imagem => imagem.colecoes)
   @Column({ nullable: true })
@@ -31,5 +23,4 @@ export class Colecao extends BaseEntity {
 
   @OneToMany(() => ViaColecao, viaColecao => viaColecao.colecao)
   viaColecoes: ViaColecao[];
-
 }

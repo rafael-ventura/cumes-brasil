@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { computed, defineEmits, defineProps, ref, watch } from 'vue';
-import { Usuario } from 'src/models/Usuario';
+import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
 import AddPreferidaModal from 'components/Perfil/AddPreferidaModal.vue';
 import { Via } from 'src/models/Via';
@@ -55,7 +55,7 @@ import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
 import ImageService from 'src/services/ImagemService';
 import { QRejectedEntry, useQuasar } from 'quasar';
 
-const props = defineProps<{ user: Usuario }>();
+const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['submit', 'waiting']);
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);

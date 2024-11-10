@@ -19,7 +19,7 @@
             </div>
             <div class="text-subtitle1">{{ colecao.descricao }}</div>
             <!-- quantidade de vias na coleção -->
-            <div class="text-caption">Vias: {{ colecao.vias?.length || 0 }}</div>
+            <div class="text-caption">Vias: {{ colecao.viaColecoes?.length || 0 }}</div>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
@@ -110,7 +110,7 @@ import Busca from 'components/Busca/Busca.vue';
 const route = useRoute();
 const router = useRouter();
 const searchEntityRef = ref();
-const colecao = ref<Colecao | null>(null);
+const colecao = ref<IColecao | null | undefined>(null);
 const colecaoEdit = ref({
   nome: '',
   descricao: ''

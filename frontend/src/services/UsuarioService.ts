@@ -1,16 +1,16 @@
 import { api } from 'boot/axios';
-import { Usuario } from 'src/models/Usuario';
+import { IUsuario } from 'src/models/IUsuario';
 import { adjustImageUrls, handleApiError } from 'src/utils/utils';
 
 class UsuarioService {
-  async getById (id: number): Promise<Usuario> {
+  async getById (id: number): Promise<IUsuario> {
     try {
       const response = await api.get(`/usuarios/${id}`);
-      const usuario = response.data as Usuario;
+      const usuario = response.data as IUsuario;
 
       // Ajustando URL da imagem do perfil do usuário
       if (usuario.foto_perfil) {
-        adjustImageUrls({ imagem: usuario.foto_perfil });
+        adjustImageUrls(usuario.foto_perfil);
       }
 
       return usuario;
@@ -19,10 +19,10 @@ class UsuarioService {
     }
   }
 
-  async getAll (): Promise<Usuario[]> {
+  async getAll (): Promise<IUsuario[]> {
     try {
       const response = await api.get('/usuarios');
-      const usuarios = response.data as Usuario[];
+      const usuarios = response.data as IUsuario[];
 
       // Ajustando URLs das imagens dos usuários
       usuarios.forEach(usuario => {
@@ -37,17 +37,17 @@ class UsuarioService {
     }
   }
 
-  async create (nome: string, email: string, password: string): Promise<Usuario> {
+  async create (nome: string, email: string, password: string): Promise<IUsuario> {
     try {
       const response = await api.post('/auth/register', {
         nome,
         email,
         password
       });
-      const usuario = response.data as Usuario;
+      const usuario = response.data as IUsuario;
 
       if (usuario.foto_perfil) {
-        adjustImageUrls({ imagem: usuario.foto_perfil });
+        adjustImageUrls(usuario.foto_perfil);
       }
 
       return usuario;
@@ -56,13 +56,13 @@ class UsuarioService {
     }
   }
 
-  async getPerfil (): Promise<Usuario> {
+  async getPerfil (): Promise<IUsuario> {
     try {
       const response = await api.get('/perfil');
-      const usuario = response.data as Usuario;
+      const usuario = response.data as IUsuario;
 
       if (usuario.foto_perfil) {
-        adjustImageUrls({ imagem: usuario.foto_perfil });
+        adjustImageUrls(usuario.foto_perfil);
       }
 
       return usuario;
@@ -71,13 +71,13 @@ class UsuarioService {
     }
   }
 
-  async update (id: number, updatedUser: Partial<Usuario>): Promise<Usuario> {
+  async update (id: number, updatedUser: Partial<IUsuario>): Promise<IUsuario> {
     try {
       const response = await api.put(`/usuarios/${id}`, updatedUser);
-      const usuario = response.data as Usuario;
+      const usuario = response.data as IUsuario;
 
       if (usuario.foto_perfil) {
-        adjustImageUrls({ imagem: usuario.foto_perfil });
+        adjustImageUrls(usuario.foto_perfil);
       }
 
       return usuario;
@@ -90,9 +90,9 @@ class UsuarioService {
     try {
       const response = await api.put('/perfil', formData);
       if (response.data.foto_perfil) {
-        adjustImageUrls({ imagem: response.data.foto_perfil });
+        adjustImageUrls(response.data.foto_perfil);
       }
-      return response.data as Usuario;
+      return response.data as IUsuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar dados');
     }
@@ -101,7 +101,7 @@ class UsuarioService {
   async editarBio (biografia: string) {
     try {
       const response = await api.put('/perfil', { biografia });
-      return response.data as Usuario;
+      return response.data as IUsuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar biografia');
     }

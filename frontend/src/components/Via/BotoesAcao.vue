@@ -35,7 +35,7 @@ import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSugestao from 'components/ItemSugestao.vue';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import { createNotifyConfig } from 'src/utils/utils';
 
 const props = defineProps({
@@ -47,14 +47,14 @@ const emit = defineEmits(['update:isFavorited']);
 const isFavorited = ref(false);
 const showEscaladaModal = ref(false);
 const showCollectionModal = ref(false);
-const colecoes = ref<Colecao[]>([]);
+const colecoes = ref<IColecao[]>([]);
 
 // Verifica se a via está na coleção favorita ao montar o componente
 const checkIfFavorited = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
       const favoriteCollection = await ColecaoService.getById(props.favoriteCollectionId);
-      isFavorited.value = favoriteCollection.vias?.some((v) => v.id === props.via?.id) ?? false;
+      isFavorited.value = favoriteCollection?.viaColecoes?.some((v: any) => v.via.id === props.via?.id) ?? false;
     } catch (error) {
       console.error('Erro ao verificar se a via é favorita:', error);
     }
@@ -124,7 +124,7 @@ const openCollectionModal = async () => {
   }
 };
 
-const addToCollection = async (colecao: Colecao) => {
+const addToCollection = async (colecao: IColecao) => {
   if (props.via) {
     try {
       await ColecaoService.addViaToColecao(colecao.id, props.via.id);

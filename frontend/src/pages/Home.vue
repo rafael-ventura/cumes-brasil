@@ -65,14 +65,17 @@ onMounted(async () => {
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
 
   if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
+    console.log(copacabanaVias.value[0].imagem.url);
     copacabanaImage.value = copacabanaVias.value[0].imagem.url;
   }
 
   if (terceiroGrauVias.value.length > 0 && terceiroGrauVias.value[0].imagem?.url) {
+    console.log(terceiroGrauVias.value[0].imagem.url);
     terceiroGrauImage.value = terceiroGrauVias.value[0].imagem.url;
   }
 
   if (exposicaoE2Vias.value.length > 0 && exposicaoE2Vias.value[0].imagem?.url) {
+    console.log(exposicaoE2Vias.value[0].imagem.url);
     exposicaoE2Image.value = exposicaoE2Vias.value[0].imagem.url;
   }
 });

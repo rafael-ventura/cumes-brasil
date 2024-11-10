@@ -2,7 +2,7 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
-    Entity,
+    Entity, JoinColumn,
     ManyToOne,
     ObjectLiteral,
     PrimaryGeneratedColumn
@@ -16,10 +16,12 @@ export class ViaColecao extends BaseEntity {
     id: number;
 
     @ManyToOne(() => Via, via => via.viaColecoes)
+    @JoinColumn({ name: 'viaId' })
     via: Via;
 
     @ManyToOne(() => Colecao, colecao => colecao.viaColecoes)
-    colecao: ObjectLiteral;
+    @JoinColumn({ name: 'colecaoId' })
+    colecao: Colecao;
 
     @CreateDateColumn()
     data_adicao: Date;

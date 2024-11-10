@@ -69,7 +69,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import ImagemModal from 'components/Colecao/ImagemModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
@@ -79,7 +79,7 @@ import SubNavbar from 'layouts/SubNavbar.vue';
 
 const router = useRouter();
 const searchEntityRef = ref();
-const colecao = ref<Colecao | null>(null);
+const colecao = ref<IColecao | null>(null);
 const isImageModalOpen = ref(false);
 const isDeleteConfirmOpen = ref(false);
 const isAddViaModalOpen = ref(false);
