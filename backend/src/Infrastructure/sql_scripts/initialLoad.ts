@@ -46,12 +46,12 @@ const viasJson = {
     {
       'id': 3,
       'nome': 'Semisonic',
-      'grau': '3',
-      'crux': 'V',
+      'grau': '2',
+      'crux': 'IV',
       'artificial': '',
       'duracao': '',
-      'exposicao': 'E3',
-      'extensao': 130,
+      'exposicao': 'E2/E3',
+      'extensao': 140,
       'conquistadores': 'Paulo Henrique \'PH\' Santos (solo encordado)',
       'detalhes': '',
       'data': '2004-06-21',
@@ -64,11 +64,11 @@ const viasJson = {
       'id': 4,
       'nome': 'Ratos de montanha',
       'grau': '5',
-      'crux': 'VIIb',
+      'crux': 'VIIa',
       'artificial': '',
-      'duracao': '',
-      'exposicao': 'E2/3',
-      'extensao': 105,
+      'duracao': 'D1',
+      'exposicao': 'E3',
+      'extensao': 110,
       'conquistadores': 'Leandro Chen; Marcos \'Snakinho\' Piffer;Marcus Vinícius Ferreira;Patrícia Duffes; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2005-04-14',
@@ -118,8 +118,8 @@ const viasJson = {
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
-      'exposicao': '',
-      'extensao': 100,
+      'exposicao': 'E2',
+      'extensao': 105,
       'conquistadores': 'Marcos Fontainha; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2005-06-10',
@@ -355,11 +355,11 @@ const viasJson = {
       'id': 21,
       'nome': 'Arco do Triunfo',
       'grau': '5',
-      'crux': 'VIIa',
-      'artificial': '',
-      'duracao': '',
-      'exposicao': '',
-      'extensao': 45,
+      'crux': 'VISup',
+      'artificial': 'A0/VIIa',
+      'duracao': 'D1',
+      'exposicao': 'E1',
+      'extensao': 42,
       'conquistadores': 'Marcus Vinícius; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2004-04-03',
@@ -372,10 +372,10 @@ const viasJson = {
       'id': 22,
       'nome': 'Unha de gato',
       'grau': '4',
-      'crux': 'VIIc',
+      'crux': 'VIIb/c',
       'artificial': '',
       'duracao': '',
-      'exposicao': 'E2/3',
+      'exposicao': 'E1',
       'extensao': 45,
       'conquistadores': 'Paulo Henrique \'PH\' Santos; Thiago Pedroso',
       'detalhes': '',
@@ -3240,6 +3240,34 @@ const croquisJson = {
       'autor': 'CEC',
       'fonte': 7
     },
+    {
+      'id': 5,
+      'nome': 'Croqui da via Semisonic',
+      'imagem': 9,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 5,
+      'nome': 'Croqui da via Ratos da Montanha',
+      'imagem': 10,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 6,
+      'nome': 'Croqui da Ponto Noturno',
+      'imagem': 11,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      id: 7,
+      nome: 'Croqui da via Unha de Gato',
+      imagem: 12,
+      autor: 'CEC',
+      'fonte': 7
+    }
   ]
 };
 
@@ -3727,7 +3755,30 @@ const imagensJson = {
       'fonte': 7,
       'tipo_entidade': 'croqui'
     },
-
+    {
+      'url': '/assets/croquis/croqui_semisonic.jpg',
+      'descricao': 'Croqui Via Semisonic',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_ratos_da_montanha.jpg',
+      'descricao': 'Croqui Via Ratos da Montanha',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_ponto_noturno.jpg',
+      'descricao': 'Croqui Via Ponto Noturno',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      url: '/assets/croquis/croqui_unha_de_gato.jpg',
+      descricao: 'Croqui Via Unha de Gato',
+      fonte: 7,
+      tipo_entidade: 'croqui'
+    }
   ]
 };
 
