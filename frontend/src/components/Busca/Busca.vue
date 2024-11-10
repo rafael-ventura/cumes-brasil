@@ -16,6 +16,7 @@
       :entityType="props.entity"
       @select="selectItem"
       :enableSortOptions="enableSortOptions"
+      @change-sort="updateSorting"
       :totalItems="totalItems"
     />
   </div>
@@ -54,6 +55,8 @@ const filters = ref(<BuscaRequest>{
   selectedCrux: null,
   selectedExposicao: null,
   page: 1,
+  sortField: 'nome',
+  sortOrder: 'asc',
   itemsPerPage: 20,
   ...props.staticFilters,
   ...route.query
@@ -64,6 +67,7 @@ const totalItems = ref(0);
 const totalPages = ref(1);
 const loading = ref(false);
 const observer = ref<HTMLElement | null>(null);
+const isSorting = ref(false);
 let observerInstance: IntersectionObserver | null = null;
 
 onMounted(async () => {
@@ -75,6 +79,18 @@ onMounted(async () => {
   }
   createObserver();
 });
+
+// Função para atualizar a ordenação ao receber uma mudança
+const updateSorting = (sortOption: any) => {
+  isSorting.value = true; // Indica que estamos alterando a ordenação
+  filters.value = {
+    ...filters.value,
+    page: 1, // Reiniciar a página ao aplicar nova ordenação
+    sortField: sortOption.field,
+    sortOrder: sortOption.direction
+  };
+  searchEntities(true); // Realiza a busca com a nova ordenação
+};
 
 watch(
   () => filters.value,
@@ -141,6 +157,7 @@ const searchEntities = async (reset = false) => {
     console.error('Erro ao buscar entidades:', error);
   } finally {
     loading.value = false;
+    isSorting.value = false; // Redefine o sinalizador após concluir a ordenação
   }
 };
 

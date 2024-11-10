@@ -16,7 +16,7 @@
         rounded
         dense
         map-options
-        @update:model-value="applySorting"
+        @update:model-value="changeSorting"
       />
     </div>
     <!-- Renderiza ViaCard se entityType for 'via' -->
@@ -60,14 +60,14 @@ const props = defineProps<{
   enableSortOptions?: { field: string, label: string }[]; // Novo campo para customizar opções de ordenação
 }>();
 
-const emit = defineEmits(['select']);
+const emit = defineEmits(['select', 'change-sort']);
 
 // Opções padrão de ordenação
 const defaultSortOptions = ref([
   { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
   { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
-  { label: 'Data de Adição (Mais recente)', value: { field: 'data_adicao', direction: 'desc' } },
-  { label: 'Data de Adição (Mais antiga)', value: { field: 'data_adicao', direction: 'asc' } }
+  { label: 'Mais recente', value: { field: 'data_adicao', direction: 'desc' } },
+  { label: 'Mais antiga', value: { field: 'data_adicao', direction: 'asc' } }
 ]);
 
 // Filtrar as opções de ordenação com base na configuração do componente pai
@@ -122,9 +122,10 @@ const sortedResults: any = computed(() => {
   });
 });
 
-// Aplica a nova ordenação
-const applySorting = (sortOption: any) => {
+// Atualiza a ordenação quando o usuário muda a opção de ordenação
+const changeSorting = (sortOption: any) => {
   currentSortOption.value = sortOption.value;
+  emit('change-sort', { field: sortOption.value.field, direction: sortOption.value.direction });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars

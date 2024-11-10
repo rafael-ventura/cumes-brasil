@@ -30,9 +30,11 @@ export class SearchController {
 				selectedCrux,
 				selectedExposicao,
 				colecaoId,
-				bairro, // Adiciona o filtro de bairro
+				bairro,
 				page,
-				itemsPerPage
+				itemsPerPage,
+				sortField,
+				sortOrder
 			} = req.body;
 
 			if (!entityType || !this.serviceMap[entityType]) {
@@ -48,9 +50,11 @@ export class SearchController {
 				selectedCrux,
 				selectedExposicao,
 				colecaoId,
-				bairro, // Adiciona o filtro de bairro
+				bairro,
 				page,
-				itemsPerPage
+				itemsPerPage,
+				sortField,
+				sortOrder
 			};
 
 			// Aplique os filtros na consulta ao banco de dados

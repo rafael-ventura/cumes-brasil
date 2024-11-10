@@ -11,4 +11,6 @@ export interface BuscaRequest {
   itemsPerPage?: number;
   entityType?: string;
   colecaoId?: number;
+  sortField?: string;
+  sortOrder?: string;
 }

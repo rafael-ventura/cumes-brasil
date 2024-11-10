@@ -91,7 +91,9 @@ export class EscaladaRepository {
         const {
             unifiedSearch,
             page = 1,
-            itemsPerPage = 10
+            itemsPerPage = 10,
+            sortField = 'escalada.data',
+            sortOrder = 'DESC'
         } = filters;
 
         let qb = this.repository.createQueryBuilder("escalada")
@@ -105,6 +107,11 @@ export class EscaladaRepository {
         // Filtrar por nome da via (se necessário)
         if (unifiedSearch) {
             qb = qb.andWhere("via.nome LIKE :unifiedSearch", { unifiedSearch: `%${unifiedSearch}%` });
+        }
+
+        // Adiciona ordenação dinâmica
+        if (sortField && sortOrder) {
+            qb = qb.orderBy(sortField, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
         }
 
         // Total de escaladas que correspondem aos filtros

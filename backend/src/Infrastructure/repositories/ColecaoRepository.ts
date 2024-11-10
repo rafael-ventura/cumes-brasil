@@ -108,7 +108,16 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
     }
 
     async search(query: any): Promise<ISearchResult<Colecao>> {
-        const { searchQuery, colecaoId, nomeVia, nomeMontanha, page = 1, itemsPerPage = 10 } = query;
+        const {
+            searchQuery,
+            colecaoId,
+            nomeVia,
+            nomeMontanha,
+            sortField = 'colecao.nome', // Campo padrão de ordenação
+            sortOrder = 'ASC', // Direção padrão de ordenação
+            page = 1,
+            itemsPerPage = 10
+        } = query;
 
         // Ajuste das junções
         let qb = this.repository.createQueryBuilder('colecao')
@@ -136,6 +145,9 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         if (nomeMontanha) {
             qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
+
+        // Aplicação da ordenação dinâmica
+        qb = qb.orderBy(sortField, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
 
         // Contar o total de itens (coleções) correspondentes
         const totalItems = await qb.getCount();

@@ -123,7 +123,9 @@ export class ViaRepository implements ISearchRepository<Via>{
       colecaoId,
       bairro,
       page = 1,
-      itemsPerPage = 10
+      itemsPerPage = 10,
+      sortField,
+      sortOrder
     } = query;
 
     let qb = this.repository.createQueryBuilder('via')
@@ -180,6 +182,11 @@ export class ViaRepository implements ISearchRepository<Via>{
       } else {
         qb = qb.andWhere('via.exposicao LIKE :selectedExposicao', { selectedExposicao: `${selectedExposicao[0]}%` });
       }
+    }
+
+    // Adicionar a ordenação com base nos parâmetros sortField e sortOrder
+    if (sortField && sortOrder) {
+      qb = qb.orderBy(`via.${sortField}`, sortOrder.toUpperCase());
     }
 
     // Contar o total de itens
