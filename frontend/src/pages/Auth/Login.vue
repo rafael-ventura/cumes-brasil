@@ -1,11 +1,10 @@
 <template>
-  <q-page class="fundo-login" :style="{ backgroundImage: `url(${backgroundImage})` }">
+  <q-page class="fundo-login">
     <!-- Logo -->
-    <div class="logo-container">
-      <q-img src="../../logo.png" alt="Cumes Brasil" class="logo-tamanho" />
-    </div>
-
     <!-- Formulário de Login -->
+    <div class="logo-container">
+      <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
+    </div>
     <div class="form-container">
       <q-card class="login-card">
         <q-form @submit.prevent="onLogin" class="custom-login-form">
@@ -118,6 +117,7 @@ onMounted(async () => {
 @import 'src/css/app.scss';
 
 .fundo-login {
+  background-image: url('/login2.jpg'); /* Imagem de fundo grande */
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -125,21 +125,16 @@ onMounted(async () => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-}
 
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo-tamanho {
-  width: 80%;
+  /* Altera a imagem de fundo para telas com 800px ou menos */
+  @media (max-width: 800px) {
+    background-image: url('/login.png'); /* Imagem de fundo pequena */
+  }
 }
 
 .form-container {
   width: 100%;
-  max-width: 100%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,6 +200,8 @@ onMounted(async () => {
   color: $primary;
   border: 1px solid $primary;
   border-radius: 15px;
+  max-width: 160px;
+  max-height: 60px;
 }
 
 .login-btn {
@@ -216,5 +213,7 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 60px;
+  max-height: 60px;
 }
 </style>
