@@ -20,7 +20,6 @@
               <q-input v-model="email"
                        id="email"
                        type="email"
-                       outlined
                        dense
                        color="primary"
                        bg-color="dark"
@@ -28,6 +27,7 @@
                        hide-bottom-space
                        :rules="[ val => !!val || 'Campo obrigatório' ]"
                        class="custom-input-field"
+                       :input-style="{ color: '#fcbd7b'}"
               />
             </div>
 
@@ -136,18 +136,6 @@ const onGeneratePasswordToken = async () => {
 .input-icon {
   color: $primary;
   font-size: 1.2em;
-}
-
-.custom-input-field {
-  width: 100%;
-  background-color: rgba($dark, 0.85);
-  border-radius: 5px;
-  color: $primary;
-
-  .q-field__control {
-    border-color: $primary;
-    color: $primary;
-  }
 }
 
 .register-btn {

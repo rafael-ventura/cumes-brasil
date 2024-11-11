@@ -18,14 +18,14 @@
           <q-input v-model="confirmPassword"
                    id="confirmPassword"
                    type="password"
-                   outlined
-                   dense
                    color="primary"
+                   dense
                    bg-color="dark"
                    label-color="primary"
                    hide-bottom-space
                    :rules="[ val => !!val || 'Campo obrigatório' ]"
                    class="custom-input-field"
+                   :input-style="{ color: '#fcbd7b' }"
           />
         </div>
         <q-btn flat label="Já tem uma conta?" class="link-login" @click="goToLogin" />
@@ -137,18 +137,6 @@ const goToLogin = () => {
 .input-icon {
   color: $primary;
   font-size: 1.2em;
-}
-
-.custom-input-field {
-  width: 100%;
-  background-color: rgba($dark, 0.85);
-  border-radius: 5px;
-  color: $primary;
-
-  .q-field__control {
-    border-color: $primary;
-    color: $primary;
-  }
 }
 
 .link-login {

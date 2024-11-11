@@ -18,7 +18,6 @@
               id="email"
               v-model="email"
               type="email"
-              outlined
               dense
               color="primary"
               bg-color="dark"
@@ -40,7 +39,6 @@
               id="senha"
               v-model="senha"
               type="password"
-              outlined
               dense
               color="primary"
               bg-color="dark"
@@ -48,6 +46,7 @@
               hide-bottom-space
               :rules="[val => !!val || 'Campo obrigatório']"
               class="custom-input-field"
+              :input-style="{ color: '#fcbd7b' }"
             />
           </div>
 
@@ -168,17 +167,6 @@ onMounted(async () => {
   font-size: 1.2em;
 }
 
-.custom-input-field {
-  width: 100%;
-  background-color: rgba($dark, 0.85);
-  border-radius: 5px;
-  color: $primary;
-  .q-field__control {
-    border-color: $primary;
-    color: $primary;
-  }
-}
-
 .forgot-password-btn {
   text-align: left;
   color: #ffffff;
@@ -216,4 +204,5 @@ onMounted(async () => {
   max-width: 60px;
   max-height: 60px;
 }
+
 </style>

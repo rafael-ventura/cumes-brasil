@@ -11,14 +11,13 @@
             id="nome"
             v-model="nome"
             type="text"
-            outlined
             dense
             color="primary"
             bg-color="dark"
             label-color="primary"
             hide-bottom-space
             :rules="[val => !!val || 'Campo obrigatório']"
-            class="custom-input-field"
+            :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
           />
         </div>
 
@@ -31,7 +30,6 @@
             id="email"
             v-model="email"
             type="email"
-            outlined
             dense
             color="primary"
             bg-color="dark"
@@ -39,6 +37,7 @@
             hide-bottom-space
             :rules="[val => !!val || 'Campo obrigatório']"
             class="custom-input-field"
+            :input-style="{ color: '#fcbd7b' }"
           />
         </div>
 
@@ -50,15 +49,15 @@
           <q-input
             id="senha"
             v-model="senha"
-            type="password"
-            outlined
             dense
+            type="password"
             color="primary"
             bg-color="dark"
             label-color="primary"
             hide-bottom-space
             :rules="[val => !!val || 'Campo obrigatório']"
             class="custom-input-field"
+            :input-style="{ color: '#fcbd7b' }"
           />
         </div>
 
@@ -129,17 +128,6 @@ const onSubmit = () => {
 .input-icon {
   color: $primary;
   font-size: 1.2em;
-}
-
-.custom-input-field {
-  width: 100%;
-  background-color: rgba($dark, 0.85);
-  border-radius: 5px;
-
-  .q-field__control {
-    border-color: $primary;
-    color: $primary;
-  }
 }
 
 .action-buttons {
