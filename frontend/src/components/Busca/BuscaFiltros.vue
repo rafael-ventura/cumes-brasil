@@ -6,12 +6,12 @@
         v-model="localFilters.unifiedSearch"
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
+        outlined
         color="primary"
         class="unified-search"
         label-color="primary"
         rounded
         @keydown="onInputChange"
-        :input-style="{ color: '#fcbd7b', borderColor: '#fcbd7b' }"
       >
         <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
@@ -374,6 +374,16 @@ const filterByExtension = (category: string) => {
   border: 1px solid #fcbd7b;
   border-radius: 50%; /* Ícone circular */
   margin-left: 4px; /* Margem à esquerda */
+}
+
+.q-btn.filter-btn {
+  background-color: #333333;
+  color: #fcbd7b;
+}
+
+.q-btn.filter-btn.active {
+  background-color: #fcbd7b;
+  color: #333333;
 }
 
 .selected {

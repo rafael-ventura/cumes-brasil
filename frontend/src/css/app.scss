@@ -245,16 +245,71 @@ body {
 
 .q-field__control {
   border-radius: 6px;
+  border-color: #fcbd7b;
 
   &::after {
-    background-color: $dark;
     color: $primary !important;
   }
 
+  &::before {
+    color: $primary !important;
+  }
+}
 
+.q-field__inner {
+  border-radius: 6px;
+  border-color: #fcbd7b;
+
+  &::after {
+    color: $primary !important;
+    background-color: $primary !important;
+  }
+
+  &::before {
+    color: $primary !important;
+    background-color: $primary !important;
+  }
+}
+
+.q-field__label {
+  color: #fcbd7b;
+  margin-left: 8px;
 
 }
 
+.q-field {
+  border-radius: 20px;
+}
+
+.q-field__control {
+  border-radius: 20px;
+  border: 1px solid #fcbd7b;
+  color: #fcbd7b;
+
+  &::after {
+    color: $primary !important;
+  }
+
+  &::before {
+    color: $primary !important;
+  }
+}
+
+.q-field__native {
+  color: #fcbd7b;
+
+  &::after {
+    color: $primary !important;
+  }
+
+  &::before {
+    color: $primary !important;
+  }
+}
+
+.q-field--focused {
+  border: none;
+}
 
 
 

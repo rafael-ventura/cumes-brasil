@@ -13,7 +13,6 @@
         label-color="primary"
         class="q-select-custom"
         outlined
-        rounded
         dense
         map-options
         @update:model-value="changeSorting"
