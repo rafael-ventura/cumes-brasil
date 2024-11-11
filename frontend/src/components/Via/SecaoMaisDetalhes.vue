@@ -67,14 +67,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   via: Via;
 }>();
 
-const router = useRouter();
 const showGrauInfo = ref(false);
 
 // Formatação dos dados com ajuste para não adicionar sufixo se o valor for "NA"
@@ -85,16 +83,9 @@ const formattedExposicao = computed(() => props.via.exposicao && props.via.expos
 const formattedDuracao = computed(() => props.via.duracao && props.via.duracao !== 'N/A' ? `D${props.via.duracao}` : 'N/A');
 
 // Outros dados permanecem os mesmos
-const fontesArray = computed(() => props.via.fonte ? props.via.fonte.autor.split(';').map(fonte => fonte.trim()) : []);
-const conquistadoresArray = computed(() => props.via.conquistadores ? props.via.conquistadores.split(';').map(conquistador => conquistador.trim()) : []);
-const originalViaName = computed(() => props.via.via_principal?.nome || '');
-
-const navigateToOriginalVia = () => {
-  if (props.via.via_principal) {
-    router.push(`/via/${props.via.via_principal.id}`);
-  }
-};
-
+computed(() => props.via.fonte ? props.via.fonte.autor.split(';').map(fonte => fonte.trim()) : []);
+computed(() => props.via.conquistadores ? props.via.conquistadores.split(';').map(conquistador => conquistador.trim()) : []);
+computed(() => props.via.via_principal?.nome || '');
 const isExpanded = ref(false);
 </script>
 

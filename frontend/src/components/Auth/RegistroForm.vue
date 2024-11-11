@@ -64,7 +64,7 @@
 
         <slot></slot>
 
-        <q-btn :label="submitLabel" class="register-btn" />
+        <q-btn :label="props.submitLabel" class="register-btn" />
       </q-form>
     </q-card-section>
   </q-card>
@@ -92,7 +92,6 @@ const onSubmit = () => {
   });
 };
 </script>
-
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
