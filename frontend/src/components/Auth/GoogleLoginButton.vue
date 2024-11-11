@@ -19,7 +19,7 @@ import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com';
 const router = useRouter();
 
 interface GoogleCredentialResponse {
