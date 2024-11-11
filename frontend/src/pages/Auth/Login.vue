@@ -169,10 +169,19 @@ onMounted(async () => {
 
 .forgot-password-btn {
   text-align: left;
-  color: #ffffff;
-  font-size: 1em;
+  color: $primary;
+  font-size: 0.85em;
+  text-decoration: underline;
   margin-bottom: 10px;
-  margin-left: -5%;
+  margin-left: -1%;
+
+  @media (max-width: 800px) {
+    margin-left: -3%;
+  }
+
+  @media (max-width: 425px) {
+    margin-left: -5%;
+  }
 }
 
 .action-buttons {
@@ -181,7 +190,8 @@ onMounted(async () => {
   width: 100%;
 }
 
-.register-btn, .google-btn {
+.register-btn,
+.google-btn {
   width: 28%;
   height: 4vh;
   font-size: 0.85em;
@@ -190,6 +200,9 @@ onMounted(async () => {
   border-radius: 15px;
   max-width: 160px;
   max-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-btn {
@@ -204,5 +217,5 @@ onMounted(async () => {
   max-width: 60px;
   max-height: 60px;
 }
-
 </style>
+

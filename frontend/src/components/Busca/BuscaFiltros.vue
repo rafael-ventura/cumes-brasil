@@ -7,7 +7,6 @@
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
         color="primary"
-        outlined
         class="unified-search"
         label-color="primary"
         rounded

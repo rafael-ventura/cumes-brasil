@@ -1,60 +1,41 @@
 <template>
   <div class="google-login-container">
     <!-- Botão customizado para abrir o login do Google -->
-    <q-btn flat class="google-login-btn" @click="onGoogleLogin">
+    <q-btn :disabled="!isReady" flat class="google-login-btn" @click="login">
       <img src="../../../public/icons/google-2015.svg" alt="Google Logo" class="google-icon" />
     </q-btn>
   </div>
 </template>
 
 <script setup lang="ts">
-// Declaração de tipo para `window.google`
-declare global {
-  interface Window {
-    google?: any;
-  }
-}
-
-import { onMounted } from 'vue';
+import { useTokenClient, type AuthCodeFlowSuccessResponse, type AuthCodeFlowErrorResponse } from "vue3-google-signin";
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com';
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const router = useRouter();
 
-interface GoogleCredentialResponse {
-  credential: string;
-}
+// Funções de sucesso e erro para o login do Google
+const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
+  console.log("Access Token: ", response.access_token);
 
-const handleCredentialResponse = async (response: GoogleCredentialResponse) => {
-  const googleTokenId = response.credential;
   try {
-    await AuthenticateService.authenticateWithGoogle(googleTokenId);
+    await AuthenticateService.authenticateWithGoogle(response.access_token);
     await router.push('/'); // Redireciona para a home após login bem-sucedido
   } catch (error) {
     console.error('Erro ao autenticar com Google:', error);
   }
 };
 
-const onGoogleLogin = () => {
-  if (window.google) {
-    // Inicializa e ativa o prompt de login do Google manualmente
-    window.google.accounts.id.prompt();
-  } else {
-    console.error('Google API not loaded');
-  }
+const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
+  console.error("Erro no login com Google: ", errorResponse);
 };
 
-onMounted(() => {
-  if (window.google) {
-    // Inicializa o Google Identity Services
-    window.google.accounts.id.initialize({
-      client_id: googleClientId,
-      callback: handleCredentialResponse
-    });
-  } else {
-    console.error('Google API not loaded');
-  }
+// Inicializa o Token Client para o Google Sign-In
+const { isReady, login } = useTokenClient({
+  client_id: googleClientId,
+  onSuccess: handleOnSuccess,
+  onError: handleOnError,
 });
 </script>
 
@@ -70,10 +51,14 @@ onMounted(() => {
 .google-login-btn {
   display: flex;
   align-items: center;
+  background-color: transparent; // Fundo transparente
+  border-radius: 999px;          // Estilo arredondado
+  color: white;                  // Cor do texto
+  cursor: pointer;
 }
 
-.google-icon {
-  width: 5em;
-  height: 5em;
+.google-login-btn img {
+  width: 5em;  // Tamanho do logo
+  height: 1.2em;
 }
 </style>
