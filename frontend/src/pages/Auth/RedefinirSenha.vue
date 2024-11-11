@@ -34,8 +34,7 @@
             <!-- Botão de redefinir senha -->
             <q-btn type="submit"
                    label="Redefinir Senha"
-                   color="primary"
-                   class="register-btn q-mt-md"
+                   class="register-btn"
             />
           </q-form>
         </q-card-section>
@@ -139,11 +138,18 @@ const onGeneratePasswordToken = async () => {
 }
 
 .register-btn {
-  width: 100%;
-  background-color: #fcbd7b;
-  color: $primary;
+  width: 40%;
+  height: 4vh;
+  font-size: 0.9em;
+  border: 1px solid $primary;
   border-radius: 15px;
-  padding: 10px;
-  max-width: 160px;
+  max-width: 300px;
+  max-height: 80px;
+  display: flex;
+}
+
+.q-btn {
+  display: flex;
+  justify-content: right;
 }
 </style>

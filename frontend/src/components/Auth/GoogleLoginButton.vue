@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTokenClient, type AuthCodeFlowSuccessResponse, type AuthCodeFlowErrorResponse } from "vue3-google-signin";
+import { useTokenClient, type AuthCodeFlowSuccessResponse, type AuthCodeFlowErrorResponse } from 'vue3-google-signin';
 import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 
@@ -17,7 +17,7 @@ const router = useRouter();
 
 // Funções de sucesso e erro para o login do Google
 const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
-  console.log("Access Token: ", response.access_token);
+  console.log('Access Token: ', response.access_token);
 
   try {
     await AuthenticateService.authenticateWithGoogle(response.access_token);
@@ -28,14 +28,14 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
 };
 
 const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
-  console.error("Erro no login com Google: ", errorResponse);
+  console.error('Erro no login com Google: ', errorResponse);
 };
 
 // Inicializa o Token Client para o Google Sign-In
 const { isReady, login } = useTokenClient({
   client_id: googleClientId,
   onSuccess: handleOnSuccess,
-  onError: handleOnError,
+  onError: handleOnError
 });
 </script>
 

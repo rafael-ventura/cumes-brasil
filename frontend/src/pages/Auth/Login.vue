@@ -215,5 +215,8 @@ onMounted(async () => {
   max-width: 60px;
   max-height: 60px;
 }
-</style>
+:deep(.q-field__control) {
+  height: 3em;
+}
 
+</style>

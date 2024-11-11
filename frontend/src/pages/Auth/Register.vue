@@ -245,8 +245,4 @@ const goToLogin = () => {
 :deep(.q-field__control) {
   height: 3em;
 }
-
-:deep(.q-field__control) {
-  height: 3em;
-}
 </style>
