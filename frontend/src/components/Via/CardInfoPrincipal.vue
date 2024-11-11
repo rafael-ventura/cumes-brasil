@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, onMounted, ref } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 
@@ -44,9 +44,6 @@ const props = defineProps({
   }
 });
 
-onMounted(() => {
-  console.log('Via:', props.via);
-});
 const showGrauInfo = ref(false);
 
 // Função de validação

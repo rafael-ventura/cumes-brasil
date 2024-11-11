@@ -38,6 +38,7 @@ onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
+    via.value.croquis = await CroquiService.getCroquiByViaId(id);
     if (AuthenticateService.isAuthenticated()) {
       const collection = await ColecaoService.getColecaoFavoritos();
       favoriteCollectionId.value = collection ? collection.id : null;

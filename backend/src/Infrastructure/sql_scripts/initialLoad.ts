@@ -3248,35 +3248,35 @@ const croquisJson = {
       'fonte': 7
     },
     {
-      'id': 5,
+      'id': 6,
       'nome': 'Croqui da via Ratos da Montanha',
       'imagem': 10,
       'autor': 'CEC',
       'fonte': 7
     },
     {
-      'id': 6,
+      'id': 7,
       'nome': 'Croqui da Ponto Noturno',
       'imagem': 11,
       'autor': 'CEC',
       'fonte': 7
     },
     {
-      id: 7,
+      id: 8,
       nome: 'Croqui da via Unha de Gato',
       imagem: 12,
       autor: 'CEC',
       'fonte': 7
     },
     {
-      id: 8,
+      id: 9,
       nome: 'Croqui da Via Fissura do Ingles - Resumido',
       imagem: 13,
       autor: 'CEC',
       'fonte': 7
     },
     {
-      id: 9,
+      id: 10,
       nome: 'Croqui da Via Fissura do Ingles - Detalhado',
       imagem: 14,
       autor: 'CEC',
@@ -3924,6 +3924,38 @@ const viasCroquisJson = {
     {
       'via_id': 148,
       'croqui_id': 2
+    },
+    {
+      'via_id': 1,
+      'croqui_id': 3
+    },
+    {
+      'via_id': 125,
+      'croqui_id': 4
+    },
+    {
+      'via_id': 3,
+      'croqui_id': 5
+    },
+    {
+      'via_id': 4,
+      'croqui_id': 6
+    },
+    {
+      'via_id': 7,
+      'croqui_id': 7
+    },
+    {
+      'via_id': 22,
+      'croqui_id': 8
+    },
+    {
+      'via_id': 27,
+      'croqui_id': 9
+    },
+    {
+      'via_id': 27,
+      'croqui_id': 10
     }
   ]
 };
