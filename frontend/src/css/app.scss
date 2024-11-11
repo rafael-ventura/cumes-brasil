@@ -243,16 +243,16 @@ body {
   color: #fcbd7b;
 }
 
-.q-input-custom .q-field__native {
-  color: white;
-  font-weight: bolder;
-  font-size: 14px;
-}
+.q-field__control {
+  border-radius: 6px;
 
-.q-select-custom .q-field__native {
-  color: $primary;
-  font-weight: bolder;
-  font-size: 14px;
+  &::after {
+    background-color: $dark;
+    color: $primary !important;
+  }
+
+
+
 }
 
 
@@ -275,6 +275,7 @@ body {
   font-size: 8px;
   font-weight: bold;
 }
+
 
 
 

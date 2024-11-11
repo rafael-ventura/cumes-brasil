@@ -1,65 +1,56 @@
 <template>
-  <q-page class="q-pa-md">
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Redefinir Senha</div>
-      </q-card-section>
-      <q-card-section v-if="token" >
-        <q-form @submit.prevent="onResetPassword">
-          <q-input v-model="password"
-                   label="Senha"
-                   type="password"
-                   lazy-rules
-                   :rules="[ val => !!val || 'Campo obrigatório' ]"/>
+  <q-page class="fundo-redefinir-senha">
+    <div class="logo-container">
+      <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
+    </div>
+    <div class="form-container">
+      <q-card class="reset-password-card">
+        <q-card-section>
+          <div class="text-h6 titulo-redefinir-senha">Redefinir Senha</div>
+        </q-card-section>
+        <q-card-section>
+          <q-form @submit.prevent="onGeneratePasswordToken" class="custom-redefinir-form">
 
-          <q-input v-model="passwordRepeated"
-                   label="Confirmar Senha"
-                   type="password"
-                   lazy-rules
-                   :rules="[ val => !!val || 'Campo obrigatório' ]"/>
-          <slot></slot>
+            <!-- Campo Email -->
+            <div class="custom-input">
+              <div class="input-container">
+                <q-icon name="mail" class="input-icon" />
+                <label for="email" class="input-label">Email</label>
+              </div>
+              <q-input v-model="email"
+                       id="email"
+                       type="email"
+                       dense
+                       color="primary"
+                       bg-color="dark"
+                       label-color="primary"
+                       hide-bottom-space
+                       :rules="[ val => !!val || 'Campo obrigatório' ]"
+                       class="custom-input-field"
+                       :input-style="{ color: '#fcbd7b'}"
+              />
+            </div>
 
-          <q-btn type="submit"
-                 label="Redefinir Senha"
-                 color="primary"
-                 class="q-mt-md"/>
-        </q-form>
-      </q-card-section>
-
-      <q-card-section v-if="token.length === 0" >
-        <q-form @submit.prevent="onGeneratePasswordToken">
-          <q-input v-model="email"
-                   label="Email"
-                   type="email"
-                   lazy-rules
-                   :rules="[ val => !!val || 'Campo obrigatório' ]"/>
-
-          <slot></slot>
-
-          <q-btn type="submit"
-                 label="Esqueci minha senha"
-                 color="primary"
-                 class="q-mt-md"
-          />
-        </q-form>
-      </q-card-section>
-    </q-card>
+            <!-- Botão de redefinir senha -->
+            <q-btn type="submit"
+                   label="Redefinir Senha"
+                   color="primary"
+                   class="register-btn q-mt-md"
+            />
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import AuthenticateService from '../../services/AuthenticateService';
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
 import { createNotifyConfig } from 'src/utils/utils';
 import { Notify } from 'quasar';
 
 const email = ref('');
-const password = ref('');
-const passwordRepeated = ref('');
-const token = ref('');
-const route = useRoute();
-const router = useRouter();
 
 defineOptions({
   name: 'ResetPasswordPage'
@@ -73,31 +64,86 @@ const onGeneratePasswordToken = async () => {
     Notify.create(createNotifyConfig('negative', error.message, 'top'));
   }
 };
-
-onMounted(async () => {
-  token.value = route.params.userToken?.toString() || '';
-}
-);
-
-const onResetPassword = async () => {
-  try {
-    if (password.value.length < 4) {
-      Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'));
-      return;
-    }
-
-    if (password.value !== passwordRepeated.value) {
-      Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'));
-      return;
-    }
-
-    const response = await AuthenticateService.resetPassword(password.value, passwordRepeated.value, token.value);
-    Notify.create(createNotifyConfig('positive', response.data.message, 'top'));
-    router.push('/auth/login');
-  } catch (error: any) {
-    console.error('Erro ao redefinir senha:', error.message);
-    Notify.create(createNotifyConfig('negative', error.message, 'top'));
-  }
-};
-
 </script>
+
+<style scoped lang="scss">
+@import 'src/css/app.scss';
+
+.fundo-redefinir-senha {
+  background-image: url('/login2.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: 800px) {
+    background-image: url('/login.png');
+  }
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.logo-tamanho {
+  width: 70%;
+  max-width: 200px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reset-password-card {
+  width: 100%;
+  background-color: rgba($dark, 0.85);
+  border-radius: 10px;
+}
+
+.titulo-redefinir-senha {
+  font-size: 1.5rem;
+  text-align: center;
+  color: $primary;
+  margin-bottom: 20px;
+}
+
+.custom-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.input-label {
+  font-size: 1em;
+  color: $primary;
+  margin-left: 0.5em;
+}
+
+.input-icon {
+  color: $primary;
+  font-size: 1.2em;
+}
+
+.register-btn {
+  width: 100%;
+  background-color: #fcbd7b;
+  color: $primary;
+  border-radius: 15px;
+  padding: 10px;
+  max-width: 160px;
+}
+</style>

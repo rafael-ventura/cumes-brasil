@@ -3337,31 +3337,31 @@ const facesJson = {
     },
     {
       'id': 9,
-      'nome': 'Face Sul (Parque da Chacrinha)',
+      'nome': 'Sul (Parque da Chacrinha)',
       'montanha': 2,
       'fonte': 2
     },
     {
       'id': 10,
-      'nome': 'Face Noroeste (Balancé)',
+      'nome': 'Noroeste (Balancé)',
       'montanha': 2,
       'fonte': 2
     },
     {
       'id': 11,
-      'nome': 'Face Noroeste (Cemitério São João Batista)',
+      'nome': 'Noroeste (Cemitério São João Batista)',
       'montanha': 2,
       'fonte': 2
     },
     {
       'id': 12,
-      'nome': 'Face Leste',
+      'nome': 'Leste',
       'montanha': 4,
       'fonte': 2
     },
     {
       'id': 13,
-      'nome': 'Face Sudoeste',
+      'nome': 'Sudoeste',
       'montanha': 4,
       'fonte': 2
     },
@@ -3379,7 +3379,7 @@ const facesJson = {
     },
     {
       'id': 16,
-      'nome': 'Face Norte/Noroeste (Lagoa/Fonte da Saudade)',
+      'nome': 'Norte/Noroeste (Lagoa/Fonte da Saudade)',
       'montanha': 5,
       'fonte': 2
     },
@@ -3391,37 +3391,37 @@ const facesJson = {
     },
     {
       'id': 18,
-      'nome': 'Face Oeste/Sudoeste (Parque da Catacumba)',
+      'nome': 'Oeste/Sudoeste (Parque da Catacumba)',
       'montanha': 5,
       'fonte': 2
     },
     {
       'id': 19,
-      'nome': 'Face Sul (Rua Constante Ramos)',
+      'nome': 'Sul (Rua Constante Ramos)',
       'montanha': 5,
       'fonte': 2
     },
     {
       'id': 20,
-      'nome': 'Face Leste (Túnel Major Rubens Vaz)',
+      'nome': 'Leste (Túnel Major Rubens Vaz)',
       'montanha': 5,
       'fonte': 2
     },
     {
       'id': 21,
-      'nome': 'Face Nordeste (Rua Santa Clara)',
+      'nome': 'Nordeste (Rua Santa Clara)',
       'montanha': 5,
       'fonte': 2
     },
     {
       'id': 22,
-      'nome': 'Face Norte/Noroeste (Platô da Lagoa)',
+      'nome': 'Norte/Noroeste (Platô da Lagoa)',
       'montanha': 6,
       'fonte': 2
     },
     {
       'id': 23,
-      'nome': 'Face Norte (Lagoa/Fonte da Saudade)',
+      'nome': 'Norte (Lagoa/Fonte da Saudade)',
       'montanha': 7,
       'fonte': 2
     },
@@ -3433,19 +3433,19 @@ const facesJson = {
     },
     {
       'id': 25,
-      'nome': 'Face Nordeste (Túnel Sá Freire Alvim)',
+      'nome': 'Nordeste (Túnel Sá Freire Alvim)',
       'montanha': 9,
       'fonte': 2
     },
     {
       'id': 26,
-      'nome': 'Face Norte (Rua Percy Murray)',
+      'nome': 'Norte (Rua Percy Murray)',
       'montanha': 9,
       'fonte': 2
     },
     {
       'id': 27,
-      'nome': 'Face Norte (Rua Presidente Afonso Lopes)',
+      'nome': 'Norte (Rua Presidente Afonso Lopes)',
       'montanha': 9,
       'fonte': 2
     },
@@ -3469,37 +3469,37 @@ const facesJson = {
     },
     {
       'id': 31,
-      'nome': 'Face Sul (Avenida Niemeyer)',
+      'nome': 'Sul (Avenida Niemeyer)',
       'montanha': 14,
       'fonte': 2
     },
     {
       'id': 32,
-      'nome': 'Face Leste (Praça Rubem Dário)',
+      'nome': 'Leste (Praça Rubem Dário)',
       'montanha': 15,
       'fonte': 2
     },
     {
       'id': 33,
-      'nome': 'Face Sul (Avenida Niemeyer)',
+      'nome': 'Sul (Avenida Niemeyer)',
       'montanha': 18,
       'fonte': 2
     },
     {
       'id': 34,
-      'nome': 'Face Leste (Parque do Penhasco Dois Irmãos)',
+      'nome': 'Leste (Parque do Penhasco Dois Irmãos)',
       'montanha': 18,
       'fonte': 2
     },
     {
       'id': 35,
-      'nome': 'Face Nordeste (Parque do Penhasco Dois Irmãos)',
+      'nome': 'Nordeste (Parque do Penhasco Dois Irmãos)',
       'montanha': 18,
       'fonte': 2
     },
     {
       'id': 36,
-      'nome': 'Face Noroeste (Rocinha)',
+      'nome': 'Noroeste (Rocinha)',
       'montanha': 18,
       'fonte': 2
     },

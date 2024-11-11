@@ -1,75 +1,96 @@
 <template>
-  <q-page class="q-pa-md fundo-login">
-    <!-- Container do logo -->
+  <q-page class="fundo-login">
+    <!-- Logo -->
+    <!-- Formulário de Login -->
     <div class="logo-container">
-      <q-img src="../../assets/logo.png" alt="Cumes Brasil" class="logo-tamanho"/>
+      <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
     </div>
-    <!-- Container do conteúdo inferior -->
-    <div v-if="!showLoginDialog" class="bottom-container">
-      <!-- Botão para abrir o pop-up de login -->
-      <q-card class="custom-login">
-        <q-card class="custom-card">
-          <q-btn flat class="btn" label="Login" @click="openLoginDialog" />
-        </q-card>
-        <!-- Google Login -->
-        <q-card class="custom-card">
-          <q-card-section>
-            <google-login-button />
-          </q-card-section>
-        </q-card>
-        <!-- Criar Conta -->
-        <q-card class="custom-card">
-          <q-btn flat class="btn"
-                 label="Criar Conta"
-                 @click="goToSignUp"/>
-        </q-card>
+    <div class="form-container">
+      <q-card class="login-card">
+        <q-form @submit.prevent="onLogin" class="custom-login-form">
+          <!-- Campo Email -->
+          <div class="custom-input">
+            <div class="input-container">
+              <q-icon name="mail" class="input-icon" />
+              <label for="email" class="input-label">Email</label>
+            </div>
+            <q-input
+              id="email"
+              v-model="email"
+              type="email"
+              dense
+              color="primary"
+              bg-color="dark"
+              label-color="primary"
+              hide-bottom-space
+              :rules="[val => !!val || 'Campo obrigatório']"
+              class="custom-input-field"
+              :input-style="{ color: '#fcbd7b' }"
+            />
+          </div>
+
+          <!-- Campo Senha -->
+          <div class="custom-input">
+            <div class="input-container">
+              <q-icon name="lock" class="input-icon" />
+              <label for="senha" class="input-label">Senha</label>
+            </div>
+            <q-input
+              id="senha"
+              v-model="senha"
+              type="password"
+              dense
+              color="primary"
+              bg-color="dark"
+              label-color="primary"
+              hide-bottom-space
+              :rules="[val => !!val || 'Campo obrigatório']"
+              class="custom-input-field"
+              :input-style="{ color: '#fcbd7b' }"
+            />
+          </div>
+
+          <!-- Botão de Esqueci a Senha -->
+          <q-btn flat label="Esqueci a senha" class="forgot-password-btn" @click="goToResetPassword" />
+
+          <!-- Botões de Ação (Cadastrar, Google e Login) -->
+          <div class="action-buttons">
+            <q-btn label="Cadastrar" class="register-btn" @click="goToSignUp" />
+            <google-login-button class="google-btn" />
+            <q-btn type="submit" icon="arrow_forward" class="login-btn" />
+          </div>
+        </q-form>
       </q-card>
     </div>
-    <!-- Pop-up de login com o LoginForm -->
-    <q-dialog v-model="showLoginDialog" transition-show="slide-up" transition-hide="slide-down" @hide="showBottomContainer">
-      <login-form submit-label="Login" @submit="onLogin">
-        <q-btn flat class="q-mt-md btn-blue custom-bottom"
-               label="Esqueci minha senha!"
-               @click="goToResetPassword"/>
-      </login-form>
-    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import AuthenticateService from 'src/services/AuthenticateService';
+import ImagemService from '../../services/ImagemService';
 import GoogleLoginButton from 'components/Auth/GoogleLoginButton.vue';
-import AuthenticateService from '../../services/AuthenticateService';
-import LoginForm from 'components/Auth/LoginForm.vue';
 import { Notify } from 'quasar';
 import { createNotifyConfig } from 'src/utils/utils';
+import { Imagem } from 'src/models/Imagem';
 
 defineOptions({
   name: 'LoginPage'
 });
 
+const email = ref('');
+const senha = ref('');
+const backgroundImage = ref('');
 const router = useRouter();
-const showLoginDialog = ref(false); // Controla a exibição do pop-up de login
 
-const openLoginDialog = () => {
-  showLoginDialog.value = true; // Abre o diálogo de login
-};
-
-const showBottomContainer = () => {
-  showLoginDialog.value = false; // Fecha o diálogo e mostra o bottom-container novamente
-};
-
-const onLogin = async ({
-  email,
-  senha
-}: { email: string, senha: string }) => {
+const onLogin = async () => {
   try {
-    await AuthenticateService.login(email, senha);
+    await AuthenticateService.login(email.value, senha.value);
+    Notify.create(createNotifyConfig('positive', 'Login realizado com sucesso', 'top'));
     await router.push('/');
-    showLoginDialog.value = false; // Fecha o pop-up após login bem-sucedido
   } catch (error: any) {
-    Notify.create(createNotifyConfig('negative', error.message));
+    Notify.create(createNotifyConfig('negative', error.message, 'top'));
   }
 };
 
@@ -80,59 +101,108 @@ const goToResetPassword = () => {
 const goToSignUp = () => {
   router.push('/auth/register');
 };
-// Declaração da propriedade 'google' no objeto 'window'
-declare global {
-  interface Window {
-    google: any;
+
+onMounted(async () => {
+  try {
+    const image: Imagem = await ImagemService.getImageById(1);
+    backgroundImage.value = ImagemService.getFullImageUrl(image.url);
+  } catch (error) {
+    console.error('Erro ao carregar a imagem de fundo:', error);
   }
-}
+});
 </script>
 
 <style scoped lang="scss">
+@import 'src/css/app.scss';
+
 .fundo-login {
-  background-image: url('../../assets/image.jpg'); /* Substitua pelo caminho da sua imagem */
-  background-size: cover; /* Cobre toda a área sem distorcer */
-  background-position: center; /* Mantém a imagem centralizada */
-  background-repeat: no-repeat; /* Evita repetição da imagem */
-  min-height: 100vh; /* Garante que o fundo cubra toda a altura da tela */
+  background-image: url('/login2.jpg'); /* Imagem de fundo grande */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Alinha os elementos em coluna */
-  justify-content: space-between; /* Espaça o conteúdo entre o topo e a parte inferior */
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 20px; /* Adiciona espaçamento nas bordas */
+
+  /* Altera a imagem de fundo para telas com 800px ou menos */
+  @media (max-width: 800px) {
+    background-image: url('/login.png'); /* Imagem de fundo pequena */
+  }
 }
-/* Container do logo na parte superior */
-.logo-container {
+
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-card {
+  width: 100%;
+  background-color: rgba($dark, 0.85);
+  padding: 5%;
+  border-radius: 10px;
+}
+
+.custom-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.input-label {
+  font-size: 1em;
+  color: $primary;
+  margin-left: 0.5em;
+}
+
+.input-icon {
+  color: $primary;
+  font-size: 1.2em;
+}
+
+.forgot-password-btn {
+  text-align: left;
+  color: #ffffff;
+  font-size: 1em;
+  margin-bottom: 10px;
+  margin-left: -5%;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.register-btn, .google-btn {
+  width: 28%;
+  height: 4vh;
+  font-size: 0.85em;
+  color: $primary;
+  border: 1px solid $primary;
+  border-radius: 15px;
+  max-width: 160px;
+  max-height: 60px;
+}
+
+.login-btn {
+  width: 8vw;
+  height: 8vw;
+  background-color: $primary;
+  color: $dark;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 0;
+  max-width: 60px;
+  max-height: 60px;
 }
-.custom-login {
-  max-width: 420px;
-  margin-inline: auto;
-  background-color: rgba(0, 0, 0, 0.42);
-  padding: 8px 10px;
-}
-.custom-bottom {
-  margin-right: 30px;
-}
-.custom-card {
-  margin-inline: auto;
-  text-align: center;
-  max-width: 400px;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px !important;
-  background-color: rgba(255, 255, 255, 0.09);
-}
-.login-card {
-  max-width: 400px;
-  margin: auto;
-}
-.logo-tamanho{
-  width: 310px;
-  margin: 0 auto;
-  display: flex;
-}
+
 </style>
