@@ -6,12 +6,13 @@
         v-model="localFilters.unifiedSearch"
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
-        outlined
         color="primary"
+        outlined
         class="unified-search"
         label-color="primary"
         rounded
         @keydown="onInputChange"
+        :input-style="{ color: '#fcbd7b', borderColor: '#fcbd7b' }"
       >
         <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
@@ -178,10 +179,9 @@ const extensionCategories = ref({
 type ExtensionCategory = keyof typeof extensionCategories.value;
 
 const difficulties = [
-  'I', 'Isup', 'II', 'III', 'IV', 'V', 'A1', 'A2', 'A3',
-  'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', 'VI', 'VIsup', 'VIIa',
-  'VIIIa/b', 'VIIIb', 'VIIc', 'VIIIb/c', 'VIIIc', 'IXa', 'III (A1/VIIIa)',
-  'VIIb/c', 'Xa', 'VII(3)', 'VII', 'V(2)', 'VIII', 'VIIIa'
+  '1', 'Isup', '2', '3', '4', '5',
+  'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', '6', 'VIsup', 'VIIa',
+  'VIIIb', 'VIIc', 'VIIIc', 'IXa', 'Xa', 'VII(3)', '7', 'V(2)', 'VIII', 'VIIIa'
 ];
 const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
 const mountainOptions = ref<any[]>([]);
@@ -375,16 +375,6 @@ const filterByExtension = (category: string) => {
   border: 1px solid #fcbd7b;
   border-radius: 50%; /* Ícone circular */
   margin-left: 4px; /* Margem à esquerda */
-}
-
-.q-btn.filter-btn {
-  background-color: #333333;
-  color: #fcbd7b;
-}
-
-.q-btn.filter-btn.active {
-  background-color: #fcbd7b;
-  color: #333333;
 }
 
 .selected {

@@ -86,7 +86,7 @@ function goToFilteredSearch (filterType: string) {
   if (filterType === 'copacabana') {
     query = { bairro: 'Copacabana' }; // Filtro por bairro
   } else if (filterType === 'terceiroGrau') {
-    query = { selectedDifficulty: 'III' }; // Filtro por grau
+    query = { selectedDifficulty: '3' }; // Filtro por grau
   } else if (filterType === 'exposicaoE2') {
     query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
   }
