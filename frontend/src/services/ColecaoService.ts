@@ -6,7 +6,7 @@ import { adjustImageUrls, formatVia, handleApiError, romanToInt } from 'src/util
 import { UnwrapRef } from 'vue';
 
 class ColecaoService {
-  async getFirstByUsuarioId (): Promise<IColecao | null> {
+  async getColecaoFavoritos (): Promise<IColecao | null> {
     const userId = localStorage.getItem('userId');
     try {
       const colecoes = await this.getColecoes(`/colecoes/usuario/${userId}`);

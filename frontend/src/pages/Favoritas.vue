@@ -94,7 +94,7 @@ defineOptions({
 
 onMounted(async () => {
   try {
-    colecao.value = await ColecaoService.getFirstByUsuarioId();
+    colecao.value = await ColecaoService.getColecaoFavoritos();
   } catch (error) {
     console.error('Coleção de Vias Favoritas não encontrada:', error);
     await router.push('/colecoes');

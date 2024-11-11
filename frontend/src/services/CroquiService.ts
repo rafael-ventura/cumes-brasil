@@ -2,7 +2,7 @@ import { api } from 'boot/axios';
 import { Croqui } from 'src/models/Croqui';
 import { adjustImageUrls, handleApiError } from 'src/utils/utils';
 
-export class CroquiService {
+class CroquiService {
   async getCroquiById (id: number | string): Promise<Croqui> {
     return this.fetchCroqui(`/croquis/${id}`);
   }
@@ -41,3 +41,5 @@ export class CroquiService {
     }
   }
 }
+
+export default new CroquiService();

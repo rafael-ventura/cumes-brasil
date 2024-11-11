@@ -36,10 +36,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { Via } from 'src/models/Via';
+import { Croqui } from 'src/models/Croqui';
 
 const props = defineProps<{
-  via: Via | null;
+  croquis: Croqui[];
 }>();
 
 const images = ref<{ url: string; nome: string }[]>([]);
@@ -56,12 +56,10 @@ const prevImage = () => {
 };
 
 onMounted(() => {
-  if (props.via && props.via.croquis) {
-    images.value = props.via.croquis.map((croqui) => ({
-      url: croqui.imagem.url,
-      nome: croqui.nome
-    }));
-  }
+  images.value = props.croquis.map((croqui) => ({
+    url: croqui.imagem.url,
+    nome: croqui.nome
+  }));
 });
 </script>
 

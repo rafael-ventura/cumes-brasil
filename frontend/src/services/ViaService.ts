@@ -1,6 +1,6 @@
 import { Via } from 'src/models/Via';
 import { api } from 'boot/axios';
-import { CroquiService } from 'src/services/CroquiService';
+import croquiService from 'src/services/CroquiService';
 import { adjustImageUrls, formatVia, handleApiError } from 'src/utils/utils';
 import ColecaoService from 'src/services/ColecaoService';
 import AuthenticateService from 'src/services/AuthenticateService';
@@ -42,8 +42,7 @@ class ViaService {
         throw new Error('Usuário não autenticado');
       }
 
-      const colecoes = await ColecaoService.getByUsuarioId();
-      const favoritosColecao = colecoes?.find(colecao => colecao.nome === 'Vias Favoritas');
+      const favoritosColecao = await ColecaoService.getColecaoFavoritos();
 
       if (!favoritosColecao) {
         throw new Error('Coleção de favoritos não encontrada');
@@ -57,7 +56,6 @@ class ViaService {
 
   private async adjustAndFormatVia (via: Via): Promise<Via> {
     adjustImageUrls(via);
-    const croquiService = new CroquiService();
     via.croquis = await croquiService.getCroquiByViaId(via.id);
     via.croquis.forEach(croqui => adjustImageUrls(croqui));
 
