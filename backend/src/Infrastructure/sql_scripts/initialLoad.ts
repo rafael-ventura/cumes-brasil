@@ -3722,12 +3722,6 @@ const fontesJson = {
 const imagensJson = {
   'imagens': [
     {
-      'url': '/assets/login.png',
-      'descricao': 'Foto Background da tela de Login',
-      'fonte': 1,
-      'tipo_entidade': 'usuario'
-    },
-    {
       'url': '/assets/colecao-default-01.jpg',
       'descricao': 'Foto Default para Colecao',
       'fonte': 3,
