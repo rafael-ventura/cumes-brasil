@@ -42,7 +42,7 @@ const verificarVias = () => {
 
 // Observa mudanças em `colecao.vias`
 watch(
-  () => props.colecao.viaColecoes.via,
+  () => props.colecao.viaColecoes?.via,
   (vias) => {
     if (vias) {
       viasCarregadas.value = vias.length;

@@ -147,7 +147,7 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         }
 
         // Aplicação da ordenação dinâmica
-        qb = qb.orderBy(sortField, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+        qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase());
 
         // Contar o total de itens (coleções) correspondentes
         const totalItems = await qb.getCount();
