@@ -2,7 +2,7 @@
   <q-page class="fundo-login" :style="{ backgroundImage: `url(${backgroundImage})` }">
     <!-- Logo -->
     <div class="logo-container">
-      <q-img src="/assets/logo.png" alt="Cumes Brasil" class="logo-tamanho" />
+      <q-img src="../../logo.png" alt="Cumes Brasil" class="logo-tamanho" />
     </div>
 
     <!-- Formulário de Login -->
@@ -11,29 +11,42 @@
         <q-form @submit.prevent="onLogin" class="custom-login-form">
           <!-- Campo Email -->
           <div class="custom-input">
-            <q-icon name="mail" class="input-icon" />
-            <label for="email" class="input-label">Email</label>
+            <div class="input-container">
+              <q-icon name="mail" class="input-icon" />
+              <label for="email" class="input-label">Email</label>
+            </div>
             <q-input
               id="email"
               v-model="email"
               type="email"
               outlined
               dense
+              color="primary"
+              bg-color="dark"
+              label-color="primary"
+              hide-bottom-space
               :rules="[val => !!val || 'Campo obrigatório']"
               class="custom-input-field"
+              :input-style="{ color: '#fcbd7b' }"
             />
           </div>
 
           <!-- Campo Senha -->
           <div class="custom-input">
-            <q-icon name="lock" class="input-icon" />
-            <label for="senha" class="input-label">Senha</label>
+            <div class="input-container">
+              <q-icon name="lock" class="input-icon" />
+              <label for="senha" class="input-label">Senha</label>
+            </div>
             <q-input
               id="senha"
               v-model="senha"
               type="password"
               outlined
               dense
+              color="primary"
+              bg-color="dark"
+              label-color="primary"
+              hide-bottom-space
               :rules="[val => !!val || 'Campo obrigatório']"
               class="custom-input-field"
             />
@@ -112,7 +125,6 @@ onMounted(async () => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
 }
 
 .logo-container {
@@ -122,12 +134,12 @@ onMounted(async () => {
 }
 
 .logo-tamanho {
-  width: 310px;
+  width: 80%;
 }
 
 .form-container {
   width: 100%;
-  max-width: 390px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -136,73 +148,70 @@ onMounted(async () => {
 .login-card {
   width: 100%;
   background-color: rgba($dark, 0.85);
-  padding: 20px;
+  padding: 5%;
   border-radius: 10px;
 }
 
 .custom-input {
   width: 100%;
   margin-bottom: 16px;
+}
+
+.input-container {
   display: flex;
-  flex-direction: column;
-  position: relative;
+  align-items: center;
 }
 
 .input-label {
-  font-size: 16px;
+  font-size: 1em;
   color: $primary;
-  margin-bottom: 4px;
-  padding-left: 35px; /* Espaçamento para o ícone */
+  margin-left: 0.5em;
 }
 
 .input-icon {
   color: $primary;
-  font-size: 20px;
+  font-size: 1.2em;
 }
 
 .custom-input-field {
-  width: 315px;
-  height: 49px;
-  background-color: $dark; /* Fundo escuro */
+  width: 100%;
+  background-color: rgba($dark, 0.85);
   border-radius: 5px;
+  color: $primary;
   .q-field__control {
-    border: 1px solid $primary;
+    border-color: $primary;
+    color: $primary;
   }
 }
 
 .forgot-password-btn {
   text-align: left;
   color: #ffffff;
-  font-size: 14px;
-  margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 10px;
+  margin-left: -5%;
 }
 
 .action-buttons {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 10px;
 }
 
-.register-btn {
-  width: 113px;
-  height: 31px;
-  font-size: 14px;
+.register-btn, .google-btn {
+  width: 28%;
+  height: 4vh;
+  font-size: 0.85em;
   color: $primary;
   border: 1px solid $primary;
   border-radius: 15px;
 }
 
-.google-btn {
-  width: 113px;
-  height: 31px;
-}
-
 .login-btn {
-  width: 45px;
-  height: 45px;
+  width: 8vw;
+  height: 8vw;
   background-color: $primary;
-  color: #fff;
+  color: $dark;
   border-radius: 50%;
   display: flex;
   justify-content: center;
