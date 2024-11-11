@@ -19,11 +19,11 @@
                 id="nome"
                 v-model="nome"
                 type="text"
-                dense
+                debounce="300"
+                outlined
                 color="primary"
-                bg-color="dark"
                 label-color="primary"
-                hide-bottom-space
+                rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
                 :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
               />
@@ -39,13 +39,12 @@
                 id="email"
                 v-model="email"
                 type="email"
-                dense
+                debounce="300"
+                outlined
                 color="primary"
-                bg-color="dark"
                 label-color="primary"
-                hide-bottom-space
+                rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                class="custom-input-field"
                 :input-style="{ color: '#fcbd7b' }"
               />
             </div>
@@ -59,14 +58,13 @@
               <q-input
                 id="senha"
                 v-model="senha"
-                dense
                 type="password"
+                debounce="300"
+                outlined
                 color="primary"
-                bg-color="dark"
                 label-color="primary"
-                hide-bottom-space
+                rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                class="custom-input-field"
                 :input-style="{ color: '#fcbd7b' }"
               />
             </div>
@@ -81,13 +79,12 @@
                 v-model="confirmPassword"
                 id="confirmPassword"
                 type="password"
+                debounce="300"
+                outlined
                 color="primary"
-                dense
-                bg-color="dark"
                 label-color="primary"
-                hide-bottom-space
+                rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                class="custom-input-field"
                 :input-style="{ color: '#fcbd7b' }"
               />
             </div>
@@ -243,5 +240,13 @@ const goToLogin = () => {
   text-decoration: underline;
   text-align: left;
   font-size: 0.85em;
+}
+
+:deep(.q-field__control) {
+  height: 3em;
+}
+
+:deep(.q-field__control) {
+  height: 3em;
 }
 </style>

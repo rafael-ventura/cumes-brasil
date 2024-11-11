@@ -18,13 +18,12 @@
               id="email"
               v-model="email"
               type="email"
-              dense
+              debounce="300"
+              outlined
               color="primary"
-              bg-color="dark"
               label-color="primary"
-              hide-bottom-space
+              rounded
               :rules="[val => !!val || 'Campo obrigatório']"
-              class="custom-input-field"
               :input-style="{ color: '#fcbd7b' }"
             />
           </div>
@@ -39,13 +38,12 @@
               id="senha"
               v-model="senha"
               type="password"
-              dense
+              debounce="300"
+              outlined
               color="primary"
-              bg-color="dark"
               label-color="primary"
-              hide-bottom-space
+              rounded
               :rules="[val => !!val || 'Campo obrigatório']"
-              class="custom-input-field"
               :input-style="{ color: '#fcbd7b' }"
             />
           </div>
