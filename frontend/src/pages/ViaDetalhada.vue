@@ -27,7 +27,6 @@ import BotoesAcao from 'components/Via/BotoesAcao.vue';
 import SecaoCroqui from 'components/Via/SecaoCroqui.vue';
 import SecaoMaisDetalhes from 'components/Via/SecaoMaisDetalhes.vue';
 import AuthenticateService from 'src/services/AuthenticateService';
-import CroquiService from 'src/services/CroquiService';
 
 const route = useRoute();
 const via = ref();
@@ -38,7 +37,6 @@ onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
-    via.value.croquis = await CroquiService.getCroquiByViaId(id);
     if (AuthenticateService.isAuthenticated()) {
       const collection = await ColecaoService.getColecaoFavoritos();
       favoriteCollectionId.value = collection ? collection.id : null;
