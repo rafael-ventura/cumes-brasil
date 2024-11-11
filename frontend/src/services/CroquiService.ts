@@ -20,7 +20,7 @@ export class CroquiService {
       const response = await api.get(url);
       const croqui = response.data as Croqui;
 
-      adjustImageUrls(croqui);
+      adjustImageUrls(croqui.imagem);
       return croqui;
     } catch (error: any) {
       handleApiError(error, 'Erro desconhecido ao buscar croqui');
@@ -32,7 +32,9 @@ export class CroquiService {
       const response = await api.get(url);
       const croquis = response.data as Croqui[];
 
-      croquis.forEach(adjustImageUrls);
+      croquis.forEach(
+        (croqui: Croqui) => adjustImageUrls(croqui.imagem)
+      );
       return croquis;
     } catch (error: any) {
       handleApiError(error, 'Erro desconhecido ao buscar croquis');

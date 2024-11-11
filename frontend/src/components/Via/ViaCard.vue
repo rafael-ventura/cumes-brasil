@@ -1,22 +1,17 @@
 <template>
   <div v-if="via">
     <q-card class="card-item" @click="emitClick">
-      <q-card-section>
-        <div v-if="via.imagem">
-          <img :src="via.imagem.url" class="card-image" alt="via image"/>
+      <div class="card-image-container">
+        <img :src="via.imagem.url" class="card-image" alt="via image" />
+      </div>
+      <q-card-section class="card-info">
+        <div class="via-nome">{{ via.nome }}</div>
+        <div class="montanha-face">
+          <q-icon name="terrain" size="20px" />
+          {{ via.montanha.nome }}<span v-if="via.face && via.face.nome">, {{ via.face.nome }}</span>
         </div>
-        <div class="card-info">
-          <div class="text-h6">{{ via.nome }}</div>
-          <div class="text-subtitle1">
-            <q-icon name="terrain" />
-            {{ via.montanha.nome }}
-          </div>
-          <q-badge color="primary" :label="'Grau: ' + via.grau" text-color="black" />
-          <q-badge color="secondary" :label="'Crux: ' + via.crux" class="q-ml-sm" text-color="black" />
-          <q-badge color="info" :label="'Artificial: ' + via.artificial" class="q-ml-sm" text-color="black" />
-          <q-badge color="accent" :label="'Duração: ' + via.duracao" class="q-ml-sm" text-color="black" />
-          <q-badge color="warning" :label="'Exposição: ' + via.exposicao" class="q-ml-sm" text-color="black" />
-          <q-badge color="info" :label="'Extensão: ' + via.extensao + 'm'" class="q-mt-sm" text-color="black" />
+        <div class="grau-badge-container">
+          <GrauBadge :grauText="via.grau!" :extensaoText="via.extensao + 'm'" />
         </div>
       </q-card-section>
     </q-card>
@@ -25,6 +20,7 @@
 
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue';
+import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{ via: Via }>();
@@ -38,28 +34,57 @@ const emitClick = () => {
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
+
 .card-item {
   border-radius: 10px;
-  background-color: $tertiary-light;
+  background-color: $dark;
+  width: 100%;
+  height: 315px;
+  margin: 0;
+  padding: 0;
 }
 
-.card-info {
-  background-color: $tertiary;
-}
-
-.text-h6 {
-  background-color: $tertiary;
-  color: black;
-}
-
-.text-subtitle1 {
-  background-color: $tertiary;
-  color: black;
+.card-image-container {
+  width: 100%;
+  height: 175px;
 }
 
 .card-image {
   width: 100%;
-  height: 200px;
+  height: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   object-fit: cover;
+}
+
+.card-info {
+  background-color: $primary;
+  padding: 10px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.via-nome {
+  font-size: 22px;
+  font-weight: bold;
+  color: black;
+}
+
+.montanha-face {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: black;
+}
+
+.montanha-face q-icon {
+  margin-right: 5px;
+}
+
+.grau-badge-container {
+  display: flex;
+  justify-content: center;
 }
 </style>

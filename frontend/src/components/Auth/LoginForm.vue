@@ -10,12 +10,14 @@
                  label="Email"
                  type="email"
                  color="dark"
-                 required/>
+                 lazy-rules
+                 :rules="[ val => !!val || 'Campo obrigatório' ]"/>
         <q-input v-model="senha"
                  label="Senha"
                  type="password"
                  color="dark"
-                 required/>
+                 lazy-rules
+                 :rules="[ val => !!val || 'Campo obrigatório' ]"/>
         <slot></slot> <!-- Slot para botões adicionais -->
         <q-btn type="submit"
                :label="submitLabel"

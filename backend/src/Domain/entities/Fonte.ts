@@ -38,5 +38,4 @@ export class Fonte extends BaseEntity {
     this.referencia = referencia;
   }
 
-
 }

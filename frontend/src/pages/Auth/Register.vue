@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router';
 import AuthenticateService from '../../services/AuthenticateService';
 import RegisterForm from 'components/Auth/RegistroForm.vue';
 import { Notify } from 'quasar';
+import { createNotifyConfig } from 'src/utils/utils';
 
 defineOptions({
   name: 'RegisterPage'
@@ -34,41 +35,21 @@ const router = useRouter();
 
 const onSignUp = async ({ nome, email, senha }: { nome: string, email: string, senha: string }) => {
   if (senha !== confirmPassword.value) {
-    Notify.create({
-      type: 'negative',
-      message: 'Senhas não conferem',
-      position: 'center',
-      timeout: 3000
-    });
+    Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'));
     return;
   }
 
   if (senha.length < 4) {
-    Notify.create({
-      type: 'negative',
-      message: 'A senha deve conter pelo menos 4 caracteres',
-      position: 'center',
-      timeout: 3000
-    });
+    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'));
     return;
   }
 
   try {
     await AuthenticateService.register(nome, email, senha);
     await router.push('/auth/login');
-    Notify.create({
-      type: 'positive',
-      message: 'Cadastro realizado com sucesso!',
-      position: 'center',
-      timeout: 3000
-    });
+    Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso', 'top'));
   } catch (error: any) {
-    Notify.create({
-      type: 'negative',
-      message: '' + error.message,
-      position: 'center',
-      timeout: 3000
-    });
+    Notify.create(createNotifyConfig('negative', error.message, 'top'));
   }
 };
 

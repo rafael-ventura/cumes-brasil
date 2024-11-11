@@ -1,5 +1,6 @@
 import { AppDataSource } from "../config/db";
 import { Escalada } from "../../Domain/entities/Escalada";
+import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
 
 export class EscaladaRepository {
     private repository = AppDataSource.getRepository(Escalada);
@@ -84,5 +85,50 @@ export class EscaladaRepository {
         }
 
         return query.getMany();
+    }
+
+    async search(filters: any): Promise<ISearchResult<Escalada>> {
+        const {
+            unifiedSearch,
+            page = 1,
+            itemsPerPage = 10,
+            sortField = 'escalada.data',
+            sortOrder = 'DESC'
+        } = filters;
+
+        let qb = this.repository.createQueryBuilder("escalada")
+            .leftJoinAndSelect("escalada.usuario", "usuario")
+            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("via.imagem", "imagem") // Acessar a imagem através da via
+            //acessar tambem os participantes
+            .leftJoinAndSelect("escalada.participantes", "participante")
+            .orderBy("escalada.data", "DESC");
+
+        // Filtrar por nome da via (se necessário)
+        if (unifiedSearch) {
+            qb = qb.andWhere("via.nome LIKE :unifiedSearch", { unifiedSearch: `%${unifiedSearch}%` });
+        }
+
+        // Adiciona ordenação dinâmica
+        if (sortField && sortOrder) {
+            qb = qb.orderBy(sortField, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+        }
+
+        // Total de escaladas que correspondem aos filtros
+        const totalItems = await qb.getCount();
+
+        // Escaladas paginadas
+        const items = await qb
+            .skip((page - 1) * itemsPerPage)
+            .take(itemsPerPage)
+            .getMany();
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        return {
+            items,
+            totalPages,
+            totalItems
+        };
     }
 }

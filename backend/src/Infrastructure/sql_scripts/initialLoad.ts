@@ -33,7 +33,7 @@ const viasJson = {
       'crux': 'Vsup',
       'artificial': '',
       'duracao': '',
-      'exposicao': '',
+      'exposicao': 'E2',
       'extensao': 18,
       'conquistadores': 'Ivan Cristie;Paulo Henrique \'PH\' Santos',
       'detalhes': '',
@@ -46,12 +46,12 @@ const viasJson = {
     {
       'id': 3,
       'nome': 'Semisonic',
-      'grau': 'III',
-      'crux': 'V',
+      'grau': '2',
+      'crux': 'IV',
       'artificial': '',
       'duracao': '',
-      'exposicao': 'E3',
-      'extensao': 130,
+      'exposicao': 'E2/E3',
+      'extensao': 140,
       'conquistadores': 'Paulo Henrique \'PH\' Santos (solo encordado)',
       'detalhes': '',
       'data': '2004-06-21',
@@ -63,12 +63,12 @@ const viasJson = {
     {
       'id': 4,
       'nome': 'Ratos de montanha',
-      'grau': 'V',
-      'crux': 'VIIb',
+      'grau': '5',
+      'crux': 'VIIa',
       'artificial': '',
-      'duracao': '',
-      'exposicao': 'E2/3',
-      'extensao': 105,
+      'duracao': 'D1',
+      'exposicao': 'E3',
+      'extensao': 110,
       'conquistadores': 'Leandro Chen; Marcos \'Snakinho\' Piffer;Marcus Vinícius Ferreira;Patrícia Duffes; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2005-04-14',
@@ -80,7 +80,7 @@ const viasJson = {
     {
       'id': 5,
       'nome': 'Paredão do Leme',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -97,7 +97,7 @@ const viasJson = {
     {
       'id': 6,
       'nome': 'João Belamy',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -114,12 +114,12 @@ const viasJson = {
     {
       'id': 7,
       'nome': 'Ponto Noturno',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
-      'exposicao': '',
-      'extensao': 100,
+      'exposicao': 'E2',
+      'extensao': 105,
       'conquistadores': 'Marcos Fontainha; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2005-06-10',
@@ -132,7 +132,7 @@ const viasJson = {
     {
       'id': 8,
       'nome': 'Um dia de sol',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VIsup',
       'artificial': '',
       'duracao': '',
@@ -201,7 +201,7 @@ const viasJson = {
     {
       'id': 12,
       'nome': 'Travessia Dois em um',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -354,12 +354,12 @@ const viasJson = {
     {
       'id': 21,
       'nome': 'Arco do Triunfo',
-      'grau': 'V',
-      'crux': 'VIIa',
-      'artificial': '',
-      'duracao': '',
-      'exposicao': '',
-      'extensao': 45,
+      'grau': '5',
+      'crux': 'VISup',
+      'artificial': 'A0/VIIa',
+      'duracao': 'D1',
+      'exposicao': 'E1',
+      'extensao': 42,
       'conquistadores': 'Marcus Vinícius; Paulo Henrique \'PH\' Santos',
       'detalhes': '',
       'data': '2004-04-03',
@@ -371,11 +371,11 @@ const viasJson = {
     {
       'id': 22,
       'nome': 'Unha de gato',
-      'grau': 'IV',
-      'crux': 'VIIc',
+      'grau': '4',
+      'crux': 'VIIb/c',
       'artificial': '',
       'duracao': '',
-      'exposicao': 'E2/3',
+      'exposicao': 'E1',
       'extensao': 45,
       'conquistadores': 'Paulo Henrique \'PH\' Santos; Thiago Pedroso',
       'detalhes': '',
@@ -405,7 +405,7 @@ const viasJson = {
     {
       'id': 24,
       'nome': 'Zé Buscapé',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -440,12 +440,12 @@ const viasJson = {
     {
       'id': 26,
       'nome': 'Ascensão e Queda',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VI',
       'artificial': 'A0(3)',
-      'duracao': '',
-      'exposicao': 'E2/3',
-      'extensao': 110,
+      'duracao': 'D2',
+      'exposicao': 'E2',
+      'extensao': 125,
       'conquistadores': 'Alfredo Neto;Flávio Abreu;Guilherme \'Piu-Piu\' Fonseca',
       'detalhes': '',
       'data': '2002-10-10',
@@ -458,7 +458,7 @@ const viasJson = {
     {
       'id': 27,
       'nome': 'Fissura do inglês',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VIsup',
       'artificial': '',
       'duracao': '',
@@ -475,7 +475,7 @@ const viasJson = {
     {
       'id': 28,
       'nome': 'Sucata',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -492,7 +492,7 @@ const viasJson = {
     {
       'id': 29,
       'nome': 'Fissura São João',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -629,7 +629,7 @@ const viasJson = {
     {
       'id': 37,
       'nome': 'Olhos de anjo',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'Vsup',
       'artificial': '',
       'duracao': '',
@@ -646,7 +646,7 @@ const viasJson = {
     {
       'id': 38,
       'nome': 'São Pedro',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -663,7 +663,7 @@ const viasJson = {
     {
       'id': 39,
       'nome': 'Balança-Mas-Não-Cai',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VIIa',
       'artificial': '',
       'duracao': '',
@@ -680,7 +680,7 @@ const viasJson = {
     {
       'id': 40,
       'nome': 'Francesco Berardi',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -697,7 +697,7 @@ const viasJson = {
     {
       'id': 41,
       'nome': 'Nós e a eternidade',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -714,7 +714,7 @@ const viasJson = {
     {
       'id': 42,
       'nome': 'Sete Palmos',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VIIb',
       'artificial': '',
       'duracao': '',
@@ -731,7 +731,7 @@ const viasJson = {
     {
       'id': 43,
       'nome': 'Forças ocultas',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'VIIb',
       'artificial': '',
       'duracao': '',
@@ -799,7 +799,7 @@ const viasJson = {
     {
       'id': 47,
       'nome': 'Passo do gigante',
-      'grau': 'II',
+      'grau': '2',
       'crux': '',
       'artificial': '',
       'duracao': '',
@@ -816,7 +816,7 @@ const viasJson = {
     {
       'id': 48,
       'nome': 'Jânio Quadros',
-      'grau': 'II',
+      'grau': '2',
       'crux': '',
       'artificial': '',
       'duracao': '',
@@ -867,7 +867,7 @@ const viasJson = {
     {
       'id': 51,
       'nome': 'Bem-Te-Vi',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -884,7 +884,7 @@ const viasJson = {
     {
       'id': 52,
       'nome': 'Encruzilhada',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -901,7 +901,7 @@ const viasJson = {
     {
       'id': 53,
       'nome': 'Via do Beto',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -918,7 +918,7 @@ const viasJson = {
     {
       'id': 54,
       'nome': 'Amnésia Audaciosa',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -935,7 +935,7 @@ const viasJson = {
     {
       'id': 55,
       'nome': 'Lagoa',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -952,7 +952,7 @@ const viasJson = {
     {
       'id': 56,
       'nome': 'O satânico Dr. Pow',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -969,7 +969,7 @@ const viasJson = {
     {
       'id': 57,
       'nome': 'Cabrito Cabreiro',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -986,7 +986,7 @@ const viasJson = {
     {
       'id': 58,
       'nome': 'A fogueira das vaidades',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -1004,7 +1004,7 @@ const viasJson = {
     {
       'id': 59,
       'nome': 'Grande guerreiro',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -1021,7 +1021,7 @@ const viasJson = {
     {
       'id': 60,
       'nome': 'Cabrito em chamas',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -1039,7 +1039,7 @@ const viasJson = {
     {
       'id': 61,
       'nome': 'Os exércitos de um homem só',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1056,7 +1056,7 @@ const viasJson = {
     {
       'id': 62,
       'nome': 'Carioca',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1090,7 +1090,7 @@ const viasJson = {
     {
       'id': 64,
       'nome': 'PFF2',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'II',
       'artificial': '',
       'duracao': '',
@@ -1107,7 +1107,7 @@ const viasJson = {
     {
       'id': 65,
       'nome': 'Cristal acima',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -1124,7 +1124,7 @@ const viasJson = {
     {
       'id': 66,
       'nome': 'Chuva de pedra',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -1141,7 +1141,7 @@ const viasJson = {
     {
       'id': 67,
       'nome': 'Tamau',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1158,7 +1158,7 @@ const viasJson = {
     {
       'id': 68,
       'nome': 'Onde as ruas não têm nome',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -1175,7 +1175,7 @@ const viasJson = {
     {
       'id': 69,
       'nome': 'Casa da mãe Joana',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -1192,7 +1192,7 @@ const viasJson = {
     {
       'id': 70,
       'nome': 'Eram os deuses astronautas',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -1209,7 +1209,7 @@ const viasJson = {
     {
       'id': 71,
       'nome': 'Padecendo no paraíso',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VIIa',
       'artificial': '',
       'duracao': '',
@@ -1226,7 +1226,7 @@ const viasJson = {
     {
       'id': 72,
       'nome': 'Última opção/Opção completa',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -1244,7 +1244,7 @@ const viasJson = {
     {
       'id': 73,
       'nome': 'Dirceu Gouveia',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1261,7 +1261,7 @@ const viasJson = {
     {
       'id': 74,
       'nome': 'Lilith',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -1279,7 +1279,7 @@ const viasJson = {
     {
       'id': 75,
       'nome': 'Ferrugem',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1296,7 +1296,7 @@ const viasJson = {
     {
       'id': 76,
       'nome': 'Antares',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'II',
       'artificial': '',
       'duracao': '',
@@ -1314,7 +1314,7 @@ const viasJson = {
     {
       'id': 77,
       'nome': 'La Belle de Jour',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'Vsup',
       'artificial': '',
       'duracao': '',
@@ -1331,7 +1331,7 @@ const viasJson = {
     {
       'id': 78,
       'nome': 'Frank Justus',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -1365,7 +1365,7 @@ const viasJson = {
     {
       'id': 80,
       'nome': 'Lá de casa dá pra ver',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -1382,7 +1382,7 @@ const viasJson = {
     {
       'id': 81,
       'nome': 'Pra galera',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1399,7 +1399,7 @@ const viasJson = {
     {
       'id': 82,
       'nome': 'Au-Au',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'II',
       'artificial': '',
       'duracao': '',
@@ -1433,7 +1433,7 @@ const viasJson = {
     {
       'id': 84,
       'nome': 'Chaminé Cinquentenário',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': 'C',
       'duracao': '',
@@ -1450,7 +1450,7 @@ const viasJson = {
     {
       'id': 85,
       'nome': 'Heróis dos Cabritos',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -1484,7 +1484,7 @@ const viasJson = {
     {
       'id': 87,
       'nome': 'Veias abertas',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VIIb/c',
       'artificial': '',
       'duracao': '',
@@ -1707,7 +1707,7 @@ const viasJson = {
     {
       'id': 100,
       'nome': '1990',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -1724,7 +1724,7 @@ const viasJson = {
     {
       'id': 101,
       'nome': 'Walmir de Castro',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -1758,7 +1758,7 @@ const viasJson = {
     {
       'id': 103,
       'nome': 'Calis',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -1776,7 +1776,7 @@ const viasJson = {
     {
       'id': 104,
       'nome': 'Chaminé do Prego',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -1966,7 +1966,7 @@ const viasJson = {
     {
       'id': 115,
       'nome': 'Chaminé do Funil',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -2000,7 +2000,7 @@ const viasJson = {
     {
       'id': 117,
       'nome': 'Alpamayo',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VIsup',
       'artificial': '',
       'duracao': '',
@@ -2085,7 +2085,7 @@ const viasJson = {
     {
       'id': 122,
       'nome': 'Adrenalina Mil',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VIIa',
       'artificial': '',
       'duracao': '',
@@ -2102,7 +2102,7 @@ const viasJson = {
     {
       'id': 123,
       'nome': 'Urbanóide',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -2120,7 +2120,7 @@ const viasJson = {
     {
       'id': 124,
       'nome': 'Lembranças de um passado',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -2137,11 +2137,11 @@ const viasJson = {
     {
       'id': 125,
       'nome': '22 de outubro',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
-      'exposicao': '',
+      'exposicao': 'E1/E2',
       'extensao': 100,
       'conquistadores': 'Leandro Chen; Rafael Wojcik',
       'detalhes': '',
@@ -2154,7 +2154,7 @@ const viasJson = {
     {
       'id': 126,
       'nome': 'Gasparito',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -2171,7 +2171,7 @@ const viasJson = {
     {
       'id': 127,
       'nome': 'Carlos Alexandre',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'III',
       'artificial': '',
       'duracao': '',
@@ -2189,7 +2189,7 @@ const viasJson = {
     {
       'id': 128,
       'nome': 'Falcão à espreita',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -2206,7 +2206,7 @@ const viasJson = {
     {
       'id': 129,
       'nome': 'Caverna de cristal',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -2223,7 +2223,7 @@ const viasJson = {
     {
       'id': 130,
       'nome': 'Brilho da noite',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -2240,7 +2240,7 @@ const viasJson = {
     {
       'id': 131,
       'nome': 'Paixão de Cris',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -2257,7 +2257,7 @@ const viasJson = {
     {
       'id': 132,
       'nome': 'Labirintite',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -2274,7 +2274,7 @@ const viasJson = {
     {
       'id': 133,
       'nome': 'Rumores da Algazarra',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'Vsup',
       'artificial': '',
       'duracao': '',
@@ -2291,7 +2291,7 @@ const viasJson = {
     {
       'id': 134,
       'nome': 'Via Láctea',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'IIIsup',
       'artificial': '',
       'duracao': '',
@@ -2308,7 +2308,7 @@ const viasJson = {
     {
       'id': 135,
       'nome': 'Guanabara',
-      'grau': 'II',
+      'grau': '2',
       'crux': 'IV',
       'artificial': '',
       'duracao': '',
@@ -3003,7 +3003,7 @@ const viasJson = {
     {
       'id': 175,
       'nome': 'Anta & Anta S.A.',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -3019,7 +3019,7 @@ const viasJson = {
     {
       'id': 176,
       'nome': 'Bill liberou',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'IVsup',
       'artificial': '',
       'duracao': '',
@@ -3035,7 +3035,7 @@ const viasJson = {
     {
       'id': 177,
       'nome': 'Vera Regina',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'Vsup',
       'artificial': 'A1(3)',
       'duracao': '',
@@ -3053,7 +3053,7 @@ const viasJson = {
     {
       'id': 178,
       'nome': 'Rafael e o sapo na festa do céu',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VIsup',
       'artificial': '',
       'duracao': '',
@@ -3071,7 +3071,7 @@ const viasJson = {
     {
       'id': 179,
       'nome': 'Sombra e água fresca',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -3106,7 +3106,7 @@ const viasJson = {
     {
       'id': 181,
       'nome': 'Solaris',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'Vsup',
       'artificial': '',
       'duracao': '',
@@ -3124,7 +3124,7 @@ const viasJson = {
     {
       'id': 182,
       'nome': 'Caixa de Pandora',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VI',
       'artificial': '',
       'duracao': '',
@@ -3141,7 +3141,7 @@ const viasJson = {
     {
       'id': 183,
       'nome': 'Marizel',
-      'grau': 'IV',
+      'grau': '4',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -3159,7 +3159,7 @@ const viasJson = {
     {
       'id': 184,
       'nome': 'Paulista',
-      'grau': 'III',
+      'grau': '3',
       'crux': 'V',
       'artificial': '',
       'duracao': '',
@@ -3177,7 +3177,7 @@ const viasJson = {
     {
       'id': 185,
       'nome': 'Tamanho não é documento',
-      'grau': 'V',
+      'grau': '5',
       'crux': 'VIIa',
       'artificial': '',
       'duracao': '',
@@ -3194,7 +3194,7 @@ const viasJson = {
     {
       'id': 186,
       'nome': 'Chaminé Ivo Pereira',
-      'grau': 'III',
+      'grau': '3',
       'crux': '',
       'artificial': '',
       'duracao': '',
@@ -3225,6 +3225,62 @@ const croquisJson = {
       'imagem': 6,
       'autor': 'Pedro Bugim',
       'fonte': 3
+    },
+    {
+      'id': 3,
+      'nome': 'Croqui da via 29 de dezembro',
+      'imagem': 7,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 4,
+      'nome': 'Croqui da via 22 de outubro',
+      'imagem': 8,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 5,
+      'nome': 'Croqui da via Semisonic',
+      'imagem': 9,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 5,
+      'nome': 'Croqui da via Ratos da Montanha',
+      'imagem': 10,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      'id': 6,
+      'nome': 'Croqui da Ponto Noturno',
+      'imagem': 11,
+      'autor': 'CEC',
+      'fonte': 7
+    },
+    {
+      id: 7,
+      nome: 'Croqui da via Unha de Gato',
+      imagem: 12,
+      autor: 'CEC',
+      'fonte': 7
+    },
+    {
+      id: 8,
+      nome: 'Croqui da Via Fissura do Ingles - Resumido',
+      imagem: 13,
+      autor: 'CEC',
+      'fonte': 7
+    },
+    {
+      id: 9,
+      nome: 'Croqui da Via Fissura do Ingles - Detalhado',
+      imagem: 14,
+      autor: 'CEC',
+      'fonte': 7
     }
   ]
 };
@@ -3654,6 +3710,11 @@ const fontesJson = {
       'id': 6,
       'autor': 'Rio Mountain Sports',
       'referencia': 'Rio Mountain Sports. Acessado em: https://riomountainsports.rezdy.com/373607/escalada-no-corcovado-via-k2'
+    },
+    {
+      'id': 7,
+      'autor': 'Clube Excursionista Carioca',
+      'referencia': 'Clube Excursionista Carioca. Acessado em: https://www.carioca.org.br/'
     }
   ]
 };
@@ -3694,6 +3755,54 @@ const imagensJson = {
       'url': '/assets/croquis/croqui_02.jpg',
       'descricao': 'Croquis da Anibal - Foto das Vias',
       'fonte': 2,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_29_dezembro.png',
+      'descricao': 'Croqui Via 29 de Dezembro',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_22_outubro.jpg',
+      'descricao': 'Croqui Via 22 de Outubro',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_semisonic.jpg',
+      'descricao': 'Croqui Via Semisonic',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_ratos_da_montanha.jpg',
+      'descricao': 'Croqui Via Ratos da Montanha',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_ponto_noturno.jpg',
+      'descricao': 'Croqui Via Ponto Noturno',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_unha_de_gato.jpg',
+      'descricao': 'Croqui Via Unha de Gato',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_fissura_do_ingles.jpg',
+      'descricao': 'Croqui Via Fissura do Ingles - Resumido',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'url': '/assets/croquis/croqui_fissura_do_ingles_02.jpg',
+      'descricao': 'Croqui Via Fissura do Ingles - Detalhado',
+      'fonte': 7,
       'tipo_entidade': 'croqui'
     }
   ]

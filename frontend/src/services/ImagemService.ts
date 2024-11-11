@@ -1,10 +1,11 @@
 import { api } from 'boot/axios';
 
 class ImageService {
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor () {
     this.baseUrl = import.meta.env.VITE_APP_SERVER_IP;
+    console.log('baseUrl assets:', this.baseUrl);
   }
 
   getFullImageUrl (relativePath: string): string {
@@ -12,6 +13,7 @@ class ImageService {
       console.warn('O caminho relativo da imagem não foi fornecido.');
       return '';
     }
+    console.log('relativePath:', relativePath);
     return `${this.baseUrl}${relativePath}`;
   }
 

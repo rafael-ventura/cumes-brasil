@@ -48,8 +48,10 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20'
       },
+      base: '', // Remova o './' e deixe vazio ou ajuste conforme necessário
+      publicPath: '/', // Defina como '/' se estiver servindo da raiz do domínio
       distDir: 'dist/pwa',
-      vueRouterMode: 'history', // available values: 'hash', 'history'
+      vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -156,7 +158,7 @@ module.exports = configure(function (/* ctx */) {
         description: 'Aplicativo de acervo de Vias de Escalada do Brasil',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
+        background_color: '#2c2c2c',
         theme_color: '#027be3',
         icons: [
           {

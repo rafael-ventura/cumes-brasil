@@ -23,6 +23,6 @@ const showDetails = (via: Via) => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
-  padding: 16px;
+  padding: 0;
 }
 </style>

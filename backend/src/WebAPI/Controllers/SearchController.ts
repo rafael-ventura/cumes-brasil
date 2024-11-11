@@ -4,6 +4,7 @@ import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
 import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
 import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
 import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
+import {EscaladaRepository} from "../../Infrastructure/repositories/EscaladaRepository";
 
 export class SearchController {
 	private serviceMap: { [key: string]: SearchService<any> };
@@ -13,6 +14,7 @@ export class SearchController {
 			'via': new SearchService(new ViaRepository()),
 			'montanha': new SearchService(new MontanhaRepository()),
 			'colecao': new SearchService<ColecaoRepository>(new ColecaoRepository()),
+			'escalada': new SearchService(new EscaladaRepository())
 			// Adicione mais serviços para outras entidades conforme necessário
 		};
 	}
@@ -21,13 +23,18 @@ export class SearchController {
 		try {
 			const {
 				entityType,
-				searchQuery,
+				unifiedSearch,
 				selectedMountain,
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
+				colecaoId,
+				bairro,
 				page,
-				itemsPerPage
+				itemsPerPage,
+				sortField,
+				sortOrder
 			} = req.body;
 
 			if (!entityType || !this.serviceMap[entityType]) {
@@ -36,13 +43,18 @@ export class SearchController {
 
 			// Construa o objeto de filtros a partir da requisição
 			const filters = {
-				searchQuery,
+				unifiedSearch,
 				selectedMountain,
 				selectedDifficulty,
 				selectedExtensionCategory,
 				selectedCrux,
+				selectedExposicao,
+				colecaoId,
+				bairro,
 				page,
-				itemsPerPage
+				itemsPerPage,
+				sortField,
+				sortOrder
 			};
 
 			// Aplique os filtros na consulta ao banco de dados

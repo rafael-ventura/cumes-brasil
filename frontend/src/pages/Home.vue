@@ -7,7 +7,7 @@
 
       <div class="card-list">
         <div class="card">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('copacabana')">
             <q-img :src="copacabanaImage" alt="Vias na copacabana">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias em Copacabana</div>
@@ -17,7 +17,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('terceiroGrau')">
             <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias de Terceiro Grau</div>
@@ -27,7 +27,7 @@
           </q-card>
         </div>
         <div class="">
-          <q-card class="card" @click="goToFilteredSearch()">
+          <q-card class="card" @click="goToFilteredSearch('exposicaoE2')">
             <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
               <div class="absolute-bottom text-white text-left">
                 <div class="text-h4">Vias com Exposição até E2</div>
@@ -45,7 +45,9 @@
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
 import { Via } from 'src/models/Via';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const copacabanaVias = ref<Via[]>([]);
 const terceiroGrauVias = ref<Via[]>([]);
 const exposicaoE2Vias = ref<Via[]>([]);
@@ -63,20 +65,36 @@ onMounted(async () => {
   exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
 
   if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
+    console.log(copacabanaVias.value[0].imagem.url);
     copacabanaImage.value = copacabanaVias.value[0].imagem.url;
   }
 
   if (terceiroGrauVias.value.length > 0 && terceiroGrauVias.value[0].imagem?.url) {
+    console.log(terceiroGrauVias.value[0].imagem.url);
     terceiroGrauImage.value = terceiroGrauVias.value[0].imagem.url;
   }
 
   if (exposicaoE2Vias.value.length > 0 && exposicaoE2Vias.value[0].imagem?.url) {
+    console.log(exposicaoE2Vias.value[0].imagem.url);
     exposicaoE2Image.value = exposicaoE2Vias.value[0].imagem.url;
   }
 });
 
-function goToFilteredSearch () {
-  // TODO: Filter search do @Vitor
+function goToFilteredSearch (filterType: string) {
+  let query = {};
+
+  if (filterType === 'copacabana') {
+    query = { bairro: 'Copacabana' }; // Filtro por bairro
+  } else if (filterType === 'terceiroGrau') {
+    query = { selectedDifficulty: 'III' }; // Filtro por grau
+  } else if (filterType === 'exposicaoE2') {
+    query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
+  }
+
+  router.push({
+    name: 'busca',
+    query
+  });
 }
 </script>
 

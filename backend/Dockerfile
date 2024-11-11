@@ -11,14 +11,11 @@ RUN npm install --only=production
 # Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
 COPY backend/dist ./dist
 
-# Copiar a pasta 'assets' do diretório 'backend'
-COPY backend/assets ./assets
-
-# Expor a porta do back-end
-EXPOSE 8080
+# Expor a nova porta da API
+EXPOSE 3001
 
 # Definir variável de ambiente
 ENV NODE_ENV=production
 
-# Comando para iniciar o back-end
+# Comando para iniciar o backend
 CMD ["node", "dist/WebAPI/server.js"]

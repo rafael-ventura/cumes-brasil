@@ -30,10 +30,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue';
-import { Usuario } from 'src/models/Usuario';
+import { computed, defineProps, ref } from 'vue';
+import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: Usuario }>();
+const props = defineProps<{ user: IUsuario }>();
 const expandedImageUrl = ref('');
 const isImageModalOpen = ref(false);
 

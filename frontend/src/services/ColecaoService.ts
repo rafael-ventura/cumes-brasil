@@ -1,21 +1,43 @@
 import { api } from 'boot/axios';
-import { Colecao } from 'src/models/Colecao';
+import { IColecao } from 'src/models/IColecao';
 import { Via } from 'src/models/Via';
 import { RouteParamValue } from 'vue-router';
 import { adjustImageUrls, formatVia, handleApiError, romanToInt } from 'src/utils/utils';
 import { UnwrapRef } from 'vue';
 
 class ColecaoService {
-  async getByUsuarioId (): Promise<Colecao[]> {
+  async getFirstByUsuarioId (): Promise<IColecao | null> {
+    const userId = localStorage.getItem('userId');
+    try {
+      const colecoes = await this.getColecoes(`/colecoes/usuario/${userId}`);
+      if (colecoes.length > 0) {
+        const primeiraColecao = colecoes[0];
+        if (primeiraColecao.nome.includes('Favoritas')) {
+          return primeiraColecao;
+        }
+        // Fallback: procura uma coleção com nome "Vias Favoritas"
+        const colecaoFavoritas = colecoes.find(colecao => colecao.nome === 'Vias Favoritas');
+        return colecaoFavoritas || null;
+      }
+
+      console.warn('Nenhuma coleção encontrada para este usuário.');
+      return null;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar coleção de favoritas');
+      return null;
+    }
+  }
+
+  async getByUsuarioId (): Promise<IColecao[] | undefined> {
     const userId = localStorage.getItem('userId');
     return this.getColecoes(`/colecoes/usuario/${userId}`);
   }
 
-  async getById (id: number): Promise<Colecao> {
+  async getById (id: number): Promise<IColecao | undefined> {
     return this.getColecao(`/colecoes/${id}`);
   }
 
-  async create (colecao: { nome: string; descricao: string; usuario_id: number; imagem_id: number }): Promise<void> {
+  async create (colecao: IColecao): Promise<void> {
     try {
       await api.post('/colecoes', colecao);
     } catch (error: any) {
@@ -23,7 +45,7 @@ class ColecaoService {
     }
   }
 
-  async delete (colecaoId: UnwrapRef<Colecao['id']>): Promise<void> {
+  async delete (colecaoId: UnwrapRef<IColecao['id']>): Promise<void> {
     try {
       await api.delete(`/colecoes/${colecaoId}`);
     } catch (error: any) {
@@ -32,7 +54,7 @@ class ColecaoService {
   }
 
   async update (
-    colecaoId: UnwrapRef<Colecao['id']>,
+    colecaoId: UnwrapRef<IColecao['id']>,
     colecao: UnwrapRef<{ nome: string; descricao: string }>
   ): Promise<void> {
     try {
@@ -42,7 +64,7 @@ class ColecaoService {
     }
   }
 
-  async getViasIn (colecaoId: number | RouteParamValue[]): Promise<Via[]> {
+  async getViasIn (colecaoId: number | RouteParamValue[]): Promise<Via[] | undefined> {
     return this.getVias(`/vias/colecao/${colecaoId}`);
   }
 
@@ -55,7 +77,9 @@ class ColecaoService {
         }
       });
       const vias = response.data.vias as Via[];
-      vias.forEach(adjustImageUrls);
+      vias.forEach(
+        via => adjustImageUrls(via.imagem)
+      );
       return {
         vias: vias.map(formatVia),
         total: response.data.total
@@ -70,7 +94,7 @@ class ColecaoService {
   }
 
   async getCollecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
-    colecoes: Colecao[];
+    colecoes: IColecao[];
     total: number
   }> {
     const response = await api.get(`/colecoes/not-containing-via/${viaId}`, {
@@ -83,11 +107,11 @@ class ColecaoService {
     return response.data;
   }
 
-  async searchByName (query: string): Promise<Colecao[]> {
+  async searchByName (query: string): Promise<IColecao[] | undefined> {
     return this.search({ name: query });
   }
 
-  async search (filters: any): Promise<Colecao[]> {
+  async search (filters: any): Promise<IColecao[] | undefined> {
     return this.getColecoes('/colecoes/search', filters);
   }
 
@@ -104,6 +128,19 @@ class ColecaoService {
     }
   }
 
+  async removeViaFromColecao (colecaoId: number, viaId: number): Promise<void> {
+    try {
+      await api.post('/colecoes/removerVia', null, {
+        params: {
+          colecao_id: colecaoId,
+          via_id: viaId
+        }
+      });
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao remover via da coleção');
+    }
+  }
+
   async sortVias (vias: Via[], {
     key,
     order
@@ -115,33 +152,44 @@ class ColecaoService {
   }
 
   // Métodos privados para evitar redundância e melhorar a manutenção
-  private async getColecao (url: string): Promise<Colecao> {
+  private async getColecao (url: string): Promise<IColecao | undefined> {
     try {
       const response = await api.get(url);
-      const colecao = response.data as Colecao;
-      adjustImageUrls(colecao);
+      const colecao = response.data as IColecao;
+      if (colecao.imagem) {
+        adjustImageUrls(colecao.imagem);
+      }
       return colecao;
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar coleção');
     }
   }
 
-  private async getColecoes (url: string, params?: any): Promise<Colecao[]> {
+  private async getColecoes (url: string, params?: any): Promise<IColecao[]> {
     try {
       const response = await api.get(url, { params });
-      const colecoes = response.data as Colecao[];
-      colecoes.forEach(adjustImageUrls);
+      const colecoes = response.data as IColecao[];
+      colecoes.forEach(
+        colecao => {
+          if (colecao.imagem) {
+            adjustImageUrls(colecao.imagem);
+          }
+        }
+      );
       return colecoes;
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar coleções');
+      return [];
     }
   }
 
-  private async getVias (url: string): Promise<Via[]> {
+  private async getVias (url: string): Promise<Via[] | undefined> {
     try {
       const response = await api.get(url);
       const vias = response.data.vias as Via[];
-      vias.forEach(adjustImageUrls);
+      vias.forEach(
+        via => adjustImageUrls(via.imagem)
+      );
       return vias.map(formatVia);
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar vias');

@@ -15,7 +15,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'busca',
-        component: () => import('pages/Busca.vue')
+        name: 'busca',
+        component: () => import('pages/CatalogoVias.vue')
       },
       {
         path: 'vias/:id',
@@ -29,6 +30,14 @@ const routes: RouteRecordRaw[] = [
         path: 'colecoes/:id',
         name: 'ColecaoDetalhada',
         component: () => import('pages/ColecaoDetalhada.vue')
+      },
+      {
+        path: 'favoritas',
+        component: () => import('pages/Favoritas.vue')
+      },
+      {
+        path: 'escaladas',
+        component: () => import('pages/Escaladas.vue')
       },
       {
         path: 'perfil',
@@ -46,25 +55,13 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/Auth/Register.vue')
           },
           {
-            path: 'reset-password',
+            path: 'reset-password/:userToken?',
             component: () => import('pages/Auth/RedefinirSenha.vue')
-          }
-        ]
-      },
-      {
-        path: 'admin',
-        children: [
-          {
-            path: 'exemple420',
-            component: () => import('pages/ExempleCume420.vue')
           }
         ]
       }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')

@@ -7,6 +7,7 @@
           :items="vias"
           itemType="via"
           @add-item="addViaToCollection"
+          :loadMoreItems="loadMoreVias"
         />
       </q-card-section>
       <q-card-actions align="right">
@@ -30,6 +31,8 @@ const props = defineProps<{ isOpen: boolean; colecaoId: number }>();
 const emit = defineEmits(['update:isOpen', 'via-added']);
 const localIsOpen = ref(props.isOpen);
 const vias = ref<ViaWithAdded[]>([]);
+const currentPage = ref(1);
+const loadingMore = ref(false); // Controle de carregamento
 
 watch(() => props.isOpen, (newVal) => {
   localIsOpen.value = newVal;
@@ -41,18 +44,32 @@ watch(localIsOpen, (newVal) => {
 
 const resetVias = () => {
   vias.value = [];
+  currentPage.value = 1; // Resetar a página atual
 };
 
-const loadViasNotInColecao = async () => {
+const loadViasNotInColecao = async (page = 1) => {
   try {
-    const result = await ColecaoService.getViasNotIn(props.colecaoId, 1, 10);
-    vias.value = result.vias.map(via => ({
+    const result = await ColecaoService.getViasNotIn(props.colecaoId, page, 10);
+    const novasVias = result.vias.map(via => ({
       ...via,
       added: false
     }));
+
+    // Adiciona as novas vias à lista existente
+    vias.value = page === 1 ? novasVias : [...vias.value, ...novasVias];
+    console.log('Vias:', vias.value);
   } catch (error) {
     console.error('Erro ao buscar vias:', error);
   }
+};
+
+// Função para carregar mais vias
+const loadMoreVias = async () => {
+  if (loadingMore.value) return;
+  loadingMore.value = true;
+  currentPage.value += 1; // Incrementar a página
+  await loadViasNotInColecao(currentPage.value); // Carregar mais vias
+  loadingMore.value = false;
 };
 
 const addViaToCollection = async (via: ViaWithAdded) => {

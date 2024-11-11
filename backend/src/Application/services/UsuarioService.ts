@@ -8,15 +8,21 @@ import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemService } from './ImagemService';
 import path from 'path';
 import * as fs from 'node:fs';
-import RegistrarUsuarioValidation from '../validations/RegistrarUsuarioValidation';
 import BadRequestError from '../errors/BadRequestError';
-import { errorsMessage } from '../errors/constants';
+import { errorsMessage, successMessage } from '../errors/constants';
+import NotFoundError from '../errors/NotFoundError';
+import { MailService } from './MailService';
+import UserValidation from '../validations/UserValidation';
+import { ResetUserPasswordTokenService } from './ResetUserPasswordTokenService';
+import TokenValidation from '../validations/TokenValidation';
 
 @Service()
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
     private imagemService: ImagemService;
+    private mailService = Container.get(MailService);
+    private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
 
     constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService) {
         this.usuarioRepo = usuarioRepo;
@@ -32,7 +38,7 @@ export class UsuarioService {
     }
 
     async register(nome: string, email: string, senha: string): Promise<void> {
-        RegistrarUsuarioValidation.validaUsuario(nome, email, senha);
+        UserValidation.registerValidation(nome, email, senha);
 
         const existingUser = await this.usuarioRepo.findByEmail(email);
         if (existingUser != null) {
@@ -44,10 +50,10 @@ export class UsuarioService {
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {
-        const escaladasCollection = new Colecao('Escaladas', 'Vias que escalei', user.id, 1);
-        await this.colecaoRepo.create(escaladasCollection);
-
-        const favoritasCollection = new Colecao('Vias Favoritas', 'Vias favoritadas por você', user.id, 1);
+        const favoritasCollection = new Colecao();
+        favoritasCollection.nome = 'Favoritas';
+        favoritasCollection.descricao = 'Vias favoritas do usuário';
+        favoritasCollection.usuario = user;
         await this.colecaoRepo.create(favoritasCollection);
     }
 
@@ -124,5 +130,60 @@ export class UsuarioService {
 
             await this.imagemService.delete(imagemAtual.id);
         }
+    }
+
+    async createResetUserPassword(email: string) {
+        UserValidation.generateResetPasswordValidation(email);
+
+        const user = await this.usuarioRepo.findByEmail(email);
+        if (!user) {
+            throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
+        }
+
+        let mailSentResponse;
+        if (user.resetPasswordToken || user.resetPasswordUrl) {
+            try {
+                this.resetUserPasswordTokenService.isTokenValid(user.resetPasswordToken);
+                mailSentResponse = {
+                    message: errorsMessage.USER_RESET_PASSWORD_TOKEN_ALREADY_SENT
+                }
+
+            } catch (error: any) {
+                mailSentResponse = this.generateTokenAndSendEmail(user);
+            }
+
+        } else {
+            mailSentResponse = this.generateTokenAndSendEmail(user);
+        }
+
+        return mailSentResponse;
+    }
+
+    private async generateTokenAndSendEmail(user: Usuario): Promise<any> {
+        let newToken = this.resetUserPasswordTokenService.generate(user);
+        let mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
+        user.resetPasswordToken = newToken.tokenEncoded;
+        user.resetPasswordUrl = newToken.smallUrl;
+        this.usuarioRepo.update(user.id, user);
+        return mailSentResponse;
+    }
+
+    async updateUserPassword(pass: string, passRepeated: string, token: string) {
+        UserValidation.resetPasswordValidation(pass, passRepeated);
+        TokenValidation.resetUserPasswordToken(token);
+
+        const user = await this.usuarioRepo.findByResetPasswordUrl(token);
+        if (!user) {
+            throw new BadRequestError(errorsMessage.USER_NOT_FOUND);
+        }
+
+        this.resetUserPasswordTokenService.isTokenValid(user.resetPasswordToken);
+        user.password_hash = await bcrypt.hash(pass, 10);
+        user.resetPasswordToken = '';
+        user.resetPasswordUrl = '';
+
+        this.usuarioRepo.resetPassword(user.id, user);
+
+        return { message: successMessage.USER_RESET_PASSWORD_UPDATED };
     }
 }

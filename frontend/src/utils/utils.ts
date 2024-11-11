@@ -1,7 +1,10 @@
+// --- Importações ---
 import { Via } from 'src/models/Via';
 import ImagemService from 'src/services/ImagemService';
-import { Imagem } from 'src/models/Imagem';
 
+type ViaKey = keyof Via;
+
+// --- Funções de Conversão entre Numerais Romanos e Arábicos ---
 export function romanToInt (roman: string): number {
   const romanMap: { [key: string]: number } = {
     I: 1,
@@ -58,50 +61,83 @@ export function intToRoman (num: number): string {
   return roman;
 }
 
-type ViaKey = keyof Via;
+// --- Formatação de Grau ---
+export function formatarGrau (grau: string | number): string {
+  if (typeof grau === 'number') {
+    return `${grau}°`;
+  }
+  const isRoman = /^[IVXLCDM]+$/.test(grau);
+  const arabicNumber = isRoman ? romanToInt(grau) : parseInt(grau);
+  return `${arabicNumber}°`;
+}
 
+// --- Função Principal de Formatação de Objetos Via ---
 export function formatVia (via: Via): Via {
-  if (via.grau) {
-    via.grau = intToRoman(parseInt(via.grau));
+  const formattedVia = { ...via };
+
+  // Formatação do Grau
+  if (formattedVia.grau) {
+    formattedVia.grau = formatarGrau(formattedVia.grau);
   }
 
-  if (via.data) {
-    via.data = new Date(via.data).toLocaleDateString('pt-BR');
+  // Formatação da Data
+  if (formattedVia.data) {
+    formattedVia.data = new Date(formattedVia.data).toLocaleDateString('pt-BR');
   }
 
-  const keys = Object.keys(via) as ViaKey[];
+  // Arredondamento e remoção de casas decimais na extensão
+  if (formattedVia.extensao) {
+    formattedVia.extensao = Math.round(Number(formattedVia.extensao));
+  }
+
+  // Define valores padrão para campos vazios
+  const keys = Object.keys(formattedVia) as ViaKey[];
   for (const key of keys) {
-    if (via[key] === '' || via[key] === null || via[key] === undefined) {
-      via[key] = 'N/A' as never;
+    if (formattedVia[key] === '' || formattedVia[key] === null || formattedVia[key] === undefined) {
+      formattedVia[key] = 'N/A' as never;
     }
   }
 
-  if (via.conquistadores) {
-    via.conquistadores = via.conquistadores.split(';').join('; ');
+  // Formata conquistadores
+  if (formattedVia.conquistadores) {
+    formattedVia.conquistadores = formattedVia.conquistadores.split(';').join('; ');
   }
-  return via;
+
+  return formattedVia;
 }
 
-export function adjustImageUrls (entity: { imagem?: Imagem }) {
-  if (entity.imagem) {
-    entity.imagem.url = ImagemService.getFullImageUrl(entity.imagem.url);
+// --- Manipulação de URLs de Imagens ---
+export function adjustImageUrls (entity: any): void {
+  if (entity !== null && entity !== undefined) {
+    entity.url = ImagemService.getFullImageUrl(entity.url);
   }
 }
 
+// --- Tratamento de Erros de API ---
 export function handleApiError (error: any, defaultMessage: string): never {
-  const message = error?.response?.data?.error || defaultMessage;
+  const message = error?.response?.data?.message || defaultMessage;
   throw new Error(message);
 }
 
-export const formatDateToYYYYMMDD = (dateString: string) => {
+// --- Utilitários de Data ---
+export const formatDateToYYYYMMDD = (dateString: string): string => {
   const [day, month, year] = dateString.split('/');
   return `${year}-${month}-${day}`;
 };
 
-export const formatDateToDDMMYYYY = (dateString: string) => {
+export const formatDateToDDMMYYYY = (dateString: string): string => {
   const date = new Date(dateString + 'T00:00:00');
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
+};
+
+export const createNotifyConfig = (type: string, message: string, position = 'top', timeout = 3000): any => {
+  return {
+    type,
+    message,
+    position,
+    timeout
+  };
 };
