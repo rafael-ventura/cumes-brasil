@@ -31,6 +31,7 @@
         :staticFilters="{ colecaoId: colecao?.id }"
         @select="goToViaDetalhada"
         :hideHeader="true"
+        :enable-sort-options="[{ label: 'Mais recente', value: { field: 'data_adicao', direction: 'desc' } }]"
       >
         <template #filters="{ filters }">
           <BuscaFiltros

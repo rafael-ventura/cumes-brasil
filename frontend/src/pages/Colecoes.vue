@@ -6,7 +6,6 @@
       entity="colecao"
       @select="goToColecaoDetalhada"
       @update-results="updateSearchResults"
-      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       :hideHeader="true"
     >
       <template #subHeader>

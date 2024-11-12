@@ -62,18 +62,28 @@ const props = defineProps<{
 const emit = defineEmits(['select', 'change-sort']);
 
 // Opções padrão de ordenação
-const defaultSortOptions = ref([
-  { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
-  { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
-  { label: 'Mais recente', value: { field: 'data_adicao', direction: 'desc' } },
-  { label: 'Mais antiga', value: { field: 'data_adicao', direction: 'asc' } }
-]);
+const defaultSortOptions = {
+  via: [
+    { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
+    { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } }
+  ],
+  colecao: [
+    { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
+    { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
+    { label: 'Mais recente', value: { field: 'data_adicao', direction: 'desc' } },
+    { label: 'Mais antiga', value: { field: 'data_adicao', direction: 'asc' } }
+  ],
+  escalada: [
+    { label: 'Data (Mais recente)', value: { field: 'data', direction: 'desc' } },
+    { label: 'Data (Mais antiga)', value: { field: 'data', direction: 'asc' } }
+  ]
+};
+
 
 // Filtrar as opções de ordenação com base na configuração do componente pai
 const filteredSortOptions = computed(() => {
   if (!props.enableSortOptions) {
-    // Se não houver configuração de opções, usar todas as opções padrão
-    return defaultSortOptions.value;
+    return defaultSortOptions[props.entityType];
   }
 
   // Filtrar as opções com base nas permitidas pelo componente pai
@@ -106,17 +116,16 @@ const sortedResults: any = computed(() => {
         : b.nome.localeCompare(a.nome);
     }
 
-    // Ordenação por data de adição
-    if (field === 'data_adicao') {
-      console.log(a, b);
-      const dateA = new Date(a.data_adicao || '');
-      const dateB = new Date(b.data_adicao || '');
-
-      return direction === 'asc'
-        ? dateA.getTime() - dateB.getTime()
-        : dateB.getTime() - dateA.getTime();
+    // Se os valores forem datas
+    if (field === 'data' || field === 'data_adicao') {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return (dateA.getTime() - dateB.getTime()) * direction;
     }
 
+    // Caso contrário, comparação padrão
+    if (a > b) return 1 * direction;
+    if (a < b) return -1 * direction;
     return 0;
   });
 });

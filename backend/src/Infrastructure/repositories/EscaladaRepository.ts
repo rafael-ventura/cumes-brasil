@@ -1,6 +1,6 @@
-import { AppDataSource } from "../config/db";
-import { Escalada } from "../../Domain/entities/Escalada";
-import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
+import { AppDataSource } from '../config/db';
+import { Escalada } from '../../Domain/entities/Escalada';
+import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 
 export class EscaladaRepository {
     private repository = AppDataSource.getRepository(Escalada);
@@ -93,7 +93,7 @@ export class EscaladaRepository {
             page = 1,
             itemsPerPage = 10,
             sortField = 'escalada.data',
-            sortOrder = 'DESC'
+            sortOrder
         } = filters;
 
         let qb = this.repository.createQueryBuilder("escalada")
@@ -111,7 +111,7 @@ export class EscaladaRepository {
 
         // Adiciona ordenação dinâmica
         if (sortField && sortOrder) {
-            qb = qb.orderBy(sortField, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+            qb = qb.orderBy(`escalada.${sortField}`, sortOrder.toUpperCase());
         }
 
         // Total de escaladas que correspondem aos filtros

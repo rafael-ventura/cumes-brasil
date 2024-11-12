@@ -9,7 +9,6 @@
       @select="goToEscaladaDetalhada"
       @update-results="updateSearchResults"
       :hideHeader="true"
-      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
     >
       <template #subHeader>
         <SubNavbar />
