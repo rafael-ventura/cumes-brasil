@@ -51,7 +51,7 @@ module.exports = configure(function (/* ctx */) {
       base: '', // Remova o './' e deixe vazio ou ajuste conforme necessário
       publicPath: '/', // Defina como '/' se estiver servindo da raiz do domínio
       distDir: 'dist/pwa',
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
