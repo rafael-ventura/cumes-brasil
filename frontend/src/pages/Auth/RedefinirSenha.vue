@@ -8,7 +8,54 @@
         <q-card-section>
           <div class="text-h6 titulo-redefinir-senha">Redefinir Senha</div>
         </q-card-section>
-        <q-card-section>
+        <q-card-section v-if="token" >
+          <q-form @submit.prevent="onResetPassword">
+            <div class="custom-input">
+              <div class="input-container">
+                <q-icon name="lock" class="input-icon" />
+                <label for="senha" class="input-label">Senha</label>
+              </div>
+              <q-input
+                id="senha"
+                v-model="password"
+                type="password"
+                debounce="300"
+                outlined
+                rounded
+                color="primary"
+                label-color="primary"
+                hide-bottom-space
+                :rules="[ val => !!val || 'Campo obrigatório' ]"
+                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+              />
+            </div>
+            <div class="custom-input">
+              <div class="input-container">
+                <q-icon name="lock" class="input-icon" />
+                <label for="confirmarSenha" class="input-label">Confirmar Senha</label>
+              </div>
+              <q-input
+                id="confirmarSenha"
+                v-model="passwordRepeated"
+                type="password"
+                debounce="300"
+                outlined
+                rounded
+                color="primary"
+                label-color="primary"
+                hide-bottom-space
+                :rules="[ val => !!val || 'Campo obrigatório' ]"
+                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+              />
+            </div>
+            <q-btn
+              type="submit"
+              label="Redefinir Senha"
+              class="register-btn"
+            />
+          </q-form>
+        </q-card-section>
+        <q-card-section v-if="token.length === 0">
           <q-form @submit.prevent="onGeneratePasswordToken" class="custom-redefinir-form">
 
             <!-- Campo Email -->
@@ -17,24 +64,26 @@
                 <q-icon name="mail" class="input-icon" />
                 <label for="email" class="input-label">Email</label>
               </div>
-              <q-input v-model="email"
-                       id="email"
-                       type="email"
-                       dense
-                       color="primary"
-                       bg-color="dark"
-                       label-color="primary"
-                       hide-bottom-space
-                       :rules="[ val => !!val || 'Campo obrigatório' ]"
-                       class="custom-input-field"
-                       :input-style="{ color: '#fcbd7b'}"
+              <q-input
+                v-model="email"
+                id="email"
+                type="email"
+                debounce="300"
+                outlined
+                rounded
+                color="primary"
+                label-color="primary"
+                hide-bottom-space
+                :rules="[ val => !!val || 'Campo obrigatório' ]"
+                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
               />
             </div>
 
             <!-- Botão de redefinir senha -->
-            <q-btn type="submit"
-                   label="Redefinir Senha"
-                   class="register-btn"
+            <q-btn
+              type="submit"
+              label="Enviar Email"
+              class="register-btn"
             />
           </q-form>
         </q-card-section>
@@ -45,14 +94,24 @@
 
 <script setup lang="ts">
 import AuthenticateService from '../../services/AuthenticateService';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { createNotifyConfig } from 'src/utils/utils';
 import { Notify } from 'quasar';
+import { useRoute, useRouter } from 'vue-router';
 
 const email = ref('');
+const password = ref('');
+const passwordRepeated = ref('');
+const token = ref('');
+const route = useRoute();
+const router = useRouter();
 
 defineOptions({
   name: 'ResetPasswordPage'
+});
+
+onMounted(async () => {
+  token.value = route.params.userToken?.toString() || '';
 });
 
 const onGeneratePasswordToken = async () => {
@@ -63,6 +122,26 @@ const onGeneratePasswordToken = async () => {
     Notify.create(createNotifyConfig('negative', error.message, 'top'));
   }
 };
+
+const onResetPassword = async () => {
+  try {
+    if (password.value.length < 4) {
+      Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'));
+      return;
+    }
+    if (password.value !== passwordRepeated.value) {
+      Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'));
+      return;
+    }
+    const response = await AuthenticateService.resetPassword(password.value, passwordRepeated.value, token.value);
+    Notify.create(createNotifyConfig('positive', response.data.message, 'top'));
+    router.push('/auth/login');
+  } catch (error: any) {
+    console.error('Erro ao redefinir senha:', error.message);
+    Notify.create(createNotifyConfig('negative', error.message, 'top'));
+  }
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -107,6 +186,7 @@ const onGeneratePasswordToken = async () => {
   width: 100%;
   background-color: rgba($dark, 0.85);
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .titulo-redefinir-senha {
@@ -138,14 +218,14 @@ const onGeneratePasswordToken = async () => {
 }
 
 .register-btn {
-  width: 40%;
+  width: 28%;
   height: 4vh;
-  font-size: 0.9em;
+  font-size: 0.85em;
+  color: $primary;
   border: 1px solid $primary;
   border-radius: 15px;
-  max-width: 300px;
-  max-height: 80px;
-  display: flex;
+  max-width: 160px;
+  max-height: 60px;
 }
 
 .q-btn {
