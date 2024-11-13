@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
+  <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large fundo1">
     <div class="row justify-between">
       <div class="text-h5 left-margem">Bio</div>
       <q-icon name="edit" class="medium-icon right-margem" @click="toggleEditMode" />
@@ -7,7 +7,7 @@
     <q-separator spaced />
     <q-card-section class="col text-left">
       <div v-if="!isEditing" class="text-h6">{{ displayedBio }}</div>
-      <q-input v-else v-model="newBio" type="textarea" class="custom-input"/>
+      <q-input v-else v-model="newBio" type="textarea" class="custom-input fundo2"/>
     </q-card-section>
     <div v-if="isEditing" class="">
       <q-btn flat label="Cancelar" @click="cancelEdit" />
@@ -68,7 +68,7 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   margin-right: 16px;
 }
 .custom-save-button {
-  background-color: $secondary;
+  background-color: $secondary-dark;
 }
 .custom-input{
   background-color: #9fd191;
@@ -77,5 +77,11 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   padding: 10px 10px;
   width: 100%;
   height: 150px;
+}
+.fundo1{
+  background-color: $primary;
+}
+.fundo2{
+  background-color: $primary-dark;
 }
 </style>

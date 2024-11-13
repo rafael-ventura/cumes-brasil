@@ -84,13 +84,13 @@ export class UsuarioService {
             throw new Error('Usuário não encontrado');
         }
 
-        this.atualizarDadosUsuario(usuario, usuarioDados);
+        await this.atualizarDadosUsuario(usuario, usuarioDados);
         if (file) {
             await this.atualizarFotoPerfil(usuario, file);
         }
     }
 
-    private atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<Usuario>) {
+    async atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<Usuario>) {
         usuario.nome = usuarioDados.nome || usuario.nome;
         usuario.email = usuarioDados.email || usuario.email;
         usuario.data_atividade = usuarioDados.data_atividade || usuario.data_atividade;
@@ -100,6 +100,7 @@ export class UsuarioService {
         if (usuarioDados.via_preferida) {
             usuario.via_preferida = usuarioDados.via_preferida;
         }
+        await this.usuarioRepo.update(usuario.id, usuario);
     }
 
     private async atualizarFotoPerfil(usuario: Usuario, file: Express.Multer.File) {

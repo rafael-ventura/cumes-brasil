@@ -1,19 +1,28 @@
 <template>
   <div class="profile-header-container no-wrap q-pa-md row items-center shadow-item">
-    <q-card-section>
-      <img :src="user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
-           class="profile-picture"
-           @click="expandImage(user?.foto_perfil?.url || 'https://via.placeholder.com/150')"/>
-    </q-card-section>
-    <q-card-section class="col text-left q-ml-md">
-      <div class="text-h6">{{ user?.nome }}</div>
-      <div class="info-list">
-        <div v-for="(info, index) in userInfo" :key="index" class="info-item row items-center">
-          <q-icon :name="info.icon" class="small-icon right-margem"/>
-          <div class="text-subtitle1 info-text">{{ info.text }}</div>
+    <q-item-section class="profile-info">
+      <div class="profile-picture-container">
+        <img :src="props.user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
+             class="profile-picture"
+             @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"/>
+        <div class="club-info text-h7">
+          {{props.user?.clube_organizacao}}
         </div>
       </div>
-    </q-card-section>
+      <div class="user-details">
+        <div class="text-h4">{{ props.user?.nome }}</div>
+        <div class="text-h7">{{props.user?.localizacao}}</div>
+        <div class="caixa-escalada border-radius-medium top-margem">
+          <div class="text-h5">
+            {{ diasEscalados }}
+            <div class="text-h8" style="display: inline-block">dias</div>
+          </div>
+          <div class="text-h7">
+            Desde {{dataFormatada}}
+          </div>
+        </div>
+      </div>
+    </q-item-section>
   </div>
   <q-dialog v-model="isImageModalOpen">
     <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;"></q-img>
@@ -33,29 +42,73 @@ const expandImage = (url: string) => {
   isImageModalOpen.value = true;
 };
 
-// Lista de informações do usuário para exibição
-const userInfo = computed(() => [
-  { icon: 'mail', text: props.user?.email || 'Email não disponível' },
-  { icon: 'calendar_month', text: `Escalando desde: ${props.user?.data_atividade || 'Data não disponível'}` },
-  { icon: 'groups_2', text: `Meu Clube/Organização: ${props.user?.clube_organizacao || 'Não disponível'}` },
-  { icon: 'perm_media', text: `Minha Predileta: ${props.user?.via_preferida?.nome || 'Não disponível'}` },
-  { icon: 'flag_circle', text: `De onde eu sou: ${props.user?.localizacao || 'Localização não disponível'}` }
-]);
+const diasEscalados = computed(() => {
+  if (!props.user?.data_atividade) return 0;
+  const partesData = props.user.data_atividade.split('/'); // Divide a string em partes
+  const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
+  console.log(`Data de atividade no usuário: ${props.user.data_atividade}`);
+  console.log(`Data de atividade transformada pelo New Date: ${dataAtividade}`);
+  const hoje = new Date();
+  if (dataAtividade > hoje) return 0;
+  const diffTime = hoje.getTime() - dataAtividade.getTime();
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+});
+
+const dataFormatada = computed(() => {
+  if (!props.user?.data_atividade) return '';
+  const partesData = props.user.data_atividade.split('/');
+  const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
+  const dataString = dataAtividade.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  return dataString.charAt(0).toUpperCase() + dataString.slice(1);
+});
+
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
+
 .profile-header-container {
   border-radius: 0 0 30px 30px;
+  padding-top: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: $primary;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.profile-picture-container {
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  margin-right: 16px;
 }
 
 .profile-picture {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
+}
+
+.club-info {
+  margin-top: 8px;
+  max-width: 18ch;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .shadow-item {
@@ -84,6 +137,12 @@ const userInfo = computed(() => [
 }
 
 .profile-header-container{
-  background-color: #bce9b4;
+  background-color: $primary;
+}
+
+.caixa-escalada{
+  border: $dark solid 2px;
+  max-width: 300px;
+  padding: 8px;
 }
 </style>

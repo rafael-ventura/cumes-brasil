@@ -2,31 +2,17 @@
   <q-page>
     <q-btn icon="settings" class="settings-btn" @click="isConfigDialogOpen = true" />
     <PerfilBar :user="<IUsuario>user" />
-    <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large">
-      <div class="row q-col-gutter-sm q-gutter-md justify-center">
-        <div v-for="(item, index) in items" :key="index" class="col-xs-5 col-sm-3 col-md-3 col-lg-2 col-xl-2">
-          <q-item flat :label="item.label" clickable :to="item.to" class="shadow-item box-item">
-            <q-item-section class="q-column items-center text-center">
-              <div class="row items-center justify-center">
-                <div :style="{ color: item.color }" class="large-text">{{ item.num }}</div>
-                <q-icon :color="item.color" :name="item.icon" class="large-icon left-margem" />
-              </div>
-              <div class="text-h5" :style="{ color: item.color }">{{ item.label }}</div>
-            </q-item-section>
-          </q-item>
-        </div>
-      </div>
-    </q-card>
+    <PerfilGridButtons :items="items" />
     <q-dialog v-model="isConfigDialogOpen">
-      <q-card>
+      <q-card class="card-config">
         <q-list>
-          <q-item flat label="Editar Dados" clickable @click="openEditDialog()">
+          <q-item flat label="Editar Dados" clickable @click="openEditDialog()" class="btn">
             <q-item-section avatar>
               <q-icon name="edit" />
             </q-item-section>
             <q-item-section>Editar Dados</q-item-section>
           </q-item>
-          <q-item flat label="Logout" clickable @click="logout">
+          <q-item flat label="Logout" clickable @click="logout" class="btn">
             <q-item-section avatar>
               <q-icon name="logout" color="negative" />
             </q-item-section>
@@ -52,6 +38,7 @@ import { IUsuario } from 'src/models/IUsuario';
 import PerfilBar from 'components/Perfil/PerfilBar.vue';
 import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
+import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 
 const router = useRouter();
 const user = ref<IUsuario | null>(null);
@@ -63,10 +50,9 @@ const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 
 const items = computed(() => [
-  { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: 'blue', to: '/escaladas' },
-  { label: 'Coleções', num: numColecoes.value, icon: 'style', color: 'purple', to: '/colecoes' },
-  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: 'orange', to: `/colecoes/${colecaoId.value}` },
-  { label: 'Nova Escalada', num: null, icon: 'add_location', color: 'green', to: '/colecoes' }
+  { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: '#EF9D9D', to: '/escaladas' },
+  { label: 'Coleções', num: numColecoes.value, icon: 'style', color: '#BCE9B4', to: '/colecoes' },
+  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: '#7E9CE8', to: `/colecoes/${colecaoId.value}` }
 ]);
 
 onMounted(async () => {
@@ -116,30 +102,17 @@ defineOptions({
   name: 'PerfilPage'
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .settings-btn {
   position: absolute;
   top: 16px;
   right: 16px;
   height: 50px;
-  color: #af8355;
-  background-color: #fcbd7b;
+  color: $dark;
+  background-color: $primary;
 }
-
-.large-text {
-  font-size: 42px; /* Ajuste o tamanho conforme necessário */
-  font-weight: bold; /* Opcional: para deixar o texto mais destacado */
+.card-config{
+  background-color: $primary-light;
 }
-
-.box-item {
-  display: flex; /* Torna o item um contêiner flexível */
-  align-items: center; /* Alinha o conteúdo verticalmente no centro */
-  justify-content: center; /* Alinha o conteúdo horizontalmente no centro */
-  height: 100%; /* Faz com que o item ocupe toda a altura disponível da coluna */
-}
-
-.q-card {
-  background-color: #96c589;
-}
-
 </style>

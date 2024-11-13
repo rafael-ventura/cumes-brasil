@@ -16,7 +16,7 @@
         <q-input v-model="biografia" label="Biografia" type="textarea" />
         <q-separator spaced />
         <div class="row">
-          <q-btn class="col-6" label="Via Predileta" color="secondary" @click="isAddPreferidaModalOpen = true" />
+          <q-btn class="col-6 btn" label="Via Predileta" @click="isAddPreferidaModalOpen = true" />
           <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
         </div>
         <q-separator spaced />
@@ -35,11 +35,11 @@
         </div>
 
         <!-- Botão de Submissão -->
-        <q-btn type="submit" label="Salvar" color="primary" class="q-mt-md" />
+        <q-btn type="submit" label="Salvar" class="q-mt-md btn" />
 
       </q-form>
       <q-dialog v-model="isAddPreferidaModalOpen">
-        <AddPreferidaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate" />
+        <AddPreferidaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate" class="fundoEditarVia"/>
       </q-dialog>
     </q-card-section>
   </q-card>
@@ -200,9 +200,10 @@ const onSubmit = async () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .my-card {
-  max-width: 400px;
+  min-width: 250px;
   margin: auto;
 }
 .q-mt-md {
@@ -213,5 +214,8 @@ const onSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.fundoEditarVia{
+  background-color: $primary-light;
 }
 </style>
