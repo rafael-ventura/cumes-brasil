@@ -3,6 +3,7 @@ import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepo
 import bcrypt from 'bcrypt';
 import { Colecao } from '../../Domain/entities/Colecao';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { Container, Service } from 'typedi';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemService } from './ImagemService';
@@ -20,6 +21,7 @@ import TokenValidation from '../validations/TokenValidation';
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
+    private viaRepo = Container.get(ViaRepository);
     private imagemService: ImagemService;
     private mailService = Container.get(MailService);
     private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
@@ -90,17 +92,26 @@ export class UsuarioService {
         }
     }
 
-    async atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<Usuario>) {
+    async atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<any>) {
+        console.log('Usuario dados:', usuarioDados);
         usuario.nome = usuarioDados.nome || usuario.nome;
         usuario.email = usuarioDados.email || usuario.email;
         usuario.data_atividade = usuarioDados.data_atividade || usuario.data_atividade;
         usuario.clube_organizacao = usuarioDados.clube_organizacao || usuario.clube_organizacao;
         usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
         usuario.biografia = usuarioDados.biografia || usuario.biografia;
-        if (usuarioDados.via_preferida) {
-            usuario.via_preferida = usuarioDados.via_preferida;
-        }
+        await this.atualizarViaPreferida(usuario, usuarioDados.via_preferida_id);
         await this.usuarioRepo.update(usuario.id, usuario);
+    }
+
+    async atualizarViaPreferida(usuario: Usuario, viaId: number) {
+        if (viaId) {
+            const via = await this.viaRepo.getById(viaId);
+            if (!via) {
+                throw new BadRequestError('Via preferida não encontrada');
+            }
+            usuario.via_preferida = via;
+        }
     }
 
     private async atualizarFotoPerfil(usuario: Usuario, file: Express.Multer.File) {

@@ -1,6 +1,6 @@
-import { UsuarioService } from '../../Application/services/UsuarioService';
-import { NextFunction, Request, Response } from 'express';
-import { Usuario } from '../../Domain/entities/Usuario';
+import {UsuarioService} from '../../Application/services/UsuarioService';
+import {NextFunction, Request, Response} from 'express';
+import {Usuario} from '../../Domain/entities/Usuario';
 import HandleErrors from '../../Application/errors/HandleErrors';
 
 export class UsuarioController {
@@ -15,11 +15,11 @@ export class UsuarioController {
             const id = parseInt(req.params.id);
             const resultado = await this.service.getUsuarioById(id);
             if (!resultado) {
-                return res.status(404).json({ message: 'Usuario não encontrado.' });
+                return res.status(404).json({message: 'Usuario não encontrado.'});
             }
             res.json(resultado);
         } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 
@@ -27,11 +27,11 @@ export class UsuarioController {
         try {
             const result = await this.service.getUsuarios();
             if (result.length === 0) {
-                return res.status(404).json({ message: 'Nenhum Usuario encontrado' });
+                return res.status(404).json({message: 'Nenhum Usuario encontrado'});
             }
             res.json(result);
         } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 
@@ -43,7 +43,7 @@ export class UsuarioController {
                 senha
             } = req.body;
             await this.service.register(nome, email, senha);
-            res.status(201).json({ message: 'Usuario criado com sucesso.' });
+            res.status(201).json({message: 'Usuario criado com sucesso.'});
         } catch (error) {
             HandleErrors.handleErrors(error, req, res, next);
         }
@@ -53,12 +53,12 @@ export class UsuarioController {
         try {
             const usuario: Usuario = req.body;
             await this.service.updateUsuario(usuario);
-            res.status(200).json({ message: 'Usuario atualizado com sucesso.' });
+            res.status(200).json({message: 'Usuario atualizado com sucesso.'});
         } catch (error) {
             if (error instanceof Error && error.message === 'Usuario não encontrado') {
-                return res.status(404).json({ message: error.message });
+                return res.status(404).json({message: error.message});
             }
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 
@@ -66,12 +66,12 @@ export class UsuarioController {
         try {
             const id = parseInt(req.params.id);
             await this.service.deleteUsuario(id);
-            res.status(200).json({ message: 'Usuario deletado com sucesso.' });
+            res.status(200).json({message: 'Usuario deletado com sucesso.'});
         } catch (error) {
             if (error instanceof Error && error.message === 'Usuario não encontrado') {
-                return res.status(400).json({ error: error.message });
+                return res.status(400).json({error: error.message});
             }
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 
@@ -80,11 +80,11 @@ export class UsuarioController {
             const userId = parseInt(req.user.userId);
             const resultado = await this.service.getPerfil(userId);
             if (!resultado) {
-                return res.status(404).json({ message: 'Perfil não encontrado.' });
+                return res.status(404).json({message: 'Perfil não encontrado.'});
             }
             res.json(resultado);
         } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 
@@ -94,12 +94,12 @@ export class UsuarioController {
             const usuarioDados: Partial<Usuario> = req.body;
             const file = req.file;
             await this.service.editarDados(userId, usuarioDados, file);
-            res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
+            res.status(200).json({message: 'Perfil atualizado com sucesso.'});
         } catch (error) {
             if (error instanceof Error && error.message === 'Perfil não encontrado') {
-                return res.status(404).json({ message: error.message });
+                return res.status(404).json({message: error.message});
             }
-            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
         }
     };
 

@@ -39,6 +39,7 @@ import PerfilBar from 'components/Perfil/PerfilBar.vue';
 import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
+import PerfilPredileta from 'components/Perfil/PerfilPredileta.vue';
 
 const router = useRouter();
 const user = ref<IUsuario | null>(null);
@@ -73,6 +74,12 @@ onMounted(async () => {
   }
 });
 
+const updateUserBio = (newBio: string) => {
+  if (user.value) {
+    user.value.biografia = newBio;
+  }
+};
+
 const logout = () => {
   UserService.logout();
   router.push('/auth/login');
@@ -92,12 +99,6 @@ const handleEditSubmit = async () => {
   }
 };
 
-const updateUserBio = (newBio: string) => {
-  if (user.value) {
-    user.value.biografia = newBio;
-  }
-};
-
 defineOptions({
   name: 'PerfilPage'
 });
@@ -113,6 +114,7 @@ defineOptions({
   background-color: $primary;
 }
 .card-config{
-  background-color: $primary-light;
+  background-color: #2C2C2CF4;
+  border-radius: 10px;
 }
 </style>

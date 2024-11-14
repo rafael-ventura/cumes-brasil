@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-dialog-plugin">
     <q-card-section>
-      <div class="text-h6">Adicionar Via</div>
+      <div class="text-h6">Escolher Via Preferida</div>
       <q-input v-model="searchQuery" label="Buscar vias" @input="searchVias" debounce="300" />
       <q-list bordered separator>
         <q-item v-for="via in vias" :key="via.id" clickable @click="addVia(via)">
@@ -12,7 +12,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ via.nome }}</q-item-label>
-            <q-item-label caption>{{ via.montanha.nome }}</q-item-label>
+            <q-item-label>{{ via.montanha.nome }}</q-item-label>
           </q-item-section>
           <q-item-section side>
             <q-btn
@@ -107,9 +107,11 @@ watch(() => props.viaPreferidaId,
 loadVias();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .q-dialog-plugin {
   height: 60%;
+  color: $primary;
 }
 .custom-avatar img {
   object-fit: cover;

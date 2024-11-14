@@ -8,55 +8,102 @@
 
     <q-card-section>
       <q-form @submit.prevent="onSubmit">
-        <q-input v-model="nome" label="Nome" type="text" required />
-        <q-input v-model="email" label="Email" type="email" required />
-        <q-input v-model="formattedDataAtividade" label="Data de Atividade" type="date" />
-        <q-input v-model="clubeOrganizacao" label="Clube ou Organização" type="text" />
-        <q-input v-model="localizacao" label="Localização" type="text" />
-        <q-input v-model="biografia" label="Biografia" type="textarea" />
-        <q-separator spaced />
-        <div class="row">
-          <q-btn class="col-6 btn" label="Via Predileta" @click="isAddPreferidaModalOpen = true" />
-          <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
-        </div>
-        <q-separator spaced />
-
-        <!-- Seção de Upload da Foto de Perfil -->
-        <div class="q-mt-md">
-          <q-img :src="fotoPreview" :ratio="1" class="my-profile-pic" />
-          <q-file
-            v-model="fotoFile"
-            label="Escolha uma nova foto de perfil"
-            accept=".jpg, image/*"
-            :max-file-size="2097152"
-            @change="onFotoChange"
-            @rejected="onFotoRejected"
-          />
-        </div>
-
+        <q-input
+          id="nome"
+          v-model="nome"
+          type="text"
+          label="Nome"
+          color="primary"
+          :rules="[val => !!val || 'Campo obrigatório']"
+          outlined
+          required
+        />
+        <q-separator spaced/>
+        <q-input
+          id="date"
+          v-model="formattedDataAtividade"
+          type="date"
+          label="Data de Atividade"
+          color="primary"
+          outlined
+        />
+        <q-separator spaced/>
+        <q-input
+          id="clubeOrganizacao"
+          v-model="clubeOrganizacao"
+          type="text"
+          label="Clube ou Organização"
+          color="primary"
+          outlined
+        />
+        <q-separator spaced/>
+        <q-input
+          id="localizacao"
+          v-model="localizacao"
+          type="text"
+          label="Localização"
+          color="primary"
+          outlined
+        />
+        <q-separator spaced/>
+        <q-input
+          id="biografia"
+          v-model="biografia"
+          type="textarea"
+          label="Biografia"
+          color="primary"
+          outlined
+        />
+        <q-separator spaced/>
+        <q-btn class="col-6 btn user-via-predileta" label="Via Predileta" @click="isAddPreferidaModalOpen = true"/>
+        <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
+        <q-separator spaced/>
+        <!-- Upload de Foto de Perfil -->
+        <FotoPerfilUploader :fotoPerfil="fotoPerfil" @fotoChange="handleFotoChange"/>
         <!-- Botão de Submissão -->
-        <q-btn type="submit" label="Salvar" class="q-mt-md btn" />
-
+        <q-btn type="submit" label="Salvar" class="q-mt-md btn"/>
+        <q-btn label="Excluir Conta" class="q-mt-md btn-red left-margem" @click="isDeleteAccountDialogOpen = true"
+        />
+        <!-- Pop-up de aviso ao clicar em excluir conta -->
+        <q-dialog v-model="isDeleteAccountDialogOpen">
+          <q-card style="background-color: #2c2c2c; color: #FCBD7BFF">
+            <q-card-section class="row items-center">
+              <div class="text-h6">Aviso</div>
+            </q-card-section>
+            <q-card-section>
+              <p>A função de exclusão de conta ainda não está disponível. Por favor, tente novamente mais tarde.</p>
+            </q-card-section>
+            <q-card-actions align="right">
+              <q-btn flat label="OK" color="primary" @click="isDeleteAccountDialogOpen = false" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </q-form>
       <q-dialog v-model="isAddPreferidaModalOpen">
-        <AddPreferidaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate" class="fundoEditarVia"/>
+        <AddPrediletaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate"
+                           class="fundoEditarVia"/>
       </q-dialog>
     </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue';
+import { defineEmits, defineProps, ref, watch } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
-import AddPreferidaModal from 'components/Perfil/AddPreferidaModal.vue';
+import AddPrediletaModal from 'components/Perfil/AddPrediletaModal.vue';
+import FotoPerfilUploader from 'components/Perfil/FotoPerfilUpload.vue';
 import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
 import ImageService from 'src/services/ImagemService';
-import { QRejectedEntry, useQuasar } from 'quasar';
 
 const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['submit', 'waiting']);
+
+const handleFotoChange = (file: File | null) => {
+  fotoFile.value = file;
+};
+
 const nome = ref(props.user.nome);
 const email = ref(props.user.email);
 const dataAtividade = ref(props.user.data_atividade);
@@ -67,20 +114,12 @@ const viaPreferidaId = ref(props.user.via_preferida?.id.toString() || '');
 const viaPreferidaNome = ref(props.user.via_preferida?.nome || '');
 const viaPreferida = ref(props.user.via_preferida || null);
 const isAddPreferidaModalOpen = ref(false);
-const $q = useQuasar();
+const fotoPerfil = ref(props.user.foto_perfil?.url || '');
 const fotoFile = ref<File | null>(null);
-const fotoPerfil = ref(
-  props.user.foto_perfil?.url ? ImageService.getFullImageUrl(props.user.foto_perfil.url) : ''
-);
-const fotoPreview = computed(() => {
-  if (fotoFile.value) {
-    return URL.createObjectURL(fotoFile.value);
-  } else if (fotoPerfil.value) {
-    return fotoPerfil.value;
-  } else {
-    return '/assets/usuario-default-01.jpg';
-  }
-});
+
+const isDeleteAccountDialogOpen = ref(false);
+
+console.log('nome da via predileta: ', props.user?.via_preferida?.id);
 
 watch(
   () => props.user,
@@ -109,43 +148,10 @@ const formattedDataAtividade = ref(
 
 // Métodos
 const viaPreferidaUpdate = (newPreferida: Via) => {
-  viaPreferida.value = newPreferida;
   viaPreferidaId.value = newPreferida.id.toString();
   viaPreferidaNome.value = newPreferida.nome;
+  viaPreferida.value = newPreferida;
   isAddPreferidaModalOpen.value = false;
-};
-
-const onFotoChange = () => {
-  if (fotoFile.value) {
-    // Se um novo arquivo for selecionado, limpe a URL existente de fotoPerfil
-    fotoPerfil.value = '';
-  }
-};
-
-interface ExtendedQRejectedEntry extends QRejectedEntry {
-  reason: 'size' | 'type' | 'extension' | string;
-}
-
-const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
-  rejectedEntries.forEach(entry => {
-    const extendedEntry = entry as ExtendedQRejectedEntry;
-    let msg = '';
-    switch (extendedEntry.reason) {
-      case 'size':
-        msg = `O arquivo "${entry.file.name}" é muito grande.`;
-        break;
-      case 'type':
-      case 'extension':
-        msg = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
-        break;
-      default:
-        msg = `O arquivo "${entry.file.name}" foi rejeitado.`;
-    }
-    $q.notify({
-      type: 'negative',
-      message: msg
-    });
-  });
 };
 
 const onSubmit = async () => {
@@ -168,7 +174,6 @@ const onSubmit = async () => {
     if (viaPreferidaId.value) {
       formData.append('via_preferida_id', viaPreferidaId.value);
     }
-
     if (fotoFile.value) {
       formData.append('foto_perfil', fotoFile.value);
     } else {
@@ -177,22 +182,6 @@ const onSubmit = async () => {
 
     // Chamar o serviço com FormData e obter o usuário atualizado
     const updatedUser = await UserService.editarDados(formData);
-
-    nome.value = updatedUser.nome;
-    email.value = updatedUser.email;
-    dataAtividade.value = updatedUser.data_atividade;
-    formattedDataAtividade.value = updatedUser.data_atividade
-      ? formatDateToYYYYMMDD(updatedUser.data_atividade)
-      : '';
-    clubeOrganizacao.value = updatedUser.clube_organizacao || '';
-    localizacao.value = updatedUser.localizacao || '';
-    biografia.value = updatedUser.biografia || '';
-    viaPreferidaId.value = updatedUser.via_preferida?.id.toString() || '';
-    viaPreferidaNome.value = updatedUser.via_preferida?.nome || '';
-    viaPreferida.value = updatedUser.via_preferida || null;
-    fotoPerfil.value = updatedUser.foto_perfil?.url
-      ? ImageService.getFullImageUrl(updatedUser.foto_perfil.url)
-      : '';
     emits('submit', updatedUser);
   } catch (error) {
     console.error(error);
@@ -202,10 +191,15 @@ const onSubmit = async () => {
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
+
 .my-card {
-  min-width: 250px;
+  min-width: 280px;
+  border-radius: 10px;
   margin: auto;
+  background-color: #2C2C2CF4;
+  color: $primary;
 }
+
 .q-mt-md {
   margin-top: 16px;
 }
@@ -215,7 +209,16 @@ const onSubmit = async () => {
   justify-content: center;
   align-items: center;
 }
-.fundoEditarVia{
-  background-color: $primary-light;
+
+.fundoEditarVia {
+  background-color: $dark;
+}
+
+.user-via-predileta {
+  min-width: max-content;
+}
+
+.edit-form {
+  padding-left: 50px;
 }
 </style>
