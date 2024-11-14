@@ -5,10 +5,10 @@
       <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode" />
     </div>
     <q-separator spaced />
-    <q-card-section class="col text-left">
-      <div v-if="!isEditing" class="text-h6">{{ displayedBio }}</div>
+    <div class="col text-left">
+      <div v-if="!isEditing" class="text-h6 descricao-bio">{{ displayedBio }}</div>
       <q-input v-else v-model="newBio" type="textarea" class="custom-input" outlined/>
-    </q-card-section>
+    </div><br/>
     <div v-if="isEditing">
       <q-btn flat label="Cancelar" class="btn-dark left-margem right-margem" @click="cancelEdit" />
       <q-btn flat label="Salvar" class="btn-dark" @click="saveBio" />
@@ -17,28 +17,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watch, computed, defineEmits } from 'vue';
-import { IUsuario } from 'src/models/IUsuario';
+import { defineProps, ref, computed, defineEmits } from 'vue';
 import UserService from 'src/services/UsuarioService';
+import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: IUsuario }>();
+const props = defineProps<{ user?: IUsuario | null }>();
 const emits = defineEmits(['bio-updated']);
 
 const isEditing = ref(false);
-const newBio = ref('');
-
-watch(
-  () => props.user,
-  (newVal) => {
-    if (newVal) {
-      newBio.value = newVal.biografia || '';
-    }
-  },
-  { immediate: true }
-);
+const newBio = ref<string>(props.user?.biografia || '');
 
 const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
+  if (isEditing.value) {
+    newBio.value = props.user?.biografia || ''; // Aqui você garante que `newBio` tenha o valor atual de `bio` quando inicia a edição
+  }
 };
 
 const cancelEdit = () => {
@@ -48,7 +41,8 @@ const cancelEdit = () => {
 
 const saveBio = async () => {
   try {
-    await UserService.editarBio(newBio.value);
+    const bio = newBio.value?.trim() || '';
+    await UserService.editarBio(bio);
     emits('bio-updated', newBio.value);
     isEditing.value = false;
   } catch (error) {
@@ -76,6 +70,12 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   background-color: $primary;
   border-radius: 5px;
   margin-left: 20px;
+}
+.descricao-bio{
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  background-color: $dark;
 }
 .right-margem {
   margin-right: 16px;

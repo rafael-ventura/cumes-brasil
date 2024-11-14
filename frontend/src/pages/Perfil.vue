@@ -25,6 +25,7 @@
       <PerfilEditaForm v-if="user" :user="<IUsuario>user" @submit="handleEditSubmit" />
     </q-dialog>
     <PerfilBio :user="<IUsuario>user" @bio-updated="updateUserBio" />
+    <PerfilPredileta :user="<IUsuario>user"/>
   </q-page>
 </template>
 <script setup lang="ts">
@@ -40,9 +41,10 @@ import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilPredileta from 'components/Perfil/PerfilPredileta.vue';
+// import { Via } from 'src/models/Via';
 
 const router = useRouter();
-const user = ref<IUsuario | null>(null);
+const user = ref<IUsuario | null | undefined>(null);
 const numColecoes = ref();
 const numEscaladas = ref();
 const numFavoritas = ref();
@@ -77,8 +79,16 @@ onMounted(async () => {
 const updateUserBio = (newBio: string) => {
   if (user.value) {
     user.value.biografia = newBio;
+    user.value = { ...user.value }; // Trigger reatividade
   }
 };
+
+// const updateUserViaPredileta = (newVia: Via) => {
+//   if (user.value) {
+//     user.value.via_preferida = newVia;
+//     user.value = { ...user.value }; // Trigger reatividade
+//   }
+// };
 
 const logout = () => {
   UserService.logout();

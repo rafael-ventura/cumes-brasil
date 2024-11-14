@@ -2,28 +2,14 @@
   <div class="q-pa-md q-mb-md no-wrap top-margem fundo1 border-radius-large">
     <div class="row title-box border-radius-medium">
       <div class="text-h5 titulo">Predileta</div>
-      <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode" />
+      <q-icon name="edit" class="medium-icon right-margem icon"/>
     </div>
     <q-separator spaced />
 
     <!-- Exibição dos detalhes da via favorita -->
-    <q-card-section v-if="props.user?.via_preferida" class="card-info">
-      <div class="via-nome">{{ props.user.via_preferida.nome }}</div>
-
-      <div class="montanha-face">
-        <q-icon name="terrain" size="20px" />
-        {{ props.user.via_preferida.montanha.nome }}
-        <span v-if="props.user.via_preferida.face?.nome">, {{ props.user.via_preferida.face.nome }}</span>
-      </div>
-
-      <div class="grau-badge-container">
-        <GrauBadge
-          :grauText="props.user.via_preferida.grau || 'N/A'"
-          :extensaoText="(props.user.via_preferida.extensao || 'N/A') + 'm'"
-        />
-      </div>
-    </q-card-section>
-
+    <div v-if="props.user?.via_preferida">
+      <ViaCardSmall :via="props.user.via_preferida" @click="handleViaClick" />
+    </div>
     <q-card-section v-else>
       <div class="text-h6">Nenhuma predileta adicionada.</div>
     </q-card-section>
@@ -31,18 +17,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
-import GrauBadge from 'src/components/Via/GrauBadge.vue';
-import {Via} from "src/models/Via";
+import ViaCardSmall from 'components/Via/ViaCardSmall.vue';
 
-const props = defineProps<{ via: Via }>();
+const props = defineProps<{ user?: IUsuario | null }>();
 
-const isEditing = ref(false);
-
-const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
+const handleViaClick = () => {
+  console.log('Via predileta clicada:', props.user?.via_preferida?.nome);
 };
+
 </script>
 
 <style scoped lang="scss">
@@ -74,5 +57,13 @@ const toggleEditMode = () => {
 }
 .fundo1{
   background-color: $primary;
+}
+
+.imagem-via-predileta{
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  border: 10px solid $dark;
+  object-fit: cover;
 }
 </style>
