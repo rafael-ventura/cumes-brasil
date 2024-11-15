@@ -26,7 +26,8 @@
           label="Data de Atividade"
           color="primary"
           outlined
-        />
+          hide-icon
+        ></q-input>
         <q-separator spaced/>
         <q-input
           id="clubeOrganizacao"
@@ -91,7 +92,7 @@
 import { defineEmits, defineProps, ref, watch } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
-import AddPrediletaModal from 'components/Perfil/AddPrediletaModal.vue';
+import AddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import FotoPerfilUploader from 'components/Perfil/FotoPerfilUpload.vue';
 import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
@@ -116,7 +117,7 @@ const viaPreferida = ref(props.user.via_preferida || null);
 const isAddPreferidaModalOpen = ref(false);
 const fotoPerfil = ref(props.user.foto_perfil?.url || '');
 const fotoFile = ref<File | null>(null);
-
+const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
 const isDeleteAccountDialogOpen = ref(false);
 
 console.log('nome da via predileta: ', props.user?.via_preferida?.id);
@@ -140,10 +141,6 @@ watch(
     immediate: true,
     deep: true
   }
-);
-
-const formattedDataAtividade = ref(
-  dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : ''
 );
 
 // Métodos

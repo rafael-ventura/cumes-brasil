@@ -32,7 +32,7 @@
 import { computed, defineProps, ref } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: IUsuario }>();
+const props = defineProps<{ user: IUsuario | undefined }>();
 const expandedImageUrl = ref('');
 const isImageModalOpen = ref(false);
 

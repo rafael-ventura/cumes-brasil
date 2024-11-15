@@ -44,7 +44,7 @@ defineProps<{
 
 .margin{
   margin: 15px 0px; /* Adiciona um espaçamento acima do componente */
-  margin-right: 10px;
+  margin-left: 15px;
 }
 
 .texto{
