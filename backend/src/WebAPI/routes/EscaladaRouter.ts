@@ -11,7 +11,7 @@ import { ImagemService } from '../../Application/services/ImagemService';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 
 const viaRepository = new ViaRepository();
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()));
+const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository());
 const escaladaRepository = new EscaladaRepository();
 const viaService = new ViaService(viaRepository);
 const escaladaService = new EscaladaService(escaladaRepository, usuarioService, viaService);

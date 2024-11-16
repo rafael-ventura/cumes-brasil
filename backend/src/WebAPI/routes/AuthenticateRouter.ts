@@ -6,10 +6,11 @@ import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepo
 import { errorRequestMiddleware } from '../Middlewares/ErrorRequestMiddleware';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { ImagemService } from '../../Application/services/ImagemService';
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
 const AuthenticateRouter = Router();
 const authController = new AuthController();
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()));
+const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository());
 
 const usuarioController = new UsuarioController(usuarioService);
 

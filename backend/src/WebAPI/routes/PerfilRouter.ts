@@ -6,8 +6,9 @@ import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepo
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { ImagemService } from '../../Application/services/ImagemService';
 import upload from '../Middlewares/MulterMiddleware';
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()));
+const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository());
 
 const usuarioController = new UsuarioController(usuarioService)
 

@@ -44,7 +44,7 @@
         <PerfilBio :user="user" @bio-updated="updateUserBio" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 caixa2">
-        <PerfilViaPredileta :user="user" />
+        <PerfilViaPredileta :user="user"  />
       </div>
     </div>
   </q-page>
@@ -62,6 +62,7 @@ import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
+import { Via } from 'src/models/Via';
 
 const router = useRouter();
 const user = ref<IUsuario | undefined>(undefined);

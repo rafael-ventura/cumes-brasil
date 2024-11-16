@@ -35,24 +35,30 @@ import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';
 
 const props = defineProps<{ user?: IUsuario | null }>();
+const emit = defineEmits(['via-preferida-updated']);
 
-const viaPreferida = ref<Via | null>(props.user?.via_preferida || null);
-const viaPreferidaId = ref<string | null>(props.user?.via_preferida?.id.toString() || null);
+const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
+const viaPreferida = ref<Via | null>(localUser.value?.via_preferida || null);
+const viaPreferidaId = ref<string | null>(localUser.value?.via_preferida?.id.toString() || null);
 const isModalSelect = ref(false);
 const staySaved = ref(false);
 
 watch(
-  () => props.user?.via_preferida,
-  (newViaPreferida) => {
-    viaPreferida.value = newViaPreferida || null;
+  () => props.user,
+  (newUser) => {
+    if (newUser) {
+      localUser.value = { ...newUser };
+      viaPreferida.value = newUser.via_preferida || null;
+      viaPreferidaId.value = newUser.via_preferida?.id.toString() || null;
+    }
   },
-  { immediate: true } // Executa o watch imediatamente ao carregar o componente
+  { immediate: true }
 );
 
 const cancelEdit = () => {
   staySaved.value = false;
   isModalSelect.value = false;
-  viaPreferida.value = props.user?.via_preferida || null; // Mantem preferida antiga se for cancelado
+  viaPreferida.value = localUser.value?.via_preferida || null; // Mantem preferida antiga se for cancelado
 };
 
 const toggleEditMode = () => {
@@ -76,13 +82,9 @@ const savePreferida = async () => {
     formData.append('via_preferida_id', viaPreferida.value.id.toString());
 
     // Chamada para o serviço de usuário para salvar a via preferida
-    const updatedUser = await UsuarioService.editarDados(formData);
+    await UsuarioService.editarDados(formData);
 
     staySaved.value = false;
-    // essa chamada com this não pode ser removido, nem pode ser colocada diretamente por props
-    // essa chamada quebra ao usar o ignore: "eslint-disable-next-line vue/no-mutating-props"
-    this.props.user.via_preferida = updatedUser.via_preferida || null;
-    viaPreferidaId.value = updatedUser.via_preferida?.id.toString() || null;
   } catch (error) {
     console.error('Erro ao salvar a via preferida:', error);
   }

@@ -21,14 +21,15 @@ import TokenValidation from '../validations/TokenValidation';
 export class UsuarioService {
     private usuarioRepo: UsuarioRepository;
     private colecaoRepo = Container.get(ColecaoRepository);
-    private viaRepo = Container.get(ViaRepository);
+    private viaRepo: ViaRepository;
     private imagemService: ImagemService;
     private mailService = Container.get(MailService);
     private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
 
-    constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService) {
+    constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository) {
         this.usuarioRepo = usuarioRepo;
         this.imagemService = imagemService;
+        this.viaRepo = viaRepo;
     }
 
     async getUsuarioById(id: number): Promise<Usuario | null> {
