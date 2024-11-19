@@ -1,11 +1,12 @@
 import { boot } from 'quasar/wrappers';
-import { Dark } from 'quasar';
+import vue3GoogleLogin from 'vue3-google-login';
 
+// Obtenha o Google Client ID do Vite
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+// Adicione uma tipagem explícita ao plugin
 export default boot(({ app }) => {
-  // Initialize dark mode based on user preference or system settings
-  if (Dark.isActive) {
-    app.config.globalProperties.$q.dark.set(true);
-  } else {
-    app.config.globalProperties.$q.dark.set(false);
-  }
+  (vue3GoogleLogin as any).install(app, {
+    clientId: googleClientId, // Passe o clientId para o plugin
+  });
 });
