@@ -3,22 +3,22 @@
   "short_name": "Cumes BR",
   "icons": [
     {
-      "src": "./icons/apple-touch-icon.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/icons/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "./icons/favicon-48x48.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/icons/favicon-48x48.png",
       "sizes": "48x48",
       "type": "image/png"
     },
     {
-      "src": "./icons/web-app-manifest-192x192.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/icons/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./icons/web-app-manifest-512x512.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/icons/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -27,21 +27,20 @@
   "background_color": "#f4f4f4",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "https://dvmnh4t2t44fm.cloudfront.net/index.html",
+  "scope": "https://dvmnh4t2t44fm.cloudfront.net/",
   "screenshots": [
     {
-      "src": "./screenshots/screenshot-wide.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/screenshots/screenshot-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "./screenshots/screenshot-mobile.png",
+      "src": "https://dvmnh4t2t44fm.cloudfront.net/screenshots/screenshot-mobile.png",
       "sizes": "640x360",
       "type": "image/png",
       "form_factor": "narrow"
     }
   ]
 }
-

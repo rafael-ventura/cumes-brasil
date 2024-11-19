@@ -18,10 +18,9 @@ precacheAndRoute(self.__WB_MANIFEST);
 // Clean up old caches that are no longer needed
 cleanupOutdatedCaches();
 
-// Fallback to `index.html` for any navigation routes (SPA behavior)
 registerRoute(
   new NavigationRoute(
-    createHandlerBoundToURL('index.html'),
+    createHandlerBoundToURL('/index.html'),
     { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
   )
 );
