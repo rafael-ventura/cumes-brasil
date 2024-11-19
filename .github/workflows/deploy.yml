@@ -1,3 +1,10 @@
+name: Build and Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-deploy:
     name: Build and Deploy Backend and Frontend
