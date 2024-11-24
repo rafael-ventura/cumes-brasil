@@ -8,31 +8,46 @@
 
     <q-card-section>
       <q-form @submit.prevent="onSubmit">
-        <q-input v-model="nome" label="Nome" type="text" required />
-        <q-input v-model="email" label="Email" type="email" required />
+        <q-input v-model="nome" label="Nome" type="text" required maxlength="35"/>
+        <q-input v-model="email" label="Email" type="email" required mask="email" />
         <q-input v-model="formattedDataAtividade" label="Data de Atividade" type="date" />
         <q-input v-model="clubeOrganizacao" label="Clube ou Organização" type="text" />
         <q-input v-model="localizacao" label="Localização" type="text" />
-        <q-input v-model="biografia" label="Biografia" type="textarea" />
+        <q-input v-model="biografia" label="Biografia" type="textarea"  autogrow />
         <q-separator spaced />
         <div class="row">
-          <q-btn class="col-6 btn" label="Via Predileta" @click="isAddPreferidaModalOpen = true" />
-          <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
+          <q-btn class="col-12 btn align-center" label="Via Predileta" @click="isAddPreferidaModalOpen = true" icon="edit"/>
+          <div class="align-center">
+            <q-icon name="forest" /> {{ viaPreferidaNome }}
+          </div>
         </div>
         <q-separator spaced />
 
         <!-- Seção de Upload da Foto de Perfil -->
         <div class="q-mt-md">
-          <q-img :src="fotoPreview" :ratio="1" class="my-profile-pic" />
           <q-file
+            class="q-mt-md q-mb-sm"
             v-model="fotoFile"
-            label="Escolha uma nova foto de perfil"
+            label="Escolha uma nova foto"
             accept=".jpg, image/*"
             :max-file-size="2097152"
             @change="onFotoChange"
             @rejected="onFotoRejected"
+            clearable
+            clear-icon="close"
+          />
+          <q-img :src="fotoPreview" :ratio="1" class="my-profile-pic"/>
+          <q-btn
+            v-if="fotoPerfil && !fotoPerfil.endsWith('/assets/usuario-default-01.jpg')"
+            class="q-mt-sm"
+            label="Remover foto de perfil"
+            @click="removeFotoPerfil"
+            icon="delete"
+            dense
+            flat
           />
         </div>
+        <q-separator spaced />
 
         <!-- Botão de Submissão -->
         <q-btn type="submit" label="Salvar" class="q-mt-md btn" />
@@ -70,16 +85,14 @@ const isAddPreferidaModalOpen = ref(false);
 const $q = useQuasar();
 const fotoFile = ref<File | null>(null);
 const fotoPerfil = ref(
-  props.user.foto_perfil?.url ? ImageService.getFullImageUrl(props.user.foto_perfil.url) : ''
+  props.user.foto_perfil.url ? props.user.foto_perfil.url : ''
 );
 const fotoPreview = computed(() => {
   if (fotoFile.value) {
-    return URL.createObjectURL(fotoFile.value);
-  } else if (fotoPerfil.value) {
-    return fotoPerfil.value;
-  } else {
-    return '/assets/usuario-default-01.jpg';
+    console.log(URL.createObjectURL(fotoFile?.value));
   }
+  console.log(fotoPerfil.value);
+  return fotoFile.value ? URL.createObjectURL(fotoFile.value) : fotoPerfil.value;
 });
 
 watch(
@@ -94,7 +107,7 @@ watch(
       biografia.value = newUser.biografia || '';
       viaPreferidaId.value = newUser.via_preferida?.id.toString() || '';
       viaPreferidaNome.value = newUser.via_preferida?.nome || '';
-      fotoPerfil.value = newUser.foto_perfil?.url ? ImageService.getFullImageUrl(newUser.foto_perfil.url) : '';
+      fotoPerfil.value = newUser.foto_perfil.url ? newUser.foto_perfil.url : '';
     }
   },
   {
@@ -122,25 +135,29 @@ const onFotoChange = () => {
   }
 };
 
-interface ExtendedQRejectedEntry extends QRejectedEntry {
-  reason: 'size' | 'type' | 'extension' | string;
-}
+const removeFotoPerfil = async () => {
+  // Atribui a foto padrão ao campo fotoPerfil
+  fotoPerfil.value = '/assets/usuario-default-01.jpg'; // Caminho da foto padrão
+  fotoFile.value = null; // Limpa o arquivo selecionado
+};
 
 const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
   rejectedEntries.forEach(entry => {
-    const extendedEntry = entry as ExtendedQRejectedEntry;
     let msg = '';
-    switch (extendedEntry.reason) {
-      case 'size':
-        msg = `O arquivo "${entry.file.name}" é muito grande.`;
+    console.log(entry);
+
+    // Verificando o motivo da rejeição através de failedPropValidation
+    switch (entry.failedPropValidation) {
+      case 'max-file-size':
+        msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
         break;
-      case 'type':
-      case 'extension':
-        msg = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
+      case 'accept':
+        msg = 'Formato inválido. Sua foto precisa ser: JPG, PNG ou GIF.';
         break;
       default:
-        msg = `O arquivo "${entry.file.name}" foi rejeitado.`;
+        msg = `O arquivo "${entry.file.name}" foi rejeitado por um motivo desconhecido.`;
     }
+
     $q.notify({
       type: 'negative',
       message: msg
@@ -166,13 +183,16 @@ const onSubmit = async () => {
       formData.append('biografia', biografia.value);
     }
     if (viaPreferidaId.value) {
-      formData.append('via_preferida_id', viaPreferidaId.value);
+      formData.append('via_preferida', viaPreferidaId.value);
     }
 
     if (fotoFile.value) {
+      console.log('Foto selecionada:', fotoFile.value);
       formData.append('foto_perfil', fotoFile.value);
     } else {
-      console.error('Sem arquivo anexado');
+      console.log('Nenhuma foto selecionada');
+      // Se não houver foto, enviar a foto padrão (ID 3)
+      formData.append('removerFoto', 'true');
     }
 
     // Chamar o serviço com FormData e obter o usuário atualizado

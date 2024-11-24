@@ -41,6 +41,9 @@ export class SearchController {
 				return res.status(400).json({ error: 'Invalid entity type' });
 			}
 
+			// Obtenha o ID do usuário logado (por exemplo, do middleware de autenticação)
+			const usuarioId = req.user?.userId;
+
 			// Construa o objeto de filtros a partir da requisição
 			const filters = {
 				unifiedSearch,
@@ -49,8 +52,9 @@ export class SearchController {
 				selectedExtensionCategory,
 				selectedCrux,
 				selectedExposicao,
-				colecaoId,
 				bairro,
+				colecaoId,
+				usuarioId,
 				page,
 				itemsPerPage,
 				sortField,

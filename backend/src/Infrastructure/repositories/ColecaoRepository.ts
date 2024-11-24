@@ -111,10 +111,11 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         const {
             searchQuery,
             colecaoId,
+            usuarioId,
             nomeVia,
             nomeMontanha,
-            sortField = 'colecao.nome', // Campo padrão de ordenação
-            sortOrder = 'ASC', // Direção padrão de ordenação
+            sortField,
+            sortOrder,
             page = 1,
             itemsPerPage = 10
         } = query;
@@ -125,6 +126,9 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
           .leftJoinAndSelect('viaColecao.via', 'via')
           .leftJoinAndSelect('via.montanha', 'montanha')
           .leftJoinAndSelect('colecao.imagem', 'imagem');
+
+        // Filtro default pelo ID do usuário logado
+        qb = qb.andWhere('colecao.usuario.id = :usuarioId', { usuarioId });
 
         // Filtro por ID da coleção
         if (colecaoId) {
@@ -147,7 +151,9 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         }
 
         // Aplicação da ordenação dinâmica
-        qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase());
+        if (sortField && sortOrder) {
+            qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase());
+        }
 
         // Contar o total de itens (coleções) correspondentes
         const totalItems = await qb.getCount();

@@ -74,7 +74,7 @@ export class UsuarioService {
         return this.usuarioRepo.getPerfilSemHash(id);
     }
 
-    async editarDados(id: number, usuarioDados: Partial<Usuario>, file?: Express.Multer.File): Promise<void> {
+    async editarDados(id: number, usuarioDados: any, file?: Express.Multer.File): Promise<void> {
         const usuario = await this.usuarioRepo.findOne({
             where: { id },
             relations: ['foto_perfil']
@@ -84,9 +84,15 @@ export class UsuarioService {
             throw new Error('Usuário não encontrado');
         }
 
+        // Atualiza os dados do usuário
         await this.atualizarDadosUsuario(usuario, usuarioDados);
+
+        // Atualiza a foto de perfil, se enviada
         if (file) {
             await this.atualizarFotoPerfil(usuario, file);
+        } else if (usuarioDados.removerFoto) {
+            // Caso o usuário tenha solicitado a remoção da foto
+            await this.removerFotoPerfil(usuario);
         }
     }
 
@@ -119,15 +125,46 @@ export class UsuarioService {
         }
     }
 
+    private async removerFotoPerfil(usuario: Usuario) {
+        const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
+
+        // Define a foto default
+        usuario.foto_perfil = 3;
+        await this.usuarioRepo.update(usuario.id, usuario);
+
+        // Remove a imagem antiga, se não for a default
+        if (imagemAtual) {
+            await this.excluirImagemAntiga(imagemAtual);
+        }
+    }
+
     private async excluirImagemAntiga(imagemAtual: Imagem) {
-        if (imagemAtual.url !== '/assets/usuario-default-01.jpg') {
-            const oldImagePath = path.resolve(__dirname, '..', '..', '..', 'assets', imagemAtual.url.replace('/assets/', ''));
-            fs.unlink(oldImagePath, (err) => {
+        const defaultImageUrl = '/assets/usuario-default-01.jpg';
+
+        if (imagemAtual.url !== defaultImageUrl) {
+            const oldImagePath = path.resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'assets',
+                imagemAtual.url.replace('/assets/', '')
+            );
+
+            // Verifica se o caminho da imagem existe antes de tentar deletá-la
+            fs.access(oldImagePath, fs.constants.F_OK, (err) => {
                 if (err) {
-                    console.error('Erro ao apagar imagem antiga:', err);
+                    console.error('Imagem não encontrada no sistema de arquivos:', err);
+                } else {
+                    fs.unlink(oldImagePath, (unlinkErr) => {
+                        if (unlinkErr) {
+                            console.error('Erro ao apagar imagem antiga:', unlinkErr);
+                        }
+                    });
                 }
             });
 
+            // Remove a entrada da imagem no banco
             await this.imagemService.delete(imagemAtual.id);
         }
     }

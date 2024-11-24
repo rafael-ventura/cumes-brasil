@@ -7,6 +7,6 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 // Adicione uma tipagem explícita ao plugin
 export default boot(({ app }) => {
   (vue3GoogleLogin as any).install(app, {
-    clientId: googleClientId, // Passe o clientId para o plugin
+    clientId: googleClientId // Passe o clientId para o plugin
   });
 });

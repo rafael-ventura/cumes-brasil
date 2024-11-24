@@ -12,6 +12,11 @@
       <div class="user-details">
         <div class="text-h4">{{ props.user?.nome }}</div>
         <div class="text-h7">{{props.user?.localizacao}}</div>
+        <!-- via preferida        -->
+        <div class="text-h7">
+          <q-icon name="star" class="right-margem"/>
+          Preferida: {{props.user?.via_preferida?.nome}}
+        </div>
         <div class="caixa-escalada border-radius-medium top-margem">
           <div class="text-h5">
             {{ diasEscalados }}

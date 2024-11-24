@@ -55,8 +55,8 @@ const filters = ref(<BuscaRequest>{
   selectedCrux: null,
   selectedExposicao: null,
   page: 1,
-  sortField: 'nome',
-  sortOrder: 'asc',
+  sortField: null,
+  sortOrder: null,
   itemsPerPage: 20,
   ...props.staticFilters,
   ...route.query
