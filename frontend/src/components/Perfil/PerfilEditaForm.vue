@@ -63,7 +63,7 @@
         <FotoPerfilUploader :fotoPerfil="fotoPerfil" @fotoChange="handleFotoChange"/>
         <!-- Botão de Submissão -->
         <q-btn type="submit" label="Salvar" class="q-mt-md btn"/>
-        <q-btn label="Excluir Conta" class="q-mt-md btn-red left-margem" @click="isDeleteAccountDialogOpen = true"
+        <q-btn disabled label="Excluir Conta" class="q-mt-md btn-red left-margem" @click="isDeleteAccountDialogOpen = true"
         />
         <!-- Pop-up de aviso ao clicar em excluir conta -->
         <q-dialog v-model="isDeleteAccountDialogOpen">
@@ -115,12 +115,21 @@ const viaPreferidaId = ref(props.user.via_preferida?.id.toString() || '');
 const viaPreferidaNome = ref(props.user.via_preferida?.nome || '');
 const viaPreferida = ref(props.user.via_preferida || null);
 const isAddPreferidaModalOpen = ref(false);
-const fotoPerfil = ref(props.user.foto_perfil?.url || '');
 const fotoFile = ref<File | null>(null);
 const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
 const isDeleteAccountDialogOpen = ref(false);
 
 console.log('nome da via predileta: ', props.user?.via_preferida?.id);
+const fotoPerfil = ref(
+  props.user.foto_perfil.url ? props.user.foto_perfil.url : ''
+);
+const fotoPreview = computed(() => {
+  if (fotoFile.value) {
+    console.log(URL.createObjectURL(fotoFile?.value));
+  }
+  console.log(fotoPerfil.value);
+  return fotoFile.value ? URL.createObjectURL(fotoFile.value) : fotoPerfil.value;
+});
 
 watch(
   () => props.user,
@@ -134,7 +143,7 @@ watch(
       biografia.value = newUser.biografia || '';
       viaPreferidaId.value = newUser.via_preferida?.id.toString() || '';
       viaPreferidaNome.value = newUser.via_preferida?.nome || '';
-      fotoPerfil.value = newUser.foto_perfil?.url ? ImageService.getFullImageUrl(newUser.foto_perfil.url) : '';
+      fotoPerfil.value = newUser.foto_perfil.url ? newUser.foto_perfil.url : '';
     }
   },
   {
@@ -149,6 +158,43 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
   viaPreferidaNome.value = newPreferida.nome;
   viaPreferida.value = newPreferida;
   isAddPreferidaModalOpen.value = false;
+};
+
+const onFotoChange = () => {
+  if (fotoFile.value) {
+    // Se um novo arquivo for selecionado, limpe a URL existente de fotoPerfil
+    fotoPerfil.value = '';
+  }
+};
+
+const removeFotoPerfil = async () => {
+  // Atribui a foto padrão ao campo fotoPerfil
+  fotoPerfil.value = '/assets/usuario-default-01.jpg'; // Caminho da foto padrão
+  fotoFile.value = null; // Limpa o arquivo selecionado
+};
+
+const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
+  rejectedEntries.forEach(entry => {
+    let msg = '';
+    console.log(entry);
+
+    // Verificando o motivo da rejeição através de failedPropValidation
+    switch (entry.failedPropValidation) {
+      case 'max-file-size':
+        msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
+        break;
+      case 'accept':
+        msg = 'Formato inválido. Sua foto precisa ser: JPG, PNG ou GIF.';
+        break;
+      default:
+        msg = `O arquivo "${entry.file.name}" foi rejeitado por um motivo desconhecido.`;
+    }
+
+    $q.notify({
+      type: 'negative',
+      message: msg
+    });
+  });
 };
 
 const onSubmit = async () => {
@@ -169,12 +215,15 @@ const onSubmit = async () => {
       formData.append('biografia', biografia.value);
     }
     if (viaPreferidaId.value) {
-      formData.append('via_preferida_id', viaPreferidaId.value);
+      formData.append('via_preferida', viaPreferidaId.value);
     }
     if (fotoFile.value) {
+      console.log('Foto selecionada:', fotoFile.value);
       formData.append('foto_perfil', fotoFile.value);
     } else {
-      console.error('Sem arquivo anexado');
+      console.log('Nenhuma foto selecionada');
+      // Se não houver foto, enviar a foto padrão (ID 3)
+      formData.append('removerFoto', 'true');
     }
 
     // Chamar o serviço com FormData e obter o usuário atualizado
