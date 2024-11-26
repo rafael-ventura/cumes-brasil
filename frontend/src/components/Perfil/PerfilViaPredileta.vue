@@ -35,7 +35,6 @@ import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';
 
 const props = defineProps<{ user?: IUsuario | null }>();
-const emit = defineEmits(['via-preferida-updated']);
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
 const viaPreferida = ref<Via | null>(localUser.value?.via_preferida || null);
