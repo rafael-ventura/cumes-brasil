@@ -63,8 +63,8 @@
         <FotoPerfilUploader :fotoPerfil="fotoPerfil" @fotoChange="handleFotoChange"/>
         <!-- Botão de Submissão -->
         <q-btn type="submit" label="Salvar" class="q-mt-md btn"/>
-        <q-btn disabled label="Excluir Conta" class="q-mt-md btn-red left-margem" @click="isDeleteAccountDialogOpen = true"
-        />
+        <!--
+        <q-btn label="Excluir Conta" class="q-mt-md btn-red left-margem" @click="isDeleteAccountDialogOpen = true"/>-->
         <!-- Pop-up de aviso ao clicar em excluir conta -->
         <q-dialog v-model="isDeleteAccountDialogOpen">
           <q-card style="background-color: #2c2c2c; color: #FCBD7BFF">
@@ -96,7 +96,6 @@ import AddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModa
 import FotoPerfilUploader from 'components/Perfil/FotoPerfilUpload.vue';
 import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
-import ImageService from 'src/services/ImagemService';
 
 const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['submit', 'waiting']);
@@ -123,13 +122,6 @@ console.log('nome da via predileta: ', props.user?.via_preferida?.id);
 const fotoPerfil = ref(
   props.user.foto_perfil.url ? props.user.foto_perfil.url : ''
 );
-const fotoPreview = computed(() => {
-  if (fotoFile.value) {
-    console.log(URL.createObjectURL(fotoFile?.value));
-  }
-  console.log(fotoPerfil.value);
-  return fotoFile.value ? URL.createObjectURL(fotoFile.value) : fotoPerfil.value;
-});
 
 watch(
   () => props.user,
@@ -160,43 +152,6 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
   isAddPreferidaModalOpen.value = false;
 };
 
-const onFotoChange = () => {
-  if (fotoFile.value) {
-    // Se um novo arquivo for selecionado, limpe a URL existente de fotoPerfil
-    fotoPerfil.value = '';
-  }
-};
-
-const removeFotoPerfil = async () => {
-  // Atribui a foto padrão ao campo fotoPerfil
-  fotoPerfil.value = '/assets/usuario-default-01.jpg'; // Caminho da foto padrão
-  fotoFile.value = null; // Limpa o arquivo selecionado
-};
-
-const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
-  rejectedEntries.forEach(entry => {
-    let msg = '';
-    console.log(entry);
-
-    // Verificando o motivo da rejeição através de failedPropValidation
-    switch (entry.failedPropValidation) {
-      case 'max-file-size':
-        msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
-        break;
-      case 'accept':
-        msg = 'Formato inválido. Sua foto precisa ser: JPG, PNG ou GIF.';
-        break;
-      default:
-        msg = `O arquivo "${entry.file.name}" foi rejeitado por um motivo desconhecido.`;
-    }
-
-    $q.notify({
-      type: 'negative',
-      message: msg
-    });
-  });
-};
-
 const onSubmit = async () => {
   try {
     const formData = new FormData();
@@ -215,7 +170,7 @@ const onSubmit = async () => {
       formData.append('biografia', biografia.value);
     }
     if (viaPreferidaId.value) {
-      formData.append('via_preferida', viaPreferidaId.value);
+      formData.append('via_preferida_id', viaPreferidaId.value);// é via_preferida_id mesmo
     }
     if (fotoFile.value) {
       console.log('Foto selecionada:', fotoFile.value);
