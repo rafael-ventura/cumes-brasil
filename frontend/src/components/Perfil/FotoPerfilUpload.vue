@@ -1,10 +1,5 @@
 <template>
   <div class="foto-perfil-uploader">
-    <!-- Visualização da Imagem -->
-    <div v-if="imagemCarregada" class="imagem-preview">
-      <q-img :src="fotoPreview ?? undefined" :ratio="1" class="my-profile-pic" />
-    </div>
-
     <!-- Upload do Arquivo -->
     <q-file
       v-model="fotoFile"
@@ -14,6 +9,18 @@
       @change="onFotoChange"
       @rejected="onFotoRejected"
       outlined
+      clearable
+      clear-icon="close"
+    />
+    <q-img  v-if="imagemCarregada" :src="fotoPreview ?? undefined" :ratio="1" class="my-profile-pic imagem-preview" />
+    <q-btn
+      v-if="imagemCarregada && !fotoPerfil.endsWith('/assets/usuario-default-01.jpg')"
+      class="q-mt-sm btn"
+      label="Remover foto de perfil"
+      @click="removeFotoPerfil"
+      icon="delete"
+      dense
+      flat
     />
   </div>
 </template>
@@ -51,26 +58,29 @@ const onFotoChange = () => {
   imagemCarregada.value = !!fotoFile.value;
 };
 
-// Tratamento de arquivos rejeitados
-interface ExtendedQRejectedEntry extends QRejectedEntry {
-  reason: 'size' | 'type' | 'extension' | string;
-}
+const removeFotoPerfil = async () => {
+  // Atribui a foto padrão ao campo fotoPerfil
+  fotoPerfil.value = '/assets/usuario-default-01.jpg'; // Caminho da foto padrão
+  fotoFile.value = null; // Limpa o arquivo selecionado
+};
 
 const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
   rejectedEntries.forEach(entry => {
-    const extendedEntry = entry as ExtendedQRejectedEntry;
     let msg = '';
-    switch (extendedEntry.reason) {
-      case 'size':
-        msg = `O arquivo "${entry.file.name}" é muito grande.`;
+    console.log(entry);
+
+    // Verificando o motivo da rejeição através de failedPropValidation
+    switch (entry.failedPropValidation) {
+      case 'max-file-size':
+        msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
         break;
-      case 'type':
-      case 'extension':
-        msg = `O tipo do arquivo "${entry.file.name}" não é permitido.`;
+      case 'accept':
+        msg = 'Formato inválido. Sua foto precisa ser: JPG, PNG ou GIF.';
         break;
       default:
-        msg = `O arquivo "${entry.file.name}" foi rejeitado.`;
+        msg = `O arquivo "${entry.file.name}" foi rejeitado por um motivo desconhecido.`;
     }
+
     $q.notify({
       type: 'negative',
       message: msg
