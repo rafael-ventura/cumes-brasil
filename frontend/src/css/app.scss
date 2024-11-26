@@ -138,8 +138,25 @@ body {
 }
 
 .btn{
-  color: black;
+  color: $primary;
   font-weight: bold;
+  border: $primary 1px solid;
+  border-radius: 10px;
+}
+
+.btn-dark{
+  color: $dark;
+  font-weight: bold;
+  border: $dark 1px solid;
+  border-radius: 10px;
+}
+
+.btn-red{
+  color: $negative;
+  font-weight: bold;
+  border: $negative 1px solid;
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
 }
 
 .btn-blue{

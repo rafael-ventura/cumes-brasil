@@ -1,22 +1,12 @@
 <template>
-  <div class="profile-header-container no-wrap q-pa-md row items-center shadow-item">
+  <div class="profile-header-container no-wrap q-pa-md row items-center text-color">
     <q-item-section class="profile-info">
       <div class="profile-picture-container">
         <img :src="props.user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
              class="profile-picture"
              @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"/>
-        <div class="club-info text-h7">
-          {{props.user?.clube_organizacao}}
-        </div>
       </div>
       <div class="user-details">
-        <div class="text-h4">{{ props.user?.nome }}</div>
-        <div class="text-h7">{{props.user?.localizacao}}</div>
-        <!-- via preferida        -->
-        <div class="text-h7">
-          <q-icon name="star" class="right-margem"/>
-          Preferida: {{props.user?.via_preferida?.nome}}
-        </div>
         <div class="caixa-escalada border-radius-medium top-margem">
           <div class="text-h5">
             {{ diasEscalados }}
@@ -26,8 +16,12 @@
             Desde {{dataFormatada}}
           </div>
         </div>
+        <div class="text-h6 user-localizacao">{{props.user?.localizacao}}</div>
       </div>
     </q-item-section>
+  </div>
+  <div class="text-h4 user-name">
+    {{ props.user?.nome }}
   </div>
   <q-dialog v-model="isImageModalOpen">
     <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;"></q-img>
@@ -38,7 +32,7 @@
 import { computed, defineProps, ref } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: IUsuario }>();
+const props = defineProps<{ user: IUsuario | undefined }>();
 const expandedImageUrl = ref('');
 const isImageModalOpen = ref(false);
 
@@ -51,8 +45,6 @@ const diasEscalados = computed(() => {
   if (!props.user?.data_atividade) return 0;
   const partesData = props.user.data_atividade.split('/'); // Divide a string em partes
   const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
-  console.log(`Data de atividade no usuário: ${props.user.data_atividade}`);
-  console.log(`Data de atividade transformada pelo New Date: ${dataAtividade}`);
   const hoje = new Date();
   if (dataAtividade > hoje) return 0;
   const diffTime = hoje.getTime() - dataAtividade.getTime();
@@ -71,6 +63,10 @@ const dataFormatada = computed(() => {
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
+
+.text-color{
+  color: $primary
+}
 
 .profile-header-container {
   border-radius: 0 0 30px 30px;
@@ -142,12 +138,22 @@ const dataFormatada = computed(() => {
 }
 
 .profile-header-container{
-  background-color: $primary;
+  background-color: $dark;
 }
 
 .caixa-escalada{
-  border: $dark solid 2px;
-  max-width: 300px;
+  border: $primary solid 2px;
+  max-width: 240px;
   padding: 8px;
+  text-align: center;
+}
+
+.user-name{
+  color: $primary;
+  padding-left: 15px;
+}
+
+.user-localizacao{
+  padding: 10px;
 }
 </style>

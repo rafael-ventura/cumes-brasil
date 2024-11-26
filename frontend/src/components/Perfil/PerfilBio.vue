@@ -1,44 +1,37 @@
 <template>
-  <q-card class="q-pa-md q-mb-md no-wrap top-margem shadow-item border-radius-large fundo1">
-    <div class="row justify-between">
-      <div class="text-h5 left-margem">Bio</div>
-      <q-icon name="edit" class="medium-icon right-margem" @click="toggleEditMode" />
+  <div class="q-pa-md q-mb-md no-wrap top-margem fundo1 border-radius-large">
+    <div class="row title-box border-radius-medium">
+      <div class="text-h5 titulo">Bio</div>
+      <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode" />
     </div>
     <q-separator spaced />
-    <q-card-section class="col text-left">
-      <div v-if="!isEditing" class="text-h6">{{ displayedBio }}</div>
-      <q-input v-else v-model="newBio" type="textarea" class="custom-input fundo2"/>
-    </q-card-section>
-    <div v-if="isEditing" class="">
-      <q-btn flat label="Cancelar" @click="cancelEdit" />
-      <q-btn flat label="Salvar" color="tertiary" class="custom-save-button" @click="saveBio" />
+    <div class="col text-left">
+      <div v-if="!isEditing" class="text-h6 descricao-bio">{{ displayedBio }}</div>
+      <q-input v-else v-model="newBio" type="textarea" class="custom-input" outlined/>
+    </div><br/>
+    <div v-if="isEditing">
+      <q-btn flat label="Cancelar" class="btn-dark left-margem right-margem" @click="cancelEdit" />
+      <q-btn flat label="Salvar" class="btn-dark" @click="saveBio" />
     </div>
-  </q-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watch, computed, defineEmits } from 'vue';
-import { IUsuario } from 'src/models/IUsuario';
+import { defineProps, ref, computed, defineEmits } from 'vue';
 import UserService from 'src/services/UsuarioService';
+import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: IUsuario }>();
+const props = defineProps<{ user?: IUsuario | null }>();
 const emits = defineEmits(['bio-updated']);
 
 const isEditing = ref(false);
-const newBio = ref('');
-
-watch(
-  () => props.user,
-  (newVal) => {
-    if (newVal) {
-      newBio.value = newVal.biografia || '';
-    }
-  },
-  { immediate: true }
-);
+const newBio = ref<string>(props.user?.biografia || '');
 
 const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
+  if (isEditing.value) {
+    newBio.value = props.user?.biografia || ''; // Aqui você garante que `newBio` tenha o valor atual de `bio` quando inicia a edição
+  }
 };
 
 const cancelEdit = () => {
@@ -48,7 +41,8 @@ const cancelEdit = () => {
 
 const saveBio = async () => {
   try {
-    await UserService.editarBio(newBio.value);
+    const bio = newBio.value?.trim() || '';
+    await UserService.editarBio(bio);
     emits('bio-updated', newBio.value);
     isEditing.value = false;
   } catch (error) {
@@ -61,27 +55,38 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
-.left-margem {
+.title-box{
+  padding-top: 10px;
+  background-color: $dark;
+  height: 50px;
+  width: max-content;
+}
+.titulo {
   margin-left: 16px;
+  color: $primary;
+}
+.icon{
+  color: $dark;
+  background-color: $primary;
+  border-radius: 5px;
+  margin-left: 20px;
+}
+.descricao-bio{
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  background-color: $dark;
 }
 .right-margem {
   margin-right: 16px;
 }
-.custom-save-button {
-  background-color: $secondary-dark;
-}
 .custom-input{
-  background-color: #9fd191;
+  background-color: $dark;
   border-radius: 10px;
   font-size: 20px;
-  padding: 10px 10px;
-  width: 100%;
-  height: 150px;
+  color: white;
 }
 .fundo1{
   background-color: $primary;
-}
-.fundo2{
-  background-color: $primary-dark;
 }
 </style>

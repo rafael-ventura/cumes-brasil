@@ -88,6 +88,7 @@ class UsuarioService {
 
   async editarDados (formData: FormData) {
     try {
+      console.log('FormData em predileta', formData.get('via_preferida_id'));
       const response = await api.put('/perfil', formData);
       if (response.data.foto_perfil) {
         adjustImageUrls(response.data.foto_perfil);

@@ -29,7 +29,8 @@ export class UsuarioRepository {
         });
     }
 
-    async update(id: number, usuarioData: Partial<Usuario>): Promise<void> {
+    async update(id: number, usuarioData: Partial<any>): Promise<void> {
+        console.log('Usuario dados:', usuarioData.via_preferida);
         await this.repository.update(id, usuarioData);
     }
 
