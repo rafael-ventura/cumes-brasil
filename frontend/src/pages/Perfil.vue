@@ -62,7 +62,6 @@ import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
-import { Via } from 'src/models/Via';
 
 const router = useRouter();
 const user = ref<IUsuario | undefined>(undefined);
