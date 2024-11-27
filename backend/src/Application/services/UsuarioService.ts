@@ -198,10 +198,14 @@ export class UsuarioService {
                 }
 
             } catch (error: any) {
+                console.log("catch validacao codigo");
+                console.log(error.name, error.message);
+                console.log("Criando novo token para usuario com token invalido");
                 mailSentResponse = this.generateTokenAndSendEmail(user);
             }
 
         } else {
+            console.log("Criando token novo para usuario");
             mailSentResponse = this.generateTokenAndSendEmail(user);
         }
 
@@ -210,6 +214,7 @@ export class UsuarioService {
 
     private async generateTokenAndSendEmail(user: Usuario): Promise<any> {
         let newToken = this.resetUserPasswordTokenService.generate(user);
+        console.log("newToken", newToken);
         let mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
         user.resetPasswordToken = newToken.tokenEncoded;
         user.resetPasswordUrl = newToken.smallUrl;

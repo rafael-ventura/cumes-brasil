@@ -20,6 +20,7 @@ export const jwtTokenErrorMessages: Record<string, string> = {
     "invalid signature": "Assinatura inválida",
     "jwt audience invalid. expected:": "Audiência inválida no token",
     "jwt issuer invalid. expected:": "Emissor inválido no token",
+    "secret or public key must be provided": "Chave invalida ou inexistente"
 };
 
 export const successMessage = {
