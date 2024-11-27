@@ -7,14 +7,14 @@ rm -rf /home/ec2-user/cumes-brasil/backend/node_modules
 # Parar e remover todos os contêineres em execução
 docker-compose down
 
-# Remover contêineres parados
-docker container prune -f
+# Parar e remover todos os contêineres (ativos ou parados)
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
 
-# Remover imagens antigas não utilizadas
-docker image prune -f
+# Remover todos os volumes
+docker volume rm $(docker volume ls -q)
 
-# Remover volumes e redes não utilizados
-docker volume prune -f
-docker network prune -f
+# Remover todas as imagens
+docker rmi $(docker images -q) -f
 
 echo "Serviços antigos parados e limpos com sucesso!"
