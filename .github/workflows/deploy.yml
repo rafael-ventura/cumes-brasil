@@ -45,9 +45,23 @@ jobs:
       - name: Upload Frontend to S3
         run: aws s3 sync frontend/dist/pwa s3://cumes-brasil-front/ --acl public-read
 
+      # CloudFront Invalidation for Frontend
+      - name: Invalidate CloudFront Cache for Frontend
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ELJ8QUTTTNKFP \
+            --paths "/*"
+
       # Upload Assets (Images) to S3 for CloudFront
       - name: Upload Images to S3 for CloudFront
         run: aws s3 sync backend/assets s3://cumes-brasil-images/assets --debug
+
+      # CloudFront Invalidation for Images
+      - name: Invalidate CloudFront Cache for Images
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id E2N1FL7EYFLAP1 \
+            --paths "/*"
 
       # Build Backend
       - name: Install Backend dependencies
