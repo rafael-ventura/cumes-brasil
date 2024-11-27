@@ -47,6 +47,14 @@ if (typeof PORT === 'number') {
     console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
     console.log("DB_NAME:", process.env.DB_NAME);
     console.log("DB_PORT:", process.env.DB_PORT);
+    console.log("SECRET_KEY:", process.env.SECRET_KEY);
+    console.log("API_HOSTNAME:", process.env.API_HOSTNAME);
+    console.log("API_PORT:", process.env.API_PORT);
+    console.log("WEB_HOSTNAME:", process.env.WEB_HOSTNAME);
+    console.log("WEB_PORT:", process.env.WEB_PORT);
+    console.log("WEB_USER_RESET_PASSWORD_PATH:", process.env.WEB_USER_RESET_PASSWORD_PATH);
+    console.log("MAIL_USER:", process.env.MAIL_USER);
+    console.log("OAUTH2_ENABLED:", process.env.OAUTH2_ENABLED);
     console.log("ASSETS_PATH:", assetsPath);
 });
 }
