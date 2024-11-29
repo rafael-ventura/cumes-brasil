@@ -8,7 +8,7 @@
 
     <!-- Exibição dos detalhes da via favorita -->
     <div v-if="viaPreferida">
-      <ViaCardSmall :via="viaPreferida" @click="toggleEditMode" />
+      <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
     </div>
     <q-card-section v-else>
       <div class="text-h6">Nenhuma predileta adicionada.</div>
@@ -29,18 +29,24 @@
 <script setup lang="ts">
 import { IUsuario } from 'src/models/IUsuario';
 import ViaCardSmall from 'components/Via/ViaCardSmall.vue';
-import { watch, ref } from 'vue';
+import { watch, ref, defineEmits } from 'vue';
 import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps<{ user?: IUsuario | null }>();
+const emits = defineEmits(['submit', 'waiting']);
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
 const viaPreferida = ref<Via | null>(localUser.value?.via_preferida || null);
 const viaPreferidaId = ref<string | null>(localUser.value?.via_preferida?.id.toString() || null);
 const isModalSelect = ref(false);
 const staySaved = ref(false);
+
+console.log('id de PerfilViaPredileta via predileta: ', localUser.value?.via_preferida?.id);
 
 watch(
   () => props.user,
@@ -64,6 +70,12 @@ const toggleEditMode = () => {
   isModalSelect.value = !isModalSelect.value;
 };
 
+const goToViaDetalhada = () => {
+  if (viaPreferida.value) {
+    router.push({ name: 'ViaDetalhada', params: { id: viaPreferida.value.id.toString() } });
+  }
+};
+
 const viaPreferidaUpdate = (newPreferida: Via) => {
   viaPreferida.value = newPreferida;
   staySaved.value = true;
@@ -81,8 +93,8 @@ const savePreferida = async () => {
     formData.append('via_preferida_id', viaPreferida.value.id.toString());
 
     // Chamada para o serviço de usuário para salvar a via preferida
-    await UsuarioService.editarDados(formData);
-
+    const updatedUser = await UsuarioService.editarDados(formData);
+    emits('submit', updatedUser);
     staySaved.value = false;
   } catch (error) {
     console.error('Erro ao salvar a via preferida:', error);

@@ -44,7 +44,7 @@
         <PerfilBio :user="user" @bio-updated="updateUserBio" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 caixa2">
-        <PerfilViaPredileta :user="user"  />
+        <PerfilViaPredileta :user="user"  @submit="handleEditSubmit"/>
       </div>
     </div>
   </q-page>

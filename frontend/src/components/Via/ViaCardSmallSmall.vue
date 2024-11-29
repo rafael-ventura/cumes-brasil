@@ -1,11 +1,8 @@
 <template>
   <q-card-section v-if="props.via" class="card-info">
-    <div class="left-section">
-      <div class="imagem-via" />
-    </div>
-    <div class="right-section">
+    <div class="section">
       <div class="via-nome">{{ props.via.nome }}</div>
-      <GrauBadge :grauText="props.via.grau!" :extensaoText="props.via.extensao + 'm'" />
+      <GrauBadge :grauText="props?.via?.grau!" :extensaoText="props?.via?.extensao + 'm'" />
     </div>
   </q-card-section>
 </template>
@@ -29,16 +26,13 @@ const props = defineProps<{ via: Via }>();
   color: white;
 }
 
-.left-section {
-  flex: 0 0 100px;
-}
-
-.right-section {
-  flex: 1;
+.section {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding-left: 10px;
+  width: 100%;
+  text-align: center;
 }
 
 .via-nome {
@@ -46,11 +40,4 @@ const props = defineProps<{ via: Via }>();
   font-weight: bold;
 }
 
-.imagem-via {
-  width: 100px;
-  height: 100px;
-  border: #1c1c1c 5px solid;
-  border-radius: 10px;
-  object-fit: cover;
-}
 </style>
