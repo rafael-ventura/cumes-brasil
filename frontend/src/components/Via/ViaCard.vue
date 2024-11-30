@@ -11,7 +11,7 @@
           {{ via.montanha.nome }}<span v-if="via.face && via.face.nome">, {{ via.face.nome }}</span>
         </div>
         <div class="grau-badge-container">
-          <GrauBadge :grauText="via.grau!" :extensaoText="via.extensao + 'm'" />
+          <GrauBadge :via="via" />
         </div>
       </q-card-section>
     </q-card>

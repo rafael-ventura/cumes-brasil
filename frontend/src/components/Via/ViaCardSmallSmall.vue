@@ -2,7 +2,7 @@
   <q-card-section v-if="props.via" class="card-info">
     <div class="section">
       <div class="via-nome">{{ props.via.nome }}</div>
-      <GrauBadge :grauText="props?.via?.grau!" :extensaoText="props?.via?.extensao + 'm'" />
+      <GrauBadge :via="props.via" />
     </div>
   </q-card-section>
 </template>

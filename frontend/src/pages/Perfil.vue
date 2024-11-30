@@ -83,13 +83,14 @@ onMounted(async () => {
     if (!AuthenticateService.isAuthenticated()) {
       await router.push('/auth/login');
     } else {
-      user.value = await UserService.getPerfil();
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
-      const favorita = colecoes?.filter((colecao: any) => colecao.nome === 'Vias Favoritas');
-      colecaoId.value = favorita?.[0].id;
-      const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value);
-      numFavoritas.value = colecaoFavoritas?.length;
-      numColecoes.value = colecoes?.length;
+      const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
+      if(favorita){
+        colecaoId.value = favorita?.id;
+        console.log(favorita)
+        numFavoritas.value = favorita.viaColecoes.length;
+        numColecoes.value = colecoes?.length;
+      }
     }
   } catch (error) {
     console.error(error);
