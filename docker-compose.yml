@@ -25,16 +25,6 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      SECRET_KEY: ${SECRET_KEY}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      API_HOSTNAME: ${API_HOSTNAME}
-      API_PORT: ${API_PORT}
-      WEB_HOSTNAME: ${WEB_HOSTNAME}
-      WEB_PORT: ${WEB_PORT}
-      WEB_USER_RESET_PASSWORD_PATH: ${WEB_USER_RESET_PASSWORD_PATH}
-      MAIL_USER: ${MAIL_USER}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
-      OAUTH2_ENABLED: ${OAUTH2_ENABLED}
     ports:
       - "3001:8080"  # Mapeia a porta 3001 externa para a 8080 interna do contêiner
     depends_on:
