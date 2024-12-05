@@ -20,6 +20,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'vias/:id',
+        name: 'ViaDetalhada',
         component: () => import('pages/ViaDetalhada.vue')
       },
       {

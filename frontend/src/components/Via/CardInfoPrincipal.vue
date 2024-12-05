@@ -13,9 +13,7 @@
 
     <!-- Usa o GrauBadge com a string formatada e extensão -->
     <GrauBadge
-      v-if="formattedGrau || extensaoValida"
-      :grauText="formattedGrau!"
-      :extensaoText="extensaoValida!"
+      :via="props.via"
       @showInfo="showGrauInfo = true"
       class="grau-container"
     />
@@ -33,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue';
+import { defineProps, ref } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 
@@ -46,25 +44,6 @@ const props = defineProps({
 
 const showGrauInfo = ref(false);
 
-// Função de validação
-const isValid = (value: any) => value != null && value !== 'N/A';
-
-// Construção do texto completo do grau
-const formattedGrau = computed(() => {
-  const grauParts = [
-    isValid(props.via?.grau) ? props.via?.grau : null,
-    isValid(props.via?.crux) ? props.via?.crux : null,
-    isValid(props.via?.artificial) ? props.via?.artificial : null,
-    isValid(props.via?.exposicao) ? props.via?.exposicao : null,
-    isValid(props.via?.duracao) ? props.via?.duracao : null
-  ].filter(Boolean);
-
-  return grauParts.length > 0 ? grauParts.join(' ') : null;
-});
-
-const extensaoValida = computed(() => {
-  return isValid(props.via?.extensao) ? `${props.via?.extensao} Metros` : null;
-});
 </script>
 
 <style scoped lang="scss">

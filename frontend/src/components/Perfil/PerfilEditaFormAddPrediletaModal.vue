@@ -112,6 +112,7 @@ loadVias();
 .q-dialog-plugin {
   height: 60%;
   color: $primary;
+  background-color: $dark;
 }
 .custom-avatar img {
   object-fit: cover;

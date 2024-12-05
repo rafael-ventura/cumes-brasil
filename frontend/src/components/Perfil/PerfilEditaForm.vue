@@ -56,8 +56,11 @@
           outlined
         />
         <q-separator spaced/>
-        <q-btn class="col-6 btn user-via-predileta" label="Via Predileta" @click="isAddPreferidaModalOpen = true"/>
-        <div class="col-6 align-center">{{ viaPreferidaNome }}</div>
+        <div class="col-6 btn user-via-predileta" @click="isAddPreferidaModalOpen = true">
+          <div class="text-h6 left-margem">Via Predileta</div>
+          <div v-if="!viaPreferida" style="text-align: center">Clique aqui para adicionar uma Via</div>
+          <ViaCardSmallSmall :via="viaPreferida"/>
+        </div>
         <q-separator spaced/>
         <!-- Upload de Foto de Perfil -->
         <FotoPerfilUploader :fotoPerfil="fotoPerfil" @fotoChange="handleFotoChange"/>
@@ -81,8 +84,7 @@
         </q-dialog>
       </q-form>
       <q-dialog v-model="isAddPreferidaModalOpen">
-        <AddPrediletaModal :viaPreferidaId="viaPreferidaId" @viaPreferidaUpdate="viaPreferidaUpdate"
-                           class="fundoEditarVia"/>
+        <PerfilEditaFormAddPrediletaModal :viaPreferidaId="viaPreferidaId || ''" @viaPreferidaUpdate="viaPreferidaUpdate"/>
       </q-dialog>
     </q-card-section>
   </q-card>
@@ -92,10 +94,11 @@
 import { defineEmits, defineProps, ref, watch } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
-import AddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
+import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import FotoPerfilUploader from 'components/Perfil/FotoPerfilUpload.vue';
 import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
+import ViaCardSmallSmall from 'components/Via/ViaCardSmallSmall.vue';
 
 const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['submit', 'waiting']);
@@ -104,51 +107,53 @@ const handleFotoChange = (file: File | null) => {
   fotoFile.value = file;
 };
 
-const nome = ref(props.user.nome);
-const email = ref(props.user.email);
-const dataAtividade = ref(props.user.data_atividade);
-const clubeOrganizacao = ref(props.user.clube_organizacao || '');
-const localizacao = ref(props.user.localizacao || '');
-const biografia = ref(props.user.biografia || '');
-const viaPreferidaId = ref(props.user.via_preferida?.id.toString() || '');
-const viaPreferidaNome = ref(props.user.via_preferida?.nome || '');
-const viaPreferida = ref(props.user.via_preferida || null);
+const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
+const nome = ref(localUser.value?.nome || '');
+const email = ref(localUser.value?.email || '');
+const dataAtividade = ref(localUser.value?.data_atividade);
+const clubeOrganizacao = ref(localUser.value?.clube_organizacao || '');
+const localizacao = ref(localUser.value?.localizacao || '');
+const biografia = ref(localUser.value?.biografia || '');
+const viaPreferidaId = ref(localUser.value?.via_preferida?.id.toString() || '');
+const viaPreferidaNome = ref(localUser.value?.via_preferida?.nome || '');
+const viaPreferida = ref(localUser.value?.via_preferida as Via || null);
 const isAddPreferidaModalOpen = ref(false);
 const fotoFile = ref<File | null>(null);
 const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
 const isDeleteAccountDialogOpen = ref(false);
 
-console.log('nome da via predileta: ', props.user?.via_preferida?.id);
+console.log('id de PerfilEditaForm via predileta: ', localUser.value?.via_preferida?.id);
 const fotoPerfil = ref(
-  props.user.foto_perfil.url ? props.user.foto_perfil.url : ''
+  localUser.value?.foto_perfil.url ? localUser.value?.foto_perfil.url : ''
 );
 
 watch(
   () => props.user,
   (newUser) => {
     if (newUser) {
+      localUser.value = { ...newUser };
       nome.value = newUser.nome;
       email.value = newUser.email;
       dataAtividade.value = newUser.data_atividade;
       clubeOrganizacao.value = newUser.clube_organizacao || '';
       localizacao.value = newUser.localizacao || '';
       biografia.value = newUser.biografia || '';
+      viaPreferida.value = newUser.via_preferida as Via;
       viaPreferidaId.value = newUser.via_preferida?.id.toString() || '';
       viaPreferidaNome.value = newUser.via_preferida?.nome || '';
       fotoPerfil.value = newUser.foto_perfil.url ? newUser.foto_perfil.url : '';
     }
   },
   {
-    immediate: true,
-    deep: true
+    immediate: true
   }
 );
 
 // Métodos
 const viaPreferidaUpdate = (newPreferida: Via) => {
+  viaPreferida.value = newPreferida;
   viaPreferidaId.value = newPreferida.id.toString();
   viaPreferidaNome.value = newPreferida.nome;
-  viaPreferida.value = newPreferida;
   isAddPreferidaModalOpen.value = false;
 };
 
@@ -211,15 +216,15 @@ const onSubmit = async () => {
   align-items: center;
 }
 
-.fundoEditarVia {
-  background-color: $dark;
-}
-
 .user-via-predileta {
   min-width: max-content;
 }
 
 .edit-form {
   padding-left: 50px;
+}
+
+.btn {
+  border-radius: 4px;
 }
 </style>

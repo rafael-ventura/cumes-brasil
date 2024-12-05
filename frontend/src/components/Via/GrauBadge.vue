@@ -1,22 +1,34 @@
 <!-- src/components/GrauBadge.vue -->
 <template>
   <div class="grau-badge">
-    <span>{{ props.grauText }}<span v-if="props.extensaoText">, {{ props.extensaoText }}</span></span>
+    <span>{{ formattedGrau }}<span v-if="extensaoValida">, {{ extensaoValida }}</span></span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { computed, defineProps } from 'vue';
+import { Via } from 'src/models/Via';
 
-const props = defineProps({
-  grauText: {
-    type: String,
-    required: true
-  },
-  extensaoText: {
-    type: String,
-    default: ''
-  }
+const props = defineProps<{ via: Via }>();
+
+// Função de validação
+const isValid = (value: any) => value != null && value !== 'N/A';
+
+// Construção do texto completo do grau
+const formattedGrau = computed(() => {
+  const grauParts = [
+    isValid(props.via?.grau) ? props.via?.grau : null,
+    isValid(props.via?.crux) ? props.via?.crux : null,
+    isValid(props.via?.artificial) ? props.via?.artificial : null,
+    isValid(props.via?.exposicao) ? props.via?.exposicao : null,
+    isValid(props.via?.duracao) ? props.via?.duracao : null
+  ].filter(Boolean);
+
+  return grauParts.length > 0 ? grauParts.join(' ') : null;
+});
+
+const extensaoValida = computed(() => {
+  return isValid(props.via?.extensao) ? `${props.via?.extensao} Metros` : null;
 });
 
 </script>
@@ -30,7 +42,7 @@ const props = defineProps({
   padding: 1%;
   border: 1px solid black;
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.10);
+  background-color: $primary-dark;
   color: black;
   font-size: 18px;
   font-weight: bold;

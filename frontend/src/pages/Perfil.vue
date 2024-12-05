@@ -44,7 +44,7 @@
         <PerfilBio :user="user" @bio-updated="updateUserBio" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 caixa2">
-        <PerfilViaPredileta :user="user"  />
+        <PerfilViaPredileta :user="user"  @submit="handleEditSubmit"/>
       </div>
     </div>
   </q-page>
@@ -85,11 +85,12 @@ onMounted(async () => {
     } else {
       user.value = await UserService.getPerfil();
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
-      const favorita = colecoes?.filter((colecao: any) => colecao.nome === 'Vias Favoritas');
-      colecaoId.value = favorita?.[0].id;
-      const colecaoFavoritas = await ColecaoService.getViasIn(colecaoId.value);
-      numFavoritas.value = colecaoFavoritas?.length;
-      numColecoes.value = colecoes?.length;
+      const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
+      if (favorita) {
+        colecaoId.value = favorita?.id;
+        numFavoritas.value = favorita.viaColecoes.length;
+        numColecoes.value = colecoes?.length;
+      }
     }
   } catch (error) {
     console.error(error);
