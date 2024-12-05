@@ -83,11 +83,11 @@ onMounted(async () => {
     if (!AuthenticateService.isAuthenticated()) {
       await router.push('/auth/login');
     } else {
+      user.value = await UserService.getPerfil();
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
       const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
-      if(favorita){
+      if (favorita) {
         colecaoId.value = favorita?.id;
-        console.log(favorita)
         numFavoritas.value = favorita.viaColecoes.length;
         numColecoes.value = colecoes?.length;
       }
