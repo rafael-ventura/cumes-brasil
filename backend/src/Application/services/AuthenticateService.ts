@@ -7,15 +7,19 @@ import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import { errorsMessage } from "../errors/constants";
 import UserValidation from "../validations/UserValidation";
+import BadRequestError from "../errors/BadRequestError";
+import InvalidTokenError from "../errors/InvalidTokenError";
+import GoogleAuthenticateService from "./GoogleAuthenticateService";
 
 class AuthService {
     private userRepository: UsuarioRepository;
     private secretKey: string = "";
-    private client: OAuth2Client;
+    private googleService: GoogleAuthenticateService;
 
     constructor() {
         this.userRepository = new UsuarioRepository();
-        this.client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        this.googleService = new GoogleAuthenticateService();
+        this.secretKey = process.env.SECRET_KEY || "";
     }
 
     async login(email: string, password: string): Promise<any> {
@@ -32,71 +36,48 @@ class AuthService {
         return { "token": token, "userId": user.id, auth: true };
     }
 
-    async googleLogin(googleToken: string): Promise<any> {
-        if (!googleToken) {
-            throw new Error('Token do Google não fornecido');
+    async googleLogin(authorizationCode: string): Promise<any> {
+        if (!authorizationCode) {
+            throw new BadRequestError(errorsMessage.GOOGLE_AUTHORIZATION_CODE_INVALID);
         }
 
-        try {
-            const ticket = await this.client.verifyIdToken({
-                idToken: googleToken,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            });
+        const idToken = await this.googleService.getIdToken(authorizationCode);
 
-            if (!ticket) {
-                throw new Error("Ticket não definido");
-            }
-
-            const payload = ticket.getPayload();
-            if (!payload) {
-                throw new Error('Payload não definido');
-            }
-
-            const userid = payload['sub'];
-            const email = payload['email'];
-            const name = payload['name'];
-
-            if (!userid || !email || !name) {
-                throw new Error('UserID, Email ou Nome não definidos no payload');
-            }
-
-            // Verificar se o usuário já existe
-            let user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
-            if (!user) {
-                // Criar um novo usuário se necessário
-                const passwordHash = await bcrypt.hash(googleToken, 10);
-                await this.userRepository.create(name, email, passwordHash, 3);
-                user = await this.userRepository.findByEmail(email);
-            }
-
-            if (!user) {
-                throw new Error('Não foi possível criar o usuário');
-            }
-
-            // Gerar um token JWT para o usuário
-            const token = this.generateToken(user.id.toString());
-
-            return { "token": token, "userId": user.id, auth: true };
-        } catch (error) {
-            throw new Error("Erro ao autenticar com o Google: " + error);
+        if (!idToken) {
+            throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_ERROR);
         }
+
+        const payload = await this.googleService.getPayloadFromToken(idToken);
+        const { sub: userId, email, name } = payload;
+
+        if (!userId || !email || !name) {
+            throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
+        }
+
+        let user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            const passwordHash = await bcrypt.hash(idToken, 10);
+            await this.userRepository.create(name, email, passwordHash, 3);
+            user = await this.userRepository.findByEmail(email);
+
+            if (!user) {
+                throw new BadRequestError(errorsMessage.USER_NOT_FOUND);
+            }
+        }
+
+        const token = this.generateToken(user.id.toString());
+
+        return { token, userId: user.id, auth: true };
     }
 
     generateToken(userId: string): string {
         return jwt.sign({ userId }, this.secretKey);
     }
 
-
     setSecretKey(secretKey: string) {
         this.secretKey = secretKey;
     }
 }
 
-export function createAuthService() {
-    const authService = new AuthService();
-    // TODO: verificar pq ele nao está pegando do .env
-    authService.setSecretKey(process.env.SECRET_KEY || '8c7515be3e2a107dc0cf543889f045fb7df3177209ebfd0a2b966b6b6d9eb4d7');
-    return authService;
-}
 
 export default AuthService;

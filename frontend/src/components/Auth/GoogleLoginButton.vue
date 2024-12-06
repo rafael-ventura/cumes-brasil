@@ -1,6 +1,5 @@
 <template>
   <div class="google-login-container">
-    <!-- Botão customizado para abrir o login do Google -->
     <q-btn flat class="google-login-btn" @click="loginWithGoogle">
       <img src="../../../public/icons/google-2015.svg" alt="Google Logo" class="google-icon" />
     </q-btn>
@@ -11,22 +10,20 @@
 import { googleAuthCodeLogin } from 'vue3-google-login';
 import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
+import { Notify } from 'quasar';
+import { createNotifyConfig } from 'src/utils/utils';
 
 const router = useRouter();
 
 const loginWithGoogle = async () => {
   try {
-    // Realiza o login com Google e obtém o código de autorização
     const response = await googleAuthCodeLogin();
-    console.log('Authorization Code:', response.code);
-
-    // Envia o código para o backend para autenticação
     await AuthenticateService.authenticateWithGoogle(response.code);
 
-    // Redireciona após o login bem-sucedido
+    Notify.create(createNotifyConfig('positive', 'Login realizado com sucesso', 'top'));
     await router.push('/');
-  } catch (error) {
-    console.error('Erro ao fazer login com Google:', error);
+  } catch (error: any) {
+    Notify.create(createNotifyConfig('negative', error.message, 'top'));
   }
 };
 </script>
@@ -41,9 +38,9 @@ const loginWithGoogle = async () => {
 .google-login-btn {
   display: flex;
   align-items: center;
-  background-color: transparent; // Fundo transparente
-  border-radius: 999px;          // Estilo arredondado
-  color: white;                  // Cor do texto
+  background-color: transparent;
+  border-radius: 999px;
+  color: white;
   cursor: pointer;
 }
 

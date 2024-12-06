@@ -22,16 +22,16 @@ app.use('/api', routes);
 
 AppDataSource.initialize()
   .then(async () => {
-      console.log('Conexão com o banco de dados estabelecida com sucesso');
-      const viaRepository = AppDataSource.getRepository(Via);
-      const count = await viaRepository.count();
-      if (count === 0) {
-          console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
-          await loadData();
-          console.log('Carga inicial realizada com sucesso');
-      } else {
-          console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
-      }
+    console.log('Conexão com o banco de dados estabelecida com sucesso');
+    const viaRepository = AppDataSource.getRepository(Via);
+    const count = await viaRepository.count();
+    if (count === 0) {
+      console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
+      await loadData();
+      console.log('Carga inicial realizada com sucesso');
+    } else {
+      console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
+    }
   })
   .catch(error => {
     console.error('Erro ao conectar com o banco de dados:', error.message);
@@ -56,5 +56,7 @@ if (typeof PORT === 'number') {
     console.log("MAIL_USER:", process.env.MAIL_USER);
     console.log("OAUTH2_ENABLED:", process.env.OAUTH2_ENABLED);
     console.log("ASSETS_PATH:", assetsPath);
-});
+    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
+    console.log("GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET);
+  });
 }
