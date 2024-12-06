@@ -9,7 +9,12 @@ export const errorsMessage = {
 
     BAD_REQUEST: "Campos obrigatórios não preenchidos corretamente",
     INTERNAL_SERVER_ERROR: "Ocorreu um erro no servidor, tente novamente mais tarde",
-    EMAIL_SERVER_ERROR: "Ocorreu um erro ao enviar o email, tente novamente mais tarde"
+    EMAIL_SERVER_ERROR: "Ocorreu um erro ao enviar o email, tente novamente mais tarde",
+
+    GOOGLE_AUTHORIZATION_CODE_INVALID: "Código de autorização do Google Invalido",
+    GOOGLE_AUTHENTICATION_TOKEN_ERROR: "Não foi possível obter código de autenticação do Google",
+    GOOGLE_AUTHENTICATION_TOKEN_INVALID: "Token de autenticação do Google Invalido"
+
 }
 
 export const jwtTokenErrorMessages: Record<string, string> = {
