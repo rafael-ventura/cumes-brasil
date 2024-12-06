@@ -2,7 +2,7 @@
   <div class="profile-header-container no-wrap q-pa-md row items-center text-color">
     <q-item-section class="profile-info">
       <div class="profile-picture-container">
-        <img :src="props.user?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
+        <img :src="localUser?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
              class="profile-picture"
              @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"/>
       </div>
@@ -24,21 +24,52 @@
     {{ props.user?.nome }}
   </div>
   <q-dialog v-model="isImageModalOpen">
-    <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;"></q-img>
+    <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;">
+      <template v-slot:default>
+        <!-- Componente de upload -->
+        <FotoPerfilUpload @closeDialogPai="closeImagePai" @submit="updateUserFotoPerfil"/>
+      </template>
+    </q-img>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue';
+import { computed, defineEmits, defineProps, ref, watch } from 'vue';
 import { IUsuario } from 'src/models/IUsuario';
+import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
 
 const props = defineProps<{ user: IUsuario | undefined }>();
-const expandedImageUrl = ref('');
+const emits = defineEmits(['submit']);
+
+const localUser = ref<IUsuario | undefined>(props.user);
 const isImageModalOpen = ref(false);
+const expandedImageUrl = ref<string | undefined>(undefined);
+const modalImageUrl = ref<string | null>(null);
+
+watch(() => props.user, (newUser) => {
+  if (newUser) {
+    localUser.value = newUser;
+    expandedImageUrl.value = newUser.foto_perfil?.url || 'https://via.placeholder.com/150';
+  }
+}, { immediate: true });
 
 const expandImage = (url: string) => {
   expandedImageUrl.value = url;
   isImageModalOpen.value = true;
+};
+
+const closeImagePai = (fecharImagem: boolean) => {
+  if (fecharImagem) {
+    expandedImageUrl.value = undefined;
+  }
+  if (!fecharImagem) {
+    expandedImageUrl.value = modalImageUrl.value || undefined;
+  }
+};
+
+const updateUserFotoPerfil = (updatedUser: IUsuario) => {
+  emits('submit', updatedUser);
+  isImageModalOpen.value = false;
 };
 
 const diasEscalados = computed(() => {

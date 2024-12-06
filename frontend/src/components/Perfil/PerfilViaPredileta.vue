@@ -46,8 +46,6 @@ const viaPreferidaId = ref<string | null>(localUser.value?.via_preferida?.id.toS
 const isModalSelect = ref(false);
 const staySaved = ref(false);
 
-console.log('id de PerfilViaPredileta via predileta: ', localUser.value?.via_preferida?.id);
-
 watch(
   () => props.user,
   (newUser) => {

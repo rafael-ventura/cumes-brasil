@@ -6,7 +6,7 @@
     <!-- PerfilBar e PerfilGridButtons lado a lado em telas grandes -->
     <div class="row q-col-gutter-none">
       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3">
-        <PerfilBar :user="user" />
+        <PerfilBar :user="user" @submit="handleEditSubmit" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-7 col-lg-5 col-xl-4 caixa1">
         <PerfilGridButtons :items="items" />

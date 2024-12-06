@@ -1,24 +1,36 @@
 <template>
   <div class="foto-perfil-uploader">
-    <!-- Upload do Arquivo -->
     <q-file
       v-model="fotoFile"
-      label="Escolha uma nova foto de perfil"
       accept=".jpg, image/*"
       :max-file-size="2097152"
       @change="onFotoChange"
       @rejected="onFotoRejected"
+      @input="onFileInput"
+      style="display: none"
+      ref="fileInput"
       outlined
       clearable
       clear-icon="close"
     />
-    <q-img  v-if="imagemCarregada" :src="fotoPreview ?? undefined" :ratio="1" class="my-profile-pic imagem-preview" />
     <q-btn
-      v-if="imagemCarregada && !fotoPerfil.endsWith('/assets/usuario-default-01.jpg')"
-      class="q-mt-sm btn"
-      label="Remover foto de perfil"
-      @click="removeFotoPerfil"
-      icon="delete"
+      flat
+      icon="edit"
+      class="btn alinha btn-escuro"
+      @click="openFileDialog"
+    />
+    <q-separator spaced/>
+    <div v-if="isLoading" class="loading-wrapper btn btn-maior btn-escuro">
+      <q-spinner size="30px" color="primary" />
+      <span>Carregando...</span>
+    </div>
+    <q-img v-if="fotoPreview" :src="fotoPreview" :ratio="1" class="my-profile-pic imagem-preview" />
+    <q-btn
+      v-if="fotoPreview"
+      class="q-mt-sm btn btn-escuro"
+      label="Salvar nova foto"
+      @click="saveFoto"
+      icon="save"
       dense
       flat
     />
@@ -28,48 +40,44 @@
 <script setup lang="ts">
 import { ref, computed, defineEmits, watch } from 'vue';
 import { QRejectedEntry, useQuasar } from 'quasar';
+import UserService from 'src/services/UsuarioService';
 
-const emits = defineEmits(['fotoChange']);
+const emits = defineEmits(['closeDialogPai', 'submit']);
 const $q = useQuasar();
 
 const fotoFile = ref<File | null>(null);
-const fotoPerfil = ref('');
-const imagemCarregada = ref(false);
+const fotoPreview = computed(() => fotoFile.value ? URL.createObjectURL(fotoFile.value) : null);
+const isLoading = ref(false);
 
-// Computed para pré-visualizar a imagem carregada ou existente
-const fotoPreview = computed(() => {
-  if (imagemCarregada.value && fotoFile.value) {
-    return URL.createObjectURL(fotoFile.value);
+watch(fotoFile, (newValue) => {
+  if (newValue) {
+    isLoading.value = false;
   }
-  if (!imagemCarregada.value && fotoPerfil.value) {
-    return fotoPerfil.value;
-  }
-  return undefined;
 });
 
-// Observador para emitir mudanças no arquivo de foto
-watch(fotoFile, (newFile) => {
-  imagemCarregada.value = !!newFile;
-  emits('fotoChange', newFile); // Emite o novo arquivo para o componente pai
-});
-
-// Metodo de tratamento de mudança na foto
-const onFotoChange = () => {
-  imagemCarregada.value = !!fotoFile.value;
+const openFileDialog = () => {
+  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+  fileInput?.click();
+  isLoading.value = true;
+  emits('closeDialogPai', true);
 };
 
-const removeFotoPerfil = async () => {
-  // Atribui a foto padrão ao campo fotoPerfil
-  fotoPerfil.value = '/assets/usuario-default-01.jpg'; // Caminho da foto padrão
-  fotoFile.value = null; // Limpa o arquivo selecionado
+const onFileInput = () => {
+  if (!fotoFile.value) {
+    isLoading.value = false;
+    emits('closeDialogPai', false);
+  }
+};
+
+const onFotoChange = () => {
+  if (fotoFile.value && fotoPreview.value) {
+    URL.revokeObjectURL(fotoPreview.value);
+  }
 };
 
 const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
   rejectedEntries.forEach(entry => {
     let msg = '';
-    console.log(entry);
-
-    // Verificando o motivo da rejeição através de failedPropValidation
     switch (entry.failedPropValidation) {
       case 'max-file-size':
         msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
@@ -80,12 +88,46 @@ const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
       default:
         msg = `O arquivo "${entry.file.name}" foi rejeitado por um motivo desconhecido.`;
     }
-
     $q.notify({
       type: 'negative',
       message: msg
     });
   });
+};
+
+const saveFoto = async () => {
+  try {
+    if (!fotoFile.value) {
+      $q.notify({
+        type: 'negative',
+        message: 'Nenhuma foto foi selecionada.'
+      });
+      return;
+    }
+
+    isLoading.value = true;
+
+    const formData = new FormData();
+    formData.append('foto_perfil', fotoFile.value);
+
+    const updatedUser = await UserService.editarDados(formData);
+
+    $q.notify({
+      type: 'positive',
+      message: 'Foto atualizada com sucesso!'
+    });
+
+    emits('submit', updatedUser);
+
+    isLoading.value = false;
+  } catch (error) {
+    console.error('Erro ao salvar a foto:', error);
+    $q.notify({
+      type: 'negative',
+      message: 'Erro ao atualizar a foto. Tente novamente.'
+    });
+    isLoading.value = false;
+  }
 };
 </script>
 
@@ -94,6 +136,34 @@ const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
   margin-bottom: 16px;
 }
 .my-profile-pic {
-  border-radius: 50%;
+  width: 100%;
+}
+.foto-perfil-uploader{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid $primary-light;
+}
+.loading-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.btn-maior{
+  margin-top: 30px;
+  padding: 10px;
+  font-size: large;
+  text-transform: uppercase;
+}
+.alinha{
+  align-self: flex-start;
+  padding: 10px;
+}
+.btn-escuro{
+  background-color: rgba(0, 0, 0, 0.66);
 }
 </style>

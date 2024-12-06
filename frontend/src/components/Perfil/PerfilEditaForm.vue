@@ -14,7 +14,7 @@
           type="text"
           label="Nome"
           color="primary"
-          :rules="[val => !!val || 'Campo obrigatório']"
+          :rules="[ val => !!val || 'Campo obrigatório']"
           outlined
           required
         />
@@ -47,23 +47,6 @@
           outlined
         />
         <q-separator spaced/>
-        <q-input
-          id="biografia"
-          v-model="biografia"
-          type="textarea"
-          label="Biografia"
-          color="primary"
-          outlined
-        />
-        <q-separator spaced/>
-        <div class="col-6 btn user-via-predileta" @click="isAddPreferidaModalOpen = true">
-          <div class="text-h6 left-margem">Via Predileta</div>
-          <div v-if="!viaPreferida" style="text-align: center">Clique aqui para adicionar uma Via</div>
-          <ViaCardSmallSmall :via="viaPreferida"/>
-        </div>
-        <q-separator spaced/>
-        <!-- Upload de Foto de Perfil -->
-        <FotoPerfilUploader :fotoPerfil="fotoPerfil" @fotoChange="handleFotoChange"/>
         <!-- Botão de Submissão -->
         <q-btn type="submit" label="Salvar" class="q-mt-md btn"/>
         <!--
@@ -83,29 +66,20 @@
           </q-card>
         </q-dialog>
       </q-form>
-      <q-dialog v-model="isAddPreferidaModalOpen">
-        <PerfilEditaFormAddPrediletaModal :viaPreferidaId="viaPreferidaId || ''" @viaPreferidaUpdate="viaPreferidaUpdate"/>
-      </q-dialog>
     </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, watch } from 'vue';
+import { useQuasar } from 'quasar';
 import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';
-import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
-import FotoPerfilUploader from 'components/Perfil/FotoPerfilUpload.vue';
-import { Via } from 'src/models/Via';
 import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from 'src/utils/utils';
-import ViaCardSmallSmall from 'components/Via/ViaCardSmallSmall.vue';
 
 const props = defineProps<{ user: IUsuario }>();
 const emits = defineEmits(['submit', 'waiting']);
-
-const handleFotoChange = (file: File | null) => {
-  fotoFile.value = file;
-};
+const $q = useQuasar();
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
 const nome = ref(localUser.value?.nome || '');
@@ -113,19 +87,8 @@ const email = ref(localUser.value?.email || '');
 const dataAtividade = ref(localUser.value?.data_atividade);
 const clubeOrganizacao = ref(localUser.value?.clube_organizacao || '');
 const localizacao = ref(localUser.value?.localizacao || '');
-const biografia = ref(localUser.value?.biografia || '');
-const viaPreferidaId = ref(localUser.value?.via_preferida?.id.toString() || '');
-const viaPreferidaNome = ref(localUser.value?.via_preferida?.nome || '');
-const viaPreferida = ref(localUser.value?.via_preferida as Via || null);
-const isAddPreferidaModalOpen = ref(false);
-const fotoFile = ref<File | null>(null);
 const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
 const isDeleteAccountDialogOpen = ref(false);
-
-console.log('id de PerfilEditaForm via predileta: ', localUser.value?.via_preferida?.id);
-const fotoPerfil = ref(
-  localUser.value?.foto_perfil.url ? localUser.value?.foto_perfil.url : ''
-);
 
 watch(
   () => props.user,
@@ -137,25 +100,12 @@ watch(
       dataAtividade.value = newUser.data_atividade;
       clubeOrganizacao.value = newUser.clube_organizacao || '';
       localizacao.value = newUser.localizacao || '';
-      biografia.value = newUser.biografia || '';
-      viaPreferida.value = newUser.via_preferida as Via;
-      viaPreferidaId.value = newUser.via_preferida?.id.toString() || '';
-      viaPreferidaNome.value = newUser.via_preferida?.nome || '';
-      fotoPerfil.value = newUser.foto_perfil.url ? newUser.foto_perfil.url : '';
     }
   },
   {
     immediate: true
   }
 );
-
-// Métodos
-const viaPreferidaUpdate = (newPreferida: Via) => {
-  viaPreferida.value = newPreferida;
-  viaPreferidaId.value = newPreferida.id.toString();
-  viaPreferidaNome.value = newPreferida.nome;
-  isAddPreferidaModalOpen.value = false;
-};
 
 const onSubmit = async () => {
   try {
@@ -170,27 +120,25 @@ const onSubmit = async () => {
     }
     if (localizacao.value) {
       formData.append('localizacao', localizacao.value);
-    }
-    if (biografia.value) {
-      formData.append('biografia', biografia.value);
-    }
-    if (viaPreferidaId.value) {
-      formData.append('via_preferida_id', viaPreferidaId.value);// é via_preferida_id mesmo
-    }
-    if (fotoFile.value) {
-      console.log('Foto selecionada:', fotoFile.value);
-      formData.append('foto_perfil', fotoFile.value);
     } else {
       console.log('Nenhuma foto selecionada');
       // Se não houver foto, enviar a foto padrão (ID 3)
       formData.append('removerFoto', 'true');
     }
-
     // Chamar o serviço com FormData e obter o usuário atualizado
     const updatedUser = await UserService.editarDados(formData);
     emits('submit', updatedUser);
+    $q.notify({
+      type: 'positive',
+      message: 'Dados atualizados com sucesso!'
+    });
   } catch (error) {
     console.error(error);
+    // Adicionar notificação de erro
+    $q.notify({
+      type: 'negative',
+      message: 'Erro ao atualizar os dados. Tente novamente.'
+    });
   }
 };
 </script>
