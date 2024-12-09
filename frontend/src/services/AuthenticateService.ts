@@ -16,9 +16,9 @@ class AuthenticateService {
   }
 
   // TODO: Implementar autenticação com Google
-  async authenticateWithGoogle (googleTokenId: string) {
+  async authenticateWithGoogle (authorizationCode: string) {
     try {
-      const response = await api.post('/auth/google-login', { token: googleTokenId });
+      const response = await api.post('/auth/google-login', { authorizationCode });
       this.saveToken(response.data); // Salva o JWT gerado no backend
       return response;
     } catch (error) {

@@ -1,18 +1,14 @@
 // controllers/auth.controller.ts
 
 import { NextFunction, Request, Response } from 'express';
-import AuthService, { createAuthService } from '../../Application/services/AuthenticateService';
-import NotFoundError from '../../Application/errors/NotFoundError';
-import UnauthorizedError from '../../Application/errors/UnauthorizedError';
-import { errorsMessage } from '../../Application/errors/constants';
-import BadRequestError from '../../Application/errors/BadRequestError';
+import AuthService from '../../Application/services/AuthenticateService';
 import HandleErrors from '../../Application/errors/HandleErrors';
 
 class AuthController {
     private authService: AuthService;
 
     constructor() {
-        this.authService = createAuthService();
+        this.authService = new AuthService();
         this.login = this.login.bind(this);
         this.googleLogin = this.googleLogin.bind(this);
     }
@@ -28,13 +24,13 @@ class AuthController {
     }
 
 
-    async googleLogin(req: Request, res: Response) {
+    async googleLogin(req: Request, res: Response, next: NextFunction) {
         try {
-            const { token } = req.body;
-            const user = await this.authService.googleLogin(token);
+            const { authorizationCode } = req.body;
+            const user = await this.authService.googleLogin(authorizationCode);
             res.json(user);
         } catch (error) {
-            res.status(400).json({ message: error });
+            HandleErrors.handleErrors(error, req, res, next);
         }
     }
 }
