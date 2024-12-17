@@ -9,18 +9,13 @@ on:
 
 jobs:
   build-and-deploy-frontend:
-    name: Build & Deploy Frontend
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-
     steps:
-      # 1. Checkout o código
+      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Configura credenciais da AWS
+      # 2. Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -34,7 +29,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # 4. Instala dependências do Frontend
+      # 4. Instalar dependências do Frontend
       - name: Install Frontend dependencies
         working-directory: ./frontend
         run: npm install --no-package-lock
@@ -48,22 +43,22 @@ jobs:
           VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
         run: npm run build
 
-      # 6. Upload do build do Frontend para o S3
+      # 6. Upload Frontend to S3
       - name: Upload Frontend to S3
         run: aws s3 sync frontend/dist/pwa s3://cumes-brasil-front/ --acl public-read
 
-      # 7. Invalidação do CloudFront para o Frontend
-      - name: Invalidate CloudFront Cache (Frontend)
+      # 7. Invalidate CloudFront Cache (Frontend)
+      - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ELJ8QUTTTNKFP \
             --paths "/*"
 
-      # Upload Assets (Images) to S3 for CloudFront
+      # 8. Upload Images to S3
       - name: Upload Images to S3 for CloudFront
         run: aws s3 sync backend/assets s3://cumes-brasil-images/assets --debug
 
-      # CloudFront Invalidation for Images
+      # 9. Invalidate CloudFront for Images
       - name: Invalidate CloudFront Cache for Images
         run: |
           aws cloudfront create-invalidation \
