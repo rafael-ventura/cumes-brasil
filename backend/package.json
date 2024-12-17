@@ -4,7 +4,7 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/WebAPI/server.js",
   "scripts": {
-    "build": "rm -rf dist && tsc && cp -R src/WebAPI dist/WebAPI && cp -R src/Infrastructure/sql_scripts/. dist/Infrastructure/sql_scripts && echo 'Build concluído com sucesso!'",
+    "build": "tsc && echo 'Build concluido com sucesso!'",
     "start": "ts-node src/WebAPI/server.ts",
     "test": "echo 'Error: no test specified' && exit 1",
     "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/InitialMigration",
