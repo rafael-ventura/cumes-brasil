@@ -15,6 +15,9 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: false })
   email: string;
 
+  @Column({ nullable: true })
+  idade: number;
+
   @Column({ nullable: false })
   password_hash: string;
 
@@ -24,7 +27,7 @@ export class Usuario extends BaseEntity {
   @Column({ nullable: true })
   clube_organizacao: string;
 
-  @Column({ nullable: true })// cidade, estado e país
+  @Column({ nullable: true })
   localizacao: string;
 
   @Column({ nullable: true })
