@@ -5,7 +5,7 @@
   "main": "dist/WebAPI/server.js",
   "scripts": {
     "build": "tsc && echo 'Build concluido com sucesso!'",
-    "start": "ts-node src/WebAPI/server.ts",
+    "start": "ts-node src/Api/server.ts",
     "test": "echo 'Error: no test specified' && exit 1",
     "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/InitialMigration",
     "migration:run": "npx typeorm migration:run -d dist/Infrastructure/config/db.js"
