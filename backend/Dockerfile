@@ -18,4 +18,4 @@ EXPOSE 3001
 ENV NODE_ENV=production
 
 # Comando para iniciar o backend
-CMD ["node", "dist/WebAPI/server.js"]
+CMD ["node", "dist/api/server.js"]
