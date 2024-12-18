@@ -44,7 +44,7 @@ jobs:
         env:
           VITE_APP_API_URL: "https://api.cumesbrasil.com.br/api"
           VITE_APP_SERVER_IP: "https://d1261jj6xox5lv.cloudfront.net"
-          VITE_GOOGLE_CLIENT_ID: "176876358344-1ukvkcsaoafq28cib1235cksn3nv7sm2.apps.googleusercontent.com"
+          VITE_GOOGLE_CLIENT_ID: "909508756876-sr03gvh50b95hk2bdttahgr3tg6vjk5c.apps.googleusercontent.com"
         run: npm run build
 
       # 6. Upload Frontend to S3
