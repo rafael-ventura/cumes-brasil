@@ -22,7 +22,7 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    synchronize: false, //AO DESENVOLVER PODE MANTER TRUE, MAS EM PRODUÇÃO DEVE SER FALSE SEMPRE SENÃO PODE PERDER DADOS
+    synchronize: false, //MANTER FALSE
     logging: false,
     entities: [
         Colecao,
@@ -37,6 +37,6 @@ export const AppDataSource = new DataSource({
         Participante,
         ViaColecao
     ],
-    migrations: ['dist/Infrastructure/migrations/*.ts'],
+    migrations: ['dist/Infrastructure/migrations/*.js'],
     ssl: false
 });
