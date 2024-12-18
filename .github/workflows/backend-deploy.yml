@@ -13,6 +13,10 @@ on:
 jobs:
   build-and-deploy-backend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       # 1. Checkout
       - name: Checkout repository
