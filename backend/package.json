@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend do projeto Cume Brasil",
-  "main": "dist/api/server.js",
+  "main": "dist/Api/server.js",
   "scripts": {
     "build": "tsc && echo 'Build concluido com sucesso!'",
     "start": "ts-node src/Api/server.ts",
