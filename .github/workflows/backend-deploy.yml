@@ -45,10 +45,6 @@ jobs:
       - name: Build Backend project
         working-directory: ./backend
         run: npm run build
-            
-      - name: Run Migrations
-        working-directory: ./backend
-        run: npm run migration:run
 
       # 12. Empacota Backend
       - name: Package Backend for Deployment
