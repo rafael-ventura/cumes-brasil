@@ -14,6 +14,11 @@ services:
       - cumes-network
 
   api:
+    command: >
+      sh -c "
+      npm run migration:run &&
+      node dist/Api/server.js 
+      "
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -41,11 +46,14 @@ services:
       OAUTH_REFRESH_TOKEN: ${OAUTH_REFRESH_TOKEN}
       OAUTH_ACCESS_TOKEN: ${OAUTH_ACCESS_TOKEN}
     ports:
-      - "3001:8080"
+      - "3001:3001"
     depends_on:
       - postgres
     networks:
       - cumes-network
+  
+  
+
 
 volumes:
   db-data:
