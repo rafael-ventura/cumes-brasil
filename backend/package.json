@@ -7,7 +7,7 @@
     "build": "tsc && echo 'Build concluido com sucesso!'",
     "start": "ts-node src/Api/server.ts",
     "test": "echo 'Error: no test specified' && exit 1",
-    "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/InitialMigration",
+    "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/AddIdade",
     "migration:run": "npx typeorm migration:run -d dist/Infrastructure/config/db.js"
   },
   "keywords": [],
