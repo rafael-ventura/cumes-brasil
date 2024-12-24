@@ -3813,6 +3813,7 @@ const usuariosJson = {
     {
       'nome': 'teste',
       'email': '1@1.com',
+      'idade': 30,
       'password_hash': '6982f0db3d4a7e74142a1a88b1dec07f0dd828c3',
       'foto_perfil': 4
     }

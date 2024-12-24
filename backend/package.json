@@ -7,8 +7,8 @@
     "build": "tsc && echo 'Build concluido com sucesso!'",
     "start": "ts-node src/Api/server.ts",
     "test": "echo 'Error: no test specified' && exit 1",
-    "migration:generate": "npx typeorm migration:generate -d src/Infrastructure/config/db.ts src/Infrastructure/migrations/AddIdade",
-    "migration:run": "npx typeorm migration:run -d dist/Infrastructure/config/db.js"
+    "migration:generate": "npx typeorm migration:generate ./src/infrastructure/migrations/AddIdadeEmUsuario -d ./dist/infrastructure/config/db.js",
+    "migration:run": "npx typeorm migration:run -d ./dist/infrastructure/config/db.js"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +43,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^20.11.5",
     "@types/nodemailer": "^6.4.16",
+    "@types/pg": "^8.11.10",
     "cross-env": "^7.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
