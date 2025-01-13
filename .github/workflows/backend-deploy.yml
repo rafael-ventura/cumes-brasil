@@ -3,15 +3,16 @@ name: Backend Deploy
 on:
   push:
     paths:
-      - 'backend/**'
-      - 'scripts/**'
-      - 'appspec.yml'
+      - '**'
     branches:
       - main
   workflow_dispatch: # Permitir execução manual
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       # 1. Checkout do código
@@ -20,7 +21,7 @@ jobs:
 
       # 2. Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
           aws-region: us-east-1
