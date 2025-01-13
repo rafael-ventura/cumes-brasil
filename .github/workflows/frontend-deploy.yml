@@ -6,6 +6,8 @@ on:
       - '**'
     branches:
       - main
+  workflow_dispatch: # Permitir execução manual
+
 
 jobs:
   build-and-deploy-frontend:
