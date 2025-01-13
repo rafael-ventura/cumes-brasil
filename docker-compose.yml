@@ -11,53 +11,11 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - cumes-network
-
-  api:
-    command: >
-      sh -c "
-      npm run migration:run &&
-      node dist/Api/server.js 
-      "
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: cumes-api
-    environment:
-      NODE_ENV: production
-      SECRET_KEY: ${SECRET_KEY}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      API_HOSTNAME: ${API_HOSTNAME}
-      API_PORT: ${API_PORT}
-      WEB_HOSTNAME: ${WEB_HOSTNAME}
-      WEB_PORT: ${WEB_PORT}
-      WEB_USER_RESET_PASSWORD_PATH: ${WEB_USER_RESET_PASSWORD_PATH}
-      MAIL_USER: ${MAIL_USER}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
-      OAUTH2_ENABLED: ${OAUTH2_ENABLED}
-      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
-      OAUTH_REDIRECT_URI: ${OAUTH_REDIRECT_URI}
-      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
-      OAUTH_REFRESH_TOKEN: ${OAUTH_REFRESH_TOKEN}
-      OAUTH_ACCESS_TOKEN: ${OAUTH_ACCESS_TOKEN}
-    ports:
-      - "3001:3001"
-    depends_on:
-      - postgres
-    networks:
-      - cumes-network
-  
-  
-
+      - app-network
 
 volumes:
   db-data:
 
 networks:
-  cumes-network:
+  app-network:
     driver: bridge
