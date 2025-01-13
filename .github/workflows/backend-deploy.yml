@@ -14,15 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout do código
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Configurar credenciais AWS
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
 
+      # 3. Empacotar o backend e scripts
       - name: Package Backend for Deployment
         run: |
           zip -r application.zip \
@@ -30,9 +35,11 @@ jobs:
             appspec.yml \
             scripts/
 
+      # 4. Fazer upload do pacote para o S3
       - name: Upload to S3
         run: aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
 
+      # 5. Criar o deploy no CodeDeploy
       - name: Deploy with CodeDeploy
         run: |
           aws deploy create-deployment \
