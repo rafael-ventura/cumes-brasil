@@ -42,6 +42,8 @@ AppDataSource.initialize()
 if (typeof PORT === 'number') {
   app.listen(PORT, HOSTNAME, () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log("DB Config Path:", path.resolve(__dirname, './dist/infrastructure/config/db.js'));
+    console.log("Env Vars:", process.env);
     console.log("DB_HOST:", process.env.DB_HOST);
     console.log("DB_USERNAME:", process.env.DB_USERNAME);
     console.log("DB_PASSWORD:", process.env.DB_PASSWORD);

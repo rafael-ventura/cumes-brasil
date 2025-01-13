@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY backend/package*.json ./
 RUN npm install --only=production
 
-# Copiar a pasta 'dist' já construída que está dentro do diretório 'backend'
+# Copiar a pasta 'dist' gerada pelo build
 COPY backend/dist ./dist
 
 # Expor a nova porta da API
