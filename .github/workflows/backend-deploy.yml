@@ -8,7 +8,7 @@ on:
       - 'appspec.yml'
     branches:
       - main
-
+  workflow_dispatch: # Permitir execução manual
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
