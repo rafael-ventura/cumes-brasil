@@ -36,17 +36,17 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # 10. Instalar dependências do Backend
+      # 4. Instalar dependências do Backend
       - name: Install Backend dependencies
         working-directory: ./backend
         run: npm install --no-package-lock
 
-      # 11. Build do Backend
+      # 5. Build do Backend
       - name: Build Backend project
         working-directory: ./backend
         run: npm run build
 
-      # 12. Empacota Backend
+      # 6. Empacota Backend para Deployment
       - name: Package Backend for Deployment
         run: |
           zip -r application.zip \
@@ -57,11 +57,11 @@ jobs:
             appspec.yml \
             scripts/
 
-      # 13. Upload to S3 for CodeDeploy
+      # 7. Upload to S3 for CodeDeploy
       - name: Upload to S3 for CodeDeploy
         run: aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
 
-      # 14. Create deployment in CodeDeploy
+      # 8. Create deployment in CodeDeploy
       - name: Create deployment in CodeDeploy
         run: |
           aws deploy create-deployment \
