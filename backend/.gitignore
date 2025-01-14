@@ -57,3 +57,5 @@ package-lock.json
 # Ignore banco de dados
 *.db
 
+dist/
+
