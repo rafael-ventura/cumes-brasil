@@ -7,10 +7,18 @@ cd /home/ec2-user/cumes-brasil || exit 1
 # Subir o banco de dados com Docker Compose
 docker-compose up -d postgres
 
-# Verificar se o banco está disponível antes de rodar migrações
+# Verificar se o contêiner está disponível antes de prosseguir
+echo "Aguardando o contêiner do PostgreSQL..."
+until [ "$(docker ps -q -f name=cumes-postgres)" ]; do
+    echo "Contêiner não disponível, aguardando..."
+    sleep 2
+done
+
+# Verificar se o banco de dados está disponível antes de rodar migrações
 echo "Aguardando o banco de dados ficar disponível..."
 until docker exec cumes-postgres pg_isready -U $DB_USERNAME -d $DB_NAME; do
-  sleep 2
+    echo "Banco ainda não disponível..."
+    sleep 2
 done
 
 # Navegar para o backend e instalar dependências
