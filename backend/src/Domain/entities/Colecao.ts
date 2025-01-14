@@ -8,6 +8,9 @@ export class Colecao extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  fantasia: string;
+
   @Column({ nullable: false })
   nome: string;
 
