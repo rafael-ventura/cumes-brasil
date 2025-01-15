@@ -77,7 +77,6 @@ export class EscaladaController {
 	createEscalada = async (req: Request, res: Response) => {
 		try {
 			let escalada = req.body;
-			escalada.usuarioId = Number(req.user.userId);
 			await this.service.create(escalada);
 			res.status(201).json({ message: "Escalada criada com sucesso" });
 		} catch (error) {

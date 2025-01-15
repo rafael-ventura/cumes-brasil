@@ -129,10 +129,11 @@ const onSubmit = async () => {
   const viaId = Number(route.params.id);
 
   const escalada: Escalada = {
-    viaId,
+    via: viaId,
     data: convertStringToDate(data.value),
     observacao: observacao.value,
-    participantes: participantes.value
+    participantes: participantes.value,
+    usuario: Number(localStorage.getItem('userId')) || 0
   };
 
   if (!AuthenticateService.isAuthenticated()) {

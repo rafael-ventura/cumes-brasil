@@ -34,7 +34,7 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
     }
 
     async save(escalada: Partial<Escalada>): Promise<void> {
-        await this.repository.save(escalada);
+        await this.repository.insert(escalada);
     }
 
 
@@ -92,9 +92,10 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         const {
             unifiedSearch,
             page = 1,
+            usuarioId,
             itemsPerPage = 10
         } = filters;
-
+        console.log('userId', usuarioId);
         let qb = this.repository.createQueryBuilder("escalada")
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
@@ -105,7 +106,7 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
 
         // Filtro default pelo ID do usuário logado
 
-        qb = qb.andWhere('escalada.usuario.id = :usuarioId', { userId });
+        qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId });
         // Filtrar por nome da via (se necessário)
         if (unifiedSearch) {
             qb = qb.andWhere("via.nome LIKE :unifiedSearch", { unifiedSearch: `%${unifiedSearch}%` });
