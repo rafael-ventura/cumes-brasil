@@ -1,47 +1,69 @@
 name: Backend Deploy
 
 on:
+  workflow_dispatch:
   push:
     paths:
-      - '**'
+      - 'backend/**'
+      - 'docker-compose.yml'
+      - 'scripts/**'
+      - 'appspec.yml'
     branches:
       - main
-  workflow_dispatch: # Permitir execução manual
 
 jobs:
-  deploy-backend:
+  build-and-deploy-backend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-      # 1. Checkout do código
+      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
 
       # 2. Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::156041409339:role/GitHubActionsCodeDeployRole
           aws-region: us-east-1
 
-      # 3. Empacotar o backend, scripts, docker-compose.yml e appspec.yml
+      # 3. Setup NodeJS
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 4. Instalar dependências do Backend
+      - name: Install Backend dependencies
+        working-directory: ./backend
+        run: npm install --no-package-lock
+
+      # 5. Build do Backend
+      - name: Build Backend project
+        working-directory: ./backend
+        run: npm run build
+
+      # 6. Empacota Backend para Deployment
       - name: Package Backend for Deployment
         run: |
           zip -r application.zip \
             backend/ \
+            backend/package*.json \
+            backend/dist/ \
             docker-compose.yml \
             appspec.yml \
             scripts/
 
-      # 4. Fazer upload do pacote para o S3
-      - name: Upload to S3
+      # 7. Upload to S3 for CodeDeploy
+      - name: Upload to S3 for CodeDeploy
         run: aws s3 cp application.zip s3://cumes-backend-deployment/application.zip
 
-      # 5. Criar o deploy no CodeDeploy
-      - name: Deploy with CodeDeploy
+      # 8. Create deployment in CodeDeploy
+      - name: Create deployment in CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name cumes-backend-app \
