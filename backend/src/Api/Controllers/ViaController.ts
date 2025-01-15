@@ -148,14 +148,11 @@ export class ViaController {
 	countEntities = async (req: Request, res: Response) => {
 		try {
 			const { filter } = req.params;
-			console.log('Endpoint GET /vias/count/:filter foi chamado', filter);
-			// Validar o formato do filtro
 			const {
 				key,
 				value
 			} = ViaValidation.validaController(filter);
 
-			// Chamar o serviço com o filtro validado
 			const totalCount = await this.service.countEntities({ key, value });
 
 			res.status(200).json({ total: totalCount });

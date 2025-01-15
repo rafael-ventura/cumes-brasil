@@ -13,7 +13,7 @@
 
     <!-- Usa o GrauBadge com a string formatada e extensão -->
     <GrauBadge
-      :via="props.via"
+      :via="<Via>props.via"
       @showInfo="showGrauInfo = true"
       class="grau-container"
     />
