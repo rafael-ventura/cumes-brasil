@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { ViaService } from '../../Application/services/ViaService';
 import { Via } from '../../Domain/entities/Via';
+import ViaValidation from '../../Application/validations/ViaValidation';
+
 
 export class ViaController {
 	private service: ViaService;
@@ -146,18 +148,14 @@ export class ViaController {
 	countEntities = async (req: Request, res: Response) => {
 		try {
 			const { filter } = req.params;
+			console.log('Endpoint GET /vias/count/:filter foi chamado', filter);
+			// Validar o formato do filtro
+			const {
+				key,
+				value
+			} = ViaValidation.validaController(filter);
 
-			if (!filter || !filter.includes('=')) {
-				return res.status(400).json({ error: 'Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).' });
-			}
-
-			const [key, value] = filter.split('=');
-
-			if (!key || !value) {
-				return res.status(400).json({ error: 'Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).' });
-			}
-
-			// Chamar o serviço com o filtro
+			// Chamar o serviço com o filtro validado
 			const totalCount = await this.service.countEntities({ key, value });
 
 			res.status(200).json({ total: totalCount });

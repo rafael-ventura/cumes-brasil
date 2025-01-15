@@ -1,5 +1,6 @@
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { Via } from '../../Domain/entities/Via';
+import ViaValidation from '../validations/ViaValidation';
 
 export class ViaService {
   private viaRepo: ViaRepository;
@@ -45,28 +46,19 @@ export class ViaService {
   }
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
+    // Validar o valor do filtro
+    const validValue = ViaValidation.validaValores(key, value);
+
+    // Chamar o repositório com base no filtro validado
     switch (key) {
       case 'grau':
-        const grau = parseInt(value, 10);
-        if (isNaN(grau)) {
-          throw new Error('O parâmetro "grau" deve ser um número válido.');
-        }
-        return await this.viaRepo.countByField('via.grau', grau);
-
+        return await this.viaRepo.countByField('via.grau', validValue);
       case 'bairro':
-        const bairro = value.trim().toLowerCase();
-        return await this.viaRepo.countByField('LOWER(montanha.bairro)', bairro);
-
+        return await this.viaRepo.countByField('LOWER(montanha.bairro)', validValue);
       case 'exposicao':
-        const exposicao = parseInt(value, 10);
-        if (isNaN(exposicao)) {
-          throw new Error('O parâmetro "exposicao" deve ser um número válido.');
-        }
-        return await this.viaRepo.countByField('via.exposicao', exposicao, '<=');
-
+        return await this.viaRepo.countByField('via.exposicao', validValue, '<=');
       default:
         throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
     }
   }
-
 }
