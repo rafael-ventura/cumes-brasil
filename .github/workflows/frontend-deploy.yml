@@ -1,10 +1,9 @@
 name: Frontend Deploy
 
 on:
-  workflow_dispatch:
   push:
     paths:
-      - '**'
+      - 'frontend/**'
     branches:
       - main
   workflow_dispatch: # Permitir execução manual
