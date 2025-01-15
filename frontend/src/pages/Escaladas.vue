@@ -39,7 +39,7 @@ onMounted(async () => {
     await router.push('/auth/login');
   }
   /* try {
-    const response = await EscaladaService.getEscaladas();
+    const response = await EscaladaService.getEscaladasByUsuario();
     if (Array.isArray(response) && response.length > 0) {
       escaladas.value = response;
     } else {

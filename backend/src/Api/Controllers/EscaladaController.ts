@@ -153,18 +153,16 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getByUsuarioId = async (req: Request, res: Response) => {
-		const { viaId, limit } = req.query as { viaId: string, limit: string };
-		const userId = parseInt(req.user.userId, 10);
-
+		const { viaId, limit, usuario } = req.query as { viaId: string, limit: string, usuario: number };
 		try {
 			let escaladas = [];
 			if (viaId) {
 				const parsedViaId = parseInt(viaId, 10);
 				const parsedLimit = limit ? parseInt(limit, 10) : undefined;
-				escaladas = await this.service.getEscaladasDaViaDoUsuario(userId, parsedViaId, parsedLimit);
+				escaladas = await this.service.getEscaladasDaViaDoUsuario(usuario, parsedViaId, parsedLimit);
 
 			} else {
-				escaladas = await this.service.getEscaladasDoUsuario(userId);
+				escaladas = await this.service.getEscaladasDoUsuario(usuario);
 			}
 			res.json(escaladas);
 		} catch (error) {

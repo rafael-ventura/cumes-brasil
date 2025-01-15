@@ -133,7 +133,7 @@ const onSubmit = async () => {
     data: convertStringToDate(data.value),
     observacao: observacao.value,
     participantes: participantes.value,
-    usuario: Number(localStorage.getItem('userId')) || 0
+    usuario: Number(localStorage.getItem('usuarioId')) || 0
   };
 
   if (!AuthenticateService.isAuthenticated()) {

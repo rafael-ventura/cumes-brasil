@@ -64,15 +64,15 @@ class AuthenticateService {
 
   logout (): void {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('usuarioId');
   }
 
-  private saveToken (token: { token: string; userId: string } | string): void {
+  private saveToken (token: { token: string; usuarioId: string } | string): void {
     if (typeof token === 'string') {
       localStorage.setItem('authToken', token);
     } else {
       localStorage.setItem('authToken', token.token);
-      localStorage.setItem('userId', token.userId);
+      localStorage.setItem('usuarioId', token.usuarioId);
     }
   }
 }
