@@ -13,7 +13,7 @@ export default {
     return { key, value };
   },
 
-  validaValores(key: string, value: string): any {
+  validaValores (key: string, value: string): string | number {
     switch (key) {
       case 'grau': {
         const grauParsed = parseInt(value, 10);
@@ -26,14 +26,16 @@ export default {
         return value.trim().toLowerCase();
       }
       case 'exposicao': {
-        const exposicaoParsed = parseInt(value, 10);
-        if (isNaN(exposicaoParsed)) {
-          throw new Error('O parâmetro "exposicao" deve ser um número válido.');
+        const exposicaoValue = value.trim().toUpperCase();
+        const validExposicoes = ['E1', 'E2', 'E3','E4']; // Adapte conforme necessário
+        if (!validExposicoes.includes(exposicaoValue)) {
+          throw new Error('O parâmetro "exposicao" deve ser um dos valores válidos: E1, E2, E3 OU E4');
         }
-        return exposicaoParsed;
+        return exposicaoValue;
       }
       default:
         throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
     }
   }
+
 };

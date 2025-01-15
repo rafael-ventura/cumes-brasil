@@ -52,7 +52,7 @@ const cards = ref([
   },
   {
     title: 'Vias com Exposição até E2',
-    filterType: 'exposicao=2',
+    filterType: 'exposicao=E2',
     count: 0,
     image: ExposicaoE2Image
   }
@@ -71,7 +71,7 @@ function goToFilteredSearch (filterType: string) {
     query = { bairro: 'Copacabana' }; // Filtro por bairro
   } else if (filterType === 'grau=3') {
     query = { selectedDifficulty: '3' }; // Filtro por grau
-  } else if (filterType === 'exposicao=2') {
+  } else if (filterType === 'exposicao=E2') {
     query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
   }
 
