@@ -4,15 +4,11 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/Api/server.js",
   "scripts": {
-    "build": "tsc && echo 'Build concluido com sucesso!'",
+    "build": "tsc && echo 'Build concluído com sucesso!'",
     "start": "ts-node src/Api/server.ts",
-    "test": "echo 'Error: no test specified' && exit 1",
-    "migration:generate": "npx typeorm migration:generate ./src/infrastructure/migrations/AddIdadeEmUsuario -d ./dist/infrastructure/config/db.js",
-    "migration:run": "npx typeorm migration:run -d ./dist/infrastructure/config/db.js"
+    "migration:run": "npx typeorm migration:run -d ./dist/infrastructure/config/db.js",
+    "migration:generate": "npx typeorm migration:generate ./src/infrastructure/migrations/NewMigration -d ./dist/infrastructure/config/db.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
