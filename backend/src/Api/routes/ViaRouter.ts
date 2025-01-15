@@ -16,5 +16,5 @@ ViaRouter.put("/:id", viaController.updateVia);
 ViaRouter.delete("/:id", viaController.deleteVia);
 ViaRouter.get("/colecao/:id", viaController.getViasInColecao);
 ViaRouter.get('/colecao/not/:id', viaController.getViasNotInColecao);
-
+ViaRouter.get('/count/:filter', viaController.countEntities);
 export default ViaRouter;

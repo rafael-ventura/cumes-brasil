@@ -142,4 +142,30 @@ export class ViaController {
 			}
 		}
 	}
+
+	countEntities = async (req: Request, res: Response) => {
+		try {
+			const { filter } = req.params;
+
+			if (!filter || !filter.includes('=')) {
+				return res.status(400).json({ error: 'Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).' });
+			}
+
+			const [key, value] = filter.split('=');
+
+			if (!key || !value) {
+				return res.status(400).json({ error: 'Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).' });
+			}
+
+			// Chamar o serviço com o filtro
+			const totalCount = await this.service.countEntities({ key, value });
+
+			res.status(200).json({ total: totalCount });
+		} catch (error) {
+			console.error('Erro no countEntities:', error);
+			res.status(500).json({ error: 'Erro interno no servidor.' });
+		}
+	};
+
+
 }

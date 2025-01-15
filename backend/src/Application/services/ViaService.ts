@@ -43,4 +43,30 @@ export class ViaService {
   async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     return this.viaRepo.getViasNotInColecaoId(colecaoId, page, limit);
   }
+
+  async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
+    switch (key) {
+      case 'grau':
+        const grau = parseInt(value, 10);
+        if (isNaN(grau)) {
+          throw new Error('O parâmetro "grau" deve ser um número válido.');
+        }
+        return await this.viaRepo.countByField('via.grau', grau);
+
+      case 'bairro':
+        const bairro = value.trim().toLowerCase();
+        return await this.viaRepo.countByField('LOWER(montanha.bairro)', bairro);
+
+      case 'exposicao':
+        const exposicao = parseInt(value, 10);
+        if (isNaN(exposicao)) {
+          throw new Error('O parâmetro "exposicao" deve ser um número válido.');
+        }
+        return await this.viaRepo.countByField('via.exposicao', exposicao, '<=');
+
+      default:
+        throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
+    }
+  }
+
 }
