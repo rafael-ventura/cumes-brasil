@@ -5,9 +5,9 @@ services:
     image: postgres:16-alpine
     container_name: cumes-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cumes-brasil
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -45,7 +45,7 @@ services:
       OAUTH_REFRESH_TOKEN: ${OAUTH_REFRESH_TOKEN}
       OAUTH_ACCESS_TOKEN: ${OAUTH_ACCESS_TOKEN}
     ports:
-      - "3001:3001"
+      - "3001:8080"
     depends_on:
       - postgres
     networks:
