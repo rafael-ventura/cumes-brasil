@@ -1,37 +1,21 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho"/>
+      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho" />
       <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
 
       <div class="card-list">
-        <div class="card">
-          <q-card class="card" @click="goToFilteredSearch('copacabana')">
-            <q-img :src="copacabanaImage" alt="Vias na copacabana">
+        <div
+          v-for="(card, index) in cards"
+          :key="index"
+          class="card"
+        >
+          <q-card class="card" @click="goToFilteredSearch(card.filterType)">
+            <q-img :src="card.image" :alt="card.title">
               <div class="absolute-bottom text-white text-left">
-                <div class="text-h4">Vias em Copacabana</div>
-                <div class="text-h6">{{ copacabanaVias.length }} vias encontradas</div>
-              </div>
-            </q-img>
-          </q-card>
-        </div>
-        <div class="">
-          <q-card class="card" @click="goToFilteredSearch('terceiroGrau')">
-            <q-img :src="terceiroGrauImage" alt="Vias de Terceiro Grau">
-              <div class="absolute-bottom text-white text-left">
-                <div class="text-h4">Vias de Terceiro Grau</div>
-                <div class="text-h6">{{ terceiroGrauVias.length }} vias encontradas</div>
-              </div>
-            </q-img>
-          </q-card>
-        </div>
-        <div class="">
-          <q-card class="card" @click="goToFilteredSearch('exposicaoE2')">
-            <q-img :src="exposicaoE2Image" alt="Vias com Exposição até E2">
-              <div class="absolute-bottom text-white text-left">
-                <div class="text-h4">Vias com Exposição até E2</div>
-                <div class="text-h6">{{ exposicaoE2Vias.length }} vias encontradas</div>
+                <div class="text-h4">{{ card.title }}</div>
+                <div class="text-h6">{{ card.count }} vias encontradas</div>
               </div>
             </q-img>
           </q-card>
@@ -44,50 +28,50 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
-import { Via } from 'src/models/Via';
+import CopacabanaImage from 'src/assets/home/copacabana.webp';
+import TerceiroGrauImage from 'src/assets/home/terceiroGrau.webp';
+import ExposicaoE2Image from 'src/assets/home/exposicaoE2.webp';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const copacabanaVias = ref<Via[]>([]);
-const terceiroGrauVias = ref<Via[]>([]);
-const exposicaoE2Vias = ref<Via[]>([]);
-const copacabanaImage = ref<string>();
-const terceiroGrauImage = ref<string>();
-const exposicaoE2Image = ref<string>();
-
 defineOptions({
   name: 'HomePage'
 });
+const cards = ref([
+  {
+    title: 'Vias em Copacabana',
+    filterType: 'bairro=copacabana',
+    count: 0,
+    image: CopacabanaImage
+  },
+  {
+    title: 'Vias de Terceiro Grau',
+    filterType: 'grau=3',
+    count: 0,
+    image: TerceiroGrauImage
+  },
+  {
+    title: 'Vias com Exposição até E2',
+    filterType: 'exposicao=E2',
+    count: 0,
+    image: ExposicaoE2Image
+  }
+]);
 
 onMounted(async () => {
-  copacabanaVias.value = await HomeService.getViasEmCopa();
-  terceiroGrauVias.value = await HomeService.getViasDeTerceiroGrau();
-  exposicaoE2Vias.value = await HomeService.getViasComExposicaoMenorOuIgualE2();
-
-  if (copacabanaVias.value.length > 0 && copacabanaVias.value[0].imagem?.url) {
-    console.log(copacabanaVias.value[0].imagem.url);
-    copacabanaImage.value = copacabanaVias.value[0].imagem.url;
-  }
-
-  if (terceiroGrauVias.value.length > 0 && terceiroGrauVias.value[0].imagem?.url) {
-    console.log(terceiroGrauVias.value[0].imagem.url);
-    terceiroGrauImage.value = terceiroGrauVias.value[0].imagem.url;
-  }
-
-  if (exposicaoE2Vias.value.length > 0 && exposicaoE2Vias.value[0].imagem?.url) {
-    console.log(exposicaoE2Vias.value[0].imagem.url);
-    exposicaoE2Image.value = exposicaoE2Vias.value[0].imagem.url;
+  for (const card of cards.value) {
+    card.count = await HomeService.getCount(card.filterType);
   }
 });
 
 function goToFilteredSearch (filterType: string) {
   let query = {};
 
-  if (filterType === 'copacabana') {
+  if (filterType === 'bairro=copacabana') {
     query = { bairro: 'Copacabana' }; // Filtro por bairro
-  } else if (filterType === 'terceiroGrau') {
+  } else if (filterType === 'grau=3') {
     query = { selectedDifficulty: '3' }; // Filtro por grau
-  } else if (filterType === 'exposicaoE2') {
+  } else if (filterType === 'exposicao=E2') {
     query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
   }
 
@@ -96,12 +80,13 @@ function goToFilteredSearch (filterType: string) {
     query
   });
 }
+
 </script>
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
 
-.logo-tamanho{
+.logo-tamanho {
   width: 310px;
   margin: 0 auto;
   display: flex;
@@ -141,9 +126,8 @@ function goToFilteredSearch (filterType: string) {
   white-space: nowrap;
   max-width: 100%;
 
-  @media (max-width: 425px){
+  @media (max-width: 425px) {
     font-size: 1.8rem;
-
   }
 }
 

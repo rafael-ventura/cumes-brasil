@@ -1,5 +1,6 @@
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { Via } from '../../Domain/entities/Via';
+import ViaValidation from '../validations/ViaValidation';
 
 export class ViaService {
   private viaRepo: ViaRepository;
@@ -42,5 +43,22 @@ export class ViaService {
 
   async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
     return this.viaRepo.getViasNotInColecaoId(colecaoId, page, limit);
+  }
+
+  async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
+    // Validar o valor do filtro
+    const validValue = ViaValidation.validaValores(key, value);
+
+    // Chamar o repositório com base no filtro validado
+    switch (key) {
+      case 'grau':
+        return await this.viaRepo.countByField('via.grau', validValue);
+      case 'bairro':
+        return await this.viaRepo.countByField('LOWER(montanha.bairro)', validValue);
+      case 'exposicao':
+        return await this.viaRepo.countByField('via.exposicao', validValue, '<=');
+      default:
+        throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
+    }
   }
 }

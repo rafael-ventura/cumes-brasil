@@ -215,4 +215,19 @@ export class ViaRepository implements ISearchRepository<Via>{
       totalItems
     };
   }
+
+  async countByField(field: string, value: any, operator: string = '='): Promise<number> {
+    const queryBuilder = this.repository.createQueryBuilder('via')
+      .leftJoin('via.montanha', 'montanha');
+
+    if (field === 'via.exposicao') {
+      // Usar operador LIKE para tratar valores compostos como "E2/3"
+      queryBuilder.where(`${field} LIKE :value`, { value: `%${value}%` });
+    } else {
+      queryBuilder.where(`${field} ${operator} :value`, { value });
+    }
+
+    return queryBuilder.getCount();
+  }
+
 }
