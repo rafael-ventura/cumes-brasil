@@ -26,7 +26,7 @@ services:
       NODE_ENV: production
       SECRET_KEY: ${SECRET_KEY}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: postgres
       DB_PORT: ${DB_PORT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
