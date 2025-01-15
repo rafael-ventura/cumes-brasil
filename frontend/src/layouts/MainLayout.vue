@@ -3,12 +3,14 @@
     <q-page-container class="page-container">
       <router-view />
     </q-page-container>
+    <ScrollToTop />
     <NavBar />
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import NavBar from 'layouts/NavBar.vue';
+import ScrollToTop from 'components/ScrolToTop.vue';
 </script>
 
 <style scoped>
