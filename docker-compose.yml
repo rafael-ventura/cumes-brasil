@@ -14,7 +14,6 @@ services:
       - cumes-network
 
   api:
-    # Removendo o "npm run migration:run"
     command: >
       sh -c "
       node dist/Api/server.js
