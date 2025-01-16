@@ -3823,12 +3823,12 @@ const usuariosJson = {
 const viasCroquisJson = {
   'via_croquis': [
     {
-      'via_id': 136,
-      'croqui_id': 1
+      'via': 136,
+      'croqui': 1
     },
     {
-      'via_id': 136,
-      'croqui_id': 2
+      'via': 136,
+      'croqui': 2
     },
     {
       'via_id': 137,
