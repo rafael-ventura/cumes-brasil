@@ -62,6 +62,8 @@ import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
+import EscaladaService from 'src/services/EscaladaService';
+import { Escalada } from 'src/models/Escalada';
 
 const router = useRouter();
 const user = ref<IUsuario | undefined>(undefined);
@@ -86,10 +88,16 @@ onMounted(async () => {
       user.value = await UserService.getPerfil();
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
       const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
+      const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
       if (favorita) {
         colecaoId.value = favorita?.id;
         numFavoritas.value = favorita.viaColecoes.length;
         numColecoes.value = colecoes?.length;
+      }
+      if (escaladas.length === 0) {
+        numEscaladas.value = 0;
+      } else {
+        numEscaladas.value = escaladas.length;
       }
     }
   } catch (error) {

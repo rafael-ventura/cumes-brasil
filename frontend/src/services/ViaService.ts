@@ -55,10 +55,9 @@ class ViaService {
   }
 
   private async adjustAndFormatVia (via: Via): Promise<Via> {
-    adjustImageUrls(via);
+    adjustImageUrls(via.imagem);
     via.croquis = await croquiService.getCroquiByViaId(via.id);
     via.croquis.forEach(croqui => adjustImageUrls(croqui));
-
     return formatVia(via);
   }
 }

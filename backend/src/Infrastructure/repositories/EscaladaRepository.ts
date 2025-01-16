@@ -1,8 +1,9 @@
-import { AppDataSource } from "../config/db";
-import { Escalada } from "../../Domain/entities/Escalada";
-import {ISearchResult} from "../../Domain/interfaces/models/ISearchResult";
+import { AppDataSource } from '../config/db';
+import { Escalada } from '../../Domain/entities/Escalada';
+import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 
-export class EscaladaRepository {
+export class EscaladaRepository implements ISearchRepository<Escalada> {
     private repository = AppDataSource.getRepository(Escalada);
     USER_INFO = ["usuario.id", "usuario.nome", "usuario.email",
         "usuario.data_atividade", "usuario.clube_organizacao", "localizacao",
@@ -10,8 +11,8 @@ export class EscaladaRepository {
 
     async getById(id: number): Promise<Escalada | null> {
         return this.repository.createQueryBuilder("escalada")
-            .leftJoinAndSelect("escalada.usuarioId", "usuario")
-            .leftJoinAndSelect("escalada.viaId", "via")
+          .leftJoinAndSelect('escalada.usuario', 'usuario')
+          .leftJoinAndSelect('escalada.via', 'via')
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("escalada.id = :id", { id })
             .getOne();
@@ -19,9 +20,9 @@ export class EscaladaRepository {
 
     async getAll(limit?: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
-            .leftJoin("escalada.usuarioId", "usuario")
+          .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
-            .leftJoinAndSelect("escalada.viaId", "via")
+          .leftJoinAndSelect('escalada.via', 'via')
             .leftJoinAndSelect("escalada.participantes", "participante")
             .orderBy("escalada.data", "DESC");
 
@@ -33,7 +34,7 @@ export class EscaladaRepository {
     }
 
     async save(escalada: Partial<Escalada>): Promise<void> {
-        await this.repository.save(escalada);
+        await this.repository.insert(escalada);
     }
 
 
@@ -43,9 +44,9 @@ export class EscaladaRepository {
 
     async getByUserId(userId: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
-            .leftJoin("escalada.usuarioId", "usuario")
+          .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
-            .leftJoin("escalada.viaId", "via")
+          .leftJoin('escalada.via', 'via')
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("usuario.id = :userId", { userId })
@@ -56,9 +57,9 @@ export class EscaladaRepository {
 
     async getByViaId(viaId: number, limit?: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
-            .leftJoin("escalada.usuarioId", "usuario")
+          .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
-            .leftJoin("escalada.viaId", "via")
+          .leftJoin('escalada.via', 'via')
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("escalada.viaId = :viaId", { viaId })
@@ -72,9 +73,9 @@ export class EscaladaRepository {
 
     async getByViaIdAndByUser(userId: number, viaId: number, limit?: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
-            .leftJoin("escalada.usuarioId", "usuario")
+          .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
-            .leftJoin("escalada.viaId", "via")
+          .leftJoin('escalada.via', 'via')
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("usuario.id = :userId AND escalada.viaId = :viaId", { userId, viaId })
@@ -91,9 +92,10 @@ export class EscaladaRepository {
         const {
             unifiedSearch,
             page = 1,
+            usuarioId,
             itemsPerPage = 10
         } = filters;
-
+        console.log('userId', usuarioId);
         let qb = this.repository.createQueryBuilder("escalada")
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
@@ -102,6 +104,9 @@ export class EscaladaRepository {
             .leftJoinAndSelect("escalada.participantes", "participante")
             .orderBy("escalada.data", "DESC");
 
+        // Filtro default pelo ID do usuário logado
+
+        qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId });
         // Filtrar por nome da via (se necessário)
         if (unifiedSearch) {
             qb = qb.andWhere("via.nome LIKE :unifiedSearch", { unifiedSearch: `%${unifiedSearch}%` });

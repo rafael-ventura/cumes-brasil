@@ -46,10 +46,8 @@ export class ViaService {
   }
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
-    // Validar o valor do filtro
     const validValue = ViaValidation.validaValores(key, value);
 
-    // Chamar o repositório com base no filtro validado
     switch (key) {
       case 'grau':
         return await this.viaRepo.countByField('via.grau', validValue);

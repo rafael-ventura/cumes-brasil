@@ -7,9 +7,9 @@ import { UnwrapRef } from 'vue';
 
 class ColecaoService {
   async getColecaoFavoritos (): Promise<IColecao | null> {
-    const userId = localStorage.getItem('userId');
+    const usuarioId = localStorage.getItem('usuarioId');
     try {
-      const colecoes = await this.getColecoes(`/colecoes/usuario/${userId}`);
+      const colecoes = await this.getColecoes(`/colecoes/usuario/${usuarioId}`);
       if (colecoes.length > 0) {
         const primeiraColecao = colecoes[0];
         if (primeiraColecao.nome.includes('Favoritas')) {
@@ -29,8 +29,8 @@ class ColecaoService {
   }
 
   async getByUsuarioId (): Promise<IColecao[] | undefined> {
-    const userId = localStorage.getItem('userId');
-    return this.getColecoes(`/colecoes/usuario/${userId}`);
+    const usuarioId = localStorage.getItem('usuarioId');
+    return this.getColecoes(`/colecoes/usuario/${usuarioId}`);
   }
 
   async getById (id: number): Promise<IColecao | undefined> {

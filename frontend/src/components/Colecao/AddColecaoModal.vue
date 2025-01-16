@@ -61,7 +61,7 @@ const closeModal = () => {
 const emitCollectionAdded = () => {
   if (colecao.value.nome.trim()) {
     // Define apenas o campo `id` no objeto `usuario` antes de emitir
-    colecao.value.usuario = new Usuario(Number(localStorage.getItem('userId')) || 0);
+    colecao.value.usuario = new Usuario(Number(localStorage.getItem('usuarioId')) || 0);
 
     emit('collection-added', { ...colecao.value });
     closeModal();
@@ -72,7 +72,7 @@ const emitCollectionAdded = () => {
 // Função para resetar a coleção
 const resetColecao = () => {
   colecao.value = new Colecao();
-  colecao.value.usuario = new Usuario(Number(localStorage.getItem('userId')) || 0);
+  colecao.value.usuario = new Usuario(Number(localStorage.getItem('usuarioId')) || 0);
 };
 
 </script>

@@ -30,7 +30,6 @@ export class ViaController {
 			const page = req.query.page ? parseInt(req.query.page as string) : undefined;
 			const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 			const result = await this.service.getVias(page, limit);
-			console.log('Endpoint GET /vias foi chamado');
 			res.status(200).json(result);
 		} catch (error) {
 			if (error instanceof Error) {
@@ -109,7 +108,6 @@ export class ViaController {
 			const colecaoId = parseInt(req.params.id);
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;
-			console.log("Endpoint GET /vias/colecao/:id foi chamado", colecaoId, "page", page, "limit", limit);
 			const result = await this.service.getViasIdByColecaoId(colecaoId, page, limit);
 			res.status(200).json(result);
 		} catch (error) {
@@ -148,14 +146,11 @@ export class ViaController {
 	countEntities = async (req: Request, res: Response) => {
 		try {
 			const { filter } = req.params;
-			console.log('Endpoint GET /vias/count/:filter foi chamado', filter);
-			// Validar o formato do filtro
 			const {
 				key,
 				value
 			} = ViaValidation.validaController(filter);
 
-			// Chamar o serviço com o filtro validado
 			const totalCount = await this.service.countEntities({ key, value });
 
 			res.status(200).json({ total: totalCount });

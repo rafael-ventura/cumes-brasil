@@ -52,7 +52,7 @@ const isAddColecaoModalOpen = ref(false);
 ref({
   nome: '',
   descricao: '',
-  usuario_id: Number(localStorage.getItem('userId')) || 0
+  usuario_id: Number(localStorage.getItem('usuarioId')) || 0
 });
 const addColecao = async (colecaoPreenchida: IColecao) => {
   try {

@@ -1,6 +1,6 @@
-import { EscaladaService } from "../../Application/services/EscaladaService";
-import { Request, Response } from "express";
-import EscaladaValidation from "../../Application/validations/EscaladaValidation";
+import { EscaladaService } from '../../Application/services/EscaladaService';
+import { Request, Response } from 'express';
+import EscaladaValidation from '../../Application/validations/EscaladaValidation';
 
 export class EscaladaController {
 	private service: EscaladaService;
@@ -77,7 +77,6 @@ export class EscaladaController {
 	createEscalada = async (req: Request, res: Response) => {
 		try {
 			let escalada = req.body;
-			escalada.usuarioId = Number(req.user.userId);
 			await this.service.create(escalada);
 			res.status(201).json({ message: "Escalada criada com sucesso" });
 		} catch (error) {
@@ -154,19 +153,22 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getByUsuarioId = async (req: Request, res: Response) => {
-		const { viaId, limit } = req.query as { viaId: string, limit: string };
-		const userId = parseInt(req.user.userId, 10);
-
 		try {
-			let escaladas = [];
-			if (viaId) {
-				const parsedViaId = parseInt(viaId, 10);
-				const parsedLimit = limit ? parseInt(limit, 10) : undefined;
-				escaladas = await this.service.getEscaladasDaViaDoUsuario(userId, parsedViaId, parsedLimit);
+			const viaId = req.query.viaId ? parseInt(req.query.viaId as string, 10) : undefined;
+			const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+			const usuario = req.query.usuario ? parseInt(req.query.usuario as string, 10) : undefined;
 
-			} else {
-				escaladas = await this.service.getEscaladasDoUsuario(userId);
+			if (usuario === undefined || isNaN(usuario)) {
+				return res.status(400).json({ error: 'Usuário inválido ou não informado.' });
 			}
+
+			let escaladas = [];
+			if (viaId && !isNaN(viaId)) {
+				escaladas = await this.service.getEscaladasDaViaDoUsuario(usuario, viaId, limit);
+			} else {
+				escaladas = await this.service.getEscaladasDoUsuario(usuario);
+			}
+
 			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
