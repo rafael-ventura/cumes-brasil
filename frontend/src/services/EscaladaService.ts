@@ -14,7 +14,7 @@ class EscaladaService {
   async getEscaladasByUsuario (): Promise<Escalada[]> {
     try {
       const usuario = localStorage.getItem('usuarioId');
-      const response = await api.get('/escaladas?usuario=' + usuario);
+      const response = await api.get('/escaladas/usuario?usuario=' + usuario);
       return response.data;
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar escaladas');

@@ -1,6 +1,6 @@
-import { EscaladaService } from "../../Application/services/EscaladaService";
-import { Request, Response } from "express";
-import EscaladaValidation from "../../Application/validations/EscaladaValidation";
+import { EscaladaService } from '../../Application/services/EscaladaService';
+import { Request, Response } from 'express';
+import EscaladaValidation from '../../Application/validations/EscaladaValidation';
 
 export class EscaladaController {
 	private service: EscaladaService;
@@ -153,17 +153,22 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getByUsuarioId = async (req: Request, res: Response) => {
-		const { viaId, limit, usuario } = req.query as { viaId: string, limit: string, usuario: number };
 		try {
-			let escaladas = [];
-			if (viaId) {
-				const parsedViaId = parseInt(viaId, 10);
-				const parsedLimit = limit ? parseInt(limit, 10) : undefined;
-				escaladas = await this.service.getEscaladasDaViaDoUsuario(usuario, parsedViaId, parsedLimit);
+			const viaId = req.query.viaId ? parseInt(req.query.viaId as string, 10) : undefined;
+			const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+			const usuario = req.query.usuario ? parseInt(req.query.usuario as string, 10) : undefined;
 
+			if (usuario === undefined || isNaN(usuario)) {
+				return res.status(400).json({ error: 'Usuário inválido ou não informado.' });
+			}
+
+			let escaladas = [];
+			if (viaId && !isNaN(viaId)) {
+				escaladas = await this.service.getEscaladasDaViaDoUsuario(usuario, viaId, limit);
 			} else {
 				escaladas = await this.service.getEscaladasDoUsuario(usuario);
 			}
+
 			res.json(escaladas);
 		} catch (error) {
 			if (error instanceof Error) {
