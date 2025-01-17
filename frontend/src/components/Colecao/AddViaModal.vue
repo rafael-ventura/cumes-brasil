@@ -26,7 +26,6 @@ import ItemSugestao from '../ItemSugestao.vue';
 interface ViaWithAdded extends Via {
   added?: boolean;
 }
-
 const props = defineProps<{ isOpen: boolean; colecaoId: number }>();
 const emit = defineEmits(['update:isOpen', 'via-added']);
 const localIsOpen = ref(props.isOpen);
@@ -54,10 +53,7 @@ const loadViasNotInColecao = async (page = 1) => {
       ...via,
       added: false
     }));
-
-    // Adiciona as novas vias à lista existente
     vias.value = page === 1 ? novasVias : [...vias.value, ...novasVias];
-
   } catch (error) {
     console.error('Erro ao buscar vias:', error);
   }

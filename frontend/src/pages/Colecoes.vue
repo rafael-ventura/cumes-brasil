@@ -5,7 +5,6 @@
       ref="searchEntityRef"
       entity="colecao"
       @select="goToColecaoDetalhada"
-      @update-results="updateSearchResults"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       :hideHeader="true"
     >
@@ -22,7 +21,7 @@
     <q-btn
       fab
       icon="add"
-      class="botao-add fixed-bottom-right"
+      class="botao-add"
       @click="isAddColecaoModalOpen = true"
     />
 
@@ -82,9 +81,6 @@ const applyFilters = (filters: any) => {
   }
 };
 
-const updateSearchResults = (results: any[]) => {
-};
-
 const goToColecaoDetalhada = (colecao: IColecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
@@ -110,11 +106,13 @@ const goToColecaoDetalhada = (colecao: IColecao) => {
   height: 100%;
 }
 
-.fixed-bottom-right {
+.botao-add {
   position: fixed;
   bottom: 120px;
   right: 16px;
   z-index: 2;
+  color: black;
+  background: $cumes-03;
 }
 
 .break-word {

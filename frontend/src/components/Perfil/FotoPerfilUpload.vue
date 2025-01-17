@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineEmits, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { QRejectedEntry, useQuasar } from 'quasar';
 import UserService from 'src/services/UsuarioService';
 

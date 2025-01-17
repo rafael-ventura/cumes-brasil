@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: String
@@ -55,13 +55,13 @@ defineOptions({
 }
 
 .observacao-header .q-icon {
-  color: $cumes-01;
+  color: $cumes-03;
   margin-right: 8px; /* Espaço entre o ícone e a label */
 }
 
 .observacao-label {
   font-size: 19px;
   font-weight: bolder;
-  color: $cumes-01;
+  color: $cumes-03;
 }
 </style>

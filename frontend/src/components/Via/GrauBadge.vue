@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import { Via } from 'src/models/Via';
 
 const props = defineProps<{ via: Via }>();
@@ -37,7 +37,7 @@ const extensaoValida = computed(() => {
 @import 'src/css/app.scss';
 
 .grau-badge {
-  width: 90%;
+  width: 70%;
   max-width: 800px;
   padding: 1%;
   border: 1px solid black;

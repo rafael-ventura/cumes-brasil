@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{ isOpen: boolean; imageUrl: string }>();
 const emit = defineEmits(['update:isOpen']);

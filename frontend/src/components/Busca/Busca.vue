@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineExpose, defineProps, onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
 import BuscaResultados from 'components/Busca/BuscaResultados.vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
@@ -189,7 +189,7 @@ const selectItem = (item: any) => {
 .search-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: $primary;
+  color: $cumes-03;
 }
 
 .slot-container {
@@ -198,11 +198,11 @@ const selectItem = (item: any) => {
 }
 
 .slot-container * {
-  color: $cumes-01;
+  color: $cumes-03;
 }
 
 .text-h2 {
-  color: $cumes-01;
+  color: $cumes-03;
 }
 
 .end-of-list-card {
@@ -216,6 +216,6 @@ const selectItem = (item: any) => {
 .end-of-list-text {
   font-size: 18px;
   font-weight: bold;
-  color: $cumes-01;
+  color: $cumes-03;
 }
 </style>

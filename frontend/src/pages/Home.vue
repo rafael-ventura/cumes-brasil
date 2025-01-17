@@ -126,11 +126,11 @@ function goToFilteredSearch (filterType: string) {
 }
 
 .text-h2 {
-  color: $cumes-04;
+  color: $cumes-03;
 }
 
 .text-h5 {
-  color: $cumes-04;
+  color: $cumes-03;
 }
 
 .text-h4 {
@@ -155,7 +155,7 @@ function goToFilteredSearch (filterType: string) {
 }
 
 .color-text {
-  color: $cumes-04;
+  color: $cumes-03;
 }
 
 .color-div {

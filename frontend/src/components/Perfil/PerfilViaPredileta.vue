@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { IUsuario } from 'src/models/IUsuario';
 import ViaCardSmall from 'components/Via/ViaCardSmall.vue';
-import { watch, ref, defineEmits } from 'vue';
+import { ref, watch } from 'vue';
 import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';

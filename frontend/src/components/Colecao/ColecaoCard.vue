@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { IColecao } from 'src/models/IColecao';
 import { useRouter } from 'vue-router';
 import ImagePlaceholder from 'components/ImagePlaceholder.vue';
@@ -143,4 +143,3 @@ onMounted(() => {
   margin-left: 5px; /* Adiciona espaço entre o texto e o número */
 }
 </style>
-

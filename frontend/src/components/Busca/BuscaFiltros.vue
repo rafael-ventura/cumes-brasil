@@ -7,9 +7,9 @@
         :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
         debounce="300"
         outlined
-        color="primary"
+        color="secondary"
         class="unified-search"
-        label-color="primary"
+        label-color="secondary"
         rounded
         @keydown="onInputChange"
       >
@@ -138,7 +138,7 @@
 
         <!-- Botões de Ação -->
         <q-card-actions align="right">
-          <q-btn flat label="Aplicar" color="primary" @click="applyFilterChanges" />
+          <q-btn flat label="Aplicar" color="secondary" @click="applyFilterChanges" />
           <q-btn flat label="Fechar" color="negative" @click="showFilterModal = false" />
         </q-card-actions>
       </q-card>
@@ -147,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 
@@ -340,7 +340,7 @@ const filterByExtension = (category: string) => {
 .modal-header {
   font-size: 24px;
   font-weight: bold;
-  color: $primary;
+  color: $cumes-03;
   margin-bottom: 16px;
 }
 
@@ -358,7 +358,7 @@ const filterByExtension = (category: string) => {
 }
 
 .filter-tag {
-  background-color: #fabc7a; /* Fundo laranja */
+  background-color: $cumes-03; /* Fundo laranja */
   padding: 4px 8px; /* Espaçamento interno */
   border-radius: 4px; /* Bordas arredondadas */
   display: flex;
@@ -370,23 +370,23 @@ const filterByExtension = (category: string) => {
   font-size: 16px;
   cursor: pointer;
   color: #2c2c2c; /* Cor do ícone */
-  border: 1px solid $primary;
+  border: 1px solid $cumes-03;
   border-radius: 50%; /* Ícone circular */
   margin-left: 4px; /* Margem à esquerda */
 }
 
 .q-btn.filter-btn {
   background-color: #333333;
-  color: $primary;
+  color: $cumes-03;
 }
 
 .q-btn.filter-btn.active {
-  background-color: $primary;
+  background-color: $cumes-03;
   color: #333333;
 }
 
 .selected {
-  background-color: $primary;
+  background-color: $cumes-03;
   color: #2c2c2c;
 }
 </style>

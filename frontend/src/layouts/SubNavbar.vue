@@ -2,7 +2,7 @@
   <q-tabs
     v-model="activeTab"
     class="text-h6 text-white"
-    active-color="primary"
+    active-color="secondary"
     align="justify"
     dense
   >

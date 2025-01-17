@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Colecao } from 'src/models/IColecao';
 import { Usuario } from 'src/models/IUsuario';
 

@@ -6,19 +6,14 @@ import ImagemService from 'src/services/ImagemService';
 
 class SearchService {
   async search (searchRequest: any) {
-    try {
-      const response = await api.post('/search', searchRequest);
-      const searchResult = response.data as SearchResult;
-
-      // Formatar as entidades do tipo Via
-      if (searchRequest.entityType === 'Via') {
-        searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
-        searchRequest.items = searchResult.items.map((item: any) => ImagemService.getFullImageUrl(item.imagem.url));
-      }
-      return searchResult;
-    } catch (error) {
-      throw error;
+    const response = await api.post('/search', searchRequest);
+    const searchResult = response.data as SearchResult;
+    // Formatar as entidades do tipo Via
+    if (searchRequest.entityType === 'Via') {
+      searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
+      searchRequest.items = searchResult.items.map((item: any) => ImagemService.getFullImageUrl(item.imagem.url));
     }
+    return searchResult;
   }
 }
 

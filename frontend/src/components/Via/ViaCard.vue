@@ -7,7 +7,7 @@
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
         <div class="montanha-face">
-          <q-icon name="terrain" size="20px" />
+          <q-icon class="montanha-icon" name="terrain" size="20px" />
           {{ via.montanha.nome }}<span v-if="via.face && via.face.nome">, {{ via.face.nome }}</span>
         </div>
         <div class="grau-badge-container">
@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import { Via } from 'src/models/Via';
 
@@ -79,8 +78,8 @@ const emitClick = () => {
   color: black;
 }
 
-.montanha-face q-icon {
-  margin-right: 5px;
+.montanha-icon {
+  margin-right: 10px;
 }
 
 .grau-badge-container {

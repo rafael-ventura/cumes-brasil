@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 

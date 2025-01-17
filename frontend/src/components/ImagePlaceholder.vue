@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 
 // Define a cor como uma prop para tornar o SVG mais flexível
 const props = defineProps({

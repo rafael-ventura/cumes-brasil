@@ -42,7 +42,6 @@
               <polygon points="0,329.836 260.305,329.836 130.153,189.205 " />
             </g>
           </svg>
-          <span>Sem Croquis Disponíveis</span>
         </div>
       </template>
 
@@ -74,7 +73,7 @@ const props = defineProps<{
 const images = ref<{ url: string; nome: string }[]>([]);
 const currentIndex = ref(0);
 
-const currentImage = computed(() => images.value[currentIndex.value] || { url: null, nome: 'Sem Foto' });
+const currentImage = computed(() => images.value[currentIndex.value] || { url: null, nome: 'Sem Croquis Disponíveis' });
 
 const isFirstImage = computed(() => currentIndex.value === 0);
 const isLastImage = computed(() => currentIndex.value === images.value.length - 1);
@@ -111,7 +110,7 @@ const downloadImage = async (image: { url: string; nome: string } | { nome: stri
 onMounted(() => {
   images.value = props.croquis.map((croqui) => ({
     url: croqui.imagem.url,
-    nome: croqui.nome,
+    nome: croqui.nome
   }));
 });
 </script>
@@ -152,12 +151,14 @@ onMounted(() => {
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: $tertiary;
+  background-color: $cumes-03;
   border-radius: 8px;
 }
 
 .svg-placeholder {
-  width: 100%;
+  width: 80%;
+  margin-bottom: -15%;
+  margin-top: -20%;
   height: auto;
 }
 
@@ -202,7 +203,7 @@ onMounted(() => {
   padding: 8px 16px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 0 0 8px 8px;
-  color: white;
+  color: $cumes-03;
 }
 
 .caption {
@@ -211,7 +212,7 @@ onMounted(() => {
 }
 
 .download-button {
-  background: $cumes-01;
+  background-color: $cumes-03;
   color: black;
   font-size: 12px;
   border-radius: 8px;

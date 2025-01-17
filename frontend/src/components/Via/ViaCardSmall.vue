@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'components/Via/GrauBadge.vue';
 

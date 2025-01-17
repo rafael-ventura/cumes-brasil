@@ -1,7 +1,6 @@
 // import { Via } from "src/models/Via";
 // import { Usuario } from "src/models/Usuario";
 import { Participante } from './Participante';
-import { Usuario } from 'src/models/IUsuario';
 
 export interface Escalada {
   usuario: number;

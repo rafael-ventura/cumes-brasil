@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import ColecaoCard from 'components/Colecao/ColecaoCard.vue';
 import { IColecao } from 'src/models/IColecao';
 import { useRouter } from 'vue-router';

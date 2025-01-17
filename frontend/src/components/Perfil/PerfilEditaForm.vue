@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { IUsuario } from 'src/models/IUsuario';
 import UserService from 'src/services/UsuarioService';

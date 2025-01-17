@@ -10,7 +10,7 @@
         option-value="value"
         option-label="label"
         label="Ordenar por"
-        label-color="primary"
+        label-color="secondary"
         class="q-select-custom"
         outlined
         dense
@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue';
+import { computed, ref } from 'vue';
 import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
@@ -142,7 +142,7 @@ const selectItem = (item: Via | IColecao | any) => {
 }
 
 .order-container .q-field__label {
-  color: $primary !important; /* Define a cor da label */
+  color: $cumes-03 !important; /* Define a cor da label */
 }
 
 .via-list {
@@ -171,7 +171,7 @@ const selectItem = (item: Via | IColecao | any) => {
 }
 
 .total-results {
-  color: $primary; /* Tom de amarelo */
+  color: $cumes-03; /* Tom de amarelo */
   font-size: 13px; /* Tamanho pequeno */
   margin-right: auto; /* Move the total results to the far left */
   margin-top: auto; /* Espaçamento superior */

@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';

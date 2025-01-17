@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, computed, defineEmits } from 'vue';
+import { computed, ref } from 'vue';
 import UserService from 'src/services/UsuarioService';
 import { IUsuario } from 'src/models/IUsuario';
 

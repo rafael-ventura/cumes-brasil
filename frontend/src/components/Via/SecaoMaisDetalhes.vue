@@ -106,9 +106,9 @@ const isExpanded = ref(false);
 .detalhes-container {
   padding: 16px;
   background-color: $background;
-  border: 1px solid $primary;
+  border: 1px solid $cumes-01;
   border-radius: 8px;
-  color: $primary;
+  color: $cumes-03;
 }
 
 .detalhe-item {
@@ -136,7 +136,7 @@ const isExpanded = ref(false);
 
 .info-icon {
   cursor: pointer;
-  color: $primary;
+  color: $cumes-01;
 }
 
 .tag-container {

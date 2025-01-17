@@ -6,7 +6,6 @@
     <Busca
       ref="searchEntityRef"
       entity="escalada"
-      @select="goToEscaladaDetalhada"
       @update-results="updateSearchResults"
       :hideHeader="true"
       :enableSortOptions="[{ field: 'data', label: 'Data' }]"
@@ -59,9 +58,6 @@ const applyFilters = (filters: any) => {
 
 const updateSearchResults = (results: any[]) => {
   escaladas.value = results;
-};
-
-const goToEscaladaDetalhada = (escalada: Escalada) => {
 };
 
 defineOptions({

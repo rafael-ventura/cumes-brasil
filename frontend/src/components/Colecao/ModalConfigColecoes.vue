@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   modelValue: Boolean,

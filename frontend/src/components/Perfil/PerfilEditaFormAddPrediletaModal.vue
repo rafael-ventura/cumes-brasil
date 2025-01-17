@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
 

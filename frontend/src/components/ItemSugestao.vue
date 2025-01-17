@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 
 interface Item {
   id: number;

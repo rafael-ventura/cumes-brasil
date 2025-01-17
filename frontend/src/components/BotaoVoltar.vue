@@ -1,5 +1,5 @@
 <template>
-  <q-btn round icon="arrow_back"  size="1.1rem" class="btn-back" @click="goBack"/>
+  <q-btn round  icon="arrow_back"  size="1.1rem" class="btn-back" @click="goBack"/>
 </template>
 
 <script setup lang="ts">
@@ -14,8 +14,11 @@ const goBack = () => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
-.btn-back {
-  background-color: $cumes-01;
+.q-btn.btn-back {
+  background-color: $cumes-03;
+  color: black;
+  opacity: 0.8;
+  z-index: 2;
 }
 
 </style>
