@@ -81,7 +81,7 @@ const resetColecao = () => {
 
 .modal-card-primary {
   background-color: $primary;
-  color: $dark;
+  color: $background;
   max-width: 400px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -102,7 +102,7 @@ const resetColecao = () => {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  color: $dark;
+  color: $background;
   margin-bottom: 20px;
 }
 

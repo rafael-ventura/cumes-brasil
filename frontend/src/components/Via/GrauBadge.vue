@@ -42,7 +42,7 @@ const extensaoValida = computed(() => {
   padding: 1%;
   border: 1px solid black;
   border-radius: 10px;
-  background-color: $primary;
+  background-color: $cumes-03;
   color: black;
   font-size: 18px;
   font-weight: bold;
@@ -52,6 +52,6 @@ const extensaoValida = computed(() => {
 
 .info-icon {
   cursor: pointer;
-  color: $primary;
+  color: $cumes-03;
 }
 </style>

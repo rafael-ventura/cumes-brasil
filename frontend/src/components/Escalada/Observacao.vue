@@ -55,13 +55,13 @@ defineOptions({
 }
 
 .observacao-header .q-icon {
-  color: var(--q-primary); /* Define a cor do ícone para a cor primária */
+  color: $cumes-01;
   margin-right: 8px; /* Espaço entre o ícone e a label */
 }
 
 .observacao-label {
   font-size: 19px;
   font-weight: bolder;
-  color: var(--q-primary);
+  color: $cumes-01;
 }
 </style>

@@ -163,7 +163,7 @@ onMounted(() => {
 
 .nav-button {
   position: absolute;
-  background: var(--q-primary);
+  background: $cumes-01;
   color: black;
   border: none;
   font-size: 24px;
@@ -211,7 +211,7 @@ onMounted(() => {
 }
 
 .download-button {
-  background: var(--q-primary);
+  background: $cumes-01;
   color: black;
   font-size: 12px;
   border-radius: 8px;

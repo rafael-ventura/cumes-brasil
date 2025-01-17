@@ -91,7 +91,7 @@ defineOptions({
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: var(--q-primary);
+  color: $cumes-01;
 }
 
 .escalada-card img {

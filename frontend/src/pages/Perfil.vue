@@ -93,7 +93,7 @@ const items = computed(() => [
     label: 'Escaladas',
     num: numEscaladas.value,
     icon: 'hiking',
-    color: '#AC560C',
+    color: '#BC4B51',
     to: '/escaladas'
   }
 ]);
@@ -160,8 +160,8 @@ defineOptions({
   top: 16px;
   right: 16px;
   height: 50px;
-  color: $dark;
-  background-color: $cumes-01;
+  color: $background;
+  background-color: $cumes-03;
 }
 .card-config{
   border-radius: 10px;

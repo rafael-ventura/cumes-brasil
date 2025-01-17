@@ -25,7 +25,7 @@ const props = defineProps<{ via: Via }>();
 .card-info {
   display: flex;
   align-items: center;
-  background-color: $dark;
+  background-color: $background;
   color: white;
 }
 

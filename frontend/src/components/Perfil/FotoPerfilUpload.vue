@@ -146,7 +146,7 @@ const saveFoto = async () => {
   background-color: rgba(0, 0, 0, 0.15);
   flex-direction: column;
   align-items: center;
-  border: 1px solid $cumes-01;
+  border: 1px solid $cumes-03;
 }
 .loading-wrapper {
   display: flex;

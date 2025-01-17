@@ -1,5 +1,5 @@
 // Import Quasar variables and mixins
-@import './quasar.variables.scss';
+
 
 // Define custom colors
 $primary: #8CB369; // Mountaineering yellow #FCBD7B
@@ -41,6 +41,7 @@ $c-color-grey: #757575;
 $body-bg-color: $light;
 $header-bg-color: $primary;
 $footer-bg-color: $primary;
+$active-tab-color: $cumes-01; /* Defina sua variável aqui */
 
 body {
   background-color: $body-bg-color;
@@ -156,16 +157,16 @@ body {
 }
 
 .btn-dark{
-  color: $dark;
+  color: $background;
   font-weight: bold;
-  border: $dark 1px solid;
+  border: $background 1px solid;
   border-radius: 10px;
 }
 
 .btn-red{
-  color: $negative;
+  color: #ff5858;
   font-weight: bold;
-  border: $negative 1px solid;
+  border: #ff5858 1px solid;
   border-radius: 10px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
 }

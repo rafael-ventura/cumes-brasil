@@ -15,7 +15,7 @@ const goBack = () => {
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 .btn-back {
-  background-color: #af8355
+  background-color: $cumes-01;
 }
 
 </style>
