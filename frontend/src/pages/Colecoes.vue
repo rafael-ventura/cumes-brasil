@@ -56,7 +56,6 @@ ref({
 });
 const addColecao = async (colecaoPreenchida: IColecao) => {
   try {
-    console.log('Adicionando coleção:', colecaoPreenchida);
     await ColecaoService.create(colecaoPreenchida);
     colecoes.value = await ColecaoService.getByUsuarioId();
     isAddColecaoModalOpen.value = false;
@@ -84,7 +83,6 @@ const applyFilters = (filters: any) => {
 };
 
 const updateSearchResults = (results: any[]) => {
-  console.log('Search results updated:', results);
 };
 
 const goToColecaoDetalhada = (colecao: IColecao) => {

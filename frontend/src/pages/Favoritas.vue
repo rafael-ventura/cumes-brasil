@@ -153,7 +153,6 @@ const applyFilters = (filters: any) => {
 
 // Função para atualizar os resultados da busca
 const updateSearchResults = (results: any[]) => {
-  console.log('Resultados da busca atualizados:', results);
 };
 
 // Função para manipular a visibilidade do modal de adição de via

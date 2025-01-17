@@ -1,7 +1,12 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-      <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho" />
+      <q-img
+        src="../assets/logo-amarelo.webp"
+        alt="Cumes Brasil"
+        class="q-mb-md text-center logo-tamanho"
+        style="object-fit: cover; object-position: center;"
+      />
       <div class="text-h2 text-center q-mb-md color-text">Bem-vindo ao Cumes Brasil</div>
       <div class="text-h5 text-center q-mb-md color-text">Descubra Sua Próxima Aventura</div>
 
@@ -12,10 +17,11 @@
           class="card"
         >
           <q-card class="card" @click="goToFilteredSearch(card.filterType)">
-            <q-img :src="card.image" :alt="card.title">
-              <div class="absolute-bottom text-white text-left">
-                <div class="text-h4">{{ card.title }}</div>
-                <div class="text-h6">{{ card.count }} vias encontradas</div>
+            <q-img :src="card.image" :alt="card.title" class="card-image">
+              <div class="absolute-bottom text-left">
+                <div class="text-h4 text-black">{{ card.title }}</div>
+                <div class="text-h6 text-black"><span class="span-count-vias text-weight-bolder"> {{ card.count }} </span> vias encontradas
+                </div>
               </div>
             </q-img>
           </q-card>
@@ -80,7 +86,6 @@ function goToFilteredSearch (filterType: string) {
     query
   });
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -88,8 +93,11 @@ function goToFilteredSearch (filterType: string) {
 
 .logo-tamanho {
   width: 310px;
+  height: 100px; /* Defina a altura desejada para cortar */
   margin: 0 auto;
   display: flex;
+  object-fit: cover; /* Garante que a largura seja mantida */
+  object-position: center; /* Centraliza o corte vertical */
 }
 
 .card {
@@ -103,20 +111,26 @@ function goToFilteredSearch (filterType: string) {
   transform: scale(1.05);
 }
 
+.card-image {
+  height: 200px; /* Altura ajustada para as imagens dos cards */
+  object-fit: cover; /* Corta as imagens para manter a largura */
+  object-position: center; /* Centraliza o corte */
+}
+
 .absolute-bottom {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 24px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  background-color: rgba($cumes-01, 0.9);
 }
 
 .text-h2 {
-  color: $tertiary;
+  color: $cumes-04;
 }
 
 .text-h5 {
-  color: $tertiary;
+  color: $cumes-04;
 }
 
 .text-h4 {
@@ -141,6 +155,19 @@ function goToFilteredSearch (filterType: string) {
 }
 
 .color-text {
-  color: $primary;
+  color: $cumes-04;
+}
+
+.color-div {
+  color: black;
+  font-weight: bolder;
+}
+
+.titulo-card {
+  color: black;
+}
+
+.span-count-vias {
+  opacity: 0.9;
 }
 </style>

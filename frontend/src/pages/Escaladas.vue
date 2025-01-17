@@ -62,8 +62,6 @@ const updateSearchResults = (results: any[]) => {
 };
 
 const goToEscaladaDetalhada = (escalada: Escalada) => {
-  // Lógica para navegar para a tela detalhada da escalada
-  console.log('Selecionada:', escalada);
 };
 
 defineOptions({

@@ -22,7 +22,6 @@ export default {
             return jwt.verify(jwtToken, process.env.SECRET_KEY ? process.env.SECRET_KEY : '') as jwt.JwtPayload;
 
         } catch (error: JsonWebTokenError | any) {
-            console.log("erro validacao JWT", error.name, error.message);
             if (error instanceof JsonWebTokenError) {
                 throw new InvalidTokenError(jwtTokenErrorMessages[error.message]);
             } else {

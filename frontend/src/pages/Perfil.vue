@@ -104,7 +104,6 @@ onMounted(async () => {
       await router.push('/auth/login');
     } else {
       user.value = await UserService.getPerfil();
-      console.log(user.value);
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
       const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
       const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();

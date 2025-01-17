@@ -57,7 +57,7 @@ const loadViasNotInColecao = async (page = 1) => {
 
     // Adiciona as novas vias à lista existente
     vias.value = page === 1 ? novasVias : [...vias.value, ...novasVias];
-    console.log('Vias:', vias.value);
+
   } catch (error) {
     console.error('Erro ao buscar vias:', error);
   }

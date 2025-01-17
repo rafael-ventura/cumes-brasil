@@ -108,7 +108,6 @@ const sortedResults: any = computed(() => {
 
     // Ordenação por data de adição
     if (field === 'data_adicao') {
-      console.log(a, b);
       const dateA = new Date(a.data_adicao || '');
       const dateB = new Date(b.data_adicao || '');
 

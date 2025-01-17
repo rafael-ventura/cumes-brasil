@@ -121,7 +121,6 @@ const onSubmit = async () => {
     if (localizacao.value) {
       formData.append('localizacao', localizacao.value);
     } else {
-      console.log('Nenhuma foto selecionada');
       // Se não houver foto, enviar a foto padrão (ID 3)
       formData.append('removerFoto', 'true');
     }

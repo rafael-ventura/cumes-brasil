@@ -256,11 +256,9 @@ onMounted(async () => {
 const onInputChange = (event: KeyboardEvent) => {
   const value = (event.target as HTMLInputElement).value;
   if (value.length >= 2) {
-    console.log('Buscando >=2:', value);
     emitFilters();
   }
   if (value.length === 0) {
-    console.log('Buscando 0:', value);
     emitFilters();
   }
 };

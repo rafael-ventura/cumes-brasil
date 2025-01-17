@@ -100,7 +100,6 @@ export class UsuarioService {
     }
 
     async atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<any>) {
-        console.log('Usuario dados:', usuarioDados);
         usuario.nome = usuarioDados.nome || usuario.nome;
         usuario.email = usuarioDados.email || usuario.email;
         usuario.data_atividade = usuarioDados.data_atividade || usuario.data_atividade;
@@ -202,7 +201,6 @@ export class UsuarioService {
             }
 
         } else {
-            console.log("Criando token novo para usuario");
             mailSentResponse = this.generateTokenAndSendEmail(user);
         }
 

@@ -8,7 +8,7 @@
           :src="colecao.imagem?.url"
           alt="Imagem da Coleção"
         />
-        <!-- Caso contrário, exibe o componente `ImagePlaceholder` -->
+        <!-- Caso contrário, exibe o componente `CroquiPlaceholderSvg` -->
         <ImagePlaceholder v-else :fillColor="'$primary'" />
       </div>
       <div class="colecao-info">

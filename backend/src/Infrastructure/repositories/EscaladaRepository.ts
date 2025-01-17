@@ -95,7 +95,6 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             usuarioId,
             itemsPerPage = 10
         } = filters;
-        console.log('userId', usuarioId);
         let qb = this.repository.createQueryBuilder("escalada")
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
