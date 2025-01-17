@@ -42,7 +42,7 @@ jobs:
       #4.5. lint
       - name: Run Lint
         working-directory: ./frontend
-        run: npm lint
+        run: npm run lint
 
       # 5. Build do Frontend
       - name: Build Frontend
