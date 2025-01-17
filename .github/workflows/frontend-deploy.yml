@@ -39,6 +39,11 @@ jobs:
         working-directory: ./frontend
         run: npm install --no-package-lock
 
+      #4.5. lint
+      - name: Run Lint
+        working-directory: ./frontend
+        run: npm lint
+
       # 5. Build do Frontend
       - name: Build Frontend
         working-directory: ./frontend
