@@ -171,7 +171,8 @@ const confirmDeletion = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .titulo-pagina {
   font-size: 40px;
   text-align: center;

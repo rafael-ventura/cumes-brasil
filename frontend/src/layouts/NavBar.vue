@@ -5,7 +5,7 @@
       <q-btn
         flat
         round
-        size="lg"
+        size="md"
         icon="home"
         @click="goTo('/')"
         :class="{ 'selected-tab': isSelected('/') }"
@@ -15,7 +15,7 @@
       <q-btn
         flat
         round
-        size="lg"
+        size="md"
         icon="search"
         @click="goTo('/busca')"
         :class="{ 'selected-tab': isSelected('/busca') }"
@@ -25,7 +25,7 @@
       <q-btn
         flat
         round
-        size="lg"
+        size="md"
         icon="style"
         @click="goTo('/colecoes')"
         :class="{ 'selected-tab': isSelected('/colecoes') }"
@@ -35,7 +35,7 @@
       <q-btn
         flat
         round
-        size="lg"
+        size="md"
         icon="account_circle"
         @click="goTo('/perfil')"
         :class="{ 'selected-tab': isSelected('/perfil') }"
@@ -70,26 +70,27 @@ const isSelected = (path: string) => {
 };
 </script>
 
-<style scoped>
-.q-toolbar {
+<style scoped lang="scss">
+@import 'src/css/app.scss';
+.q-footer .q-toolbar {
+  height: 60px;
   justify-content: space-around;
-  z-index: 1; /* Garante que a navbar esteja sempre acima do conteúdo */
+  z-index: 1;
 }
 
 .q-footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: #fcbd7b;
+  background-color: $primary;
 }
 
 .selected-tab {
-  background-color: #bce9b4 !important; /* Cor mais clara quando o botão está selecionado */
-  color: black !important; /* Garante que o ícone permaneça visível */
+  color: black
 }
 
 .q-btn:hover,
 .q-btn:active {
-  background-color: #96c589 !important; /* Cor mais escura para hover e botão pressionado */
+  color: black;
 }
 </style>

@@ -93,7 +93,8 @@ const onDialogShow = async () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .q-dialog-plugin {
   min-width: 400px;
 }

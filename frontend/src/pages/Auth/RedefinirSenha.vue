@@ -26,7 +26,7 @@
                 label-color="primary"
                 hide-bottom-space
                 :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+                :input-style="{ color: '$primary', borderRadius: '15px' }"
               />
             </div>
             <div class="custom-input">
@@ -45,7 +45,7 @@
                 label-color="primary"
                 hide-bottom-space
                 :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+                :input-style="{ color: '$primary', borderRadius: '15px' }"
               />
             </div>
             <q-btn
@@ -75,7 +75,7 @@
                 label-color="primary"
                 hide-bottom-space
                 :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+                :input-style="{ color: '$primary', borderRadius: '15px' }"
               />
             </div>
 

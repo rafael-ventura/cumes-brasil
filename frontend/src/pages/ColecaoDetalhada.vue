@@ -193,7 +193,8 @@ const viaAdded = () => {
   searchEntityRef.value?.handleApplyFilters({ page: 1 });
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "src/css/app.scss";
 .header-container {
   margin-bottom: 16px;
   position: relative;

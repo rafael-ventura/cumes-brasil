@@ -6,13 +6,15 @@
     </div>
     <q-separator spaced />
 
-    <!-- Exibição dos detalhes da via favorita -->
-    <div v-if="viaPreferida">
-      <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
+    <!-- Novo contêiner para alinhamento -->
+    <div class="col text-left predileta-div">
+      <div v-if="viaPreferida">
+        <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
+      </div>
+      <q-card-section v-else>
+        <div class="text-h6">Nenhuma predileta adicionada.</div>
+      </q-card-section>
     </div>
-    <q-card-section v-else>
-      <div class="text-h6">Nenhuma predileta adicionada.</div>
-    </q-card-section>
     <br/>
     <div>
       <q-dialog v-model="isModalSelect">
@@ -83,7 +85,7 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
 const savePreferida = async () => {
   try {
     if (!viaPreferida.value) {
-      console.error('Nenhuma via preferida selecionada.');
+      console.error('Nenhuma via predileta selecionada.');
       return;
     }
 
@@ -110,12 +112,12 @@ const savePreferida = async () => {
   width: max-content;
 }
 .titulo {
-  margin-left: 16px;
-  color: $primary;
+  margin-left: 5px;
+  color: $cumes-01;
 }
 .icon{
   color: $dark;
-  background-color: $primary;
+  background-color: $cumes-01;
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -123,13 +125,9 @@ const savePreferida = async () => {
   margin-right: 16px;
 }
 .custom-input{
-  background-color: $dark;
   border-radius: 10px;
   font-size: 20px;
   color: white;
-}
-.fundo1{
-  background-color: $primary;
 }
 
 .imagem-via-predileta{
@@ -139,4 +137,13 @@ const savePreferida = async () => {
   border: 10px solid $dark;
   object-fit: cover;
 }
+
+.predileta-div {
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  background-color: $dark;
+  border: 2px solid $cumes-01;
+}
+
 </style>

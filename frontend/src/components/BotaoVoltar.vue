@@ -12,7 +12,8 @@ const goBack = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .btn-back {
   background-color: #af8355
 }

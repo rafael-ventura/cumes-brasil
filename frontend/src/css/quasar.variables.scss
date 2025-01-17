@@ -16,7 +16,6 @@
 // quasar.variables.scss
 
 // Define custom colors
-$primary: #fcbd7b; // Adventure green
 $secondary: #BCE9B4FF; // Mountaineering yellow
 $tertiary: #DA7093FF; // Palevioletred
 
@@ -49,11 +48,6 @@ $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
 
-
-// Include Quasar variables
-$body-bg-color: $light;
-$header-bg-color: $primary;
-$footer-bg-color: $primary;
 
 // Set dark mode variables
 $dark-body-bg-color: $dark;

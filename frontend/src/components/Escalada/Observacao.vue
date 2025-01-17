@@ -39,7 +39,8 @@ defineOptions({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .observacao-container {
   background-color: #2c2c2c;
   padding: 8px;

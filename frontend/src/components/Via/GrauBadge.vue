@@ -42,7 +42,7 @@ const extensaoValida = computed(() => {
   padding: 1%;
   border: 1px solid black;
   border-radius: 10px;
-  background-color: $primary-dark;
+  background-color: $primary;
   color: black;
   font-size: 18px;
   font-weight: bold;

@@ -122,7 +122,8 @@ function getParticipantColor (tipo: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .via-imagem {
   width: calc(100% + 2px); /* Expande a imagem horizontalmente */
   height: auto;

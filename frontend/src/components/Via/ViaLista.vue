@@ -18,7 +18,8 @@ const showDetails = (via: Via) => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .via-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

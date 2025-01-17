@@ -8,7 +8,7 @@
       <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3">
         <PerfilBar :user="user" @submit="handleEditSubmit" />
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-7 col-lg-5 col-xl-4 caixa1">
+      <div class="col-xs-12 col-sm-12 col-md-7 col-lg-5 col-xl-4">
         <PerfilGridButtons :items="items" />
       </div>
     </div>
@@ -40,7 +40,7 @@
 
     <!-- PerfilBio e PerfilPredileta lado a lado em telas grandes -->
     <div class="row q-col-gutter-none">
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 caixa2">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 perfil-div">
         <PerfilBio :user="user" @bio-updated="updateUserBio" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 caixa2">
@@ -75,9 +75,27 @@ const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
 
 const items = computed(() => [
-  { label: 'Coleções', num: numColecoes.value, icon: 'style', color: '#BCE9B4', to: '/colecoes' },
-  { label: 'Favoritas', num: numFavoritas.value, icon: 'star', color: '#7E9CE8', to: '/favoritas' },
-  { label: 'Escaladas', num: numEscaladas.value, icon: 'hiking', color: '#EF9D9D', to: '/escaladas' }
+  {
+    label: 'Coleções',
+    num: numColecoes.value,
+    icon: 'style',
+    color: '#546119',
+    to: '/colecoes'
+  },
+  {
+    label: 'Favoritas',
+    num: numFavoritas.value,
+    icon: 'star',
+    color: '#F4E285',
+    to: '/favoritas'
+  },
+  {
+    label: 'Escaladas',
+    num: numEscaladas.value,
+    icon: 'hiking',
+    color: '#AC560C',
+    to: '/escaladas'
+  }
 ]);
 
 onMounted(async () => {
@@ -86,6 +104,7 @@ onMounted(async () => {
       await router.push('/auth/login');
     } else {
       user.value = await UserService.getPerfil();
+      console.log(user.value);
       const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
       const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
       const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
@@ -143,20 +162,19 @@ defineOptions({
   right: 16px;
   height: 50px;
   color: $dark;
-  background-color: $primary;
+  background-color: $cumes-01;
 }
 .card-config{
-  background-color: #2C2C2CF4;
   border-radius: 10px;
 }
 
 .caixa1 {
   @media (min-width: 1024px) {
-    padding-top: 60px;   // Mover o conteúdo para baixo
+    padding-top: 60px;
   }
 }
 
-.caixa2 {
+.perfil-div {
   @media (min-width: 1024px) {
     padding: 20px;
   }

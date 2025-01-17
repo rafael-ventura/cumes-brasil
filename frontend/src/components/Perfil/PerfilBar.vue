@@ -96,7 +96,7 @@ const dataFormatada = computed(() => {
 @import "src/css/app.scss";
 
 .text-color{
-  color: $primary
+  color: $cumes-01
 }
 
 .profile-header-container {
@@ -105,7 +105,7 @@ const dataFormatada = computed(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: $primary;
+  background-color: $cumes-01;
 }
 
 .profile-info {
@@ -173,14 +173,14 @@ const dataFormatada = computed(() => {
 }
 
 .caixa-escalada{
-  border: $primary solid 2px;
+  border: $cumes-01 solid 2px;
   max-width: 240px;
   padding: 8px;
   text-align: center;
 }
 
 .user-name{
-  color: $primary;
+  color: $cumes-01;
   padding-left: 15px;
 }
 

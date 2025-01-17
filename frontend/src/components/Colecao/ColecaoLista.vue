@@ -21,7 +21,8 @@ const showDetails = (colecao: IColecao) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .colecao-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

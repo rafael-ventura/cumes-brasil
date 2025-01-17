@@ -2,8 +2,8 @@
   <q-page>
     <div class="q-pa-md">
       <q-img src="../assets/logo.png" alt="Cumes Brasil" class="q-mb-md text-center logo-tamanho" />
-      <div class="text-h2 text-center q-mb-md">Bem-vindo ao Cumes Brasil</div>
-      <div class="text-h5 text-center q-mb-md">Descubra Sua Próxima Aventura</div>
+      <div class="text-h2 text-center q-mb-md color-text">Bem-vindo ao Cumes Brasil</div>
+      <div class="text-h5 text-center q-mb-md color-text">Descubra Sua Próxima Aventura</div>
 
       <div class="card-list">
         <div
@@ -138,5 +138,9 @@ function goToFilteredSearch (filterType: string) {
   padding: 10px;
   justify-content: center;
   margin: 0 auto;
+}
+
+.color-text {
+  color: $primary;
 }
 </style>

@@ -38,7 +38,8 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .scroll-to-top {
   position: fixed;
   bottom: 95px;

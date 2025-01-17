@@ -9,7 +9,7 @@
           alt="Imagem da Coleção"
         />
         <!-- Caso contrário, exibe o componente `ImagePlaceholder` -->
-        <ImagePlaceholder v-else :fillColor="'#fcbd7b'" />
+        <ImagePlaceholder v-else :fillColor="'$primary'" />
       </div>
       <div class="colecao-info">
         <div class="text-h6">{{ colecao.nome }}</div>
@@ -77,7 +77,7 @@ onMounted(() => {
   transition: transform 0.2s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  background-color: #fcbd7b;
+  background-color: $primary;
 
   &:hover {
     transform: translateY(-4px);

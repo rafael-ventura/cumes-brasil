@@ -25,7 +25,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+                :input-style="{ color: '$primary', borderRadius: '15px' }"
               />
             </div>
 
@@ -45,7 +45,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 
@@ -65,7 +65,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 
@@ -85,7 +85,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 

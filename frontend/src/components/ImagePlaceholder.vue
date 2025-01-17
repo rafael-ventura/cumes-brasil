@@ -27,7 +27,8 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .svg-placeholder {
   width: 96px;
   height: 96px;

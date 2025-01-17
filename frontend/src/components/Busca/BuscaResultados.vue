@@ -133,7 +133,8 @@ const selectItem = (item: Via | IColecao | any) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .order-container {
   margin-bottom: 16px;
   margin-right: 16px;
@@ -142,7 +143,7 @@ const selectItem = (item: Via | IColecao | any) => {
 }
 
 .order-container .q-field__label {
-  color: #fcbd7b !important; /* Define a cor da label */
+  color: $primary !important; /* Define a cor da label */
 }
 
 .via-list {
@@ -171,7 +172,7 @@ const selectItem = (item: Via | IColecao | any) => {
 }
 
 .total-results {
-  color: #fcbd7b; /* Tom de amarelo */
+  color: $primary; /* Tom de amarelo */
   font-size: 13px; /* Tamanho pequeno */
   margin-right: auto; /* Move the total results to the far left */
   margin-top: auto; /* Espaçamento superior */

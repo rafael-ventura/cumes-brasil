@@ -111,7 +111,7 @@ loadVias();
 @import "src/css/app.scss";
 .q-dialog-plugin {
   height: 60%;
-  color: $primary;
+  color: $cumes-01;
   background-color: $dark;
 }
 .custom-avatar img {

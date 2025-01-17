@@ -150,8 +150,8 @@ const onSubmit = async () => {
   min-width: 280px;
   border-radius: 10px;
   margin: auto;
-  background-color: #2C2C2CF4;
-  color: $primary;
+  background-color: $dark;
+  color: $cumes-01;
 }
 
 .q-mt-md {

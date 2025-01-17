@@ -13,7 +13,8 @@ import NavBar from 'layouts/NavBar.vue';
 import ScrollToTop from 'components/ScrolToTop.vue';
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .page-container {
   padding-bottom: 56px; /* Espaço para a navbar */
   min-height: calc(100vh - 56px); /* Certifique-se de que o container ocupa toda a altura da tela menos a altura da navbar */

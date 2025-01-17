@@ -71,7 +71,8 @@ defineOptions({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .escaladas-page {
   flex-direction: column;
   align-items: center;
