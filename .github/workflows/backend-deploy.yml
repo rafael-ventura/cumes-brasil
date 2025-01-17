@@ -35,7 +35,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'npm'
 
       # 4. Instalar dependências do Backend
       - name: Install Backend dependencies
