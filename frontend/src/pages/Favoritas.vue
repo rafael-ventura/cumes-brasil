@@ -153,7 +153,6 @@ const applyFilters = (filters: any) => {
 
 // Função para atualizar os resultados da busca
 const updateSearchResults = (results: any[]) => {
-  console.log('Resultados da busca atualizados:', results);
 };
 
 // Função para manipular a visibilidade do modal de adição de via
@@ -171,11 +170,12 @@ const confirmDeletion = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: var(--q-primary);
+  color: $cumes-01;
 }
 
 .fixed-bottom-right {

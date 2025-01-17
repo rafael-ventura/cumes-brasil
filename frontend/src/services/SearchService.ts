@@ -15,10 +15,8 @@ class SearchService {
         searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
         searchRequest.items = searchResult.items.map((item: any) => ImagemService.getFullImageUrl(item.imagem.url));
       }
-      console.log('results', searchResult);
       return searchResult;
     } catch (error) {
-      console.error('API error: ', error);
       throw error;
     }
   }

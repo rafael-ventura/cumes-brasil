@@ -37,7 +37,8 @@ watch(
 );
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .text-white {
   color: white;
 }

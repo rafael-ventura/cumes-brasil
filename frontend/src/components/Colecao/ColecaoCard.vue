@@ -8,20 +8,21 @@
           :src="colecao.imagem?.url"
           alt="Imagem da Coleção"
         />
-        <!-- Caso contrário, exibe o componente `ImagePlaceholder` -->
-        <ImagePlaceholder v-else :fillColor="'#fcbd7b'" />
+        <!-- Caso contrário, exibe o componente `CroquiPlaceholderSvg` -->
+        <ImagePlaceholder v-else :fillColor="'$primary'" />
       </div>
       <div class="colecao-info">
-        <div class="text-h6">{{ colecao.nome }}</div>
+        <div class="text-h6 text-weight-bolder">{{ colecao.nome }}</div>
         <div class="text-subtitle1">{{ colecao.descricao }}</div>
 
         <!-- Exibe o número de vias apenas se `viasCarregadas` tiver sido preenchido -->
         <q-badge
           v-if="viasCarregadas !== null"
-          color="primary"
-          :label="'Vias na coleção: ' + viasCarregadas"
-        />
-        <q-badge v-else color="grey" label="Carregando vias..." />
+          class="badge-custom"
+        >
+          Vias na coleção: <span class="badge-value text-weight-bold">{{ viasCarregadas }}</span>
+        </q-badge>
+        <q-badge v-else color="grey" label="Carregando vias..." class="badge-custom" />
       </div>
     </q-card-section>
   </q-card>
@@ -77,7 +78,7 @@ onMounted(() => {
   transition: transform 0.2s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  background-color: #fcbd7b;
+  background-color: $primary;
 
   &:hover {
     transform: translateY(-4px);
@@ -111,12 +112,35 @@ onMounted(() => {
 }
 
 .text-h6 {
-  font-weight: bold;
   margin-bottom: 4px;
+  color: black;
 }
 
 .text-subtitle1 {
-  font-size: 0.9em;
+  font-size: 1.05em;
   margin-bottom: 8px;
 }
+
+.q-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  background: $cumes-01;
+  border: 1px solid $cumes-02;
+  font-size: 1.1em; /* Aumenta o tamanho do texto */
+  padding: 8px 12px; /* Adiciona espaço interno */
+  border-radius: 12px; /* Deixa os cantos arredondados */
+}
+
+.badge-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-value {
+  margin-left: 5px; /* Adiciona espaço entre o texto e o número */
+}
 </style>
+

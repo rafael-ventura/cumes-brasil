@@ -256,11 +256,9 @@ onMounted(async () => {
 const onInputChange = (event: KeyboardEvent) => {
   const value = (event.target as HTMLInputElement).value;
   if (value.length >= 2) {
-    console.log('Buscando >=2:', value);
     emitFilters();
   }
   if (value.length === 0) {
-    console.log('Buscando 0:', value);
     emitFilters();
   }
 };
@@ -331,7 +329,8 @@ const filterByExtension = (category: string) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .filter-modal {
   background-color: #2c2c2c;
   border-radius: 8px;
@@ -341,7 +340,7 @@ const filterByExtension = (category: string) => {
 .modal-header {
   font-size: 24px;
   font-weight: bold;
-  color: #fcbd7b;
+  color: $primary;
   margin-bottom: 16px;
 }
 
@@ -371,23 +370,23 @@ const filterByExtension = (category: string) => {
   font-size: 16px;
   cursor: pointer;
   color: #2c2c2c; /* Cor do ícone */
-  border: 1px solid #fcbd7b;
+  border: 1px solid $primary;
   border-radius: 50%; /* Ícone circular */
   margin-left: 4px; /* Margem à esquerda */
 }
 
 .q-btn.filter-btn {
   background-color: #333333;
-  color: #fcbd7b;
+  color: $primary;
 }
 
 .q-btn.filter-btn.active {
-  background-color: #fcbd7b;
+  background-color: $primary;
   color: #333333;
 }
 
 .selected {
-  background-color: #fcbd7b;
+  background-color: $primary;
   color: #2c2c2c;
 }
 </style>

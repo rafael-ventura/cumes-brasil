@@ -24,7 +24,7 @@
               label-color="primary"
               rounded
               :rules="[val => !!val || 'Campo obrigatório']"
-              :input-style="{ color: '#fcbd7b' }"
+              :input-style="{ color: '$primary' }"
             />
           </div>
 
@@ -44,7 +44,7 @@
               label-color="primary"
               rounded
               :rules="[val => !!val || 'Campo obrigatório']"
-              :input-style="{ color: '#fcbd7b' }"
+              :input-style="{ color: '$primary' }"
             />
           </div>
 
@@ -139,7 +139,7 @@ onMounted(async () => {
 
 .login-card {
   width: 100%;
-  background-color: rgba($dark, 0.85);
+  background-color: rgba($background, 0.85);
   padding: 5%;
   border-radius: 10px;
 }
@@ -207,7 +207,7 @@ onMounted(async () => {
   width: 8vw;
   height: 8vw;
   background-color: $primary;
-  color: $dark;
+  color: $background;
   border-radius: 50%;
   display: flex;
   justify-content: center;

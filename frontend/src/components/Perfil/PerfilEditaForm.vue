@@ -121,7 +121,6 @@ const onSubmit = async () => {
     if (localizacao.value) {
       formData.append('localizacao', localizacao.value);
     } else {
-      console.log('Nenhuma foto selecionada');
       // Se não houver foto, enviar a foto padrão (ID 3)
       formData.append('removerFoto', 'true');
     }
@@ -150,8 +149,8 @@ const onSubmit = async () => {
   min-width: 280px;
   border-radius: 10px;
   margin: auto;
-  background-color: #2C2C2CF4;
-  color: $primary;
+  background-color: $background;
+  color: $cumes-03;
 }
 
 .q-mt-md {

@@ -162,15 +162,15 @@ const addToCollection = async (colecao: IColecao) => {
 }
 
 .registrar {
-  background-color: #EF9D9D;
+  background-color: $cumes-02;
 }
 
 .favoritos {
-  background-color: #C0E8AB;
+  background-color: $cumes-04;
 }
 
 .colecao {
-  background-color: #7E9CE8;
+  background-color: $cumes-05;
 }
 
 .collection-card {

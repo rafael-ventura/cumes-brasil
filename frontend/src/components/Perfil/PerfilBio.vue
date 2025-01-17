@@ -57,17 +57,17 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
 @import "src/css/app.scss";
 .title-box{
   padding-top: 10px;
-  background-color: $dark;
+  background-color: $background;
   height: 50px;
   width: max-content;
 }
 .titulo {
-  margin-left: 16px;
-  color: $primary;
+  margin-left: 5px;
+  color: $cumes-03;
 }
 .icon{
-  color: $dark;
-  background-color: $primary;
+  color: $background;
+  background-color: $cumes-03;
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -75,18 +75,17 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   padding: 15px;
   border-radius: 10px;
   color: white;
-  background-color: $dark;
+  background-color: $background;
+  border: 2px solid $cumes-03;
 }
 .right-margem {
   margin-right: 16px;
 }
 .custom-input{
-  background-color: $dark;
+  background-color: $background;
+  border: 5px solid $cumes-03;
   border-radius: 10px;
   font-size: 20px;
   color: white;
-}
-.fundo1{
-  background-color: $primary;
 }
 </style>

@@ -62,8 +62,6 @@ const updateSearchResults = (results: any[]) => {
 };
 
 const goToEscaladaDetalhada = (escalada: Escalada) => {
-  // Lógica para navegar para a tela detalhada da escalada
-  console.log('Selecionada:', escalada);
 };
 
 defineOptions({
@@ -71,7 +69,8 @@ defineOptions({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .escaladas-page {
   flex-direction: column;
   align-items: center;
@@ -92,7 +91,7 @@ defineOptions({
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: var(--q-primary);
+  color: $cumes-01;
 }
 
 .escalada-card img {

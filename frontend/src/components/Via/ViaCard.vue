@@ -37,7 +37,7 @@ const emitClick = () => {
 
 .card-item {
   border-radius: 10px;
-  background-color: $dark;
+  background-color: $background;
   width: 100%;
   height: 315px;
   margin: 0;

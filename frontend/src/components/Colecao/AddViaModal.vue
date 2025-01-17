@@ -57,7 +57,7 @@ const loadViasNotInColecao = async (page = 1) => {
 
     // Adiciona as novas vias à lista existente
     vias.value = page === 1 ? novasVias : [...vias.value, ...novasVias];
-    console.log('Vias:', vias.value);
+
   } catch (error) {
     console.error('Erro ao buscar vias:', error);
   }
@@ -93,7 +93,8 @@ const onDialogShow = async () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .q-dialog-plugin {
   min-width: 400px;
 }

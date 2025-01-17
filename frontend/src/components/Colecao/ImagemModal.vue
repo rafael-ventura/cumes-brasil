@@ -32,7 +32,8 @@ const handleHide = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .expanded-image {
   max-width: 100%;
   max-height: 80vh;

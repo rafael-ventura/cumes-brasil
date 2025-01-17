@@ -54,7 +54,7 @@
 
                   <!-- Tipo do Participante -->
                   <div
-                    :style="{ backgroundColor: getParticipantColor(participante.tipo) }"
+                    :style="{ backgroundColor: getParticipantColor(participante.tipo), opacity: 0.85 }"
                     class="tipo-participante-chip"
                   >
                     {{ participante.tipo }}
@@ -111,18 +111,19 @@ function toggleDropdown () {
 function getParticipantColor (tipo: string) {
   switch (tipo.toUpperCase()) {
     case 'GUIA':
-      return '#EF9D9D';
+      return '#546119';
     case 'MISTO':
-      return '#C0E8AB';
+      return '#F4E285';
     case 'PARTICIPANTE':
-      return '#7E9CE8';
+      return '#BC4B51';
     default:
       return 'gray';
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import 'src/css/app.scss';
 .via-imagem {
   width: calc(100% + 2px); /* Expande a imagem horizontalmente */
   height: auto;
@@ -138,7 +139,7 @@ function getParticipantColor (tipo: string) {
 /* Card da Escalada */
 .escalada-card {
   width: 100%;
-  background-color: var(--q-primary);
+  background-color: $cumes-01;
   padding: 16px; /* Mantém o padding interno */
   box-sizing: border-box; /* Inclui padding no tamanho */
 }
@@ -165,7 +166,7 @@ function getParticipantColor (tipo: string) {
   padding: 1%;
   border: 1px solid black;
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.10);
+  background-color: $cumes-03;
   color: black;
   font-size: 18px;
   font-weight: bold;
@@ -211,7 +212,7 @@ function getParticipantColor (tipo: string) {
 }
 
 .participantes-dropdown {
-  background-color: var(--q-primary);
+  background-color: $cumes-01;
   margin-top: 4px;
   margin-bottom: 4%;
   display: flex;
@@ -235,7 +236,7 @@ function getParticipantColor (tipo: string) {
 .participante-nome,
 .tipo-participante-chip {
   margin: 0; /* Remove margin entre nome e tipo */
-  padding: 0; /* Remove padding dentro dos campos */
+  padding: 2%; /* Remove padding dentro dos campos */
   border: none; /* Remove a borda dos campos */
 }
 
@@ -256,7 +257,7 @@ function getParticipantColor (tipo: string) {
 
 .tipo-participante-chip {
   flex: 0 0 30%; /* Ajuste de largura para caber na linha */
-  padding: 1%;
+  padding: 5px;
   border-radius: 15px;
   font-size: 14px;
   text-align: center;

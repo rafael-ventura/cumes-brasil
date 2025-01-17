@@ -25,7 +25,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b', borderRadius: '15px' }"
+                :input-style="{ color: '$primary', borderRadius: '15px' }"
               />
             </div>
 
@@ -45,7 +45,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 
@@ -65,7 +65,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 
@@ -85,7 +85,7 @@
                 label-color="primary"
                 rounded
                 :rules="[val => !!val || 'Campo obrigatório']"
-                :input-style="{ color: '#fcbd7b' }"
+                :input-style="{ color: '$primary' }"
               />
             </div>
 
@@ -190,7 +190,7 @@ const goToLogin = () => {
 
 .login-card {
   width: 100%;
-  background-color: rgba($dark, 0.85);
+  background-color: rgba($background, 0.85);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

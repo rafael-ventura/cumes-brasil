@@ -1,11 +1,12 @@
 // Import Quasar variables and mixins
-@import './quasar.variables.scss';
+
 
 // Define custom colors
-$primary: #FCBD7B; // Mountaineering yellow #FCBD7B
+$primary: #8CB369; // Mountaineering yellow #FCBD7B
 $secondary: #BCE9B4; // Adventure green #BCE9B4
 $tertiary: #f5f5f5; // Palevioletred #DA7092
 
+// #119DA4 , F2E86D, 9FB7B9, FF9F1C, FDFFFC
 $primary-light: #ffca91;
 $secondary-light: #b5d3ae;
 $tertiary-light: #fcbd7b;
@@ -16,6 +17,13 @@ $tertiary-dark: #c71585;
 
 $background: #2c2c2c; // Dark mode background
 $light: #f5f5f5; // Light mode background
+
+
+$cumes-01: #8CB369;
+$cumes-02: #546119;
+$cumes-03: #AC560C;
+$cumes-04: #F4E285;
+$cumes-05: #BC4B51;
 
 
 // Define Cume custom colors
@@ -33,6 +41,7 @@ $c-color-grey: #757575;
 $body-bg-color: $light;
 $header-bg-color: $primary;
 $footer-bg-color: $primary;
+$active-tab-color: $cumes-01; /* Defina sua variável aqui */
 
 body {
   background-color: $body-bg-color;
@@ -51,6 +60,9 @@ body {
 
 // Common classes
 
+:root {
+  --primary: $primary;
+}
 
 .header {
   width: 100%;
@@ -145,16 +157,16 @@ body {
 }
 
 .btn-dark{
-  color: $dark;
+  color: $background;
   font-weight: bold;
-  border: $dark 1px solid;
+  border: $background 1px solid;
   border-radius: 10px;
 }
 
 .btn-red{
-  color: $negative;
+  color: #ff5858;
   font-weight: bold;
-  border: $negative 1px solid;
+  border: #ff5858 1px solid;
   border-radius: 10px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
 }
@@ -257,12 +269,12 @@ body {
 }
 
 .text-h2{
-  color: #fcbd7b;
+  color: $primary;
 }
 
 .q-field__control {
   border-radius: 20px;
-  border-color: #fcbd7b;
+  border-color: $primary;
 
   &::after {
     color: $primary !important;
@@ -274,7 +286,7 @@ body {
 }
 
 .q-field__label {
-  color: #fcbd7b;
+  color: $primary;
   margin-left: 8px;
 
 }
@@ -285,8 +297,8 @@ body {
 
 .q-field__control {
   border-radius: 20px;
-  border: 1px solid #fcbd7b;
-  color: #fcbd7b;
+  border: 1px solid $primary;
+  color: $primary;
 
   &::after {
     color: $primary !important;
@@ -298,7 +310,7 @@ body {
 }
 
 .q-field__native {
-  color: #fcbd7b;
+  color: $primary;
 
   &::after {
     color: $primary !important;

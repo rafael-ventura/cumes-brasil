@@ -6,13 +6,15 @@
     </div>
     <q-separator spaced />
 
-    <!-- Exibição dos detalhes da via favorita -->
-    <div v-if="viaPreferida">
-      <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
+    <!-- Novo contêiner para alinhamento -->
+    <div class="col text-left predileta-div">
+      <div v-if="viaPreferida">
+        <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
+      </div>
+      <q-card-section v-else>
+        <div class="text-h6">Nenhuma predileta adicionada.</div>
+      </q-card-section>
     </div>
-    <q-card-section v-else>
-      <div class="text-h6">Nenhuma predileta adicionada.</div>
-    </q-card-section>
     <br/>
     <div>
       <q-dialog v-model="isModalSelect">
@@ -83,7 +85,7 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
 const savePreferida = async () => {
   try {
     if (!viaPreferida.value) {
-      console.error('Nenhuma via preferida selecionada.');
+      console.error('Nenhuma via predileta selecionada.');
       return;
     }
 
@@ -105,17 +107,17 @@ const savePreferida = async () => {
 @import "src/css/app.scss";
 .title-box{
   padding-top: 10px;
-  background-color: $dark;
+  background-color: $background;
   height: 50px;
   width: max-content;
 }
 .titulo {
-  margin-left: 16px;
-  color: $primary;
+  margin-left: 5px;
+  color: $cumes-03;
 }
 .icon{
-  color: $dark;
-  background-color: $primary;
+  color: $background;
+  background-color: $cumes-03;
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -123,20 +125,25 @@ const savePreferida = async () => {
   margin-right: 16px;
 }
 .custom-input{
-  background-color: $dark;
   border-radius: 10px;
   font-size: 20px;
   color: white;
-}
-.fundo1{
-  background-color: $primary;
 }
 
 .imagem-via-predileta{
   width: 200px;
   height: 200px;
   border-radius: 10px;
-  border: 10px solid $dark;
+  border: 10px solid $background;
   object-fit: cover;
 }
+
+.predileta-div {
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  background-color: $background;
+  border: 2px solid $cumes-03;
+}
+
 </style>

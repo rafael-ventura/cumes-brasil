@@ -38,7 +38,6 @@ const selectOptions = ref([
 ]);
 
 const submitForm = () => {
-  console.log('Form submitted:', formData.value);
 };
 </script>
 

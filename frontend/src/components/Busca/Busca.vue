@@ -198,11 +198,11 @@ const selectItem = (item: any) => {
 }
 
 .slot-container * {
-  color: $primary;
+  color: $cumes-01;
 }
 
 .text-h2 {
-  color: $primary;
+  color: $cumes-01;
 }
 
 .end-of-list-card {
@@ -216,6 +216,6 @@ const selectItem = (item: any) => {
 .end-of-list-text {
   font-size: 18px;
   font-weight: bold;
-  color: $primary;
+  color: $cumes-01;
 }
 </style>
