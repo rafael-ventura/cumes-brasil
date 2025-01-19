@@ -55,8 +55,8 @@ ref({
 });
 const addColecao = async (colecaoPreenchida: IColecao) => {
   try {
-    await ColecaoService.create(colecaoPreenchida);
-    colecoes.value = await ColecaoService.getByUsuarioId();
+    await ColecaoService.criarColecao(colecaoPreenchida);
+    colecoes.value = await ColecaoService.listarColecoesPorUsuario();
     isAddColecaoModalOpen.value = false;
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);

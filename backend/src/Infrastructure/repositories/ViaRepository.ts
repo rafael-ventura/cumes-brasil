@@ -73,23 +73,27 @@ export class ViaRepository implements ISearchRepository<Via>{
     };
   }
 
-  async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    const subQuery = this.repository
-        .createQueryBuilder('via_colecao')
-        .select('via_colecao.viaId')  // Referência direta à coluna de chave estrangeira 'viaId'
-        .where('via_colecao.colecaoId = :colecaoId', { colecaoId });  // Referência direta à coluna de chave estrangeira 'colecaoId'
+  async getViasNotInColecaoForUser (
+    colecaoId: number,
+    usuarioId: number,
+    page: number,
+    limit: number
+  ): Promise<{ vias: Via[]; total: number }> {
+    const subQuery = AppDataSource.getRepository(ViaColecao)
+      .createQueryBuilder('via_colecao')
+      .select('via_colecao.viaId')
+      .where('via_colecao.colecaoId = :colecaoId', { colecaoId });
 
-    const [vias, total] = await this.repository.createQueryBuilder('via')
-        .where(`via.id NOT IN (${subQuery.getQuery()})`)
-        .setParameters(subQuery.getParameters())
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
+    const [vias, total] = await this.repository
+      .createQueryBuilder('via')
+      .leftJoinAndSelect('via.montanha', 'montanha')
+      .leftJoinAndSelect('via.imagem', 'imagem')
+      .where(`via.id NOT IN (${subQuery.getQuery()})`)
+      .andWhere('montanha.usuarioId = :usuarioId', { usuarioId })
+      .setParameters(subQuery.getParameters())
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
 
     return {
       vias,

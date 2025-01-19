@@ -35,7 +35,7 @@ import { Colecao } from 'src/models/IColecao';
 import { Usuario } from 'src/models/IUsuario';
 
 const props = defineProps<{ isOpen: boolean }>();
-const emit = defineEmits(['update:isOpen', 'collection-added']);
+const emit = defineEmits(['atualizar:isOpen', 'collection-added']);
 
 // Estado local do modal
 const localIsOpen = ref(props.isOpen);
@@ -53,7 +53,7 @@ watch(
 
 // Função para fechar o modal e resetar o estado da coleção
 const closeModal = () => {
-  emit('update:isOpen', false);
+  emit('atualizar:isOpen', false);
   localIsOpen.value = false;
 };
 

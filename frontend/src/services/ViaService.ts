@@ -42,13 +42,13 @@ class ViaService {
         throw new Error('Usuário não autenticado');
       }
 
-      const favoritosColecao = await ColecaoService.getColecaoFavoritos();
+      const favoritosColecao = await ColecaoService.obterColecaoFavoritos();
 
       if (!favoritosColecao) {
         throw new Error('Coleção de favoritos não encontrada');
       }
 
-      await ColecaoService.addViaToColecao(favoritosColecao.id, viaId);
+      await ColecaoService.adicionarViaNaColecao(favoritosColecao.id, viaId);
     } catch (error: any) {
       handleApiError(error, 'Erro ao adicionar via aos favoritos');
     }

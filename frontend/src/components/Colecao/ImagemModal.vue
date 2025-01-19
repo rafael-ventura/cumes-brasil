@@ -8,7 +8,7 @@
 import { ref, watch } from 'vue';
 
 const props = defineProps<{ isOpen: boolean; imageUrl: string }>();
-const emit = defineEmits(['update:isOpen']);
+const emit = defineEmits(['atualizar:isOpen']);
 
 const localIsOpen = ref(props.isOpen);
 
@@ -18,7 +18,7 @@ watch(() => props.isOpen, (newVal) => {
 
 watch(localIsOpen, (newVal) => {
   if (!newVal) {
-    emit('update:isOpen', false);
+    emit('atualizar:isOpen', false);
   }
 });
 
@@ -28,7 +28,7 @@ const closeModal = () => {
 
 const handleHide = () => {
   localIsOpen.value = false;
-  emit('update:isOpen', false);
+  emit('atualizar:isOpen', false);
 };
 </script>
 

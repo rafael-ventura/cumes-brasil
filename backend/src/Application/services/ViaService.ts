@@ -41,9 +41,19 @@ export class ViaService {
     return this.viaRepo.getViasByColecaoId(colecaoId, page, limit);
   }
 
-  async getViasNotInColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    return this.viaRepo.getViasNotInColecaoId(colecaoId, page, limit);
+  async getViasNotInColecaoForUser (
+    colecaoId: number,
+    usuarioId: number,
+    page: number,
+    limit: number
+  ): Promise<{ vias: Via[]; total: number }> {
+    if (!colecaoId || !usuarioId) {
+      throw new Error('Parâmetros inválidos: colecaoId ou usuarioId ausentes.');
+    }
+
+    return this.viaRepo.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit);
   }
+
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
     const validValue = ViaValidation.validaValores(key, value);

@@ -45,7 +45,7 @@ const props = defineProps<{
 defineOptions({
   name: 'BuscaComponent'
 });
-const emit = defineEmits(['select', 'update-results']);
+const emit = defineEmits(['select', 'atualizar-results']);
 const route = useRoute();
 
 const filters = ref(<BuscaRequest>{
@@ -73,7 +73,7 @@ let observerInstance: IntersectionObserver | null = null;
 onMounted(async () => {
   if (props.initialData && props.initialData.length) {
     results.value = props.initialData;
-    emit('update-results', results.value);
+    emit('atualizar-results', results.value);
   } else {
     searchEntities(true);
   }
@@ -152,7 +152,7 @@ const searchEntities = async (reset = false) => {
     }
     totalPages.value = searchResult.totalPages;
     totalItems.value = searchResult.totalItems;
-    emit('update-results', results.value);
+    emit('atualizar-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
   } finally {

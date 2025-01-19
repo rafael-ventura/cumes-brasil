@@ -28,7 +28,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({error: error.message});
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getById"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller obterPorId"});
             }
         }
     }
@@ -77,7 +77,7 @@ export class ColecaoController {
                 } else if (error.message === "Usuário inválido") {
                     return res.status(400).json({error: error.message});
                 } else {
-                    res.status(500).json({error: "Ocorreu um erro desconhecido em controller getByUsuarioId"});
+                    res.status(500).json({error: "Ocorreu um erro desconhecido em controller obterPorUsuario"});
                 }
             }
         }
@@ -123,7 +123,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller update' });
+                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller atualizar' });
             }
         }
     }
@@ -147,7 +147,7 @@ export class ColecaoController {
                 }
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller delete"});
+                res.status(500).json({error: "Ocorreu um erro desconhecido em controller excluir"});
             }
         }
     }

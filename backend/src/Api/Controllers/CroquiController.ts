@@ -72,7 +72,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller create" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller criar" });
             }
         }
     };
@@ -96,7 +96,7 @@ export class CroquiController {
                     res.status(500).json({ error: error.message });
                 }
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller update" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller atualizar" });
             }
         }
     };
@@ -121,7 +121,7 @@ export class CroquiController {
                     res.status(500).json({ error: error.message });
                 }
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller excluir" });
             }
         }
     };
@@ -146,7 +146,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller excluir" });
             }
         }
     };
@@ -171,7 +171,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller excluir" });
             }
         }
     }
@@ -194,7 +194,7 @@ export class CroquiController {
             if (error instanceof Error) {
                 res.status(500).json({ error: error.message });
             } else {
-                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller delete" });
+                res.status(500).json({ error: "Ocorreu um erro desconhecido em controller excluir" });
             }
         }
     };

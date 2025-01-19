@@ -42,7 +42,7 @@ const props = defineProps({
   via: Object,
   favoriteCollectionId: Number
 });
-const emit = defineEmits(['update:isFavorited']);
+const emit = defineEmits(['atualizar:isFavorited']);
 
 const isFavorited = ref(false);
 const showEscaladaModal = ref(false);
@@ -53,7 +53,7 @@ const colecoes = ref<IColecao[]>([]);
 const checkIfFavorited = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
-      const favoriteCollection = await ColecaoService.getById(props.favoriteCollectionId);
+      const favoriteCollection = await ColecaoService.buscarColecaoPorId(props.favoriteCollectionId);
       isFavorited.value = favoriteCollection?.viaColecoes?.some((v: any) => v.via.id === props.via?.id) ?? false;
     } catch (error) {
       console.error('Erro ao verificar se a via é favorita:', error);
@@ -76,7 +76,7 @@ const toggleFavoriteStatus = async () => {
 const addToFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
-      await ColecaoService.addViaToColecao(props.favoriteCollectionId, props.via.id);
+      await ColecaoService.adicionarViaNaColecao(props.favoriteCollectionId, props.via.id);
       updateFavoriteStatus(true, 'Via adicionada a favoritos!');
     } catch (error) {
       console.error('Erro ao adicionar aos favoritos:', error);
@@ -89,7 +89,7 @@ const addToFavorites = async () => {
 const removeFromFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
-      await ColecaoService.removeViaFromColecao(props.favoriteCollectionId, props.via.id);
+      await ColecaoService.removerViaDaColecao(props.favoriteCollectionId, props.via.id);
       updateFavoriteStatus(false, 'Via removida dos favoritos!');
     } catch (error) {
       console.error('Erro ao remover dos favoritos:', error);
@@ -100,7 +100,7 @@ const removeFromFavorites = async () => {
 
 const updateFavoriteStatus = (status: boolean, message: string) => {
   isFavorited.value = status;
-  emit('update:isFavorited', status);
+  emit('atualizar:isFavorited', status);
   if (status) {
     Notify.create(createNotifyConfig('positive', message, 'top-right'));
   } else {
@@ -116,7 +116,7 @@ const openCollectionModal = async () => {
   if (props.via) {
     try {
       const usuarioId = Number(localStorage.getItem('usuarioId'));
-      const result = await ColecaoService.getCollecoesNotContainingVia(
+      const result = await ColecaoService.listarColecoesSemVia(
         props.via.id,
         1,
         10
@@ -132,7 +132,7 @@ const openCollectionModal = async () => {
 const addToCollection = async (colecao: IColecao) => {
   if (props.via) {
     try {
-      await ColecaoService.addViaToColecao(colecao.id, props.via.id);
+      await ColecaoService.adicionarViaNaColecao(colecao.id, props.via.id);
       Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
     } catch (error) {
       console.error('Erro ao adicionar à coleção:', error);

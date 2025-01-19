@@ -27,7 +27,7 @@ interface ViaWithAdded extends Via {
   added?: boolean;
 }
 const props = defineProps<{ isOpen: boolean; colecaoId: number }>();
-const emit = defineEmits(['update:isOpen', 'via-added']);
+const emit = defineEmits(['atualizar:isOpen', 'via-added']);
 const localIsOpen = ref(props.isOpen);
 const vias = ref<ViaWithAdded[]>([]);
 const currentPage = ref(1);
@@ -38,7 +38,7 @@ watch(() => props.isOpen, (newVal) => {
 });
 
 watch(localIsOpen, (newVal) => {
-  emit('update:isOpen', newVal);
+  emit('atualizar:isOpen', newVal);
 });
 
 const resetVias = () => {
@@ -48,7 +48,7 @@ const resetVias = () => {
 
 const loadViasNotInColecao = async (page = 1) => {
   try {
-    const result = await ColecaoService.getViasNotIn(props.colecaoId, page, 10);
+    const result = await ColecaoService.listarViasForaDaColecao(props.colecaoId, page, 10);
     const novasVias = result.vias.map(via => ({
       ...via,
       added: false
@@ -70,7 +70,7 @@ const loadMoreVias = async () => {
 
 const addViaToCollection = async (via: ViaWithAdded) => {
   try {
-    await ColecaoService.addViaToColecao(props.colecaoId, via.id);
+    await ColecaoService.adicionarViaNaColecao(props.colecaoId, via.id);
     via.added = true;
     vias.value = vias.value.filter(v => v.id !== via.id);
     emit('via-added', via);
@@ -80,7 +80,7 @@ const addViaToCollection = async (via: ViaWithAdded) => {
 };
 
 const handleHide = () => {
-  emit('update:isOpen', false);
+  emit('atualizar:isOpen', false);
 };
 
 const onDialogShow = async () => {

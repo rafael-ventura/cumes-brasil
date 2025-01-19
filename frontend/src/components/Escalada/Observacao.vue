@@ -21,7 +21,7 @@ const props = defineProps({
   modelValue: String
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['atualizar:modelValue']);
 const localValue = ref(props.modelValue);
 
 // Observa mudanças na prop e atualiza o valor local
@@ -31,7 +31,7 @@ watch(() => props.modelValue, (newValue) => {
 
 // Emite o evento quando o valor local muda
 watch(localValue, (newValue) => {
-  emit('update:modelValue', newValue);
+  emit('atualizar:modelValue', newValue);
 });
 
 defineOptions({

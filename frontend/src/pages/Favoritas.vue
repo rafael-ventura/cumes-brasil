@@ -35,7 +35,7 @@ async function fetchFavoritasColecao () {
   }
 
   try {
-    const colecao = await ColecaoService.getColecaoFavoritos();
+    const colecao = await ColecaoService.obterColecaoFavoritos();
     if (colecao?.id) {
       colecaoId.value = colecao.id; // Atualiza o filtro
     } else {

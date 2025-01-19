@@ -3,7 +3,6 @@ import { ViaService } from '../../Application/services/ViaService';
 import { Via } from '../../Domain/entities/Via';
 import ViaValidation from '../../Application/validations/ViaValidation';
 
-
 export class ViaController {
 	private service: ViaService;
 
@@ -118,7 +117,7 @@ export class ViaController {
 					res.status(500).json({ error: error.message });
 				}
 			} else {
-				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasIn" });
+				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller obterViasNaColecao" });
 			}
 		}
 	};
@@ -126,22 +125,23 @@ export class ViaController {
 	getViasNotInColecao = async (req: Request, res: Response) => {
 		try {
 			const colecaoId = parseInt(req.params.id);
+			const usuarioId = parseInt(req.query.usuarioId as string);
 			const page = parseInt(req.query.page as string) || 1;
 			const limit = parseInt(req.query.limit as string) || 10;
-			const result = await this.service.getViasNotInColecaoId(colecaoId, page, limit);
+
+			const result = await this.service.getViasNotInColecaoForUser(
+				colecaoId,
+				usuarioId,
+				page,
+				limit
+			);
+
 			res.status(200).json(result);
 		} catch (error) {
-			if (error instanceof Error) {
-				if (error.message === "Nenhuma via encontrada") {
-					return res.status(404).json({ error: error.message });
-				} else {
-					res.status(500).json({ error: error.message });
-				}
-			} else {
-				res.status(500).json({ error: "Ocorreu um erro desconhecido em controller getViasNotIn" });
-			}
+			console.error('Erro em getViasNotInColecao:', error);
+			res.status(500).json({ error: 'Erro interno no servidor.' });
 		}
-	}
+	};
 
 	countEntities = async (req: Request, res: Response) => {
 		try {

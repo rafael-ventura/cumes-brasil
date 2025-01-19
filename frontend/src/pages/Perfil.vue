@@ -104,8 +104,8 @@ onMounted(async () => {
       await router.push('/auth/login');
     } else {
       user.value = await UserService.getPerfil();
-      const colecoes: IColecao[] | undefined = await ColecaoService.getByUsuarioId();
-      const favorita: IColecao | null = await ColecaoService.getColecaoFavoritos();
+      const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
+      const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
       const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
       if (favorita) {
         colecaoId.value = favorita?.id;

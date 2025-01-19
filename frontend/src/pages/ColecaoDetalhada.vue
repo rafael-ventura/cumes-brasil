@@ -135,7 +135,7 @@ const isConfigDialogOpen = ref(false);
 
 onMounted(async () => {
   const colecaoId = Number(route.params.id);
-  colecao.value = await ColecaoService.getById(colecaoId);
+  colecao.value = await ColecaoService.obterPorId(colecaoId);
 });
 
 const applyFilters = (filters: any) => {
@@ -161,7 +161,7 @@ const confirmDeletion = () => {
 const deleteCollection = async () => {
   if (colecao.value) {
     try {
-      await ColecaoService.delete(colecao.value.id);
+      await ColecaoService.excluir(colecao.value.id);
       router.push('/colecoes');
     } catch (error) {
       console.error('Erro ao excluir a coleção:', error);
@@ -181,7 +181,7 @@ const submitEditCollection = () => {
 const editCollection = async (data: { nome: string; descricao: string }) => {
   if (colecao.value) {
     try {
-      await ColecaoService.update(colecao.value.id, data);
+      await ColecaoService.atualizar(colecao.value.id, data);
       colecao.value.nome = data.nome;
       colecao.value.descricao = data.descricao;
       isEditFormOpen.value = false;

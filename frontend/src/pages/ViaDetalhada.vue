@@ -38,7 +38,7 @@ onMounted(async () => {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
     if (AuthenticateService.isAuthenticated()) {
-      const collection = await ColecaoService.getColecaoFavoritos();
+      const collection = await ColecaoService.obterFavoritos();
       favoriteCollectionId.value = collection ? collection.id : null;
     }
   } catch (error) {
