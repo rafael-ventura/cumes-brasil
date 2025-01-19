@@ -21,7 +21,7 @@ export class MulterMiddleware {
         if (err) {
           cb(err, '');
         } else {
-          const usuarioId = req.user?.userId || 'unknown'; // Certifique-se de que req.user existe
+          const usuarioId = req.user?.usuarioId || 'unknown'; // Certifique-se de que req.user existe
           const fileName = `foto_perfil-userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
           cb(null, fileName);
         }

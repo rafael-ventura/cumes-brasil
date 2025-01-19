@@ -77,8 +77,8 @@ export class UsuarioController {
 
     getPerfil = async (req: Request, res: Response) => {
         try {
-            const userId = parseInt(req.user.userId);
-            const resultado = await this.service.getPerfil(userId);
+            const usuarioId = parseInt(req.user.usuarioId);
+            const resultado = await this.service.getPerfil(usuarioId);
             if (!resultado) {
                 return res.status(404).json({ message: 'Perfil não encontrado.' });
             }
@@ -90,7 +90,7 @@ export class UsuarioController {
 
     editarDados = async (req: Request, res: Response) => {
         try {
-            const userId = parseInt(req.user.userId);
+            const usuarioId = parseInt(req.user.usuarioId);
             const usuarioDados: any = req.body;
 
             if (!req.file && Object.keys(req.body).length === 0) {
@@ -98,7 +98,7 @@ export class UsuarioController {
             }
 
             const file = req.file;
-            await this.service.editarDados(userId, usuarioDados, file);
+            await this.service.editarDados(usuarioId, usuarioDados, file);
 
             res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
         } catch (error) {

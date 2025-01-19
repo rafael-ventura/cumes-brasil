@@ -1,10 +1,20 @@
 <template>
   <q-page class="q-pa-none">
     <div v-if="colecao">
-      <div class="header-container" @click="expandImage(colecao!.imagem?.url || 'https://via.placeholder.com/300x150')">
+      <div class="header-container" @click="expandImage(colecao!.imagem?.url || '')">
         <BotaoVoltar class="back-button" />
-        <div class="header"
-             :style="{ backgroundImage: `url(${colecao!.imagem?.url || 'https://via.placeholder.com/300x150'})` }">
+        <div class="header">
+          <!-- Substituir a imagem por um componente ou exibir o placeholder -->
+          <div
+            v-if="colecao!.imagem?.url"
+            :style="{ backgroundImage: `url(${colecao!.imagem.url})` }"
+            class="header-image"
+          ></div>
+          <ImagePlaceholder
+            v-else
+            class="header-placeholder"
+            :fillColor="'$primary'"
+          />
           <div class="header-content">
             <div class="header-info">
               <div class="text-h5">{{ colecao.nome }}</div>
@@ -106,6 +116,7 @@ import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import Busca from 'components/Busca/Busca.vue';
+import ImagePlaceholder from 'components/ImagePlaceholder.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -209,6 +220,7 @@ const viaAdded = () => {
 }
 
 .header {
+  position: relative;
   width: 100%;
   height: 300px;
   background-size: cover;
@@ -223,11 +235,32 @@ const viaAdded = () => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
+.header-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.header-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  background-color: var(--q-primary); /* Cor primária do Quasar */
+}
+
 .header-content {
   background: rgba(0, 0, 0, 0.5);
-  padding: 4%;
+  padding: 0.2%;
   border-radius: 4%;
   width: 100%;
+  margin-bottom: -40px;
 }
 
 .header-info {

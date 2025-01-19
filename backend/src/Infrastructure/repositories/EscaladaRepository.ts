@@ -42,14 +42,14 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         await this.repository.remove(escalada);
     }
 
-    async getByUserId(userId: number): Promise<Escalada[]> {
+    async getByUsuarioId (usuarioId: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
           .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
           .leftJoin('escalada.via', 'via')
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
-            .where("usuario.id = :userId", { userId })
+          .where('usuario.id = :usuarioId', { usuarioId: usuarioId })
             .orderBy("escalada.data", "DESC");
 
         return query.getMany();
@@ -71,14 +71,17 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         return query.getMany();
     }
 
-    async getByViaIdAndByUser(userId: number, viaId: number, limit?: number): Promise<Escalada[]> {
+    async getByViaIdAndByUser (usuarioId: number, viaId: number, limit?: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
           .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
           .leftJoin('escalada.via', 'via')
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
-            .where("usuario.id = :userId AND escalada.viaId = :viaId", { userId, viaId })
+          .where('usuario.id = :usuarioId AND escalada.viaId = :viaId', {
+              usuarioId: usuarioId,
+              viaId
+          })
             .orderBy("escalada.data", "DESC");
 
         if (limit) {

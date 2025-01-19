@@ -33,7 +33,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { "token": token, "userId": user.id, auth: true };
+        return { "token": token, "usuarioId": user.id, auth: true };
     }
 
     async googleLogin(authorizationCode: string): Promise<any> {
@@ -48,9 +48,9 @@ class AuthService {
         }
 
         const payload = await this.googleService.getPayloadFromToken(idToken);
-        const { sub: userId, email, name } = payload;
+        const { sub: usuarioId, email, name } = payload;
 
-        if (!userId || !email || !name) {
+        if (!usuarioId || !email || !name) {
             throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
         }
 
@@ -67,11 +67,11 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, userId: user.id, auth: true };
+        return { token, usuarioId: user.id, auth: true };
     }
 
-    generateToken(userId: string): string {
-        return jwt.sign({ userId }, this.secretKey);
+    generateToken(usuarioId: string): string {
+        return jwt.sign({ usuarioId: usuarioId }, this.secretKey);
     }
 
     setSecretKey(secretKey: string) {

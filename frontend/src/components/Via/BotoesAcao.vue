@@ -115,7 +115,12 @@ const toggleEscaladaModal = () => {
 const openCollectionModal = async () => {
   if (props.via) {
     try {
-      const result = await ColecaoService.getCollecoesNotContainingVia(props.via.id, 1, 10);
+      const usuarioId = Number(localStorage.getItem('usuarioId'));
+      const result = await ColecaoService.getCollecoesNotContainingVia(
+        props.via.id,
+        1,
+        10
+      );
       colecoes.value = result.colecoes;
       showCollectionModal.value = true;
     } catch (error) {

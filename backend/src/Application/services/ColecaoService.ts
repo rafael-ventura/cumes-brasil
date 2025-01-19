@@ -46,10 +46,22 @@ export class ColecaoService {
     await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
   }
 
-  async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
-    colecoes: Colecao[],
-    total: number
-  }> {
-    return this.colecaoRepo.getColecoesNotContainingVia(viaId, page, limit);
+  async getColecoesNotContainingViaForUser (
+    viaId: number,
+    usuarioId: number,
+    page: number,
+    limit: number
+  ): Promise<{ colecoes: Colecao[]; total: number }> {
+    if (!usuarioId || !viaId) {
+      throw new Error('Parâmetros inválidos: usuário ou via ausente.');
+    }
+
+    return await this.colecaoRepo.getColecoesNotContainingViaForUser(
+      viaId,
+      usuarioId,
+      page,
+      limit
+    );
   }
+
 }

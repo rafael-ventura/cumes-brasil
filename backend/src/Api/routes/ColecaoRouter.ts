@@ -18,6 +18,6 @@ ColecaoRouter.delete("/:id", colecaoController.deleteColecao);
 ColecaoRouter.post("/adicionarVia", colecaoController.adicionarVia);
 ColecaoRouter.post("/removerVia", colecaoController.removeVia);
 ColecaoRouter.get("/usuario/:id", colecaoController.getByUsuarioId);
-ColecaoRouter.get('/not-containing-via/:viaId', colecaoController.getColecoesNotContainingVia);
+ColecaoRouter.get('/not-containing-via/:viaId', colecaoController.getColecoesNotContainingViaForUser);
 
 export default ColecaoRouter;

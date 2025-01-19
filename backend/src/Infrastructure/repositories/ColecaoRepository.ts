@@ -83,26 +83,29 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
         });
     }
 
-
-    async getColecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
-        colecoes: Colecao[],
-        total: number
-    }> {
+    async getColecoesNotContainingViaForUser (
+      viaId: number,
+      usuarioId: number,
+      page: number,
+      limit: number
+    ): Promise<{ colecoes: Colecao[]; total: number }> {
         const subQuery = AppDataSource.getRepository(ViaColecao)
           .createQueryBuilder('via_colecao')
           .select('via_colecao.colecaoId')
           .where('via_colecao.viaId = :viaId', { viaId });
 
-        const [colecoes, total] = await this.repository.createQueryBuilder('colecao')
+        const [colecoes, total] = await this.repository
+          .createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .where(`colecao.id NOT IN (${subQuery.getQuery()})`)
+          .where('colecao.usuario.id = :usuarioId', { usuarioId })
+          .andWhere(`colecao.id NOT IN (${subQuery.getQuery()})`)
           .setParameters(subQuery.getParameters())
           .skip((page - 1) * limit)
           .take(limit)
           .getManyAndCount();
 
         return {
-            colecoes: colecoes as Colecao[], // Garantir que o TypeScript entenda o tipo
+            colecoes,
             total
         };
     }

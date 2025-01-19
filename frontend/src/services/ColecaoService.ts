@@ -93,24 +93,6 @@ class ColecaoService {
     }
   }
 
-  async getCollecoesNotContainingVia (viaId: number, page: number, limit: number): Promise<{
-    colecoes: IColecao[];
-    total: number
-  }> {
-    const response = await api.get(`/colecoes/not-containing-via/${viaId}`, {
-      params: {
-        page,
-        limit
-      }
-    });
-    response.data.colecoes.forEach(adjustImageUrls);
-    return response.data;
-  }
-
-  async searchByName (query: string): Promise<IColecao[] | undefined> {
-    return this.search({ name: query });
-  }
-
   async search (filters: any): Promise<IColecao[] | undefined> {
     return this.getColecoes('/colecoes/search', filters);
   }
@@ -149,6 +131,23 @@ class ColecaoService {
 
     const compare = this.getComparator(order, key);
     return [...vias].sort(compare);
+  }
+
+  async getCollecoesNotContainingVia (
+    viaId: number,
+    page: number,
+    limit: number
+  ): Promise<{ colecoes: IColecao[]; total: number }> {
+    const usuarioId = localStorage.getItem('usuarioId');
+    const response = await api.get(`/colecoes/not-containing-via/${viaId}`, {
+      params: {
+        usuarioId,
+        page,
+        limit
+      }
+    });
+    response.data.colecoes.forEach(adjustImageUrls);
+    return response.data;
   }
 
   // Métodos privados para evitar redundância e melhorar a manutenção

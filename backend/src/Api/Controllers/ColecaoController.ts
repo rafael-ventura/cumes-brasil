@@ -158,19 +158,24 @@ export class ColecaoController {
      * @returns {Array.<Colecao>} 200 - Colecoes encontradas
      * @returns {Error} 500 - Erro desconhecido
      */
-    getColecoesNotContainingVia = async (req: Request, res: Response) => {
+    getColecoesNotContainingViaForUser = async (req: Request, res: Response) => {
         try {
             const viaId = Number(req.params.viaId);
+            const usuarioId = Number(req.query.usuarioId);
             const page = Number(req.query.page) || 1;
             const limit = Number(req.query.limit) || 10;
-            const result = await this.service.getColecoesNotContainingVia(viaId, page, limit);
-            res.json(result);
+            console.log(req.query);
+            const result = await this.service.getColecoesNotContainingViaForUser(
+              viaId,
+              usuarioId,
+              page,
+              limit
+            );
+
+            res.status(200).json(result);
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(500).json({ error: error.message });
-            } else {
-                res.status(500).json({ error: 'Ocorreu um erro desconhecido em controller getColecoesNotContainingVia' });
-            }
+            console.error('Erro no getColecoesNotContainingViaForUser:', error);
+            res.status(500).json({ error: 'Erro interno no servidor.' });
         }
     };
 
