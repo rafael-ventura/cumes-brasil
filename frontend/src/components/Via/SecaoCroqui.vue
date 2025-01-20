@@ -90,13 +90,16 @@ const prevImage = () => {
   }
 };
 
-const downloadImage = async (image: { url: string; nome: string } | { nome: string; url: null }) => {
-  if (!image?.url) return;
+const downloadImage = async (image) => {
+  if (!image?.url) {
+    console.error('URL inválida ou ausente.');
+    return;
+  }
 
   try {
     const response = await fetch(image.url);
     if (!response.ok) {
-      console.error('Erro ao baixar a imagem:', response.statusText);
+      console.error(`Erro HTTP: ${response.status} - ${response.statusText}`);
       return;
     }
 
@@ -112,7 +115,9 @@ onMounted(() => {
     url: croqui.imagem.url,
     nome: croqui.nome
   }));
+  console.log(images.value);
 });
+
 </script>
 
 <style scoped lang="scss">
