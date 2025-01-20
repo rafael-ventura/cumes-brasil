@@ -1,97 +1,88 @@
 <template>
-  <q-dialog v-model="localIsOpen" @hide="handleHide" @show="onDialogShow">
-    <q-card class="q-dialog-plugin">
-      <q-card-section>
-        <div class="text-h6">Adicionar Via a uma Coleção</div>
-        <ItemSugestao
-          :items="vias"
-          itemType="via"
-          @add-item="addViaToCollection"
-          :loadMoreItems="loadMoreVias"
-        />
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn flat label="Cancelar" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <ItemSelectorModal
+    :isOpen="localIsOpen"
+    title="Adicionar Via a uma Coleção"
+    :fetchItems="fetchViasNotInColecao"
+    :addItemToTarget="adicionarViaNaColecao"
+    itemType="via"
+    @update:isOpen="localIsOpen = $event"
+    @item-added="onViaAdded"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { Via } from 'src/models/Via';
 import ColecaoService from 'src/services/ColecaoService';
-import ItemSugestao from '../ItemSugestao.vue';
+import { Via } from 'src/models/Via';
+import ItemSelectorModal from 'components/Colecao/ItemSelectorModal.vue';
 
-interface ViaWithAdded extends Via {
-  added?: boolean;
-}
 const props = defineProps<{ isOpen: boolean; colecaoId: number }>();
-const emit = defineEmits(['atualizar:isOpen', 'via-added']);
+const emit = defineEmits(['update:isOpen', 'via-added']);
 const localIsOpen = ref(props.isOpen);
-const vias = ref<ViaWithAdded[]>([]);
-const currentPage = ref(1);
-const loadingMore = ref(false); // Controle de carregamento
 
 watch(() => props.isOpen, (newVal) => {
   localIsOpen.value = newVal;
 });
 
-watch(localIsOpen, (newVal) => {
-  emit('atualizar:isOpen', newVal);
-});
-
-const resetVias = () => {
-  vias.value = [];
-  currentPage.value = 1; // Resetar a página atual
-};
-
-const loadViasNotInColecao = async (page = 1) => {
+const fetchViasNotInColecao = async (page: number, limit: number) => {
   try {
-    const result = await ColecaoService.listarViasForaDaColecao(props.colecaoId, page, 10);
-    const novasVias = result.vias.map(via => ({
-      ...via,
-      added: false
-    }));
-    vias.value = page === 1 ? novasVias : [...vias.value, ...novasVias];
+    const result = await ColecaoService.listarViasForaDaColecao(props.colecaoId, page, limit);
+    return {
+      items: result.vias,
+      total: result.total
+    };
   } catch (error) {
     console.error('Erro ao buscar vias:', error);
+    return {
+      items: [],
+      total: 0
+    };
   }
 };
 
-// Função para carregar mais vias
-const loadMoreVias = async () => {
-  if (loadingMore.value) return;
-  loadingMore.value = true;
-  currentPage.value += 1; // Incrementar a página
-  await loadViasNotInColecao(currentPage.value); // Carregar mais vias
-  loadingMore.value = false;
-};
-
-const addViaToCollection = async (via: ViaWithAdded) => {
+const adicionarViaNaColecao = async (viaId: number) => {
   try {
-    await ColecaoService.adicionarViaNaColecao(props.colecaoId, via.id);
-    via.added = true;
-    vias.value = vias.value.filter(v => v.id !== via.id);
-    emit('via-added', via);
+    await ColecaoService.adicionarViaNaColecao(props.colecaoId, viaId);
   } catch (error) {
     console.error('Erro ao adicionar via à coleção:', error);
+    throw error;
   }
 };
 
-const handleHide = () => {
-  emit('atualizar:isOpen', false);
-};
-
-const onDialogShow = async () => {
-  resetVias();
-  await loadViasNotInColecao();
+const onViaAdded = (via: Via) => {
+  emit('via-added', via);
 };
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
 .q-dialog-plugin {
   min-width: 400px;
+  max-height: 450px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .q-pagination {
+    flex-grow: 1;
+    margin-left: 16px;
+  }
+
+  .items-per-page-select {
+    width: 120px;
+  }
+
+  .q-btn {
+    color: $cumes-03;
+    background-color: transparent;
+  }
 }
 </style>

@@ -76,15 +76,17 @@ class ColecaoService {
     limite = 10
   ): Promise<{ vias: Via[]; total: number }> {
     try {
+      const usuarioId = localStorage.getItem('usuarioId');
       const resposta = await api.get(`/vias/colecao/not/${colecaoId}`, {
         params: {
           page: pagina,
-          limit: limite
-        }
+          limit: limite,
+          usuarioId: usuarioId // Passa o ID do usuário logado
+        },
       });
 
       const vias = resposta.data.vias.map(formatVia);
-      vias.forEach(via => adjustImageUrls(via.imagem));
+      vias.forEach((via) => adjustImageUrls(via.imagem));
       return {
         vias,
         total: resposta.data.total

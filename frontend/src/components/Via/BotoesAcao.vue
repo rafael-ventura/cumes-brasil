@@ -1,5 +1,6 @@
 <template>
   <div class="botoes-acao">
+    <!-- Botão para registrar escalada -->
     <q-btn @click="toggleEscaladaModal" class="btn-acao registrar">
       <q-icon name="add_circle" />
       <span>Registrar Escalada</span>
@@ -11,21 +12,25 @@
       <span>{{ isFavorited ? 'Remover de Favoritos' : 'Adicionar a Favoritos' }}</span>
     </q-btn>
 
-    <q-btn @click="openCollectionModal" class="btn-acao colecao">
+    <!-- Botão para abrir o modal de coleções -->
+    <q-btn @click="toggleCollectionModal" class="btn-acao colecao">
       <q-icon name="style" />
       <span>Adicionar a Coleção</span>
     </q-btn>
 
-    <!-- Modal de criação de escalada -->
+    <!-- Modal reutilizável para adicionar a coleção -->
+    <ItemSelectorModal
+      :isOpen="showCollectionModal"
+      title="Adicionar a Coleção"
+      :fetchItems="fetchColecoesSemVia"
+      :addItemToTarget="adicionarViaNaColecao"
+      itemType="colecao"
+      @update:isOpen="showCollectionModal = $event"
+      @item-added="onColecaoAdded"
+    />
+
+    <!-- Modal para registrar escalada -->
     <ModalCriarEscalada :isOpen="showEscaladaModal" @closeModal="toggleEscaladaModal" />
-    <q-dialog v-model="showCollectionModal">
-      <q-card class="collection-card">
-        <q-card-section class="collection-header">Adicionar a Coleção</q-card-section>
-        <q-card-section class="collection-content">
-          <ItemSugestao :items="colecoes" @add-item="addToCollection" item-type="colecao" />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
@@ -34,20 +39,18 @@ import { onMounted, ref } from 'vue';
 import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
-import ItemSugestao from 'components/ItemSugestao.vue';
-import { IColecao } from 'src/models/IColecao';
+import ItemSelectorModal from 'components/Colecao/ItemSelectorModal.vue';
 import { createNotifyConfig } from 'src/utils/utils';
 
 const props = defineProps({
-  via: Object,
-  favoriteCollectionId: Number
+  via: Object, // A via atualmente sendo manipulada
+  favoriteCollectionId: Number // ID da coleção de favoritos
 });
 const emit = defineEmits(['atualizar:isFavorited']);
 
-const isFavorited = ref(false);
-const showEscaladaModal = ref(false);
-const showCollectionModal = ref(false);
-const colecoes = ref<IColecao[]>([]);
+const isFavorited = ref(false); // Controle do status de favorito
+const showEscaladaModal = ref(false); // Controle de exibição do modal de escalada
+const showCollectionModal = ref(false); // Controle de exibição do modal de coleções
 
 // Verifica se a via está na coleção favorita ao montar o componente
 const checkIfFavorited = async () => {
@@ -72,7 +75,7 @@ const toggleFavoriteStatus = async () => {
   }
 };
 
-// Adiciona aos favoritos
+// Adiciona a via aos favoritos
 const addToFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
@@ -80,12 +83,12 @@ const addToFavorites = async () => {
       updateFavoriteStatus(true, 'Via adicionada a favoritos!');
     } catch (error) {
       console.error('Erro ao adicionar aos favoritos:', error);
-      Notify.create(createNotifyConfig('negative', 'Erro ao dicionar aos favoritos', 'top-right'));
+      Notify.create(createNotifyConfig('negative', 'Erro ao adicionar aos favoritos', 'top-right'));
     }
   }
 };
 
-// Remove dos favoritos
+// Remove a via dos favoritos
 const removeFromFavorites = async () => {
   if (props.favoriteCollectionId && props.via) {
     try {
@@ -98,49 +101,62 @@ const removeFromFavorites = async () => {
   }
 };
 
+// Atualiza o status de favorito e exibe uma notificação
 const updateFavoriteStatus = (status: boolean, message: string) => {
   isFavorited.value = status;
   emit('atualizar:isFavorited', status);
-  if (status) {
-    Notify.create(createNotifyConfig('positive', message, 'top-right'));
-  } else {
-    Notify.create(createNotifyConfig('negative', message, 'top-right'));
-  }
+  Notify.create(createNotifyConfig(status ? 'positive' : 'negative', message, 'top-right'));
 };
 
+// Alterna a exibição do modal de escalada
 const toggleEscaladaModal = () => {
   showEscaladaModal.value = !showEscaladaModal.value;
 };
 
-const openCollectionModal = async () => {
+// Alterna a exibição do modal de coleções
+const toggleCollectionModal = () => {
+  showCollectionModal.value = !showCollectionModal.value;
+};
+
+// Busca coleções em que a via não está presente
+const fetchColecoesSemVia = async (page: number, limit: number) => {
   if (props.via) {
     try {
-      Number(localStorage.getItem('usuarioId'));
-      const result = await ColecaoService.listarColecoesSemVia(
-        props.via.id,
-        1,
-        10
-      );
-      colecoes.value = result.colecoes;
-      showCollectionModal.value = true;
+      const result = await ColecaoService.listarColecoesSemVia(props.via.id, page, limit);
+      return {
+        items: result.colecoes,
+        total: result.total
+      };
     } catch (error) {
       console.error('Erro ao buscar coleções:', error);
+      return {
+        items: [],
+        total: 0
+      };
     }
   }
+  return {
+    items: [],
+    total: 0
+  };
 };
 
-const addToCollection = async (colecao: IColecao) => {
+// Adiciona a via à coleção selecionada
+const adicionarViaNaColecao = async (colecaoId: number) => {
   if (props.via) {
     try {
-      await ColecaoService.adicionarViaNaColecao(colecao.id, props.via.id);
-      Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
+      await ColecaoService.adicionarViaNaColecao(colecaoId, props.via.id);
     } catch (error) {
       console.error('Erro ao adicionar à coleção:', error);
-      Notify.create(createNotifyConfig('negative', 'Erro ao adicionar à coleção', 'top-right'));
+      throw error;
     }
   }
 };
 
+// Callback quando uma coleção é adicionada
+const onColecaoAdded = () => {
+  Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
+};
 </script>
 
 <style scoped lang="scss">
@@ -158,10 +174,10 @@ const addToCollection = async (colecao: IColecao) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px; /* Mantém bordas levemente arredondadas */
-  width: 100px; /* Define a largura para 100px */
-  height: 100px; /* Define a altura para 100px */
-  flex-direction: column; /* Alinha o ícone e o texto verticalmente */
+  border-radius: 8px;
+  width: 100px;
+  height: 100px;
+  flex-direction: column;
   font-size: 14px;
   text-align: center;
 }

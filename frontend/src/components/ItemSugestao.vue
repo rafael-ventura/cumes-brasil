@@ -71,7 +71,7 @@ const emit = defineEmits(['add-item']);
 
 // Estados locais
 const unifiedSearch = ref('');
-const placeholderImage = props.placeholderImage || 'https://via.placeholder.com/50';
+const placeholderImage = props.placeholderImage || import.meta.env.VITE_APP_SERVER_IP + '/assets/via-default-01.jpg';
 const loadingMore = ref(false);
 
 // Lógica de filtragem unificada

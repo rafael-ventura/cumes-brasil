@@ -82,14 +82,15 @@ export class ViaRepository implements ISearchRepository<Via>{
     const subQuery = AppDataSource.getRepository(ViaColecao)
       .createQueryBuilder('via_colecao')
       .select('via_colecao.viaId')
-      .where('via_colecao.colecaoId = :colecaoId', { colecaoId });
+      .innerJoin('via_colecao.colecao', 'colecao')
+      .where('via_colecao.colecaoId = :colecaoId', { colecaoId })
+      .andWhere('colecao.usuarioId = :usuarioId', { usuarioId }); // Filtro pelo usuário
 
     const [vias, total] = await this.repository
       .createQueryBuilder('via')
       .leftJoinAndSelect('via.montanha', 'montanha')
       .leftJoinAndSelect('via.imagem', 'imagem')
-      .where(`via.id NOT IN (${subQuery.getQuery()})`)
-      .andWhere('montanha.usuarioId = :usuarioId', { usuarioId })
+      .where(`via.id NOT IN (${subQuery.getQuery()})`) // Vias não pertencentes à coleção
       .setParameters(subQuery.getParameters())
       .skip((page - 1) * limit)
       .take(limit)
