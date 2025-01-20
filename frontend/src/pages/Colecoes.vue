@@ -14,7 +14,7 @@
 
       <template #filters="{ filters }">
         <BuscaFiltros :entity="'colecao'" :filters="filters" :enabledFilters="['searchQuery']"
-                      @applyFilters="applyFilters" unifiedSearchLabel="Nome da Coleção" />
+                      @applyFilters="handleApplyFilters" unifiedSearchLabel="Nome da Coleção" />
       </template>
     </Busca>
 
@@ -58,6 +58,7 @@ const addColecao = async (colecaoPreenchida: IColecao) => {
     await ColecaoService.criarColecao(colecaoPreenchida);
     colecoes.value = await ColecaoService.listarColecoesPorUsuario();
     isAddColecaoModalOpen.value = false;
+    handleApplyFilters({ page: 1 });
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);
   }
@@ -73,7 +74,7 @@ onMounted(async () => {
   }
 });
 
-const applyFilters = (filters: any) => {
+const handleApplyFilters = (filters: any) => {
   if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
     searchEntityRef.value.handleApplyFilters(filters);
   } else {

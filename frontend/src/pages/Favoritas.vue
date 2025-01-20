@@ -38,7 +38,7 @@ async function fetchFavoritasColecao () {
     const colecao = await ColecaoService.obterColecaoFavoritos();
     if (colecao?.id) {
       colecaoId.value = colecao.id; // Atualiza o filtro
-      await applyFilters({ colecaoId: colecao.id }); // Aplica os filtros após buscar a coleção
+      await handleApplyFilters({ colecaoId: colecao.id }); // Aplica os filtros após buscar a coleção
     } else {
       console.warn('Nenhuma coleção de favoritas encontrada.');
       colecaoId.value = null;
@@ -55,7 +55,7 @@ onMounted(async () => {
 });
 
 // Funções auxiliares
-const applyFilters = (filters: any) => {
+const handleApplyFilters = (filters: any) => {
   if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
     searchEntityRef.value.handleApplyFilters(filters);
   } else {
@@ -100,7 +100,7 @@ const viaAdded = () => {
           :filters="filters"
           :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
           :staticFilters="{ colecaoId: colecaoId }"
-          @applyFilters="applyFilters"
+          @applyFilters="handleApplyFilters"
           unifiedSearchLabel="Buscar Via"
           :entity="'via'"
         />
