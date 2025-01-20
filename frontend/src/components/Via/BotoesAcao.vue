@@ -115,7 +115,7 @@ const toggleEscaladaModal = () => {
 const openCollectionModal = async () => {
   if (props.via) {
     try {
-      const usuarioId = Number(localStorage.getItem('usuarioId'));
+      Number(localStorage.getItem('usuarioId'));
       const result = await ColecaoService.listarColecoesSemVia(
         props.via.id,
         1,

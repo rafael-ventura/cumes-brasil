@@ -90,7 +90,7 @@ const prevImage = () => {
   }
 };
 
-const downloadImage = async (image) => {
+const downloadImage = async (image: { url: string; nome: string }) => {
   if (!image?.url) {
     console.error('URL inválida ou ausente.');
     return;

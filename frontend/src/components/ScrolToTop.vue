@@ -3,6 +3,7 @@
     v-if="showScrollToTop"
     class="scroll-to-top"
     icon="arrow_upward"
+    color="primary"
     dense
     @click="scrollToTop"
   />
@@ -45,6 +46,6 @@ onUnmounted(() => {
   bottom: 95px;
   right: 5px;
   z-index: 1000;
-  box-shadow: none; /* Remove a sombra para combinar com o design */
+  box-shadow: none;
 }
 </style>

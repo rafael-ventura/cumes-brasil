@@ -21,8 +21,7 @@ class ColecaoService {
   async listarColecoesPorUsuario (): Promise<IColecao[]> {
     try {
       const usuarioId = localStorage.getItem('usuarioId');
-      const colecoes = await this.buscarColecoes(`/colecoes/usuario/${usuarioId}`);
-      return colecoes;
+      return await this.buscarColecoes(`/colecoes/usuario/${usuarioId}`);
     } catch (erro) {
       handleApiError(erro, 'Erro ao listar coleções do usuário.');
       return [];

@@ -13,7 +13,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
 const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
-const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:3000'; // URL do frontend
+const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200'; // URL do frontend
 
 app.use(
   cors({
