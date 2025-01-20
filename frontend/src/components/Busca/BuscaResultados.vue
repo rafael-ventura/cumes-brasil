@@ -19,14 +19,14 @@
       />
     </div>
     <!-- Renderiza ViaCard se entityType for 'via' -->
-    <div v-if="entityType === 'via'">
+    <div v-if="entityType === 'via' && sortedResults">
       <ViaLista :vias="sortedResults as Via[]" />
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
-    <div v-else-if="entityType === 'colecao'">
+    <div v-else-if="entityType === 'colecao' && sortedResults">
       <ColecaoLista :colecoes="sortedResults as IColecao[]" />
     </div>
-    <div v-else-if="entityType === 'escalada'">
+    <div v-else-if="entityType === 'escalada' && sortedResults">
       <EscaladaCard
         v-for="escalada in sortedResults"
         :key="escalada.id"
@@ -50,14 +50,29 @@ import { IColecao } from 'src/models/IColecao';
 import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
 import { Escalada } from 'src/models/Escalada';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-const props = defineProps<{
-  results:(Via | IColecao | Escalada)[];
+// Define the type for the props
+interface BuscaResultadosProps {
+  results: (Via | IColecao | Escalada)[];
   entityType: 'via' | 'colecao' | 'escalada';
   totalItems?: number;
   initialSort?: { field: string, direction: 'asc' | 'desc' };
-  enableSortOptions?: { field: string, label: string }[]; // Novo campo para customizar opções de ordenação
-}>();
+  enableSortOptions?: { field: string, label: string }[];
+}
+
+// Use defineProps without the type argument
+const props = defineProps({
+  results: {
+    type: Array,
+    default: () => []
+  },
+  entityType: {
+    type: String,
+    required: true
+  },
+  totalItems: Number,
+  initialSort: Object,
+  enableSortOptions: Array
+});
 
 const emit = defineEmits(['select', 'change-sort']);
 

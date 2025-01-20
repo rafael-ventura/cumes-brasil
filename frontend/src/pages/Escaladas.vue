@@ -6,7 +6,7 @@
     <Busca
       ref="searchEntityRef"
       entity="escalada"
-      @update-results="updateSearchResults"
+      @atualizar-results="updateSearchResults"
       :hideHeader="true"
       :enableSortOptions="[{ field: 'data', label: 'Data' }]"
     >

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import {ref, onMounted, computed, onBeforeMount} from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
@@ -27,10 +27,10 @@ const isAddViaModalOpen = ref(false);
 const usuarioId = computed(() => window.localStorage.getItem('usuarioId') || null);
 
 // Função para buscar a coleção de favoritas
-async function fetchFavoritasColecao () {
+async function fetchFavoritasColecao() {
   if (!usuarioId.value) {
     console.error('Usuário não logado.');
-    router.push('/auth/login');
+    await router.push('/auth/login');
     return;
   }
 
@@ -38,6 +38,7 @@ async function fetchFavoritasColecao () {
     const colecao = await ColecaoService.obterColecaoFavoritos();
     if (colecao?.id) {
       colecaoId.value = colecao.id; // Atualiza o filtro
+      await applyFilters({ colecaoId: colecao.id }); // Aplica os filtros após buscar a coleção
     } else {
       console.warn('Nenhuma coleção de favoritas encontrada.');
       colecaoId.value = null;
@@ -55,7 +56,11 @@ onMounted(async () => {
 
 // Funções auxiliares
 const applyFilters = (filters: any) => {
-  searchEntityRef.value?.handleApplyFilters(filters);
+  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
+    searchEntityRef.value.handleApplyFilters(filters);
+  } else {
+    console.error('Busca ref not found or handleApplyFilters not defined');
+  }
 };
 
 const goToViaDetalhada = (via: any) => {
@@ -78,10 +83,11 @@ const viaAdded = () => {
 
     <!-- Componente de Busca -->
     <Busca
+      v-if="colecaoId"
       ref="searchEntityRef"
       entity="via"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
-      :staticFilters="{ colecaoId: colecaoId, usuarioId: usuarioId }"
+      :staticFilters="{ colecaoId: colecaoId }"
       :hideHeader="true"
       @select="goToViaDetalhada"
     >
@@ -93,7 +99,7 @@ const viaAdded = () => {
         <BuscaFiltros
           :filters="filters"
           :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
-          :staticFilters="{ colecaoId: colecaoId, usuarioId: usuarioId }"
+          :staticFilters="{ colecaoId: colecaoId }"
           @applyFilters="applyFilters"
           unifiedSearchLabel="Buscar Via"
           :entity="'via'"
