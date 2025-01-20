@@ -43,9 +43,9 @@ import ItemSugestao from '../ItemSugestao.vue';
 const props = defineProps<{
   isOpen: boolean;
   title: string;
-  fetchItems: (page: number, limit: number) => Promise<{ items: any[]; total: number }>;
+  fetchItems:(page: number, limit: number) => Promise<{ items: any[]; total: number }>;
   addItemToTarget: (itemId: number) => Promise<void>;
-  itemType: string;
+  itemType: 'via' | 'colecao';
 }>();
 
 const emit = defineEmits(['update:isOpen', 'item-added']);

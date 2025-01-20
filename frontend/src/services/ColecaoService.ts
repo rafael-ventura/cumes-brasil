@@ -81,12 +81,12 @@ class ColecaoService {
         params: {
           page: pagina,
           limit: limite,
-          usuarioId: usuarioId // Passa o ID do usuário logado
-        },
+          usuarioId
+        }
       });
 
       const vias = resposta.data.vias.map(formatVia);
-      vias.forEach((via) => adjustImageUrls(via.imagem));
+      vias.forEach((via: any) => adjustImageUrls(via.imagem));
       return {
         vias,
         total: resposta.data.total
@@ -170,7 +170,7 @@ class ColecaoService {
     try {
       const resposta = await api.get(url);
       const colecoes = resposta.data;
-      colecoes.forEach(c => c.imagem && adjustImageUrls(c.imagem));
+      colecoes.forEach((c: IColecao) => c.imagem && adjustImageUrls(c.imagem));
       return colecoes;
     } catch (erro) {
       handleApiError(erro, 'Erro ao buscar coleções.');
@@ -182,7 +182,7 @@ class ColecaoService {
     try {
       const resposta = await api.get(url);
       const vias = resposta.data.vias.map(formatVia);
-      vias.forEach(via => adjustImageUrls(via.imagem));
+      vias.forEach((via: any) => adjustImageUrls(via.imagem));
       return vias;
     } catch (erro) {
       handleApiError(erro, 'Erro ao buscar vias.');

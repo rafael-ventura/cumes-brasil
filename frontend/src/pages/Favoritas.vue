@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, computed, onBeforeMount} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
@@ -27,7 +27,7 @@ const isAddViaModalOpen = ref(false);
 const usuarioId = computed(() => window.localStorage.getItem('usuarioId') || null);
 
 // Função para buscar a coleção de favoritas
-async function fetchFavoritasColecao() {
+async function fetchFavoritasColecao () {
   if (!usuarioId.value) {
     console.error('Usuário não logado.');
     await router.push('/auth/login');

@@ -48,16 +48,6 @@ import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
 import { IColecao } from 'src/models/IColecao';
 import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
-import { Escalada } from 'src/models/Escalada';
-
-// Define the type for the props
-interface BuscaResultadosProps {
-  results: (Via | IColecao | Escalada)[];
-  entityType: 'via' | 'colecao' | 'escalada';
-  totalItems?: number;
-  initialSort?: { field: string, direction: 'asc' | 'desc' };
-  enableSortOptions?: { field: string, label: string }[];
-}
 
 // Use defineProps without the type argument
 const props = defineProps({
@@ -92,9 +82,7 @@ const filteredSortOptions = computed(() => {
   }
 
   // Filtrar as opções com base nas permitidas pelo componente pai
-  return defaultSortOptions.value.filter(option =>
-    props.enableSortOptions?.some(sortOption => sortOption.field === option.value.field)
-  );
+  return defaultSortOptions.value.filter(option => props.enableSortOptions?.some((sortOption: any) => sortOption.field === option.value.field));
 });
 
 // Ordenação atual
