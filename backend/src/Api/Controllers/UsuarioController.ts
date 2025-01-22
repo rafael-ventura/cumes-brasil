@@ -62,6 +62,23 @@ export class UsuarioController {
         }
     };
 
+    editarFotoPerfil = async (req: Request, res: Response) => {
+        try {
+            console.log("entrei controller")
+            const usuarioId = req.user.usuarioId
+            console.log('usuario', usuarioId)
+            const file = req.file
+            console.log('file', file)
+            await this.service.atualizarFotoPerfil(usuarioId, file);
+            res.status(200).json({ message: 'Usuario atualizado com sucesso.' });
+        } catch (error) {
+            if (error instanceof Error && error.message === 'Usuario não encontrado') {
+                return res.status(404).json({ message: error.message });
+            }
+            res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
+        }
+    };
+
     delete = async (req: Request, res: Response) => {
         try {
             const id = parseInt(req.params.id);
@@ -92,13 +109,7 @@ export class UsuarioController {
         try {
             const usuarioId = parseInt(req.user.usuarioId);
             const usuarioDados: any = req.body;
-
-            if (!req.file && Object.keys(req.body).length === 0) {
-                return res.status(400).json({ message: 'Nenhum dado enviado para atualização.' });
-            }
-
-            const file = req.file;
-            await this.service.editarDados(usuarioId, usuarioDados, file);
+            await this.service.editarDados(usuarioId, usuarioDados);
 
             res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
         } catch (error) {

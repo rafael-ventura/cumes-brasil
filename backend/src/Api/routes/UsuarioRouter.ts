@@ -9,7 +9,7 @@ import { ImagemRepository } from '../../Infrastructure/repositories/ImagemReposi
 import { authenticateToken } from "../Middlewares/AuthenticateMiddleware";
 import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository());
+const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 const usuarioController = new UsuarioController(usuarioService);
 
 const UsuarioRouter = Router();
@@ -17,7 +17,8 @@ const UsuarioRouter = Router();
 UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.get("/", usuarioController.getAll);
 UsuarioRouter.post("/", usuarioController.registrar);
-UsuarioRouter.put('/', authenticateToken, MulterMiddleware.upload, usuarioController.editarDados);
+UsuarioRouter.put('/', authenticateToken, usuarioController.editarDados);
+UsuarioRouter.put('/perfil/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);
 UsuarioRouter.delete("/:id", usuarioController.delete);
 
 // perfil do usuario

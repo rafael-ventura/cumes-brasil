@@ -1,5 +1,5 @@
-import { Imagem } from "../../Domain/entities/Imagem";
-import { AppDataSource } from "../config/db";
+import {Imagem} from "../../Domain/entities/Imagem";
+import {AppDataSource} from "../config/db";
 
 export class ImagemRepository {
   private repository = AppDataSource.getRepository(Imagem);
@@ -17,8 +17,10 @@ export class ImagemRepository {
       .getMany();
   }
 
-  async create (imagem: Partial<Imagem>): Promise<void> {
-    await this.repository.insert(imagem);
+  async create(imagem: Partial<Imagem>): Promise<Imagem> {
+    console.log("repo create imagem");
+     // Salva a entidade
+    return await this.repository.save(imagem); // Retorna a entidade salva com o ID e outros campos preenchidos
   }
 
   async update (id: number, imagemData: Partial<Imagem>): Promise<void> {

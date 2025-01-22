@@ -10,14 +10,18 @@ import UserValidation from "../validations/UserValidation";
 import BadRequestError from "../errors/BadRequestError";
 import InvalidTokenError from "../errors/InvalidTokenError";
 import GoogleAuthenticateService from "./GoogleAuthenticateService";
+import {Imagem} from "../../Domain/entities/Imagem";
+import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
 
 class AuthService {
     private userRepository: UsuarioRepository;
+    private imagemRepository: ImagemRepository;
     private secretKey: string = "";
     private googleService: GoogleAuthenticateService;
 
     constructor() {
         this.userRepository = new UsuarioRepository();
+        this.imagemRepository = new ImagemRepository();
         this.googleService = new GoogleAuthenticateService();
         this.secretKey = process.env.SECRET_KEY || "";
     }
@@ -48,16 +52,35 @@ class AuthService {
         }
 
         const payload = await this.googleService.getPayloadFromToken(idToken);
-        const { sub: usuarioId, email, name } = payload;
+        console.log('payload', payload)
+        const { sub: usuarioId, email, name, picture } = payload;
 
         if (!usuarioId || !email || !name) {
             throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
         }
 
         let user = await this.userRepository.findByEmail(email);
+        console.log("?????")
         if (!user) {
+            console.log("nao tem user")
             const passwordHash = await bcrypt.hash(idToken, 10);
-            await this.userRepository.create(name, email, passwordHash, 3);
+            // Use a foto do Google ou a imagem padrão (ID 3)
+            if (picture) {
+                console.log("pic")
+                let newFotoUsuario: Imagem = new Imagem();
+                newFotoUsuario.url = picture;
+                newFotoUsuario.descricao = "foto de perfil";
+                newFotoUsuario.tipo_entidade = "usuario"
+                console.log(await this.imagemRepository.create(newFotoUsuario))
+                newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
+                await this.userRepository.create(name, email, passwordHash, newFotoUsuario);
+            } else {
+                console.log("log... ?")
+                const fotoPerfil = await this.imagemRepository.getById(3)// Default image perfil foto
+                if (fotoPerfil) {
+                    await this.userRepository.create(name, email, passwordHash, fotoPerfil);
+                }
+            }
             user = await this.userRepository.findByEmail(email);
 
             if (!user) {

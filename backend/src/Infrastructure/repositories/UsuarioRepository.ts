@@ -1,6 +1,7 @@
 import { Usuario } from '../../Domain/entities/Usuario';
 import { AppDataSource } from '../config/db';
 import { Service } from 'typedi';
+import {Imagem} from "../../Domain/entities/Imagem";
 
 @Service()
 export class UsuarioRepository {
@@ -20,12 +21,12 @@ export class UsuarioRepository {
             .getMany();
     }
 
-    async create(nome: string, email: string, senhaHash: string, imagemId: number): Promise<Usuario> {
+    async create(nome: string, email: string, senhaHash: string, imagem: Imagem): Promise<Usuario> {
         return this.repository.save({
             nome,
             email,
             password_hash: senhaHash,
-            foto_perfil: imagemId
+            foto_perfil: imagem
         });
     }
 
@@ -51,7 +52,7 @@ export class UsuarioRepository {
             .getOne();
     }
 
-    async findOne(param: { where: { id: number }; relations: string[] }) {
+    async findOne(param: { where: { id: number }; relations?: string[] }) {
         return this.repository.findOne(param);
     }
 
@@ -61,5 +62,14 @@ export class UsuarioRepository {
 
     async resetPassword(usuarioId: number, userUpdated: Usuario) {
         await this.repository.update(usuarioId, userUpdated);
+    }
+
+    async updateFotoPerfil(usuarioId: number, fotoPerfilId: number): Promise<void> {
+        console.log("aq;;;", fotoPerfilId)
+        await this.repository.createQueryBuilder()
+            .update(Usuario)
+            .set({ foto_perfil: { id: fotoPerfilId } })
+            .where("id = :usuarioId", { usuarioId })
+            .execute();
     }
 }

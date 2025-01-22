@@ -23,7 +23,7 @@ export class ImagemService {
     return this.imagemRepository.getAll();
   }
 
-  async create (imagem: Imagem): Promise<void> {
+  async create (imagem: Imagem): Promise<Imagem> {
     if (!imagem) {
       throw new Error("Imagem inválida");
     }
