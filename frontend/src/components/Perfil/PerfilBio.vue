@@ -10,8 +10,8 @@
       <q-input v-else v-model="newBio" type="textarea" class="custom-input" outlined/>
     </div><br/>
     <div v-if="isEditing">
-      <q-btn flat label="Cancelar" class="btn-dark left-margem right-margem" @click="cancelEdit" />
-      <q-btn flat label="Salvar" class="btn-dark" @click="saveBio" />
+      <q-btn flat label="Cancelar" class="btn-secondary left-margem right-margem" @click="cancelEdit" />
+      <q-btn flat label="Salvar" class="btn-primary" @click="saveBio" />
     </div>
   </div>
 </template>

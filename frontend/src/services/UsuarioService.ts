@@ -60,7 +60,6 @@ class UsuarioService {
     try {
       const response = await api.get('/perfil');
       const usuario = response.data as IUsuario;
-      console.log("perfil", usuario, response)
       if (usuario.foto_perfil) {
         adjustImageUrls(usuario.foto_perfil);
       }
@@ -97,7 +96,6 @@ class UsuarioService {
 
   async editarFotoPerfil (formData: FormData) {
     try {
-      console.log("formdata", formData)
       const response = await api.put('/perfil/foto', formData);
       return response.data as IUsuario;
     } catch (error: any) {
