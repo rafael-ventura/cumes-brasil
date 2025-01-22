@@ -1,29 +1,29 @@
 <template>
-  <div class="q-pa-md q-mb-md no-wrap top-margem fundo1 border-radius-large">
+  <div class="q-pa-md q-mb-md no-wrap top-margem border-radius-large">
     <div class="row title-box border-radius-medium">
       <div class="text-h5 titulo">Predileta</div>
       <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode"/>
     </div>
     <q-separator spaced />
 
-    <!-- Novo contêiner para alinhamento -->
-    <div class="col text-left predileta-div">
+    <!-- Exibição dos detalhes da via favorita -->
+    <div class="border border-radius-medium">
       <div v-if="viaPreferida">
         <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
       </div>
       <q-card-section v-else>
         <div class="text-h6">Nenhuma predileta adicionada.</div>
       </q-card-section>
+      <div v-if="staySaved" class="space-save">
+        <q-btn flat label="Cancelar" class="btn-secondary left-margem right-margem" @click="cancelEdit" />
+        <q-btn flat label="Salvar" class="btn-primary" @click="savePreferida" />
+      </div>
     </div>
     <br/>
     <div>
       <q-dialog v-model="isModalSelect">
         <PerfilEditaFormAddPrediletaModal :viaPreferidaId="viaPreferidaId || ''" @viaPreferidaUpdate="viaPreferidaUpdate" />
       </q-dialog>
-      <div v-if="staySaved">
-        <q-btn flat label="Cancelar" class="btn-dark left-margem right-margem" @click="cancelEdit" />
-        <q-btn flat label="Salvar" class="btn-dark" @click="savePreferida" />
-      </div>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { IUsuario } from 'src/models/IUsuario';
 import ViaCardSmall from 'components/Via/ViaCardSmall.vue';
-import { ref, watch } from 'vue';
+import { watch, ref, defineEmits } from 'vue';
 import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';
@@ -85,7 +85,7 @@ const viaPreferidaUpdate = (newPreferida: Via) => {
 const savePreferida = async () => {
   try {
     if (!viaPreferida.value) {
-      console.error('Nenhuma via predileta selecionada.');
+      console.error('Nenhuma via preferida selecionada.');
       return;
     }
 
@@ -107,17 +107,17 @@ const savePreferida = async () => {
 @import "src/css/app.scss";
 .title-box{
   padding-top: 10px;
-  background-color: $background;
+  background-color: $dark;
   height: 50px;
   width: max-content;
 }
 .titulo {
-  margin-left: 5px;
-  color: $cumes-03;
+  margin-left: 16px;
+  color: $secondary;
 }
 .icon{
-  color: $background;
-  background-color: $cumes-03;
+  color: $dark;
+  background-color: $secondary;
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -125,25 +125,24 @@ const savePreferida = async () => {
   margin-right: 16px;
 }
 .custom-input{
-  border-radius: 10px;
+  background-color: $dark;
   font-size: 20px;
   color: white;
+}
+.border{
+  border: 2px solid $secondary;
+  color: white;
+}
+
+.space-save{
+  padding-block: 10px;
 }
 
 .imagem-via-predileta{
   width: 200px;
   height: 200px;
   border-radius: 10px;
-  border: 10px solid $background;
+  border: 10px solid $dark;
   object-fit: cover;
 }
-
-.predileta-div {
-  padding: 15px;
-  border-radius: 10px;
-  color: white;
-  background-color: $background;
-  border: 2px solid $cumes-03;
-}
-
 </style>

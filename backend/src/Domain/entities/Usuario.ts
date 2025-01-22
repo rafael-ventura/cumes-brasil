@@ -38,7 +38,7 @@ export class Usuario extends BaseEntity {
   via_preferida: Via;
 
   @ManyToOne(() => Imagem, imagem => imagem.usuarios)
-  foto_perfil: number;
+  foto_perfil: Imagem;
 
   @OneToMany(() => Colecao, colecao => colecao.usuario)
   colecoes: Colecao[];

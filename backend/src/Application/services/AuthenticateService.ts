@@ -10,14 +10,18 @@ import UserValidation from "../validations/UserValidation";
 import BadRequestError from "../errors/BadRequestError";
 import InvalidTokenError from "../errors/InvalidTokenError";
 import GoogleAuthenticateService from "./GoogleAuthenticateService";
+import {Imagem} from "../../Domain/entities/Imagem";
+import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
 
 class AuthService {
     private userRepository: UsuarioRepository;
+    private imagemRepository: ImagemRepository;
     private secretKey: string = "";
     private googleService: GoogleAuthenticateService;
 
     constructor() {
         this.userRepository = new UsuarioRepository();
+        this.imagemRepository = new ImagemRepository();
         this.googleService = new GoogleAuthenticateService();
         this.secretKey = process.env.SECRET_KEY || "";
     }
@@ -48,7 +52,13 @@ class AuthService {
         }
 
         const payload = await this.googleService.getPayloadFromToken(idToken);
-        const { sub: usuarioId, email, name } = payload;
+        const { sub: usuarioId, email, name, picture } = payload;
+
+        // Ajusta o tamanho da imagem para 400x400 pixels
+        let highQualityPicture = picture;
+        if (picture) {
+            highQualityPicture = picture.replace(/s96-c/, 's400-c');
+        }
 
         if (!usuarioId || !email || !name) {
             throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
@@ -57,7 +67,20 @@ class AuthService {
         let user = await this.userRepository.findByEmail(email);
         if (!user) {
             const passwordHash = await bcrypt.hash(idToken, 10);
-            await this.userRepository.create(name, email, passwordHash, 3);
+            // Use a foto do Google ou a imagem padrão (ID 3)
+            if (picture) {
+                let newFotoUsuario: Imagem = new Imagem();
+                newFotoUsuario.url = highQualityPicture;
+                newFotoUsuario.descricao = `foto de perfil do google do usuário ${name} (${usuarioId})`;
+                newFotoUsuario.tipo_entidade = "usuario"
+                newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
+                await this.userRepository.create(name, email, passwordHash, newFotoUsuario);
+            } else {
+                const fotoPerfil = await this.imagemRepository.getById(3)// Default image perfil foto
+                if (fotoPerfil) {
+                    await this.userRepository.create(name, email, passwordHash, fotoPerfil);
+                }
+            }
             user = await this.userRepository.findByEmail(email);
 
             if (!user) {

@@ -60,7 +60,6 @@ class UsuarioService {
     try {
       const response = await api.get('/perfil');
       const usuario = response.data as IUsuario;
-
       if (usuario.foto_perfil) {
         adjustImageUrls(usuario.foto_perfil);
       }
@@ -89,9 +88,15 @@ class UsuarioService {
   async editarDados (formData: FormData) {
     try {
       const response = await api.put('/perfil', formData);
-      if (response.data.foto_perfil) {
-        adjustImageUrls(response.data.foto_perfil);
-      }
+      return response.data as IUsuario;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao atualizar dados');
+    }
+  }
+
+  async editarFotoPerfil (formData: FormData) {
+    try {
+      const response = await api.put('/perfil/foto', formData);
       return response.data as IUsuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar dados');

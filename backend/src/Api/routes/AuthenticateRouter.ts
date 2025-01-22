@@ -10,7 +10,7 @@ import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
 const AuthenticateRouter = Router();
 const authController = new AuthController();
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository());
+const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 
 const usuarioController = new UsuarioController(usuarioService);
 

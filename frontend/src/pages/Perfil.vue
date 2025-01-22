@@ -23,9 +23,9 @@
             </q-item-section>
             <q-item-section>Editar Dados</q-item-section>
           </q-item>
-          <q-item flat label="Logout" clickable @click="logout" class="btn">
+          <q-item flat label="Logout" clickable @click="logout" class="btn-red">
             <q-item-section avatar>
-              <q-icon name="logout" color="negative" />
+              <q-icon name="logout" class="red" />
             </q-item-section>
             <q-item-section>Logout</q-item-section>
           </q-item>
@@ -165,6 +165,7 @@ defineOptions({
 }
 .card-config{
   border-radius: 10px;
+  background-color: $background;
 }
 
 .caixa1 {

@@ -12,6 +12,9 @@ class ImageService {
       console.warn('O caminho relativo da imagem não foi fornecido.');
       return '';
     }
+    if (relativePath.startsWith('https://')) {
+      return relativePath;
+    }
     return `${this.baseUrl}${relativePath}`;
   }
 
