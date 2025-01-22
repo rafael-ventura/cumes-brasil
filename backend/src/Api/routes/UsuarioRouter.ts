@@ -18,7 +18,6 @@ UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.get("/", usuarioController.getAll);
 UsuarioRouter.post("/", usuarioController.registrar);
 UsuarioRouter.put('/', authenticateToken, usuarioController.editarDados);
-UsuarioRouter.put('/perfil/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);
 UsuarioRouter.delete("/:id", usuarioController.delete);
 
 // perfil do usuario

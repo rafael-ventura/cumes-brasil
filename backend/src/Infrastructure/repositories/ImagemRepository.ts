@@ -6,20 +6,18 @@ export class ImagemRepository {
 
   async getById (id: number): Promise<Imagem | null> {
     return this.repository.createQueryBuilder("imagem")
-      .leftJoinAndSelect("imagem.fonte", "fonte")
-      .where("imagem.id = :id", { id })
-      .getOne();
+        .leftJoinAndSelect("imagem.fonte", "fonte")
+        .where("imagem.id = :id", { id })
+        .getOne();
   }
 
   async getAll (): Promise<Imagem[]> {
     return this.repository.createQueryBuilder("imagem")
-      .leftJoinAndSelect("imagem.fonte", "fonte")
-      .getMany();
+        .leftJoinAndSelect("imagem.fonte", "fonte")
+        .getMany();
   }
 
   async create(imagem: Partial<Imagem>): Promise<Imagem> {
-    console.log("repo create imagem");
-     // Salva a entidade
     return await this.repository.save(imagem); // Retorna a entidade salva com o ID e outros campos preenchidos
   }
 

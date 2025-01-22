@@ -65,7 +65,6 @@ export class UsuarioRepository {
     }
 
     async updateFotoPerfil(usuarioId: number, fotoPerfilId: number): Promise<void> {
-        console.log("aq;;;", fotoPerfilId)
         await this.repository.createQueryBuilder()
             .update(Usuario)
             .set({ foto_perfil: { id: fotoPerfilId } })

@@ -119,20 +119,23 @@ export class UsuarioService {
 
     async atualizarFotoPerfil(usuarioId: number, file?: Express.Multer.File) {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
+        if(!imagemAtual) {
+            throw new BadRequestError('Imagem não encontrada');
+        }
         const usuario: Usuario | null = await this.usuarioRepo.findOne({where: {id: usuarioId}});
         if (usuario != null) {
             let novaImagem = new Imagem();
             novaImagem.url = `/assets/${file?.filename}`;
             novaImagem.tipo_entidade = 'usuario';
             novaImagem.descricao = `Foto de perfil do usuário ${usuario?.nome} (${usuario.id})`;
-            novaImagem = await this.imagemService.create(novaImagem);
+            const novaImagemUpdate = await this.imagemService.update(imagemAtual?.id, novaImagem);
+            if(!novaImagemUpdate) {
+                throw new BadRequestError('Erro ao atualizar a imagem');
+            }
+            novaImagem = novaImagemUpdate;
 
             usuario.foto_perfil = novaImagem;
             await this.usuarioRepo.updateFotoPerfil(usuario.id, novaImagem.id);
-
-            if (imagemAtual) {
-                await this.excluirImagemAntiga(imagemAtual);
-            }
         }
     }
 

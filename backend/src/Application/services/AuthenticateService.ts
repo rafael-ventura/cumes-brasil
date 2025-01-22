@@ -52,30 +52,30 @@ class AuthService {
         }
 
         const payload = await this.googleService.getPayloadFromToken(idToken);
-        console.log('payload', payload)
         const { sub: usuarioId, email, name, picture } = payload;
+
+        // Ajusta o tamanho da imagem para 400x400 pixels
+        let highQualityPicture = picture;
+        if (picture) {
+            highQualityPicture = picture.replace(/s96-c/, 's400-c');
+        }
 
         if (!usuarioId || !email || !name) {
             throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
         }
 
         let user = await this.userRepository.findByEmail(email);
-        console.log("?????")
         if (!user) {
-            console.log("nao tem user")
             const passwordHash = await bcrypt.hash(idToken, 10);
             // Use a foto do Google ou a imagem padrão (ID 3)
             if (picture) {
-                console.log("pic")
                 let newFotoUsuario: Imagem = new Imagem();
-                newFotoUsuario.url = picture;
-                newFotoUsuario.descricao = "foto de perfil";
+                newFotoUsuario.url = highQualityPicture;
+                newFotoUsuario.descricao = `foto de perfil do google do usuário ${name} (${usuarioId})`;
                 newFotoUsuario.tipo_entidade = "usuario"
-                console.log(await this.imagemRepository.create(newFotoUsuario))
                 newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
                 await this.userRepository.create(name, email, passwordHash, newFotoUsuario);
             } else {
-                console.log("log... ?")
                 const fotoPerfil = await this.imagemRepository.getById(3)// Default image perfil foto
                 if (fotoPerfil) {
                     await this.userRepository.create(name, email, passwordHash, fotoPerfil);

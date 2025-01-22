@@ -64,11 +64,8 @@ export class UsuarioController {
 
     editarFotoPerfil = async (req: Request, res: Response) => {
         try {
-            console.log("entrei controller")
             const usuarioId = req.user.usuarioId
-            console.log('usuario', usuarioId)
             const file = req.file
-            console.log('file', file)
             await this.service.atualizarFotoPerfil(usuarioId, file);
             res.status(200).json({ message: 'Usuario atualizado com sucesso.' });
         } catch (error) {
