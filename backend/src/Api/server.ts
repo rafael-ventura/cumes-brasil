@@ -15,6 +15,10 @@ const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
 const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
 const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200'; // URL do frontend
 
+console.log('Frontend URL:', FRONTEND_URL);
+console.log('Hostname:', HOSTNAME);
+console.log('Port:', PORT);
+
 app.use(
   cors({
     origin: FRONTEND_URL,
