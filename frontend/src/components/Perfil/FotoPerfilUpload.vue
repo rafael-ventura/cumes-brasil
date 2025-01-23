@@ -109,8 +109,7 @@ const saveFoto = async () => {
 
     const formData = new FormData();
     formData.append('foto_perfil', fotoFile.value);
-
-    const updatedUser = await UserService.editarDados(formData);
+    const updatedUser = await UserService.editarFotoPerfil(formData);
 
     $q.notify({
       type: 'positive',

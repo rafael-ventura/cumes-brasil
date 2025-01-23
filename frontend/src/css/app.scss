@@ -2,18 +2,18 @@
 
 
 // Define custom colors
-$primary: #8CB369; // Mountaineering yellow #FCBD7B
-$secondary: #F29340; // Adventure green #BCE9B4
-$tertiary: #F4E285; // Palevioletred #DA7092
+$primary: #8CB369; // Adventure green #8CB369
+$secondary: #F29340; // Mountaineering yellow #F29340
+$tertiary: #F4E285; // Palevioletred #F4E285
 
 // #119DA4 , F2E86D, 9FB7B9, FF9F1C, FDFFFC
-$primary-light: #ffca91;
-$secondary-light: #b5d3ae;
-$tertiary-light: #fcbd7b;
+$primary-light: #BCE9B4; // Custom green light
+$secondary-light: #fffd5e; // Custom yellow light
+$tertiary-light: #EF9D9D; // Custom pink light
 
-$primary-dark: #e2aa6e;
-$secondary-dark: #80c372;
-$tertiary-dark: #c71585;
+$primary-dark: #546119; // Custom green dark
+$secondary-dark: #BC4B51; // Custom red dark
+$tertiary-dark: #ca74ef; // Custom purple dark
 
 $background: #2c2c2c; // Dark mode background
 $light: #f5f5f5; // Light mode background
@@ -149,11 +149,51 @@ body {
   padding: 16px;
 }
 
+.primary{
+  color: $primary;
+}
+
+.secondary{
+  color: $secondary;
+}
+
+.tertiary{
+  color: $tertiary;
+}
+
+.red{
+  color: $c-color-red;
+}
+
 .btn{
   color: $primary;
   font-weight: bold;
   border: $primary 1px solid;
   border-radius: 10px;
+}
+
+.btn-primary{
+  color: $primary;
+  font-weight: bold;
+  border: $primary 1px solid;
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+
+  &:hover {
+    background-color: $c-color-blue;
+  }
+}
+
+.btn-secondary{
+  color: $secondary;
+  font-weight: bold;
+  border: $secondary 1px solid;
+  border-radius: 10px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+
+  &:hover {
+    background-color: $c-color-blue;
+  }
 }
 
 .btn-dark{
@@ -169,17 +209,6 @@ body {
   border: #ff5858 1px solid;
   border-radius: 10px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
-}
-
-.btn-blue{
-  color: black;
-  background-color: $primary;
-  font-weight: bold;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
-
-  &:hover {
-    background-color: $c-color-blue;
-  }
 }
 
 .btn-text-black{

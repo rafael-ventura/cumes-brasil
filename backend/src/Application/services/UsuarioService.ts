@@ -1,21 +1,22 @@
-import { Usuario } from '../../Domain/entities/Usuario';
-import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
+import {Usuario} from '../../Domain/entities/Usuario';
+import {UsuarioRepository} from '../../Infrastructure/repositories/UsuarioRepository';
 import bcrypt from 'bcrypt';
-import { Colecao } from '../../Domain/entities/Colecao';
-import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
-import { Container, Service } from 'typedi';
-import { Imagem } from '../../Domain/entities/Imagem';
-import { ImagemService } from './ImagemService';
+import {Colecao} from '../../Domain/entities/Colecao';
+import {ColecaoRepository} from '../../Infrastructure/repositories/ColecaoRepository';
+import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
+import {Container, Service} from 'typedi';
+import {Imagem} from '../../Domain/entities/Imagem';
+import {ImagemService} from './ImagemService';
 import path from 'path';
 import * as fs from 'node:fs';
 import BadRequestError from '../errors/BadRequestError';
-import { errorsMessage, successMessage } from '../errors/constants';
+import {errorsMessage, successMessage} from '../errors/constants';
 import NotFoundError from '../errors/NotFoundError';
-import { MailService } from './MailService';
+import {MailService} from './MailService';
 import UserValidation from '../validations/UserValidation';
-import { ResetUserPasswordTokenService } from './ResetUserPasswordTokenService';
+import {ResetUserPasswordTokenService} from './ResetUserPasswordTokenService';
 import TokenValidation from '../validations/TokenValidation';
+import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
 
 @Service()
 export class UsuarioService {
@@ -23,13 +24,15 @@ export class UsuarioService {
     private colecaoRepo = Container.get(ColecaoRepository);
     private viaRepo: ViaRepository;
     private imagemService: ImagemService;
+    private imagemRepository: ImagemRepository;
     private mailService = Container.get(MailService);
     private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
 
-    constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository) {
+    constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository, imagemRepository: ImagemRepository) {
         this.usuarioRepo = usuarioRepo;
         this.imagemService = imagemService;
         this.viaRepo = viaRepo;
+        this.imagemRepository = imagemRepository;
     }
 
     async getUsuarioById(id: number): Promise<Usuario | null> {
@@ -48,8 +51,11 @@ export class UsuarioService {
             throw new BadRequestError(errorsMessage.USER_ALREADY_EXISTS);
         }
         const senhaHash = await bcrypt.hash(senha, 10);
-        const user = await this.usuarioRepo.create(nome, email, senhaHash, 3);
-        await this.createDefaultCollections(user);
+        let imagem: Imagem | null = await this.imagemRepository.getById(3)
+        if (imagem != null) {
+            const user = await this.usuarioRepo.create(nome, email, senhaHash, imagem);
+            await this.createDefaultCollections(user);
+        }
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {
@@ -79,8 +85,7 @@ export class UsuarioService {
 
     async editarDados(id: number, usuarioDados: any, file?: Express.Multer.File): Promise<void> {
         const usuario = await this.usuarioRepo.findOne({
-            where: { id },
-            relations: ['foto_perfil']
+            where: {id},
         });
 
         if (!usuario) {
@@ -89,14 +94,6 @@ export class UsuarioService {
 
         // Atualiza os dados do usuário
         await this.atualizarDadosUsuario(usuario, usuarioDados);
-
-        // Atualiza a foto de perfil, se enviada
-        if (file) {
-            await this.atualizarFotoPerfil(usuario, file);
-        } else if (usuarioDados.removerFoto) {
-            // Caso o usuário tenha solicitado a remoção da foto
-            await this.removerFotoPerfil(usuario);
-        }
     }
 
     async atualizarDadosUsuario(usuario: Usuario, usuarioDados: Partial<any>) {
@@ -120,19 +117,25 @@ export class UsuarioService {
         }
     }
 
-    private async atualizarFotoPerfil(usuario: Usuario, file: Express.Multer.File) {
-        const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
+    async atualizarFotoPerfil(usuarioId: number, file?: Express.Multer.File) {
+        const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
+        if(!imagemAtual) {
+            throw new BadRequestError('Imagem não encontrada');
+        }
+        const usuario: Usuario | null = await this.usuarioRepo.findOne({where: {id: usuarioId}});
+        if (usuario != null) {
+            let novaImagem = new Imagem();
+            novaImagem.url = `/assets/${file?.filename}`;
+            novaImagem.tipo_entidade = 'usuario';
+            novaImagem.descricao = `Foto de perfil do usuário ${usuario?.nome} (${usuario.id})`;
+            const novaImagemUpdate = await this.imagemService.update(imagemAtual?.id, novaImagem);
+            if(!novaImagemUpdate) {
+                throw new BadRequestError('Erro ao atualizar a imagem');
+            }
+            novaImagem = novaImagemUpdate;
 
-        const novaImagem = new Imagem();
-        novaImagem.url = `/assets/${file.filename}`;
-        novaImagem.tipo_entidade = 'usuario';
-        novaImagem.descricao = `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`;
-        await this.imagemService.create(novaImagem);
-        usuario.foto_perfil = novaImagem.id;
-
-        await this.usuarioRepo.update(usuario.id, usuario);
-        if (imagemAtual) {
-            await this.excluirImagemAntiga(imagemAtual);
+            usuario.foto_perfil = novaImagem;
+            await this.usuarioRepo.updateFotoPerfil(usuario.id, novaImagem.id);
         }
     }
 
@@ -140,7 +143,6 @@ export class UsuarioService {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
 
         // Define a foto default
-        usuario.foto_perfil = 3;
         await this.usuarioRepo.update(usuario.id, usuario);
 
         // Remove a imagem antiga, se não for a default
@@ -232,6 +234,6 @@ export class UsuarioService {
 
         await this.usuarioRepo.resetPassword(user.id, user);
 
-        return { message: successMessage.USER_RESET_PASSWORD_UPDATED };
+        return {message: successMessage.USER_RESET_PASSWORD_UPDATED};
     }
 }

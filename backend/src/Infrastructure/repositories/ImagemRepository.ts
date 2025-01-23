@@ -1,24 +1,24 @@
-import { Imagem } from "../../Domain/entities/Imagem";
-import { AppDataSource } from "../config/db";
+import {Imagem} from "../../Domain/entities/Imagem";
+import {AppDataSource} from "../config/db";
 
 export class ImagemRepository {
   private repository = AppDataSource.getRepository(Imagem);
 
   async getById (id: number): Promise<Imagem | null> {
     return this.repository.createQueryBuilder("imagem")
-      .leftJoinAndSelect("imagem.fonte", "fonte")
-      .where("imagem.id = :id", { id })
-      .getOne();
+        .leftJoinAndSelect("imagem.fonte", "fonte")
+        .where("imagem.id = :id", { id })
+        .getOne();
   }
 
   async getAll (): Promise<Imagem[]> {
     return this.repository.createQueryBuilder("imagem")
-      .leftJoinAndSelect("imagem.fonte", "fonte")
-      .getMany();
+        .leftJoinAndSelect("imagem.fonte", "fonte")
+        .getMany();
   }
 
-  async create (imagem: Partial<Imagem>): Promise<void> {
-    await this.repository.insert(imagem);
+  async create(imagem: Partial<Imagem>): Promise<Imagem> {
+    return await this.repository.save(imagem); // Retorna a entidade salva com o ID e outros campos preenchidos
   }
 
   async update (id: number, imagemData: Partial<Imagem>): Promise<void> {

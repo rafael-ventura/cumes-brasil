@@ -23,14 +23,14 @@ export class ImagemService {
     return this.imagemRepository.getAll();
   }
 
-  async create (imagem: Imagem): Promise<void> {
+  async create (imagem: Imagem): Promise<Imagem> {
     if (!imagem) {
       throw new Error("Imagem inválida");
     }
     return this.imagemRepository.create(imagem);
   }
 
-  async update (id: number, imagemData: Partial<Imagem>): Promise<void> {
+  async update (id: number, imagemData: Partial<Imagem>): Promise<Imagem | null> {
     if (!id) {
       throw new Error("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
@@ -41,6 +41,7 @@ export class ImagemService {
       throw new Error("Imagem não encontrada");
     }
     await this.imagemRepository.update(id, imagemData);
+    return this.getById(id);
   }
 
   async delete (id: number): Promise<void> {
