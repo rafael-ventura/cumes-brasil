@@ -18,7 +18,7 @@ const PerfilRouter = Router();
 
 // perfil do Usuario
 PerfilRouter.get('/', usuarioController.getPerfil);
-PerfilRouter.put('/', authenticateToken, MulterMiddleware.upload, MulterMiddleware.handleErrors, usuarioController.editarDados);
+PerfilRouter.put('/', authenticateToken, MulterMiddleware.upload, usuarioController.editarDados);
 PerfilRouter.put('/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);
 
 

@@ -3,7 +3,7 @@
     <q-file
       v-model="fotoFile"
       accept=".jpg, image/*"
-      :max-file-size="2097152"
+      :max-file-size="1097152"
       @change="onFotoChange"
       @rejected="onFotoRejected"
       @input="onFileInput"
@@ -80,7 +80,7 @@ const onFotoRejected = (rejectedEntries: QRejectedEntry[]) => {
     let msg = '';
     switch (entry.failedPropValidation) {
       case 'max-file-size':
-        msg = 'O tamanho máximo da sua foto deve ser de 2MB.';
+        msg = 'O tamanho máximo da sua foto deve ser de 1MB.';
         break;
       case 'accept':
         msg = 'Formato inválido. Sua foto precisa ser: JPG, PNG ou GIF.';

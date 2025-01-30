@@ -1,17 +1,9 @@
-import multer, { MulterError } from 'multer';
+import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 import { Request, Response, NextFunction } from 'express';
 
 export class MulterMiddleware {
-  private static readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-  private static readonly ALLOWED_MIMES = [
-    'image/jpeg',
-    'image/pjpeg',
-    'image/png',
-    'image/gif'
-  ];
-
   private static storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, path.resolve(__dirname, '..', '..', '..', 'assets'));
@@ -21,7 +13,7 @@ export class MulterMiddleware {
         if (err) {
           cb(err, '');
         } else {
-          const usuarioId = req.user?.usuarioId || 'unknown'; // Certifique-se de que req.user existe
+          const usuarioId = req.user?.usuarioId || 'unknown';
           const fileName = `foto_perfil-userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
           cb(null, fileName);
         }
@@ -29,37 +21,16 @@ export class MulterMiddleware {
     }
   });
 
-  private static fileFilter(req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) {
-    if (MulterMiddleware.ALLOWED_MIMES.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Formato inválido. Aceitamos apenas imagens nos formatos JPG, PNG ou GIF.'));
-    }
-  }
-
   public static upload = multer({
-    storage: MulterMiddleware.storage,
-    limits: {
-      fileSize: MulterMiddleware.MAX_FILE_SIZE
-    },
-    fileFilter: MulterMiddleware.fileFilter
-  }).single('foto_perfil'); // Certifique-se de que o campo do formulário tem este nome
+    storage: MulterMiddleware.storage
+  }).single('foto_perfil');
 
   public static handleErrors(err: any, req: Request, res: Response, next: NextFunction) {
-    if (err instanceof MulterError) {
-      // Se o erro for relacionado ao limite de tamanho, informa o usuário
-      if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(400).json({
-          message: 'O tamanho do arquivo excede o limite permitido de 2MB.'
-        });
-      }
-    } else if (err) {
-      // Em caso de outros erros, exibe a mensagem fornecida
+    if (err) {
       return res.status(400).json({
-        message: err.message || 'Erro ao fazer upload do arquivo.'
+        message: 'Erro ao fazer upload da imagem.'
       });
     }
-
-    next(); // Se não houver erro, prossegue
+    next();
   }
 }
