@@ -36,7 +36,7 @@
     </div>
     <!-- Mensagem se não houver resultados -->
     <div v-if="results && results.length === 0">
-      <p>No results found.</p>
+      <p class="result-not-found"> Nenhum resultado foi encontrado.</p>
     </div>
   </div>
 </template>
@@ -183,5 +183,12 @@ const selectItem = (item: Via | IColecao | any) => {
 
 .q-select-custom {
   width: 40%;
+}
+
+.result-not-found{
+  padding-left: 3rem;
+  font-size: 1.4rem;
+  align-self: center;
+  color: $cumes-03;
 }
 </style>

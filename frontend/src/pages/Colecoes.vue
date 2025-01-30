@@ -48,7 +48,7 @@ const isAddColecaoModalOpen = ref(false);
 
 // Agora garantimos que o evento do botão realmente abre o modal
 const abrirModalAdicao = () => {
-  console.log("Abrindo modal de adição...");
+  console.log('Abrindo modal de adição...');
   isAddColecaoModalOpen.value = true;
 };
 

@@ -233,6 +233,4 @@ const onScroll = async (event: Event) => {
     }
   }
 }
-
-
 </style>

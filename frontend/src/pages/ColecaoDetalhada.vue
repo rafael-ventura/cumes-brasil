@@ -72,8 +72,6 @@ import { useRoute, useRouter } from 'vue-router';
 import ColecaoService from 'src/services/ColecaoService';
 import { IColecao } from 'src/models/IColecao';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
-import ImagemModal from 'components/Colecao/ImagemModal.vue';
-import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
 import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import Busca from 'components/Busca/Busca.vue';
@@ -84,13 +82,7 @@ const route = useRoute();
 const router = useRouter();
 const searchEntityRef = ref();
 const colecao = ref<IColecao | null | undefined>(null);
-const colecaoEdit = ref({
-  nome: '',
-  descricao: ''
-});
 const isImageModalOpen = ref(false);
-const isDeleteConfirmOpen = ref(false);
-const isEditFormOpen = ref(false);
 const isAddViaModalOpen = ref(false);
 const expandedImageUrl = ref('');
 const isConfigDialogOpen = ref(false);
@@ -116,45 +108,12 @@ const expandImage = (url: string) => {
   expandedImageUrl.value = url;
   isImageModalOpen.value = true;
 };
-const confirmDeletion = () => {
-  isDeleteConfirmOpen.value = true;
-};
-
-const deleteCollection = async () => {
-  if (colecao.value) {
-    try {
-      await ColecaoService.excluirColecao(colecao.value.id);
-      router.push('/colecoes');
-    } catch (error) {
-      console.error('Erro ao excluir a coleção:', error);
-    }
-  }
-};
-
-const submitEditCollection = () => {
-  if (colecao.value) {
-    editCollection({
-      nome: colecaoEdit.value.nome,
-      descricao: colecaoEdit.value.descricao
-    });
-  }
-};
-
-const editCollection = async (data: { nome: string; descricao: string }) => {
-  if (colecao.value) {
-    try {
-      await ColecaoService.atualizarColecao(colecao.value.id, data);
-      colecao.value.nome = data.nome;
-      colecao.value.descricao = data.descricao;
-      isEditFormOpen.value = false;
-    } catch (error) {
-      console.error('Erro ao editar a coleção:', error);
-    }
-  }
-};
 
 const openAddViaModal = () => {
-  isAddViaModalOpen.value = true;
+  isAddViaModalOpen.value = false; // Força um reset antes de abrir
+  setTimeout(() => {
+    isAddViaModalOpen.value = true;
+  }, 50); // Pequeno delay para garantir que o Vue processe a atualização corretamente
 };
 
 const updateIsAddViaModalOpen = (value: boolean) => {
@@ -186,7 +145,7 @@ const viaAdded = () => {
 .header {
   width: 100%;
   height: 300px; /* Altura fixa */
-  background-color: var(--q-primary);
+  background-color: rgba($cumes-01, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -210,7 +169,7 @@ const viaAdded = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--q-primary); /* Cor verde padrão */
+  background-color: rgba($cumes-01, 0.1);
   border-bottom-left-radius: 16px; /* Alinha o arredondamento com a `header` */
   border-bottom-right-radius: 16px;
 }

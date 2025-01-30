@@ -20,9 +20,13 @@ const props = defineProps<{ isOpen: boolean; colecaoId: number }>();
 const emit = defineEmits(['update:isOpen', 'via-added']);
 const localIsOpen = ref(props.isOpen);
 
-watch(() => props.isOpen, (newVal) => {
-  localIsOpen.value = newVal;
-});
+watch(
+  () => props.isOpen,
+  (newValue) => {
+    localIsOpen.value = newValue;
+  },
+  { immediate: true }
+);
 
 const fetchViasNotInColecao = async (page: number, limit: number) => {
   try {
