@@ -1,14 +1,16 @@
 <template>
   <q-page>
-    <BotaoVoltar />
+    <!-- Componente Principal com Botão no Topo -->
     <CardInfoPrincipal :via="via!" />
 
+    <!-- Botões de Ação -->
     <BotoesAcao
       :via="via"
       :favoriteCollectionId="favoriteCollectionId"
       @update:isFavorited="isFavorited = $event"
     />
 
+    <!-- Lista com Croqui e Detalhes -->
     <q-list bordered>
       <SecaoCroqui v-if="via" :croquis="via.croquis" />
       <SecaoMaisDetalhes v-if="via" :via="via" />
@@ -21,7 +23,6 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import ViaService from 'src/services/ViaService';
 import ColecaoService from 'src/services/ColecaoService';
-import BotaoVoltar from 'components/BotaoVoltar.vue';
 import CardInfoPrincipal from 'components/Via/CardInfoPrincipal.vue';
 import BotoesAcao from 'components/Via/BotoesAcao.vue';
 import SecaoCroqui from 'components/Via/SecaoCroqui.vue';
@@ -45,6 +46,7 @@ onMounted(async () => {
     console.error('Erro ao buscar detalhes da via:', error);
   }
 });
+
 </script>
 
 <style scoped lang="scss">

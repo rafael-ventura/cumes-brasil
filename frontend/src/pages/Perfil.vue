@@ -73,7 +73,9 @@ const numFavoritas = ref();
 const colecaoId = ref();
 const isEditDialogOpen = ref(false);
 const isConfigDialogOpen = ref(false);
-
+defineOptions({
+  name: 'PerfilPage'
+});
 const items = computed(() => [
   {
     label: 'Coleções',
@@ -148,10 +150,6 @@ const handleEditSubmit = async () => {
     console.error('Erro ao atualizar o perfil:', error);
   }
 };
-
-defineOptions({
-  name: 'PerfilPage'
-});
 </script>
 <style scoped lang="scss">
 @import "src/css/app.scss";

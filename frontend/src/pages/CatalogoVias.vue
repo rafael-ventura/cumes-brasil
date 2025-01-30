@@ -47,6 +47,6 @@ const goViaDetalhadaView = (id: number) => {
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: $primary;
+  color: $cumes-03;
 }
 </style>

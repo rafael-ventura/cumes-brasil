@@ -57,7 +57,7 @@ const emitClick = () => {
 }
 
 .card-info {
-  background-color: $primary;
+  background-color: rgba($cumes-01, 0.75);
   padding: 10px;
   height: 140px;
   display: flex;

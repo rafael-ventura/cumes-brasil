@@ -45,7 +45,9 @@ import DuracaoRapidaImage from 'src/assets/home/duracao-rapida.webp';
 import UrcaImage from 'src/assets/home/urca.webp';
 
 const router = useRouter();
-
+defineOptions({
+  name: 'HomePage'
+});
 export interface Card {
   title: string;
   filterType: string;
@@ -92,14 +94,14 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch(filterType: string) {
+function goToFilteredSearch (filterType: string) {
   router.push({
     name: 'busca',
     query: { filterType }
   });
 }
 
-function chooseRandomVia() {
+function chooseRandomVia () {
   const randomCard = cards.value[Math.floor(Math.random() * cards.value.length)];
   alert(`Via aleatória: ${randomCard.title}`);
 }
