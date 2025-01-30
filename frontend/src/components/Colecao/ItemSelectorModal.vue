@@ -1,8 +1,10 @@
 <template>
   <q-dialog v-model="isOpen" @hide="handleHide" @show="onDialogShow">
     <q-card class="q-dialog-plugin">
+      <q-card-section class="title-section">
+        <div class="title-text">{{ title }}</div>
+      </q-card-section>
       <q-card-section>
-        <div class="text-h6">{{ title }}</div>
         <ItemSugestao
           :items="items"
           :itemType="itemType"
@@ -110,10 +112,42 @@ const onDialogShow = async () => {
 
 .q-dialog-plugin {
   min-width: 400px;
-  max-height: 450px;
+  max-height: 500px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  background-color: $background; /* Fundo geral */
+  border-radius: 10px;
+}
+
+.title-section {
+  background-color: $cumes-03; /* Cor de destaque para o título */
+  color: white;
+  padding: 2.5rem 16px 16px;
+  border-top-left-radius: 10px; /* Bordas arredondadas integrando ao card */
+  border-top-right-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  text-align: center;
+}
+
+.title-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.title-text::after {
+  content: '';
+  position: absolute;
+  bottom: -0.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 0.2rem;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .card-actions {
@@ -125,15 +159,32 @@ const onDialogShow = async () => {
   .q-pagination {
     flex-grow: 1;
     margin-left: 16px;
+    font-size: 0.9rem; /* Ajusta tamanho da fonte */
+    color: $cumes-01; /* Usa cor padrão */
   }
 
   .items-per-page-select {
-    width: 120px;
+    width: 130px;
+    border: 1px solid $cumes-01; /* Borda com cor padrão */
+    border-radius: 5px;
   }
 
   .q-btn {
     color: $cumes-03;
+    border: 1px solid $cumes-03; /* Borda com cor do botão */
     background-color: transparent;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1); /* Fundo leve no hover */
+    }
   }
 }
+
+.item-sugestao-container {
+  background-color: $background;
+  padding: 16px;
+  border-radius: 0 0 10px 10px; /* Faz o container parecer integrado ao título */
+}
+
 </style>

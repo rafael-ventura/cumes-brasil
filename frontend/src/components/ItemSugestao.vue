@@ -11,8 +11,8 @@
       class="search-input"
       @input="onInputChange"
     />
-    <q-list separator>
-      <q-item v-for="item in filteredItems" :key="item.id" clickable class="q-pa-xs item-card">
+    <q-list>
+      <q-item v-for="item in filteredItems" :key="item.id" clickable class="item-card">
         <q-item-section avatar>
           <q-avatar size="50px">
             <q-img :src="item.imagem?.url || placeholderImage" cover />
@@ -133,46 +133,106 @@ const onScroll = async (event: Event) => {
 @import "src/css/app.scss";
 
 .item-sugestao-container {
-  max-height: 700px;
+  max-height: 550px; /* Aumenta a altura total do modal */
   background-color: $background;
   border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.q-list {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .search-input {
-  margin-bottom: 16px;
-
-  .q-field__label,
-  .q-field__native {
-    color: $primary;
-  }
+  margin-bottom: 24px; /* Aumenta a distância entre o input e os itens */
 }
 
 .item-card {
+  display: flex;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  padding: 1%;
+  border-radius: 8px;
+  height: 80px; /* Define uma altura maior */
+  margin: 4px 0; /* Remover margens laterais */
+  padding: 0 12px; /* Padding lateral reduzido */
+  width: 100%; /* Ocupar largura total */
+}
 
-  .q-item__section {
-    color: $primary;
-  }
+.q-item-section {
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.q-avatar {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .item-label-primary {
   color: $primary;
   font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
 }
 
 .item-caption {
   color: $primary;
+  font-size: 0.8rem;
 }
 
-.icon-primary {
-  color: $primary;
+.q-btn {
+  margin: 0;
+  padding: 0;
 }
 
-.loading-item,
-.no-results {
-  text-align: center;
-  color: $primary;
+.q-dialog-plugin {
+  min-width: 450px; /* Aumenta a largura do modal em 50px */
+  max-height: 550px; /* Aumenta a altura do modal em 50px */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: $background;
+  border-radius: 10px;
 }
+
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .q-pagination {
+    flex-grow: 1;
+    margin-left: 16px;
+    font-size: 0.8rem; /* Fonte um pouco menor */
+    color: white; /* Cor branca para os itens de paginação */
+  }
+
+  .items-per-page-select {
+    width: 130px;
+    border-radius: 5px;
+  }
+
+  .q-btn {
+    color: $cumes-03;
+    border: 1px solid $cumes-03;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+
 </style>
