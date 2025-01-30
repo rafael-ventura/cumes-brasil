@@ -6,6 +6,7 @@ import { Request, Response, NextFunction } from 'express';
 export class MulterMiddleware {
   private static storage = multer.diskStorage({
     destination: (req, file, cb) => {
+      console.log("o caminho é: ", path.resolve(__dirname, '..', '..', '..', 'assets'));
       cb(null, path.resolve(__dirname, '..', '..', '..', 'assets'));
     },
     filename: (req: any, file, cb) => {
