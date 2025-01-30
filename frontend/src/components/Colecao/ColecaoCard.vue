@@ -78,7 +78,7 @@ onMounted(() => {
   transition: transform 0.2s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  background-color: $primary;
+  background-color: $cumes-03;
 
   &:hover {
     transform: translateY(-4px);
@@ -88,18 +88,58 @@ onMounted(() => {
 .colecao-content {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Distribui melhor os elementos */
+  flex-wrap: wrap; /* Permite que os elementos se ajustem caso falte espaço */
+}
+
+.colecao-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #2c2c2c;
+  flex-grow: 1;
+  min-width: 0; /* Permite que o conteúdo encolha corretamente */
+}
+
+.q-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  background: $cumes-03;
+  border: 1.5px solid $background;
+  font-size: 1.1em;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%; /* Garante que não estoure a div pai */
+  overflow-wrap: break-word; /* Quebra palavras longas */
+  text-align: center;
+}
+
+.badge-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* Permite que os elementos fiquem ajustados caso necessário */
+  max-width: 80%; /* Impede estouro no desktop */
+}
+
+.badge-value {
+  margin-left: 5px;
+  font-weight: bold;
 }
 
 .colecao-image {
-  width: 96px;
-  height: 96px;
+  padding: 2%;
+  width: 6rem;
+  height: 6rem;
   border-radius: 8px;
   overflow: hidden;
   margin-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e0e0e0;
+  background-color: $cumes-01;
   flex-shrink: 0; /* Impede a imagem de redimensionar */
 }
 
@@ -126,20 +166,10 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   color: black;
-  background: $cumes-01;
-  border: 1px solid $cumes-02;
+  background: $cumes-03;
+  border: 1.5px solid $background;
   font-size: 1.1em; /* Aumenta o tamanho do texto */
   padding: 8px 12px; /* Adiciona espaço interno */
   border-radius: 12px; /* Deixa os cantos arredondados */
-}
-
-.badge-custom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.badge-value {
-  margin-left: 5px; /* Adiciona espaço entre o texto e o número */
 }
 </style>

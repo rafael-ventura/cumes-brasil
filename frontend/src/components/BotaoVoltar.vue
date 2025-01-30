@@ -14,7 +14,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const goBack = () => {
-  console.log('Botão de voltar clicado'); // Log para verificar o clique
+  console.log('Botão de voltar clicado');
   router.back();
 };
 </script>
@@ -24,12 +24,12 @@ const goBack = () => {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente */
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  z-index: 1000; /* Garante que o botão fica acima de outros elementos */
+  z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 50%; /* Torna o botão redondo */
-  opacity: 0.9; /* Dá visibilidade sem ser chamativo */
-  pointer-events: auto; /* Garante que o botão captura cliques */
+  border-radius: 50%;
+  opacity: 0.9;
+  pointer-events: auto;
 }
 </style>

@@ -17,11 +17,10 @@
 
 <script setup lang="ts">
 
-// Define a cor como uma prop para tornar o SVG mais flexível
 const props = defineProps({
   fillColor: {
     type: String,
-    default: '#000000' // Cor padrão caso nenhuma seja passada
+    default: '#000000'
   }
 });
 </script>

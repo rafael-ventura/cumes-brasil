@@ -18,12 +18,8 @@
       </template>
     </Busca>
 
-    <q-btn
-      fab
-      icon="add"
-      class="botao-add"
-      @click="isAddColecaoModalOpen = true"
-    />
+    <!-- Botão de Adicionar -->
+    <BotaoAdicionar @add="abrirModalAdicao" />
 
     <AddColecaoModal
       :isOpen="isAddColecaoModalOpen"
@@ -43,16 +39,19 @@ import Busca from 'components/Busca/Busca.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
 import AddColecaoModal from 'components/Colecao/AddColecaoModal.vue';
+import BotaoAdicionar from 'components/BotaoAdicionar.vue'; // Importa o botão
 
 const searchEntityRef = ref();
 const router = useRouter();
 const colecoes = ref<IColecao[] | undefined>([]);
 const isAddColecaoModalOpen = ref(false);
-ref({
-  nome: '',
-  descricao: '',
-  usuario_id: Number(localStorage.getItem('usuarioId')) || 0
-});
+
+// Agora garantimos que o evento do botão realmente abre o modal
+const abrirModalAdicao = () => {
+  console.log("Abrindo modal de adição...");
+  isAddColecaoModalOpen.value = true;
+};
+
 const addColecao = async (colecaoPreenchida: IColecao) => {
   try {
     await ColecaoService.criarColecao(colecaoPreenchida);
@@ -85,44 +84,18 @@ const handleApplyFilters = (filters: any) => {
 const goToColecaoDetalhada = (colecao: IColecao) => {
   router.push(`/colecoes/${colecao.id}`);
 };
-
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
 .page-padding {
   padding: 16px;
-}
-
-.custom-avatar {
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.custom-avatar img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
-.botao-add {
-  position: fixed;
-  bottom: 120px;
-  right: 16px;
-  z-index: 2;
-  color: black;
-  background: $cumes-03;
-}
-
-.break-word {
-  word-break: break-all;
 }
 
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: $primary;
+  color: $cumes-03;
 }
 </style>
