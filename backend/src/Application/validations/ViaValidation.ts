@@ -10,10 +10,13 @@ export default {
       throw new Error('Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).');
     }
 
+    if (!['grau', 'bairro', 'exposicao', 'duracao'].includes(key)) {
+      throw new Error('Filtro inválido. Use grau, bairro, exposicao ou duracao.');
+    }
+
     return { key, value };
   },
-
-  validaValores (key: string, value: string): string | number {
+  validaValores(key: string, value: string): string | number {
     switch (key) {
       case 'grau': {
         const grauParsed = parseInt(value, 10);
@@ -22,20 +25,23 @@ export default {
         }
         return grauParsed;
       }
-      case 'bairro': {
+      case 'bairro':
         return value.trim().toLowerCase();
-      }
       case 'exposicao': {
-        const exposicaoValue = value.trim().toUpperCase();
-        const validExposicoes = ['E1', 'E2', 'E3','E4']; // Adapte conforme necessário
-        if (!validExposicoes.includes(exposicaoValue)) {
-          throw new Error('O parâmetro "exposicao" deve ser um dos valores válidos: E1, E2, E3 OU E4');
+        const validExposicoes = ['E1', 'E2', 'E3', 'E4'];
+        if (!validExposicoes.includes(value.toUpperCase())) {
+          throw new Error('O parâmetro "exposicao" deve ser um dos valores válidos: E1, E2, E3, E4.');
         }
-        return exposicaoValue;
+        return value.trim().toUpperCase();
+      }
+      case 'duracao': {
+        if (!['D1', 'D2', 'D3', 'D4', 'D5'].includes(value.toUpperCase())) {
+          throw new Error('O parâmetro "duracao" deve ser D1, D2, D3, D4 ou D5.');
+        }
+        return value.trim().toUpperCase();
       }
       default:
-        throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
+        throw new Error('Filtro inválido.');
     }
   }
-
 };

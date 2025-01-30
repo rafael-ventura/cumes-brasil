@@ -65,8 +65,10 @@ export class ViaService {
         return await this.viaRepo.countByField('LOWER(montanha.bairro)', validValue);
       case 'exposicao':
         return await this.viaRepo.countByField('via.exposicao', validValue, '<=');
+      case 'duracao':
+        return await this.viaRepo.countByField('via.duracao', validValue, '=');
       default:
-        throw new Error('Filtro inválido. Use grau, bairro ou exposicao.');
+        throw new Error('Filtro inválido. Use grau, bairro, exposicao ou duracao.');
     }
   }
 }

@@ -1,31 +1,33 @@
 <template>
-  <q-page>
+  <q-page class="home-page">
     <div class="q-pa-md">
+      <!-- Logo e Cabeçalho -->
       <q-img
         src="../assets/logo-amarelo.webp"
         alt="Cumes Brasil"
         class="q-mb-md text-center logo-tamanho"
         style="object-fit: cover; object-position: center;"
       />
-      <div class="text-h2 text-center q-mb-md color-text">Bem-vindo ao Cumes Brasil</div>
-      <div class="text-h5 text-center q-mb-md color-text">Descubra Sua Próxima Aventura</div>
+      <div class="text-h2 text-center q-mb-md title-text">Bem-vindo ao Cumes Brasil</div>
 
-      <div class="card-list">
-        <div
-          v-for="(card, index) in cards"
-          :key="index"
-          class="card"
-        >
-          <q-card class="card" @click="goToFilteredSearch(card.filterType)">
-            <q-img :src="card.image" :alt="card.title" class="card-image">
-              <div class="absolute-bottom text-left">
-                <div class="text-h4 text-black">{{ card.title }}</div>
-                <div class="text-h6 text-black"><span class="span-count-vias text-weight-bolder"> {{ card.count }} </span> vias encontradas
-                </div>
-              </div>
-            </q-img>
-          </q-card>
-        </div>
+      <!-- Mosaico de Cards -->
+      <CardMosaic :cards="cards" @navigate="goToFilteredSearch" />
+
+      <!-- Botão de Via Aleatória -->
+      <div class="random-section">
+        <div class="random-title">Explore uma Via Aleatória</div>
+        <q-btn
+          icon="shuffle"
+          color="primary"
+          class="random-btn"
+          @click="chooseRandomVia"
+        />
+      </div>
+
+      <!-- Espaço para o Mapa -->
+      <div class="map-section">
+        <div class="map-text">Em breve explore vias diretamente no mapa</div>
+        <q-icon name="map" size="100px" color="$cumes-04" class="map-icon" />
       </div>
     </div>
   </q-page>
@@ -34,16 +36,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
+import CardMosaic from 'src/components/Home/CardMosaic.vue';
+import { useRouter } from 'vue-router';
 import CopacabanaImage from 'src/assets/home/copacabana.webp';
 import TerceiroGrauImage from 'src/assets/home/terceiroGrau.webp';
 import ExposicaoE2Image from 'src/assets/home/exposicaoE2.webp';
-import { useRouter } from 'vue-router';
+import DuracaoRapidaImage from 'src/assets/home/duracao-rapida.webp';
+import UrcaImage from 'src/assets/home/urca.webp';
 
 const router = useRouter();
-defineOptions({
-  name: 'HomePage'
-});
-const cards = ref([
+
+export interface Card {
+  title: string;
+  filterType: string;
+  count: number;
+  image: any;
+}
+
+const cards = ref<Card[]>([
   {
     title: 'Vias em Copacabana',
     filterType: 'bairro=copacabana',
@@ -61,6 +71,18 @@ const cards = ref([
     filterType: 'exposicao=E2',
     count: 0,
     image: ExposicaoE2Image
+  },
+  {
+    title: 'Vias com Duração Rápida',
+    filterType: 'duracao=d1',
+    count: 0,
+    image: DuracaoRapidaImage
+  },
+  {
+    title: 'Vias no Bairro da Urca',
+    filterType: 'bairro=urca',
+    count: 0,
+    image: UrcaImage
   }
 ]);
 
@@ -70,104 +92,88 @@ onMounted(async () => {
   }
 });
 
-function goToFilteredSearch (filterType: string) {
-  let query = {};
-
-  if (filterType === 'bairro=copacabana') {
-    query = { bairro: 'Copacabana' }; // Filtro por bairro
-  } else if (filterType === 'grau=3') {
-    query = { selectedDifficulty: '3' }; // Filtro por grau
-  } else if (filterType === 'exposicao=E2') {
-    query = { selectedExposicao: ['e1', 'e2'] }; // Filtro por extensão
-  }
-
+function goToFilteredSearch(filterType: string) {
   router.push({
     name: 'busca',
-    query
+    query: { filterType }
   });
+}
+
+function chooseRandomVia() {
+  const randomCard = cards.value[Math.floor(Math.random() * cards.value.length)];
+  alert(`Via aleatória: ${randomCard.title}`);
 }
 </script>
 
 <style scoped lang="scss">
-@import "src/css/app.scss";
+@import 'src/css/app.scss';
+
+.home-page {
+  text-align: center;
+}
 
 .logo-tamanho {
   width: 310px;
-  height: 100px; /* Defina a altura desejada para cortar */
+  height: 100px;
   margin: 0 auto;
   display: flex;
-  object-fit: cover; /* Garante que a largura seja mantida */
-  object-position: center; /* Centraliza o corte vertical */
 }
 
-.card {
-  cursor: pointer;
-  transition: transform 0.3s;
-  margin-bottom: 20px;
+.title-text {
+  color: $cumes-04;
+}
+
+.random-section {
+  border: 2px solid $cumes-04;
   border-radius: 10px;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card-image {
-  height: 200px; /* Altura ajustada para as imagens dos cards */
-  object-fit: cover; /* Corta as imagens para manter a largura */
-  object-position: center; /* Centraliza o corte */
-}
-
-.absolute-bottom {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   padding: 10px;
-  background-color: rgba($cumes-01, 0.9);
-}
+  margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.text-h2 {
-  color: $cumes-03;
-}
+  .random-title {
+    color: $cumes-04;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
 
-.text-h5 {
-  color: $cumes-03;
-}
+  .random-btn {
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    color: black;
+    background: $cumes-02;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
 
-.text-h4 {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-
-  @media (max-width: 425px) {
-    font-size: 1.8rem;
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
   }
 }
 
-.card-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  padding: 10px;
-  justify-content: center;
-  margin: 0 auto;
-}
+.map-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $cumes-05;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 
-.color-text {
-  color: $cumes-03;
-}
+  .map-text {
+    color: $cumes-04;
+    font-size: 18px;
+    font-weight: bold;
+    flex: 1;
+    text-align: left;
+  }
 
-.color-div {
-  color: black;
-  font-weight: bolder;
-}
-
-.titulo-card {
-  color: black;
-}
-
-.span-count-vias {
-  opacity: 0.9;
+  .map-icon {
+    flex: 1;
+    text-align: right;
+  }
 }
 </style>

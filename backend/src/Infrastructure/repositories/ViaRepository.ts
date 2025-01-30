@@ -225,8 +225,7 @@ export class ViaRepository implements ISearchRepository<Via>{
     const queryBuilder = this.repository.createQueryBuilder('via')
       .leftJoin('via.montanha', 'montanha');
 
-    if (field === 'via.exposicao') {
-      // Usar operador LIKE para tratar valores compostos como "E2/3"
+    if (field === 'via.exposicao' || field === 'via.duracao') {
       queryBuilder.where(`${field} LIKE :value`, { value: `%${value}%` });
     } else {
       queryBuilder.where(`${field} ${operator} :value`, { value });
@@ -234,5 +233,4 @@ export class ViaRepository implements ISearchRepository<Via>{
 
     return queryBuilder.getCount();
   }
-
 }
