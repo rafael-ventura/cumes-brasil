@@ -150,15 +150,15 @@ body {
 }
 
 .primary{
-  color: $primary;
+  color: $cumes-01;
 }
 
 .secondary{
-  color: $secondary;
+  color: $cumes-02;
 }
 
 .tertiary{
-  color: $tertiary;
+  color: $cumes-03;
 }
 
 .red{
@@ -166,33 +166,33 @@ body {
 }
 
 .btn{
-  color: $primary;
+  color: $cumes-01;
   font-weight: bold;
-  border: $primary 1px solid;
+  border: $cumes-01 1px solid;
   border-radius: 10px;
 }
 
 .btn-primary{
-  color: $primary;
+  color: $cumes-01;
   font-weight: bold;
-  border: $primary 1px solid;
+  border: $cumes-01 1px solid;
   border-radius: 10px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
 
   &:hover {
-    background-color: $c-color-blue;
+    background-color: $cumes-03;
   }
 }
 
 .btn-secondary{
-  color: $secondary;
+  color: $cumes-03;
   font-weight: bold;
-  border: $secondary 1px solid;
+  border: $cumes-03 1px solid;
   border-radius: 10px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
 
   &:hover {
-    background-color: $c-color-blue;
+    background-color: $cumes-03;
   }
 }
 
@@ -282,7 +282,7 @@ body {
 }
 
 .small-icon {
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .border-radius-small {

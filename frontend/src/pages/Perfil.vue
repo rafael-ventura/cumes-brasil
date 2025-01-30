@@ -5,7 +5,7 @@
 
     <!-- PerfilBar e PerfilGridButtons lado a lado em telas grandes -->
     <div class="row q-col-gutter-none">
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3">
+      <div class="div-colorida col-xs-12 col-sm-12 col-md-4 col-lg-3 col-xl-3">
         <PerfilBar :user="user" @submit="handleEditSubmit" />
       </div>
       <div class="col-xs-12 col-sm-12 col-md-7 col-lg-5 col-xl-4">
@@ -161,11 +161,10 @@ defineOptions({
   right: 16px;
   height: 50px;
   color: $background;
-  background-color: $cumes-03;
+  background-color: rgba($cumes-05, 0.05); // Cor com transparência
 }
 .card-config{
   border-radius: 10px;
-  background-color: $background;
 }
 
 .caixa1 {
@@ -180,4 +179,19 @@ defineOptions({
   }
 }
 
+/*.div-colorida {
+  background-color: rgba($cumes-03, 0.85); // Cor com transparência
+  border-bottom-left-radius: 12px; // Borda arredondada inferior
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Brilho/sombra para efeito mais vivo
+  backdrop-filter: blur(5px); // Efeito de suavização no fundo
+
+  padding: 16px; // Adiciona espaçamento interno
+  transition: all 0.3s ease-in-out; // Suaviza animações
+
+  &:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); // Aumenta o efeito no hover
+    transform: translateY(-2px); // Elevação sutil ao passar o mouse
+  }
+}*/
 </style>

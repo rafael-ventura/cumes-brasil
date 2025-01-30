@@ -1,42 +1,48 @@
 <template>
-  <div class="profile-header-container no-wrap q-pa-md row items-center text-color">
-    <q-item-section class="profile-info">
-      <div class="profile-picture-container">
-        <img :src="localUser?.foto_perfil?.url || 'https://via.placeholder.com/150'" alt="Foto de Perfil"
-             class="profile-picture"
-             @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"/>
-      </div>
-      <div class="user-details">
-        <div class="caixa-escalada border-radius-medium top-margem">
-          <div class="text-h5">
-            {{ diasEscalados }}
-            <div class="text-h8" style="display: inline-block">dias</div>
+  <div class="profile-card-container">
+    <div class="profile-header">
+      <div class="profile-row">
+        <div class="profile-picture-container">
+          <img
+            :src="localUser?.foto_perfil?.url || 'https://via.placeholder.com/150'"
+            alt="Foto de Perfil"
+            class="profile-picture"
+            @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"
+          />
+        </div>
+        <div class="escalando-info">
+          <div class="dias-escalando">
+            <div class="label">Escalando há</div>
+            <div class="dias-count">{{ diasEscalados }} dias</div>
           </div>
-          <div class="text-h7">
-            Desde {{dataFormatada}}
+          <div class="anos-escalando">
+            <div class="anos-count">{{ anosEscalando }}</div>
+            <div class="data-label">
+              Desde <span class="data-formatada">{{ dataFormatada }}</span>
+            </div>
           </div>
         </div>
-        <div class="text-h6 user-localizacao">{{props.user?.localizacao}}</div>
       </div>
-    </q-item-section>
+      <div class="user-details">
+        <div class="user-name">{{ props.user?.nome }}</div>
+        <div class="user-location">{{ props.user?.localizacao }}</div>
+        <div class="user-club" v-if="props.user?.clube_organizacao">{{ props.user.clube_organizacao }}</div>
+      </div>
+    </div>
+    <q-dialog v-model="isImageModalOpen">
+      <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;">
+        <template v-slot:default>
+          <FotoPerfilUpload @closeDialogPai="closeImagePai" @submit="updateUserFotoPerfil" />
+        </template>
+      </q-img>
+    </q-dialog>
   </div>
-  <div class="text-h4 user-name">
-    {{ props.user?.nome }}
-  </div>
-  <q-dialog v-model="isImageModalOpen">
-    <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;">
-      <template v-slot:default>
-        <!-- Componente de upload -->
-        <FotoPerfilUpload @closeDialogPai="closeImagePai" @submit="updateUserFotoPerfil"/>
-      </template>
-    </q-img>
-  </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { IUsuario } from 'src/models/IUsuario';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
+import { IUsuario } from 'src/models/IUsuario';
 
 const props = defineProps<{ user: IUsuario | undefined }>();
 const emits = defineEmits(['submit']);
@@ -44,14 +50,17 @@ const emits = defineEmits(['submit']);
 const localUser = ref<IUsuario | undefined>(props.user);
 const isImageModalOpen = ref(false);
 const expandedImageUrl = ref<string | undefined>(undefined);
-const modalImageUrl = ref<string | null>(null);
 
-watch(() => props.user, (newUser) => {
-  if (newUser) {
-    localUser.value = newUser;
-    expandedImageUrl.value = newUser.foto_perfil?.url || 'https://via.placeholder.com/150';
-  }
-}, { immediate: true });
+watch(
+  () => props.user,
+  (newUser) => {
+    if (newUser) {
+      localUser.value = newUser;
+      expandedImageUrl.value = newUser.foto_perfil?.url || 'https://via.placeholder.com/150';
+    }
+  },
+  { immediate: true }
+);
 
 const expandImage = (url: string) => {
   expandedImageUrl.value = url;
@@ -62,9 +71,6 @@ const closeImagePai = (fecharImagem: boolean) => {
   if (fecharImagem) {
     expandedImageUrl.value = undefined;
   }
-  if (!fecharImagem) {
-    expandedImageUrl.value = modalImageUrl.value || undefined;
-  }
 };
 
 const updateUserFotoPerfil = (updatedUser: IUsuario) => {
@@ -74,117 +80,122 @@ const updateUserFotoPerfil = (updatedUser: IUsuario) => {
 
 const diasEscalados = computed(() => {
   if (!props.user?.data_atividade) return 0;
-  const partesData = props.user.data_atividade.split('/'); // Divide a string em partes
+  const partesData = props.user.data_atividade.split('/');
   const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
   const hoje = new Date();
-  if (dataAtividade > hoje) return 0;
-  const diffTime = hoje.getTime() - dataAtividade.getTime();
-  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  return Math.floor((hoje.getTime() - dataAtividade.getTime()) / (1000 * 60 * 60 * 24));
+});
+
+const anosEscalando = computed(() => {
+  return `${Math.floor(diasEscalados.value / 365)} ano(s)`;
 });
 
 const dataFormatada = computed(() => {
   if (!props.user?.data_atividade) return '';
   const partesData = props.user.data_atividade.split('/');
   const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
-  const dataString = dataAtividade.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  const dataString = dataAtividade.toLocaleDateString('pt-BR', {
+    month: 'long',
+    year: 'numeric'
+  });
   return dataString.charAt(0).toUpperCase() + dataString.slice(1);
 });
-
 </script>
 
 <style scoped lang="scss">
 @import "src/css/app.scss";
 
-.text-color{
-  color: $cumes-03
+.profile-card-container {
+  padding: 16px;
+  background-color: $cumes-05;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: auto;
 }
 
-.profile-header-container {
-  border-radius: 0 0 30px 30px;
-  padding-top: 80px;
+.profile-header {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
   align-items: center;
-  background-color: $cumes-03;
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+  gap: 16px;
 }
 
 .profile-picture-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-right: 16px;
 }
 
 .profile-picture {
-  width: 120px;
-  height: 120px;
+  width: 160px;
+  height: 160px;
   border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.club-info {
-  margin-top: 8px;
-  max-width: 18ch;
-  word-wrap: break-word;
-  font-size: 14px;
+  border: 3px solid $cumes-04;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .user-details {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  text-align: left;
 }
 
-.shadow-item {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  display: flex;
-  height: 10%;
+.user-name {
+  font-size: 30px;
+  font-weight: bold;
+  color: $cumes-04;
 }
 
-.info-list {
+.user-location,
+.user-club {
+  font-size: 16px;
+  color: $cumes-04;
+}
+
+.escalando-info {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: auto;
+  padding-left: 30px;
 }
 
-.info-item {
-  display: flex;
-  align-items: flex-start; /* Alinha o ícone e o texto no topo */
+.dias-escalando{
+  margin-top: 3rem;
 }
 
-.right-margem {
-  margin-right: 8px;
+.anos-escalando {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
-.info-text {
-  flex: 1; /* Permite que o texto ocupe o espaço restante */
-  word-wrap: break-word; /* Quebra o texto se for muito longo */
+.label {
+  font-size: 14px;
+  color: $cumes-04;
 }
 
-.profile-header-container{
-  background-color: $background;
+.dias-count,
+.anos-count {
+  font-size: 20px;
+  font-weight: bold;
+  color: $cumes-04;
 }
 
-.caixa-escalada{
-  border: $cumes-03 solid 2px;
-  max-width: 240px;
-  padding: 20px;
-  text-align: center;
+.data-label {
+  font-size: 14px;
+  color: $cumes-04;
 }
 
-.user-name{
-  color: $cumes-03;
-  padding-left: 15px;
-}
-
-.user-localizacao{
-  padding: 10px;
+.data-formatada {
+  font-size: 18px;
+  font-weight: bold;
+  color: $cumes-04;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
 </style>

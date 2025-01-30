@@ -1,13 +1,13 @@
 <template>
-  <div class="q-pa-md q-mb-md no-wrap top-margem border-radius-large">
-    <div class="row title-box border-radius-medium">
+  <div class="div-externa">
+    <div class="row title-box border-radius-small">
       <div class="text-h5 titulo">Predileta</div>
-      <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode"/>
+      <q-icon name="edit" class="small-icon right-margem icon" @click="toggleEditMode"/>
     </div>
     <q-separator spaced />
 
     <!-- Exibição dos detalhes da via favorita -->
-    <div class="border border-radius-medium">
+    <div class="border border-radius-small">
       <div v-if="viaPreferida">
         <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
       </div>
@@ -107,25 +107,22 @@ const savePreferida = async () => {
 @import "src/css/app.scss";
 .title-box{
   padding-top: 10px;
-  background-color: $dark;
+  background-color: $background;
   height: 50px;
   width: max-content;
 }
 .titulo {
-  margin-left: 16px;
   color: $secondary;
 }
 .icon{
-  color: $dark;
-  background-color: $secondary;
-  border-radius: 5px;
-  margin-left: 20px;
+  color: $cumes-03;
+  margin-left: 0.8rem;
 }
 .right-margem {
   margin-right: 16px;
 }
 .custom-input{
-  background-color: $dark;
+  background-color: $background;
   font-size: 20px;
   color: white;
 }
@@ -142,7 +139,12 @@ const savePreferida = async () => {
   width: 200px;
   height: 200px;
   border-radius: 10px;
-  border: 10px solid $dark;
+  border: 10px solid $background;
   object-fit: cover;
+}
+
+.div-externa{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 </style>

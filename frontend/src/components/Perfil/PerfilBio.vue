@@ -1,8 +1,8 @@
 <template>
-  <div class="q-pa-md q-mb-md no-wrap top-margem fundo1 border-radius-large">
-    <div class="row title-box border-radius-medium">
+  <div class="div-externa">
+    <div class="row title-box border-radius-small">
       <div class="text-h5 titulo">Bio</div>
-      <q-icon name="edit" class="medium-icon right-margem icon" @click="toggleEditMode" />
+      <q-icon name="edit" class="small-icon right-margem icon" @click="toggleEditMode" />
     </div>
     <q-separator spaced />
     <div class="col text-left">
@@ -62,14 +62,11 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   width: max-content;
 }
 .titulo {
-  margin-left: 5px;
   color: $cumes-03;
 }
 .icon{
-  color: $background;
-  background-color: $cumes-03;
-  border-radius: 5px;
-  margin-left: 20px;
+  color: $cumes-03;
+  margin-left: 0.8rem;
 }
 .descricao-bio{
   padding: 15px;
@@ -87,5 +84,10 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   border-radius: 10px;
   font-size: 20px;
   color: white;
+}
+
+.div-externa{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 </style>
