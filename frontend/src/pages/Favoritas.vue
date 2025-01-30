@@ -1,81 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import ColecaoService from 'src/services/ColecaoService';
-import AddViaModal from 'components/Colecao/AddViaModal.vue';
-import Busca from 'components/Busca/Busca.vue';
-import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
-import SubNavbar from 'layouts/SubNavbar.vue';
-
-defineOptions({
-  name: 'FavoritasPage'
-});
-
-// Router para navegação
-const router = useRouter();
-
-// Referência para o componente de busca
-const searchEntityRef = ref();
-
-// Dados da coleção de favoritas
-const colecaoId = ref<number | null>(null);
-
-// Controle de modais
-const isAddViaModalOpen = ref(false);
-
-// Obtenha o ID do usuário de forma reativa
-const usuarioId = computed(() => window.localStorage.getItem('usuarioId') || null);
-
-// Função para buscar a coleção de favoritas
-async function fetchFavoritasColecao () {
-  if (!usuarioId.value) {
-    console.error('Usuário não logado.');
-    await router.push('/auth/login');
-    return;
-  }
-
-  try {
-    const colecao = await ColecaoService.obterColecaoFavoritos();
-    if (colecao?.id) {
-      colecaoId.value = colecao.id; // Atualiza o filtro
-      await handleApplyFilters({ colecaoId: colecao.id }); // Aplica os filtros após buscar a coleção
-    } else {
-      console.warn('Nenhuma coleção de favoritas encontrada.');
-      colecaoId.value = null;
-    }
-  } catch (error) {
-    console.error('Erro ao buscar coleção de favoritas:', error);
-    router.push('/colecoes'); // Redireciona caso falhe
-  }
-}
-
-// Executa ao montar o componente
-onMounted(async () => {
-  await fetchFavoritasColecao();
-});
-
-// Funções auxiliares
-const handleApplyFilters = (filters: any) => {
-  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
-    searchEntityRef.value.handleApplyFilters(filters);
-  } else {
-    console.error('Busca ref not found or handleApplyFilters not defined');
-  }
-};
-
-const goToViaDetalhada = (via: any) => {
-  router.push(`/vias/${via.id}`);
-};
-
-const openAddViaModal = () => {
-  isAddViaModalOpen.value = true;
-};
-
-const viaAdded = () => {
-  searchEntityRef.value?.handleApplyFilters({ page: 1 });
-};
-</script>
-
 <template>
   <q-page class="favoritas-page">
     <!-- Título da página -->
@@ -122,6 +44,83 @@ const viaAdded = () => {
     />
   </q-page>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import ColecaoService from 'src/services/ColecaoService';
+import AddViaModal from 'components/Colecao/AddViaModal.vue';
+import Busca from 'components/Busca/Busca.vue';
+import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
+import SubNavbar from 'layouts/SubNavbar.vue';
+
+defineOptions({
+  name: 'FavoritasPage'
+});
+
+// Router para navegação
+const router = useRouter();
+
+// Referência para o componente de busca
+const searchEntityRef = ref();
+
+// Dados da coleção de favoritas
+const colecaoId = ref<number | null>(null);
+
+// Controle de modais
+const isAddViaModalOpen = ref(false);
+
+// Obtenha o ID do usuário de forma reativa
+const usuarioId = computed(() => window.localStorage.getItem('usuarioId') || null);
+
+// Função para buscar a coleção de favoritas
+async function fetchFavoritasColecao () {
+  if (!usuarioId.value) {
+    console.error('Usuário não logado.');
+    await router.push('/auth/login');
+    return;
+  }
+  try {
+    const colecao = await ColecaoService.obterColecaoFavoritos();
+    if (colecao?.id) {
+      colecaoId.value = colecao.id; // Atualiza o filtro
+      await handleApplyFilters({ colecaoId: colecao.id }); // Aplica os filtros após buscar a coleção
+    } else {
+      console.warn('Nenhuma coleção de favoritas encontrada.');
+      colecaoId.value = null;
+    }
+  } catch (error) {
+    console.error('Erro ao buscar coleção de favoritas:', error);
+    router.push('/colecoes'); // Redireciona caso falhe
+  }
+}
+
+// Executa ao montar o componente
+onMounted(async () => {
+  await fetchFavoritasColecao();
+});
+
+// Funções auxiliares
+const handleApplyFilters = (filters: any) => {
+  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
+    searchEntityRef.value.handleApplyFilters(filters);
+  } else {
+    console.error('Busca ref not found or handleApplyFilters not defined');
+  }
+};
+
+const goToViaDetalhada = (via: any) => {
+  router.push(`/vias/${via.id}`);
+};
+
+const openAddViaModal = () => {
+  isAddViaModalOpen.value = true;
+};
+
+const viaAdded = () => {
+  searchEntityRef.value?.handleApplyFilters({ page: 1 });
+};
+</script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';

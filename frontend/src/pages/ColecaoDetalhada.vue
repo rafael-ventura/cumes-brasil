@@ -1,10 +1,9 @@
 <template>
-  <q-page class="q-pa-none">
+  <q-page>
     <div v-if="colecao">
       <div class="header-container" @click="expandImage(colecao!.imagem?.url || '')">
         <BotaoVoltar class="back-button" />
         <div class="header">
-          <!-- Substituir a imagem por um componente ou exibir o placeholder -->
           <div
             v-if="colecao!.imagem?.url"
             :style="{ backgroundImage: `url(${colecao!.imagem.url})` }"
@@ -54,46 +53,8 @@
         </template>
       </Busca>
 
-      <!-- Outros componentes de configuração e modais -->
-      <ModalConfigColecoes
-        v-model="isConfigDialogOpen"
-        :collectionData="colecao"
-        @edit="editCollection"
-        @delete="confirmDeletion"
-      />
-      <ImagemModal :isOpen="isImageModalOpen" :imageUrl="expandedImageUrl" @update:isOpen="isImageModalOpen = $event" />
-      <!-- Confirmar exclusão -->
-      <q-dialog v-model="isDeleteConfirmOpen" persistent>
-        <q-card>
-          <q-card-section>
-            Tem certeza que deseja excluir esta coleção?
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn flat label="Sim" color="red" @click="deleteCollection" />
-            <q-btn flat label="Voltar" @click="isDeleteConfirmOpen = false" />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-      <!-- Formulário de edição -->
-      <q-dialog v-model="isEditFormOpen" persistent>
-        <q-card>
-          <q-card-section>
-            <q-input v-model="colecaoEdit.nome" label="Nome da Coleção" />
-            <q-input v-model="colecaoEdit.descricao" label="Descrição da Coleção" />
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn flat label="Editar" color="primary" @click="submitEditCollection" />
-            <q-btn flat label="Voltar" @click="isEditFormOpen = false" />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-
-      <q-btn
-        fab
-        icon="add"
-        class="botao-add fixed-bottom-right"
-        @click="openAddViaModal"
-      />
+      <!-- Substituição pelo componente de botão -->
+      <BotaoAdicionar @add="openAddViaModal" />
 
       <AddViaModal
         :isOpen="isAddViaModalOpen"
@@ -117,6 +78,7 @@ import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import Busca from 'components/Busca/Busca.vue';
 import ImagePlaceholder from 'components/ImagePlaceholder.vue';
+import BotaoAdicionar from 'components/BotaoAdicionar.vue'; // Importação do novo botão
 
 const route = useRoute();
 const router = useRouter();
@@ -200,16 +162,18 @@ const updateIsAddViaModalOpen = (value: boolean) => {
 };
 
 const viaAdded = () => {
-  // Atualize a busca após adicionar uma nova via
   searchEntityRef.value?.handleApplyFilters({ page: 1 });
 };
 </script>
+
 <style scoped lang="scss">
 @import "src/css/app.scss";
+
 .header-container {
-  margin-bottom: 16px;
   position: relative;
+  width: 100%;
   cursor: pointer;
+  margin: 0;
 }
 
 .back-button {
@@ -220,17 +184,13 @@ const viaAdded = () => {
 }
 
 .header {
-  position: relative;
   width: 100%;
-  height: 300px;
-  background-size: cover;
-  background-position: center;
-  color: white;
+  height: 300px; /* Altura fixa */
+  background-color: var(--q-primary);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 16px;
-  border-bottom-left-radius: 16px;
+  border-bottom-left-radius: 16px; /* Bordas arredondadas nos cantos inferiores */
   border-bottom-right-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -240,7 +200,7 @@ const viaAdded = () => {
   height: 100%;
   background-size: cover;
   background-position: center;
-  border-bottom-left-radius: 16px;
+  border-bottom-left-radius: 16px; /* Alinha o arredondamento com a `header` */
   border-bottom-right-radius: 16px;
 }
 
@@ -250,32 +210,48 @@ const viaAdded = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom-left-radius: 16px;
+  background-color: var(--q-primary); /* Cor verde padrão */
+  border-bottom-left-radius: 16px; /* Alinha o arredondamento com a `header` */
   border-bottom-right-radius: 16px;
-  background-color: var(--q-primary); /* Cor primária do Quasar */
 }
 
 .header-content {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 0.2%;
-  border-radius: 4%;
-  width: 100%;
-  margin-bottom: -40px;
+  background: rgba(0, 0, 0, 0.7); /* Fundo preto com transparência */
+  padding: 8px 16px; /* Reduz o espaço interno */
+  width: 100%; /* Ocupa toda a largura */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espaçamento entre os elementos */
+  border-bottom-left-radius: 16px; /* Arredondamento da caixa */
+  border-bottom-right-radius: 16px;
 }
 
 .header-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Texto à esquerda e ícone à direita */
   align-items: center;
 }
 
-.icons-container {
-  position: relative;
-  z-index: 20; /* Garante que os ícones estejam acima do cabeçalho */
+.text-h5 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
 }
 
-.icons-container q-icon {
-  cursor: pointer;
+.text-subtitle1 {
+  font-size: 1rem;
+  color: white;
+}
+
+.text-caption {
+  font-size: 0.875rem;
+  color: white;
+}
+
+.q-btn {
+  margin: 0;
+  padding: 0;
+  color: white;
 }
 
 .via-list {
@@ -310,8 +286,9 @@ const viaAdded = () => {
 
 .fixed-bottom-right {
   position: fixed;
-  bottom: 120px; /* Ajuste a posição para ficar acima da navbar */
+  bottom: 120px; /* Ajuste para manter o botão acima da navbar */
   right: 16px;
   z-index: 2; /* Garante que o botão esteja acima do conteúdo */
 }
+
 </style>
