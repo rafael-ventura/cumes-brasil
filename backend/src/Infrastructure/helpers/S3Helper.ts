@@ -24,8 +24,7 @@ class S3Helper {
         Bucket: this.bucketName,
         Key: fileName,
         Body: fileBuffer,
-        ContentType: fileMimeType,
-        ACL: 'public-read',
+        ContentType: fileMimeType
       };
 
       const result = await s3.upload(params).promise();
