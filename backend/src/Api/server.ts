@@ -61,9 +61,9 @@ AppDataSource.initialize()
 // Inicializar o servidor
 app.listen(PORT, HOSTNAME, () => {
   console.log('Configurações do servidor:');
-  console.log('FRONTEND_URL:', FRONTEND_URL);
-  console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-  console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
-  console.log('DB_HOST:', process.env.DB_HOST);
-  console.log('DB_NAME:', process.env.DB_NAME);
+  console.log('AWS_REGION:', process.env.AWS_REGION);
+  console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
+  console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY);
+  console.log('AWS_S3_BUCKET_NAME:', process.env.AWS_S3_BUCKET_NAME);
+  console.log('CLOUDFRONT_URL:', process.env.CLOUDFRONT_URL);
 });
