@@ -64,12 +64,14 @@ export class UsuarioController {
 
     editarFotoPerfil = async (req: Request, res: Response) => {
         try {
-            const usuarioId = req.user.usuarioId
-            const file = req.file
+            const usuarioId = req.user.usuarioId;
+            const file = req.file;
+            console.log("📸 Arquivo recebido:", req.file);
             await this.service.atualizarFotoPerfil(usuarioId, file);
-            res.status(200).json({ message: 'Usuario atualizado com sucesso.' });
+
+            res.status(200).json({ message: 'Usuário atualizado com sucesso.' });
         } catch (error) {
-            if (error instanceof Error && error.message === 'Usuario não encontrado') {
+            if (error instanceof Error && error.message === 'Usuário não encontrado') {
                 return res.status(404).json({ message: error.message });
             }
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });

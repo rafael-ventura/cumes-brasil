@@ -1,29 +1,35 @@
 import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const isProduction = Boolean(process.env.CLOUDFRONT_URL); // Se existir, estamos em produção
 
 export class MulterMiddleware {
-  private static storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      console.log("o caminho é: ", path.resolve(__dirname, '..', '..', '..', 'assets'));
-      cb(null, path.resolve(__dirname, '..', '..', '..', 'assets'));
-    },
-    filename: (req: any, file, cb) => {
-      crypto.randomBytes(16, (err, hash) => {
-        if (err) {
-          cb(err, '');
-        } else {
+  private static storage = isProduction
+    ? multer.memoryStorage() // Salva na memória (para enviar ao S3)
+    : multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets');
+        console.log('📂 Salvando imagem localmente em:', uploadPath);
+        cb(null, uploadPath);
+      },
+      filename: (req: any, file, cb) => {
+        crypto.randomBytes(16, (err, hash) => {
+          if (err) return cb(err, '');
           const usuarioId = req.user?.usuarioId || 'unknown';
           const fileName = `foto_perfil-userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
           cb(null, fileName);
-        }
-      });
-    }
-  });
+        });
+      }
+    });
 
   public static upload = multer({
-    storage: MulterMiddleware.storage
+    storage: MulterMiddleware.storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB
   }).single('foto_perfil');
 
   public static handleErrors(err: any, req: Request, res: Response, next: NextFunction) {

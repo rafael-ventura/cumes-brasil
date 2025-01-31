@@ -1,22 +1,23 @@
-import {Usuario} from '../../Domain/entities/Usuario';
-import {UsuarioRepository} from '../../Infrastructure/repositories/UsuarioRepository';
+import { Usuario } from '../../Domain/entities/Usuario';
+import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 import bcrypt from 'bcrypt';
-import {Colecao} from '../../Domain/entities/Colecao';
-import {ColecaoRepository} from '../../Infrastructure/repositories/ColecaoRepository';
-import {ViaRepository} from '../../Infrastructure/repositories/ViaRepository';
-import {Container, Service} from 'typedi';
-import {Imagem} from '../../Domain/entities/Imagem';
-import {ImagemService} from './ImagemService';
+import { Colecao } from '../../Domain/entities/Colecao';
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { Container, Service } from 'typedi';
+import { Imagem } from '../../Domain/entities/Imagem';
+import { ImagemService } from './ImagemService';
 import path from 'path';
 import * as fs from 'node:fs';
 import BadRequestError from '../errors/BadRequestError';
-import {errorsMessage, successMessage} from '../errors/constants';
+import { errorsMessage, successMessage } from '../errors/constants';
 import NotFoundError from '../errors/NotFoundError';
-import {MailService} from './MailService';
+import { MailService } from './MailService';
 import UserValidation from '../validations/UserValidation';
-import {ResetUserPasswordTokenService} from './ResetUserPasswordTokenService';
+import { ResetUserPasswordTokenService } from './ResetUserPasswordTokenService';
 import TokenValidation from '../validations/TokenValidation';
-import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
+import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
+import S3Helper from '../../Infrastructure/helpers/S3Helper';
 
 @Service()
 export class UsuarioService {
@@ -27,6 +28,7 @@ export class UsuarioService {
     private imagemRepository: ImagemRepository;
     private mailService = Container.get(MailService);
     private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
+    private s3Service: S3Helper = new S3Helper();
 
     constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository, imagemRepository: ImagemRepository) {
         this.usuarioRepo = usuarioRepo;
@@ -118,26 +120,59 @@ export class UsuarioService {
     }
 
     async atualizarFotoPerfil(usuarioId: number, file?: Express.Multer.File) {
-        const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
-        if(!imagemAtual) {
-            throw new BadRequestError('Imagem não encontrada');
+        if (!file) {
+            throw new BadRequestError('Nenhuma imagem foi enviada.');
         }
-        const usuario: Usuario | null = await this.usuarioRepo.findOne({where: {id: usuarioId}});
-        if (usuario != null) {
-            let novaImagem = new Imagem();
-            novaImagem.url = `/assets/${file?.filename}`;
-            novaImagem.tipo_entidade = 'usuario';
-            novaImagem.descricao = `Foto de perfil do usuário ${usuario?.nome} (${usuario.id})`;
-            const novaImagemUpdate = await this.imagemService.update(imagemAtual?.id, novaImagem);
-            if(!novaImagemUpdate) {
-                throw new BadRequestError('Erro ao atualizar a imagem');
-            }
-            novaImagem = novaImagemUpdate;
 
-            usuario.foto_perfil = novaImagem;
-            await this.usuarioRepo.updateFotoPerfil(usuario.id, novaImagem.id);
+        const usuario: Usuario | null = await this.usuarioRepo.findOne({ where: { id: usuarioId } });
+
+        if (!usuario) {
+            throw new BadRequestError('Usuário não encontrado.');
         }
+
+        // Buscar imagem atual do usuário
+        const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
+
+        // Remover a imagem antiga do S3, se existir
+        if (imagemAtual && process.env.CLOUDFRONT_URL) {
+            console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`);
+            const fileName = imagemAtual.url.split('/').pop(); // Pega o nome do arquivo
+            if (fileName) {
+                await this.s3Service.deleteFileS3(fileName);
+            }
+        }
+
+        let imageUrl: string;
+
+        if (process.env.CLOUDFRONT_URL) {
+            // Produção: Enviar para S3
+            console.log("🌍 Enviando imagem para o S3...");
+            const fileName = `perfil/userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
+            imageUrl = await this.s3Service.uploadFileS3(fileName, file.buffer, file.mimetype);
+        } else {
+            // Desenvolvimento: Usar caminho local
+            console.log("💾 Salvando imagem localmente...");
+            imageUrl = `/assets/${file.filename}`;
+        }
+
+        console.log("✅ Imagem salva com sucesso:", imageUrl);
+
+        // Atualizar banco de dados com a URL da imagem
+        let novaImagem = imagemAtual || new Imagem(); // Se já existia uma, reaproveita
+        novaImagem.url = imageUrl;
+        novaImagem.tipo_entidade = 'usuario';
+        novaImagem.descricao = `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`;
+
+        const novaImagemUpdate = await this.imagemService.update(novaImagem.id, novaImagem);
+
+        if (!novaImagemUpdate) {
+            throw new BadRequestError('Erro ao atualizar a imagem');
+        }
+
+        usuario.foto_perfil = novaImagemUpdate;
+        await this.usuarioRepo.updateFotoPerfil(usuario.id, novaImagemUpdate.id);
     }
+
 
     private async removerFotoPerfil(usuario: Usuario) {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
