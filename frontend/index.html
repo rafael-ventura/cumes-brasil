@@ -4,6 +4,11 @@
     <title>Cumes Brasil</title>
 
     <meta charset="utf-8">
+    <meta property="og:title" content="Cumes Brasil - Catálogo Digital de Escalada">
+    <meta property="og:description" content="Encontre informações detalhadas sobre vias de escalada e croquis no Brasil. Projeto feito por escaladores para escaladores.">
+    <meta property="og:image" content="https://www.cumesbrasil.com.br/assets/logo.png">
+    <meta property="og:url" content="https://www.cumesbrasil.com.br">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="description" content="<%= productDescription %>">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -17,6 +22,16 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="./src-pwa/manifest.json">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Cumes Brasil",
+        "url": "https://www.cumesbrasil.com.br",
+        "logo": "https://cumes-brasil-images.s3.us-east-1.amazonaws.com/assets/logo.webp"
+      }
+    </script>
+
   </head>
   <body>
     <!-- quasar:entry-point -->
