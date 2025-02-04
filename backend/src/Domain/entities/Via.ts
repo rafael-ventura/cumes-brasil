@@ -59,6 +59,22 @@ export class Via extends BaseEntity {
   @Column({ nullable: true })
   data: string;
 
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  latitude: number;
+
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  longitude: number;
+
   @ManyToOne(() => Montanha, montanha => montanha.vias)
   montanha: number;
 
