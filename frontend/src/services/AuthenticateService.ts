@@ -39,7 +39,7 @@ class AuthenticateService {
 
   async generateUserResetPassword (email: string) {
     try {
-      return await api.post('/usuarios/generate-reset-password', { email });
+      return await api.post('/auth/generate-reset-password', { email });
     } catch (error: any) {
       handleApiError(error, error.response?.data?.message);
     }
@@ -47,7 +47,7 @@ class AuthenticateService {
 
   async resetPassword (password: string, passwordRepeated: string, token: string) {
     try {
-      return await api.put(`/usuarios/reset-password/${token}`, {
+      return await api.put(`/auth/reset-password/${token}`, {
         password,
         passwordRepeated
       });
