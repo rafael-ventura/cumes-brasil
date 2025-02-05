@@ -1,7 +1,6 @@
 import { UsuarioService } from '../../Application/services/UsuarioService';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { Usuario } from '../../Domain/entities/Usuario';
-import HandleErrors from '../../Application/errors/HandleErrors';
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -32,20 +31,6 @@ export class UsuarioController {
             res.json(result);
         } catch (error) {
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
-        }
-    };
-
-    registrar = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const {
-                nome,
-                email,
-                senha
-            } = req.body;
-            await this.service.register(nome, email, senha);
-            res.status(201).json({ message: 'Usuario criado com sucesso.' });
-        } catch (error) {
-            HandleErrors.handleErrors(error, req, res, next);
         }
     };
 
@@ -118,30 +103,4 @@ export class UsuarioController {
             res.status(500).json({ error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido' });
         }
     };
-
-    generateResetUserPasswordToken = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const response = await this.service.createResetUserPassword(req.body?.email);
-            res.status(200).json({
-                message: response.message
-            });
-
-        } catch (error: any) {
-            HandleErrors.handleErrors(error, req, res, next);
-        }
-    }
-
-    /**
-     * Criar lógica para resetar senha do usuario
-     */
-    resetPassword = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const response = await this.service.updateUserPassword(req.body?.password, req.body?.passwordRepeated, req.params?.token);
-            res.status(201).json({
-                message: response.message
-            });
-        } catch (error: any) {
-            HandleErrors.handleErrors(error, req, res, next);
-        }
-    }
 }
