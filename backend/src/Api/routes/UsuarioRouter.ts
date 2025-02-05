@@ -11,19 +11,15 @@ import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 
 const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 const usuarioController = new UsuarioController(usuarioService);
-
 const UsuarioRouter = Router();
 
-UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.get("/", usuarioController.getAll);
-UsuarioRouter.post("/", usuarioController.registrar);
-UsuarioRouter.put('/', authenticateToken, usuarioController.editarDados);
+UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.delete("/:id", usuarioController.delete);
 
-// perfil do usuario
-UsuarioRouter.get('/perfil/:id', usuarioController.getPerfil);
-
-UsuarioRouter.post("/generate-reset-password", usuarioController.generateResetUserPasswordToken);
-UsuarioRouter.put("/reset-password/:token", usuarioController.resetPassword);
+// perfil do usuario - Movido para o Perfil - TODO - remover
+/*UsuarioRouter.get('/perfil', usuarioController.getPerfil);
+UsuarioRouter.put('/perfil', authenticateToken, usuarioController.editarDados);
+UsuarioRouter.put('/perfil/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);*/
 
 export default UsuarioRouter;
