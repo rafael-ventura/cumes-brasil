@@ -13,6 +13,7 @@
     <!-- Lista com Croqui e Detalhes -->
     <q-list bordered>
       <SecaoCroqui v-if="via" :croquis="via.croquis" />
+      <SecaoGrau v-if="via" :via="via"/>
       <SecaoMaisDetalhes v-if="via" :via="via" />
     </q-list>
   </q-page>
@@ -28,6 +29,7 @@ import BotoesAcao from 'components/Via/BotoesAcao.vue';
 import SecaoCroqui from 'components/Via/SecaoCroqui.vue';
 import SecaoMaisDetalhes from 'components/Via/SecaoMaisDetalhes.vue';
 import AuthenticateService from 'src/services/AuthenticateService';
+import SecaoGrau from 'components/Via/SecaoGrau.vue';
 
 const route = useRoute();
 const via = ref();

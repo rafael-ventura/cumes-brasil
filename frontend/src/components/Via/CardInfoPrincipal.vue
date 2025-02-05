@@ -37,7 +37,6 @@
 import { ref } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
-import router from 'src/router';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 
 const props = defineProps({
