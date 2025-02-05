@@ -1,11 +1,155 @@
-import { AppDataSource } from '../config/db';
-import { Fonte } from '../../Domain/entities/Fonte';
-import { Montanha } from '../../Domain/entities/Montanha';
-import { Face } from '../../Domain/entities/Face';
-import { Via } from '../../Domain/entities/Via';
-import { Croqui } from '../../Domain/entities/Croqui';
-import { Imagem } from '../../Domain/entities/Imagem';
-import { Usuario } from '../../Domain/entities/Usuario';
+import {AppDataSource} from '../config/db';
+import {Fonte} from '../../Domain/entities/Fonte';
+import {Montanha} from '../../Domain/entities/Montanha';
+import {Face} from '../../Domain/entities/Face';
+import {Via} from '../../Domain/entities/Via';
+import {Croqui} from '../../Domain/entities/Croqui';
+import {Imagem} from '../../Domain/entities/Imagem';
+import {Usuario} from '../../Domain/entities/Usuario';
+
+
+const fontesJson = {
+  'fontes': [
+    {
+      'id': 1,
+      'autor': 'Deus Ex Machina',
+      'referencia': 'Deus Ex Machina. AKA Cumes Brasil.'
+    },
+    {
+      'id': 2,
+      'autor': 'André Ilha; Kika Bradford',
+      'referencia': 'André Ilha; Kika Bradford. Guia de escaladas da Zona Sul e Ilhas Costeiras do Rio de Janeiro. Rio de Janeiro\\, 2011.'
+    },
+    {
+      'id': 3,
+      'autor': 'Pedro Bugim',
+      'referencia': 'Pedro Bugim. Blog do Bugim. Acessado em: https://www.blogdobugim.com/post/invas%C3%A3o-na-pedreira-da-rua-dr-anibal-moreira'
+    },
+    {
+      'id': 4,
+      'autor': 'Itaway Ecotours',
+      'referencia': 'Itaway Ecotours. Acessado em: https://www.tripadvisor.com.br/AttractionProductReview-g303506-d16840111-Climb_Rio_Rock_Climbing_Tailored_for_All_Levels-Rio_de_Janeiro_State_of_Rio_de_Jan.html'
+    },
+    {
+      'id': 5,
+      'autor': 'Melhores Destinos',
+      'referencia': 'https://www.melhoresdestinos.com.br/wp-content/uploads/2019/02/passagens-aereas-rio-de-janeiro-capa2019-01.jpg'
+    },
+    {
+      'id': 6,
+      'autor': 'Rio Mountain Sports',
+      'referencia': 'Rio Mountain Sports. Acessado em: https://riomountainsports.rezdy.com/373607/escalada-no-corcovado-via-k2'
+    },
+    {
+      'id': 7,
+      'autor': 'Clube Excursionista Carioca',
+      'referencia': 'Clube Excursionista Carioca. Acessado em: https://www.carioca.org.br/'
+    }
+  ]
+};
+
+const imagensJson = {
+  'imagens': [
+    {
+      'id': 1,
+      'url': '/assets/colecao-default-01.webp',
+      'descricao': 'Foto Default para Colecao',
+      'fonte': 3,
+      'tipo_entidade': 'colecao'
+    },
+    {
+      'id': 2,
+      'url': '/assets/montanha-default-01.webp',
+      'descricao': 'Foto Default para Montanha',
+      'fonte': 4,
+      'tipo_entidade': 'montanha'
+    },
+    {
+      'id': 3,
+      'url': '/assets/usuario-default-01.webp',
+      'descricao': 'Foto Default para Usuário',
+      'fonte': 1,
+      'tipo_entidade': 'usuario'
+    },
+    {
+      'id': 4,
+      'url': '/assets/via-default-01.webp',
+      'descricao': 'Foto Default para Via',
+      'fonte': 1,
+      'tipo_entidade': 'via'
+    },
+    {
+      'id': 5,
+      'url': '/assets/croquis/croqui_01.webp',
+      'descricao': 'Croquis da Anibal - Mapa Desenhado',
+      'fonte': 2,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 6,
+      'url': '/assets/croquis/croqui_02.webp',
+      'descricao': 'Croquis da Anibal - Foto das Vias',
+      'fonte': 2,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 7,
+      'url': '/assets/croquis/croqui_29_dezembro.webp',
+      'descricao': 'Croqui Via 29 de Dezembro',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 8,
+      'url': '/assets/croquis/croqui_22_outubro.webp',
+      'descricao': 'Croqui Via 22 de Outubro',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 9,
+      'url': '/assets/croquis/croqui_semisonic.webp',
+      'descricao': 'Croqui Via Semisonic',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 10,
+      'url': '/assets/croquis/croqui_ratos_da_montanha.webp',
+      'descricao': 'Croqui Via Ratos da Montanha',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 11,
+      'url': '/assets/croquis/croqui_ponto_noturno.webp',
+      'descricao': 'Croqui Via Ponto Noturno',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 12,
+      'url': '/assets/croquis/croqui_unha_de_gato.webp',
+      'descricao': 'Croqui Via Unha de Gato',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 13,
+      'url': '/assets/croquis/croqui_fissura_do_ingles.webp',
+      'descricao': 'Croqui Via Fissura do Ingles - Resumido',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    },
+    {
+      'id': 14,
+      'url': '/assets/croquis/croqui_fissura_do_ingles_02.webp',
+      'descricao': 'Croqui Via Fissura do Ingles - Detalhado',
+      'fonte': 7,
+      'tipo_entidade': 'croqui'
+    }
+  ]
+};
 
 const viasJson = {
   'vias': [
@@ -3679,135 +3823,6 @@ const montanhasJson = {
   ]
 };
 
-const fontesJson = {
-  'fontes': [
-    {
-      'id': 1,
-      'autor': 'Deus Ex Machina',
-      'referencia': 'Deus Ex Machina. AKA Cumes Brasil.'
-    },
-    {
-      'id': 2,
-      'autor': 'André Ilha; Kika Bradford',
-      'referencia': 'André Ilha; Kika Bradford. Guia de escaladas da Zona Sul e Ilhas Costeiras do Rio de Janeiro. Rio de Janeiro\\, 2011.'
-    },
-    {
-      'id': 3,
-      'autor': 'Pedro Bugim',
-      'referencia': 'Pedro Bugim. Blog do Bugim. Acessado em: https://www.blogdobugim.com/post/invas%C3%A3o-na-pedreira-da-rua-dr-anibal-moreira'
-    },
-    {
-      'id': 4,
-      'autor': 'Itaway Ecotours',
-      'referencia': 'Itaway Ecotours. Acessado em: https://www.tripadvisor.com.br/AttractionProductReview-g303506-d16840111-Climb_Rio_Rock_Climbing_Tailored_for_All_Levels-Rio_de_Janeiro_State_of_Rio_de_Jan.html'
-    },
-    {
-      'id': 5,
-      'autor': 'Melhores Destinos',
-      'referencia': 'https://www.melhoresdestinos.com.br/wp-content/uploads/2019/02/passagens-aereas-rio-de-janeiro-capa2019-01.jpg'
-    },
-    {
-      'id': 6,
-      'autor': 'Rio Mountain Sports',
-      'referencia': 'Rio Mountain Sports. Acessado em: https://riomountainsports.rezdy.com/373607/escalada-no-corcovado-via-k2'
-    },
-    {
-      'id': 7,
-      'autor': 'Clube Excursionista Carioca',
-      'referencia': 'Clube Excursionista Carioca. Acessado em: https://www.carioca.org.br/'
-    }
-  ]
-};
-
-const imagensJson = {
-  'imagens': [
-    {
-      'url': '/assets/colecao-default-01.jpg',
-      'descricao': 'Foto Default para Colecao',
-      'fonte': 3,
-      'tipo_entidade': 'colecao'
-    },
-    {
-      'url': '/assets/montanha-default-01.jpg',
-      'descricao': 'Foto Default para Montanha',
-      'fonte': 4,
-      'tipo_entidade': 'montanha'
-    },
-    {
-      'url': '/assets/usuario-default-01.jpg',
-      'descricao': 'Foto Default para Usuário',
-      'fonte': 1,
-      'tipo_entidade': 'usuario'
-    },
-    {
-      'url': '/assets/via-default-01.jpg',
-      'descricao': 'Foto Default para Via',
-      'fonte': 1,
-      'tipo_entidade': 'via'
-    },
-    {
-      'url': '/assets/croquis/croqui_01.jpg',
-      'descricao': 'Croquis da Anibal - Mapa Desenhado',
-      'fonte': 2,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_02.jpg',
-      'descricao': 'Croquis da Anibal - Foto das Vias',
-      'fonte': 2,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_29_dezembro.png',
-      'descricao': 'Croqui Via 29 de Dezembro',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_22_outubro.jpg',
-      'descricao': 'Croqui Via 22 de Outubro',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_semisonic.jpg',
-      'descricao': 'Croqui Via Semisonic',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_ratos_da_montanha.jpg',
-      'descricao': 'Croqui Via Ratos da Montanha',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_ponto_noturno.jpg',
-      'descricao': 'Croqui Via Ponto Noturno',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_unha_de_gato.jpg',
-      'descricao': 'Croqui Via Unha de Gato',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_fissura_do_ingles.jpg',
-      'descricao': 'Croqui Via Fissura do Ingles - Resumido',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    },
-    {
-      'url': '/assets/croquis/croqui_fissura_do_ingles_02.jpg',
-      'descricao': 'Croqui Via Fissura do Ingles - Detalhado',
-      'fonte': 7,
-      'tipo_entidade': 'croqui'
-    }
-  ]
-};
-
 const usuariosJson = {
   'usuarios': [
     {
@@ -3816,7 +3831,7 @@ const usuariosJson = {
       'idade': 30,
       'password_hash': '6982f0db3d4a7e74142a1a88b1dec07f0dd828c3',
       'foto_perfil': {
-        'url': '/assets/usuario-default-01.jpg',
+        'url': '/assets/usuario-default-01.webp',
         'descricao': 'Foto Default para Usuário',
         'fonte': 1,
         'tipo_entidade': 'usuario'
@@ -3994,23 +4009,23 @@ export async function loadData() {
     const faces = faceRepository.create(facesJson.faces);
     await faceRepository.save(faces);
 
-    const vias = viaRepository.create(viasJson.vias);
-    await viaRepository.save(vias);
-
     const croquis = croquiRepository.create(croquisJson.croquis);
     await croquiRepository.save(croquis);
 
-    const usuarios = usuarioRepository.create(usuariosJson.usuarios);
-    await usuarioRepository.save(usuarios);
+    const vias = viaRepository.create(viasJson.vias);
+    await viaRepository.save(vias);
 
     for (const viaCroqui of viasCroquisJson.via_croquis) {
-      const via = await viaRepository.findOne({ where: { id: viaCroqui.via_id } });
-      const croqui = await croquiRepository.findOne({ where: { id: viaCroqui.croqui_id } });
+      const via = await viaRepository.findOne({where: {id: viaCroqui.via_id}});
+      const croqui = await croquiRepository.findOne({where: {id: viaCroqui.croqui_id}});
       if (via && croqui) {
         via.croquis = [...(via.croquis || []), croqui];
         await viaRepository.save(via);
       }
     }
+
+    const usuarios = usuarioRepository.create(usuariosJson.usuarios);
+    await usuarioRepository.save(usuarios);
 
     await queryRunner.commitTransaction();
   } catch (error) {

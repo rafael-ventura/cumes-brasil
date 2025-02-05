@@ -1,46 +1,100 @@
-{
-  "imagens": [
-    {
-      "url": "/assets/colecao-default-01.jpg",
-      "descricao": "Foto Default para Colecao",
-      "fonte": 3,
-      "tipo_entidade": "colecao"
-    },
-    {
-      "url": "/assets/montanha-default-01.jpg",
-      "descricao": "Foto Default para Montanha",
-      "fonte": 4,
-      "tipo_entidade": "montanha"
-    },
-    {
-      "url": "/assets/usuario-default-01.jpg",
-      "descricao": "Foto Default para Usuário",
-      "fonte": 1,
-      "tipo_entidade": "usuario"
-    },
-    {
-      "url": "/assets/via-default-01.jpg",
-      "descricao": "Foto Default para Via",
-      "fonte": 1,
-      "tipo_entidade": "via"
-    },
-    {
-      "url": "/assets/croquis/croqui_01.jpg",
-      "descricao": "Croquis da Anibal - Mapa Desenhado",
-      "fonte": 2,
-      "tipo_entidade": "croqui"
-    },
-    {
-      "url": "/assets/croquis/croqui_02.jpg",
-      "descricao": "Croquis da Anibal - Foto das Vias",
-      "fonte": 2,
-      "tipo_entidade": "croqui"
-    },
-    {
-      "url": "/assets/croquis/croqui_29_dezembro.png",
-      "descricao": "Croqui 29 de Dezembro",
-      "fonte": 1,
-      "tipo_entidade": "croqui"
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "url": "/assets/colecao-default-01.webp",
+    "descricao": "Foto Default para Colecao",
+    "fonte": 3,
+    "tipo_entidade": "colecao"
+  },
+  {
+    "id": 2,
+    "url": "/assets/montanha-default-01.webp",
+    "descricao": "Foto Default para Montanha",
+    "fonte": 4,
+    "tipo_entidade": "montanha"
+  },
+  {
+    "id": 3,
+    "url": "/assets/usuario-default-01.webp",
+    "descricao": "Foto Default para Usuário",
+    "fonte": 1,
+    "tipo_entidade": "usuario"
+  },
+  {
+    "id": 4,
+    "url": "/assets/via-default-01.webp",
+    "descricao": "Foto Default para Via",
+    "fonte": 1,
+    "tipo_entidade": "via"
+  },
+  {
+    "id": 5,
+    "url": "/assets/croquis/croqui_01.webp",
+    "descricao": "Croquis da Anibal - Mapa Desenhado",
+    "fonte": 2,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 6,
+    "url": "/assets/croquis/croqui_02.webp",
+    "descricao": "Croquis da Anibal - Foto das Vias",
+    "fonte": 2,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 7,
+    "url": "/assets/croquis/croqui_29_dezembro.webp",
+    "descricao": "Croqui Via 29 de Dezembro",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 8,
+    "url": "/assets/croquis/croqui_22_outubro.webp",
+    "descricao": "Croqui Via 22 de Outubro",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 9,
+    "url": "/assets/croquis/croqui_semisonic.webp",
+    "descricao": "Croqui Via Semisonic",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 10,
+    "url": "/assets/croquis/croqui_ratos_da_montanha.webp",
+    "descricao": "Croqui Via Ratos da Montanha",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 11,
+    "url": "/assets/croquis/croqui_ponto_noturno.webp",
+    "descricao": "Croqui Via Ponto Noturno",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 12,
+    "url": "/assets/croquis/croqui_unha_de_gato.webp",
+    "descricao": "Croqui Via Unha de Gato",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 13,
+    "url": "/assets/croquis/croqui_fissura_do_ingles.webp",
+    "descricao": "Croqui Via Fissura do Ingles - Resumido",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  },
+  {
+    "id": 14,
+    "url": "/assets/croquis/croqui_fissura_do_ingles_02.webp",
+    "descricao": "Croqui Via Fissura do Ingles - Detalhado",
+    "fonte": 7,
+    "tipo_entidade": "croqui"
+  }
+]
