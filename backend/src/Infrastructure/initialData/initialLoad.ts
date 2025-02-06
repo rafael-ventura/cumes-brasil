@@ -9,6 +9,7 @@ import {Usuario} from "../../Domain/entities/Usuario";
 import {Face} from "../../Domain/entities/Face";
 import {Montanha} from "../../Domain/entities/Montanha";
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
+import path from "path";
 
 const basePath = path.resolve(__dirname, "../../Infrastructure/initialData");
 const fontesJson = JSON.parse(fs.readFileSync(`${basePath}/fontes.json`, "utf8"));
