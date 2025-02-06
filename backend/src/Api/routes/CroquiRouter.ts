@@ -1,13 +1,15 @@
-import { Router } from "express";
+import {Router} from "express";
 
-import { CroquiService } from "../../Application/services/CroquiService";
-import { CroquiRepository } from "../../Infrastructure/repositories/CroquiRepository";
-import { CroquiController } from "../Controllers/CroquiController";
-import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
+import {CroquiService} from "../../Application/services/CroquiService";
+import {CroquiRepository} from "../../Infrastructure/repositories/CroquiRepository";
+import {CroquiController} from "../Controllers/CroquiController";
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import {ViaCroquiRepository} from "../../Infrastructure/repositories/ViaCroquiRepository";
 
 const viaRepository = new ViaRepository();
 const croquiRepository = new CroquiRepository();
-const croquiService = new CroquiService(croquiRepository, viaRepository);
+const viaCroquiRepository = new ViaCroquiRepository();
+const croquiService = new CroquiService(croquiRepository, viaRepository, viaCroquiRepository);
 const croquiController = new CroquiController(croquiService);
 
 const CroquiRouter = Router();

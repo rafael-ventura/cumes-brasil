@@ -49,24 +49,24 @@
     "fonte": 7
   },
   {
-    id: 8,
-    nome: "Croqui da via Unha de Gato",
-    imagem: 12,
-    autor: "CEC",
+    "id": 8,
+    "nome": "Croqui da via Unha de Gato",
+    "imagem": 12,
+    "autor": "CEC",
     "fonte": 7
   },
   {
-    id: 9,
-    nome: "Croqui da Via Fissura do Ingles - Resumido",
-    imagem: 13,
-    autor: "CEC",
+    "id": 9,
+    "nome": "Croqui da Via Fissura do Ingles - Resumido",
+    "imagem": 13,
+    "autor": "CEC",
     "fonte": 7
   },
   {
-    id: 10,
-    nome: "Croqui da Via Fissura do Ingles - Detalhado",
-    imagem: 14,
-    autor: "CEC",
+    "id": 10,
+    "nome": "Croqui da Via Fissura do Ingles - Detalhado",
+    "imagem": 14,
+    "autor": "CEC",
     "fonte": 7
   }
 ]
