@@ -172,18 +172,26 @@ onMounted(() => {
   background: $cumes-01;
   color: black;
   border: none;
-  font-size: 24px;
-  padding: 8px;
+  font-size: 20px;
+  width: 40px; /* Definindo largura fixa */
+  height: 40px; /* Definindo altura fixa para manter circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   cursor: pointer;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: 50%;
+  border-radius: 50%; /* Deixa o botão completamente redondo */
   opacity: 0.9;
-  transition: opacity 0.3s ease, background 0.3s ease;
+  transition: opacity 0.3s ease, background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .nav-button:hover {
   opacity: 1;
+  background: darken($cumes-01, 10%);
+  transform: scale(1.1); /* Efeito sutil de crescimento no hover */
 }
 
 .nav-button:disabled {
