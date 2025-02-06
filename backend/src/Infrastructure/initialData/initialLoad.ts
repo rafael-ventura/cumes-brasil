@@ -10,14 +10,15 @@ import {Face} from "../../Domain/entities/Face";
 import {Montanha} from "../../Domain/entities/Montanha";
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
 
-const fontesJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/fontes.json', 'utf8'));
-const imagensJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/imagens.json', 'utf8'));
-const viasJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/vias.json', 'utf8'));
-const croquisJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/croquis.json', 'utf8'));
-const facesJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/faces.json', 'utf8'));
-const montanhasJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/montanhas.json', 'utf8'));
-const usuariosJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/usuarios.json', 'utf8'));
-const viasCroquisJson = JSON.parse(fs.readFileSync('src/Infrastructure/initialData/via_croquis.json', 'utf8'));
+const basePath = path.resolve(__dirname, "../../Infrastructure/initialData");
+const fontesJson = JSON.parse(fs.readFileSync(`${basePath}/fontes.json`, "utf8"));
+const imagensJson = JSON.parse(fs.readFileSync(`${basePath}/imagens.json`, "utf8"));
+const viasJson = JSON.parse(fs.readFileSync(`${basePath}/vias.json`, "utf8"));
+const croquisJson = JSON.parse(fs.readFileSync(`${basePath}/croquis.json`, "utf8"));
+const facesJson = JSON.parse(fs.readFileSync(`${basePath}/faces.json`, "utf8"));
+const montanhasJson = JSON.parse(fs.readFileSync(`${basePath}/montanhas.json`, "utf8"));
+const usuariosJson = JSON.parse(fs.readFileSync(`${basePath}/usuarios.json`, "utf8"));
+const viasCroquisJson = JSON.parse(fs.readFileSync(`${basePath}/via_croquis.json`, "utf8"));
 
 export async function loadData() {
   const queryRunner = AppDataSource.createQueryRunner();
