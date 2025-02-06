@@ -50,7 +50,7 @@
       <!-- Descrição -->
       <div class="detalhe-item descricao-container">
         <span>Descrição:</span>
-        <span v-if="via.descricao" class="valor-detalhe descricao">{{ via.descricao }}</span>
+        <span v-if="via.detalhes" class="valor-detalhe descricao">{{ via.detalhes }}</span>
         <span v-else class="descricao-vazia">Sem descrição disponível</span>
       </div>
 

@@ -41,7 +41,8 @@ export class CroquiRepository {
 
   async getIdsByViaId (via_id: number): Promise<number[] | null> {
     return this.repository.createQueryBuilder("croqui")
-      .leftJoin("croqui.vias", "via")
+      .leftJoin("croqui.viaCroquis", "viaCroquis")
+      .leftJoin("viaCroquis.via", "via")
       .where("via.id = :via_id", { via_id })
       .select("croqui.id")
       .getRawMany()
@@ -52,7 +53,8 @@ export class CroquiRepository {
     return this.repository.createQueryBuilder("croqui")
         .leftJoinAndSelect("croqui.fonte", "fonte")
         .leftJoinAndSelect("croqui.imagem", "imagem")
-        .leftJoin("croqui.vias", "via")
+        .leftJoin("croqui.viaCroquis", "viaCroquis")
+        .leftJoin("viaCroquis.via", "via")
         .where("via.id = :via_id", { via_id })
         .getMany();
   }
