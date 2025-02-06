@@ -31,6 +31,22 @@
         <q-badge class="badge-data">{{ formattedDataConquista }}</q-badge>
       </div>
 
+      <!-- Altura da Montanha -->
+      <div class="detalhe-item" v-if="via.montanha?.altura">
+        <span>Altura da Montanha:</span>
+        <q-badge class="badge-highlight">
+          {{ via.montanha.altura }} metros
+        </q-badge>
+      </div>
+
+      <!-- Extensão da Via -->
+      <div class="detalhe-item" v-if="via.extensao">
+        <span>Extensão da Via:</span>
+        <q-badge class="badge-highlight">
+          {{ via.extensao }} metros
+        </q-badge>
+      </div>
+
       <!-- Descrição -->
       <div class="detalhe-item descricao-container">
         <span>Descrição:</span>
@@ -134,6 +150,18 @@ const badgeColors = ['cumes-01', 'cumes-02', 'primary', 'secondary'];
   display: inline-block;
 }
 
+/* Badge para Altura da Montanha e Extensão da Via */
+.badge-highlight {
+  background-color: $cumes-02;
+  color: $offwhite;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 12px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
 /* Estilo das cores dinâmicas */
 .badge-color-1 {
   background-color: $cumes-04;
@@ -142,17 +170,17 @@ const badgeColors = ['cumes-01', 'cumes-02', 'primary', 'secondary'];
 
 .badge-color-2 {
   background-color: $cumes-05;
-  color: white;
+  color: $offwhite;
 }
 
 .badge-color-3 {
   background-color: $cumes-02;
-  color: white;
+  color: $offwhite;
 }
 
 .badge-color-4 {
   background-color: $cumes-01;
-  color: white;
+  color: $offwhite;
 }
 
 .descricao {
