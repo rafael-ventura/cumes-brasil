@@ -3,7 +3,7 @@
     <div class="q-pa-md">
       <!-- Logo e Cabeçalho -->
       <q-img
-        src="../assets/logo-amarelo.webp"
+        src="/logo-amarelo.webp"
         alt="Cumes Brasil"
         class="q-mb-md text-center logo-tamanho"
         style="object-fit: cover; object-position: center;"
