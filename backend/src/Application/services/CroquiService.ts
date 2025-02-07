@@ -1,15 +1,17 @@
-import { Croqui } from "../../Domain/entities/Croqui";
-import { CroquiRepository } from "../../Infrastructure/repositories/CroquiRepository";
-import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
-import { ObjectLiteral } from "typeorm";
+import {Croqui} from "../../Domain/entities/Croqui";
+import {CroquiRepository} from "../../Infrastructure/repositories/CroquiRepository";
+import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import {ViaCroquiRepository} from "../../Infrastructure/repositories/ViaCroquiRepository";
 
 export class CroquiService {
     private croquiRepository: CroquiRepository;
     private viaRepository: ViaRepository;
+    private viaCroquiRepository: ViaCroquiRepository;
 
-    constructor (croquiRepository: CroquiRepository, viaRepository: ViaRepository) {
+    constructor(croquiRepository: CroquiRepository, viaRepository: ViaRepository, viaCroquiRepository: ViaCroquiRepository) {
         this.croquiRepository = croquiRepository;
         this.viaRepository = viaRepository;
+        this.viaCroquiRepository = viaCroquiRepository;
     }
 
     async getCroquiById (id: number): Promise<Croqui | null> {
@@ -60,11 +62,11 @@ export class CroquiService {
     }
 
     async associarCroquiEmVia (croquiId: number, viaId: number): Promise<void> {
-        return this.croquiRepository.associarVia(croquiId, viaId);
+        return this.viaCroquiRepository.associar({croqui: {id: croquiId}, via: {id: viaId}});
     }
 
     async desassociarCroquiEmVia (croquiId: number, viaId: number): Promise<void> {
-        return this.croquiRepository.desassociarVia(croquiId, viaId);
+        return this.viaCroquiRepository.desassociar(croquiId, viaId);
     }
     async getCroquisByViaId (id: number): Promise<Croqui[]> {
         return this.croquiRepository.getByViaId(id);

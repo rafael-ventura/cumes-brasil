@@ -1,10 +1,10 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Fonte } from "./Fonte";
-import { Colecao } from "./Colecao";
-import { Via } from "./Via";
-import { Montanha } from "./Montanha";
-import { Usuario } from "./Usuario";
-import { Croqui } from "./Croqui";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Fonte} from "./Fonte";
+import {Colecao} from "./Colecao";
+import {Via} from "./Via";
+import {Montanha} from "./Montanha";
+import {Usuario} from "./Usuario";
+import {Croqui} from "./Croqui";
 
 @Entity()
 export class Imagem extends BaseEntity {
@@ -18,7 +18,11 @@ export class Imagem extends BaseEntity {
   descricao?: string;
 
   @ManyToOne(() => Fonte, fonte => fonte.imagens)
-  fonte: number;
+  @JoinColumn({name: "fonte_id"}) // Nome da chave estrangeira no banco
+  fonte: Fonte;
+
+  @Column({nullable: true})
+  fonte_id: number;
 
   @Column({ nullable: false })
   tipo_entidade: string;

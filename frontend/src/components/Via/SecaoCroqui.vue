@@ -1,29 +1,31 @@
 <template>
   <q-expansion-item expand-separator icon="photo_camera" label="Croquis">
     <div class="carousel">
-      <!-- Condicional para exibir imagem ou placeholder -->
       <template v-if="currentImage.url">
         <div class="carousel-wrapper">
-          <img
+          <q-img
             :src="currentImage.url"
             :alt="currentImage.nome"
             class="carousel-image"
+            spinner-color="white"
           />
           <!-- Botões de navegação -->
-          <button
-            @click="prevImage"
+          <q-btn
+            flat
+            round
+            icon="arrow_back"
             class="nav-button left"
-            :disabled="isFirstImage"
-          >
-            ◀
-          </button>
-          <button
-            @click="nextImage"
+            :disable="isFirstImage"
+            @click="prevImage"
+          />
+          <q-btn
+            flat
+            round
+            icon="arrow_forward"
             class="nav-button right"
-            :disabled="isLastImage"
-          >
-            ▶
-          </button>
+            :disable="isLastImage"
+            @click="nextImage"
+          />
         </div>
       </template>
       <template v-else>
@@ -50,6 +52,7 @@
         <span class="caption">{{ currentImage.nome }}</span>
         <q-btn
           dense
+          flat
           icon="download"
           ripple="false"
           label="Baixar"
@@ -62,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { Croqui } from 'src/models/Croqui';
 import { saveAs } from 'file-saver';
 
@@ -80,13 +83,13 @@ const isLastImage = computed(() => currentIndex.value === images.value.length - 
 
 const nextImage = () => {
   if (!isLastImage.value) {
-    currentIndex.value = (currentIndex.value + 1) % images.value.length;
+    currentIndex.value += 1;
   }
 };
 
 const prevImage = () => {
   if (!isFirstImage.value) {
-    currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length;
+    currentIndex.value -= 1;
   }
 };
 
@@ -115,9 +118,7 @@ onMounted(() => {
     url: croqui.imagem.url,
     nome: croqui.nome
   }));
-  console.log(images.value);
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -142,12 +143,15 @@ onMounted(() => {
 
 .carousel-wrapper {
   position: relative;
+  width: 100%;
+  max-width: 600px;
 }
 
 .carousel-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .no-photo {
@@ -162,42 +166,36 @@ onMounted(() => {
 
 .svg-placeholder {
   width: 80%;
-  margin-bottom: -15%;
-  margin-top: -20%;
   height: auto;
 }
 
 .nav-button {
   position: absolute;
-  background: $cumes-01;
-  color: black;
-  border: none;
-  font-size: 24px;
-  padding: 8px;
-  cursor: pointer;
   top: 50%;
   transform: translateY(-50%);
+  background: $cumes-01;
+  color: white;
+  border: none;
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
   border-radius: 50%;
   opacity: 0.9;
   transition: opacity 0.3s ease, background 0.3s ease;
-}
 
-.nav-button:hover {
-  opacity: 1;
-}
-
-.nav-button:disabled {
-  background: rgba(0, 0, 0, 0.2);
-  cursor: not-allowed;
-  opacity: 0.5;
+  &:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 
 .nav-button.left {
-  left: 16px;
+  left: 8px;
 }
 
 .nav-button.right {
-  right: 16px;
+  right: 8px;
 }
 
 .footer {
