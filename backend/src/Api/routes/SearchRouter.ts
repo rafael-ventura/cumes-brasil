@@ -10,6 +10,6 @@ const viaRepository = new ViaRepository();
 new SearchService(viaRepository);
 const searchController = new SearchController();
 
-router.post('/', authenticateToken ,searchController.searchEntities);
+router.post('/' ,searchController.searchEntities);
 
 export default router;

@@ -68,9 +68,7 @@ defineOptions({
 });
 
 onMounted(async () => {
-  if (!AuthenticateService.isAuthenticated()) {
-    await router.push('/auth/login');
-  }
+  await AuthenticateService.redirecionaSeNaoAutenticado(router)
 });
 
 const handleApplyFilters = (filters: any) => {

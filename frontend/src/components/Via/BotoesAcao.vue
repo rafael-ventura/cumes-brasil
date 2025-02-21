@@ -41,6 +41,8 @@ import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSelectorModal from 'components/Colecao/ItemSelectorModal.vue';
 import { createNotifyConfig } from 'src/utils/utils';
+import { useRouter } from 'vue-router';
+import AuthenticateService from "src/services/AuthenticateService";
 
 const props = defineProps({
   via: Object, // A via atualmente sendo manipulada
@@ -48,6 +50,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['atualizar:isFavorited']);
 
+const router = useRouter();
 const isFavorited = ref(false); // Controle do status de favorito
 const showEscaladaModal = ref(false); // Controle de exibição do modal de escalada
 const showCollectionModal = ref(false); // Controle de exibição do modal de coleções
@@ -68,6 +71,8 @@ onMounted(checkIfFavorited);
 
 // Alterna o status de favorito
 const toggleFavoriteStatus = async () => {
+  await AuthenticateService.redirecionaSeNaoAutenticado(router);
+
   try {
     isFavorited.value ? await removeFromFavorites() : await addToFavorites();
   } catch (error) {
@@ -110,11 +115,15 @@ const updateFavoriteStatus = (status: boolean, message: string) => {
 
 // Alterna a exibição do modal de escalada
 const toggleEscaladaModal = () => {
+  AuthenticateService.redirecionaSeNaoAutenticado(router);
+
   showEscaladaModal.value = !showEscaladaModal.value;
 };
 
 // Alterna a exibição do modal de coleções
 const toggleCollectionModal = () => {
+  AuthenticateService.redirecionaSeNaoAutenticado(router);
+
   showCollectionModal.value = !showCollectionModal.value;
 };
 

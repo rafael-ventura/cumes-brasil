@@ -102,9 +102,8 @@ const items = computed(() => [
 
 onMounted(async () => {
   try {
-    if (!AuthenticateService.isAuthenticated()) {
-      await router.push('/auth/login');
-    } else {
+      await AuthenticateService.redirecionaSeNaoAutenticado(router);
+
       user.value = await UserService.getPerfil();
       const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
       const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
@@ -119,7 +118,6 @@ onMounted(async () => {
       } else {
         numEscaladas.value = escaladas.length;
       }
-    }
   } catch (error) {
     console.error(error);
   }

@@ -1,7 +1,9 @@
 import { api } from 'boot/axios';
 import { handleApiError } from 'src/utils/utils';
+import Router from "src/router";
 
 class AuthenticateService {
+
   async login (email: string, password: string) {
     try {
       const response = await api.post('/auth/login', {
@@ -56,9 +58,11 @@ class AuthenticateService {
     }
   }
 
-  isAuthenticated (): boolean {
-    const token = localStorage.getItem('authToken');
-    return !!token;
+// frontend/src/services/AuthenticateService.ts
+  async redirecionaSeNaoAutenticado (router: Router): Promise<void> {
+    if (localStorage.getItem('authToken') == null || localStorage.getItem('authToken') == "" ) {
+      await router.push("/auth/login");
+    }
   }
 
   logout (): void {

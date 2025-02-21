@@ -38,9 +38,6 @@ class ViaService {
 
   async addToFavorites (viaId: number): Promise<void> {
     try {
-      if (!AuthenticateService.isAuthenticated()) {
-        throw new Error('Usuário não autenticado');
-      }
 
       const favoritosColecao = await ColecaoService.obterColecaoFavoritos();
 

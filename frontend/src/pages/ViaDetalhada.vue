@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import {onMounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import ViaService from 'src/services/ViaService';
 import ColecaoService from 'src/services/ColecaoService';
 import CardInfoPrincipal from 'components/Via/CardInfoPrincipal.vue';
@@ -32,6 +32,7 @@ import AuthenticateService from 'src/services/AuthenticateService';
 import SecaoGrau from 'components/Via/SecaoGrau.vue';
 
 const route = useRoute();
+const router = useRouter();
 const via = ref();
 const favoriteCollectionId = ref();
 const isFavorited = ref(false);
@@ -40,12 +41,10 @@ onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
-    if (AuthenticateService.isAuthenticated()) {
-      const collection = await ColecaoService.obterColecaoFavoritos();
-      favoriteCollectionId.value = collection ? collection.id : null;
-    }
+    const collection = await ColecaoService.obterColecaoFavoritos();
+    favoriteCollectionId.value = collection ? collection.id : null;
   } catch (error) {
-    console.error('Erro ao buscar detalhes da via:', error);
+    // nao faz nada
   }
 });
 
