@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import ViaService from 'src/services/ViaService';
 import ColecaoService from 'src/services/ColecaoService';
 import CardInfoPrincipal from 'components/Via/CardInfoPrincipal.vue';

@@ -42,7 +42,7 @@ import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSelectorModal from 'components/Colecao/ItemSelectorModal.vue';
 import { createNotifyConfig } from 'src/utils/utils';
 import { useRouter } from 'vue-router';
-import AuthenticateService from "src/services/AuthenticateService";
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const props = defineProps({
   via: Object, // A via atualmente sendo manipulada

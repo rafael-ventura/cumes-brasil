@@ -38,7 +38,6 @@ class ViaService {
 
   async addToFavorites (viaId: number): Promise<void> {
     try {
-
       const favoritosColecao = await ColecaoService.obterColecaoFavoritos();
 
       if (!favoritosColecao) {

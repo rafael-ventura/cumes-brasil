@@ -1,0 +1,110 @@
+@import "app";
+
+.custom-input-auth {
+  width: 100%;
+  margin-bottom: 16px;
+
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-label {
+    font-size: 1em;
+    color: $primary;
+    margin-left: 0.5em;
+  }
+
+  .input-icon {
+    color: $primary;
+    font-size: 1.2em;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid #8CB369 !important;
+    background-color: transparent !important;
+    color: #ffffe4 !important;
+    padding: 10px;
+    font-size: 16px;
+
+    &:focus {
+      border-color: #8CB369 !important;
+      box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
+    }
+  }
+
+  .p-invalid {
+    border-color: #ff5858 !important;
+  }
+
+  .error-message {
+    color: #ff5858;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+}
+
+.custom-password-input-auth {
+  width: 100%;
+  margin-bottom: 16px;
+
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-label {
+    font-size: 1em;
+    color: $primary;
+    margin-left: 0.5em;
+  }
+
+  .input-icon {
+    color: $primary;
+    font-size: 1.2em;
+  }
+
+  // Aplica a estilização correta para o campo de senha do PrimeVue
+  :deep(.p-password) {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  :deep(.p-password-input) {
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid #8CB369 !important;
+    background-color: transparent !important;
+    color: #ffffe4 !important;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  :deep(.p-password-input:focus) {
+    border-color: #8CB369 !important;
+    box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
+  }
+
+  // Ajusta o botão de visibilidade (olhinho)
+  :deep(.p-password .p-password-toggle-mask) {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #8CB369 !important;
+    cursor: pointer;
+  }
+}
+
+// Esconde o feedback de força da senha do PrimeVue
+:deep(.p-password-panel) {
+  display: none !important;
+}
+
+

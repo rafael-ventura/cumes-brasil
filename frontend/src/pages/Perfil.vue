@@ -102,22 +102,22 @@ const items = computed(() => [
 
 onMounted(async () => {
   try {
-      await AuthenticateService.redirecionaSeNaoAutenticado(router);
+    await AuthenticateService.redirecionaSeNaoAutenticado(router);
 
-      user.value = await UserService.getPerfil();
-      const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
-      const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
-      const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
-      if (favorita) {
-        colecaoId.value = favorita?.id;
-        numFavoritas.value = favorita.viaColecoes.length;
-        numColecoes.value = colecoes?.length;
-      }
-      if (escaladas.length === 0) {
-        numEscaladas.value = 0;
-      } else {
-        numEscaladas.value = escaladas.length;
-      }
+    user.value = await UserService.getPerfil();
+    const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
+    const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
+    const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
+    if (favorita) {
+      colecaoId.value = favorita?.id;
+      numFavoritas.value = favorita.viaColecoes.length;
+      numColecoes.value = colecoes?.length;
+    }
+    if (escaladas.length === 0) {
+      numEscaladas.value = 0;
+    } else {
+      numEscaladas.value = escaladas.length;
+    }
   } catch (error) {
     console.error(error);
   }
