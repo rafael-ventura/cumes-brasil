@@ -88,10 +88,10 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
-import {Notify} from 'quasar';
-import {createNotifyConfig} from 'src/utils/utils';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Notify } from 'quasar';
+import { createNotifyConfig } from 'src/utils/utils';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 

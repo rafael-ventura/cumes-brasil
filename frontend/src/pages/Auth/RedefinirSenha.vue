@@ -82,7 +82,7 @@
             <!-- Botão de redefinir senha -->
             <q-btn
               type="submit"
-              label="Enviar Email"
+              label="Redefinir"
               class="register-btn"
             />
           </q-form>
