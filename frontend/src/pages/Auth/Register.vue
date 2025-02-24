@@ -1,14 +1,13 @@
 <template>
   <q-page class="fundo-cadastro">
     <div class="logo-container">
-      <h1 class="logo-text">
-        <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
-      </h1>
+      <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
     </div>
     <div class="form-container">
       <q-card class="login-card">
         <q-card-section>
           <form @submit.prevent="onSignUp" class="custom-cadastro-form">
+            <!-- Campo Nome -->
             <div class="custom-input-auth">
               <div class="input-container">
                 <q-icon name="person" class="input-icon"/>
@@ -17,12 +16,13 @@
               <InputText
                 id="nome"
                 v-model="nome"
-                class="p-inputtext"
+                class="custom-input-field"
                 :class="{ 'p-invalid': !nome }"
                 placeholder="Digite seu nome"
               />
               <small v-if="!nome" class="error-message">Campo obrigatório</small>
             </div>
+
             <!-- Campo Email -->
             <div class="custom-input-auth">
               <div class="input-container">
@@ -38,6 +38,7 @@
               />
               <small v-if="!email" class="error-message">Campo obrigatório</small>
             </div>
+
             <!-- Campo Senha -->
             <div class="custom-password-input-auth">
               <div class="input-container">
@@ -47,7 +48,7 @@
               <Password
                 id="senha"
                 v-model="senha"
-                class=""
+                class="custom-input-field"
                 :class="{ 'p-invalid': !senha || senha.length < 4 }"
                 placeholder="Digite sua senha"
                 :feedback="false"
@@ -67,16 +68,20 @@
               <Password
                 id="confirmPassword"
                 v-model="confirmPassword"
-                class=""
-                :class="{ 'p-invalid': confirmPassword !== senha }"
+                class="custom-input-field"
+                :class="{
+                  'p-invalid': confirmPassword !== senha && confirmPassword.length > 0,
+                  'p-valid': confirmPassword === senha && confirmPassword.length > 0
+                }"
                 placeholder="Confirme sua senha"
                 :feedback="false"
               />
-              <small v-if="confirmPassword !== senha" class="error-message senha-nao-conferem">
+              <small v-if="confirmPassword !== senha && confirmPassword.length > 0" class="error-message senha-nao-conferem">
                 Senhas não conferem
               </small>
             </div>
           </form>
+
           <div class="action-buttons">
             <q-btn flat label="Já tem uma conta?" class="link-login" @click="goToLogin"/>
             <q-btn type="submit" label="Cadastrar" class="register-btn"/>
@@ -88,96 +93,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Notify } from 'quasar';
-import { createNotifyConfig } from 'src/utils/utils';
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Notify } from 'quasar'
+import { createNotifyConfig } from 'src/utils/utils'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
 
 defineOptions({
   name: 'RegisterPage'
-});
+})
 
-const nome = ref('');
-const email = ref('');
-const senha = ref('');
-const confirmPassword = ref('');
-const router = useRouter();
+const nome = ref('')
+const email = ref('')
+const senha = ref('')
+const confirmPassword = ref('')
+const router = useRouter()
 
 const onSignUp = async () => {
   if (!nome.value || !email.value || !senha.value || !confirmPassword.value) {
-    Notify.create(createNotifyConfig('negative', 'Preencha todos os campos', 'top'));
-    return;
+    Notify.create(createNotifyConfig('negative', 'Preencha todos os campos', 'top'))
+    return
   }
 
   if (senha.value.length < 4) {
-    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'));
-    return;
+    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'))
+    return
   }
 
   if (senha.value !== confirmPassword.value) {
-    Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'));
-    return;
+    Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'))
+    return
   }
 
   try {
-    Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso', 'top'));
-    await router.push('/auth/login');
+    Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso', 'top'))
+    await router.push('/auth/login')
   } catch (error: any) {
-    Notify.create(createNotifyConfig('negative', error.message, 'top'));
+    Notify.create(createNotifyConfig('negative', error.message, 'top'))
   }
-};
-
-const togglePassword = (id: string) => {
-  const input = document.getElementById(id) as HTMLInputElement;
-  if (input) {
-    input.type = input.type === 'password' ? 'text' : 'password';
-  }
-};
+}
 
 const goToLogin = () => {
-  router.push('/auth/login');
-};
+  router.push('/auth/login')
+}
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
-@import "src/css/inputs.scss";
+@import 'src/css/inputs.scss';
 
 .fundo-cadastro {
   background-image: url('/login2.jpg');
   background-size: cover;
   background-position: center;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
 
   @media (max-width: 800px) {
     background-image: url('/login.png');
   }
-}
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.logo-text {
-  font-size: 2.5em;
-  text-align: center;
-  color: $primary;
-  display: flex;
-  justify-content: center;
-}
-
-.logo-tamanho {
-  width: 70%;
-  max-width: 200px;
 }
 
 .form-container {
@@ -232,16 +210,6 @@ const goToLogin = () => {
   font-size: 0.85em;
 }
 
-:deep(input:-webkit-autofill),
-:deep(input:-webkit-autofill:hover),
-:deep(input:-webkit-autofill:focus),
-:deep(input:-webkit-autofill:active) {
-  background-color: transparent !important;
-  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
-  -webkit-text-fill-color: #ffffe4 !important;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
 small.error-message.senha-nao-conferem {
   color: red !important;
   padding-left: 0.8em;
@@ -253,5 +221,4 @@ small.error-message {
   padding-left: 0.8em;
   font-size: 0.92em;
 }
-
 </style>

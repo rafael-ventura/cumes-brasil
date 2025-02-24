@@ -7,85 +7,67 @@
       <q-card class="reset-password-card">
         <q-card-section>
           <div class="text-h6 titulo-redefinir-senha">Redefinir Senha</div>
-        </q-card-section>
-        <q-card-section v-if="token" >
-          <q-form @submit.prevent="onResetPassword">
-            <div class="custom-input">
+        </q-card-section>3<q-card-section v-if="token">
+          <form @submit.prevent="onResetPassword">
+            <div class="custom-input-auth">
               <div class="input-container">
                 <q-icon name="lock" class="input-icon" />
                 <label for="senha" class="input-label">Senha</label>
               </div>
-              <q-input
+              <Password
                 id="senha"
                 v-model="password"
-                type="password"
-                debounce="300"
-                outlined
-                rounded
-                color="primary"
-                label-color="primary"
-                hide-bottom-space
-                :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '$primary', borderRadius: '15px' }"
+                class="custom-input-field"
+                :class="{ 'p-invalid': password.length < 4 }"
+                placeholder="Digite sua nova senha"
+                :feedback="false"
               />
+              <small v-if="password.length < 4" class="error-message">
+                A senha deve conter pelo menos 4 caracteres
+              </small>
             </div>
-            <div class="custom-input">
+
+            <div class="custom-input-auth">
               <div class="input-container">
                 <q-icon name="lock" class="input-icon" />
                 <label for="confirmarSenha" class="input-label">Confirmar Senha</label>
               </div>
-              <q-input
+              <Password
                 id="confirmarSenha"
                 v-model="passwordRepeated"
-                type="password"
-                debounce="300"
-                outlined
-                rounded
-                color="primary"
-                label-color="primary"
-                hide-bottom-space
-                :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '$primary', borderRadius: '15px' }"
+                class="custom-input-field"
+                :class="{ 'p-invalid': passwordRepeated !== password }"
+                placeholder="Confirme sua senha"
+                :feedback="false"
               />
+              <small v-if="passwordRepeated !== password" class="error-message senha-nao-conferem">
+                Senhas não conferem
+              </small>
             </div>
-            <q-btn
-              type="submit"
-              label="Redefinir Senha"
-              class="register-btn"
-            />
-          </q-form>
-        </q-card-section>
-        <q-card-section v-if="token.length === 0">
-          <q-form @submit.prevent="onGeneratePasswordToken" class="custom-redefinir-form">
 
-            <!-- Campo Email -->
-            <div class="custom-input">
+            <q-btn type="submit" label="Redefinir Senha" class="register-btn"/>
+          </form>
+        </q-card-section>
+
+        <q-card-section v-if="!token">
+          <form @submit.prevent="onGeneratePasswordToken" class="custom-redefinir-form">
+            <div class="custom-input-auth">
               <div class="input-container">
                 <q-icon name="mail" class="input-icon" />
                 <label for="email" class="input-label">Email</label>
               </div>
-              <q-input
-                v-model="email"
+              <InputText
                 id="email"
-                type="email"
-                debounce="300"
-                outlined
-                rounded
-                color="primary"
-                label-color="primary"
-                hide-bottom-space
-                :rules="[ val => !!val || 'Campo obrigatório' ]"
-                :input-style="{ color: '$primary', borderRadius: '15px' }"
+                v-model="email"
+                class="custom-input-field"
+                :class="{ 'p-invalid': !email }"
+                placeholder="Digite seu email"
               />
+              <small v-if="!email" class="error-message">Campo obrigatório</small>
             </div>
 
-            <!-- Botão de redefinir senha -->
-            <q-btn
-              type="submit"
-              label="Redefinir"
-              class="register-btn"
-            />
-          </q-form>
+            <q-btn type="submit" label="Redefinir" class="register-btn"/>
+          </form>
         </q-card-section>
       </q-card>
     </div>
@@ -93,59 +75,61 @@
 </template>
 
 <script setup lang="ts">
-import AuthenticateService from '../../services/AuthenticateService';
-import { ref, onMounted } from 'vue';
-import { createNotifyConfig } from 'src/utils/utils';
-import { Notify } from 'quasar';
-import { useRoute, useRouter } from 'vue-router';
-
-const email = ref('');
-const password = ref('');
-const passwordRepeated = ref('');
-const token = ref('');
-const route = useRoute();
-const router = useRouter();
+import AuthenticateService from '../../services/AuthenticateService'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { createNotifyConfig } from 'src/utils/utils'
+import { Notify } from 'quasar'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
 
 defineOptions({
   name: 'ResetPasswordPage'
-});
+})
+
+const email = ref('')
+const password = ref('')
+const passwordRepeated = ref('')
+const token = ref('')
+const route = useRoute()
+const router = useRouter()
 
 onMounted(async () => {
-  token.value = route.params.userToken?.toString() || '';
-});
+  token.value = route.params.userToken?.toString() || ''
+})
 
 const onGeneratePasswordToken = async () => {
   try {
-    const response = await AuthenticateService.generateUserResetPassword(email.value);
-    Notify.create(createNotifyConfig('positive', response.data.message, 'top'));
+    const response = await AuthenticateService.generateUserResetPassword(email.value)
+    Notify.create(createNotifyConfig('positive', response.data.message, 'top'))
   } catch (error: any) {
-    Notify.create(createNotifyConfig('negative', error.message, 'top'));
+    Notify.create(createNotifyConfig('negative', error.message, 'top'))
   }
-};
+}
 
 const onResetPassword = async () => {
-  try {
-    if (password.value.length < 4) {
-      Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'));
-      return;
-    }
-    if (password.value !== passwordRepeated.value) {
-      Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'));
-      return;
-    }
-    const response = await AuthenticateService.resetPassword(password.value, passwordRepeated.value, token.value);
-    Notify.create(createNotifyConfig('positive', response.data.message, 'top'));
-    router.push('/auth/login');
-  } catch (error: any) {
-    console.error('Erro ao redefinir senha:', error.message);
-    Notify.create(createNotifyConfig('negative', error.message, 'top'));
+  if (password.value.length < 4) {
+    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'))
+    return
   }
-};
+  if (password.value !== passwordRepeated.value) {
+    Notify.create(createNotifyConfig('negative', 'Senhas não conferem', 'top'))
+    return
+  }
 
+  try {
+    const response = await AuthenticateService.resetPassword(password.value, passwordRepeated.value, token.value)
+    Notify.create(createNotifyConfig('positive', response.data.message, 'top'))
+    router.push('/auth/login')
+  } catch (error: any) {
+    Notify.create(createNotifyConfig('negative', error.message, 'top'))
+  }
+}
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+@import 'src/css/inputs.scss';
 
 .fundo-redefinir-senha {
   background-image: url('/login2.jpg');
@@ -196,7 +180,7 @@ const onResetPassword = async () => {
   margin-bottom: 20px;
 }
 
-.custom-input {
+.custom-input-auth {
   width: 100%;
   margin-bottom: 16px;
 }
@@ -220,7 +204,7 @@ const onResetPassword = async () => {
 .register-btn {
   width: 28%;
   height: 4vh;
-  font-size: 0.85em;
+  font-size: 0.95em;
   color: $primary;
   border: 1px solid $primary;
   border-radius: 15px;
@@ -228,8 +212,15 @@ const onResetPassword = async () => {
   max-height: 60px;
 }
 
-.q-btn {
-  display: flex;
-  justify-content: right;
+small.error-message.senha-nao-conferem {
+  color: red !important;
+  padding-left: 0.8em;
+  font-size: 0.92em;
+}
+
+small.error-message {
+  color: red !important;
+  padding-left: 0.8em;
+  font-size: 0.92em;
 }
 </style>

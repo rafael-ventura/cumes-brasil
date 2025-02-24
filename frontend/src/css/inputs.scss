@@ -23,20 +23,20 @@
   .p-inputtext {
     width: 100%;
     border-radius: 20px;
-    border: 2px solid #8CB369 !important;
+    border: 2px solid $cumes-01 !important;
     background-color: transparent !important;
-    color: #ffffe4 !important;
+    color: $offwhite !important;
     padding: 10px;
     font-size: 16px;
 
     &:focus {
-      border-color: #8CB369 !important;
+      border-color: $cumes-01 !important;
       box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
     }
   }
 
   .p-invalid {
-    border-color: #ff5858 !important;
+    border-color: #ff5858 !important; // Vermelho para erro
   }
 
   .error-message {
@@ -78,16 +78,33 @@
   :deep(.p-password-input) {
     width: 100%;
     border-radius: 20px;
-    border: 2px solid #8CB369 !important;
+    border: 2px solid $cumes-01 !important; // Padrão verde
     background-color: transparent !important;
-    color: #ffffe4 !important;
+    color: $offwhite !important;
     padding: 10px;
     font-size: 16px;
+
+    &:focus {
+      border-color: $cumes-01 !important;
+      box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
+    }
   }
 
-  :deep(.p-password-input:focus) {
-    border-color: #8CB369 !important;
-    box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
+  // Se o campo estiver vazio, aplica borda vermelha
+  &.p-invalid :deep(.p-password-input) {
+    border-color: #ff5858 !important;
+  }
+
+  // Estilização específica para "Confirmar Senha"
+  .confirm-password-input {
+    :deep(.p-password-input) {
+      border: 2px solid $cumes-01 !important; // Verde por padrão
+    }
+
+    // Se o campo estiver vazio, aplica borda vermelha
+    &.p-invalid :deep(.p-password-input) {
+      border-color: #ff5858 !important;
+    }
   }
 
   // Ajusta o botão de visibilidade (olhinho)
@@ -97,14 +114,22 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
-    color: #8CB369 !important;
+    color: $cumes-01 !important;
     cursor: pointer;
   }
 }
 
-// Esconde o feedback de força da senha do PrimeVue
+
 :deep(.p-password-panel) {
   display: none !important;
 }
 
-
+:deep(input:-webkit-autofill),
+:deep(input:-webkit-autofill:hover),
+:deep(input:-webkit-autofill:focus),
+:deep(input:-webkit-autofill:active) {
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: $offwhite !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
