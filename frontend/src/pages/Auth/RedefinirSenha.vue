@@ -7,7 +7,9 @@
       <q-card class="reset-password-card">
         <q-card-section>
           <div class="text-h6 titulo-redefinir-senha">Redefinir Senha</div>
-        </q-card-section>3<q-card-section v-if="token">
+        </q-card-section>
+
+        <q-card-section v-if="token">
           <form @submit.prevent="onResetPassword">
             <div class="custom-input-auth">
               <div class="input-container">
@@ -45,12 +47,15 @@
               </small>
             </div>
 
-            <q-btn type="submit" label="Redefinir Senha" class="register-btn"/>
+            <div class="action-buttons">
+              <BotaoVoltar class="btn-back"/>
+              <q-btn type="submit" label="Redefinir Senha" class="register-btn"/>
+            </div>
           </form>
         </q-card-section>
 
-        <q-card-section v-if="!token">
-          <form @submit.prevent="onGeneratePasswordToken" class="custom-redefinir-form">
+        <q-card-section v-else>
+          <form @submit.prevent="onGeneratePasswordToken">
             <div class="custom-input-auth">
               <div class="input-container">
                 <q-icon name="mail" class="input-icon" />
@@ -66,7 +71,10 @@
               <small v-if="!email" class="error-message">Campo obrigatório</small>
             </div>
 
-            <q-btn type="submit" label="Redefinir" class="register-btn"/>
+            <div class="action-buttons">
+              <BotaoVoltar class="btn-back"/>
+              <q-btn type="submit" label="Redefinir" class="register-btn"/>
+            </div>
           </form>
         </q-card-section>
       </q-card>
@@ -76,12 +84,13 @@
 
 <script setup lang="ts">
 import AuthenticateService from '../../services/AuthenticateService'
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { createNotifyConfig } from 'src/utils/utils'
-import { Notify } from 'quasar'
+import {onMounted, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {createNotifyConfig} from 'src/utils/utils'
+import {Notify} from 'quasar'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
+import BotaoVoltar from "components/BotaoVoltar.vue";
 
 defineOptions({
   name: 'ResetPasswordPage'
@@ -120,7 +129,7 @@ const onResetPassword = async () => {
   try {
     const response = await AuthenticateService.resetPassword(password.value, passwordRepeated.value, token.value)
     Notify.create(createNotifyConfig('positive', response.data.message, 'top'))
-    router.push('/auth/login')
+    await router.push('/auth/login')
   } catch (error: any) {
     Notify.create(createNotifyConfig('negative', error.message, 'top'))
   }
@@ -201,26 +210,25 @@ const onResetPassword = async () => {
   font-size: 1.2em;
 }
 
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.btn-back {
+  margin-left: 0.5rem;
+}
+
 .register-btn {
-  width: 28%;
-  height: 4vh;
+  max-width: 160px;
+  height: 40px;
+  text-align: center;
   font-size: 0.95em;
   color: $primary;
   border: 1px solid $primary;
   border-radius: 15px;
-  max-width: 160px;
-  max-height: 60px;
-}
-
-small.error-message.senha-nao-conferem {
-  color: red !important;
-  padding-left: 0.8em;
-  font-size: 0.92em;
-}
-
-small.error-message {
-  color: red !important;
-  padding-left: 0.8em;
-  font-size: 0.92em;
 }
 </style>

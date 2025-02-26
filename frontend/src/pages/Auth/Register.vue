@@ -17,7 +17,7 @@
                 id="nome"
                 v-model="nome"
                 class="custom-input-field"
-                :class="{ 'p-invalid': !nome }"
+                :invalid="!nome"
                 placeholder="Digite seu nome"
               />
               <small v-if="!nome" class="error-message">Campo obrigatório</small>
@@ -32,53 +32,51 @@
               <InputText
                 id="email"
                 v-model="email"
-                class="custom-input-field"
-                :class="{ 'p-invalid': !email }"
+                :invalid="!email"
                 placeholder="Digite seu email"
               />
               <small v-if="!email" class="error-message">Campo obrigatório</small>
             </div>
 
             <!-- Campo Senha -->
-            <div class="custom-password-input-auth">
+            <div class="custom-password-input-auth" :class="{'p-invalid': !senha || senha.length < 6}">
               <div class="input-container">
                 <q-icon name="lock" class="input-icon"/>
                 <label for="senha" class="input-label">Senha</label>
               </div>
-              <Password
+              <InputText
                 id="senha"
                 v-model="senha"
                 class="custom-input-field"
-                :class="{ 'p-invalid': !senha || senha.length < 4 }"
+                type="password"
+                :invalid="!senha || senha.length < 6"
                 placeholder="Digite sua senha"
-                :feedback="false"
               />
               <small v-if="!senha" class="error-message">Campo obrigatório</small>
-              <small v-else-if="senha.length < 4" class="error-message senha-nao-conferem">
-                A senha deve conter pelo menos 4 caracteres
+              <small v-else-if="senha.length < 6" class="error-message senha-nao-conferem">
+                A senha deve conter pelo menos 6 caracteres
               </small>
             </div>
 
             <!-- Campo Confirmar Senha -->
-            <div class="custom-password-input-auth">
+            <div class="custom-password-input-auth" :class="{'p-invalid': confirmPassword !== senha}">
               <div class="input-container">
                 <q-icon name="lock" class="input-icon"/>
                 <label for="confirmPassword" class="input-label">Confirmar Senha</label>
               </div>
-              <Password
+              <InputText
                 id="confirmPassword"
                 v-model="confirmPassword"
                 class="custom-input-field"
-                :class="{
-                  'p-invalid': confirmPassword !== senha && confirmPassword.length > 0,
-                  'p-valid': confirmPassword === senha && confirmPassword.length > 0
-                }"
+                type="password"
+                :invalid=" !confirmPassword || confirmPassword !== senha"
                 placeholder="Confirme sua senha"
-                :feedback="false"
               />
               <small v-if="confirmPassword !== senha && confirmPassword.length > 0" class="error-message senha-nao-conferem">
                 Senhas não conferem
               </small>
+              <small v-else-if="!confirmPassword" class="error-message">Campo obrigatório</small>
+
             </div>
           </form>
 
@@ -93,12 +91,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { Notify } from 'quasar'
-import { createNotifyConfig } from 'src/utils/utils'
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {Notify} from 'quasar'
+import {createNotifyConfig} from 'src/utils/utils'
 import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
 
 defineOptions({
   name: 'RegisterPage'
@@ -208,17 +205,5 @@ const goToLogin = () => {
   text-decoration: underline;
   text-align: left;
   font-size: 0.85em;
-}
-
-small.error-message.senha-nao-conferem {
-  color: red !important;
-  padding-left: 0.8em;
-  font-size: 0.92em;
-}
-
-small.error-message {
-  color: red !important;
-  padding-left: 0.8em;
-  font-size: 0.92em;
 }
 </style>
