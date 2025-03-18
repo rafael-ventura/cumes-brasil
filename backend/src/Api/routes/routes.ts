@@ -15,6 +15,7 @@ import { authenticateToken } from '../Middlewares/AuthenticateMiddleware';
 import ImagemRouter from './ImagemRouter';
 import SearchRouter from './SearchRouter';
 import PerfilRouter from "./PerfilRouter";
+import {optionalAuthMiddleware} from "../Middlewares/OptionalMiddleware";
 
 const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
@@ -30,5 +31,5 @@ routes.use("/imagens", ImagemRouter);
 routes.use("/escaladas", authenticateToken, EscaladaRouter);
 routes.use('/colecoes', authenticateToken, ColecaoRouter);
 routes.use("/perfil", authenticateToken, PerfilRouter);
-routes.use("/search", SearchRouter);
+routes.use("/search", optionalAuthMiddleware,SearchRouter);
 export default routes;

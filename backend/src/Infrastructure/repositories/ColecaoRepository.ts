@@ -128,7 +128,8 @@ export class ColecaoRepository implements ISearchRepository<Colecao> {
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
           .leftJoinAndSelect('via.montanha', 'montanha')
-          .leftJoinAndSelect('colecao.imagem', 'imagem');
+          .leftJoinAndSelect('colecao.imagem', 'imagem')
+            .leftJoinAndSelect('colecao.usuario', 'usuario');
 
         // Filtro default pelo ID do usuário logado
         qb = qb.andWhere('colecao.usuario.id = :usuarioId', { usuarioId });

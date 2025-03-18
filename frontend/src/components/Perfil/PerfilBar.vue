@@ -146,7 +146,7 @@ const dataFormatada = computed(() => {
 }
 
 .user-name {
-  font-size: 30px;
+  font-size: 20px;
   font-weight: bold;
   color: $cumes-04;
 }

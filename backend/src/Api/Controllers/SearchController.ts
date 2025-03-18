@@ -42,7 +42,7 @@ export class SearchController {
 			}
 
 			// Obtenha o ID do usuário logado (por exemplo, do middleware de autenticação)
-			const usuarioId = req.user?.usuarioId;
+			const usuarioId = req.user?.usuarioId || 0;
 
 			// Construa o objeto de filtros a partir da requisição
 			const filters = {
