@@ -3,7 +3,6 @@ import { Router } from 'express';
 import { SearchService } from '../../Application/services/SearchService';
 import {SearchController} from "../Controllers/SearchController";
 import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
-import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
 
 const router = Router();
 const viaRepository = new ViaRepository();

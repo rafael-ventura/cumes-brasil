@@ -124,12 +124,19 @@ export class MailService {
         }
     }
 
-    private buildFullResetUserPasswordUrl(tokenUrl: string): string {
+/*    private buildFullResetUserPasswordUrl(tokenUrl: string): string {
         const baseUrl = process.env.WEB_HOSTNAME;
         const port = process.env.WEB_PORT;
         const resetPasswordPath = process.env.WEB_USER_RESET_PASSWORD_PATH;
 
         return `${baseUrl}:${port}/${resetPasswordPath}/${tokenUrl}`;
+    }*/
+
+    private buildFullResetUserPasswordUrl(tokenUrl: string): string {
+        const baseUrl = process.env.WEB_HOSTNAME;
+        const resetPasswordPath = process.env.WEB_USER_RESET_PASSWORD_PATH;
+
+        return `${baseUrl}/${resetPasswordPath}/${tokenUrl}`;
     }
 
 }

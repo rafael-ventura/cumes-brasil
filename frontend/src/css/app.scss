@@ -1,6 +1,3 @@
-// Import Quasar variables and mixins
-
-
 // Define custom colors
 $primary: #8CB369; // Adventure green #8CB369
 $secondary: #F4E285; // Mountaineering yellow #F29340
@@ -356,42 +353,6 @@ body {
   font-weight: bold;
 }
 
-/* Inputs das telas de Autenticação */
-.custom-input-field {
-  :deep(.q-field__control) {
-    border: 2px solid $cumes-01 !important;
-    transition: border-color 0.3s ease-in-out;
-  }
-
-  :deep(.q-field__native) {
-    color: $offwhite !important;
-  }
-
-  :deep(.q-field__label) {
-    color: $cumes-01 !important;
-  }
-
-  :deep(.q-icon) {
-    color: $cumes-01 !important;
-  }
-
-  /* 🔴 Quando houver erro, a borda ficará completamente vermelha */
-  :deep(.q-field.q-field--error .q-field__control) {
-    border: 2px solid #ff4c4c !important; /* Borda vermelha sólida */
-  }
-
-  /* 🔴 Ajusta a cor da mensagem de erro */
-  :deep(.q-field__error) {
-    color: #ff4c4c !important;
-    font-size: 0.85em;
-    margin-top: 4px;
-  }
-
-  /* 🔄 Quando não houver erro, mantém a borda verde */
-  :deep(.q-field:not(.q-field--error) .q-field__control) {
-    border: 2px solid $cumes-01 !important;
-  }
-}
 
 
 

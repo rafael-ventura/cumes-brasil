@@ -92,12 +92,12 @@
 </template>
 
 <script setup lang="ts">
-import {Escalada} from 'src/models/Escalada';
-import {Participante} from 'src/models/Participante';
-import {ref, watch} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
+import { Escalada } from 'src/models/Escalada';
+import { Participante } from 'src/models/Participante';
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
-import {Notify} from 'quasar';
+import { Notify } from 'quasar';
 import AuthenticateService from 'src/services/AuthenticateService';
 
 const observacao = ref('');
@@ -105,10 +105,10 @@ const qtdParticipantes = ref(1);
 const route = useRoute();
 const router = useRouter();
 const data = ref('');
-const participantes = ref<Participante[]>([{nome: '', tipo: '', email: ''}]);
+const participantes = ref<Participante[]>([{ nome: '', tipo: '', email: '' }]);
 const props = defineProps<{ isOpen: boolean }>();
 
-const emit = defineEmits<{ (e: 'closeModal'): void; }>();
+const emit = defineEmits<{(e: 'closeModal'): void; }>();
 
 const participanteTipoOptions = ['GUIA', 'PARTICIPANTE', 'MISTO'];
 
@@ -118,7 +118,7 @@ const onQtdParticipantesChange = () => {
 
   if (newLength > currentLength) {
     for (let i = currentLength; i < newLength; i++) {
-      participantes.value.push({nome: '', tipo: '', email: ''});
+      participantes.value.push({ nome: '', tipo: '', email: '' });
     }
   } else {
     participantes.value.length = newLength;
@@ -168,7 +168,7 @@ const onReset = () => {
   observacao.value = '';
   data.value = '';
   qtdParticipantes.value = 1;
-  participantes.value = [{nome: '', tipo: '', email: ''}];
+  participantes.value = [{ nome: '', tipo: '', email: '' }];
 };
 </script>
 

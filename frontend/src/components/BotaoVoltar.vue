@@ -21,15 +21,13 @@ const goBack = () => {
 
 <style scoped lang="scss">
 .q-btn.btn-back {
-  position: absolute;
-  top: 10px;
-  left: 10px;
   background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: #8CB369;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   border-radius: 50%;
   opacity: 0.9;
   pointer-events: auto;
 }
+
 </style>

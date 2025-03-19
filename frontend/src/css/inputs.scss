@@ -1,0 +1,87 @@
+@import "app";
+
+.custom-input-auth,
+.custom-password-input-auth {
+  width: 100%;
+  margin-bottom: 16px;
+
+  .input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .input-label {
+    font-size: 1em;
+    color: $primary;
+    margin-left: 0.5em;
+  }
+
+  .input-icon {
+    color: $primary;
+    font-size: 1.2em;
+  }
+
+  .p-inputtext,
+  :deep(.p-password-input) {
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid $cumes-01;
+    background-color: transparent;
+    color: $offwhite;
+    padding: 10px;
+    font-size: 16px;
+    caret-color: $offwhite;
+
+    &:focus {
+      border-color: $cumes-01;
+      box-shadow: 0 0 5px rgba(140, 179, 105, 0.7);
+    }
+
+    &:hover {
+      border-color: $cumes-01;
+    }
+  }
+
+  .p-invalid {
+    border-color: #ff5858;
+  }
+
+  .error-message {
+    color: #ff5858;
+    padding-left: 0.8em;
+    font-size: 0.92em;
+  }
+}
+
+.custom-password-input-auth {
+  :deep(.p-password) {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  :deep(.p-password .p-password-toggle-mask) {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: $cumes-01;
+    cursor: pointer;
+  }
+}
+
+:deep(.p-password-panel) {
+  display: none;
+}
+
+:deep(input:-webkit-autofill),
+:deep(input:-webkit-autofill:hover),
+:deep(input:-webkit-autofill:focus),
+:deep(input:-webkit-autofill:active) {
+  background-color: transparent;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  -webkit-text-fill-color: $offwhite;
+  transition: background-color 5000s ease-in-out 0s;
+}

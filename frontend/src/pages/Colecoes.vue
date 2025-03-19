@@ -68,7 +68,7 @@ defineOptions({
 });
 
 onMounted(async () => {
-  await AuthenticateService.redirecionaSeNaoAutenticado(router)
+  await AuthenticateService.redirecionaSeNaoAutenticado(router);
 });
 
 const handleApplyFilters = (filters: any) => {

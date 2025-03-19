@@ -14,8 +14,11 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
+    "@vueuse/core": "^12.7.0",
     "axios": "1.7.4",
     "file-saver": "^2.0.5",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.2.5",
     "quasar": "^2.16.0",
     "serve": "^14.2.3",
     "src": "^1.1.2",
