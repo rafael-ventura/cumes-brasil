@@ -17,9 +17,4 @@ UsuarioRouter.get("/", usuarioController.getAll);
 UsuarioRouter.get("/:id", usuarioController.getById);
 UsuarioRouter.delete("/:id", usuarioController.delete);
 
-// perfil do usuario - Movido para o Perfil - TODO - remover
-/*UsuarioRouter.get('/perfil', usuarioController.getPerfil);
-UsuarioRouter.put('/perfil', authenticateToken, usuarioController.editarDados);
-UsuarioRouter.put('/perfil/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);*/
-
 export default UsuarioRouter;

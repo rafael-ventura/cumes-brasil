@@ -16,16 +16,15 @@
                 <q-icon name="lock" class="input-icon" />
                 <label for="senha" class="input-label">Senha</label>
               </div>
-              <Password
+              <InputText
                 id="senha"
                 v-model="password"
-                class="custom-input-field"
-                :class="{ 'p-invalid': password.length < 4 }"
+                :class="{ 'p-invalid': password.length < 6 }"
                 placeholder="Digite sua nova senha"
                 :feedback="false"
               />
-              <small v-if="password.length < 4" class="error-message">
-                A senha deve conter pelo menos 4 caracteres
+              <small v-if="password.length < 6" class="error-message">
+                A senha deve conter pelo menos 6 caracteres
               </small>
             </div>
 
@@ -34,13 +33,11 @@
                 <q-icon name="lock" class="input-icon" />
                 <label for="confirmarSenha" class="input-label">Confirmar Senha</label>
               </div>
-              <Password
+              <InputText
                 id="confirmarSenha"
                 v-model="passwordRepeated"
-                class="custom-input-field"
                 :class="{ 'p-invalid': passwordRepeated !== password }"
                 placeholder="Confirme sua senha"
-                :feedback="false"
               />
               <small v-if="passwordRepeated !== password" class="error-message senha-nao-conferem">
                 Senhas não conferem
@@ -109,6 +106,7 @@ onMounted(async () => {
 
 const onGeneratePasswordToken = async () => {
   try {
+    console.log("email... calling", email.value)
     const response = await AuthenticateService.generateUserResetPassword(email.value)
     Notify.create(createNotifyConfig('positive', response.data.message, 'top'))
   } catch (error: any) {
@@ -117,8 +115,8 @@ const onGeneratePasswordToken = async () => {
 }
 
 const onResetPassword = async () => {
-  if (password.value.length < 4) {
-    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'))
+  if (password.value.length < 6) {
+    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 6 caracteres', 'top'))
     return
   }
   if (password.value !== passwordRepeated.value) {

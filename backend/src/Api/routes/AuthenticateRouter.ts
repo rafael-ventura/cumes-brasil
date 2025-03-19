@@ -22,9 +22,9 @@ AuthenticateRouter.post("/google-login", authController.googleLogin);
 // Rota de registro
 AuthenticateRouter.post("/register", authController.registrar);
 
-UsuarioRouter.post("/generate-reset-password", authController.generateResetUserPasswordToken);
+AuthenticateRouter.post("/generate-reset-password", authController.generateResetUserPasswordToken);
 
-UsuarioRouter.put("/reset-password/:token", authController.resetPassword);
+AuthenticateRouter.put("/reset-password/:token", authController.resetPassword);
 
 AuthenticateRouter.use(errorRequestMiddleware);
 

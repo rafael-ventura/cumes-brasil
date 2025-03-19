@@ -50,6 +50,7 @@ class AuthController {
 
     generateResetUserPasswordToken = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log("entrei")
             const response = await this.authService.createResetUserPassword(req.body?.email);
             res.status(200).json({
                 message: response.message
