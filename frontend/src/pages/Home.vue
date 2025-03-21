@@ -1,34 +1,32 @@
 <template>
   <q-page class="home-page">
-    <div class="q-pa-md">
-      <!-- Logo e Cabeçalho -->
-      <q-img
-        src="/logo-amarelo.webp"
-        alt="Cumes Brasil"
-        class="q-mb-md text-center logo-tamanho"
-        style="object-fit: cover; object-position: center;"
+    <!-- Logo e Cabeçalho -->
+    <q-img
+      src="/logo-amarelo.webp"
+      alt="Cumes Brasil"
+      class="q-mb-md text-center logo-tamanho"
+      style="object-fit: cover; object-position: center;"
+    />
+    <div class="text-h2 text-center q-mb-md title-text">Bem-vindo ao Cumes Brasil</div>
+
+    <!-- Mosaico de Cards -->
+    <CardMosaic :cards="cards" @navigate="goToFilteredSearch" />
+
+    <!-- Botão de Via Aleatória -->
+    <div class="random-section">
+      <div class="random-title">Explore uma Via Aleatória</div>
+      <q-btn
+        icon="shuffle"
+        color="primary"
+        class="random-btn"
+        @click="chooseRandomVia"
       />
-      <div class="text-h2 text-center q-mb-md title-text">Bem-vindo ao Cumes Brasil</div>
+    </div>
 
-      <!-- Mosaico de Cards -->
-      <CardMosaic :cards="cards" @navigate="goToFilteredSearch" />
-
-      <!-- Botão de Via Aleatória -->
-      <div class="random-section">
-        <div class="random-title">Explore uma Via Aleatória</div>
-        <q-btn
-          icon="shuffle"
-          color="primary"
-          class="random-btn"
-          @click="chooseRandomVia"
-        />
-      </div>
-
-      <!-- Espaço para o Mapa -->
-      <div class="map-section">
-        <div class="map-text">Em breve explore vias diretamente no mapa</div>
-        <q-icon name="map" size="100px" color="$cumes-04" class="map-icon" />
-      </div>
+    <!-- Espaço para o Mapa -->
+    <div class="map-section">
+      <div class="map-text">Em breve explore vias diretamente no mapa</div>
+      <q-icon name="map" size="100px" color="$cumes-04" class="map-icon" />
     </div>
   </q-page>
 </template>
@@ -129,7 +127,7 @@ function chooseRandomVia () {
   border: 2px solid $cumes-04;
   border-radius: 10px;
   padding: 10px;
-  margin: 30px 0;
+  margin: 30px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -164,6 +162,7 @@ function chooseRandomVia () {
   background-color: $cumes-05;
   padding: 0.5rem 1rem;
   border-radius: 8px;
+  margin: 16px 16px;
 
   .map-text {
     color: $cumes-04;

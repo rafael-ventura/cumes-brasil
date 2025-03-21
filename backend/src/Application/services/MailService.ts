@@ -15,7 +15,7 @@ export class MailService {
     private mailOptions: any;
     private oauth2Client: OAuth2Client;
 
-    constructor() {}
+    constructor() { }
 
     /**
      * retornar mensagem: E-mail com passo-a-passo de redefinição de senha enviado com sucesso em caso de sucesso
@@ -123,14 +123,6 @@ export class MailService {
             html: htmlToSend
         }
     }
-
-/*    private buildFullResetUserPasswordUrl(tokenUrl: string): string {
-        const baseUrl = process.env.WEB_HOSTNAME;
-        const port = process.env.WEB_PORT;
-        const resetPasswordPath = process.env.WEB_USER_RESET_PASSWORD_PATH;
-
-        return `${baseUrl}:${port}/${resetPasswordPath}/${tokenUrl}`;
-    }*/
 
     private buildFullResetUserPasswordUrl(tokenUrl: string): string {
         const baseUrl = process.env.WEB_HOSTNAME;
