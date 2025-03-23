@@ -13,7 +13,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
 const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
-const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200'; // URL do frontend
+const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200';
 
 console.log('Frontend URL:', FRONTEND_URL);
 console.log('Hostname:', HOSTNAME);
@@ -24,21 +24,18 @@ app.use(
     origin: FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Necessário para cookies/sessões
+    credentials: true
   })
 );
 
 app.use(express.json());
 
-// Configuração de arquivos estáticos
 const assetsPath = path.resolve(__dirname, '../../assets');
 app.use('/assets', express.static(assetsPath));
 console.log('Servindo arquivos estáticos de:', assetsPath);
 
-// Configuração das rotas
 app.use('/api', routes);
 
-// Inicializar a conexão com o banco de dados
 AppDataSource.initialize()
   .then(async () => {
     console.log('Conexão com o banco de dados estabelecida com sucesso');
@@ -58,7 +55,7 @@ AppDataSource.initialize()
     process.exit(1);
   });
 
-// Inicializar o servidor
+
 app.listen(PORT, HOSTNAME, () => {
   console.log('Configurações do servidor:');
   console.log('AWS_REGION:', process.env.AWS_REGION);

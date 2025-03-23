@@ -38,8 +38,9 @@ defineProps({
 
 .mosaic {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 15px;
+  margin-top: 30px;
 }
 
 .mosaic-card {
@@ -55,7 +56,7 @@ defineProps({
 }
 
 .card-image {
-  height: 200px; /* Reduzindo o tamanho para caber mais cards */
+  height: 250px;
   object-fit: cover;
   position: relative;
 }
@@ -66,16 +67,16 @@ defineProps({
   width: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 10px;
+  padding: 3px 10px;
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 .card-subtitle {
-  font-size: 12px;
+  font-size: 14px;
   opacity: 0.8;
 }
 </style>
