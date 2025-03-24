@@ -39,7 +39,6 @@ class AuthenticateService {
   }
 
   async generateUserResetPassword (email: string) {
-    console.log("chamando", email)
     try {
       return await api.post('/auth/generate-reset-password', { email });
     } catch (error: any) {
