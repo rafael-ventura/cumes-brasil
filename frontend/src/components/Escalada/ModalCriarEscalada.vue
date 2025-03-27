@@ -1,94 +1,58 @@
 <template>
-  <q-dialog :model-value="props.isOpen">
-    <q-card class="card-style">
-      <q-card-section class="header-section">
+  <div v-if="props.isOpen" class="modal-overlay">
+    <div class="card-style">
+      <div class="header-section">
         <div class="title">Criar Escalada</div>
-        <q-space/>
-        <q-btn icon="close" flat round dense v-close-popup/>
-      </q-card-section>
+        <Button icon="pi pi-times" class="p-button-rounded p-button-text" @click="emit('closeModal')" />
+      </div>
 
-      <q-form @submit="onSubmit" @reset="onReset" class="form-container">
-        <q-input
-          label-color="primary"
-          color="primary"
-          outlined
-          label="Data da Escalada"
-          v-model="data"
-          class="input"
-          mask="##-##-####"
-          lazy-rules
-          :rules="[ val => !!val || 'Campo obrigatório' ]"
-        >
-          <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer icon-primary">
-              <q-popup-proxy transition-show="scale" transition-hide="scale">
-                <q-date event-color="primary" text-color="black" color="primary" v-model="data" mask="DD-MM-YYYY"
-                        bordered/>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
+      <form @submit="onSubmit" @reset="onReset" class="form-container">
 
-        <q-input
-          label-color="primary"
-          filled
-          v-model="observacao"
-          label="Alguma observação?"
-          type="textarea"
-          class="input"
-        />
+        <!-- Campo Data da Escalada -->
+        <div class="custom-input-auth">
+          <div class="input-container">
+            <i class="pi pi-calendar input-icon"></i>
+            <label for="data" class="input-label">Data da Escalada</label>
+          </div>
+          <DatePicker id="data" v-model="data" :invalid="!data" class="custom-input-field"
+            placeholder="Selecione a data" :maxDate="new Date()" :manualInput="false" dateFormat="dd/mm/yy" />
+        </div>
 
-        <div class="spacer"></div> <!-- Espaço extra entre observação e quantidade de participantes -->
+        <!-- Campo de Text Field para Observação -->
+        <InputText label-color="primary" filled v-model="observacao" label="Alguma observação?" type="textarea"
+          class="input p-inputtext-label-primary" />
 
-        <q-input
-          filled
-          type="number"
-          v-model.number="qtdParticipantes"
-          label="Quantos participantes na escalada?"
-          label-color="primary"
-          color="primary"
-          min="1"
-          :rules="[ val => val > 0 || 'Participante não pode ser menor que zero' ]"
-          class="input"
-          @input="onQtdParticipantesChange"
-        />
+        <!-- Input para definir a quantidade de participantes na Escalada -->
+        <InputText filled type="number" v-model.number="qtdParticipantes" label="Quantos participantes na escalada?"
+          label-color="primary" color="primary" min="1"
+          :rules="[val => val > 0 || 'Participante não pode ser menor que zero']"
+          class="input p-inputtext-label-primary" @input="onQtdParticipantesChange" />
 
         <div v-for="(participante, index) in participantes" :key="index" class="participante-section">
           <h5 class="participante-title">Participante {{ index + 1 }}</h5>
-          <q-select
-            filled
-            v-model="participante.tipo"
-            label="Tipo do participante"
-            label-color="primary"
-            color="primary"
-            :options="participanteTipoOptions"
-            class="input"
-            :rules="[ val => !!val || 'Por favor, selecione uma opção' ]"
-          />
-          <q-input
-            filled
-            v-model="participante.nome"
-            label="Nome do participante"
-            label-color="primary"
-            class="input"
-            :rules="[ val => val !== '' || 'Nome não pode ser vazio' ]"
-          />
-          <q-input
-            filled
-            v-model="participante.email"
-            label="Email do participante"
-            label-color="primary"
-            class="input"
-          />
+
+          <!-- Campo de Seleção para Tipo de Participante -->
+          <Dropdown filled v-model="participante.tipo" label="Tipo do participante" label-color="primary"
+            color="primary" :options="participanteTipoOptions" class="input"
+            :rules="[val => !!val || 'Por favor, selecione uma opção']" />
+
+          <!-- Campos de Nome Participante -->
+          <InputText filled v-model="participante.nome" label="Nome do participante" label-color="primary"
+            class="custom-input-field p-inputtext-label-primary"
+            :rules="[val => val !== '' || 'Nome não pode ser vazio']" />
+
+          <!-- Campo de Email Participante -->
+          <InputText filled v-model="participante.email" label="Email do participante" label-color="primary"
+            class="input p-inputtext-label-primary" />
         </div>
 
         <div class="button-container">
-          <q-btn label="Criar" type="submit" color="primary" class="btn"/>
-          <q-btn label="Limpar" type="reset" color="primary" flat class="btn flat"/>
+          <Button label="Criar" type="submit" class="login-btn" />
+          <Button label="Limpar" type="reset" class="register-btn" />
         </div>
-      </q-form>
-    </q-card>
-  </q-dialog>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -99,6 +63,10 @@ import { useRoute, useRouter } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
 import { Notify } from 'quasar';
 import AuthenticateService from 'src/services/AuthenticateService';
+import InputText from "primevue/inputtext";
+import Button from "primevue/button";
+import DatePicker from "primevue/datepicker";
+import Dropdown from "primevue/dropdown";
 
 const observacao = ref('');
 const qtdParticipantes = ref(1);
@@ -108,7 +76,7 @@ const data = ref('');
 const participantes = ref<Participante[]>([{ nome: '', tipo: '', email: '' }]);
 const props = defineProps<{ isOpen: boolean }>();
 
-const emit = defineEmits<{(e: 'closeModal'): void; }>();
+const emit = defineEmits<{ (e: 'closeModal'): void; }>();
 
 const participanteTipoOptions = ['GUIA', 'PARTICIPANTE', 'MISTO'];
 
@@ -172,8 +140,20 @@ const onReset = () => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "src/css/app.scss";
+
+.modal-overlay {
+  position: fixed;
+  top: 1%;
+  left: 20;
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
 .card-style {
   background-color: $background;
@@ -184,6 +164,29 @@ const onReset = () => {
   border-radius: 15px;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+
+  /* Estilização da barra de rolagem (scrollbar) para navegadores WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Estilização da barra de rolagem (scrollbar) para Firefox */
+  scrollbar-width: auto;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 .header-section {
@@ -191,6 +194,7 @@ const onReset = () => {
   align-items: center;
   padding-bottom: 10px;
   color: $primary;
+  justify-content: space-between;
 }
 
 .title {
@@ -209,18 +213,6 @@ const onReset = () => {
 .input {
   width: 90%;
   color: $primary;
-
-  .q-field__label,
-  .q-field__native,
-  .q-item__label,
-  .q-select__dropdown-icon,
-  .q-date__calendar-day {
-    color: $primary;
-  }
-}
-
-.spacer {
-  height: 20px; /* Espaçamento entre observação e quantidade de participantes */
 }
 
 .participante-section {
