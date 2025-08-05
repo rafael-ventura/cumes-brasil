@@ -4,7 +4,8 @@ class ImageService {
   private readonly baseUrl: string;
 
   constructor () {
-    this.baseUrl = import.meta.env.VITE_APP_SERVER_IP;
+    const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:8080/api';
+    this.baseUrl = apiUrl.replace('/api', '');
   }
 
   getFullImageUrl (relativePath: string): string {
@@ -15,7 +16,9 @@ class ImageService {
     if (relativePath.startsWith('https://')) {
       return relativePath;
     }
-    return `${this.baseUrl}${relativePath}`;
+    // Remove /assets se já estiver no caminho para evitar duplicação
+    const cleanPath = relativePath.startsWith('/assets') ? relativePath : `/assets${relativePath}`;
+    return `${this.baseUrl}${cleanPath}`;
   }
 
   async getImageById (id: number): Promise<any> {

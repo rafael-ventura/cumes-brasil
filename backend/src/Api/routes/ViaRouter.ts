@@ -9,6 +9,7 @@ const viaController = new ViaController(viaService);
 
 const ViaRouter = Router();
 
+ViaRouter.get("/random", viaController.getRandomVia);
 ViaRouter.get("/:id", viaController.getViaById);
 ViaRouter.get("/", viaController.getAllVia);
 ViaRouter.post("/", viaController.createVia);

@@ -1,9 +1,10 @@
-import {BaseEntity, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {Via} from './Via';
 import {Croqui} from './Croqui';
+import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
 @Entity()
-export class ViaCroqui extends BaseEntity {
+export class ViaCroqui extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;
 

@@ -1,13 +1,14 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Fonte} from "./Fonte";
 import {Colecao} from "./Colecao";
 import {Via} from "./Via";
 import {Montanha} from "./Montanha";
 import {Usuario} from "./Usuario";
 import {Croqui} from "./Croqui";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Imagem extends BaseEntity {
+export class Imagem extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 

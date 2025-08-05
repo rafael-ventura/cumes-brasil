@@ -39,6 +39,19 @@ export class ViaRepository implements ISearchRepository<Via> {
     };
   }
 
+  async getRandom(): Promise<Via | null> {
+    return this.repository.createQueryBuilder("via")
+        .leftJoinAndSelect("via.montanha", "montanha")
+        .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+        .leftJoinAndSelect("via.fonte", "fonte")
+        .leftJoinAndSelect("via.face", "face")
+        .leftJoinAndSelect("via.imagem", "imagem")
+        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
+        .leftJoinAndSelect("viaCroquis.croqui", "croqui")
+        .orderBy("RANDOM()")
+        .getOne();
+  }
+
   async create(via: Partial<Via>): Promise<void> {
     await this.repository.insert(via);
   }

@@ -36,7 +36,7 @@ class AuthService {
         this.secretKey = process.env.SECRET_KEY || "";
     }
 
-    async register(nome: string, email: string, senha: string): Promise<void> {
+    async register(nome: string, email: string, senha: string): Promise<any> {
         UserValidation.registerValidation(nome, email, senha);
 
         const existingUser = await this.usuarioRepository.findByEmail(email);
@@ -53,7 +53,12 @@ class AuthService {
             newImagem = await this.imagemRepository.create(newImagem);
             const user = await this.usuarioRepository.create(nome, email, senhaHash, newImagem);
             await this.createDefaultCollections(user);
+            
+            // Retorna token após registro bem-sucedido
+            const token = this.generateToken(user.id.toString());
+            return { token, usuarioId: user.id, auth: true };
         }
+        throw new BadRequestError('Erro ao criar usuário: imagem padrão não encontrada');
     }
 
     async login(email: string, password: string): Promise<any> {
@@ -133,7 +138,7 @@ class AuthService {
     }
 
     generateToken(usuarioId: string): string {
-        return jwt.sign({ usuarioId: usuarioId }, this.secretKey);
+        return jwt.sign({ usuarioId: usuarioId }, this.secretKey, { expiresIn: '7d' });
     }
 
     setSecretKey(secretKey: string) {

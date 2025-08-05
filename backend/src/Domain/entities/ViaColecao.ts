@@ -1,5 +1,4 @@
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity, JoinColumn,
@@ -9,9 +8,10 @@ import {
 } from 'typeorm';
 import { Via } from './Via';
 import { Colecao } from './Colecao';
+import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
 @Entity()
-export class ViaColecao extends BaseEntity {
+export class ViaColecao extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;
 

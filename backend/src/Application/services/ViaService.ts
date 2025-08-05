@@ -25,6 +25,14 @@ export class ViaService {
     }
   }
 
+  async getRandomVia(): Promise<Via> {
+    const via = await this.viaRepo.getRandom();
+    if (!via) {
+      throw new Error("Nenhuma via encontrada");
+    }
+    return via;
+  }
+
   async createVia(viaData: Partial<Via>): Promise<void> {
     return this.viaRepo.create(viaData);
   }

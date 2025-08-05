@@ -39,6 +39,19 @@ export class ViaController {
 		}
 	};
 
+	getRandomVia = async (req: Request, res: Response) => {
+		try {
+			const via = await this.service.getRandomVia();
+			res.status(200).json(via);
+		} catch (error) {
+			if (error instanceof Error) {
+				res.status(500).json({ error: error.message });
+			} else {
+				res.status(500).json({ error: 'Ocorreu um erro desconhecido ao buscar via aleatória' });
+			}
+		}
+	};
+
 	createVia = async (requisicao: Request, resposta: Response) => {
 		try {
 			const via: Via = requisicao.body;
@@ -98,6 +111,8 @@ export class ViaController {
 					return resposta.status(404).json({ error: error.message });
 				}
 				resposta.status(500).json({ error: error.message });
+			} else {
+				resposta.status(500).json({ error: "Ocorreu um erro desconhecido em controller deleteVia" });
 			}
 		}
 	};

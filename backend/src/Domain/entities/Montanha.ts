@@ -1,11 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Fonte } from "./Fonte";
 import { Imagem } from "./Imagem";
 import { Face } from "./Face";
 import { Via } from "./Via";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Montanha extends BaseEntity {
+export class Montanha extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 

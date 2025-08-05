@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   JoinTable,
@@ -16,9 +15,10 @@ import { Imagem } from './Imagem';
 import { Escalada } from './Escalada';
 import { ViaColecao } from './ViaColecao';
 import {ViaCroqui} from "./ViaCroqui";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Via extends BaseEntity {
+export class Via extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 
