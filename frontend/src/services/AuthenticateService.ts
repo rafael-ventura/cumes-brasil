@@ -15,7 +15,7 @@ class AuthenticateService {
         email,
         password
       });
-      this.saveToken(response.data.token);
+      this.saveToken(response.data);
       return response;
     } catch (error: any) {
       handleApiError(error, error.response?.data?.message);
@@ -32,13 +32,15 @@ class AuthenticateService {
     }
   }
 
-  async register (nome: string, email: string, senha: string) {
+    async register (nome: string, email: string, senha: string) {
     try {
-      return await api.post('/auth/register', {
+      const response = await api.post('/auth/register', {
         nome,
         email,
         senha
       });
+      this.saveToken(response.data);
+      return response;
     } catch (error) {
       handleApiError(error, 'Erro ao criar usuário');
     }
@@ -75,6 +77,7 @@ class AuthenticateService {
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp > currentTime;
     } catch (error) {
+      console.error('Erro ao validar token:', error);
       return false;
     }
   }

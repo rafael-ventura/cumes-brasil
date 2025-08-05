@@ -1,8 +1,8 @@
 <template>
   <div class="botoes-acao">
     <!-- Error Handler -->
-    <ErrorHandler 
-      :error="error" 
+    <ErrorHandler
+      :error="error"
       position="top-right"
       @close="clearError"
     />
@@ -211,10 +211,10 @@ const onColecaoAdded = () => {
   .botoes-acao {
     gap: 15px;
     padding: 8px;
-    
+
     .q-btn {
       size: md;
     }
   }
 }
-</style> 
+</style>

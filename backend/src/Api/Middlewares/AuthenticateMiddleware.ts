@@ -44,9 +44,9 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
             throw new UnauthorizedError('Token expirado');
         }
 
-        const secretKey = process.env.JWT_SECRET_KEY;
+        const secretKey = process.env.SECRET_KEY;
         if (!secretKey) {
-            safeLogger.error('JWT_SECRET_KEY não configurada');
+            safeLogger.error('SECRET_KEY não configurada');
             throw new UnauthorizedError('Erro de configuração do servidor');
         }
 

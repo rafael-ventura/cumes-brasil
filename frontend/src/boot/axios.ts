@@ -6,6 +6,18 @@ api.interceptors.response.use(
   response => response,
   error => {
     console.error('API error:', error.response || error.message);
+
+    // Se for erro 401 (não autorizado), limpar token e redirecionar para login
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('usuarioId');
+
+      // Redirecionar para login se não estiver já na página de login
+      if (window.location.pathname !== '/auth/login') {
+        window.location.href = '/auth/login';
+      }
+    }
+
     return Promise.reject(error);
   }
 );

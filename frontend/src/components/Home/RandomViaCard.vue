@@ -7,8 +7,8 @@
     </div>
 
     <!-- Error State -->
-    <ErrorHandler 
-      :error="error" 
+    <ErrorHandler
+      :error="error"
       :show-notification="false"
       @close="clearError"
     />
@@ -17,22 +17,14 @@
     <div v-if="via && !loading" class="via-card-wrapper">
       <div class="card-header">
         <h3 class="card-title">Via Aleatória Encontrada</h3>
-        <q-btn
-          icon="refresh"
-          color="primary"
-          round
-          size="sm"
-          @click="fetchRandomVia"
-          :loading="loading"
-        />
       </div>
-      
-      <ViaCard 
-        :via="via" 
+
+      <ViaCard
+        :via="via"
         @click="navigateToVia"
         class="random-via-card"
       />
-      
+
       <div class="card-actions">
         <q-btn
           label="Ver Detalhes"
@@ -82,7 +74,7 @@ const error = ref<Error | null>(null);
 const fetchRandomVia = async () => {
   loading.value = true;
   error.value = null;
-  
+
   try {
     const randomVia = await ViaService.getRandomVia();
     via.value = randomVia;
@@ -124,7 +116,7 @@ const clearError = () => {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  
+
   .loading-text {
     margin-top: 16px;
     color: $cumes-04;
@@ -139,7 +131,7 @@ const clearError = () => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    
+
     .card-title {
       color: $cumes-04;
       font-size: 18px;
@@ -147,17 +139,17 @@ const clearError = () => {
       margin: 0;
     }
   }
-  
+
   .random-via-card {
     margin-bottom: 16px;
   }
-  
+
   .card-actions {
     display: flex;
     gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
-    
+
     .action-btn {
       min-width: 120px;
     }
@@ -169,7 +161,7 @@ const clearError = () => {
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
-  
+
   .random-btn {
     border-radius: 100%;
     width: 60px;
@@ -185,7 +177,7 @@ const clearError = () => {
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     }
   }
-  
+
   .initial-text {
     color: $cumes-04;
     font-size: 16px;
@@ -201,19 +193,19 @@ const clearError = () => {
     margin: 16px 8px;
     padding: 16px;
   }
-  
+
   .card-actions {
     flex-direction: column;
-    
+
     .action-btn {
       width: 100%;
     }
   }
-  
+
   .card-header {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
 }
-</style> 
+</style>

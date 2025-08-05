@@ -82,7 +82,7 @@
 
           <div class="action-buttons">
             <q-btn flat label="Já tem uma conta?" class="link-login" @click="goToLogin"/>
-            <q-btn type="submit" label="Cadastrar" class="register-btn"/>
+            <q-btn label="Cadastrar" class="register-btn" @click="onSignUp" :loading="loading"/>
           </div>
         </q-card-section>
       </q-card>
@@ -96,6 +96,7 @@ import {useRouter} from 'vue-router'
 import {Notify} from 'quasar'
 import {createNotifyConfig} from 'src/utils/utils'
 import InputText from 'primevue/inputtext'
+import AuthenticateService from 'src/services/AuthenticateService'
 
 defineOptions({
   name: 'RegisterPage'
@@ -105,6 +106,7 @@ const nome = ref('')
 const email = ref('')
 const senha = ref('')
 const confirmPassword = ref('')
+const loading = ref(false)
 const router = useRouter()
 
 const onSignUp = async () => {
@@ -113,8 +115,8 @@ const onSignUp = async () => {
     return
   }
 
-  if (senha.value.length < 4) {
-    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 4 caracteres', 'top'))
+  if (senha.value.length < 6) {
+    Notify.create(createNotifyConfig('negative', 'A senha deve conter pelo menos 6 caracteres', 'top'))
     return
   }
 
@@ -123,11 +125,16 @@ const onSignUp = async () => {
     return
   }
 
+  loading.value = true
+
   try {
-    Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso', 'top'))
+    await AuthenticateService.register(nome.value, email.value, senha.value)
+    Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso! Faça login para continuar.', 'top'))
     await router.push('/auth/login')
   } catch (error: any) {
-    Notify.create(createNotifyConfig('negative', error.message, 'top'))
+    Notify.create(createNotifyConfig('negative', error.message || 'Erro ao realizar cadastro', 'top'))
+  } finally {
+    loading.value = false
   }
 }
 

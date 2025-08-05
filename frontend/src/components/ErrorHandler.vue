@@ -40,7 +40,7 @@ watch(() => props.error, (newError) => {
   if (newError) {
     errorMessage.value = newError.message || 'Ocorreu um erro inesperado';
     showError.value = true;
-    
+
     if (props.showNotification) {
       Notify.create(createNotifyConfig('negative', errorMessage.value, props.position, props.timeout));
     }
@@ -59,4 +59,4 @@ const closeError = () => {
 .error-container {
   margin: 16px 0;
 }
-</style> 
+</style>

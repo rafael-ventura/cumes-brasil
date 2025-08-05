@@ -16,8 +16,8 @@ class AuthController {
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             const { email, password } = req.body;
-            const token = await this.authService.login(email, password);
-            res.json({ token });
+            const result = await this.authService.login(email, password);
+            res.json(result);
         } catch (error) {
             HandleErrors.handleErrors(error, req, res, next);
         }
@@ -27,8 +27,8 @@ class AuthController {
     async googleLogin(req: Request, res: Response, next: NextFunction) {
         try {
             const { authorizationCode } = req.body;
-            const user = await this.authService.googleLogin(authorizationCode);
-            res.json(user);
+            const result = await this.authService.googleLogin(authorizationCode);
+            res.json(result);
         } catch (error) {
             HandleErrors.handleErrors(error, req, res, next);
         }
@@ -41,8 +41,8 @@ class AuthController {
                 email,
                 senha
             } = req.body;
-            await this.authService.register(nome, email, senha);
-            res.status(201).json({ message: 'Usuario criado com sucesso.' });
+            const result = await this.authService.register(nome, email, senha);
+            res.status(201).json(result);
         } catch (error) {
             HandleErrors.handleErrors(error, req, res, next);
         }

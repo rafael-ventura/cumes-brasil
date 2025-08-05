@@ -1,10 +1,11 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Montanha} from "./Montanha";
 import {Fonte} from "./Fonte";
 import {Via} from "./Via";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Face extends BaseEntity {
+export class Face extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;
 

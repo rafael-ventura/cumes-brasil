@@ -9,7 +9,8 @@ import path from 'path';
 import { initializeEnvConfig } from '../Infrastructure/config/envinronment';
 import { safeLogger } from '../Infrastructure/config/logger';
 import { errorRequestMiddleware, notFoundMiddleware } from './Middlewares/ErrorRequestMiddleware';
-import { generalRateLimiter } from './Middlewares/RateLimitMiddleware';
+import { generalRateLimiter, getRateLimitInfo } from './Middlewares/RateLimitMiddleware';
+import { corsMiddleware, imageCorsMiddleware } from './Middlewares/CorsMiddleware';
 
 initializeEnvConfig();
 
@@ -26,27 +27,42 @@ safeLogger.info('Iniciando servidor', {
   environment: process.env.NODE_ENV || 'development'
 });
 
-// Middlewares de segurança
-app.use(helmet());
+// Middlewares de segurança com configuração específica para imagens
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "blob:", "http:", "https:"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'"],
+      connectSrc: ["'self'", FRONTEND_URL],
+    },
+  },
+}));
 
-// Rate limiting global
+// Rate limiting global (condicional)
 app.use(generalRateLimiter);
 
-app.use(
-  cors({
-    origin: FRONTEND_URL,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  })
-);
+// Configuração do CORS para todas as rotas
+app.use(corsMiddleware);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Configuração específica para arquivos estáticos com CORS
 const assetsPath = path.resolve(__dirname, '../../assets');
-app.use('/assets', express.static(assetsPath));
+app.use('/assets', imageCorsMiddleware, express.static(assetsPath));
+
 safeLogger.info('Servindo arquivos estáticos', { path: assetsPath });
+
+// Rota para verificar configuração de rate limiting (apenas em desenvolvimento)
+if (process.env.NODE_ENV === 'development') {
+  app.get('/api/rate-limit-info', (req, res) => {
+    res.json(getRateLimitInfo());
+  });
+}
 
 // Rotas da API
 app.use('/api', routes);
@@ -79,6 +95,8 @@ AppDataSource.initialize()
   });
 
 app.listen(PORT, HOSTNAME, () => {
+  const rateLimitInfo = getRateLimitInfo();
+  
   safeLogger.info('Servidor iniciado com sucesso', {
     port: PORT,
     hostname: HOSTNAME,
@@ -91,5 +109,12 @@ app.listen(PORT, HOSTNAME, () => {
     awsS3Bucket: process.env.AWS_S3_BUCKET_NAME ? 'Configurado' : 'Não configurado',
     cloudfrontUrl: process.env.CLOUDFRONT_URL ? 'Configurado' : 'Não configurado',
     googleClientId: process.env.GOOGLE_CLIENT_ID ? 'Configurado' : 'Não configurado'
+  });
+  
+  // Log de rate limiting
+  safeLogger.info('Configuração de Rate Limiting', {
+    enabled: rateLimitInfo.enabled,
+    environment: rateLimitInfo.environment,
+    limits: rateLimitInfo.limits
   });
 });

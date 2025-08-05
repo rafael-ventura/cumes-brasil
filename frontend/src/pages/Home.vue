@@ -15,11 +15,6 @@
     <!-- Componente de Via Aleatória -->
     <RandomViaCard />
 
-    <!-- Espaço para o Mapa -->
-    <div class="map-section">
-      <div class="map-text">Em breve explore vias diretamente no mapa</div>
-      <q-icon name="map" size="100px" color="$cumes-04" class="map-icon" />
-    </div>
   </q-page>
 </template>
 
@@ -141,20 +136,20 @@ function goToFilteredSearch (filterType: string) {
     width: 250px;
     height: 80px;
   }
-  
+
   .title-text {
     font-size: 1.5rem;
   }
-  
+
   .map-section {
     flex-direction: column;
     gap: 12px;
     text-align: center;
-    
+
     .map-text {
       text-align: center;
     }
-    
+
     .map-icon {
       text-align: center;
     }
