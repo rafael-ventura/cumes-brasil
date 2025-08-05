@@ -12,16 +12,8 @@
     <!-- Mosaico de Cards -->
     <CardMosaic :cards="cards" @navigate="goToFilteredSearch" />
 
-    <!-- Botão de Via Aleatória -->
-    <div class="random-section">
-      <div class="random-title">Explore uma Via Aleatória</div>
-      <q-btn
-        icon="shuffle"
-        color="primary"
-        class="random-btn"
-        @click="chooseRandomVia"
-      />
-    </div>
+    <!-- Componente de Via Aleatória -->
+    <RandomViaCard />
 
     <!-- Espaço para o Mapa -->
     <div class="map-section">
@@ -35,6 +27,7 @@
 import { onMounted, ref } from 'vue';
 import HomeService from 'src/services/HomeService';
 import CardMosaic from 'src/components/Home/CardMosaic.vue';
+import RandomViaCard from 'src/components/Home/RandomViaCard.vue';
 import { useRouter } from 'vue-router';
 import CopacabanaImage from 'src/assets/home/copacabana.webp';
 import TerceiroGrauImage from 'src/assets/home/terceiroGrau.webp';
@@ -46,6 +39,7 @@ const router = useRouter();
 defineOptions({
   name: 'HomePage'
 });
+
 export interface Card {
   title: string;
   filterType: string;
@@ -98,11 +92,6 @@ function goToFilteredSearch (filterType: string) {
     query: { filterType }
   });
 }
-
-function chooseRandomVia () {
-  const randomCard = cards.value[Math.floor(Math.random() * cards.value.length)];
-  alert(`Via aleatória: ${randomCard.title}`);
-}
 </script>
 
 <style scoped lang="scss">
@@ -121,38 +110,6 @@ function chooseRandomVia () {
 
 .title-text {
   color: $cumes-04;
-}
-
-.random-section {
-  border: 2px solid $cumes-04;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 30px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .random-title {
-    color: $cumes-04;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  .random-btn {
-    border-radius: 100%;
-    width: 50px;
-    height: 50px;
-    color: black;
-    background: $cumes-02;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    }
-  }
 }
 
 .map-section {
@@ -175,6 +132,32 @@ function chooseRandomVia () {
   .map-icon {
     flex: 1;
     text-align: right;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .logo-tamanho {
+    width: 250px;
+    height: 80px;
+  }
+  
+  .title-text {
+    font-size: 1.5rem;
+  }
+  
+  .map-section {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    
+    .map-text {
+      text-align: center;
+    }
+    
+    .map-icon {
+      text-align: center;
+    }
   }
 }
 </style>

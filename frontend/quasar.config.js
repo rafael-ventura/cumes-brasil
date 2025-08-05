@@ -21,7 +21,8 @@ module.exports = configure(function (/* ctx */) {
     boot: [
       'axios',
       'googleLogin',
-      'primevue'
+      'primevue',
+      'errorHandler'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

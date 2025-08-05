@@ -115,8 +115,77 @@ export function adjustImageUrls (entity: any): void {
 
 // --- Tratamento de Erros de API ---
 export function handleApiError (error: any, defaultMessage: string): never {
-  const message = error?.response?.data?.message || defaultMessage;
-  throw new Error(message);
+  let message = defaultMessage;
+  let statusCode = 500;
+
+  if (error?.response) {
+    statusCode = error.response.status;
+    const errorData = error.response.data;
+
+    // Tratamento específico por status code
+    switch (statusCode) {
+      case 400:
+        message = errorData?.error || 'Dados inválidos';
+        break;
+      case 401:
+        message = errorData?.error || 'Não autorizado';
+        break;
+      case 403:
+        message = errorData?.error || 'Acesso negado';
+        break;
+      case 404:
+        message = errorData?.error || 'Recurso não encontrado';
+        break;
+      case 409:
+        message = errorData?.error || 'Conflito de dados';
+        break;
+      case 422:
+        message = errorData?.error || 'Dados inválidos';
+        break;
+      case 429:
+        message = errorData?.error || 'Muitas requisições. Tente novamente em alguns minutos.';
+        break;
+      case 500:
+        message = errorData?.error || 'Erro interno do servidor';
+        break;
+      default:
+        message = errorData?.error || errorData?.message || defaultMessage;
+    }
+  } else if (error?.request) {
+    message = 'Erro de conexão. Verifique sua internet.';
+  } else if (error?.message) {
+    message = error.message;
+  }
+
+  const customError = new Error(message) as any;
+  customError.statusCode = statusCode;
+  customError.originalError = error;
+
+  throw customError;
+}
+
+// --- Função para tratamento de erros com notificação ---
+export function handleApiErrorWithNotify (error: any, defaultMessage: string, notify: any): void {
+  try {
+    handleApiError(error, defaultMessage);
+  } catch (customError: any) {
+    notify(createNotifyConfig('negative', customError.message));
+  }
+}
+
+// --- Função para validação de resposta de API ---
+export function validateApiResponse (response: any, expectedStatus: number = 200): void {
+  if (!response) {
+    throw new Error('Resposta inválida da API');
+  }
+
+  if (response.status !== expectedStatus) {
+    throw new Error(`Status inesperado: ${response.status}`);
+  }
+
+  if (!response.data) {
+    throw new Error('Dados não encontrados na resposta');
+  }
 }
 
 // --- Utilitários de Data ---

@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import routes from './routes/routes';
 import 'reflect-metadata';
 import { AppDataSource } from '../Infrastructure/config/db';
@@ -6,6 +7,9 @@ import { loadData } from '../Infrastructure/initialData/initialLoad';
 import { Via } from '../Domain/entities/Via';
 import path from 'path';
 import { initializeEnvConfig } from '../Infrastructure/config/envinronment';
+import { safeLogger } from '../Infrastructure/config/logger';
+import { errorRequestMiddleware, notFoundMiddleware } from './Middlewares/ErrorRequestMiddleware';
+import { generalRateLimiter } from './Middlewares/RateLimitMiddleware';
 
 initializeEnvConfig();
 
@@ -15,9 +19,18 @@ const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
 const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
 const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200';
 
-console.log('Frontend URL:', FRONTEND_URL);
-console.log('Hostname:', HOSTNAME);
-console.log('Port:', PORT);
+safeLogger.info('Iniciando servidor', {
+  frontendUrl: FRONTEND_URL,
+  hostname: HOSTNAME,
+  port: PORT,
+  environment: process.env.NODE_ENV || 'development'
+});
+
+// Middlewares de segurança
+app.use(helmet());
+
+// Rate limiting global
+app.use(generalRateLimiter);
 
 app.use(
   cors({
@@ -28,39 +41,55 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const assetsPath = path.resolve(__dirname, '../../assets');
 app.use('/assets', express.static(assetsPath));
-console.log('Servindo arquivos estáticos de:', assetsPath);
+safeLogger.info('Servindo arquivos estáticos', { path: assetsPath });
 
+// Rotas da API
 app.use('/api', routes);
+
+// Middleware para rotas não encontradas
+app.use(notFoundMiddleware);
+
+// Middleware de tratamento de erro global (deve ser o último)
+app.use(errorRequestMiddleware);
 
 AppDataSource.initialize()
   .then(async () => {
-    console.log('Conexão com o banco de dados estabelecida com sucesso');
+    safeLogger.info('Conexão com o banco de dados estabelecida com sucesso');
     const viaRepository = AppDataSource.getRepository(Via);
     const count = await viaRepository.count();
     if (count === 0) {
-      console.log('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
+      safeLogger.info('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
       await loadData();
-      console.log('Carga inicial realizada com sucesso');
+      safeLogger.info('Carga inicial realizada com sucesso');
     } else {
-      console.log('Registros já existentes na tabela Via, pulando a carga de dados.');
+      safeLogger.info('Registros já existentes na tabela Via, pulando a carga de dados', { count });
     }
   })
   .catch((error) => {
-    console.error('Erro ao conectar com o banco de dados:', error.message);
-    console.error(error.stack);
+    safeLogger.error('Erro ao conectar com o banco de dados', { 
+      error: error.message,
+      stack: error.stack 
+    });
     process.exit(1);
   });
 
-
 app.listen(PORT, HOSTNAME, () => {
-  console.log('Configurações do servidor:');
-  console.log('AWS_REGION:', process.env.AWS_REGION);
-  console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
-  console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY);
-  console.log('AWS_S3_BUCKET_NAME:', process.env.AWS_S3_BUCKET_NAME);
-  console.log('CLOUDFRONT_URL:', process.env.CLOUDFRONT_URL);
+  safeLogger.info('Servidor iniciado com sucesso', {
+    port: PORT,
+    hostname: HOSTNAME,
+    environment: process.env.NODE_ENV || 'development'
+  });
+  
+  // Log de configurações (sem dados sensíveis)
+  safeLogger.info('Configurações do servidor', {
+    awsRegion: process.env.AWS_REGION ? 'Configurado' : 'Não configurado',
+    awsS3Bucket: process.env.AWS_S3_BUCKET_NAME ? 'Configurado' : 'Não configurado',
+    cloudfrontUrl: process.env.CLOUDFRONT_URL ? 'Configurado' : 'Não configurado',
+    googleClientId: process.env.GOOGLE_CLIENT_ID ? 'Configurado' : 'Não configurado'
+  });
 });
