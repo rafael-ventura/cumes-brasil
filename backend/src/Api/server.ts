@@ -27,20 +27,23 @@ safeLogger.info('Iniciando servidor', {
   environment: process.env.NODE_ENV || 'development'
 });
 
-// Middlewares de segurança com configuração específica para imagens
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: false,
   contentSecurityPolicy: {
+    useDefaults: true,
     directives: {
       defaultSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "blob:", "http:", "https:"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       fontSrc: ["'self'"],
-      connectSrc: ["'self'", FRONTEND_URL],
-    },
-  },
+      connectSrc: ["'self'"],
+    }
+  }
 }));
+
 
 // Rate limiting global (condicional)
 app.use(generalRateLimiter);
