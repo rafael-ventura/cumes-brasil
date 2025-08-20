@@ -15,9 +15,8 @@ export function corsMiddleware(req: Request, res: Response, next: NextFunction) 
 
     if (isAllowed) {
         res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Credentials', 'true'); // só se precisar de cookies/credenciais
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
-    // Nunca use '*' quando Allow-Credentials=true
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type,Accept,X-Requested-With');
