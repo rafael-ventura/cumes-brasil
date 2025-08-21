@@ -1,11 +1,8 @@
 #!/bin/bash
 echo "Parando serviços antigos..."
 
-# Parar a API no PM2
-pm2 stop cumes-api || true
-pm2 delete cumes-api || true
+cd /home/ec2-user/cumes-brasil || exit 1
 
-# Parar apenas o banco no Docker (mantendo a API fora dele)
-docker-compose stop postgres
+docker-compose down
 
-echo "API e banco de dados parados."
+echo "Todos os serviços foram parados."

@@ -4,10 +4,12 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/Api/server.js",
   "scripts": {
-    "build": "tsc && echo 'Build concluído com sucesso!'",
-    "start": "ts-node src/Api/server.ts",
-    "migration:run": "npx typeorm migration:run -d ./dist/infrastructure/config/db.js",
-    "migration:generate": "npx typeorm migration:generate ./src/infrastructure/migrations/NewMigration -d ./dist/infrastructure/config/db.js"
+    "dev": "cross-env NODE_ENV=development ts-node src/Api/server.ts",
+    "build": "tsc",
+    "start": "node dist/Api/server.js",
+    "start:pm2": "cross-env NODE_ENV=production pm2 start dist/Api/server.js --name cumes-api",
+    "migration:run": "cross-env NODE_ENV=production npx typeorm migration:run -d ./dist/Infrastructure/config/db.js",
+    "migration:generate": "cross-env NODE_ENV=development npx typeorm migration:generate ./src/Infrastructure/migrations/NewMigration -d ./dist/Infrastructure/config/db.js"
   },
   "dependencies": {
     "@aws-sdk/credential-providers": "^3.738.0",
@@ -16,8 +18,8 @@
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "csv-parse": "^5.5.2",
-    "dotenv": "^16.3.1",
-    "express": "5.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
     "express-rate-limit": "^7.5.1",
     "express-session": "^1.17.3",
     "fast-csv": "^4.3.6",

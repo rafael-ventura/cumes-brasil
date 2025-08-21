@@ -1,5 +1,4 @@
 import {DataSource} from 'typeorm';
-import {initializeEnvConfig} from './envinronment';
 import {Colecao} from '../../Domain/entities/Colecao';
 import {Croqui} from '../../Domain/entities/Croqui';
 import {Escalada} from '../../Domain/entities/Escalada';
@@ -13,7 +12,6 @@ import {Participante} from '../../Domain/entities/Participante';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
 
-initializeEnvConfig();
 
 export const AppDataSource = new DataSource({
     schema: 'public',

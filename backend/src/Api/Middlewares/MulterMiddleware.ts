@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const isProduction = Boolean(process.env.CLOUDFRONT_URL); // Se existir, estamos em produção
+const isProduction = Boolean(process.env.CLOUDFRONT_URL) || process.env.NODE_ENV === 'production';
 
 export class MulterMiddleware {
   private static storage = isProduction
