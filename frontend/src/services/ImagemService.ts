@@ -1,27 +1,31 @@
-import { api } from 'boot/axios';
+import {api} from 'boot/axios';
 
 class ImageService {
   private readonly baseUrl: string;
 
-  constructor () {
+  constructor() {
+    // ex: https://api.cumesbrasil.com.br/api
     const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:8080/api';
+    // remove o /api para usar como base em local/dev
     this.baseUrl = apiUrl.replace('/api', '');
   }
 
   getFullImageUrl(relativePath: string): string {
     if (!relativePath) return '';
 
-    // Se já vier absoluta (https://), só retorna
     if (relativePath.startsWith('http')) {
       return relativePath;
     }
 
-    // Se backend mandar apenas o nome do arquivo
-    return `${this.baseUrl}${relativePath}`;
+    if (relativePath.startsWith('/assets') || relativePath.startsWith('assets')) {
+      return `${this.baseUrl}/${relativePath.replace(/^\/?/, '')}`;
+    }
+
+    return `${this.baseUrl}/assets/${relativePath}`;
   }
 
 
-  async getImageById (id: number): Promise<any> {
+  async getImageById(id: number): Promise<any> {
     try {
       const response = await api.get(`/imagens/${id}`);
       return response.data;
