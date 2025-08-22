@@ -17,6 +17,10 @@ import SearchRouter from './SearchRouter';
 import PerfilRouter from "./PerfilRouter";
 import { authRateLimiter, uploadRateLimiter, createContentRateLimiter } from '../Middlewares/RateLimitMiddleware';
 
+// TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
+// TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
+// TODO: VERIFIQUE A NECESSIDADE DE CRIAR METODOS E ISOLAR TRECHOS DE CODIGO COMUM.
+
 const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
 

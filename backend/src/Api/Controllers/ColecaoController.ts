@@ -9,6 +9,7 @@ export class ColecaoController {
     constructor(colecaoaService: ColecaoService) {
         this.service = colecaoaService;
     }
+    //TODO: USAR MIDDLEWARE DE ERRO. AJUSTAR CHAMADA DOS MÉTODOS ABAIXO. AJUSTAR TIPAGENS DE RETORNO. AJUSTAR SWAGGER. AJUSTAR NOMES DE MÉTODOS RESTFUL
 
     /**
      * @route GET /colecaoes/:id

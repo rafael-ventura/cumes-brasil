@@ -8,18 +8,18 @@ class ImageService {
     this.baseUrl = apiUrl.replace('/api', '');
   }
 
-  getFullImageUrl (relativePath: string): string {
-    if (!relativePath) {
-      console.warn('O caminho relativo da imagem não foi fornecido.');
-      return '';
-    }
-    if (relativePath.startsWith('https://')) {
+  getFullImageUrl(relativePath: string): string {
+    if (!relativePath) return '';
+
+    // Se já vier absoluta (https://), só retorna
+    if (relativePath.startsWith('http')) {
       return relativePath;
     }
-    // Remove /assets se já estiver no caminho para evitar duplicação
-    const cleanPath = relativePath.startsWith('/assets') ? relativePath : `/assets${relativePath}`;
-    return `${this.baseUrl}${cleanPath}`;
+
+    // Se backend mandar apenas o nome do arquivo
+    return `${this.baseUrl}${relativePath}`;
   }
+
 
   async getImageById (id: number): Promise<any> {
     try {
