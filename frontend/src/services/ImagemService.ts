@@ -1,29 +1,20 @@
 import {api} from 'boot/axios';
 
 class ImageService {
-  private readonly baseUrl: string;
+  private readonly apiUrl: string;
+  private readonly assetsUrl: string;
 
   constructor() {
-    // ex: https://api.cumesbrasil.com.br/api
-    const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:8080/api';
-    // remove o /api para usar como base em local/dev
-    this.baseUrl = apiUrl.replace('/api', '');
+    this.apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:8080/api';
+    this.assetsUrl = import.meta.env.VITE_APP_ASSETS_URL || 'http://localhost:8080/assets';
   }
 
   getFullImageUrl(relativePath: string): string {
     if (!relativePath) return '';
+    if (relativePath.startsWith('http')) return relativePath;
 
-    if (relativePath.startsWith('http')) {
-      return relativePath;
-    }
-
-    if (relativePath.startsWith('/assets') || relativePath.startsWith('assets')) {
-      return `${this.baseUrl}/${relativePath.replace(/^\/?/, '')}`;
-    }
-
-    return `${this.baseUrl}/assets/${relativePath}`;
+    return `${this.assetsUrl}/${relativePath.replace(/^\/?assets?\//, '')}`;
   }
-
 
   async getImageById(id: number): Promise<any> {
     try {

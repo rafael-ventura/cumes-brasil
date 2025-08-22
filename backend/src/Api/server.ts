@@ -16,8 +16,6 @@ import { imageCorsMiddleware } from './Middlewares/ImageCorsMiddleware';
 const app = express();
 const PORT = process.env.API_PORT ? parseInt(process.env.API_PORT) : 8080;
 const HOSTNAME = process.env.API_HOSTNAME || '0.0.0.0';
-const FRONTEND_URL = process.env.WEB_HOSTNAME || 'http://localhost:9200';
-
 // Log inicial de configuração do servidor
 safeLogger.info('Iniciando servidor', {
   frontendUrl: process.env.WEB_HOSTNAME,

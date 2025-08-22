@@ -11,10 +11,6 @@ export default defineConfig({
       sassVariables: 'src/css/quasar.variables.scss'
     })
   ],
-  define: {
-    'import.meta.env.VITE_APP_API_URL': JSON.stringify('http://localhost:8080/api'),
-    'import.meta.env.VITE_APP_SERVER_IP': JSON.stringify('http://localhost:8080'),
-  },
   server: {
     port: 9200,
     host: true
