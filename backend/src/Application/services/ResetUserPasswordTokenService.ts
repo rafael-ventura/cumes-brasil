@@ -9,7 +9,6 @@ import TokenValidation from "../validations/TokenValidation";
 @Service()
 export class ResetUserPasswordTokenService {
     generate(user: Usuario) {
-        console.log("process.env.secret_key:", process.env.SECRET_KEY);
         const jwtToken = jwt.sign({
                 id: user.id,
                 email: user.email
@@ -19,9 +18,6 @@ export class ResetUserPasswordTokenService {
                 expiresIn: "12h"
             }
         );
-    
-        console.log("jwtToken:", jwtToken);
-        
         const token = Base64.encodeURI(jwtToken);
         const smallUrl = crypto.randomBytes(64).toString('base64url');
         return {

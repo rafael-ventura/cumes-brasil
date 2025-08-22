@@ -5,254 +5,220 @@ import {ISearchResult} from '../../Domain/interfaces/models/ISearchResult';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
 
 export class ViaRepository implements ISearchRepository<Via> {
-  private repository = AppDataSource.getRepository(Via);
+    private repository = AppDataSource.getRepository(Via);
 
-  async getById(id: number): Promise<Via | null> {
-    return this.repository.createQueryBuilder("via")
-        .leftJoinAndSelect("via.montanha", "montanha")
-        .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-        .leftJoinAndSelect("via.fonte", "fonte")
-        .leftJoinAndSelect("via.face", "face")
-        .leftJoinAndSelect("via.imagem", "imagem")
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui") // Pegando os croquis relacionados via ViaCroqui
-        .where("via.id = :id", {id})
-        .getOne();
-  }
-
-  async getAll(page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    const [vias, total] = await this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui") // Pegando os croquis corretamente
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
-
-    return {
-      vias,
-      total
-    };
-  }
-
-  async getRandom(): Promise<Via | null> {
-    return this.repository.createQueryBuilder("via")
-        .leftJoinAndSelect("via.montanha", "montanha")
-        .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-        .leftJoinAndSelect("via.fonte", "fonte")
-        .leftJoinAndSelect("via.face", "face")
-        .leftJoinAndSelect("via.imagem", "imagem")
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui")
-        .orderBy("RANDOM()")
-        .getOne();
-  }
-
-  async create(via: Partial<Via>): Promise<void> {
-    await this.repository.insert(via);
-  }
-
-  async update(id: number, viaData: Partial<Via>): Promise<void> {
-    await this.repository.update(id, viaData);
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
-  }
-
-  async getViasByColecaoId(colecaoId: number, page: number, limit: number): Promise<{ vias: Via[], total: number }> {
-    const subQuery = AppDataSource.getRepository(ViaColecao)
-        .createQueryBuilder('via_colecao')
-        .select('via_colecao.viaId')
-        .where('via_colecao.colecaoId = :colecaoId', {colecaoId});
-
-    const [vias, total] = await this.repository.createQueryBuilder('via')
-        .where(`via.id IN (${subQuery.getQuery()})`)
-        .setParameters(subQuery.getParameters())
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui") // Pegando os croquis corretamente
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
-
-    return {
-      vias,
-      total
-    };
-  }
-
-  async getViasNotInColecaoForUser(
-      colecaoId: number,
-      usuarioId: number,
-      page: number,
-      limit: number
-  ): Promise<{ vias: Via[], total: number }> {
-    const subQuery = AppDataSource.getRepository(ViaColecao)
-        .createQueryBuilder('via_colecao')
-        .select('via_colecao.viaId')
-        .innerJoin('via_colecao.colecao', 'colecao')
-        .where('via_colecao.colecaoId = :colecaoId', {colecaoId})
-        .andWhere('colecao.usuarioId = :usuarioId', {usuarioId});
-
-    const [vias, total] = await this.repository
-        .createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui") // Pegando os croquis corretamente
-        .where(`via.id NOT IN (${subQuery.getQuery()})`)
-        .setParameters(subQuery.getParameters())
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getManyAndCount();
-
-    return {
-      vias,
-      total
-    };
-  }
-
-  async getAllWithoutPagination(): Promise<{ vias: Via[], total: number }> {
-    const [vias, total] = await this.repository.createQueryBuilder('via')
-        .leftJoinAndSelect('via.montanha', 'montanha')
-        .leftJoinAndSelect('via.viaPrincipal', 'viaPrincipal')
-        .leftJoinAndSelect('via.fonte', 'fonte')
-        .leftJoinAndSelect('via.face', 'face')
-        .leftJoinAndSelect('via.imagem', 'imagem')
-        .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-        .leftJoinAndSelect("viaCroquis.croqui", "croqui") // Pegando os croquis corretamente
-        .getManyAndCount();
-
-    return {
-      vias,
-      total
-    };
-  }
-
-  async search(query: any): Promise<ISearchResult<any>> {
-    const {
-      unifiedSearch,
-      selectedMountain,
-      selectedDifficulty,
-      selectedCrux,
-      selectedExtensionCategory,
-      selectedExposicao,
-      colecaoId,
-      bairro,
-      page = 1,
-      itemsPerPage = 10,
-      sortField,
-      sortOrder
-    } = query;
-
-    let qb = this.repository.createQueryBuilder('via')
-      .leftJoinAndSelect('via.montanha', 'montanha')
-      .leftJoinAndSelect('via.imagem', 'imagem');
-
-    // Filtro por colecaoId (aplicado inicialmente)
-    if (colecaoId) {
-      qb = qb
-        .innerJoin('via.viaColecoes', 'viaColecaoFilter', 'viaColecaoFilter.colecaoId = :colecaoId', { colecaoId })
-        .addSelect('viaColecaoFilter.data_adicao', 'data_adicao');
+    private withRelations(qb: any) {
+        return qb
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+            .leftJoinAndSelect("via.fonte", "fonte")
+            .leftJoinAndSelect("via.face", "face")
+            .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
+            .leftJoinAndSelect("viaCroquis.croqui", "croqui");
     }
 
-    // Filtro de busca unificada
-    if (unifiedSearch) {
-      qb = qb.andWhere(
-        '(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)',
-        { unifiedSearch: `%${unifiedSearch}%` }
-      );
+    async getById(id: number): Promise<Via | null> {
+        return this.withRelations(
+            this.repository.createQueryBuilder("via").where("via.id = :id", {id})
+        ).getOne();
     }
 
-    // Filtro por bairro da montanha
-    if (bairro) {
-      qb = qb.andWhere('montanha.bairro = :bairro', { bairro });
+    async getAll(page: number, limit: number): Promise<{ items: Via[]; total: number; totalPages: number }> {
+        const [vias, total] = await this.withRelations(
+            this.repository.createQueryBuilder("via")
+        )
+            .skip((page - 1) * limit)
+            .take(limit)
+            .getManyAndCount();
+
+        return {
+            items: vias,
+            total,
+            totalPages: Math.ceil(total / limit),
+        };
     }
 
-    // Filtro por nome da montanha
-    if (selectedMountain) {
-      qb = qb.andWhere('montanha.nome = :selectedMountain', { selectedMountain });
+    async getAllWithoutPagination(): Promise<{ items: Via[]; total: number; totalPages: number }> {
+        const [vias, total] = await this.withRelations(
+            this.repository.createQueryBuilder("via")
+        ).getManyAndCount();
+
+        return {
+            items: vias,
+            total,
+            totalPages: 1,
+        };
     }
 
-    // Filtro por dificuldade da via
-    if (selectedDifficulty) {
-      qb = qb.andWhere('via.grau = :selectedDifficulty', { selectedDifficulty });
+    async getRandom(): Promise<Via | null> {
+        return this.withRelations(
+            this.repository.createQueryBuilder("via").orderBy("RANDOM()")
+        ).getOne();
     }
 
-    // Filtro por crux da via
-    if (selectedCrux) {
-      qb = qb.andWhere('via.crux = :selectedCrux', { selectedCrux });
+    async create(via: Partial<Via>): Promise<Via> {
+        const insertResult = await this.repository.insert(via);
+        const id = insertResult.identifiers[0].id;
+        return this.getById(id) as Promise<Via>;
     }
 
-    // Filtro por categoria de extensão
-    if (selectedExtensionCategory) {
-      qb = qb.andWhere('via.extensao >= :minExtension AND via.extensao <= :maxExtension', {
-        minExtension: selectedExtensionCategory[0],
-        maxExtension: selectedExtensionCategory[1]
-      });
+    async update(id: number, viaData: Partial<Via>): Promise<Via | null> {
+        await this.repository.update(id, viaData);
+        return this.getById(id);
     }
 
-    // Filtro por exposição
-    if (selectedExposicao) {
-      if (selectedExposicao[0] === 'e1' && selectedExposicao[1] === 'e2') {
-        qb = qb.andWhere('LOWER(via.exposicao) IN (:...selectedExposicao)', { selectedExposicao: selectedExposicao });
-      } else {
-        qb = qb.andWhere('via.exposicao LIKE :selectedExposicao', { selectedExposicao: `${selectedExposicao[0]}%` });
-      }
+    async delete(id: number): Promise<void> {
+        await this.repository.delete(id);
     }
 
-    // Adicionar a ordenação com base nos parâmetros sortField e sortOrder
-    if (sortField && sortOrder) {
-      qb = qb.orderBy(`via.${sortField}`, sortOrder.toUpperCase());
+    async getViasByColecaoId(colecaoId: number, page: number, limit: number): Promise<{
+        items: Via[],
+        total: number,
+        totalPages: number
+    }> {
+        const subQuery = AppDataSource.getRepository(ViaColecao)
+            .createQueryBuilder("via_colecao")
+            .select("via_colecao.viaId")
+            .where("via_colecao.colecaoId = :colecaoId", {colecaoId});
+
+        const [vias, total] = await this.withRelations(
+            this.repository.createQueryBuilder("via")
+                .where(`via.id IN (${subQuery.getQuery()})`)
+                .setParameters(subQuery.getParameters())
+        )
+            .skip((page - 1) * limit)
+            .take(limit)
+            .getManyAndCount();
+
+        return {
+            items: vias,
+            total,
+            totalPages: Math.ceil(total / limit),
+        };
     }
 
-    // Contar o total de itens
-    const totalItems = await qb.getCount();
+    async getViasNotInColecaoForUser(colecaoId: number, usuarioId: number, page: number, limit: number): Promise<{
+        items: Via[],
+        total: number,
+        totalPages: number
+    }> {
+        const subQuery = AppDataSource.getRepository(ViaColecao)
+            .createQueryBuilder("via_colecao")
+            .select("via_colecao.viaId")
+            .innerJoin("via_colecao.colecao", "colecao")
+            .where("via_colecao.colecaoId = :colecaoId", {colecaoId})
+            .andWhere("colecao.usuarioId = :usuarioId", {usuarioId});
 
-    // Buscar itens paginados
-    const items = await qb
-      .skip((page - 1) * itemsPerPage)
-      .take(itemsPerPage)
-      .getRawAndEntities(); // Busca raw data e entidades
+        const [vias, total] = await this.withRelations(
+            this.repository.createQueryBuilder("via")
+                .where(`via.id NOT IN (${subQuery.getQuery()})`)
+                .setParameters(subQuery.getParameters())
+        )
+            .skip((page - 1) * limit)
+            .take(limit)
+            .getManyAndCount();
 
-    // Mapear os itens para incluir a data_adicao no resultado final
-    const mappedItems = items.entities.map((item, index) => {
-      // @ts-ignore
-      const rawData = items.raw[index];
-      return {
-        ...item,
-        data_adicao: rawData.data_adicao || null  // Adicionar a data_adicao ao retorno
-      };
-    });
-
-    // Calcular total de páginas
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    return {
-      items: mappedItems,
-      totalPages,
-      totalItems
-    };
-  }
-
-  async countByField(field: string, value: any, operator: string = '='): Promise<number> {
-    const queryBuilder = this.repository.createQueryBuilder('via')
-      .leftJoin('via.montanha', 'montanha');
-
-    if (field === 'via.exposicao' || field === 'via.duracao') {
-      queryBuilder.where(`${field} LIKE :value`, { value: `%${value}%` });
-    } else {
-      queryBuilder.where(`${field} ${operator} :value`, { value });
+        return {
+            items: vias,
+            total,
+            totalPages: Math.ceil(total / limit),
+        };
     }
 
-    return queryBuilder.getCount();
-  }
+    async search(query: any): Promise<ISearchResult<any>> {
+        const {
+            unifiedSearch,
+            selectedMountain,
+            selectedDifficulty,
+            selectedCrux,
+            selectedExtensionCategory,
+            selectedExposicao,
+            colecaoId,
+            bairro,
+            page = 1,
+            itemsPerPage = 10,
+            sortField,
+            sortOrder,
+        } = query;
+
+        let qb = this.repository.createQueryBuilder("via")
+            .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("via.imagem", "imagem");
+
+        if (colecaoId) {
+            qb = qb.innerJoin("via.viaColecoes", "viaColecaoFilter", "viaColecaoFilter.colecaoId = :colecaoId", {colecaoId})
+                .addSelect("viaColecaoFilter.data_adicao", "data_adicao");
+        }
+
+        if (unifiedSearch) {
+            qb = qb.andWhere(
+                "(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)",
+                {unifiedSearch: `%${unifiedSearch}%`}
+            );
+        }
+
+        if (bairro) {
+            qb = qb.andWhere("LOWER(montanha.bairro) = :bairro", {bairro: bairro.toLowerCase()});
+        }
+
+        if (selectedMountain) {
+            qb = qb.andWhere("montanha.nome = :selectedMountain", {selectedMountain});
+        }
+
+        if (selectedDifficulty) {
+            qb = qb.andWhere("via.grau = :selectedDifficulty", {selectedDifficulty});
+        }
+
+        if (selectedCrux) {
+            qb = qb.andWhere("via.crux = :selectedCrux", {selectedCrux});
+        }
+
+        if (selectedExtensionCategory) {
+            qb = qb.andWhere("via.extensao >= :minExtension AND via.extensao <= :maxExtension", {
+                minExtension: selectedExtensionCategory[0],
+                maxExtension: selectedExtensionCategory[1],
+            });
+        }
+
+        if (selectedExposicao) {
+            if (selectedExposicao[0] === "e1" && selectedExposicao[1] === "e2") {
+                qb = qb.andWhere("LOWER(via.exposicao) IN (:...selectedExposicao)", {selectedExposicao});
+            } else {
+                qb = qb.andWhere("via.exposicao LIKE :selectedExposicao", {selectedExposicao: `${selectedExposicao[0]}%`});
+            }
+        }
+
+        if (sortField && sortOrder) {
+            qb = qb.orderBy(`via.${sortField}`, sortOrder.toUpperCase());
+        }
+
+        const totalItems = await qb.getCount();
+
+        const items = await qb
+            .skip((page - 1) * itemsPerPage)
+            .take(itemsPerPage)
+            .getRawAndEntities();
+
+        const mappedItems = items.entities.map((item, index) => {
+            const rawData = items.raw[index];
+            return {...item, data_adicao: rawData.data_adicao || null};
+        });
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        return {items: mappedItems, totalPages, totalItems};
+    }
+
+    async countByField(field: string, value: any, operator: string = "="): Promise<number> {
+        const queryBuilder = this.repository.createQueryBuilder("via")
+            .leftJoin("via.montanha", "montanha");
+
+        if (field === "via.exposicao" || field === "via.duracao") {
+            queryBuilder.where(`${field} LIKE :value`, {value: `%${value}%`});
+        } else {
+            queryBuilder.where(`${field} ${operator} :value`, {value});
+        }
+
+        return queryBuilder.getCount();
+    }
 }

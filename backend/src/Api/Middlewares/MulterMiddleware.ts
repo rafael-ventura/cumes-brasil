@@ -14,7 +14,7 @@ export class MulterMiddleware {
     : multer.diskStorage({
       destination: (req, file, cb) => {
         const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets');
-        console.log('📂 Salvando imagem localmente em:', uploadPath);
+        console.log('📂 Salvando imagem localmente em:', uploadPath); //TODO: ADD LOGGER
         cb(null, uploadPath);
       },
       filename: (req: any, file, cb) => {

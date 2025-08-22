@@ -19,7 +19,7 @@ export class Imagem extends BaseEntityWithTimestamps {
   descricao?: string;
 
   @ManyToOne(() => Fonte, fonte => fonte.imagens)
-  @JoinColumn({name: "fonte_id"}) // Nome da chave estrangeira no banco
+  @JoinColumn({name: "fonte_id"})
   fonte: Fonte;
 
   @Column({nullable: true})

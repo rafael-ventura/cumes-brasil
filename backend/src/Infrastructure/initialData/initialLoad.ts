@@ -34,8 +34,6 @@ export async function loadData() {
     await insertData(queryRunner, Via, viasJson);
     await insertData(queryRunner, Usuario, usuariosJson);
     await associateViaCroqui(queryRunner);
-
-    console.log("✅ Todos os dados foram carregados com sucesso.");
   } catch (error) {
     console.error("❌ Erro ao carregar dados:", error);
   } finally {
@@ -54,7 +52,7 @@ async function insertData<T>(
     const entities = repository.create(data);
     await repository.insert(entities);
     await queryRunner.commitTransaction();
-    console.log(`✅ ${entityClass.name} inserido com sucesso.`);
+    console.log(`✅ ${entityClass.name} inserido com sucesso.`); // TODO: Melhorar mensagem de log C LOGGER
   } catch (error) {
     console.error(`❌ Erro ao inserir ${entityClass.name}:`, error);
     await queryRunner.rollbackTransaction();
@@ -77,7 +75,6 @@ async function associateViaCroqui(queryRunner: QueryRunner) {
     await viaCroquiRepository.insert(viaCroquis);
 
     await queryRunner.commitTransaction();
-    console.log("✅ Via-Croqui inserida diretamente.");
   } catch (error) {
     console.error("❌ Erro ao inserir Via-Croqui:", error);
     await queryRunner.rollbackTransaction();

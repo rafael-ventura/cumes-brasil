@@ -15,8 +15,8 @@ export class Croqui extends BaseEntityWithTimestamps {
   @ManyToOne(() => Fonte, fonte => fonte.croquis)
   fonte: number;
 
-  @ManyToOne(() => Imagem, imagem => imagem.croquis)
-  imagem: number;
+  @ManyToOne(() => Imagem, imagem => imagem.croquis, { nullable: true })
+  imagem?: Imagem;
 
   @OneToMany(() => ViaCroqui, viaCroqui => viaCroqui.croqui)
   viaCroquis: ViaCroqui[];

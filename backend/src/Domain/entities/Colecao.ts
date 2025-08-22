@@ -21,9 +21,8 @@ export class Colecao extends BaseEntityWithTimestamps {
   @ManyToOne(() => Usuario, usuario => usuario.colecoes)
   usuario: Usuario;
 
-  @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  @Column({ nullable: true })
-  imagem?: number;
+  @ManyToOne(() => Imagem, imagem => imagem.colecoes, { nullable: true })
+  imagem?: Imagem;
 
   @OneToMany(() => ViaColecao, viaColecao => viaColecao.colecao)
   viaColecoes: ViaColecao[];

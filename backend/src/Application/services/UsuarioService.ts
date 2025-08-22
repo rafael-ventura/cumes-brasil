@@ -100,7 +100,7 @@ export class UsuarioService {
 
         // Remover a imagem antiga do S3, se existir
         if (imagemAtual && process.env.CLOUDFRONT_URL) {
-            console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`);
+            console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`); // TODO: Adicionar logger
             const fileName = imagemAtual.url.split('/').pop(); // Pega o nome do arquivo
             if (fileName) {
                 await this.s3Service.deleteFileS3(fileName);
@@ -111,17 +111,12 @@ export class UsuarioService {
 
         if (process.env.CLOUDFRONT_URL) {
             // Produção: Enviar para S3
-            console.log("🌍 Enviando imagem para o S3...");
             const fileName = `perfil/userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
             imageUrl = await this.s3Service.uploadFileS3(fileName, file.buffer, file.mimetype);
         } else {
             // Desenvolvimento: Usar caminho local
-            console.log("💾 Salvando imagem localmente...");
             imageUrl = `/assets/${file.filename}`;
         }
-
-        console.log("✅ Imagem salva com sucesso:", imageUrl);
-
         // Atualizar banco de dados com a URL da imagem
         let novaImagem = imagemAtual || new Imagem(); // Se já existia uma, reaproveita
         novaImagem.url = imageUrl;

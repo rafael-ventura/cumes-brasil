@@ -28,8 +28,6 @@ class S3Helper {
       };
 
       const result = await s3.upload(params).promise();
-
-      console.log(`✅ Arquivo enviado para S3: ${fileName}`);
       return `${this.cloudfrontUrl}/${fileName}`;
     } catch (error) {
       console.error('❌ Erro ao enviar arquivo para S3:', error);
@@ -45,7 +43,6 @@ class S3Helper {
       };
 
       await s3.deleteObject(params).promise();
-      console.log(`🗑️ Arquivo deletado do S3: ${fileName}`);
     } catch (error) {
       console.error('❌ Erro ao deletar arquivo do S3:', error);
       throw new Error('Falha ao deletar a imagem.');
@@ -61,10 +58,8 @@ class S3Helper {
       };
 
       const signedUrl = s3.getSignedUrl('getObject', params);
-      console.log(`🔗 URL assinada gerada para: ${fileName}`);
       return signedUrl;
     } catch (error) {
-      console.error('❌ Erro ao gerar URL assinada:', error);
       throw new Error('Falha ao gerar URL da imagem.');
     }
   }

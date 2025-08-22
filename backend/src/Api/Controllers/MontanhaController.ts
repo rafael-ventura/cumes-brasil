@@ -1,5 +1,6 @@
 import {MontanhaService} from "../../Application/services/MontanhaService";
 import {Request, Response} from "express";
+import {MontanhaDTO} from "../DTOs/Montanha/MontanhaDTO";
 
 export class MontanhaController {
     private service: MontanhaService;
@@ -20,17 +21,13 @@ export class MontanhaController {
             const id = parseInt(req.params.id);
             const result = await this.service.getMontanhaById(id);
             if (!result) {
-                return res.status(404).json({message: "montanha não encontrada."});
+                return res.status(404).json({ message: "Montanha não encontrada." });
             }
-            res.json(result);
+            return res.json(new MontanhaDTO(result));
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(500).json({error: error.message});
-            } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getMontanhaById"});
-            }
+            res.status(500).json({ error: error instanceof Error ? error.message : "Erro desconhecido" });
         }
-    }
+    };
 
     /**
      * @route GET /montanhas
@@ -40,19 +37,15 @@ export class MontanhaController {
      * @returns {object} 404 - montanha não encontrada
      * @returns {Error} 500 - Erro desconhecido
      */
-    getAllMontanha = async (req: Request, res: Response) => {
+    getAllMontanha = async (_: Request, res: Response) => {
         try {
             const montanhas = await this.service.getMontanhas();
-            if (montanhas?.length === 0) {
-                return res.status(404).json({message: "Nenhuma montanha encontrada"});
+            if (!montanhas || montanhas.length === 0) {
+                return res.status(404).json({ message: "Nenhuma montanha encontrada" });
             }
-            res.json(montanhas);
+            return res.json(montanhas.map(m => new MontanhaDTO(m)));
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(500).json({error: error.message});
-            } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller getAllMontanha"});
-            }
+            res.status(500).json({ error: error instanceof Error ? error.message : "Erro desconhecido" });
         }
-    }
+    };
 }
