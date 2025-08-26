@@ -53,6 +53,7 @@ package-lock.json
 *.bd
 
 *.env
+*.env*
 
 # Ignore banco de dados
 *.db
