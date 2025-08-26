@@ -50,7 +50,7 @@ node_modules/
 package-lock.json
 
 *.env
-backend/.env.development
+*backend/.env.development
 
 # Ignore banco de dados
 *.db
