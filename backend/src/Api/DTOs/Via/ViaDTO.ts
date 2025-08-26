@@ -10,9 +10,23 @@ export class ViaDTO {
     detalhes?: string;
     data?: string;
 
+    // Campos adicionados
+    crux?: string;
+    artificial?: string;
+    duracao?: string;
+    exposicao?: string;
+    viaPrincipalId?: number;
+    fonteId?: number;
+
     imagem?: ImagemDTO;
     montanhaId?: number;
     faceId?: number;
+
+    // Relações como arrays de IDs
+    variantesIds?: number[];
+    viaCroquisIds?: number[];
+    viaColacoesIds?: number[];
+    escaladasIds?: number[];
 
     constructor(entity: Via) {
         this.id = entity.id;
@@ -23,6 +37,14 @@ export class ViaDTO {
         this.detalhes = entity.detalhes;
         this.data = entity.data;
 
+        // Novos campos
+        this.crux = entity.crux;
+        this.artificial = entity.artificial;
+        this.duracao = entity.duracao;
+        this.exposicao = entity.exposicao;
+        this.viaPrincipalId = (entity.viaPrincipal as any)?.id ?? entity.viaPrincipal;
+        this.fonteId = (entity.fonte as any)?.id ?? entity.fonte;
+
         // imagem (transforma para URL final)
         this.imagem = entity.imagem
             ? new ImagemDTO(entity.imagem as any)
@@ -31,5 +53,11 @@ export class ViaDTO {
         // se quiser simplificar as relações (não trazer objeto inteiro)
         this.montanhaId = (entity.montanha as any)?.id ?? entity.montanha;
         this.faceId = (entity.face as any)?.id ?? entity.face;
+
+        // Arrays de relações
+        this.variantesIds = entity.variantes?.map(v => v.id);
+        this.viaCroquisIds = entity.viaCroquis?.map(vc => vc.id);
+        this.viaColacoesIds = entity.viaColecoes?.map(vc => vc.id);
+        this.escaladasIds = entity.escaladas?.map(e => e.id);
     }
 }
