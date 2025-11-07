@@ -2,6 +2,8 @@ import {Request, Response} from "express";
 import {FonteService} from "../../Application/services/FonteService";
 import {Fonte} from "../../Domain/entities/Fonte";
 import {FonteDTO} from "../DTOs/Fonte/FonteDTO";
+import { NotFoundError } from '../../Application/errors';
+import FonteValidation from '../../Application/validations/FonteValidation';
 
 export class FonteController {
     private service: FonteService;
@@ -18,18 +20,14 @@ export class FonteController {
      * @returns {Error} 500 - Erro desconhecido
      */
     getFonteById = async (req: Request, res: Response) => {
-        try {
-            const id = parseInt(req.params.id);
-            const result = await this.service.getFonteById(id);
+        const id = FonteValidation.idParam(req.params.id);
+        const result = await this.service.getFonteById(id);
 
-            if (!result) {
-                return res.status(404).json({error: "Fonte não encontrada"});
-            }
-
-            return res.json(new FonteDTO(result));
-        } catch (error) {
-            res.status(500).json({error: error instanceof Error ? error.message : "Erro desconhecido"});
+        if (!result) {
+            throw new NotFoundError("Fonte não encontrada");
         }
+
+        return res.json(new FonteDTO(result));
     };
 
     /**
@@ -41,16 +39,12 @@ export class FonteController {
      * @returns {Error} 500 - Erro desconhecido
      */
     getAllFonte = async (_: Request, res: Response) => {
-        try {
-            const result = await this.service.getFontes();
-            if (!result || result.length === 0) {
-                return res.status(404).json({error: "Nenhuma Fonte encontrada"});
-            }
-
-            return res.json(result.map(f => new FonteDTO(f)));
-        } catch (error) {
-            res.status(500).json({error: error instanceof Error ? error.message : "Erro desconhecido"});
+        const result = await this.service.getFontes();
+        if (!result || result.length === 0) {
+            throw new NotFoundError("Nenhuma Fonte encontrada");
         }
+
+        return res.json(result.map(f => new FonteDTO(f)));
     };
 
     /**
@@ -60,17 +54,10 @@ export class FonteController {
      * @returns {Error} 500 - Erro desconhecido
      */
     createFonte = async (req: Request, res: Response) => {
-        try {
-            const fonte: Fonte = req.body;
-            await this.service.createFonte(fonte);
-            res.status(201).json({message: "Fonte criada com sucesso"});
-        } catch (error) {
-            if (error instanceof Error) {
-                res.status(500).json({error: error.message});
-            } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller createFonte"});
-            }
-        }
+        const fonte: Fonte = req.body;
+        FonteValidation.createBody(fonte);
+        await this.service.createFonte(fonte);
+        res.status(201).json({message: "Fonte criada com sucesso"});
     }
 
     /**
@@ -80,20 +67,10 @@ export class FonteController {
      * @returns {Error} 500 - Erro desconhecido
      */
     updateFonte = async (req: Request, res: Response) => {
-        try {
-            const fonte: Fonte = req.body;
-            await this.service.updateFonte(fonte.id, fonte);
-            res.status(200).json({message: "Fonte atualizada com sucesso"});
-        } catch (error) {
-            if (error instanceof Error) {
-                if (error.message === "Fonte não encontrada") {
-                    return res.status(404).json({error: error.message});
-                }
-                res.status(500).json({error: error.message});
-            } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller updateFonte"});
-            }
-        }
+        const fonte: Fonte = req.body;
+        FonteValidation.updateBody(fonte);
+        await this.service.updateFonte(fonte.id, fonte);
+        res.status(200).json({message: "Fonte atualizada com sucesso"});
     }
 
     /**
@@ -104,21 +81,8 @@ export class FonteController {
      * @returns {object} 404 - Fonte não encontrada
      */
     deleteFonte = async (req: Request, res: Response) => {
-        try {
-            const id = parseInt(req.params.id);
-            await this.service.deleteFonte(id);
-            res.status(200).json({message: "Fonte deletada com sucesso"});
-        } catch (error) {
-            if (error instanceof Error) {
-                if (error.message === "Fonte não encontrada") {
-                    return res.status(404).json({error: error.message});
-                } else if (error.message === "Erro ao deletar Fonte") {
-                    return res.status(500).json({error: error.message});
-                }
-                res.status(500).json({error: error.message});
-            } else {
-                res.status(500).json({error: "Ocorreu um erro desconhecido em controller deleteFonte"});
-            }
-        }
+        const id = FonteValidation.idParam(req.params.id);
+        await this.service.deleteFonte(id);
+        res.status(200).json({message: "Fonte deletada com sucesso"});
     }
 }

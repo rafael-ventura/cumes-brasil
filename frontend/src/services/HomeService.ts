@@ -4,10 +4,30 @@ class HomeService {
   async getCount (filter: string): Promise<number> {
     try {
       const response = await api.get(`/vias/count/${filter}`);
-      return response.data.total; // Assume que o endpoint retorna um objeto com { total: number }
+      return response.data.total;
     } catch (error: any) {
       console.error(`Erro ao obter contagem para o filtro ${filter}:`, error);
-      return 0; // Retorna 0 em caso de erro para evitar quebra
+      return 0;
+    }
+  }
+
+  async getTotalMontanhas(): Promise<number> {
+    try {
+      const response = await api.get('/montanhas');
+      return response.data.length;
+    } catch (error: any) {
+      console.error('Erro ao obter total de montanhas:', error);
+      return 0;
+    }
+  }
+
+  async getTotalUsuarios(): Promise<number> {
+    try {
+      const response = await api.get('/usuarios');
+      return response.data.length;
+    } catch (error: any) {
+      console.error('Erro ao obter total de usuários:', error);
+      return 0;
     }
   }
 }

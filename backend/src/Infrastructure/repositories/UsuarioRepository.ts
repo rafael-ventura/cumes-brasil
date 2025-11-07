@@ -2,12 +2,16 @@ import { Usuario } from '../../Domain/entities/Usuario';
 import { AppDataSource } from '../config/db';
 import { Service } from 'typedi';
 import {Imagem} from "../../Domain/entities/Imagem";
+import { BaseRepository } from './BaseRepository';
+import { ICrudRepository } from '../../Domain/interfaces/repositories/ICrudRepository';
 
 @Service()
-export class UsuarioRepository {
-    private repository = AppDataSource.getRepository(Usuario);
+export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudRepository<Usuario> {
+    constructor() {
+        super(Usuario);
+    }
 
-    async getById(id: number): Promise<Usuario | null> {
+    async getById(id: number, relations?: string[]): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
             .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")

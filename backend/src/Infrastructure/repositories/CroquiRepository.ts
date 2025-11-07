@@ -1,11 +1,13 @@
-import { AppDataSource } from "../config/db";
 import { Croqui } from "../../Domain/entities/Croqui";
-import { ObjectLiteral } from "typeorm";
+import { BaseRepository } from "./BaseRepository";
+import { ICrudRepository } from "../../Domain/interfaces/repositories/ICrudRepository";
 
-export class CroquiRepository {
-  private repository = AppDataSource.getRepository(Croqui);
+export class CroquiRepository extends BaseRepository<Croqui> implements ICrudRepository<Croqui> {
+  constructor() {
+    super(Croqui);
+  }
 
-  async getById (id: number): Promise<Croqui | null> {
+  async getById (id: number, relations?: string[]): Promise<Croqui | null> {
     return this.repository.createQueryBuilder("croqui")
       .leftJoinAndSelect("croqui.fonte", "fonte")
       .leftJoinAndSelect("croqui.imagem", "imagem")
@@ -25,18 +27,6 @@ export class CroquiRepository {
       .leftJoinAndSelect("croqui.fonte", "fonte")
       .leftJoinAndSelect("croqui.imagem", "imagem")
       .getMany();
-  }
-
-  async create (croqui: Partial<Croqui>): Promise<void> {
-    await this.repository.insert(croqui);
-  }
-
-  async update (id: number, croquiData: Partial<Croqui>): Promise<void> {
-    await this.repository.update(id, croquiData);
-  }
-
-  async delete (id: number): Promise<void> {
-    await this.repository.delete(id);
   }
 
   async getIdsByViaId (via_id: number): Promise<number[] | null> {

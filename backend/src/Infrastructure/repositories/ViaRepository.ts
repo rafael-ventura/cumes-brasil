@@ -3,9 +3,13 @@ import {AppDataSource} from '../config/db';
 import {ISearchRepository} from '../../Domain/interfaces/repositories/ISearchRepository';
 import {ISearchResult} from '../../Domain/interfaces/models/ISearchResult';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
+import {BaseRepository} from './BaseRepository';
+import {ICrudRepository} from '../../Domain/interfaces/repositories/ICrudRepository';
 
-export class ViaRepository implements ISearchRepository<Via> {
-    private repository = AppDataSource.getRepository(Via);
+export class ViaRepository extends BaseRepository<Via> implements ISearchRepository<Via>, ICrudRepository<Via> {
+    constructor() {
+        super(Via);
+    }
 
     private withRelations(qb: any) {
         return qb
@@ -18,7 +22,7 @@ export class ViaRepository implements ISearchRepository<Via> {
             .leftJoinAndSelect("viaCroquis.croqui", "croqui");
     }
 
-    async getById(id: number): Promise<Via | null> {
+    async getById(id: number, relations?: string[]): Promise<Via | null> {
         return this.withRelations(
             this.repository.createQueryBuilder("via").where("via.id = :id", {id})
         ).getOne();

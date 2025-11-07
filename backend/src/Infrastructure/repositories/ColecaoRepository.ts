@@ -5,12 +5,16 @@ import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchR
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 import { Via } from '../../Domain/entities/Via';
 import { ViaColecao } from '../../Domain/entities/ViaColecao';
+import { BaseRepository } from './BaseRepository';
+import { ICrudRepository } from '../../Domain/interfaces/repositories/ICrudRepository';
 
 @Service()
-export class ColecaoRepository implements ISearchRepository<Colecao> {
-    private repository = AppDataSource.getRepository(Colecao);
+export class ColecaoRepository extends BaseRepository<Colecao> implements ISearchRepository<Colecao>, ICrudRepository<Colecao> {
+    constructor() {
+        super(Colecao);
+    }
 
-    async getById(id: number): Promise<Colecao | null> {
+    async getById(id: number, relations?: string[]): Promise<Colecao | null> {
         return this.repository.createQueryBuilder("colecao")
           .leftJoinAndSelect('colecao.usuario', 'usuario')
           .leftJoinAndSelect('colecao.imagem', 'imagem')

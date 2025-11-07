@@ -9,54 +9,55 @@ import * as fs from 'node:fs';
 import BadRequestError from '../errors/BadRequestError';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import S3Helper from '../../Infrastructure/helpers/S3Helper';
+import NotFoundError from '../errors/NotFoundError';
+import BaseService from './BaseService';
 
 @Service()
-export class UsuarioService {
-    private usuarioRepo: UsuarioRepository;
+export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
     private viaRepo: ViaRepository;
     private imagemService: ImagemService;
     private imagemRepository: ImagemRepository;
     private s3Service: S3Helper = new S3Helper();
 
     constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository, imagemRepository: ImagemRepository) {
-        this.usuarioRepo = usuarioRepo;
+        super(usuarioRepo);
         this.imagemService = imagemService;
         this.viaRepo = viaRepo;
         this.imagemRepository = imagemRepository;
     }
 
     async getUsuarioById(id: number): Promise<Usuario | null> {
-        return this.usuarioRepo.getById(id);
+        return this.repository.getById(id);
     }
 
     async getUsuarios(): Promise<Usuario[]> {
-        return this.usuarioRepo.getAll();
+        return this.repository.getAll();
     }
 
     async updateUsuario(usuario: Usuario): Promise<void> {
-        await this.usuarioRepo.update(usuario.id, usuario);
+        await this.repository.update(usuario.id, usuario);
     }
 
     async deleteUsuario(id: number): Promise<void> {
-        const user = await this.usuarioRepo.getById(id);
+        const user = await this.repository.getById(id);
         if (!user) {
-            throw new Error("Usuario não encontrado");
+            throw new NotFoundError("Usuario não encontrado");
         }
 
-        await this.usuarioRepo.delete(id);
+        await this.repository.delete(id);
     }
 
     async getPerfil(id: number): Promise<Usuario | null> {
-        return this.usuarioRepo.getPerfilSemHash(id);
+        return this.repository.getPerfilSemHash(id);
     }
 
     async editarDados(id: number, usuarioDados: any, file?: Express.Multer.File): Promise<void> {
-        const usuario = await this.usuarioRepo.findOne({
+        const usuario = await this.repository.findOne({
             where: {id},
         });
 
         if (!usuario) {
-            throw new Error('Usuário não encontrado');
+            throw new NotFoundError('Usuário não encontrado');
         }
 
         // Atualiza os dados do usuário
@@ -71,7 +72,7 @@ export class UsuarioService {
         usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
         usuario.biografia = usuarioDados.biografia || usuario.biografia;
         await this.atualizarViaPreferida(usuario, usuarioDados.via_preferida_id);
-        await this.usuarioRepo.update(usuario.id, usuario);
+        await this.repository.update(usuario.id, usuario);
     }
 
     async atualizarViaPreferida(usuario: Usuario, viaId: number) {
@@ -130,7 +131,7 @@ export class UsuarioService {
         }
 
         usuario.foto_perfil = novaImagemUpdate;
-        await this.usuarioRepo.updateFotoPerfil(usuario.id, novaImagemUpdate.id);
+        await this.repository.updateFotoPerfil(usuario.id, novaImagemUpdate.id);
     }
 
     private async removerFotoPerfil(usuario: Usuario) {

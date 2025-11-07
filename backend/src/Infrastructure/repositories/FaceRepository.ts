@@ -1,8 +1,10 @@
 import { Face } from "../../Domain/entities/Face";
-import { AppDataSource } from "../config/db";
+import BaseRepository from "./BaseRepository";
 
-export class FaceRepository {
-    private repository = AppDataSource.getRepository(Face);
+export class FaceRepository extends BaseRepository<Face> {
+    constructor() {
+        super(Face);
+    }
 
     async getById (id: number): Promise<Face | null> {
         return this.repository.createQueryBuilder("face")
@@ -20,15 +22,5 @@ export class FaceRepository {
           .getMany();
     }
 
-    async create (face: Partial<Face>): Promise<void> {
-        await this.repository.insert(face);
-    }
-
-    async update (id: number, faceData: Partial<Face>): Promise<void> {
-        await this.repository.update(id as any, faceData);
-    }
-
-    async delete (id: number): Promise<void> {
-        await this.repository.delete(id as any);
-    }
+    // create/update/delete herdados do BaseRepository
 }

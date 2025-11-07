@@ -8,13 +8,14 @@ import { ImagemService } from '../../Application/services/ImagemService';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { authenticateToken } from "../Middlewares/AuthenticateMiddleware";
 import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 const usuarioController = new UsuarioController(usuarioService);
 const UsuarioRouter = Router();
 
-UsuarioRouter.get("/", usuarioController.getAll);
-UsuarioRouter.get("/:id", usuarioController.getById);
-UsuarioRouter.delete("/:id", usuarioController.delete);
+UsuarioRouter.get("/", asyncErrorHandler(usuarioController.getAll));
+UsuarioRouter.get("/:id", asyncErrorHandler(usuarioController.getById));
+UsuarioRouter.delete("/:id", asyncErrorHandler(usuarioController.delete));
 
 export default UsuarioRouter;

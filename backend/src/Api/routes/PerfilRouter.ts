@@ -9,6 +9,7 @@ import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 import { MulterMiddleware } from "../Middlewares/MulterMiddleware";
 import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
 import UsuarioRouter from "./UsuarioRouter";
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 
@@ -17,9 +18,9 @@ const usuarioController = new UsuarioController(usuarioService)
 const PerfilRouter = Router();
 
 // perfil do Usuario
-PerfilRouter.get('/', usuarioController.getPerfil);
-PerfilRouter.put('/', authenticateToken, MulterMiddleware.upload, usuarioController.editarDados);
-PerfilRouter.put('/foto', authenticateToken, MulterMiddleware.upload, usuarioController.editarFotoPerfil);
+PerfilRouter.get('/', asyncErrorHandler(usuarioController.getPerfil));
+PerfilRouter.put('/', authenticateToken, MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarDados));
+PerfilRouter.put('/foto', authenticateToken, MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarFotoPerfil));
 
 
 export default PerfilRouter;

@@ -9,6 +9,7 @@ import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { authenticateToken } from '../Middlewares/AuthenticateMiddleware';
 import { ImagemService } from '../../Application/services/ImagemService';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const viaRepository = new ViaRepository();
 const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
@@ -19,11 +20,30 @@ const escaladaController = new EscaladaController(escaladaService);
 
 const EscaladaRouter = Router();
 
-EscaladaRouter.get("/", escaladaController.getAllEscalada);
-EscaladaRouter.get("/usuario", authenticateToken, escaladaController.getByUsuarioId);
+EscaladaRouter.get(
+  "/",
+  asyncErrorHandler(escaladaController.getAllEscalada)
+);
+EscaladaRouter.get(
+  "/usuario",
+  authenticateToken,
+  asyncErrorHandler(escaladaController.getByUsuarioId)
+);
 
-EscaladaRouter.post("/", authenticateToken, escaladaController.createEscalada);
-EscaladaRouter.put("/:id", authenticateToken, escaladaController.updateEscalada);
-EscaladaRouter.delete("/:id", authenticateToken, escaladaController.deleteEscalada);
+EscaladaRouter.post(
+  "/",
+  authenticateToken,
+  asyncErrorHandler(escaladaController.createEscalada)
+);
+EscaladaRouter.put(
+  "/:id",
+  authenticateToken,
+  asyncErrorHandler(escaladaController.updateEscalada)
+);
+EscaladaRouter.delete(
+  "/:id",
+  authenticateToken,
+  asyncErrorHandler(escaladaController.deleteEscalada)
+);
 
 export default EscaladaRouter;
