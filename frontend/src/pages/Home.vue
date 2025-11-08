@@ -221,7 +221,7 @@ function getPrimeIcon(materialIcon: string): string {
   position: relative;
   min-height: 550px;
   background: linear-gradient(to bottom, $cumes-01 0%, darken($cumes-01, 8%) 100%);
-  padding: 80px 24px 280px;
+  padding: 40px 24px 280px;
   margin-bottom: 0;
   overflow: visible;
   border-radius: 0 0 40px 40px;
@@ -286,7 +286,7 @@ function getPrimeIcon(materialIcon: string): string {
   z-index: 10;
   margin-top: -220px;
   padding: 0 24px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .stats-grid {
@@ -352,7 +352,7 @@ function getPrimeIcon(materialIcon: string): string {
 // ============================================
 .section-header {
   text-align: center;
-  margin: 56px 24px 40px;
+  margin: 32px 24px 40px;
 
   &.random-section {
     margin-top: 80px;
@@ -381,7 +381,7 @@ function getPrimeIcon(materialIcon: string): string {
 @media (max-width: 768px) {
   .hero-section {
     min-height: 920px;
-    padding: 60px 16px 650px;
+    padding: 40px 16px 650px;
     border-radius: 0 0 32px 32px;
   }
 
@@ -391,7 +391,7 @@ function getPrimeIcon(materialIcon: string): string {
 
   .stats-container {
     margin-top: -570px;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .stats-grid {
