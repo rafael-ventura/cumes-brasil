@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Fonte } from './Fonte';
-import { Imagem } from './Imagem';
-import { Face } from './Face';
-import { Via } from './Via';
-import { Bairro } from './Bairro';
-=======
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Fonte } from "./Fonte";
 import { Imagem } from "./Imagem";
 import { Face } from "./Face";
 import { Via } from "./Via";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
->>>>>>> origin/main
+import { Bairro } from "./Bairro";
 
 @Entity()
 export class Montanha extends BaseEntityWithTimestamps {
