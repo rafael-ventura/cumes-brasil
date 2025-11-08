@@ -7,13 +7,14 @@ export class FonteDTO {
     referencia: string;
     imagens?: ImagemDTO[];
 
-    constructor(entity: Fonte) {
+    constructor(entity: Fonte, includeImages: boolean = false) {
         this.id = entity.id;
         this.autor = entity.autor;
         this.referencia = entity.referencia;
 
-        this.imagens = entity.imagens
-            ? entity.imagens.map(img => new ImagemDTO(img))
-            : undefined;
+        // Incluir imagens apenas quando necessário (evita payload pesado)
+        if (includeImages && entity.imagens) {
+            this.imagens = entity.imagens.map(img => new ImagemDTO(img));
+        }
     }
 }

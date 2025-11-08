@@ -1,6 +1,8 @@
 import { ImagemDTO } from "../Imagem/ImagemDTO";
 import { MontanhaDTO } from "../Montanha/MontanhaDTO";
-import {Via} from "../../../Domain/entities/Via";
+import { FaceDTO } from "../Face/FaceDTO";
+import { FonteDTO } from "../Fonte/FonteDTO";
+import { Via } from "../../../Domain/entities/Via";
 
 export class ViaDTO {
     id: number;
@@ -15,17 +17,14 @@ export class ViaDTO {
     detalhes?: string;
     data?: string;
 
-    viaPrincipalId?: number;
-    fonteId?: number;
-
+    // Relações como objetos completos (informações essenciais)
     imagem?: ImagemDTO;
     montanha?: MontanhaDTO;
-    face?: any;
-    fonte?: any;
-    via_principal?: any;
-    croquis?: any[];
+    face?: FaceDTO;
+    fonte?: FonteDTO;
+    via_principal?: { id: number; nome: string; grau?: string };
 
-    // Relações como arrays de IDs
+    // Arrays de IDs para relações de muitos-para-muitos
     variantesIds?: number[];
     viaCroquisIds?: number[];
     viaColacoesIds?: number[];
@@ -44,25 +43,34 @@ export class ViaDTO {
         this.detalhes = entity.detalhes;
         this.data = entity.data;
 
-        // IDs das relações
-        this.viaPrincipalId = (entity.viaPrincipal as any)?.id ?? entity.viaPrincipal;
-        this.fonteId = (entity.fonte as any)?.id ?? entity.fonte;
+        // Relações com objetos completos
+        this.imagem = entity.imagem 
+            ? new ImagemDTO(entity.imagem as any) 
+            : undefined;
 
-        // Passar objetos COMPLETOS como o Repository carrega
-        this.imagem = entity.imagem ? new ImagemDTO(entity.imagem as any) : undefined;
-        this.montanha = entity.montanha ? new MontanhaDTO(entity.montanha as any) : undefined;
-        this.face = entity.face || null;
-        this.fonte = entity.fonte || null;
-        this.via_principal = entity.viaPrincipal || null;
-        
-        // Mapear croquis corretamente (viaCroquis -> croquis)
-        if (entity.viaCroquis && Array.isArray(entity.viaCroquis)) {
-            this.croquis = entity.viaCroquis.map((vc: any) => vc.croqui).filter(Boolean);
-        } else {
-            this.croquis = [];
+        this.montanha = entity.montanha 
+            ? new MontanhaDTO(entity.montanha as any) 
+            : undefined;
+
+        this.face = entity.face 
+            ? new FaceDTO(entity.face as any) 
+            : undefined;
+
+        this.fonte = entity.fonte 
+            ? new FonteDTO(entity.fonte as any) 
+            : undefined;
+
+        // Via principal simplificada (apenas info básica para evitar recursão)
+        if (entity.viaPrincipal) {
+            const vp = entity.viaPrincipal as any;
+            this.via_principal = {
+                id: vp.id,
+                nome: vp.nome,
+                grau: vp.grau
+            };
         }
 
-        // Arrays de relações
+        // Arrays de relações (apenas IDs)
         this.variantesIds = entity.variantes?.map(v => v.id);
         this.viaCroquisIds = entity.viaCroquis?.map(vc => vc.id);
         this.viaColacoesIds = entity.viaColecoes?.map(vc => vc.id);
