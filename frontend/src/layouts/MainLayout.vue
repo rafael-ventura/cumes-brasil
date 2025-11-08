@@ -58,5 +58,9 @@ onUnmounted(() => {
 // Container para Desktop (com topbar)
 .page-container-desktop {
   padding-top: 70px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 </style>

@@ -52,6 +52,7 @@
 **Objetivo:** Permitir que usuários contribuam com fotos de vias, com sistema de moderação e créditos aos autores.
 
 **Contexto Técnico:**
+
 - Entidade `Image` existente
 - Relações atuais: Via → Image (nullable), Montanha → Image (nullable), Usuario → Image (nullable)
 - Necessidade: permitir múltiplas fotos por via com autoria
@@ -96,12 +97,13 @@
 - ~~Home~~
 - ~~Login~~
 - ~~Register~~
-- Vias (listagem)
-- Via Detalhada
-- Coleções (listagem)
-- Coleção Detalhada
-- Escaladas
-- Favoritas
 - ~~Perfil~~
+- ~~Vias (listagem)~~
+- ~~Via Detalhada~~
+- ~~Coleções (listagem)~~
+- ~~Coleção Detalhada~~
+- ~~Escaladas~~
+- ~~Favoritas~~
+- ~~**Ajustar largura maxima das telas em desktop (evitar 100% width)**~~
 
 ---
