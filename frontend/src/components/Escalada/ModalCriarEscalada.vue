@@ -3,8 +3,8 @@
     <q-card class="card-style">
       <q-card-section class="header-section">
         <div class="title">Criar Escalada</div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <q-space/>
+        <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
       <q-form @submit="onSubmit" @reset="onReset" class="form-container">
@@ -22,7 +22,8 @@
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer icon-primary">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
-                <q-date event-color="primary" text-color="black" color="primary" v-model="data" mask="DD-MM-YYYY" bordered />
+                <q-date event-color="primary" text-color="black" color="primary" v-model="data" mask="DD-MM-YYYY"
+                        bordered/>
               </q-popup-proxy>
             </q-icon>
           </template>
@@ -82,8 +83,8 @@
         </div>
 
         <div class="button-container">
-          <q-btn label="Criar" type="submit" color="primary" class="btn" />
-          <q-btn label="Limpar" type="reset" color="primary" flat class="btn flat" />
+          <q-btn label="Criar" type="submit" color="primary" class="btn"/>
+          <q-btn label="Limpar" type="reset" color="primary" flat class="btn flat"/>
         </div>
       </q-form>
     </q-card>
@@ -136,29 +137,25 @@ const onSubmit = async () => {
     usuario: Number(localStorage.getItem('usuarioId')) || 0
   };
 
-  if (!AuthenticateService.isAuthenticated()) {
-    await router.push('/auth/login');
-  } else {
-    try {
-      await EscaladaService.createEscalada(escalada);
-      onReset();
-      Notify.create({
-        type: 'positive',
-        message: 'Escalada registrada com sucesso!',
-        position: 'top-right',
-        timeout: 3000
-      });
-
-      emit('closeModal');
-    } catch (error: any) {
-      const errorMessage = 'Ocorreu um erro no servidor, tente novamente mais tarde';
-      Notify.create({
-        type: 'negative',
-        message: '' + errorMessage,
-        position: 'top-right',
-        timeout: 3000
-      });
-    }
+  await AuthenticateService.redirecionaSeNaoAutenticado(router);
+  try {
+    await EscaladaService.createEscalada(escalada);
+    onReset();
+    Notify.create({
+      type: 'positive',
+      message: 'Escalada registrada com sucesso!',
+      position: 'top-right',
+      timeout: 3000
+    });
+    emit('closeModal');
+  } catch (error: any) {
+    const errorMessage = 'Ocorreu um erro no servidor, tente novamente mais tarde';
+    Notify.create({
+      type: 'negative',
+      message: '' + errorMessage,
+      position: 'top-right',
+      timeout: 3000
+    });
   }
 };
 

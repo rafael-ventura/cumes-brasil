@@ -36,12 +36,19 @@ class ViaService {
     }
   }
 
+  async getRandomVia (): Promise<Via> {
+    try {
+      const response = await api.get('/vias/random');
+      let via = response.data as Via;
+      via = await this.adjustAndFormatVia(via);
+      return via;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar via aleatória');
+    }
+  }
+
   async addToFavorites (viaId: number): Promise<void> {
     try {
-      if (!AuthenticateService.isAuthenticated()) {
-        throw new Error('Usuário não autenticado');
-      }
-
       const favoritosColecao = await ColecaoService.obterColecaoFavoritos();
 
       if (!favoritosColecao) {

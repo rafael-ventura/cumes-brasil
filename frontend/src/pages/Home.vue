@@ -1,42 +1,65 @@
 <template>
   <q-page class="home-page">
-    <div class="q-pa-md">
-      <!-- Logo e Cabeçalho -->
-      <q-img
-        src="../assets/logo-amarelo.webp"
-        alt="Cumes Brasil"
-        class="q-mb-md text-center logo-tamanho"
-        style="object-fit: cover; object-position: center;"
-      />
-      <div class="text-h2 text-center q-mb-md title-text">Bem-vindo ao Cumes Brasil</div>
-
-      <!-- Mosaico de Cards -->
-      <CardMosaic :cards="cards" @navigate="goToFilteredSearch" />
-
-      <!-- Botão de Via Aleatória -->
-      <div class="random-section">
-        <div class="random-title">Explore uma Via Aleatória</div>
-        <q-btn
-          icon="shuffle"
-          color="primary"
-          class="random-btn"
-          @click="chooseRandomVia"
-        />
-      </div>
-
-      <!-- Espaço para o Mapa -->
-      <div class="map-section">
-        <div class="map-text">Em breve explore vias diretamente no mapa</div>
-        <q-icon name="map" size="100px" color="$cumes-04" class="map-icon" />
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <i class="pi pi-map hero-icon"></i>
+        <h1 class="hero-title">
+          Explore as <span class="highlight">Montanhas</span><br/>
+          do Brasil
+        </h1>
+        <p class="hero-subtitle">
+          Descubra rotas, conecte-se com escaladores e registre suas conquistas
+        </p>
       </div>
     </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stats-grid">
+        <div v-for="stat in statsData" :key="stat.label" class="stat-card">
+          <div class="stat-card-content">
+            <i :class="`pi ${getPrimeIcon(stat.icon)}`" class="stat-icon"></i>
+            <div class="stat-value">
+              <span v-if="loadingStats" class="pi pi-spin pi-spinner"></span>
+              <span v-else>{{ stat.value }}</span>
+            </div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-title">Explore por categoria</h2>
+      <p class="section-subtitle">Encontre vias perfeitas para seu nível</p>
+    </div>
+
+    <!-- Mosaico de Cards -->
+    <CardMosaic
+      :cards="cards"
+      :loading="loadingCards"
+      @navigate="goToFilteredSearch"
+    />
+
+    <!-- Section Header Random -->
+    <div class="section-header random-section">
+      <h2 class="section-title">Feeling aventureiro?</h2>
+      <p class="section-subtitle">Deixe o destino escolher sua próxima escalada</p>
+    </div>
+
+    <!-- Componente de Via Aleatória -->
+    <RandomViaCard />
+
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import HomeService from 'src/services/HomeService';
 import CardMosaic from 'src/components/Home/CardMosaic.vue';
+import RandomViaCard from 'src/components/Home/RandomViaCard.vue';
 import { useRouter } from 'vue-router';
 import CopacabanaImage from 'src/assets/home/copacabana.webp';
 import TerceiroGrauImage from 'src/assets/home/terceiroGrau.webp';
@@ -48,12 +71,17 @@ const router = useRouter();
 defineOptions({
   name: 'HomePage'
 });
+
 export interface Card {
   title: string;
   filterType: string;
   count: number;
   image: any;
 }
+
+// Estados de loading
+const loadingCards = ref(true);
+const loadingStats = ref(true);
 
 const cards = ref<Card[]>([
   {
@@ -88,11 +116,76 @@ const cards = ref<Card[]>([
   }
 ]);
 
-onMounted(async () => {
-  for (const card of cards.value) {
-    card.count = await HomeService.getCount(card.filterType);
+// Stats dinâmicos
+const totalVias = ref(0);
+const totalMontanhas = ref(0);
+const totalEscaladores = ref(0);
+
+const statsData = computed(() => [
+  {
+    icon: 'route',
+    value: totalVias.value,
+    label: 'Vias Catalogadas',
+    color: 'cumes-04'
+  },
+  {
+    icon: 'terrain',
+    value: totalMontanhas.value,
+    label: 'Montanhas',
+    color: 'cumes-05'
+  },
+  {
+    icon: 'groups',
+    value: totalEscaladores.value,
+    label: 'Escaladores',
+    color: 'cumes-03'
   }
+]);
+
+onMounted(async () => {
+  // Carrega contadores dos cards e stats em paralelo
+  await Promise.all([
+    loadCardsData(),
+    loadStatsData()
+  ]);
 });
+
+async function loadCardsData() {
+  try {
+    loadingCards.value = true;
+
+    // Carrega todos os contadores em paralelo
+    const promises = cards.value.map(card =>
+      HomeService.getCount(card.filterType)
+    );
+
+    const counts = await Promise.all(promises);
+
+    cards.value.forEach((card, index) => {
+      card.count = counts[index];
+    });
+  } catch (error) {
+    console.error('Erro ao carregar dados dos cards:', error);
+  } finally {
+    loadingCards.value = false;
+  }
+}
+
+async function loadStatsData() {
+  try {
+    loadingStats.value = true;
+
+    const stats = await HomeService.getStats();
+
+    totalVias.value = stats.vias;
+    totalMontanhas.value = stats.montanhas;
+    totalEscaladores.value = stats.usuarios;
+  } catch (error) {
+    console.error('Erro ao carregar stats:', error);
+  } finally {
+    loadingStats.value = false;
+  }
+}
 
 function goToFilteredSearch (filterType: string) {
   router.push({
@@ -101,9 +194,13 @@ function goToFilteredSearch (filterType: string) {
   });
 }
 
-function chooseRandomVia () {
-  const randomCard = cards.value[Math.floor(Math.random() * cards.value.length)];
-  alert(`Via aleatória: ${randomCard.title}`);
+function getPrimeIcon(materialIcon: string): string {
+  const iconMap: Record<string, string> = {
+    'route': 'pi-map-marker',
+    'terrain': 'pi-map',
+    'groups': 'pi-users'
+  };
+  return iconMap[materialIcon] || 'pi-circle';
 }
 </script>
 
@@ -111,71 +208,221 @@ function chooseRandomVia () {
 @import 'src/css/app.scss';
 
 .home-page {
-  text-align: center;
-}
-
-.logo-tamanho {
-  width: 310px;
-  height: 100px;
+  max-width: 1400px;
   margin: 0 auto;
-  display: flex;
+  padding: 0;
+  background: linear-gradient(180deg, rgba($cumes-05, 0.03) 0%, transparent 100%);
 }
 
-.title-text {
+// ============================================
+// HERO SECTION
+// ============================================
+.hero-section {
+  position: relative;
+  min-height: 550px;
+  background: linear-gradient(to bottom, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  padding: 40px 24px 280px;
+  margin-bottom: 0;
+  overflow: visible;
+  border-radius: 0 0 40px 40px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 30%, $overlay-light 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, $overlay-dark 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-icon {
+  font-size: 72px;
   color: $cumes-04;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 8px $text-shadow-default);
 }
 
-.random-section {
-  border: 2px solid $cumes-04;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 30px 0;
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: $offwhite;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px $text-shadow-default;
+  letter-spacing: -0.01em;
+
+  .highlight {
+    color: $cumes-04;
+    position: relative;
+  }
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: $offwhite;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.5;
+  text-shadow: 0 1px 4px $text-shadow-default;
+  max-width: 600px;
+  margin: 0 auto;
+  opacity: 0.95;
+}
+
+.stats-container {
+  position: relative;
+  z-index: 10;
+  margin-top: -220px;
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: $offwhite;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px $box-shadow-light;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px $box-shadow-medium;
+  }
+}
+
+.stat-card-content {
+  padding: 32px 24px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 12px;
+}
 
-  .random-title {
-    color: $cumes-04;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
+.stat-icon {
+  font-size: 40px;
+  color: $cumes-03;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: $cumes-01;
+  line-height: 1;
+
+  .pi-spinner {
+    font-size: 2rem;
+    color: $cumes-03;
+  }
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $cumes-03;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+
+// ============================================
+// SECTION HEADERS
+// ============================================
+.section-header {
+  text-align: center;
+  margin: 32px 24px 40px;
+
+  &.random-section {
+    margin-top: 80px;
+  }
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: $cumes-01;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+  font-size: 1.05rem;
+  color: $cumes-03;
+  margin: 0;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+// ============================================
+// RESPONSIVIDADE
+// ============================================
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 920px;
+    padding: 40px 16px 650px;
+    border-radius: 0 0 32px 32px;
   }
 
-  .random-btn {
-    border-radius: 100%;
-    width: 50px;
-    height: 50px;
-    color: black;
-    background: $cumes-02;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
+  .hero-icon {
+    font-size: 60px;
+  }
 
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  .stats-container {
+    margin-top: -570px;
+    margin-bottom: 32px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stat-card {
+    box-shadow: 0 6px 20px $box-shadow-medium;
+  }
+
+  .stat-card-content {
+    padding: 28px 24px;
+  }
+
+  .stat-value {
+    font-size: 2.25rem;
+  }
+
+  .stat-icon {
+    font-size: 36px;
+  }
+
+  .section-header {
+    margin: 40px 16px 32px;
+
+    &.random-section {
+      margin-top: 56px;
     }
   }
 }
 
-.map-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: $cumes-05;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-
-  .map-text {
-    color: $cumes-04;
-    font-size: 18px;
-    font-weight: bold;
-    flex: 1;
-    text-align: left;
-  }
-
-  .map-icon {
-    flex: 1;
-    text-align: right;
-  }
-}
 </style>

@@ -1,30 +1,22 @@
-import { api } from 'boot/axios';
+import {api} from 'boot/axios';
 
 class ImageService {
-  private readonly baseUrl: string;
+    private readonly assetsUrl: string;
 
-  constructor () {
-    this.baseUrl = import.meta.env.VITE_APP_SERVER_IP;
+  constructor() {
+    this.assetsUrl = import.meta.env.VITE_APP_ASSETS_URL || 'http://localhost:8080/assets';
   }
 
-  getFullImageUrl (relativePath: string): string {
-    if (!relativePath) {
-      console.warn('O caminho relativo da imagem não foi fornecido.');
-      return '';
-    }
-    if (relativePath.startsWith('https://')) {
-      return relativePath;
-    }
-    return `${this.baseUrl}${relativePath}`;
+  getFullImageUrl(relativePath: string): string {
+    if (!relativePath) return '';
+    if (relativePath.startsWith('http')) return relativePath;
+
+    return `${this.assetsUrl}/${relativePath.replace(/^\/?assets?\//, '')}`;
   }
 
-  async getImageById (id: number): Promise<any> {
-    try {
-      const response = await api.get(`/imagens/${id}`);
-      return response.data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Erro desconhecido ao buscar imagem');
-    }
+  async getImageById(id: number): Promise<any> {
+    const response = await api.get(`/imagens/${id}`);
+    return response.data;
   }
 }
 

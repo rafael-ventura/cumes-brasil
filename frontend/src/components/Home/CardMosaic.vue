@@ -1,81 +1,120 @@
 <template>
-  <div class="mosaic">
-    <div
-      v-for="(card, index) in cards"
-      :key="index"
-      class="mosaic-card"
-    >
-      <q-card @click="$emit('navigate', card.filterType)">
-        <q-img :src="card.image" :alt="card.title" class="card-image">
-          <div class="absolute-bottom text-left card-content">
-            <div class="card-title">{{ card.title }}</div>
-            <div class="card-subtitle">
-              <span class="span-count-vias text-weight-bolder">
-                {{ card.count }}
-              </span>
-              vias encontradas
-            </div>
-          </div>
-        </q-img>
-      </q-card>
+  <div class="mosaic-container">
+    <div class="mosaic-grid">
+      <CategoryCard
+        v-for="(card, index) in cards"
+        :key="index"
+        :card="card"
+        :loading="loading"
+        @navigate="handleNavigate"
+        class="mosaic-item"
+        :style="{ animationDelay: `${index * 100}ms` }"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Card } from 'pages/Home.vue';
+import CategoryCard from './CategoryCard.vue';
 
-defineProps({
-  cards: {
-    type: Array as () => Card[],
-    required: true
-  }
-});
+defineProps<{
+  cards: Card[];
+  loading?: boolean;
+}>();
+
+const emit = defineEmits<{
+  navigate: [filterType: string];
+}>();
+
+const handleNavigate = (filterType: string) => {
+  emit('navigate', filterType);
+};
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
-.mosaic {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
+.mosaic-container {
+  padding: 0 24px;
+  margin-bottom: 40px;
 }
 
-.mosaic-card {
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
+.mosaic-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  // Primeira linha: 3 cards (cada um ocupa 2 colunas)
+  .mosaic-item:nth-child(1),
+  .mosaic-item:nth-child(2),
+  .mosaic-item:nth-child(3) {
+    grid-column: span 2;
+  }
+
+  // Segunda linha: 2 cards centralizados (cada um ocupa 2 colunas, com 1 coluna vazia em cada lado)
+  .mosaic-item:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+
+  .mosaic-item:nth-child(5) {
+    grid-column: 4 / span 2;
   }
 }
 
-.card-image {
-  height: 200px; /* Reduzindo o tamanho para caber mais cards */
-  object-fit: cover;
-  position: relative;
+.mosaic-item {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.card-content {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 10px;
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.card-title {
-  font-size: 16px;
-  font-weight: bold;
+// Responsividade
+@media (max-width: 1024px) {
+  .mosaic-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    .mosaic-item:nth-child(1),
+    .mosaic-item:nth-child(2),
+    .mosaic-item:nth-child(3),
+    .mosaic-item:nth-child(4),
+    .mosaic-item:nth-child(5) {
+      grid-column: span 1;
+    }
+  }
 }
 
-.card-subtitle {
-  font-size: 12px;
-  opacity: 0.8;
+@media (max-width: 768px) {
+  .mosaic-container {
+    padding: 0 16px;
+    margin-bottom: 32px;
+  }
+
+  .mosaic-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    .mosaic-item:nth-child(1),
+    .mosaic-item:nth-child(2),
+    .mosaic-item:nth-child(3),
+    .mosaic-item:nth-child(4),
+    .mosaic-item:nth-child(5) {
+      grid-column: span 1;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .mosaic-container {
+    padding: 0 12px;
+  }
 }
 </style>

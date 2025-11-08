@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   JoinTable,
@@ -15,9 +14,11 @@ import { Face } from './Face';
 import { Imagem } from './Imagem';
 import { Escalada } from './Escalada';
 import { ViaColecao } from './ViaColecao';
+import {ViaCroqui} from "./ViaCroqui";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Via extends BaseEntity {
+export class Via extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -93,19 +94,8 @@ export class Via extends BaseEntity {
   @ManyToOne(() => Imagem, imagem => imagem.vias)
   imagem: number;
 
-  @ManyToMany(() => Croqui, croqui => croqui.vias)
-  @JoinTable({
-    name: "via_croqui",
-    joinColumn: {
-      name: "via_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "croqui_id",
-      referencedColumnName: "id"
-    }
-  })
-  croquis: Croqui[];
+  @OneToMany(() => ViaCroqui, viaCroqui => viaCroqui.via)
+  viaCroquis: ViaCroqui[];
 
   @OneToMany(() => ViaColecao, viaColecao => viaColecao.via)
   viaColecoes: ViaColecao[];

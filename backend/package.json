@@ -4,10 +4,12 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/Api/server.js",
   "scripts": {
-    "build": "tsc && echo 'Build concluído com sucesso!'",
-    "start": "ts-node src/Api/server.ts",
-    "migration:run": "npx typeorm migration:run -d ./dist/infrastructure/config/db.js",
-    "migration:generate": "npx typeorm migration:generate ./src/infrastructure/migrations/NewMigration -d ./dist/infrastructure/config/db.js"
+    "dev": "cross-env NODE_ENV=development ts-node src/Api/server.ts",
+    "build": "tsc",
+    "start": "node dist/Api/server.js",
+    "start:pm2": "cross-env NODE_ENV=production pm2 start dist/Api/server.js --name cumes-api",
+    "migration:run": "cross-env NODE_ENV=production npx typeorm migration:run -d ./dist/Infrastructure/config/db.js",
+    "migration:generate": "cross-env NODE_ENV=development npx typeorm migration:generate ./src/Infrastructure/migrations/NewMigration -d ./dist/Infrastructure/config/db.js"
   },
   "dependencies": {
     "@aws-sdk/credential-providers": "^3.738.0",
@@ -16,13 +18,15 @@
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "csv-parse": "^5.5.2",
-    "dotenv": "^16.3.1",
-    "express": "5.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
     "express-session": "^1.17.3",
     "fast-csv": "^4.3.6",
     "google-auth-library": "^9.7.0",
     "googleapis": "^144.0.0",
     "handlebars": "^4.7.8",
+    "helmet": "^7.2.0",
     "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
@@ -31,10 +35,13 @@
     "pg": "^8.12.0",
     "reflect-metadata": "^0.1.14",
     "typedi": "^0.10.0",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "winston": "^3.17.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.20",
     "@types/express-session": "^1.17.10",

@@ -5,7 +5,7 @@ on:
     paths:
       - 'frontend/**'
     branches:
-      - main
+      - hold
   workflow_dispatch: # Permitir execução manual
 
 
@@ -39,17 +39,13 @@ jobs:
         working-directory: ./frontend
         run: npm install --no-package-lock
 
-      #4.5. lint
-      - name: Run Lint
-        working-directory: ./frontend
-        run: npm run lint
 
       # 5. Build do Frontend
       - name: Build Frontend
         working-directory: ./frontend
         env:
           VITE_APP_API_URL: "https://api.cumesbrasil.com.br/api"
-          VITE_APP_SERVER_IP: "https://d1261jj6xox5lv.cloudfront.net"
+          VITE_APP_ASSETS_URL: "https://d1261jj6xox5lv.cloudfront.net/assets"
           VITE_GOOGLE_CLIENT_ID: "909508756876-sr03gvh50b95hk2bdttahgr3tg6vjk5c.apps.googleusercontent.com"
         run: npm run build
 

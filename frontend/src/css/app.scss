@@ -1,32 +1,41 @@
-// Import Quasar variables and mixins
+// ============================================
+// PALETA DE CORES - CUMES BRASIL
+// ============================================
 
+// Cores principais da marca
+$cumes-01: #8CB369; // Verde principal (identidade da marca)
+$cumes-02: #546119; // Verde escuro
+$cumes-03: #F29340; // Laranja (ação/energia)
+$cumes-04: #F4E285; // Amarelo (destaque)
+$cumes-05: #BC4B51; // Vermelho/bordô (destaque alternativo)
 
-// Define custom colors
-$primary: #8CB369; // Adventure green #8CB369
-$secondary: #F4E285; // Mountaineering yellow #F29340
-$tertiary: #F4E285; // Palevioletred #F4E285
+// Cores de fundo e texto
+$background: #2c2c2c; // Fundo escuro / texto principal em fundos claros
+$offwhite: #ffffe4; // Branco suave (melhor que white puro)
 
-// #119DA4 , F2E86D, 9FB7B9, FF9F1C, FDFFFC
-$primary-light: #BCE9B4; // Custom green light
-$secondary-light: #fffd5e; // Custom yellow light
-$tertiary-light: #EF9D9D; // Custom pink light
+// Cores de feedback
+$error-color: #e74c3c; // Vermelho para erros
 
-$primary-dark: #546119; // Custom green dark
-$secondary-dark: #BC4B51; // Custom red dark
-$tertiary-dark: #ca74ef; // Custom purple dark
+// ============================================
+// VARIAVEIS SEMANTICAS - AÇÕES DO USUARIO
+// ============================================
+$action-escaladas: $cumes-03; // Laranja - ação, movimento, energia
+$action-favoritos: $cumes-04; // Amarelo - estrela, destaque
+$action-colecoes: $cumes-02; // Verde escuro - organização, categorização
 
-$background: #2c2c2c; // Dark mode background
-$light: #f5f5f5; // Light mode background
+// ============================================
+// TRANSPARENCIAS PADRONIZADAS
+// ============================================
+$overlay-light: rgba(255, 255, 255, 0.08);
+$overlay-dark: rgba(0, 0, 0, 0.05);
+$text-shadow-default: rgba(0, 0, 0, 0.2);
+$box-shadow-soft: rgba(0, 0, 0, 0.08);
+$box-shadow-light: rgba(0, 0, 0, 0.12);
+$box-shadow-medium: rgba(0, 0, 0, 0.15);
+$box-shadow-strong: rgba(0, 0, 0, 0.2);
+$box-shadow-dark: rgba(0, 0, 0, 0.3);
 
-
-$cumes-01: #8CB369;
-$cumes-02: #546119;
-$cumes-03: #F29340;
-$cumes-04: #F4E285;
-$cumes-05: #BC4B51;
-
-
-// Define Cume custom colors
+// Cores de grau/dificuldade (usadas nos badges de via)
 $c-color-yellow: #fffd5e;
 $c-color-green: #BCE9B4;
 $c-color-red: #ff5858;
@@ -37,49 +46,26 @@ $c-color-orange: #fcbd7b;
 $c-color-brown: #e4a16a;
 $c-color-grey: #757575;
 
-// Include Quasar variables
-$body-bg-color: $light;
-$header-bg-color: $primary;
-$footer-bg-color: $primary;
-$active-tab-color: $cumes-01; /* Defina sua variável aqui */
-
-body {
-  background-color: $body-bg-color;
-}
-
-// Set dark mode variables
-[data-theme='dark'] {
-  $body-bg-color: $background;
-  $header-bg-color: #333;
-  $footer-bg-color: #333;
-
-  body {
-    background-color: $body-bg-color;
-  }
-}
-
-// Common classes
-
-:root {
-  --primary: $primary;
-}
+// ============================================
+// CLASSES UTILITÁRIAS
+// ============================================
 
 .header {
   width: 100%;
   height: 300px;
   background-size: cover;
   background-position: center;
-  color: white;
+  color: $offwhite;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 16px;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px $box-shadow-dark;
 
   &-content {
-    background: rgba(0, 0, 0, 0.5);
+    background: $overlay-dark;
     padding: 16px;
     border-radius: 8px;
     width: 100%;
@@ -103,7 +89,7 @@ body {
   margin: 0 auto;
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px $box-shadow-soft;
 }
 
 .via-image,
@@ -137,18 +123,6 @@ body {
   padding-left: 24px;
 }
 
-.page-centered {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.page-padding {
-  padding: 16px;
-}
-
 .primary{
   color: $cumes-01;
 }
@@ -177,7 +151,7 @@ body {
   font-weight: bold;
   border: $cumes-03 1px solid;
   border-radius: 10px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+  box-shadow: 0 2px 2px $box-shadow-dark;
 
   &:hover {
     background-color: $cumes-03;
@@ -189,7 +163,7 @@ body {
   font-weight: bold;
   border: $cumes-03 1px solid;
   border-radius: 10px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+  box-shadow: 0 2px 2px $box-shadow-dark;
 
   &:hover {
     background-color: $cumes-03;
@@ -204,35 +178,35 @@ body {
 }
 
 .btn-red{
-  color: #ff5858;
+  color: $error-color;
   font-weight: bold;
-  border: #ff5858 1px solid;
+  border: $error-color 1px solid;
   border-radius: 10px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+  box-shadow: 0 2px 2px $box-shadow-dark;
 }
 
 .btn-text-black{
-  color: black !important;
+  color: $background !important;
   font-weight: bold;
 
   &:hover {
-    background-color: lightgray;
+    background-color: lighten($background, 60%);
   }
 }
 
 .btn-back {
-  color: white;
-  background-color: #1c1c1c;
+  color: $offwhite;
+  background-color: $background;
   opacity: 0.6;
 
   &:hover {
-    background-color: lightgray;
+    background-color: lighten($background, 20%);
   }
 }
 
 .btn-close {
   &:hover {
-    background-color: darkred;
+    background-color: darken($error-color, 10%);
   }
 }
 
@@ -250,11 +224,11 @@ body {
 .card-info {
   padding: 16px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px $box-shadow-soft;
 }
 
 .shadow-item {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ajuste os valores conforme necessário */
+  box-shadow: 0 4px 8px $box-shadow-dark;
 }
 
 .top-margem {
@@ -297,17 +271,12 @@ body {
   border-radius: 24px;
 }
 
-.text-h2{
-  color: $cumes-03;
-}
-
 .q-field__control {
   border-radius: 20px;
 }
 
 .q-field__label {
   margin-left: 8px;
-
 }
 
 .q-field {
@@ -354,5 +323,4 @@ body {
   font-size: 8px;
   font-weight: bold;
 }
-
 

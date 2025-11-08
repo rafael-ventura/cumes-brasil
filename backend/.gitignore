@@ -53,9 +53,17 @@ package-lock.json
 *.bd
 
 *.env
+*.env.development
+.env.development
+backend/.env.development
 
 # Ignore banco de dados
 *.db
 
 dist/
+
+# Assets e uploads de usuários (exceto logo e imagens estáticas)
+assets/foto_perfil-*
+assets/croquis/
+uploads/
 

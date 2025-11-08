@@ -7,7 +7,6 @@
     "*.ts",
     "*.d.ts",
     "custom-service-worker.ts",
-    ".eslintrc.js",
     "postcss.config.cjs"
   ]
 }

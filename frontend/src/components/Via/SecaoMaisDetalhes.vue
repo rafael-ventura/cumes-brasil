@@ -1,7 +1,7 @@
 <template>
   <q-expansion-item
     expand-separator
-    icon="description"
+    icon="info"
     label="Mais Detalhes"
     :header-class="isExpanded ? 'expansion-header-expanded' : 'expansion-header'"
     content-class="expansion-content"
@@ -9,59 +9,52 @@
     @collapse="isExpanded = false"
   >
     <div class="detalhes-container">
-      <div class="detalhe-item" v-if="formattedGrau">
-        <div class="detalhe-grau">
-          <span>Grau:</span>
-          <q-icon name="info" @click.stop="showGrauInfo = true" class="info-icon" />
+
+      <!-- Conquistadores -->
+      <div class="detalhe-item" v-if="conquistadores.length">
+        <span>Conquistadores:</span>
+        <div class="badges-container">
+          <q-badge
+            v-for="(conquistador, index) in conquistadores"
+            :key="index"
+            class="badge"
+            :class="`badge-color-${(index % badgeColors.length) + 1}`"
+          >
+            {{ conquistador }}
+          </q-badge>
         </div>
-        <span class="valor-detalhe">{{ formattedGrau }}</span>
       </div>
 
-      <!-- Crux -->
-      <div class="detalhe-item" v-if="formattedCrux">
-        <span>Crux:</span>
-        <span class="valor-detalhe">{{ formattedCrux }}</span>
+      <!-- Data de Conquista -->
+      <div class="detalhe-item" v-if="formattedDataConquista">
+        <span>Data de Conquista:</span>
+        <q-badge class="badge-data">{{ formattedDataConquista }}</q-badge>
       </div>
 
-      <!-- Artificial -->
-      <div class="detalhe-item" v-if="formattedArtificial">
-        <span>Artificial:</span>
-        <span class="valor-detalhe">{{ formattedArtificial }}</span>
+      <!-- Altura da Montanha -->
+      <div class="detalhe-item" v-if="via.montanha?.altura">
+        <span>Altura da Montanha:</span>
+        <q-badge class="badge-highlight">
+          {{ via.montanha.altura }} metros
+        </q-badge>
       </div>
 
-      <!-- Exposição -->
-      <div class="detalhe-item" v-if="formattedExposicao">
-        <span>Exposição:</span>
-        <span class="valor-detalhe">{{ formattedExposicao }}</span>
+      <!-- Extensão da Via -->
+      <div class="detalhe-item" v-if="via.extensao">
+        <span>Extensão da Via:</span>
+        <q-badge class="badge-highlight">
+          {{ via.extensao }} metros
+        </q-badge>
       </div>
 
-      <!-- Duração -->
-      <div class="detalhe-item" v-if="formattedDuracao">
-        <span>Duração:</span>
-        <span class="valor-detalhe">{{ formattedDuracao }}</span>
+      <!-- Descrição -->
+      <div class="detalhe-item descricao-container">
+        <span>Descrição:</span>
+        <span v-if="via.detalhes" class="valor-detalhe descricao">{{ via.detalhes }}</span>
+        <span v-else class="descricao-vazia">Sem descrição disponível</span>
       </div>
 
-      <!-- Outros itens permanecem os mesmos -->
     </div>
-
-    <q-dialog v-model="showGrauInfo">
-      <q-card class="modal-card">
-        <q-card-section>
-          <div class="modal-title">
-            <q-icon name="info" />
-            Como Ler o Grau de uma Via?
-          </div>
-          <p class="modal-content">
-            A graduação de uma via é composta por Grau, Crux, Artificial, Exposição e Duração.
-            Cada um desses fatores expressa uma parte da dificuldade e exposição da escalada.
-            Consulte o site da FEMERJ para detalhes completos.
-          </p>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn class="q-button" flat label="Fechar" @click="showGrauInfo = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-expansion-item>
 </template>
 
@@ -73,20 +66,25 @@ const props = defineProps<{
   via: Via;
 }>();
 
-const showGrauInfo = ref(false);
-
-// Formatação dos dados com ajuste para não adicionar sufixo se o valor for "NA"
-const formattedGrau = computed(() => props.via.grau && props.via.grau !== 'NA' ? `${props.via.grau}` : 'NA');
-const formattedCrux = computed(() => props.via.crux || 'NA');
-const formattedArtificial = computed(() => props.via.artificial && props.via.artificial !== 'N/A' ? `A${props.via.artificial}` : 'N/A');
-const formattedExposicao = computed(() => props.via.exposicao && props.via.exposicao !== 'N/A' ? `E${props.via.exposicao}` : 'N/A');
-const formattedDuracao = computed(() => props.via.duracao && props.via.duracao !== 'N/A' ? `D${props.via.duracao}` : 'N/A');
-
-// Outros dados permanecem os mesmos
-computed(() => props.via.fonte ? props.via.fonte.autor.split(';').map(fonte => fonte.trim()) : []);
-computed(() => props.via.conquistadores ? props.via.conquistadores.split(';').map(conquistador => conquistador.trim()) : []);
-computed(() => props.via.via_principal?.nome || '');
 const isExpanded = ref(false);
+
+// Conquistadores formatados corretamente
+const conquistadores = computed(() =>
+  props.via.conquistadores ? props.via.conquistadores.split(';').map(nome => nome.trim()) : []
+);
+
+// Formatar data de conquista (dd/MM/yyyy)
+const formattedDataConquista = computed(() => {
+  if (!props.via.data || props.via.data === 'NULL') return null;
+
+  const data = new Date(props.via.data);
+  if (isNaN(data.getTime())) return null; // Verifica se a data é válida
+
+  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+});
+
+// Define as cores disponíveis para os badges (quantidade controlada pelo SCSS)
+const badgeColors = ['cumes-01', 'cumes-03', 'primary', 'secondary'];
 </script>
 
 <style scoped lang="scss">
@@ -113,68 +111,84 @@ const isExpanded = ref(false);
 
 .detalhe-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 8px;
 }
 
-.detalhe-grau {
-  display: flex;
-  align-items: baseline;
-
-  .info-icon {
-    margin-left: 4px;
-    font-size: 16px;
-    position: relative;
-    top: -2px; /* Alinha o ícone um pouco acima */
-  }
-}
-
 .valor-detalhe {
-  margin-left: auto;
+  margin-top: 4px;
+  font-weight: bold;
 }
 
-.info-icon {
-  cursor: pointer;
+.badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  gap: 8px; /* Espaçamento entre os badges */
+  margin-top: 4px;
+}
+
+.badge {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Badge da Data de Conquista */
+.badge-data {
+  background-color: $cumes-01;
+  color: $background;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+/* Badge para Altura da Montanha e Extensão da Via */
+.badge-highlight {
+  background-color: $cumes-01;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 12px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* Estilo das cores dinâmicas */
+.badge-color-1 {
+  background-color: $cumes-04;
+  color: $background;
+}
+
+.badge-color-2 {
+  background-color: $cumes-05;
+  color: $offwhite;
+}
+
+.badge-color-3 {
+  background-color: $cumes-03;
+  color: black;
+}
+
+.badge-color-4 {
+  background-color: $cumes-01;
+  color: $offwhite;
+}
+
+.descricao {
   color: $cumes-01;
 }
 
-.tag-container {
-  font-size: 10px;
-}
-
-.tag {
-  padding: 4px 6px;
-  border-radius: 10px;
-  border: 1px solid $primary;
-  color: $primary;
-  margin-bottom: 3%;
-}
-
-.modal-card {
-  background-color: $primary;
-}
-
-.modal-title {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: $background;
-}
-
-.modal-content {
-  margin-top: 8px;
-  font-size: 14px;
-  color: $background;
-}
-
-.q-button {
-  color: $background;
-  font-weight: bolder;
-  font-size: 14px;
-  padding: 4px 16px;
-  border-radius: 10px;
-  border: 1px solid $background;
+.descricao-vazia {
+  color: gray;
+  font-style: italic;
 }
 </style>

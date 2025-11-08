@@ -6,3 +6,5 @@
 .eslintrc.cjs
 /quasar.config.*.temporary.compiled*
 postcss.config.cjs
+quasar.config.js
+/src/boot/

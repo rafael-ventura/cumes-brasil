@@ -107,15 +107,28 @@ const dataFormatada = computed(() => {
 
 .profile-card-container {
   padding: 16px;
-  background-color: $cumes-05;
+  background-color: $cumes-01;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: auto;
+
+  @media (min-width: 1024px) {
+    padding: 24px;
+    min-height: 400px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 12px;
+  }
 }
 
 .profile-header {
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (min-width: 1024px) {
+    gap: 24px;
+  }
 }
 
 .profile-row {
@@ -123,12 +136,28 @@ const dataFormatada = computed(() => {
   grid-template-columns: 150px 1fr;
   align-items: center;
   gap: 16px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+  }
 }
 
 .profile-picture-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .profile-picture {
@@ -137,24 +166,58 @@ const dataFormatada = computed(() => {
   border-radius: 50%;
   border: 3px solid $cumes-04;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+
+  @media (min-width: 1024px) {
+    width: 200px;
+    height: 200px;
+    border: 4px solid $cumes-04;
+  }
+
+  @media (max-width: 600px) {
+    width: 100px;
+    height: 100px;
+    border: 2px solid $cumes-04;
+  }
 }
 
 .user-details {
   display: flex;
   flex-direction: column;
   text-align: left;
+  gap: 4px;
+
+  @media (min-width: 1024px) {
+    gap: 8px;
+  }
 }
 
 .user-name {
-  font-size: 30px;
+  font-size: 20px;
   font-weight: bold;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 26px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 18px;
+  }
 }
 
 .user-location,
 .user-club {
   font-size: 16px;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+  }
 }
 
 .escalando-info {
@@ -164,20 +227,41 @@ const dataFormatada = computed(() => {
   justify-content: center;
   margin-left: auto;
   padding-left: 30px;
+
+  @media (max-width: 600px) {
+    display: none; // Esconde no mobile para economizar espaço
+  }
+
+  @media (min-width: 1024px) {
+    padding-left: 40px;
+  }
 }
 
-.dias-escalando{
+.dias-escalando {
   margin-top: 3rem;
+
+  @media (min-width: 1024px) {
+    margin-top: 2rem;
+  }
 }
 
 .anos-escalando {
   margin-top: 2rem;
   margin-bottom: 2rem;
+
+  @media (min-width: 1024px) {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
 }
 
 .label {
   font-size: 14px;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
 .dias-count,
@@ -185,11 +269,19 @@ const dataFormatada = computed(() => {
   font-size: 20px;
   font-weight: bold;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 24px;
+  }
 }
 
 .data-label {
   font-size: 14px;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
 .data-formatada {
@@ -197,5 +289,9 @@ const dataFormatada = computed(() => {
   font-weight: bold;
   color: $cumes-04;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+
+  @media (min-width: 1024px) {
+    font-size: 20px;
+  }
 }
 </style>

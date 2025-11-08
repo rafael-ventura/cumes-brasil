@@ -6,7 +6,6 @@
   "include": [
     "src",
     "src-pwa",
-    "quasar.config.js",
     "quasar.d.ts",
     "src-pwa/**/*.ts",
     "src-pwa/**/*.d.ts",

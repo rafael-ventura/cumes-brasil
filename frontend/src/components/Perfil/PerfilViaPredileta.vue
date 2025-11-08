@@ -1,30 +1,29 @@
 <template>
   <div class="div-externa">
-    <div class="row title-box border-radius-small">
-      <div class="text-h5 titulo">Predileta</div>
-      <q-icon name="edit" class="small-icon right-margem icon" @click="toggleEditMode"/>
+    <div class="title-box">
+      <div class="titulo">Predileta</div>
+      <q-icon name="edit" size="20px" class="icon" @click="toggleEditMode"/>
     </div>
-    <q-separator spaced />
 
     <!-- Exibição dos detalhes da via favorita -->
-    <div class="border border-radius-small">
-      <div v-if="viaPreferida">
+    <div class="content-wrapper">
+      <div v-if="viaPreferida" class="via-card-wrapper">
         <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
       </div>
-      <q-card-section v-else>
-        <div class="text-h6">Nenhuma predileta adicionada.</div>
-      </q-card-section>
-      <div v-if="staySaved" class="space-save">
-        <q-btn flat label="Cancelar" class="btn-secondary left-margem right-margem" @click="cancelEdit" />
-        <q-btn flat label="Salvar" class="btn-primary" @click="savePreferida" />
+      <div v-else class="empty-state">
+        <q-icon name="favorite_border" size="48px" color="grey-6" />
+        <div class="empty-text">Nenhuma predileta adicionada.</div>
       </div>
     </div>
-    <br/>
-    <div>
-      <q-dialog v-model="isModalSelect">
-        <PerfilEditaFormAddPrediletaModal :viaPreferidaId="viaPreferidaId || ''" @viaPreferidaUpdate="viaPreferidaUpdate" />
-      </q-dialog>
+    
+    <div v-if="staySaved" class="actions-wrapper">
+      <q-btn flat label="Cancelar" class="btn-secondary" @click="cancelEdit" />
+      <q-btn flat label="Salvar" class="btn-primary" @click="savePreferida" />
     </div>
+    
+    <q-dialog v-model="isModalSelect">
+      <PerfilEditaFormAddPrediletaModal :viaPreferidaId="viaPreferidaId || ''" @viaPreferidaUpdate="viaPreferidaUpdate" />
+    </q-dialog>
   </div>
 </template>
 
@@ -106,45 +105,81 @@ const savePreferida = async () => {
 <style scoped lang="scss">
 @import "src/css/app.scss";
 .title-box{
-  padding-top: 10px;
-  background-color: $background;
-  height: 50px;
-  width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 20px 0;
+  background-color: transparent;
+  height: auto;
+  width: 100%;
+  border-bottom: 2px solid rgba($cumes-03, 0.3);
+  margin-bottom: 20px;
 }
 .titulo {
-  color: $secondary;
+  color: $cumes-03;
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .icon{
   color: $cumes-03;
-  margin-left: 0.8rem;
-}
-.right-margem {
-  margin-right: 16px;
-}
-.custom-input{
-  background-color: $background;
-  font-size: 20px;
-  color: white;
-}
-.border{
-  border: 2px solid $secondary;
-  color: white;
-}
-
-.space-save{
-  padding-block: 10px;
-}
-
-.imagem-via-predileta{
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
-  border: 10px solid $background;
-  object-fit: cover;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: $cumes-01;
+    transform: scale(1.15);
+  }
 }
 
 .div-externa{
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.via-card-wrapper {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+  min-height: 180px;
+  flex: 1;
+}
+
+.empty-text {
+  color: $offwhite;
+  font-size: 16px;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.actions-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 </style>

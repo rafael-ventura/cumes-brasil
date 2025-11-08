@@ -13,7 +13,15 @@ export const errorsMessage = {
 
     GOOGLE_AUTHORIZATION_CODE_INVALID: "Código de autorização do Google Invalido",
     GOOGLE_AUTHENTICATION_TOKEN_ERROR: "Não foi possível obter código de autenticação do Google",
-    GOOGLE_AUTHENTICATION_TOKEN_INVALID: "Token de autenticação do Google Invalido"
+    GOOGLE_AUTHENTICATION_TOKEN_INVALID: "Token de autenticação do Google Invalido",
+
+    // Generic validation messages
+    PARAM_INVALID: "Parâmetro inválido",
+    QUERY_NUMERIC_REQUIRED: "Query param deve ser numérico",
+    REQUIRED_BODY_OBJECT: "Campos obrigatórios não preenchidos corretamente",
+    REQUIRED_ID_ON_BODY: "Objeto deve conter o campo id",
+    INVALID_ENTITY_TYPE: "Tipo de entidade inválido",
+    FILTER_INVALID: "Filtro inválido"
 
 }
 

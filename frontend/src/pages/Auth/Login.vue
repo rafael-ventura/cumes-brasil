@@ -1,120 +1,109 @@
 <template>
   <q-page class="fundo-login">
-    <!-- Logo -->
-    <!-- Formulário de Login -->
     <div class="logo-container">
       <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
     </div>
     <div class="form-container">
       <q-card class="login-card">
-        <q-form @submit.prevent="onLogin" class="custom-login-form">
+        <form @submit.prevent="onLogin" class="custom-login-form">
           <!-- Campo Email -->
-          <div class="custom-input">
+          <div class="custom-input-auth">
             <div class="input-container">
               <q-icon name="mail" class="input-icon" />
               <label for="email" class="input-label">Email</label>
             </div>
-            <q-input
+            <InputText
               id="email"
               v-model="email"
-              type="email"
-              debounce="300"
-              outlined
-              color="primary"
-              label-color="primary"
-              rounded
-              :rules="[val => !!val || 'Campo obrigatório']"
-              :input-style="{ color: '$primary' }"
+              :invalid="!email"
+              class="custom-input-field"
+              placeholder="Digite seu email"
             />
+            <small v-if="!email" class="error-message">Campo obrigatório</small>
           </div>
 
           <!-- Campo Senha -->
-          <div class="custom-input">
+          <div class="custom-password-input-auth">
             <div class="input-container">
               <q-icon name="lock" class="input-icon" />
               <label for="senha" class="input-label">Senha</label>
             </div>
-            <q-input
+            <InputText
               id="senha"
               v-model="senha"
+              class="custom-input-field"
+              :invalid="!senha || senha.length < 6"
               type="password"
-              debounce="300"
-              outlined
-              color="primary"
-              label-color="primary"
-              rounded
-              :rules="[val => !!val || 'Campo obrigatório']"
-              :input-style="{ color: '$primary' }"
+              placeholder="Digite sua senha"
             />
+            <small v-if="!senha" class="error-message">Campo obrigatório</small>
+            <small v-else-if="senha.length < 6" class="error-message senha-nao-conferem">
+              A senha deve conter pelo menos 6 caracteres
+            </small>
           </div>
 
           <!-- Botão de Esqueci a Senha -->
           <q-btn flat label="Esqueci a senha" class="forgot-password-btn" @click="goToResetPassword" />
 
-          <!-- Botões de Ação (Cadastrar, Google e Login) -->
+          <!-- Botões de Ação -->
           <div class="action-buttons">
             <q-btn label="Cadastrar" class="register-btn" @click="goToSignUp" />
             <google-login-button class="google-btn" />
             <q-btn type="submit" icon="arrow_forward" class="login-btn" />
           </div>
-        </q-form>
+        </form>
       </q-card>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import AuthenticateService from 'src/services/AuthenticateService';
-import ImagemService from '../../services/ImagemService';
-import GoogleLoginButton from 'components/Auth/GoogleLoginButton.vue';
-import { Notify } from 'quasar';
-import { createNotifyConfig } from 'src/utils/utils';
-import { Imagem } from 'src/models/Imagem';
+import {ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {Notify} from 'quasar'
+import {createNotifyConfig} from 'src/utils/utils'
+import AuthenticateService from 'src/services/AuthenticateService'
+import GoogleLoginButton from 'components/Auth/GoogleLoginButton.vue'
+import InputText from 'primevue/inputtext'
 
 defineOptions({
   name: 'LoginPage'
-});
+})
 
-const email = ref('');
-const senha = ref('');
-const backgroundImage = ref('');
-const router = useRouter();
+const email = ref('')
+const senha = ref('')
+const router = useRouter()
 
 const onLogin = async () => {
-  try {
-    await AuthenticateService.login(email.value, senha.value);
-    Notify.create(createNotifyConfig('positive', 'Login realizado com sucesso', 'top'));
-    await router.push('/');
-  } catch (error: any) {
-    Notify.create(createNotifyConfig('negative', error.message, 'top'));
+  if (!email.value || !senha.value) {
+    Notify.create(createNotifyConfig('negative', 'Preencha todos os campos', 'top'))
+    return
   }
-};
+
+  try {
+    await AuthenticateService.login(email.value, senha.value)
+    Notify.create(createNotifyConfig('positive', 'Login realizado com sucesso', 'top'))
+    await router.push('/')
+  } catch (error: any) {
+    Notify.create(createNotifyConfig('negative', error.message, 'top'))
+  }
+}
 
 const goToResetPassword = () => {
-  router.push('/auth/reset-password');
-};
+  router.push('/auth/reset-password')
+}
 
 const goToSignUp = () => {
-  router.push('/auth/register');
-};
-
-onMounted(async () => {
-  try {
-    const image: Imagem = await ImagemService.getImageById(1);
-    backgroundImage.value = ImagemService.getFullImageUrl(image.url);
-  } catch (error) {
-    console.error('Erro ao carregar a imagem de fundo:', error);
-  }
-});
+  router.push('/auth/register')
+}
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+@import 'src/css/inputs.scss';
 
 .fundo-login {
-  background-image: url('/login2.jpg'); /* Imagem de fundo grande */
+  background-image: url('/login2.jpg');
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -123,9 +112,8 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
 
-  /* Altera a imagem de fundo para telas com 800px ou menos */
   @media (max-width: 800px) {
-    background-image: url('/login.png'); /* Imagem de fundo pequena */
+    background-image: url('/login.png');
   }
 }
 
@@ -142,16 +130,7 @@ onMounted(async () => {
   background-color: rgba($background, 0.85);
   padding: 5%;
   border-radius: 10px;
-}
-
-.custom-input {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .input-label {
@@ -186,6 +165,7 @@ onMounted(async () => {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  margin-top: 20px;
 }
 
 .register-btn,
@@ -214,9 +194,6 @@ onMounted(async () => {
   align-items: center;
   max-width: 60px;
   max-height: 60px;
-}
-:deep(.q-field__control) {
-  height: 3em;
 }
 
 </style>

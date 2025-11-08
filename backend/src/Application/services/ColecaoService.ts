@@ -1,49 +1,54 @@
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Colecao } from '../../Domain/entities/Colecao';
+import NotFoundError from '../errors/NotFoundError';
+import BadRequestError from '../errors/BadRequestError';
+import BaseService from './BaseService';
 
-export class ColecaoService {
+export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   constructor(
-    private colecaoRepo: ColecaoRepository
-  ) {}
+    colecaoRepo: ColecaoRepository
+  ) {
+    super(colecaoRepo);
+  }
 
   async getColecaoById(id: number): Promise<Colecao | null> {
-    return this.colecaoRepo.getById(id);
+    return this.repository.getById(id);
   }
 
   async getAllColecoes(): Promise<Colecao[]> {
-    return this.colecaoRepo.getAll();
+    return this.repository.getAll();
   }
 
   async getColecoesByUsuarioId(usuarioId: number): Promise<Colecao[]> {
-    return this.colecaoRepo.getByUsuarioId(usuarioId);
+    return this.repository.getByUsuarioId(usuarioId);
   }
 
   async createColecao(colecaoData: Partial<Colecao>): Promise<void> {
-    await this.colecaoRepo.create(colecaoData);
+    await this.repository.create(colecaoData);
   }
 
   async updateColecao(id: number, colecaoData: Partial<Colecao>): Promise<void> {
-    const colecao = await this.colecaoRepo.getById(id);
+    const colecao = await this.repository.getById(id);
     if (!colecao) {
-      throw new Error('Coleção não encontrada');
+      throw new NotFoundError('Coleção não encontrada');
     }
-    await this.colecaoRepo.update(id, colecaoData);
+    await this.repository.update(id, colecaoData);
   }
 
   async deleteColecao(id: number): Promise<void> {
-    const colecao = await this.colecaoRepo.getById(id);
+    const colecao = await this.repository.getById(id);
     if (!colecao) {
-      throw new Error('Coleção não encontrada');
+      throw new NotFoundError('Coleção não encontrada');
     }
-    await this.colecaoRepo.delete(id);
+    await this.repository.delete(id);
   }
 
   async addViaToColecao(viaId: number, colecaoId: number): Promise<void> {
-    await this.colecaoRepo.addViaToColecao(viaId, colecaoId);
+    await this.repository.addViaToColecao(viaId, colecaoId);
   }
 
   async removeViaFromColecao(viaId: number, colecaoId: number): Promise<void> {
-    await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
+    await this.repository.removeViaFromColecao(viaId, colecaoId);
   }
 
   async getColecoesNotContainingViaForUser (
@@ -53,10 +58,10 @@ export class ColecaoService {
     limit: number
   ): Promise<{ colecoes: Colecao[]; total: number }> {
     if (!usuarioId || !viaId) {
-      throw new Error('Parâmetros inválidos: usuário ou via ausente.');
+      throw new BadRequestError('Parâmetros inválidos: usuário ou via ausente.');
     }
 
-    return await this.colecaoRepo.getColecoesNotContainingViaForUser(
+    return await this.repository.getColecoesNotContainingViaForUser(
       viaId,
       usuarioId,
       page,

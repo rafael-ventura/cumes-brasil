@@ -6,6 +6,7 @@ import { FonteRepository } from "../../Infrastructure/repositories/FonteReposito
 import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
 import { FonteService } from "../../Application/services/FonteService";
 import { MontanhaService } from "../../Application/services/MontanhaService";
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const faceRepository = new FaceRepository();
 const montanhaRepository = new MontanhaRepository();
@@ -18,10 +19,10 @@ const faceController = new FaceController(faceService);
 
 const FaceRouter = Router();
 
-FaceRouter.get("/:id", faceController.getFaceById);
-FaceRouter.get("/", faceController.getAllFace);
-FaceRouter.post("/", faceController.createFace);
-FaceRouter.put("/:id", faceController.updateFace);
-FaceRouter.delete("/:id", faceController.deleteFace);
+FaceRouter.get("/:id", asyncErrorHandler(faceController.getFaceById));
+FaceRouter.get("/", asyncErrorHandler(faceController.getAllFace));
+FaceRouter.post("/", asyncErrorHandler(faceController.createFace));
+FaceRouter.put("/:id", asyncErrorHandler(faceController.updateFace));
+FaceRouter.delete("/:id", asyncErrorHandler(faceController.deleteFace));
 
 export default FaceRouter;

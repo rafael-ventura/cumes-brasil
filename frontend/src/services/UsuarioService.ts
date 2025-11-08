@@ -37,25 +37,6 @@ class UsuarioService {
     }
   }
 
-  async create (nome: string, email: string, password: string): Promise<IUsuario> {
-    try {
-      const response = await api.post('/auth/register', {
-        nome,
-        email,
-        password
-      });
-      const usuario = response.data as IUsuario;
-
-      if (usuario.foto_perfil) {
-        adjustImageUrls(usuario.foto_perfil);
-      }
-
-      return usuario;
-    } catch (error: any) {
-      handleApiError(error, 'Erro ao criar usuário');
-    }
-  }
-
   async getPerfil (): Promise<IUsuario> {
     try {
       const response = await api.get('/perfil');
@@ -109,6 +90,15 @@ class UsuarioService {
       return response.data as IUsuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar biografia');
+    }
+  }
+
+  async excluirFotoPerfil () {
+    try {
+      const response = await api.delete('/perfil/foto');
+      return response.data as IUsuario;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao excluir foto de perfil');
     }
   }
 

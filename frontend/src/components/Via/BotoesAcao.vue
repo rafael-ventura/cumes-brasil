@@ -1,19 +1,19 @@
 <template>
   <div class="botoes-acao">
     <!-- Botão para registrar escalada -->
-    <q-btn @click="toggleEscaladaModal" class="btn-acao registrar">
+    <q-btn @click="handleEscaladaClick" class="btn-acao registrar">
       <q-icon name="add_circle" />
       <span>Registrar Escalada</span>
     </q-btn>
 
     <!-- Botão de favoritos com ícone e texto dinâmicos -->
-    <q-btn @click="toggleFavoriteStatus" class="btn-acao favoritos">
+    <q-btn @click="handleFavoritoClick" class="btn-acao favoritos">
       <q-icon :name="isFavorited ? 'star' : 'star_border'" />
       <span>{{ isFavorited ? 'Remover de Favoritos' : 'Adicionar a Favoritos' }}</span>
     </q-btn>
 
     <!-- Botão para abrir o modal de coleções -->
-    <q-btn @click="toggleCollectionModal" class="btn-acao colecao">
+    <q-btn @click="handleColecaoClick" class="btn-acao colecao">
       <q-icon name="style" />
       <span>Adicionar a Coleção</span>
     </q-btn>
@@ -35,39 +35,71 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import ColecaoService from 'src/services/ColecaoService';
 import { Notify } from 'quasar';
 import ModalCriarEscalada from 'components/Escalada/ModalCriarEscalada.vue';
 import ItemSelectorModal from 'components/Colecao/ItemSelectorModal.vue';
 import { createNotifyConfig } from 'src/utils/utils';
+import { useRouter } from 'vue-router';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const props = defineProps({
   via: Object, // A via atualmente sendo manipulada
   favoriteCollectionId: Number // ID da coleção de favoritos
 });
-const emit = defineEmits(['atualizar:isFavorited']);
+const emit = defineEmits([
+  'atualizar:isFavorited',
+  'acao:escalada',
+  'acao:favorito',
+  'acao:colecao'
+]);
 
+const router = useRouter();
 const isFavorited = ref(false); // Controle do status de favorito
 const showEscaladaModal = ref(false); // Controle de exibição do modal de escalada
 const showCollectionModal = ref(false); // Controle de exibição do modal de coleções
 
-// Verifica se a via está na coleção favorita ao montar o componente
-const checkIfFavorited = async () => {
+// Atualiza o status de favorito quando recebe a informação do pai
+const checkIfFavorited = () => {
   if (props.favoriteCollectionId && props.via) {
     try {
-      const favoriteCollection = await ColecaoService.buscarColecaoPorId(props.favoriteCollectionId);
-      isFavorited.value = favoriteCollection?.viaColecoes?.some((v: any) => v.via.id === props.via?.id) ?? false;
+      ColecaoService.buscarColecaoPorId(props.favoriteCollectionId)
+        .then(favoriteCollection => {
+          isFavorited.value = favoriteCollection?.viaColecoes?.some((v: any) => v.via.id === props.via?.id) ?? false;
+        })
+        .catch(error => {
+          console.error('Erro ao verificar se a via é favorita:', error);
+        });
     } catch (error) {
       console.error('Erro ao verificar se a via é favorita:', error);
     }
   }
 };
 
-onMounted(checkIfFavorited);
+// Funções para emitir eventos para o componente pai
+const handleEscaladaClick = () => {
+  emit('acao:escalada');
+};
+
+const handleFavoritoClick = () => {
+  emit('acao:favorito');
+  if (props.favoriteCollectionId) {
+    toggleFavoriteStatus();
+  }
+};
+
+const handleColecaoClick = () => {
+  emit('acao:colecao');
+  toggleCollectionModal();
+};
 
 // Alterna o status de favorito
 const toggleFavoriteStatus = async () => {
+  if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
+    return;
+  }
+
   try {
     isFavorited.value ? await removeFromFavorites() : await addToFavorites();
   } catch (error) {
@@ -109,12 +141,20 @@ const updateFavoriteStatus = (status: boolean, message: string) => {
 };
 
 // Alterna a exibição do modal de escalada
-const toggleEscaladaModal = () => {
+const toggleEscaladaModal = async () => {
+  if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
+    return;
+  }
+
   showEscaladaModal.value = !showEscaladaModal.value;
 };
 
 // Alterna a exibição do modal de coleções
-const toggleCollectionModal = () => {
+const toggleCollectionModal = async () => {
+  if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
+    return;
+  }
+
   showCollectionModal.value = !showCollectionModal.value;
 };
 
@@ -183,20 +223,23 @@ const onColecaoAdded = () => {
 }
 
 .registrar {
-  background-color: $cumes-02;
+  background-color: $action-escaladas;
+  color: $offwhite;
 }
 
 .favoritos {
-  background-color: $cumes-04;
+  background-color: $action-favoritos;
+  color: $background;
 }
 
 .colecao {
-  background-color: $cumes-05;
+  background-color: $action-colecoes;
+  color: $offwhite;
 }
 
 .collection-card {
   background-color: $background;
-  color: $primary;
+  color: $cumes-01;
   border-radius: 8px;
   width: 100%;
 }
@@ -204,14 +247,14 @@ const onColecaoAdded = () => {
 .collection-header {
   font-size: 20px;
   font-weight: bold;
-  color: $primary;
+  color: $cumes-01;
   background-color: $background;
   padding: 5px;
-  border-bottom: 1px solid $primary;
+  border-bottom: 1px solid $cumes-01;
 }
 
 .collection-content {
   padding: 16px;
-  color: $primary;
+  color: $cumes-01;
 }
 </style>

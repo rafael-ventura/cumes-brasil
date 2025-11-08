@@ -68,9 +68,7 @@ defineOptions({
 });
 
 onMounted(async () => {
-  if (!AuthenticateService.isAuthenticated()) {
-    await router.push('/auth/login');
-  }
+  await AuthenticateService.redirecionaSeNaoAutenticado(router);
 });
 
 const handleApplyFilters = (filters: any) => {
@@ -96,6 +94,6 @@ const goToColecaoDetalhada = (colecao: IColecao) => {
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: $cumes-03;
+  color: $cumes-01;
 }
 </style>

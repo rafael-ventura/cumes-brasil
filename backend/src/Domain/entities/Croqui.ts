@@ -1,19 +1,11 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
-import { Via } from "./Via";
-import { Fonte } from "./Fonte";
-import { Imagem } from "./Imagem";
+import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Fonte} from "./Fonte";
+import {Imagem} from "./Imagem";
+import {ViaCroqui} from "./ViaCroqui";
+import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-export class Croqui extends BaseEntity {
+export class Croqui extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,9 +15,9 @@ export class Croqui extends BaseEntity {
   @ManyToOne(() => Fonte, fonte => fonte.croquis)
   fonte: number;
 
-  @ManyToOne(() => Imagem, imagem => imagem.croquis)
-  imagem: number;
+  @ManyToOne(() => Imagem, imagem => imagem.croquis, { nullable: true })
+  imagem?: Imagem;
 
-  @ManyToMany(() => Via, via => via.croquis)
-  vias: Via[];
+  @OneToMany(() => ViaCroqui, viaCroqui => viaCroqui.croqui)
+  viaCroquis: ViaCroqui[];
 }

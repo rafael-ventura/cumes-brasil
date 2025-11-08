@@ -1,13 +1,12 @@
 #!/bin/bash
 echo "Iniciando serviços..."
 
-# Navegar até o diretório do projeto
 cd /home/ec2-user/cumes-brasil || exit 1
 
-# Rebuild das imagens (opcional)
-docker-compose build
+# Parar containers antigos
+docker-compose down
 
-# Iniciar os containers Docker Compose
-docker-compose up -d
+# Subir containers com build atualizado
+docker-compose up -d --build
 
-echo "Serviços iniciados."
+echo "Serviços iniciados com sucesso via Docker!"

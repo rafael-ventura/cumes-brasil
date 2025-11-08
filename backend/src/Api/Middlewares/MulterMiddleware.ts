@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const isProduction = Boolean(process.env.CLOUDFRONT_URL); // Se existir, estamos em produção
+const isProduction = Boolean(process.env.CLOUDFRONT_URL) || process.env.NODE_ENV === 'production';
 
 export class MulterMiddleware {
   private static storage = isProduction
@@ -14,7 +14,7 @@ export class MulterMiddleware {
     : multer.diskStorage({
       destination: (req, file, cb) => {
         const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets');
-        console.log('📂 Salvando imagem localmente em:', uploadPath);
+        console.log('📂 Salvando imagem localmente em:', uploadPath); //TODO: ADD LOGGER
         cb(null, uploadPath);
       },
       filename: (req: any, file, cb) => {

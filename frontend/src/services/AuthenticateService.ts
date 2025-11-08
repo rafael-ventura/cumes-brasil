@@ -1,5 +1,12 @@
 import { api } from 'boot/axios';
 import { handleApiError } from 'src/utils/utils';
+import { Router } from 'vue-router';
+
+interface TokenPayload {
+  exp: number;
+  userId: string;
+  email: string;
+}
 
 class AuthenticateService {
   async login (email: string, password: string) {
@@ -8,7 +15,7 @@ class AuthenticateService {
         email,
         password
       });
-      this.saveToken(response.data.token);
+      this.saveToken(response.data);
       return response;
     } catch (error: any) {
       handleApiError(error, error.response?.data?.message);
@@ -18,20 +25,22 @@ class AuthenticateService {
   async authenticateWithGoogle (authorizationCode: string) {
     try {
       const response = await api.post('/auth/google-login', { authorizationCode });
-      this.saveToken(response.data); // Salva o JWT gerado no backend
+      this.saveToken(response.data);
       return response;
     } catch (error) {
       handleApiError(error, 'Erro ao fazer login com Google');
     }
   }
 
-  async register (nome: string, email: string, senha: string) {
+    async register (nome: string, email: string, senha: string) {
     try {
-      return await api.post('/auth/register', {
+      const response = await api.post('/auth/register', {
         nome,
         email,
         senha
       });
+      this.saveToken(response.data);
+      return response;
     } catch (error) {
       handleApiError(error, 'Erro ao criar usuário');
     }
@@ -39,7 +48,7 @@ class AuthenticateService {
 
   async generateUserResetPassword (email: string) {
     try {
-      return await api.post('/usuarios/generate-reset-password', { email });
+      return await api.post('/auth/generate-reset-password', { email });
     } catch (error: any) {
       handleApiError(error, error.response?.data?.message);
     }
@@ -47,7 +56,7 @@ class AuthenticateService {
 
   async resetPassword (password: string, passwordRepeated: string, token: string) {
     try {
-      return await api.put(`/usuarios/reset-password/${token}`, {
+      return await api.put(`/auth/reset-password/${token}`, {
         password,
         passwordRepeated
       });
@@ -56,9 +65,41 @@ class AuthenticateService {
     }
   }
 
-  isAuthenticated (): boolean {
+  // Valida se o token existe e não está expirado
+  isTokenValid (): boolean {
     const token = localStorage.getItem('authToken');
-    return !!token;
+    if (!token) return false;
+
+    try {
+      const payload = this.decodeToken(token);
+      if (!payload) return false;
+
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp > currentTime;
+    } catch (error) {
+      console.error('Erro ao validar token:', error);
+      return false;
+    }
+  }
+
+  // Decodifica o token JWT (sem verificar assinatura)
+  private decodeToken (token: string): TokenPayload | null {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async redirecionaSeNaoAutenticado (router: Router): Promise<void> {
+    if (!this.isTokenValid()) {
+      await router.push('/auth/login');
+    }
   }
 
   logout (): void {

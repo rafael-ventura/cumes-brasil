@@ -1,19 +1,30 @@
 import { Participante } from "../../Domain/entities/Participante";
 import { ParticipanteTipo } from "../../Domain/enum/EParticipanteTipo";
+import ValidationBase from "./ValidationBase";
+import BadRequestError from "../errors/BadRequestError";
 
 const PARTICIPANTE_INVALIDO_MESSAGE_ERROR = "Valor de participante inválido";
 
 export default {
     valida(escalada: any): void {
         if (!escalada.participantes) {
-            throw new Error(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
+            throw new BadRequestError(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
         }
         if (!checaParticipantesTemTipo(escalada.participantes)) {
-            throw new Error(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
+            throw new BadRequestError(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
         }
         if (!validaParticipantes(escalada.participantes)) {
-            throw new Error(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
+            throw new BadRequestError(PARTICIPANTE_INVALIDO_MESSAGE_ERROR);
         }
+    },
+
+    idParam(id: unknown) {
+        return ValidationBase.idParam(id, 'id');
+    },
+
+    queryInt(raw: unknown, name: string, required = false) {
+        if (!required && (raw === undefined || raw === null)) return undefined;
+        return ValidationBase.numberParam(raw, name);
     }
 }
 

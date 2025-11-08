@@ -1,10 +1,11 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Imagem } from './Imagem';
 import { Usuario } from './Usuario';
 import { ViaColecao } from './ViaColecao';
+import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
 @Entity()
-export class Colecao extends BaseEntity {
+export class Colecao extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,9 +21,8 @@ export class Colecao extends BaseEntity {
   @ManyToOne(() => Usuario, usuario => usuario.colecoes)
   usuario: Usuario;
 
-  @ManyToOne(() => Imagem, imagem => imagem.colecoes)
-  @Column({ nullable: true })
-  imagem?: number;
+  @ManyToOne(() => Imagem, imagem => imagem.colecoes, { nullable: true })
+  imagem?: Imagem;
 
   @OneToMany(() => ViaColecao, viaColecao => viaColecao.colecao)
   viaColecoes: ViaColecao[];

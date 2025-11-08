@@ -9,7 +9,7 @@ on:
       - 'scripts/**'
       - 'appspec.yml'
     branches:
-      - main
+      - nem
 
 jobs:
   build-and-deploy-backend:

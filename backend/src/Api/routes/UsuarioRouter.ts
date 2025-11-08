@@ -8,22 +8,14 @@ import { ImagemService } from '../../Application/services/ImagemService';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { authenticateToken } from "../Middlewares/AuthenticateMiddleware";
 import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
 const usuarioController = new UsuarioController(usuarioService);
-
 const UsuarioRouter = Router();
 
-UsuarioRouter.get("/:id", usuarioController.getById);
-UsuarioRouter.get("/", usuarioController.getAll);
-UsuarioRouter.post("/", usuarioController.registrar);
-UsuarioRouter.put('/', authenticateToken, usuarioController.editarDados);
-UsuarioRouter.delete("/:id", usuarioController.delete);
-
-// perfil do usuario
-UsuarioRouter.get('/perfil/:id', usuarioController.getPerfil);
-
-UsuarioRouter.post("/generate-reset-password", usuarioController.generateResetUserPasswordToken);
-UsuarioRouter.put("/reset-password/:token", usuarioController.resetPassword);
+UsuarioRouter.get("/", asyncErrorHandler(usuarioController.getAll));
+UsuarioRouter.get("/:id", asyncErrorHandler(usuarioController.getById));
+UsuarioRouter.delete("/:id", asyncErrorHandler(usuarioController.delete));
 
 export default UsuarioRouter;

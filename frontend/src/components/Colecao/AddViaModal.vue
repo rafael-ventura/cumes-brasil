@@ -31,6 +31,7 @@ watch(
 const fetchViasNotInColecao = async (page: number, limit: number) => {
   try {
     const result = await ColecaoService.listarViasForaDaColecao(props.colecaoId, page, limit);
+    console.log(result)
     return {
       items: result.vias,
       total: result.total

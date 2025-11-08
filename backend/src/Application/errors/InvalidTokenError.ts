@@ -5,7 +5,7 @@ export default class InvalidTokenError extends Error {
     constructor(message: string) {
         super(message);
         this.name = "InvalidTokenError"
-        this.status = 404;
+        this.status = 401;
     }
 
 }

@@ -4,6 +4,8 @@ import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRe
 import { UsuarioService } from './UsuarioService';
 import { ViaService } from './ViaService';
 import { ObjectLiteral } from 'typeorm';
+import BadRequestError from '../errors/BadRequestError';
+import NotFoundError from '../errors/NotFoundError';
 
 export class EscaladaService {
 	private repository: EscaladaRepository;
@@ -22,9 +24,9 @@ export class EscaladaService {
 
 	async getById(id: number): Promise<Escalada | null> {
 		if (!id) {
-			throw new Error("ID da Fonte não fornecido");
+			throw new BadRequestError("ID da Escalada não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da Fonte inválido");
+			throw new BadRequestError("ID da Escalada inválido");
 		}
 		return await this.repository.getById(id);
 	}
@@ -41,7 +43,7 @@ export class EscaladaService {
 	async update(escalada: Escalada): Promise<void> {
 		const escaladaExiste = await this.repository.getById(escalada.id);
 		if (!escaladaExiste) {
-			throw new Error("Escalada não encontrada");
+			throw new NotFoundError("Escalada não encontrada");
 		}
 
 		escaladaExiste.data = escalada.data;
@@ -55,38 +57,38 @@ export class EscaladaService {
 	async delete(id: number): Promise<void> {
 		const escaladaExiste = await this.repository.getById(id);
 		if (!escaladaExiste) {
-			throw new Error("Escalada não encontrada");
+			throw new NotFoundError("Escalada não encontrada");
 		}
 		return this.repository.remove(escaladaExiste);
 	}
 
 	async getEscaladasDoUsuario(usuario_id: number): Promise<ObjectLiteral[]> {
 		if (!usuario_id) {
-			throw new Error("ID do usuário não fornecido");
+			throw new BadRequestError("ID do usuário não fornecido");
 		} else if (isNaN(usuario_id)) {
-			throw new Error("ID do usuário inválido");
+			throw new BadRequestError("ID do usuário inválido");
 		}
 		return this.repository.getByUsuarioId(usuario_id);
 	}
 
 	async getEscaladasDaVia(via_id: number, limit?: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
-			throw new Error("ID da via não fornecido");
+			throw new BadRequestError("ID da via não fornecido");
 		} else if (isNaN(via_id)) {
-			throw new Error("ID da via inválido");
+			throw new BadRequestError("ID da via inválido");
 		}
 		return this.repository.getByViaId(via_id, limit);
 	}
 
 	async getEscaladasDaViaDoUsuario(usuario_id: number, via_id: number, limit?: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
-			throw new Error("ID da via não fornecido");
+			throw new BadRequestError("ID da via não fornecido");
 		} else if (isNaN(via_id)) {
-			throw new Error("ID da via inválido");
+			throw new BadRequestError("ID da via inválido");
 		} else if (!usuario_id) {
-			throw new Error("ID do usuário não fornecido");
+			throw new BadRequestError("ID do usuário não fornecido");
 		} else if (isNaN(usuario_id)) {
-			throw new Error("ID do usuário inválido");
+			throw new BadRequestError("ID do usuário inválido");
 		}
 		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit);
 	}

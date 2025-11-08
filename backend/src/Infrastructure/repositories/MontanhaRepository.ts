@@ -1,15 +1,16 @@
-import { AppDataSource } from "../config/db";
 import { Montanha } from "../../Domain/entities/Montanha";
-import {ISearchRepository} from "../../Domain/interfaces/repositories/ISearchRepository";
-import {query} from "express";
+import BaseRepository from "./BaseRepository";
+import { ICrudRepository } from "../../Domain/interfaces/repositories/ICrudRepository";
 
-export class MontanhaRepository {
-    private repository = AppDataSource.getRepository(Montanha);
+export class MontanhaRepository extends BaseRepository<Montanha> implements ICrudRepository<Montanha> {
+    constructor() {
+        super(Montanha);
+    }
 
-    async getById(id: number): Promise<Montanha | null> {
+    async getById(id: number, relations?: string[]): Promise<Montanha | null> {
         return this.repository.createQueryBuilder("montanha")
             .leftJoinAndSelect("montanha.fonte", "fonte")
-            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
+            .leftJoinAndSelect("montanha.imagem", "imagem")
             .where("montanha.id = :id", { id })
             .getOne();
     }
@@ -17,7 +18,7 @@ export class MontanhaRepository {
     async getAll(): Promise<Montanha[]> {
         return this.repository.createQueryBuilder("montanha")
             .leftJoinAndSelect("montanha.fonte", "fonte")
-            .leftJoinAndSelect("montanha.imagem", "imagem") // Correção aqui
+            .leftJoinAndSelect("montanha.imagem", "imagem")
             .getMany();
     }
 }

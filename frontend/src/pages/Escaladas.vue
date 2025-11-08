@@ -34,9 +34,7 @@ const escaladas = ref<Escalada[]>([]);
 const searchEntityRef = ref();
 
 onMounted(async () => {
-  if (!AuthenticateService.isAuthenticated()) {
-    await router.push('/auth/login');
-  }
+  await AuthenticateService.redirecionaSeNaoAutenticado(router);
   /* try {
     const response = await EscaladaService.getEscaladasByUsuario();
     if (Array.isArray(response) && response.length > 0) {

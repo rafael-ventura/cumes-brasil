@@ -5,31 +5,66 @@ import { OAuth2Client } from "google-auth-library";
 import { ObjectLiteral } from "typeorm";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
-import { errorsMessage } from "../errors/constants";
+import {errorsMessage, successMessage} from "../errors/constants";
 import UserValidation from "../validations/UserValidation";
 import BadRequestError from "../errors/BadRequestError";
 import InvalidTokenError from "../errors/InvalidTokenError";
 import GoogleAuthenticateService from "./GoogleAuthenticateService";
 import {Imagem} from "../../Domain/entities/Imagem";
 import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
+import {Usuario} from "../../Domain/entities/Usuario";
+import {Colecao} from "../../Domain/entities/Colecao";
+import {Container} from "typedi";
+import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
+import TokenValidation from "../validations/TokenValidation";
+import {ResetUserPasswordTokenService} from "./ResetUserPasswordTokenService";
+import {MailService} from "./MailService";
 
 class AuthService {
-    private userRepository: UsuarioRepository;
+    private usuarioRepository: UsuarioRepository;
     private imagemRepository: ImagemRepository;
     private secretKey: string = "";
     private googleService: GoogleAuthenticateService;
+    private colecaoRepo = Container.get(ColecaoRepository);
+    private resetUserPasswordTokenService = Container.get(ResetUserPasswordTokenService);
+    private mailService = Container.get(MailService);
 
     constructor() {
-        this.userRepository = new UsuarioRepository();
+        this.usuarioRepository = new UsuarioRepository();
         this.imagemRepository = new ImagemRepository();
         this.googleService = new GoogleAuthenticateService();
         this.secretKey = process.env.SECRET_KEY || "";
     }
 
+    async register(nome: string, email: string, senha: string): Promise<any> {
+        UserValidation.registerValidation(nome, email, senha);
+
+        const existingUser = await this.usuarioRepository.findByEmail(email);
+        if (existingUser != null) {
+            throw new BadRequestError(errorsMessage.USER_ALREADY_EXISTS);
+        }
+        const senhaHash = await bcrypt.hash(senha, 10);
+        let imagem: Imagem | null = await this.imagemRepository.getById(3)
+        if (imagem != null) {
+            let newImagem = new Imagem();
+            newImagem.url = imagem.url;
+            newImagem.descricao = imagem.descricao;
+            newImagem.tipo_entidade = imagem.tipo_entidade;
+            newImagem = await this.imagemRepository.create(newImagem);
+            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, newImagem);
+            await this.createDefaultCollections(user);
+            
+            // Retorna token após registro bem-sucedido
+            const token = this.generateToken(user.id.toString());
+            return { token, usuarioId: user.id, auth: true };
+        }
+        throw new BadRequestError('Erro ao criar usuário: imagem padrão não encontrada');
+    }
+
     async login(email: string, password: string): Promise<any> {
         UserValidation.authenticateValidation(email, password);
 
-        const user: ObjectLiteral | null | undefined = await this.userRepository.findByEmail(email);
+        const user: ObjectLiteral | null | undefined = await this.usuarioRepository.findByEmail(email);
         if (!user) throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
 
         const isValidPassword = await bcrypt.compare(password, user.password_hash);
@@ -64,7 +99,7 @@ class AuthService {
             throw new InvalidTokenError(errorsMessage.GOOGLE_AUTHENTICATION_TOKEN_INVALID);
         }
 
-        let user = await this.userRepository.findByEmail(email);
+        let user = await this.usuarioRepository.findByEmail(email);
         if (!user) {
             const passwordHash = await bcrypt.hash(idToken, 10);
             // Use a foto do Google ou a imagem padrão (ID 3)
@@ -74,14 +109,15 @@ class AuthService {
                 newFotoUsuario.descricao = `foto de perfil do google do usuário ${name} (${usuarioId})`;
                 newFotoUsuario.tipo_entidade = "usuario"
                 newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
-                await this.userRepository.create(name, email, passwordHash, newFotoUsuario);
+                user = await this.usuarioRepository.createUsuario(name, email, passwordHash, newFotoUsuario);
+                await this.createDefaultCollections(user);
             } else {
-                const fotoPerfil = await this.imagemRepository.getById(3)// Default image perfil foto
+                const fotoPerfil = await this.imagemRepository.getById(3) // Default image perfil foto
                 if (fotoPerfil) {
-                    await this.userRepository.create(name, email, passwordHash, fotoPerfil);
+                    await this.usuarioRepository.createUsuario(name, email, passwordHash, fotoPerfil);
                 }
             }
-            user = await this.userRepository.findByEmail(email);
+            user = await this.usuarioRepository.findByEmail(email);
 
             if (!user) {
                 throw new BadRequestError(errorsMessage.USER_NOT_FOUND);
@@ -93,14 +129,76 @@ class AuthService {
         return { token, usuarioId: user.id, auth: true };
     }
 
+    private async createDefaultCollections(user: Usuario): Promise<void> {
+        const favoritasCollection = new Colecao();
+        favoritasCollection.nome = 'Favoritas';
+        favoritasCollection.descricao = 'Vias favoritas do usuário';
+        favoritasCollection.usuario = user;
+        await this.colecaoRepo.create(favoritasCollection);
+    }
+
     generateToken(usuarioId: string): string {
-        return jwt.sign({ usuarioId: usuarioId }, this.secretKey);
+        return jwt.sign({ usuarioId: usuarioId }, this.secretKey, { expiresIn: '7d' });
     }
 
     setSecretKey(secretKey: string) {
         this.secretKey = secretKey;
     }
-}
 
+    async createResetUserPassword(email: string) {
+        UserValidation.generateResetPasswordValidation(email);
+
+        const user = await this.usuarioRepository.findByEmail(email);
+        if (!user) {
+            throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
+        }
+
+        let mailSentResponse;
+        if (user.resetPasswordToken || user.resetPasswordUrl) {
+            try {
+                this.resetUserPasswordTokenService.isTokenValid(user.resetPasswordToken);
+                mailSentResponse = {
+                    message: errorsMessage.USER_RESET_PASSWORD_TOKEN_ALREADY_SENT
+                }
+
+            } catch (error: any) {
+                mailSentResponse = this.generateTokenAndSendEmail(user);
+            }
+
+        } else {
+            mailSentResponse = this.generateTokenAndSendEmail(user);
+        }
+
+        return mailSentResponse;
+    }
+
+    private async generateTokenAndSendEmail(user: Usuario): Promise<any> {
+        let newToken = this.resetUserPasswordTokenService.generate(user);
+        let mailSentResponse = this.mailService.sendResetUserPassword(user.nome, user.email, newToken.smallUrl);
+        user.resetPasswordToken = newToken.tokenEncoded;
+        user.resetPasswordUrl = newToken.smallUrl;
+        await this.usuarioRepository.update(user.id, user);
+        return mailSentResponse;
+    }
+
+    async updateUserPassword(pass: string, passRepeated: string, token: string) {
+        UserValidation.resetPasswordValidation(pass, passRepeated);
+        TokenValidation.resetUserPasswordToken(token);
+
+        const user = await this.usuarioRepository.findByResetPasswordUrl(token);
+        if (!user) {
+            throw new BadRequestError(errorsMessage.USER_NOT_FOUND);
+        }
+
+        this.resetUserPasswordTokenService.isTokenValid(user.resetPasswordToken);
+        user.password_hash = await bcrypt.hash(pass, 10);
+        user.resetPasswordToken = '';
+        user.resetPasswordUrl = '';
+
+        await this.usuarioRepository.resetPassword(user.id, user);
+
+        return {message: successMessage.USER_RESET_PASSWORD_UPDATED};
+    }
+}
 
 export default AuthService;
