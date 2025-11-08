@@ -58,6 +58,7 @@ interface Item {
   imagem?: { url: string };
   montanha?: { nome: string; bairro: string };
   added?: boolean;
+  lentgh?: any[];
   [key: string]: any;
 }
 
@@ -108,6 +109,7 @@ const itemInfo = (item: Item) => {
   if (props.itemType === 'via') {
     return item.montanha?.nome || '';
   } else if (props.itemType === 'colecao') {
+    console.log(item);
     return item.vias?.length ? `${item.vias.length} vias` : '0 vias';
   }
   return '';

@@ -49,7 +49,9 @@ app.*.map.json
 node_modules/
 package-lock.json
 
+# Environment files
 *.env
+backend/.env.development
 
 # Ignore banco de dados
 *.db

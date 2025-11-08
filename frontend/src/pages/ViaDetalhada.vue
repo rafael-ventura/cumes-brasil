@@ -7,7 +7,10 @@
     <BotoesAcao
       :via="via"
       :favoriteCollectionId="favoriteCollectionId"
-      @update:isFavorited="isFavorited = $event"
+      @atualizar:isFavorited="isFavorited = $event"
+      @acao:escalada="handleAcaoEscalada"
+      @acao:favorito="handleAcaoFavorito"
+      @acao:colecao="handleAcaoColecao"
     />
 
     <!-- Lista com Croqui e Detalhes -->
@@ -37,17 +40,49 @@ const via = ref();
 const favoriteCollectionId = ref();
 const isFavorited = ref(false);
 
+// Carregar apenas a via, sem dados que exigem autenticação
 onMounted(async () => {
   try {
     const id = Number(route.params.id);
     via.value = await ViaService.getViaById(id);
-    const collection = await ColecaoService.obterColecaoFavoritos();
-    favoriteCollectionId.value = collection ? collection.id : null;
+    console.log('Via carregada:', via.value);
   } catch (error) {
-    // nao faz nada
+    // não faz nada, deixa o usuário ver a página mesmo sem via
   }
 });
 
+// Função para carregar dados que necessitam de autenticação
+const carregarDadosAutenticados = async () => {
+  // Verifica se o usuário já está autenticado, se não, será redirecionado
+  if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
+    return false;
+  }
+
+  try {
+    // Carrega a coleção de favoritos apenas quando necessário
+    if (!favoriteCollectionId.value) {
+      const collection = await ColecaoService.obterColecaoFavoritos();
+      favoriteCollectionId.value = collection ? collection.id : null;
+    }
+    return true;
+  } catch (error) {
+    console.error('Erro ao carregar dados autenticados:', error);
+    return false;
+  }
+};
+
+// Manipuladores de eventos para as ações
+const handleAcaoEscalada = async () => {
+  await carregarDadosAutenticados();
+};
+
+const handleAcaoFavorito = async () => {
+  await carregarDadosAutenticados();
+};
+
+const handleAcaoColecao = async () => {
+  await carregarDadosAutenticados();
+};
 </script>
 
 <style scoped lang="scss">

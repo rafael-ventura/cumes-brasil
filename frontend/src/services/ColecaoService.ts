@@ -84,8 +84,7 @@ class ColecaoService {
           usuarioId
         }
       });
-
-      const vias = resposta.data.vias.map(formatVia);
+      const vias = resposta.data.items.map(formatVia);
       vias.forEach((via: any) => adjustImageUrls(via.imagem));
       return {
         vias,

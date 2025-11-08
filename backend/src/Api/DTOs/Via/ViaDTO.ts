@@ -15,12 +15,21 @@ export class ViaDTO {
     detalhes?: string;
     data?: string;
 
+    viaPrincipalId?: number;
+    fonteId?: number;
+
     imagem?: ImagemDTO;
     montanha?: MontanhaDTO;
     face?: any;
     fonte?: any;
     via_principal?: any;
     croquis?: any[];
+
+    // Relações como arrays de IDs
+    variantesIds?: number[];
+    viaCroquisIds?: number[];
+    viaColacoesIds?: number[];
+    escaladasIds?: number[];
 
     constructor(entity: Via) {
         this.id = entity.id;
@@ -35,6 +44,10 @@ export class ViaDTO {
         this.detalhes = entity.detalhes;
         this.data = entity.data;
 
+        // IDs das relações
+        this.viaPrincipalId = (entity.viaPrincipal as any)?.id ?? entity.viaPrincipal;
+        this.fonteId = (entity.fonte as any)?.id ?? entity.fonte;
+
         // Passar objetos COMPLETOS como o Repository carrega
         this.imagem = entity.imagem ? new ImagemDTO(entity.imagem as any) : undefined;
         this.montanha = entity.montanha ? new MontanhaDTO(entity.montanha as any) : undefined;
@@ -48,5 +61,11 @@ export class ViaDTO {
         } else {
             this.croquis = [];
         }
+
+        // Arrays de relações
+        this.variantesIds = entity.variantes?.map(v => v.id);
+        this.viaCroquisIds = entity.viaCroquis?.map(vc => vc.id);
+        this.viaColacoesIds = entity.viaColecoes?.map(vc => vc.id);
+        this.escaladasIds = entity.escaladas?.map(e => e.id);
     }
 }
