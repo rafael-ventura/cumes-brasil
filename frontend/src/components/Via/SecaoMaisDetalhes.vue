@@ -84,7 +84,7 @@ const formattedDataConquista = computed(() => {
 });
 
 // Define as cores disponíveis para os badges (quantidade controlada pelo SCSS)
-const badgeColors = ['cumes-01', 'cumes-02', 'primary', 'secondary'];
+const badgeColors = ['cumes-01', 'cumes-03', 'primary', 'secondary'];
 </script>
 
 <style scoped lang="scss">
@@ -152,8 +152,8 @@ const badgeColors = ['cumes-01', 'cumes-02', 'primary', 'secondary'];
 
 /* Badge para Altura da Montanha e Extensão da Via */
 .badge-highlight {
-  background-color: $cumes-02;
-  color: $offwhite;
+  background-color: $cumes-01;
+  color: black;
   font-size: 16px;
   font-weight: bold;
   padding: 10px 16px;
@@ -174,8 +174,8 @@ const badgeColors = ['cumes-01', 'cumes-02', 'primary', 'secondary'];
 }
 
 .badge-color-3 {
-  background-color: $cumes-02;
-  color: $offwhite;
+  background-color: $cumes-03;
+  color: black;
 }
 
 .badge-color-4 {

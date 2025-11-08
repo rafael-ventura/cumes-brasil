@@ -223,7 +223,7 @@ const onColecaoAdded = () => {
 }
 
 .registrar {
-  background-color: $cumes-02;
+  background-color: $cumes-01;
 }
 
 .favoritos {
