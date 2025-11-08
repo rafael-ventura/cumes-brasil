@@ -150,6 +150,7 @@ import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
 import EscaladaService from 'src/services/EscaladaService';
 import { Escalada } from 'src/models/Escalada';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
+import { CUMES_COLORS } from 'src/constants/colors';
 
 const router = useRouter();
 const user = ref<IUsuario | undefined>(undefined);
@@ -183,21 +184,21 @@ const items = computed(() => [
     label: 'Coleções',
     num: numColecoes.value,
     icon: 'style',
-    color: '#546119',
+    color: CUMES_COLORS.cumes02,
     to: '/colecoes'
   },
   {
     label: 'Favoritas',
     num: numFavoritas.value,
     icon: 'star',
-    color: '#F4E285',
+    color: CUMES_COLORS.cumes04,
     to: '/favoritas'
   },
   {
     label: 'Escaladas',
     num: numEscaladas.value,
     icon: 'hiking',
-    color: '#BC4B51',
+    color: CUMES_COLORS.cumes05,
     to: '/escaladas'
   }
 ]);
