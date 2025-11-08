@@ -57,8 +57,8 @@ const handleClick = () => {
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: $offwhite;
+  box-shadow: 0 4px 12px $box-shadow-soft;
   border: 2px solid transparent;
   height: 100%;
   display: flex;
@@ -66,7 +66,7 @@ const handleClick = () => {
 
   &:not(.loading):hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 24px $box-shadow-medium;
     border-color: $cumes-01;
 
     .card-icon {

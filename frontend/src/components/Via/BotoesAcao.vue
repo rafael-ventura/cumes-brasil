@@ -223,20 +223,23 @@ const onColecaoAdded = () => {
 }
 
 .registrar {
-  background-color: $cumes-01;
+  background-color: $action-escaladas;
+  color: $offwhite;
 }
 
 .favoritos {
-  background-color: $cumes-04;
+  background-color: $action-favoritos;
+  color: $background;
 }
 
 .colecao {
-  background-color: $cumes-05;
+  background-color: $action-colecoes;
+  color: $offwhite;
 }
 
 .collection-card {
   background-color: $background;
-  color: $primary;
+  color: $cumes-01;
   border-radius: 8px;
   width: 100%;
 }
@@ -244,14 +247,14 @@ const onColecaoAdded = () => {
 .collection-header {
   font-size: 20px;
   font-weight: bold;
-  color: $primary;
+  color: $cumes-01;
   background-color: $background;
   padding: 5px;
-  border-bottom: 1px solid $primary;
+  border-bottom: 1px solid $cumes-01;
 }
 
 .collection-content {
   padding: 16px;
-  color: $primary;
+  color: $cumes-01;
 }
 </style>

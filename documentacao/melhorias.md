@@ -170,19 +170,24 @@
 
 **Objetivo:** Aplicar consistentemente as cores e padrões do design system em todo o projeto.
 
-**Contexto:** Criado DESIGN_SYSTEM.md e constants/colors.ts, agora precisamos aplicar em todos os componentes.
+**Contexto:** DESIGN_SYSTEM.md criado com padrões unificados. Removido constants/colors.ts (usar SCSS diretamente).
 
 **Tarefas:**
 
-- Revisar e aplicar cores nos componentes de Via
-  - ViaCard, ViaCardSmall, CardInfoPrincipal
-  - SecaoGrau, SecaoMaisDetalhes, SecaoCroqui
-  - Badges e tags
+- ✅ **CONCLUÍDO** - Revisar e aplicar cores nos componentes de Via
+  - ✅ ViaCard padronizado com $cumes-01 sólido
+  - ✅ CardInfoPrincipal ajustado
+  - ✅ SecaoMaisDetalhes com cores consistentes
+  - ✅ Badges e tags padronizados
 
-- Revisar e aplicar cores nos componentes de Coleção
-  - ColecaoCard
-  - AddColecaoModal, AddViaModal
-  - Tela de coleção detalhada
+- ✅ **CONCLUÍDO** - Revisar e aplicar cores nos componentes de Coleção
+  - ✅ ColecaoCard mudou de $cumes-03 para $cumes-01
+  - ✅ Badges em cards com transparência suave
+
+- ✅ **CONCLUÍDO** - Padronizar Perfil Mobile e Desktop
+  - ✅ PerfilBar (mobile) mudou de $cumes-05 para $cumes-01
+  - ✅ Desktop mantém $cumes-01
+  - ✅ Consistência total entre mobile e desktop
 
 - Revisar e aplicar cores nos componentes de Escalada
   - EscaladaCard

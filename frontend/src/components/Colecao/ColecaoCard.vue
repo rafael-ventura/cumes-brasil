@@ -78,7 +78,7 @@ onMounted(() => {
   transition: transform 0.2s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  background-color: $cumes-03;
+  background-color: $cumes-01;
 
   &:hover {
     transform: translateY(-4px);
@@ -106,7 +106,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   color: black;
-  background: $cumes-03;
+  background: rgba(255, 255, 255, 0.2);
   border: 1.5px solid $background;
   font-size: 1.1em;
   padding: 8px 12px;
@@ -166,7 +166,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   color: black;
-  background: $cumes-03;
+  background: rgba(255, 255, 255, 0.2);
   border: 1.5px solid $background;
   font-size: 1.1em; /* Aumenta o tamanho do texto */
   padding: 8px 12px; /* Adiciona espaço interno */

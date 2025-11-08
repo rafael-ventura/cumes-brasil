@@ -234,8 +234,8 @@ function getPrimeIcon(materialIcon: string): string {
     right: 0;
     bottom: 0;
     background:
-      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+      radial-gradient(circle at 20% 30%, $overlay-light 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, $overlay-dark 0%, transparent 50%);
     pointer-events: none;
   }
 }
@@ -252,16 +252,16 @@ function getPrimeIcon(materialIcon: string): string {
   font-size: 72px;
   color: $cumes-04;
   margin-bottom: 24px;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 4px 8px $text-shadow-default);
 }
 
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
-  color: white;
+  color: $offwhite;
   margin: 0 0 16px 0;
   line-height: 1.2;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 8px $text-shadow-default;
   letter-spacing: -0.01em;
 
   .highlight {
@@ -272,13 +272,14 @@ function getPrimeIcon(materialIcon: string): string {
 
 .hero-subtitle {
   font-size: clamp(1rem, 2vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.95);
+  color: $offwhite;
   margin: 0;
   font-weight: 500;
   line-height: 1.5;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 4px $text-shadow-default;
   max-width: 600px;
   margin: 0 auto;
+  opacity: 0.95;
 }
 
 .stats-container {
@@ -298,15 +299,15 @@ function getPrimeIcon(materialIcon: string): string {
 }
 
 .stat-card {
-  background: white;
+  background: $offwhite;
   border-radius: 20px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 16px $box-shadow-light;
   transition: all 0.3s ease;
   overflow: hidden;
 
   &:hover {
     transform: translateY(-6px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 12px 24px $box-shadow-medium;
   }
 }
 
@@ -400,7 +401,7 @@ function getPrimeIcon(materialIcon: string): string {
   }
 
   .stat-card {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px $box-shadow-medium;
   }
 
   .stat-card-content {

@@ -183,21 +183,21 @@ const items = computed(() => [
     label: 'Coleções',
     num: numColecoes.value,
     icon: 'style',
-    color: '#546119', // $cumes-02
+    color: '#546119', // $action-colecoes
     to: '/colecoes'
   },
   {
     label: 'Favoritas',
     num: numFavoritas.value,
     icon: 'star',
-    color: '#F4E285', // $cumes-04
+    color: '#F4E285', // $action-favoritos
     to: '/favoritas'
   },
   {
     label: 'Escaladas',
     num: numEscaladas.value,
     icon: 'hiking',
-    color: '#F29340', // $cumes-03 (mudou de 05 para 03 - laranja ao invés de vermelho)
+    color: '#F29340', // $action-escaladas
     to: '/escaladas'
   }
 ]);

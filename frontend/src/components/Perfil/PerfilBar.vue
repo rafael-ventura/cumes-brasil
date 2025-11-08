@@ -107,7 +107,7 @@ const dataFormatada = computed(() => {
 
 .profile-card-container {
   padding: 16px;
-  background-color: $cumes-05;
+  background-color: $cumes-01;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin: auto;
 

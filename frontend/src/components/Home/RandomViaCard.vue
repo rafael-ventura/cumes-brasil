@@ -99,9 +99,9 @@ const navigateToVia = () => {
   max-width: 600px;
   margin: 0 auto 60px;
   padding: 24px;
-  background: white;
+  background: $offwhite;
   border-radius: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px $box-shadow-soft;
   transition: all 0.3s ease;
 }
 
@@ -141,7 +141,7 @@ const navigateToVia = () => {
 
   .error-icon {
     font-size: 48px;
-    color: #e74c3c;
+    color: $error-color;
     margin-bottom: 16px;
   }
 
@@ -157,7 +157,7 @@ const navigateToVia = () => {
     gap: 8px;
     padding: 12px 24px;
     background: $cumes-04;
-    color: white;
+    color: $offwhite;
     border: none;
     border-radius: 12px;
     font-size: 15px;
@@ -168,7 +168,7 @@ const navigateToVia = () => {
     &:hover {
       background: darken($cumes-04, 10%);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px $box-shadow-medium;
     }
 
     i {
@@ -237,25 +237,25 @@ const navigateToVia = () => {
 
       &.primary {
         background: $cumes-01;
-        color: white;
+        color: $offwhite;
 
         &:hover {
           background: darken($cumes-01, 10%);
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px $box-shadow-medium;
         }
       }
 
       &.secondary {
-        background: white;
+        background: $offwhite;
         color: $cumes-01;
         border: 2px solid $cumes-01;
 
         &:hover {
           background: $cumes-01;
-          color: white;
+          color: $offwhite;
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px $box-shadow-medium;
         }
 
         &:disabled {
@@ -290,10 +290,10 @@ const navigateToVia = () => {
       border-radius: 50%;
       border: none;
       background: linear-gradient(135deg, $cumes-04 0%, lighten($cumes-04, 10%) 100%);
-      color: white;
+      color: $offwhite;
       cursor: pointer;
       transition: all 0.4s ease;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 24px $box-shadow-medium;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -304,7 +304,7 @@ const navigateToVia = () => {
 
       &:hover {
         transform: scale(1.1) rotate(10deg);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 12px 32px $box-shadow-strong;
       }
 
       &:active {
