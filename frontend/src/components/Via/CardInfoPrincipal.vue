@@ -58,7 +58,7 @@ const showGrauInfo = ref(false);
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 6%;
+  margin-bottom: 24px;
   background-color: $primary;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -66,10 +66,9 @@ const showGrauInfo = ref(false);
 
 .card-imagem {
   width: 100%;
-  height: 180px;
+  height: 250px;
   border-radius: 10px 10px 0 0;
   object-fit: cover;
-  margin-bottom: -8%;
   position: relative;
 }
 
@@ -77,30 +76,53 @@ const showGrauInfo = ref(false);
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 2; /* Garante que está acima da imagem */
+  z-index: 2;
 }
 
 .via-nome {
-  font-size: 36px;
+  font-size: clamp(24px, 5vw, 36px);
   font-weight: bold;
   color: black;
   text-align: left;
   width: 100%;
-  margin-bottom: 5px;
-  padding-left: 1%;
+  margin: 16px 0 8px 0;
+  padding: 0 16px;
 }
 
 .via-localizacao {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: clamp(16px, 3vw, 20px);
+  font-weight: 500;
   color: black;
-  margin-top: 3%;
   text-align: left;
-  margin-bottom: 3%;
-  padding-left: 1%;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 0 16px;
 }
 
 .grau-container {
-  margin: 5px 0;
+  margin: 16px 0 24px 0;
+}
+
+// Desktop
+@media (min-width: 768px) {
+  .card-imagem {
+    height: 350px;
+  }
+  
+  .via-nome {
+    font-size: 42px;
+    margin: 24px 0 12px 0;
+    padding: 0 32px;
+  }
+  
+  .via-localizacao {
+    font-size: 22px;
+    margin-bottom: 20px;
+    padding: 0 32px;
+  }
+  
+  .grau-container {
+    margin: 20px 0 32px 0;
+  }
 }
 </style>

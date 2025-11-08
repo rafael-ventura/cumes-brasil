@@ -91,6 +91,15 @@ const handleAcaoColecao = async () => {
 .q-list {
   border-radius: 8px;
   border: 1px solid $primary;
-  padding: 1%;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+// Desktop
+@media (min-width: 768px) {
+  .q-list {
+    padding: 24px;
+    margin-top: 24px;
+  }
 }
 </style>
