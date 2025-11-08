@@ -93,6 +93,15 @@ class UsuarioService {
     }
   }
 
+  async excluirFotoPerfil () {
+    try {
+      const response = await api.delete('/perfil/foto');
+      return response.data as IUsuario;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao excluir foto de perfil');
+    }
+  }
+
   logout (): void {
     localStorage.removeItem('authToken');
   }

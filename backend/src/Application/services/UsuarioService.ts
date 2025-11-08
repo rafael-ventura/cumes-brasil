@@ -134,6 +134,54 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         await this.repository.updateFotoPerfil(usuario.id, novaImagemUpdate.id);
     }
 
+    async excluirFotoPerfil(usuarioId: number) {
+        const usuario: Usuario | null = await this.repository.findOne({ where: { id: usuarioId } });
+
+        if (!usuario) {
+            throw new BadRequestError('Usuário não encontrado.');
+        }
+
+        // Buscar imagem atual do usuário
+        const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
+
+        // Remover a imagem antiga do S3 ou do sistema de arquivos, se existir e não for a default
+        if (imagemAtual && imagemAtual.id !== 3) {
+            if (process.env.CLOUDFRONT_URL) {
+                console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`);
+                const fileName = imagemAtual.url.split('/').pop();
+                if (fileName) {
+                    await this.s3Service.deleteFileS3(fileName);
+                }
+            }
+            
+            // Excluir a imagem antiga do banco
+            await this.imagemService.delete(imagemAtual.id);
+        }
+
+        // Buscar a imagem default (ID 3)
+        const imagemDefault = await this.imagemService.getById(3);
+        
+        if (!imagemDefault) {
+            throw new BadRequestError('Imagem padrão não encontrada no sistema.');
+        }
+
+        // Criar uma nova instância da imagem default para o usuário
+        let novaImagem = new Imagem();
+        novaImagem.url = imagemDefault.url;
+        novaImagem.descricao = imagemDefault.descricao;
+        novaImagem.tipo_entidade = 'usuario';
+
+        const imagemCriada = await this.imagemService.create(novaImagem);
+
+        if (!imagemCriada) {
+            throw new BadRequestError('Erro ao criar imagem padrão');
+        }
+
+        // Atualizar o usuário com a foto default
+        usuario.foto_perfil = imagemCriada;
+        await this.repository.updateFotoPerfil(usuario.id, imagemCriada.id);
+    }
+
     private async removerFotoPerfil(usuario: Usuario) {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
 

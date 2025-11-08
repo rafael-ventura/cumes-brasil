@@ -18,9 +18,10 @@ const usuarioController = new UsuarioController(usuarioService)
 const PerfilRouter = Router();
 
 // perfil do Usuario
-PerfilRouter.get('/', asyncErrorHandler(usuarioController.getPerfil));
-PerfilRouter.put('/', authenticateToken, MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarDados));
-PerfilRouter.put('/foto', authenticateToken, MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarFotoPerfil));
+PerfilRouter.get('/', authenticateToken, asyncErrorHandler(usuarioController.getPerfil));
+PerfilRouter.put('/', MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarDados));
+PerfilRouter.put('/foto', MulterMiddleware.upload, asyncErrorHandler(usuarioController.editarFotoPerfil));
+PerfilRouter.delete('/foto', asyncErrorHandler(usuarioController.excluirFotoPerfil));
 
 
 export default PerfilRouter;

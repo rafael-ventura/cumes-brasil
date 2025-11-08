@@ -147,10 +147,26 @@ const onSubmit = async () => {
 
 .my-card {
   min-width: 280px;
+  max-width: 600px;
+  width: 90vw;
   border-radius: 10px;
   margin: auto;
   background-color: $background;
   color: $cumes-03;
+  
+  @media (min-width: 768px) {
+    width: 70vw;
+  }
+  
+  @media (min-width: 1024px) {
+    width: 50vw;
+    max-width: 700px;
+  }
+  
+  @media (min-width: 1440px) {
+    width: 40vw;
+    max-width: 800px;
+  }
 }
 
 .q-mt-md {

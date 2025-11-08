@@ -68,4 +68,11 @@ export class UsuarioController {
 
         res.status(200).json({message: 'Perfil atualizado com sucesso.'});
     };
+
+    excluirFotoPerfil = async (req: Request, res: Response) => {
+        const usuarioId = parseInt(req.user.usuarioId);
+        await this.service.excluirFotoPerfil(usuarioId);
+
+        res.status(200).json({message: 'Foto de perfil excluída com sucesso.'});
+    };
 }
