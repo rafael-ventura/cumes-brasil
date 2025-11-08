@@ -107,3 +107,95 @@
 - ~~**Ajustar largura maxima das telas em desktop (evitar 100% width)**~~
 
 ---
+
+### Epic: Vias Clássicas do CERJ 🏔️
+
+**Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
+
+**Tarefas:**
+
+- Adicionar campo `is_classica_cerj` na entidade Via (backend)
+  - Boolean/flag no banco de dados
+  - Adicionar no DTO de Via
+  - Atualizar validações e controllers
+
+- Criar badge/tag visual para vias clássicas
+  - Design do badge (ícone + texto)
+  - Adicionar nos cards de via
+  - Adicionar na tela de via detalhada
+  - Usar cor de destaque da paleta ($cumes-04 ou $cumes-05)
+
+- Adicionar filtro de vias clássicas na busca
+  - Checkbox/toggle no filtro
+  - Integrar com SearchService
+  - Atualizar query no ViaRepository
+
+- Criar card personalizado na Home
+  - Card especial "Clássicas do CERJ"
+  - Listar X vias clássicas aleatórias
+  - Link para busca filtrada por clássicas
+
+---
+
+### Epic: Paginação de Vias 📄
+
+**Objetivo:** Melhorar performance e experiência de navegação com paginação adequada.
+
+**Tarefas:**
+
+- Revisar paginação atual
+  - Verificar implementação no ViaRepository
+  - Validar retorno de totalPages e total items
+  - Garantir consistência nos endpoints
+
+- Melhorar componente de paginação no frontend
+  - Adicionar controles de navegação (Anterior/Próximo)
+  - Mostrar informação de página atual (ex: "Página 1 de 10")
+  - Adicionar opção de "Ir para página"
+  - Melhorar UX mobile e desktop
+
+- Adicionar controle de itens por página
+  - Dropdown para selecionar (10, 25, 50, 100)
+  - Persistir preferência no localStorage
+  - Atualizar query automaticamente
+
+- Otimizar performance
+  - Implementar lazy loading de imagens
+  - Adicionar skeleton loading durante carregamento
+  - Cache de páginas já visitadas (opcional)
+
+---
+
+### Epic: Padronização do Design System 🎨
+
+**Objetivo:** Aplicar consistentemente as cores e padrões do design system em todo o projeto.
+
+**Contexto:** Criado DESIGN_SYSTEM.md e constants/colors.ts, agora precisamos aplicar em todos os componentes.
+
+**Tarefas:**
+
+- Revisar e aplicar cores nos componentes de Via
+  - ViaCard, ViaCardSmall, CardInfoPrincipal
+  - SecaoGrau, SecaoMaisDetalhes, SecaoCroqui
+  - Badges e tags
+
+- Revisar e aplicar cores nos componentes de Coleção
+  - ColecaoCard
+  - AddColecaoModal, AddViaModal
+  - Tela de coleção detalhada
+
+- Revisar e aplicar cores nos componentes de Escalada
+  - EscaladaCard
+  - ModalCriarEscalada
+
+- Revisar e aplicar cores em modais e overlays
+  - Garantir consistência de headers
+  - Padronizar botões de ação
+  - Uniformizar fundos e textos
+
+- Criar classes utilitárias no app.scss
+  - .text-primary, .text-secondary, etc.
+  - .bg-primary, .bg-secondary, etc.
+  - .badge-primary, .badge-success, etc.
+
+---
