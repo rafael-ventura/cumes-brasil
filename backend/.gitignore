@@ -62,3 +62,8 @@ backend/.env.development
 
 dist/
 
+# Assets e uploads de usuários (exceto logo e imagens estáticas)
+assets/foto_perfil-*
+assets/croquis/
+uploads/
+

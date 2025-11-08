@@ -1,18 +1,18 @@
 import { Montanha } from "../../Domain/entities/Montanha";
 import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
+import BaseService from "./BaseService";
 
-export class MontanhaService {
-    private montanhaRepository: MontanhaRepository;
+export class MontanhaService extends BaseService<Montanha, MontanhaRepository> {
 
     constructor(montanhaRepository: MontanhaRepository) {
-        this.montanhaRepository = montanhaRepository;
+        super(montanhaRepository);
     }
 
     async getMontanhaById(id: number): Promise<Montanha | null> {
-        return this.montanhaRepository.getById(id);
+        return this.repository.getById(id);
     }
 
     async getMontanhas(): Promise<Montanha[]> {
-        return this.montanhaRepository.getAll();
+        return this.repository.getAll();
     }
 }

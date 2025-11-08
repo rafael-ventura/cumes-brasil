@@ -3,7 +3,7 @@ import AuthController from '../Controllers/AuthenticateController';
 import { UsuarioController } from '../Controllers/UsuarioController';
 import { UsuarioService } from '../../Application/services/UsuarioService';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
-import { errorRequestMiddleware } from '../Middlewares/ErrorRequestMiddleware';
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { ImagemService } from '../../Application/services/ImagemService';
 import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
@@ -16,16 +16,16 @@ const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemSer
 const usuarioController = new UsuarioController(usuarioService);
 
 // Rota de login
-AuthenticateRouter.post("/login", authController.login);
-AuthenticateRouter.post("/google-login", authController.googleLogin);
+AuthenticateRouter.post("/login", asyncErrorHandler(authController.login));
+AuthenticateRouter.post("/google-login", asyncErrorHandler(authController.googleLogin));
 
 // Rota de registro
-AuthenticateRouter.post("/register", authController.registrar);
+AuthenticateRouter.post("/register", asyncErrorHandler(authController.registrar));
 
-AuthenticateRouter.post("/generate-reset-password", authController.generateResetUserPasswordToken);
+AuthenticateRouter.post("/generate-reset-password", asyncErrorHandler(authController.generateResetUserPasswordToken));
 
-AuthenticateRouter.put("/reset-password/:token", authController.resetPassword);
+AuthenticateRouter.put("/reset-password/:token", asyncErrorHandler(authController.resetPassword));
 
-AuthenticateRouter.use(errorRequestMiddleware);
+// Tratamento de erros será feito globalmente no server
 
 export default AuthenticateRouter;

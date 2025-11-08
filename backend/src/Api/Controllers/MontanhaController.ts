@@ -1,6 +1,8 @@
 import {MontanhaService} from "../../Application/services/MontanhaService";
 import {Request, Response} from "express";
 import {MontanhaDTO} from "../DTOs/Montanha/MontanhaDTO";
+import { NotFoundError } from '../../Application/errors';
+import MontanhaValidation from '../../Application/validations/MontanhaValidation';
 
 export class MontanhaController {
     private service: MontanhaService;
@@ -17,16 +19,12 @@ export class MontanhaController {
      * @returns {Error} 500 - Erro desconhecido
      */
     getMontanhaById = async (req: Request, res: Response) => {
-        try {
-            const id = parseInt(req.params.id);
-            const result = await this.service.getMontanhaById(id);
-            if (!result) {
-                return res.status(404).json({ message: "Montanha não encontrada." });
-            }
-            return res.json(new MontanhaDTO(result));
-        } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : "Erro desconhecido" });
+        const id = MontanhaValidation.idParam(req.params.id);
+        const result = await this.service.getMontanhaById(id);
+        if (!result) {
+            throw new NotFoundError("Montanha não encontrada.");
         }
+        return res.json(new MontanhaDTO(result));
     };
 
     /**
@@ -38,14 +36,10 @@ export class MontanhaController {
      * @returns {Error} 500 - Erro desconhecido
      */
     getAllMontanha = async (_: Request, res: Response) => {
-        try {
-            const montanhas = await this.service.getMontanhas();
-            if (!montanhas || montanhas.length === 0) {
-                return res.status(404).json({ message: "Nenhuma montanha encontrada" });
-            }
-            return res.json(montanhas.map(m => new MontanhaDTO(m)));
-        } catch (error) {
-            res.status(500).json({ error: error instanceof Error ? error.message : "Erro desconhecido" });
+        const montanhas = await this.service.getMontanhas();
+        if (!montanhas || montanhas.length === 0) {
+            throw new NotFoundError("Nenhuma montanha encontrada");
         }
+        return res.json(montanhas.map(m => new MontanhaDTO(m)));
     };
 }

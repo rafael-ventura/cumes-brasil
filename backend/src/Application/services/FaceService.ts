@@ -2,9 +2,11 @@ import { FaceRepository } from "../../Infrastructure/repositories/FaceRepository
 import { Face } from "../../Domain/entities/Face";
 import { MontanhaService } from "./MontanhaService";
 import { FonteService } from "./FonteService";
+import BadRequestError from "../errors/BadRequestError";
+import NotFoundError from "../errors/NotFoundError";
+import BaseService from "./BaseService";
 
-export class FaceService {
-    private faceRepository: FaceRepository;
+export class FaceService extends BaseService<Face, FaceRepository> {
     private fonteService: FonteService;
     private montanhaService: MontanhaService;
 
@@ -13,63 +15,57 @@ export class FaceService {
         fonteService: FonteService,
         montanhaService: MontanhaService
     ) {
-        this.faceRepository = faceRepository;
+        super(faceRepository);
         this.fonteService = fonteService;
         this.montanhaService = montanhaService;
     }
 
     async getFaceById (id: number): Promise<Face | null> {
         if (!id) {
-            throw new Error("ID da Face não fornecido");
+            throw new BadRequestError("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da Face inválido");
+            throw new BadRequestError("ID da Face inválido");
         }
-        return this.faceRepository.getById(id);
+        return this.repository.getById(id);
     }
 
     async getFaces(): Promise<Face[] | null> {
-        return this.faceRepository.getAll();
+        return this.repository.getAll();
     }
 
     async createFace(face: Face): Promise<void> {
         if (!face) {
-            throw new Error("Face inválida");
+            throw new BadRequestError("Face inválida");
         }
         const fonteExiste = await this.fonteService.getFonteById(face.fonte);
         if (!fonteExiste) {
-            throw new Error("É necessário existir uma Fonte antes da criação da via");
+            throw new BadRequestError("É necessário existir uma Fonte antes da criação da via");
         }
         const montanhaExiste = await this.montanhaService.getMontanhaById(face.montanha);
         if (!montanhaExiste) {
-            throw new Error(
+            throw new BadRequestError(
               "É necessário existir uma montanha antes da criação da via");
         }
-        return this.faceRepository.create(face);
+        await this.repository.create(face);
     }
 
     async updateFace (id: number, face: Partial<Face>): Promise<void> {
         if (!id) {
-            throw new Error("ID da Face não fornecido");
+            throw new BadRequestError("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da Face inválido");
+            throw new BadRequestError("ID da Face inválido");
         }
-        const existingFace = await this.getFaceById(id);
-        if (!existingFace) {
-            throw new Error("Face não encontrada");
-        }
-        return this.faceRepository.update(id, face);
+        this.ensureExists(await this.getFaceById(id), "Face não encontrada");
+        return this.repository.update(id, face);
     }
 
     async deleteFace (id: number): Promise<void> {
         if (!id) {
-            throw new Error("ID da Face não fornecido");
+            throw new BadRequestError("ID da Face não fornecido");
         } else if (isNaN(id)) {
-            throw new Error("ID da Face inválido");
+            throw new BadRequestError("ID da Face inválido");
         }
-        const existingFace = await this.getFaceById(id);
-        if (!existingFace) {
-            throw new Error("Face não encontrada");
-        }
-        return this.faceRepository.delete(id);
+        this.ensureExists(await this.getFaceById(id), "Face não encontrada");
+        return this.repository.delete(id);
     }
 }

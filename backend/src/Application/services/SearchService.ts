@@ -9,17 +9,11 @@ export class SearchService<T> {
     }
 
     async search(filters: any): Promise<ISearchResult<T>> {
-        try {
-            // Chama o método de pesquisa do repositório
-            const { items, totalItems, totalPages }: any = await this.repository.search(filters);
-            return {
-                items,
-                totalPages,
-                totalItems
-            };
-        } catch (error) {
-            console.error("Error in search method:", error);
-            throw error;
-        }
+        const { items, totalItems, totalPages }: any = await this.repository.search(filters);
+        return {
+            items,
+            totalPages,
+            totalItems
+        };
     }
 }

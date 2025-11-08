@@ -51,7 +51,7 @@ class AuthService {
             newImagem.descricao = imagem.descricao;
             newImagem.tipo_entidade = imagem.tipo_entidade;
             newImagem = await this.imagemRepository.create(newImagem);
-            const user = await this.usuarioRepository.create(nome, email, senhaHash, newImagem);
+            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, newImagem);
             await this.createDefaultCollections(user);
             
             // Retorna token após registro bem-sucedido
@@ -109,12 +109,12 @@ class AuthService {
                 newFotoUsuario.descricao = `foto de perfil do google do usuário ${name} (${usuarioId})`;
                 newFotoUsuario.tipo_entidade = "usuario"
                 newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
-                user = await this.usuarioRepository.create(name, email, passwordHash, newFotoUsuario);
+                user = await this.usuarioRepository.createUsuario(name, email, passwordHash, newFotoUsuario);
                 await this.createDefaultCollections(user);
             } else {
                 const fotoPerfil = await this.imagemRepository.getById(3) // Default image perfil foto
                 if (fotoPerfil) {
-                    await this.usuarioRepository.create(name, email, passwordHash, fotoPerfil);
+                    await this.usuarioRepository.createUsuario(name, email, passwordHash, fotoPerfil);
                 }
             }
             user = await this.usuarioRepository.findByEmail(email);

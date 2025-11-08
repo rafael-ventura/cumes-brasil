@@ -24,8 +24,12 @@ export function errorRequestMiddleware(err: CustomError, req: Request, res: Resp
   let statusCode = 500;
   let message = 'Erro interno do servidor';
 
+  // Preferir propriedades padronizadas quando disponíveis
   if (err.statusCode) {
     statusCode = err.statusCode;
+    message = err.message;
+  } else if ((err as any).status) { // compatibilidade com antigos Error.status
+    statusCode = (err as any).status;
     message = err.message;
   } else if (err.name === 'ValidationError') {
     statusCode = 400;
@@ -42,6 +46,32 @@ export function errorRequestMiddleware(err: CustomError, req: Request, res: Resp
   } else if (err.name === 'MongoError' && (err as any).code === 11000) {
     statusCode = 409;
     message = 'Dados duplicados';
+  } else if (err.message) {
+    // Heurísticas temporárias de mapeamento por mensagem para preservar comportamento atual
+    const normalized = err.message.toLowerCase();
+    const isNotFound =
+      normalized.includes('não encontrada') ||
+      normalized.includes('nenhuma via encontrada') ||
+      normalized.includes('nenhuma escalada encontrada') ||
+      normalized.includes('nenhuma escalada encontrada para esta via') ||
+      normalized.includes('nenhuma escalada encontrada para este usuário') ||
+      normalized.includes('usuario não encontrado') ||
+      normalized.includes('usuário não encontrado');
+
+    const isBadRequest =
+      normalized.includes('inválido') ||
+      normalized.includes('não fornecido') ||
+      normalized.includes('parâmetros inválidos') ||
+      normalized.includes('campos obrigatórios') ||
+      normalized.includes('filtro inválido');
+
+    if (isNotFound) {
+      statusCode = 404;
+      message = err.message;
+    } else if (isBadRequest) {
+      statusCode = 400;
+      message = err.message;
+    }
   }
 
   // Em desenvolvimento, incluir stack trace

@@ -2,6 +2,8 @@ import {UsuarioService} from '../../Application/services/UsuarioService';
 import {Request, Response} from 'express';
 import {Usuario} from '../../Domain/entities/Usuario';
 import {UsuarioDTO} from "../DTOs/Usuario/UsuarioDTO";
+import { NotFoundError } from '../../Application/errors';
+import UsuarioValidation from '../../Application/validations/UsuarioValidation';
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -11,97 +13,66 @@ export class UsuarioController {
     }
 
     getById = async (req: Request, res: Response) => {
-        try {
-            const id = parseInt(req.params.id);
-            const usuario = await this.service.getUsuarioById(id);
-            if (!usuario) {
-                return res.status(404).json({message: "Usuário não encontrado."});
-            }
-            return res.json(new UsuarioDTO(usuario));
-        } catch (error) {
-            res.status(500).json({error: error instanceof Error ? error.message : "Erro desconhecido"});
+        const id = UsuarioValidation.idParam(req.params.id);
+        const usuario = await this.service.getUsuarioById(id);
+        if (!usuario) {
+            throw new NotFoundError("Usuário não encontrado.");
         }
+        return res.json(new UsuarioDTO(usuario));
     };
 
     getAll = async (_: Request, res: Response) => {
-        try {
-            const usuarios = await this.service.getUsuarios();
-            if (!usuarios || usuarios.length === 0) {
-                return res.status(404).json({message: "Nenhum usuário encontrado"});
-            }
-            return res.json(usuarios.map(u => new UsuarioDTO(u)));
-        } catch (error) {
-            res.status(500).json({error: error instanceof Error ? error.message : "Erro desconhecido"});
+        const usuarios = await this.service.getUsuarios();
+        if (!usuarios || usuarios.length === 0) {
+            throw new NotFoundError("Nenhum usuário encontrado");
         }
+        return res.json(usuarios.map(u => new UsuarioDTO(u)));
     };
 
     update = async (req: Request, res: Response) => {
-        try {
-            const usuario: Usuario = req.body;
-            await this.service.updateUsuario(usuario);
-            res.status(200).json({message: 'Usuario atualizado com sucesso.'});
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Usuario não encontrado') {
-                return res.status(404).json({message: error.message});
-            }
-            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
-        }
+        const usuario: Usuario = req.body;
+        UsuarioValidation.updateBody(usuario);
+        await this.service.updateUsuario(usuario);
+        res.status(200).json({message: 'Usuario atualizado com sucesso.'});
     };
 
     editarFotoPerfil = async (req: Request, res: Response) => {
-        try {
-            const usuarioId = req.user.usuarioId;
-            const file = req.file;
-            //TODO: Adicionar logger para mostrar processamento de edição de foto de perfil
-            await this.service.atualizarFotoPerfil(usuarioId, file);
+        const usuarioId = req.user.usuarioId;
+        const file = req.file;
+        UsuarioValidation.editarFoto(file);
+        await this.service.atualizarFotoPerfil(usuarioId, file);
 
-            res.status(200).json({message: 'Usuário atualizado com sucesso.'});
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Usuário não encontrado') {
-                return res.status(404).json({message: error.message});
-            }
-            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
-        }
+        res.status(200).json({message: 'Usuário atualizado com sucesso.'});
     };
 
     delete = async (req: Request, res: Response) => {
-        try {
-            const id = parseInt(req.params.id);
-            await this.service.deleteUsuario(id);
-            res.status(200).json({message: 'Usuario deletado com sucesso.'});
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Usuario não encontrado') {
-                return res.status(400).json({error: error.message});
-            }
-            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
-        }
+        const id = UsuarioValidation.idParam(req.params.id);
+        await this.service.deleteUsuario(id);
+        res.status(200).json({message: 'Usuario deletado com sucesso.'});
     };
 
     getPerfil = async (req: Request, res: Response) => {
-        try {
-            const usuarioId = parseInt(req.user.usuarioId);
-            const resultado = await this.service.getPerfil(usuarioId);
-            if (!resultado) {
-                return res.status(404).json({message: 'Perfil não encontrado.'});
-            }
-            res.json(resultado);
-        } catch (error) {
-            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
+        const usuarioId = parseInt(req.user.usuarioId);
+        const resultado = await this.service.getPerfil(usuarioId);
+        if (!resultado) {
+            throw new NotFoundError('Perfil não encontrado.');
         }
+        res.json(resultado);
     };
 
     editarDados = async (req: Request, res: Response) => {
-        try {
-            const usuarioId = parseInt(req.user.usuarioId);
-            const usuarioDados: any = req.body;
-            await this.service.editarDados(usuarioId, usuarioDados);
+        const usuarioId = parseInt(req.user.usuarioId);
+        const usuarioDados: any = req.body;
+        UsuarioValidation.editarDados(usuarioDados);
+        await this.service.editarDados(usuarioId, usuarioDados);
 
-            res.status(200).json({message: 'Perfil atualizado com sucesso.'});
-        } catch (error) {
-            if (error instanceof Error && error.message === 'Perfil não encontrado') {
-                return res.status(404).json({message: error.message});
-            }
-            res.status(500).json({error: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido'});
-        }
+        res.status(200).json({message: 'Perfil atualizado com sucesso.'});
+    };
+
+    excluirFotoPerfil = async (req: Request, res: Response) => {
+        const usuarioId = parseInt(req.user.usuarioId);
+        await this.service.excluirFotoPerfil(usuarioId);
+
+        res.status(200).json({message: 'Foto de perfil excluída com sucesso.'});
     };
 }

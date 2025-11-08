@@ -1,51 +1,30 @@
 import {Imagem} from "../../Domain/entities/Imagem";
-import {AppDataSource} from "../config/db";
+import BaseRepository from "./BaseRepository";
 
-export class ImagemRepository {
-  private repository = AppDataSource.getRepository(Imagem);
-
-  async getById (id: number): Promise<Imagem | null> {
-    return this.repository.createQueryBuilder("imagem")
-        .leftJoinAndSelect("imagem.fonte", "fonte")
-        .where("imagem.id = :id", { id })
-        .getOne();
+export class ImagemRepository extends BaseRepository<Imagem> {
+  constructor() {
+    super(Imagem);
   }
 
-  async getAll (): Promise<Imagem[]> {
-    return this.repository.createQueryBuilder("imagem")
-        .leftJoinAndSelect("imagem.fonte", "fonte")
-        .getMany();
-  }
-
-  async create(imagem: Partial<Imagem>): Promise<Imagem> {
-    return await this.repository.save(imagem); // Retorna a entidade salva com o ID e outros campos preenchidos
-  }
-
-  async update (id: number, imagemData: Partial<Imagem>): Promise<void> {
-    await this.repository.update(id, imagemData);
-  }
-
-  async delete (id: number): Promise<void> {
-    await this.repository.delete(id);
-  }
+  // Métodos específicos abaixo
 
   async getByColecaoId (colecaoId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { colecoes: { id: colecaoId } } });
+    return this.repository.findOne({ where: { colecoes: { id: colecaoId } } as any });
   }
 
   async getByUsuarioId (usuarioId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { usuarios: { id: usuarioId } } });
+    return this.repository.findOne({ where: { usuarios: { id: usuarioId } } as any });
   }
 
   async getByMontanhaId (montanhaId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { montanhas: { id: montanhaId } } });
+    return this.repository.findOne({ where: { montanhas: { id: montanhaId } } as any });
   }
 
   async getByViaId (viaId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { vias: { id: viaId } } });
+    return this.repository.findOne({ where: { vias: { id: viaId } } as any });
   }
 
   async getByCroquiId (croquiId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { croquis: { id: croquiId } } });
+    return this.repository.findOne({ where: { croquis: { id: croquiId } } as any });
   }
 }

@@ -1,79 +1,75 @@
 import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
+import BadRequestError from '../errors/BadRequestError';
+import NotFoundError from '../errors/NotFoundError';
+import BaseService from './BaseService';
 
-export class ImagemService {
-  private imagemRepository: ImagemRepository;
+export class ImagemService extends BaseService<Imagem, ImagemRepository> {
 
   constructor (imagemRepository: ImagemRepository) {
-    this.imagemRepository = imagemRepository;
+    super(imagemRepository);
   }
 
   async getById (id: number): Promise<Imagem | null> {
     let imagem;
     if (!id) {
-      throw new Error("ID da Imagem não fornecido");
+      throw new BadRequestError("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da Imagem inválido");
+      throw new BadRequestError("ID da Imagem inválido");
     }
-    imagem = await this.imagemRepository.getById(id);
+    imagem = await this.repository.getById(id);
     return imagem;
   }
 
   async getAll (): Promise<Imagem[]> {
-    return this.imagemRepository.getAll();
+    return this.repository.getAll();
   }
 
   async create (imagem: Imagem): Promise<Imagem> {
     if (!imagem) {
-      throw new Error("Imagem inválida");
+      throw new BadRequestError("Imagem inválida");
     }
-    return this.imagemRepository.create(imagem);
+    return this.repository.create(imagem);
   }
 
   async update (id: number, imagemData: Partial<Imagem>): Promise<Imagem | null> {
     if (!id) {
-      throw new Error("ID da Imagem não fornecido");
+      throw new BadRequestError("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da Imagem inválido");
+      throw new BadRequestError("ID da Imagem inválido");
     }
-    const existingImagem = await this.getById(id);
-    if (!existingImagem) {
-      throw new Error("Imagem não encontrada");
-    }
-    await this.imagemRepository.update(id, imagemData);
+    const existingImagem = this.ensureExists(await this.getById(id), "Imagem não encontrada");
+    await this.repository.update(id, imagemData);
     return this.getById(id);
   }
 
   async delete (id: number): Promise<void> {
     if (!id) {
-      throw new Error("ID da Imagem não fornecido");
+      throw new BadRequestError("ID da Imagem não fornecido");
     } else if (isNaN(id)) {
-      throw new Error("ID da Imagem inválido");
+      throw new BadRequestError("ID da Imagem inválido");
     }
-    const existingImagem = await this.getById(id);
-    if (!existingImagem) {
-      throw new Error("Imagem não encontrada");
-    }
-    await this.imagemRepository.delete(id);
+    const existingImagem = this.ensureExists(await this.getById(id), "Imagem não encontrada");
+    await this.repository.delete(id);
   }
 
   async getByColecaoId (colecaoId: number): Promise<Imagem | null> {
-    return this.imagemRepository.getByColecaoId(colecaoId);
+    return this.repository.getByColecaoId(colecaoId);
   }
 
   async getByUsuarioId (usuarioId: number): Promise<Imagem | null> {
-    return this.imagemRepository.getByUsuarioId(usuarioId);
+    return this.repository.getByUsuarioId(usuarioId);
   }
 
   async getByMontanhaId (montanhaId: number): Promise<Imagem | null> {
-    return this.imagemRepository.getByMontanhaId(montanhaId);
+    return this.repository.getByMontanhaId(montanhaId);
   }
 
   async getByViaId (viaId: number): Promise<Imagem | null> {
-    return this.imagemRepository.getByViaId(viaId);
+    return this.repository.getByViaId(viaId);
   }
 
   async getByCroquiId (croquiId: number): Promise<Imagem | null> {
-    return this.imagemRepository.getByCroquiId(croquiId);
+    return this.repository.getByCroquiId(croquiId);
   }
 }

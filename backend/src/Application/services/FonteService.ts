@@ -1,57 +1,53 @@
 import { Fonte } from "../../Domain/entities/Fonte";
 import { FonteRepository } from "../../Infrastructure/repositories/FonteRepository";
+import BadRequestError from "../errors/BadRequestError";
+import NotFoundError from "../errors/NotFoundError";
+import BaseService from "./BaseService";
 
-export class FonteService {
-	private fonteRepository: FonteRepository;
+export class FonteService extends BaseService<Fonte, FonteRepository> {
 
-	constructor(fonteRepository: FonteRepository) {
-		this.fonteRepository = fonteRepository;
-	}
+    constructor(fonteRepository: FonteRepository) {
+        super(fonteRepository);
+    }
 
 	async getFonteById (id: number): Promise<Fonte | null> {
 		if (!id) {
-			throw new Error("ID da Fonte não fornecido");
+            throw new BadRequestError("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da Fonte inválido");
+            throw new BadRequestError("ID da Fonte inválido");
 		}
-		return this.fonteRepository.getById(id);
+        return this.repository.getById(id);
 
 	}
 
 	async getFontes (): Promise<Fonte[]> {
-		return this.fonteRepository.getAll();
+        return this.repository.getAll();
 	}
 
 	async createFonte (fonte: Fonte): Promise<void> {
 		if (!fonte) {
-			throw new Error("Fonte inválida");
+            throw new BadRequestError("Fonte inválida");
 		}
-		return this.fonteRepository.create(fonte);
+        await this.repository.create(fonte);
 	}
 
 	async updateFonte (id: number, fonteData: Partial<Fonte>): Promise<void> {
 		if (!id) {
-			throw new Error("ID da Fonte não fornecido");
+            throw new BadRequestError("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da Fonte inválido");
+            throw new BadRequestError("ID da Fonte inválido");
 		}
-		const existingFonte = await this.getFonteById(id);
-		if (!existingFonte) {
-			throw new Error("Fonte não encontrada");
-		}
-		await this.fonteRepository.update(id, fonteData);
+        this.ensureExists(await this.getFonteById(id), "Fonte não encontrada");
+        await this.repository.update(id, fonteData);
 	}
 
 	async deleteFonte(id: number): Promise<void> {
 		if (!id) {
-			throw new Error("ID da Fonte não fornecido");
+            throw new BadRequestError("ID da Fonte não fornecido");
 		} else if (isNaN(id)) {
-			throw new Error("ID da Fonte inválido");
+            throw new BadRequestError("ID da Fonte inválido");
 		}
-		const existingFonte = await this.getFonteById(id);
-		if (!existingFonte) {
-			throw new Error("Fonte não encontrada");
-		}
-		await this.fonteRepository.delete(id);
+        this.ensureExists(await this.getFonteById(id), "Fonte não encontrada");
+        await this.repository.delete(id);
 	}
 }

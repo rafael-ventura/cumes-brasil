@@ -56,3 +56,4 @@ backend/.env.development
 # Ignore banco de dados
 *.db
 .vercel
+backend/.env.development

@@ -7,6 +7,7 @@ import FaceRouter from './FaceRouter';
 import CroquiRouter from './CroquiRouter';
 import ColecaoRouter from './ColecaoRouter';
 import EscaladaRouter from './EscaladaRouter';
+import StatsRouter from './StatsRouter';
 import { ConexaoController } from '../Controllers/ConexaoController';
 import { ConexaoService } from '../../Application/services/ConexaoService';
 import { AppDataSource } from '../../Infrastructure/config/db';
@@ -16,6 +17,7 @@ import ImagemRouter from './ImagemRouter';
 import SearchRouter from './SearchRouter';
 import PerfilRouter from "./PerfilRouter";
 import { authRateLimiter, uploadRateLimiter, createContentRateLimiter } from '../Middlewares/RateLimitMiddleware';
+import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 // TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
 // TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
@@ -25,12 +27,13 @@ const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
 
 // Rota de health check (sem rate limiting)
-routes.get("/conexao", conexaoController.checkDatabaseHealth);
+routes.get("/conexao", asyncErrorHandler(conexaoController.checkDatabaseHealth));
 
 // Rotas de autenticação com rate limiting específico
 routes.use("/auth", authRateLimiter, AuthenticateRouter);
 
 // Rotas públicas
+routes.use("/stats", StatsRouter);
 routes.use("/vias", ViaRouter);
 routes.use("/fontes", FonteRouter);
 routes.use("/montanhas", MontanhaRouter);
