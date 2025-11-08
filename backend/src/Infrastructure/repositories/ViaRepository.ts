@@ -3,7 +3,7 @@ import {AppDataSource} from '../config/db';
 import {ISearchRepository} from '../../Domain/interfaces/repositories/ISearchRepository';
 import {ISearchResult} from '../../Domain/interfaces/models/ISearchResult';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
-import {BaseRepository} from './BaseRepository';
+import BaseRepository from './BaseRepository';
 import {ICrudRepository} from '../../Domain/interfaces/repositories/ICrudRepository';
 
 export class ViaRepository extends BaseRepository<Via> implements ISearchRepository<Via>, ICrudRepository<Via> {
@@ -28,7 +28,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         ).getOne();
     }
 
-    async getAll(page: number, limit: number): Promise<{ items: Via[]; total: number; totalPages: number }> {
+    async getAllPaginated(page: number, limit: number): Promise<{ items: Via[]; total: number; totalPages: number }> {
         const [vias, total] = await this.withRelations(
             this.repository.createQueryBuilder("via")
         )
@@ -67,7 +67,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         return this.getById(id) as Promise<Via>;
     }
 
-    async update(id: number, viaData: Partial<Via>): Promise<Via | null> {
+    async updateVia(id: number, viaData: Partial<Via>): Promise<Via | null> {
         await this.repository.update(id, viaData);
         return this.getById(id);
     }

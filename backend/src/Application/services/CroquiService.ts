@@ -34,7 +34,7 @@ export class CroquiService extends BaseService<Croqui, CroquiRepository> {
         if (!croqui) {
             throw new BadRequestError("Croqui inválido");
         }
-        return this.repository.create(croqui);
+        await this.repository.create(croqui);
     }
 
     async updateCroqui (id: number, croquiData: Partial<Croqui>): Promise<void> {

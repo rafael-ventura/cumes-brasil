@@ -2,7 +2,7 @@ import { Usuario } from '../../Domain/entities/Usuario';
 import { AppDataSource } from '../config/db';
 import { Service } from 'typedi';
 import {Imagem} from "../../Domain/entities/Imagem";
-import { BaseRepository } from './BaseRepository';
+import BaseRepository from './BaseRepository';
 import { ICrudRepository } from '../../Domain/interfaces/repositories/ICrudRepository';
 
 @Service()
@@ -25,7 +25,7 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
             .getMany();
     }
 
-    async create(nome: string, email: string, senhaHash: string, imagem: Imagem): Promise<Usuario> {
+    async createUsuario(nome: string, email: string, senhaHash: string, imagem: Imagem): Promise<Usuario> {
         return this.repository.save({
             nome,
             email,

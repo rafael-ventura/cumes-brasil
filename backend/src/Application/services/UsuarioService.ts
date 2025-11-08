@@ -90,7 +90,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
             throw new BadRequestError('Nenhuma imagem foi enviada.');
         }
 
-        const usuario: Usuario | null = await this.usuarioRepo.findOne({ where: { id: usuarioId } });
+        const usuario: Usuario | null = await this.repository.findOne({ where: { id: usuarioId } });
 
         if (!usuario) {
             throw new BadRequestError('Usuário não encontrado.');
@@ -138,7 +138,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
 
         // Define a foto default
-        await this.usuarioRepo.update(usuario.id, usuario);
+        await this.repository.update(usuario.id, usuario);
 
         // Remove a imagem antiga, se não for a default
         if (imagemAtual) {

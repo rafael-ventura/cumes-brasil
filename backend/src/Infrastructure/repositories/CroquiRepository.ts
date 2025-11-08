@@ -1,5 +1,5 @@
 import { Croqui } from "../../Domain/entities/Croqui";
-import { BaseRepository } from "./BaseRepository";
+import BaseRepository from "./BaseRepository";
 import { ICrudRepository } from "../../Domain/interfaces/repositories/ICrudRepository";
 
 export class CroquiRepository extends BaseRepository<Croqui> implements ICrudRepository<Croqui> {

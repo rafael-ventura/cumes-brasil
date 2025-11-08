@@ -1,5 +1,11 @@
 import { api } from 'boot/axios';
 
+export interface IStats {
+  vias: number;
+  montanhas: number;
+  usuarios: number;
+}
+
 class HomeService {
   async getCount (filter: string): Promise<number> {
     try {
@@ -11,23 +17,17 @@ class HomeService {
     }
   }
 
-  async getTotalMontanhas(): Promise<number> {
+  async getStats(): Promise<IStats> {
     try {
-      const response = await api.get('/montanhas');
-      return response.data.length;
+      const response = await api.get('/stats');
+      return response.data;
     } catch (error: any) {
-      console.error('Erro ao obter total de montanhas:', error);
-      return 0;
-    }
-  }
-
-  async getTotalUsuarios(): Promise<number> {
-    try {
-      const response = await api.get('/usuarios');
-      return response.data.length;
-    } catch (error: any) {
-      console.error('Erro ao obter total de usuários:', error);
-      return 0;
+      console.error('Erro ao obter estatísticas:', error);
+      return {
+        vias: 0,
+        montanhas: 0,
+        usuarios: 0
+      };
     }
   }
 }

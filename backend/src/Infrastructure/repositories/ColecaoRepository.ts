@@ -5,7 +5,7 @@ import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchR
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 import { Via } from '../../Domain/entities/Via';
 import { ViaColecao } from '../../Domain/entities/ViaColecao';
-import { BaseRepository } from './BaseRepository';
+import BaseRepository from './BaseRepository';
 import { ICrudRepository } from '../../Domain/interfaces/repositories/ICrudRepository';
 
 @Service()
@@ -44,8 +44,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
     }
 
 
-    async create(colecaoData: Partial<Colecao>): Promise<void> {
-        await this.repository.save(colecaoData);
+    async create(colecaoData: Partial<Colecao>): Promise<Colecao> {
+        return await this.repository.save(colecaoData);
     }
 
     async update(id: number, colecaoData: Partial<Colecao>): Promise<void> {

@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/db";
-import { EntityTarget, FindManyOptions, Repository } from "typeorm";
+import { EntityTarget, FindManyOptions, Repository, ObjectLiteral } from "typeorm";
 import { ICrudRepository } from "../../Domain/interfaces/repositories/ICrudRepository";
 
 export type PaginationResult<T> = {
@@ -8,7 +8,7 @@ export type PaginationResult<T> = {
     totalPages: number;
 };
 
-export default abstract class BaseRepository<T> implements ICrudRepository<T> {
+export default abstract class BaseRepository<T extends ObjectLiteral> implements ICrudRepository<T> {
     protected repository: Repository<T>;
 
     protected constructor(entity: EntityTarget<T>) {
@@ -42,7 +42,7 @@ export default abstract class BaseRepository<T> implements ICrudRepository<T> {
     }
 
     async update(id: number, data: Partial<T>): Promise<void> {
-        await this.repository.update(id as any, data);
+        await this.repository.update(id as any, data as any);
     }
 
     async delete(id: number): Promise<void> {

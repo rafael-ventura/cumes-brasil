@@ -44,11 +44,11 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   }
 
   async addViaToColecao(viaId: number, colecaoId: number): Promise<void> {
-    await this.colecaoRepo.addViaToColecao(viaId, colecaoId);
+    await this.repository.addViaToColecao(viaId, colecaoId);
   }
 
   async removeViaFromColecao(viaId: number, colecaoId: number): Promise<void> {
-    await this.colecaoRepo.removeViaFromColecao(viaId, colecaoId);
+    await this.repository.removeViaFromColecao(viaId, colecaoId);
   }
 
   async getColecoesNotContainingViaForUser (

@@ -22,7 +22,7 @@ export class ImagemService extends BaseService<Imagem, ImagemRepository> {
   }
 
   async getAll (): Promise<Imagem[]> {
-    return this.imagemRepository.getAll();
+    return this.repository.getAll();
   }
 
   async create (imagem: Imagem): Promise<Imagem> {

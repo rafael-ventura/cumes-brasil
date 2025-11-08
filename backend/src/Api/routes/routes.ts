@@ -7,6 +7,7 @@ import FaceRouter from './FaceRouter';
 import CroquiRouter from './CroquiRouter';
 import ColecaoRouter from './ColecaoRouter';
 import EscaladaRouter from './EscaladaRouter';
+import StatsRouter from './StatsRouter';
 import { ConexaoController } from '../Controllers/ConexaoController';
 import { ConexaoService } from '../../Application/services/ConexaoService';
 import { AppDataSource } from '../../Infrastructure/config/db';
@@ -32,6 +33,7 @@ routes.get("/conexao", asyncErrorHandler(conexaoController.checkDatabaseHealth))
 routes.use("/auth", authRateLimiter, AuthenticateRouter);
 
 // Rotas públicas
+routes.use("/stats", StatsRouter);
 routes.use("/vias", ViaRouter);
 routes.use("/fontes", FonteRouter);
 routes.use("/montanhas", MontanhaRouter);

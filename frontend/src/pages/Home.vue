@@ -117,7 +117,7 @@ const cards = ref<Card[]>([
 ]);
 
 // Stats dinâmicos
-const totalVias = computed(() => cards.value.reduce((acc, card) => acc + card.count, 0));
+const totalVias = ref(0);
 const totalMontanhas = ref(0);
 const totalEscaladores = ref(0);
 
@@ -143,11 +143,11 @@ const statsData = computed(() => [
 ]);
 
 onMounted(async () => {
-  // Carrega contadores dos cards em paralelo
-  await loadCardsData();
-
-  // Carrega stats (mock por enquanto)
-  await loadStatsData();
+  // Carrega contadores dos cards e stats em paralelo
+  await Promise.all([
+    loadCardsData(),
+    loadStatsData()
+  ]);
 });
 
 async function loadCardsData() {
@@ -175,13 +175,11 @@ async function loadStatsData() {
   try {
     loadingStats.value = true;
 
-    const [montanhas, usuarios] = await Promise.all([
-      HomeService.getTotalMontanhas(),
-      HomeService.getTotalUsuarios()
-    ]);
+    const stats = await HomeService.getStats();
 
-    totalMontanhas.value = montanhas;
-    totalEscaladores.value = usuarios;
+    totalVias.value = stats.vias;
+    totalMontanhas.value = stats.montanhas;
+    totalEscaladores.value = stats.usuarios;
   } catch (error) {
     console.error('Erro ao carregar stats:', error);
   } finally {

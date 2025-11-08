@@ -1,5 +1,5 @@
 import { Montanha } from "../../Domain/entities/Montanha";
-import { BaseRepository } from "./BaseRepository";
+import BaseRepository from "./BaseRepository";
 import { ICrudRepository } from "../../Domain/interfaces/repositories/ICrudRepository";
 
 export class MontanhaRepository extends BaseRepository<Montanha> implements ICrudRepository<Montanha> {

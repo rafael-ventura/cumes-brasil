@@ -19,7 +19,7 @@ export class ViaService extends BaseService<Via, ViaRepository> {
 
   async getVias(page?: number, limit?: number) {
     return page && limit
-        ? this.repository.getAll(page, limit as any)
+        ? this.repository.getAllPaginated(page, limit as any)
         : this.repository.getAllWithoutPagination();
   }
 
@@ -34,7 +34,7 @@ export class ViaService extends BaseService<Via, ViaRepository> {
   }
 
   async updateVia(id: number, viaData: Partial<Via>): Promise<Via | null> {
-    return this.repository.update(id, viaData);
+    return this.repository.updateVia(id, viaData);
   }
 
   async deleteVia(id: number): Promise<void> {
