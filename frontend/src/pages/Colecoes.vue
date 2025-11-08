@@ -94,6 +94,6 @@ const goToColecaoDetalhada = (colecao: IColecao) => {
 .titulo-pagina {
   font-size: 40px;
   text-align: center;
-  color: $cumes-03;
+  color: $cumes-01;
 }
 </style>

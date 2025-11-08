@@ -150,7 +150,6 @@ import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
 import EscaladaService from 'src/services/EscaladaService';
 import { Escalada } from 'src/models/Escalada';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
-import { CUMES_COLORS } from 'src/constants/colors';
 
 const router = useRouter();
 const user = ref<IUsuario | undefined>(undefined);
@@ -184,21 +183,21 @@ const items = computed(() => [
     label: 'Coleções',
     num: numColecoes.value,
     icon: 'style',
-    color: CUMES_COLORS.cumes02,
+    color: '#546119', // $cumes-02
     to: '/colecoes'
   },
   {
     label: 'Favoritas',
     num: numFavoritas.value,
     icon: 'star',
-    color: CUMES_COLORS.cumes04,
+    color: '#F4E285', // $cumes-04
     to: '/favoritas'
   },
   {
     label: 'Escaladas',
     num: numEscaladas.value,
     icon: 'hiking',
-    color: CUMES_COLORS.cumes05,
+    color: '#F29340', // $cumes-03 (mudou de 05 para 03 - laranja ao invés de vermelho)
     to: '/escaladas'
   }
 ]);
@@ -366,7 +365,7 @@ const handleEditSubmit = async () => {
   display: flex;
   align-items: center;
   gap: 32px;
-  background-color: $cumes-05;
+  background-color: $cumes-01;
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -398,7 +397,7 @@ const handleEditSubmit = async () => {
 
 // Estatísticas Desktop - Linha separada
 .desktop-stats {
-  background-color: $cumes-05;
+  background-color: $cumes-01;
   border-radius: 16px;
   padding: 24px 32px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
