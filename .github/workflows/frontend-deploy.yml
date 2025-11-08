@@ -5,7 +5,7 @@ on:
     paths:
       - 'frontend/**'
     branches:
-      - main
+      - hold
   workflow_dispatch: # Permitir execução manual
 
 
