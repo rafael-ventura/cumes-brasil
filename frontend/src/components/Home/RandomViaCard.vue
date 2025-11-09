@@ -97,7 +97,7 @@ const navigateToVia = () => {
 
 .random-via-container {
   max-width: 600px;
-  margin: 0 auto 60px;
+  margin: 0 auto 80px;
   padding: 24px;
   background: $offwhite;
   border-radius: 24px;
@@ -156,7 +156,7 @@ const navigateToVia = () => {
     align-items: center;
     gap: 8px;
     padding: 12px 24px;
-    background: $cumes-04;
+    background: $cumes-01;
     color: $offwhite;
     border: none;
     border-radius: 12px;
@@ -166,7 +166,7 @@ const navigateToVia = () => {
     transition: all 0.3s ease;
 
     &:hover {
-      background: darken($cumes-04, 10%);
+      background: darken($cumes-01, 10%);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px $box-shadow-medium;
     }
@@ -366,7 +366,7 @@ const navigateToVia = () => {
 // ============================================
 @media (max-width: 768px) {
   .random-via-container {
-    margin: 0 16px 40px;
+    margin: 0 16px 60px;
     padding: 20px;
   }
 

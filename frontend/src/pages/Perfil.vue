@@ -42,7 +42,7 @@
             class="desktop-profile-picture"
           />
           <div class="picture-overlay">
-            <q-icon name="edit" size="32px" color="white" />
+            <q-icon name="edit" size="32px" class="overlay-icon" />
           </div>
         </div>
         
@@ -111,18 +111,50 @@
     <!-- Configuração do Dialog -->
     <q-dialog v-model="isConfigDialogOpen">
       <q-card class="card-config">
-        <q-list>
-          <q-item flat label="Editar Dados" clickable @click="openEditDialog()" class="btn">
+        <q-card-section class="config-header">
+          <div class="config-title">
+            <q-icon name="settings" size="24px" />
+            <span>Configurações</span>
+          </div>
+        </q-card-section>
+        
+        <q-list class="config-list">
+          <q-item 
+            clickable 
+            @click="openEditDialog()" 
+            class="config-item"
+            v-ripple
+          >
             <q-item-section avatar>
-              <q-icon name="edit" />
+              <q-icon name="edit" size="24px" class="item-icon icon-edit" />
             </q-item-section>
-            <q-item-section>Editar Dados</q-item-section>
+            <q-item-section>
+              <q-item-label class="item-label">Editar Dados</q-item-label>
+              <q-item-label caption class="item-caption">Alterar suas informações pessoais</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="chevron_right" size="20px" />
+            </q-item-section>
           </q-item>
-          <q-item flat label="Logout" clickable @click="logout" class="btn-red">
+          
+          <q-separator spaced />
+          
+          <q-item 
+            clickable 
+            @click="logout" 
+            class="config-item logout-item"
+            v-ripple
+          >
             <q-item-section avatar>
-              <q-icon name="logout" class="red" />
+              <q-icon name="logout" size="24px" class="item-icon icon-logout" />
             </q-item-section>
-            <q-item-section>Logout</q-item-section>
+            <q-item-section>
+              <q-item-label class="item-label">Sair da Conta</q-item-label>
+              <q-item-label caption class="item-caption">Desconectar do aplicativo</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="chevron_right" size="20px" />
+            </q-item-section>
           </q-item>
         </q-list>
       </q-card>
@@ -183,21 +215,21 @@ const items = computed(() => [
     label: 'Coleções',
     num: numColecoes.value,
     icon: 'style',
-    color: '#546119', // $action-colecoes
+    color: '#546119', // $cumes-02 (action-colecoes)
     to: '/colecoes'
   },
   {
     label: 'Favoritas',
     num: numFavoritas.value,
     icon: 'star',
-    color: '#F4E285', // $action-favoritos
+    color: '#F4E285', // $cumes-04 (action-favoritos)
     to: '/favoritas'
   },
   {
     label: 'Escaladas',
     num: numEscaladas.value,
     icon: 'hiking',
-    color: '#F29340', // $action-escaladas
+    color: '#F29340', // $cumes-03 (action-escaladas)
     to: '/escaladas'
   }
 ]);
@@ -303,34 +335,121 @@ const handleEditSubmit = async () => {
 // ============================================
 .settings-btn-mobile {
   position: fixed;
-  top: 16px;
-  right: 16px;
-  height: 40px;
-  width: 40px;
+  top: 20px;
+  right: 20px;
+  height: 44px;
+  width: 44px;
   color: $offwhite;
   background-color: $cumes-02;
-  z-index: 100;
+  z-index: 1000;
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px $box-shadow-dark;
   transition: all 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 6px 16px $box-shadow-dark;
     background-color: darken($cumes-02, 10%);
   }
 }
 
 .card-config {
-  border-radius: 10px;
-  min-width: 250px;
+  border-radius: 16px;
+  min-width: 320px;
+  max-width: 400px;
+  background-color: $offwhite;
+  border: 2px solid $cumes-01;
+  box-shadow: 0 8px 24px $box-shadow-dark;
+  overflow: hidden;
+
+  @media (min-width: 1024px) {
+    min-width: 420px;
+    max-width: 500px;
+  }
+}
+
+.config-header {
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  padding: 20px 24px;
+  border-bottom: 3px solid $cumes-03;
+}
+
+.config-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: $offwhite;
+  text-shadow: 0 2px 4px $text-shadow-default;
+
+  .q-icon {
+    color: $cumes-04;
+  }
+}
+
+.config-list {
+  padding: 12px;
+}
+
+.config-item {
+  border-radius: 12px;
+  padding: 16px 12px;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba($cumes-01, 0.1);
+    transform: translateX(4px);
+  }
+
+  .item-icon {
+    color: $cumes-03;
+    transition: all 0.3s ease;
+
+    &.icon-edit {
+      color: $cumes-03;
+    }
+
+    &.icon-logout {
+      color: $error-color;
+    }
+  }
+
+  .item-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: $background;
+  }
+
+  .item-caption {
+    font-size: 13px;
+    color: $cumes-02;
+    margin-top: 2px;
+  }
+
+  .q-item__section--side {
+    color: $cumes-03;
+  }
+
+  &.logout-item {
+    &:hover {
+      background-color: rgba($error-color, 0.05);
+      
+      .item-label {
+        color: $error-color;
+      }
+    }
+  }
 }
 
 // ============================================
 // LAYOUT MOBILE (< 1024px)
 // ============================================
 .perfil-page-mobile {
-  padding: 8px;
+  padding: 0;
+  padding-top: 0;
 }
 
 .mobile-layout {
@@ -342,6 +461,28 @@ const handleEditSubmit = async () => {
 
   .row {
     margin-bottom: 16px;
+
+    &:first-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Primeiro row (PerfilBar) sem padding
+  > .row:first-child {
+    .col-12:first-child {
+      padding: 0;
+    }
+
+    // PerfilGridButtons com margin-top para separar do card
+    .col-12:nth-child(2) {
+      margin-top: 20px;
+      padding: 0 8px;
+    }
+  }
+
+  // Segundo row com padding lateral
+  > .row:nth-child(2) {
+    padding: 0 8px;
   }
 }
 
@@ -368,7 +509,7 @@ const handleEditSubmit = async () => {
   background-color: $cumes-01;
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px $box-shadow-strong;
   position: relative;
 
   @media (max-width: 1200px) {
@@ -385,12 +526,12 @@ const handleEditSubmit = async () => {
   right: 24px;
   color: $offwhite;
   background-color: $cumes-02;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px $box-shadow-dark;
   transition: all 0.3s ease;
 
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 6px 16px $box-shadow-dark;
     background-color: darken($cumes-02, 10%);
   }
 }
@@ -400,7 +541,7 @@ const handleEditSubmit = async () => {
   background-color: $cumes-01;
   border-radius: 16px;
   padding: 24px 32px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px $box-shadow-medium;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -426,7 +567,7 @@ const handleEditSubmit = async () => {
   height: 180px;
   border-radius: 50%;
   border: 5px solid $cumes-04;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px $box-shadow-dark;
   object-fit: cover;
 }
 
@@ -443,6 +584,10 @@ const handleEditSubmit = async () => {
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+
+  .overlay-icon {
+    color: $offwhite;
+  }
 }
 
 // Informações do Usuário Desktop
@@ -458,7 +603,7 @@ const handleEditSubmit = async () => {
   font-weight: 800;
   color: $cumes-04;
   margin: 0;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 3px 6px $text-shadow-default;
   letter-spacing: 0.5px;
 }
 
@@ -550,14 +695,14 @@ const handleEditSubmit = async () => {
   border-radius: 16px;
   padding: 32px;
   border: 2px solid $cumes-03;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px $box-shadow-medium;
   transition: all 0.3s ease;
   min-height: 350px;
   display: flex;
   flex-direction: column;
 
   &:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 24px $box-shadow-strong;
     transform: translateY(-4px);
     border-color: $cumes-01;
   }

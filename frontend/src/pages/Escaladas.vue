@@ -84,8 +84,14 @@ defineOptions({
 
 .titulo-pagina {
   font-size: 40px;
+  font-weight: 700; /* Mesmo estilo de fonte de Colecoes */
   text-align: center;
   color: $cumes-01;
+  text-shadow: 0 2px 4px $text-shadow-default; /* Mesmo text-shadow de Colecoes */
+  
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
 }
 
 .escalada-card img {

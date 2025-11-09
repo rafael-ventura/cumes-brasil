@@ -33,8 +33,9 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         return query.getMany();
     }
 
-    async save(escalada: Partial<Escalada>): Promise<void> {
-        await this.repository.insert(escalada);
+    async save(escalada: Partial<Escalada> | Escalada): Promise<Escalada> {
+        // Usa save() ao invés de insert() para salvar relacionamentos (participantes) com cascade
+        return await this.repository.save(escalada);
     }
 
 

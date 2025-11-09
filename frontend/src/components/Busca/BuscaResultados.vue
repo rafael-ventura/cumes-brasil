@@ -11,7 +11,7 @@
         option-label="label"
         label="Ordenar por"
         label-color="secondary"
-        class="q-select-custom"
+        class="q-select-custom custom-select"
         outlined
         dense
         map-options
@@ -26,12 +26,12 @@
     <div v-else-if="entityType === 'colecao' && sortedResults">
       <ColecaoLista :colecoes="sortedResults as IColecao[]" />
     </div>
-    <div v-else-if="entityType === 'escalada' && sortedResults">
+    <div v-else-if="entityType === 'escalada' && sortedResults" class="escaladas-grid">
       <EscaladaCard
         v-for="escalada in sortedResults"
         :key="escalada.id"
         :escalada="escalada"
-        class="escalada-card"
+        class="escalada-card-item"
       />
     </div>
     <!-- Mensagem se não houver resultados -->
@@ -142,10 +142,59 @@ const selectItem = (item: Via | IColecao | any) => {
   margin-right: 16px;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
 }
 
-.order-container .q-field__label {
-  color: $cumes-03 !important; /* Define a cor da label */
+.total-results {
+  color: $cumes-03;
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: auto;
+  margin-left: 16px;
+}
+
+.custom-select {
+  width: 40%;
+  min-width: 200px;
+
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01 !important;
+      border-width: 2px !important;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 8px 14px !important;
+  }
+
+  :deep(.q-field__input) {
+    color: $background !important;
+    padding: 8px 14px !important;
+  }
+
+  :deep(.q-field__label) {
+    color: $cumes-03 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    font-size: 13px !important;
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03 !important;
+      border-width: 2px !important;
+    }
+  }
 }
 
 .via-list {
@@ -155,40 +204,35 @@ const selectItem = (item: Via | IColecao | any) => {
   gap: 16px;
 }
 
-.escalada-card {
+.escaladas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); /* Cards mais largos no desktop */
+  gap: 24px;
   width: 100%;
-  margin-bottom: 10%;
-  border-radius: 11px;
-  padding: 0;
+  padding: 0 16px;
+  max-width: 1400px; /* Limita largura máxima para não ficar muito esticado */
+  margin: 0 auto; /* Centraliza o grid */
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* Um card por vez no mobile */
+    gap: 16px;
+    padding: 0 5%; /* 5% de padding em cada lado = 90% de largura efetiva */
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
 }
 
-.escalada-card img {
+.escalada-card-item {
   width: 100%;
-  height: auto;
-  padding: 0; /* Remove padding da imagem */
-  margin: 0; /* Remove margin da imagem */
-  border: 0; /* Remove borda da imagem */
-  border-top-left-radius: 10px; /* Borda arredondada superior esquerda */
-  border-top-right-radius: 10px; /* Borda arredondada superior direita */
-  object-fit: cover; /* Garante que a imagem se ajuste corretamente ao espaço */
+  margin: 0;
 }
 
-.total-results {
-  color: $cumes-03; /* Tom de amarelo */
-  font-size: 13px; /* Tamanho pequeno */
-  margin-right: auto; /* Move the total results to the far left */
-  margin-top: auto; /* Espaçamento superior */
-  margin-left: 16px; /* Espaçamento à esquerda */
-}
-
-.q-select-custom {
-  width: 40%;
-}
-
-.result-not-found{
+.result-not-found {
   padding-left: 3rem;
   font-size: 1.4rem;
   align-self: center;
   color: $cumes-03;
+  font-weight: 600;
 }
 </style>

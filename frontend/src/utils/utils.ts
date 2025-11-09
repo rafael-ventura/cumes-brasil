@@ -63,20 +63,52 @@ export function intToRoman (num: number): string {
 
 // --- Formatação de Grau ---
 export function formatarGrau (grau: string | number): string {
+  // Validação de entrada
+  if (!grau || grau === 'N/A' || grau === '' || grau === null || grau === undefined) {
+    return 'N/A';
+  }
+
+  // Se for número, retornar com grau
   if (typeof grau === 'number') {
     return `${grau}°`;
   }
-  const isRoman = /^[IVXLCDM]+$/.test(grau);
-  const arabicNumber = isRoman ? romanToInt(grau) : parseInt(grau);
-  return `${arabicNumber}°`;
+
+  // Se já contém formatação (grau, sup, a, b, c, etc), retornar como está
+  const grauStr = String(grau).trim();
+  if (grauStr.includes('°') || 
+      grauStr.includes('sup') || 
+      /[abc]$/i.test(grauStr) || 
+      /^[IVXLCDM]+[abc]?$/i.test(grauStr)) {
+    return grauStr;
+  }
+
+  // Tentar converter numeral romano puro
+  const isRoman = /^[IVXLCDM]+$/.test(grauStr);
+  if (isRoman) {
+    const arabicNumber = romanToInt(grauStr);
+    return `${arabicNumber}°`;
+  }
+
+  // Tentar converter número arábico
+  const arabicNumber = parseInt(grauStr);
+  if (!isNaN(arabicNumber)) {
+    return `${arabicNumber}°`;
+  }
+
+  // Se não conseguir converter, retornar original
+  return grauStr;
 }
 
 // --- Função Principal de Formatação de Objetos Via ---
 export function formatVia (via: Via): Via {
   const formattedVia = { ...via };
 
-  // Formatação do Grau
-  if (formattedVia.grau) {
+  // Formatação do Grau (só formata se não for vazio/null/undefined)
+  if (formattedVia.grau && 
+      formattedVia.grau !== 'N/A' && 
+      formattedVia.grau !== '' && 
+      formattedVia.grau !== null && 
+      formattedVia.grau !== undefined) {
     formattedVia.grau = formatarGrau(formattedVia.grau);
   }
 

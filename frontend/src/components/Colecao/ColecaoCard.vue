@@ -12,17 +12,24 @@
         <ImagePlaceholder v-else :fillColor="'$primary'" />
       </div>
       <div class="colecao-info">
-        <div class="text-h6 text-weight-bolder">{{ colecao.nome }}</div>
-        <div class="text-subtitle1">{{ colecao.descricao }}</div>
+        <div class="colecao-header">
+          <div class="text-h6">{{ colecao.nome }}</div>
+          <div class="text-subtitle1" v-if="colecao.descricao">{{ colecao.descricao }}</div>
+        </div>
 
-        <!-- Exibe o número de vias apenas se `viasCarregadas` tiver sido preenchido -->
-        <q-badge
-          v-if="viasCarregadas !== null"
-          class="badge-custom"
-        >
-          Vias na coleção: <span class="badge-value text-weight-bold">{{ viasCarregadas }}</span>
-        </q-badge>
-        <q-badge v-else color="grey" label="Carregando vias..." class="badge-custom" />
+        <!-- Badge de contagem de vias -->
+        <div class="badge-container">
+          <q-badge
+            v-if="viasCarregadas !== null"
+            class="badge-custom"
+          >
+            <span class="badge-label">Vias na coleção:</span>
+            <span class="badge-value">{{ viasCarregadas }}</span>
+          </q-badge>
+          <q-badge v-else class="badge-custom badge-loading">
+            <span class="badge-label">Carregando...</span>
+          </q-badge>
+        </div>
       </div>
     </q-card-section>
   </q-card>
@@ -72,104 +79,191 @@ onMounted(() => {
 
 .colecao-card {
   width: 100%;
-  max-width: 892px;
-  margin: auto;
+  height: 100%;
+  min-height: 150px; /* Reduzido de 180px */
   cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  background-color: $cumes-01;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px $box-shadow-medium;
+  border-radius: 16px;
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  border: 2px solid rgba($cumes-01, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px $box-shadow-strong;
+    border-color: rgba($cumes-01, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    min-height: 130px; /* Reduzido de 160px */
   }
 }
 
 .colecao-content {
   display: flex;
-  align-items: center;
-  justify-content: space-between; /* Distribui melhor os elementos */
-  flex-wrap: wrap; /* Permite que os elementos se ajustem caso falte espaço */
-}
+  align-items: flex-start;
+  padding: 16px; /* Reduzido de 20px */
+  gap: 16px; /* Reduzido de 20px */
+  flex: 1;
+  height: 100%;
+  position: relative;
 
-.colecao-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: #2c2c2c;
-  flex-grow: 1;
-  min-width: 0; /* Permite que o conteúdo encolha corretamente */
-}
-
-.q-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1.5px solid $background;
-  font-size: 1.1em;
-  padding: 8px 12px;
-  border-radius: 12px;
-  max-width: 80%; /* Garante que não estoure a div pai */
-  overflow-wrap: break-word; /* Quebra palavras longas */
-  text-align: center;
-}
-
-.badge-custom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap; /* Permite que os elementos fiquem ajustados caso necessário */
-  max-width: 80%; /* Impede estouro no desktop */
-}
-
-.badge-value {
-  margin-left: 5px;
-  font-weight: bold;
+  @media (max-width: 768px) {
+    padding: 12px; /* Reduzido de 16px */
+    gap: 12px; /* Reduzido de 16px */
+  }
 }
 
 .colecao-image {
-  padding: 2%;
-  width: 6rem;
-  height: 6rem;
-  border-radius: 8px;
+  width: 120px; /* Reduzido de 140px */
+  min-width: 120px;
+  height: 120px; /* Reduzido de 140px */
+  border-radius: 12px;
   overflow: hidden;
-  margin-right: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $cumes-01;
-  flex-shrink: 0; /* Impede a imagem de redimensionar */
+  background-color: rgba($offwhite, 0.2);
+  box-shadow: 0 4px 12px $box-shadow-medium;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+
+  .q-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :deep(.svg-placeholder) {
+    width: 80%;
+    height: 80%;
+    opacity: 0.6;
+  }
+
+  .colecao-card:hover & {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px $box-shadow-strong;
+  }
+
+  @media (max-width: 768px) {
+    width: 85px; /* Reduzido de 100px */
+    min-width: 85px;
+    height: 85px; /* Reduzido de 100px */
+  }
 }
 
 .colecao-info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  color: #2c2c2c;
-  flex-grow: 1; /* Garante que a informação ocupe o restante do espaço */
+  justify-content: flex-start;
+  color: $background;
+  flex-grow: 1;
+  min-width: 0;
+  gap: 12px;
+  height: 120px; /* Reduzido de 140px */
+  position: relative;
+
+  @media (max-width: 768px) {
+    height: 85px; /* Reduzido de 100px */
+  }
+}
+
+.colecao-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
 }
 
 .text-h6 {
-  margin-bottom: 4px;
-  color: black;
+  margin: 0;
+  color: $background;
+  font-size: 20px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px $text-shadow-default;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 .text-subtitle1 {
-  font-size: 1.05em;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin: 0;
+  color: rgba($background, 0.8);
+  font-weight: 500;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.q-badge {
+.badge-container {
   display: flex;
   align-items: center;
+  margin-top: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.badge-custom {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  color: black;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1.5px solid $background;
-  font-size: 1.1em; /* Aumenta o tamanho do texto */
-  padding: 8px 12px; /* Adiciona espaço interno */
-  border-radius: 12px; /* Deixa os cantos arredondados */
+  gap: 8px;
+  color: $background;
+  background: rgba($offwhite, 0.4);
+  border: 2px solid rgba($background, 0.4);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px $box-shadow-light;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &.badge-loading {
+    opacity: 0.7;
+  }
+
+  .colecao-card:hover & {
+    background: rgba($offwhite, 0.5);
+    border-color: rgba($background, 0.5);
+    transform: scale(1.02);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+}
+
+.badge-label {
+  font-weight: 600;
+  color: $background;
+}
+
+.badge-value {
+  font-weight: 800;
+  font-size: 16px;
+  color: $cumes-03;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin-left: 6px;
+
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 }
 </style>

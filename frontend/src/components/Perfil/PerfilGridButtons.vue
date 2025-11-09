@@ -51,7 +51,7 @@ defineProps<{
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px $box-shadow-dark;
   }
 
   @media (min-width: 1024px) {
@@ -64,7 +64,7 @@ defineProps<{
 }
 
 .margin {
-  margin: 10px;
+  margin: 0;
 
   @media (min-width: 1024px) {
     margin: 0;

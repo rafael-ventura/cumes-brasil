@@ -43,9 +43,9 @@ onUnmounted(() => {
 @import 'src/css/app.scss';
 .scroll-to-top {
   position: fixed;
-  bottom: 95px;
-  right: 5px;
-  z-index: 1000;
-  box-shadow: none;
+  bottom: 170px; /* Posicionado acima do botão de adicionar (100px + 56px + 14px de espaço) */
+  right: 5px; /* Posição original */
+  z-index: 1001; /* Maior que o botão de adicionar para ficar acima */
+  box-shadow: none; /* Visual original */
 }
 </style>

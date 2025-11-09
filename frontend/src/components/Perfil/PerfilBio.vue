@@ -78,7 +78,7 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   color: $cumes-03;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     color: $cumes-01;
     transform: scale(1.15);
@@ -95,19 +95,39 @@ const displayedBio = computed(() => props.user?.biografia || 'Nenhuma biografia 
   min-height: 100px;
 }
 .custom-input{
-  background-color: rgba($cumes-01, 0.1);
+  background-color: $offwhite;
   border: 2px solid $cumes-01;
   border-radius: 12px;
-  font-size: 16px;
-  color: white;
-  
+
   :deep(.q-field__control) {
-    color: white;
+    background-color: $offwhite;
+    padding: 0 !important;
   }
-  
+
   :deep(.q-field__native) {
-    color: white;
+    color: $background;
+    font-size: 15px;
+    font-weight: 500;
     min-height: 120px;
+    padding: 12px !important;
+  }
+
+  :deep(textarea) {
+    color: $background;
+    line-height: 1.6;
+    padding: 12px !important;
+  }
+
+  :deep(textarea::placeholder) {
+    color: rgba($background, 0.5);
+  }
+
+  &:deep(.q-field--focused) {
+    border-color: $cumes-03;
+
+    .q-field__control {
+      background-color: $offwhite;
+    }
   }
 }
 

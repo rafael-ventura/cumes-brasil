@@ -52,7 +52,7 @@ onUnmounted(() => {
 
 // Container para Mobile (com bottom navbar)
 .page-container-mobile {
-  padding-bottom: 56px;
+  padding-bottom: 80px;
 }
 
 // Container para Desktop (com topbar)

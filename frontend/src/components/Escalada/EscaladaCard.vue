@@ -18,54 +18,97 @@
 
         <!-- Grau da Via -->
         <div class="grau-container">
-          <div class="grau-btn">
-            {{ via?.grau || 'Grau não informado' }}
+          <GrauBadge v-if="via" :via="via" />
+          <div v-else class="grau-btn">
+            Grau não informado
           </div>
         </div>
 
         <!-- Detalhes da Escalada -->
         <div class="detalhes-container">
-          <!-- Data da Escalada -->
-          <div class="detalhe-item">
-            <q-icon name="event" size="md" />
-            <q-item-label class="data-escalada">{{ formatDateToDDMMYY(escaladaLocal.data) }}</q-item-label>
+          <!-- Data da Escalada - Destaque -->
+          <div class="data-card">
+            <div class="data-icon-wrapper">
+              <q-icon name="event" class="data-icon" />
+            </div>
+            <div class="data-content">
+              <div class="data-label">Data da Escalada</div>
+              <div class="data-value">{{ formatDateToDDMMYY(escaladaLocal.data) }}</div>
+            </div>
           </div>
 
-          <!-- Participantes -->
-          <div :class="['participantes-wrapper', { 'bordered': dropdownOpen }]">
-            <div class="participantes-header" @click="toggleDropdown">
-              <q-icon name="people" size="md" />
-              <q-item-label class="label-text">Participantes</q-item-label>
-              <q-icon name="arrow_drop_down" size="md" class="dropdown-icon" />
+          <!-- Participantes - Layout Moderno -->
+          <div class="participantes-section">
+            <div class="section-header" @click="toggleDropdown">
+              <div class="section-title">
+                <q-icon name="people" class="section-icon" />
+                <span class="section-label">Participantes</span>
+                <q-badge v-if="escaladaLocal.participantes?.length" class="participantes-count">
+                  {{ escaladaLocal.participantes.length }}
+                </q-badge>
+              </div>
+              <q-icon 
+                :name="dropdownOpen ? 'expand_less' : 'expand_more'" 
+                class="dropdown-icon" 
+              />
             </div>
 
-            <!-- Dropdown de Participantes -->
-            <div v-if="dropdownOpen" class="participantes-dropdown">
-              <q-list class="participante-list">
-                <q-item
+            <!-- Lista de Participantes -->
+            <div v-if="dropdownOpen" class="participantes-list">
+              <div v-if="escaladaLocal.participantes && escaladaLocal.participantes.length > 0">
+                <div
                   v-for="participante in escaladaLocal.participantes"
-                  :key="participante.nome"
-                  class="participante-item"
+                  :key="participante.id || participante.nome"
+                  class="participante-card"
                 >
-                  <!-- Nome do Participante -->
-                  <div class="participante-nome">
-                    {{ participante.nome }}
+                  <div class="participante-avatar">
+                    <q-icon name="person" />
                   </div>
-
-                  <!-- Tipo do Participante -->
-                  <div
-                    :style="{ backgroundColor: getParticipantColor(participante.tipo), opacity: 0.85 }"
-                    class="tipo-participante-chip"
-                  >
-                    {{ participante.tipo }}
+                  <div class="participante-info">
+                    <div class="participante-nome">{{ participante.nome }}</div>
+                    <div
+                      :style="{ backgroundColor: getParticipantColor(participante.tipo) }"
+                      class="tipo-participante-badge"
+                    >
+                      {{ participante.tipo }}
+                    </div>
                   </div>
-                </q-item>
-              </q-list>
+                </div>
+              </div>
+              <div v-else class="no-participantes">
+                Nenhum participante registrado
+              </div>
             </div>
           </div>
 
-          <!-- Observação -->
-          <ObservacaoComponent v-model="escaladaLocal.observacao" />
+          <!-- Observação - Layout Moderno -->
+          <div v-if="escaladaLocal.observacao" class="observacao-section">
+            <div class="section-header" @click="toggleObservacaoDropdown">
+              <div class="section-title">
+                <q-icon name="note" class="section-icon" />
+                <span class="section-label">Observação</span>
+              </div>
+              <q-icon 
+                :name="observacaoDropdownOpen ? 'expand_less' : 'expand_more'" 
+                class="dropdown-icon" 
+              />
+            </div>
+            <div v-if="observacaoDropdownOpen" class="observacao-content">
+              <div class="observacao-text">
+                {{ observacaoExibida }}
+              </div>
+              <q-btn
+                v-if="observacaoLocal.length > 300"
+                flat
+                dense
+                no-caps
+                :label="observacaoExpandida ? 'Ver menos' : 'Ver mais'"
+                :icon="observacaoExpandida ? 'expand_less' : 'expand_more'"
+                class="btn-ver-mais"
+                @click.stop="toggleObservacao"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -73,11 +116,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { Escalada } from 'src/models/Escalada';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
-import ObservacaoComponent from 'src/components/Escalada/Observacao.vue';
+import GrauBadge from 'src/components/Via/GrauBadge.vue';
 
 const props = defineProps({
   escalada: {
@@ -89,10 +132,36 @@ const props = defineProps({
 const escaladaLocal = ref({ ...props.escalada });
 const via = ref<Via | null>(null);
 const dropdownOpen = ref(false);
+const observacaoExpandida = ref(false);
+const observacaoDropdownOpen = ref(true); // Começa aberto por padrão
+
+// Observa mudanças na prop escalada
+watch(() => props.escalada, (newEscalada) => {
+  escaladaLocal.value = { ...newEscalada };
+  // Garante que participantes seja um array
+  if (!escaladaLocal.value.participantes) {
+    escaladaLocal.value.participantes = [];
+  }
+}, { immediate: true, deep: true });
 
 onMounted(async () => {
-  if (escaladaLocal.value.id) {
-    via.value = await ViaService.getViaById(escaladaLocal.value.id);
+  // Garante que participantes seja um array
+  if (!escaladaLocal.value.participantes) {
+    escaladaLocal.value.participantes = [];
+  }
+  
+  // Debug: verificar se participantes estão vindo
+  console.log('Escalada recebida:', escaladaLocal.value);
+  console.log('Participantes:', escaladaLocal.value.participantes);
+  
+  // Buscar via corretamente
+  if (escaladaLocal.value.via && typeof escaladaLocal.value.via === 'object' && escaladaLocal.value.via.id) {
+    via.value = await ViaService.getViaById(escaladaLocal.value.via.id);
+  } else if (escaladaLocal.value.via && typeof escaladaLocal.value.via === 'number') {
+    via.value = await ViaService.getViaById(escaladaLocal.value.via);
+  } else if (escaladaLocal.value.id) {
+    // Se não tiver via, tenta buscar pela escalada (isso não faz sentido, mas mantém compatibilidade)
+    console.warn('Escalada sem via definida, tentando buscar via pelo id da escalada');
   }
 });
 
@@ -120,147 +189,385 @@ function getParticipantColor (tipo: string) {
       return 'gray';
   }
 }
+
+const observacaoLocal = computed(() => {
+  return escaladaLocal.value.observacao || '';
+});
+
+const observacaoExibida = computed(() => {
+  if (observacaoLocal.value.length <= 300 || observacaoExpandida.value) {
+    return observacaoLocal.value;
+  }
+  return observacaoLocal.value.substring(0, 300) + '...';
+});
+
+function toggleObservacao () {
+  observacaoExpandida.value = !observacaoExpandida.value;
+}
+
+function toggleObservacaoDropdown () {
+  observacaoDropdownOpen.value = !observacaoDropdownOpen.value;
+}
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
-.via-imagem {
-  width: calc(100% + 2px); /* Expande a imagem horizontalmente */
-  height: auto;
+.imagem-container {
+  width: 100%;
+  height: 240px; /* Altura aumentada para dar mais destaque */
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   position: relative;
-  top: -1px; /* Sobe a imagem em 1px */
-  left: -1px; /* Move a imagem para a esquerda em 1px */
-  border-top-left-radius: 10px; /* Arredonda borda superior esquerda */
-  border-top-right-radius: 10px; /* Arredonda borda superior direita */
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+    pointer-events: none;
+  }
+}
+
+.via-imagem {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 /* Card da Escalada */
+.escalada-card-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px $box-shadow-medium;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px $box-shadow-strong;
+  }
+}
+
 .escalada-card {
   width: 100%;
-  background-color: $cumes-01;
-  padding: 16px; /* Mantém o padding interno */
-  box-sizing: border-box; /* Inclui padding no tamanho */
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  padding: 20px;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 }
 
 .escalada-card-content {
-  padding-top: 16px; /* Adiciona um espaçamento entre a imagem e o conteúdo */
+  padding-top: 0; /* Remove padding extra */
 }
 
 .titulo-escalada {
-  font-size: 40px;
-  margin-bottom: 12px;
-  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: $offwhite;
+  text-shadow: 0 2px 4px $text-shadow-default;
+  line-height: 1.3;
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
 }
 
 .grau-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  width: 100%;
+  
+  :deep(.grau-badge) {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .grau-btn {
   width: 100%;
-  max-width: 800px;
-  padding: 1%;
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: $cumes-03;
-  color: black;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, $cumes-04 0%, darken($cumes-04, 10%) 100%);
+  color: $background;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px $box-shadow-medium;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 }
 
 .detalhes-container {
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }
 
-.detalhe-item {
+/* Data Card - Layout Moderno */
+.data-card {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.35);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
 }
 
-.data-escalada {
-  font-size: 32px;
-  font-weight: bold;
-  margin-left: 8px;
-}
-
-.participantes-wrapper {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 4%;
-}
-
-.participantes-header .q-icon {
-  margin-right: 8px; /* Espaço entre o ícone e a label */
-}
-
-.participantes-header {
+.data-icon-wrapper {
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
-  cursor: pointer;
+  justify-content: center;
+  background: linear-gradient(135deg, $cumes-03 0%, darken($cumes-03, 10%) 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.dropdown-icon {
-  margin-left: 8px;
+.data-icon {
+  color: $offwhite;
+  font-size: 24px;
 }
 
-.participantes-dropdown {
-  background-color: $cumes-01;
-  margin-top: 4px;
-  margin-bottom: 4%;
+.data-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
-.participante-list {
-  display: flex;
-  flex-direction: column;
-  transform: translateY(-30px); /* Sobe a lista */
+.data-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: $offwhite;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.participante-item {
+.data-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: $offwhite;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+/* Participantes Section - Layout Moderno */
+.participantes-section {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0; /* Remove o padding */
-  margin: 0; /* Remove o margin */
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
 }
 
-.participante-nome,
-.tipo-participante-chip {
-  margin: 0; /* Remove margin entre nome e tipo */
-  padding: 2%; /* Remove padding dentro dos campos */
-  border: none; /* Remove a borda dos campos */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.participante-item:last-child {
-  margin-bottom: -15%;
+.section-icon {
+  color: $cumes-04;
+  font-size: 20px;
+}
+
+.section-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: $offwhite;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.participantes-count {
+  background: $cumes-03 !important;
+  color: $offwhite !important;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.dropdown-icon {
+  color: $cumes-04;
+  font-size: 24px;
+  transition: transform 0.2s ease;
+}
+
+.participantes-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.participante-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: translateX(4px);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.participante-avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $cumes-02 0%, darken($cumes-02, 10%) 100%);
+  border-radius: 50%;
+  color: $offwhite;
+  font-size: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.participante-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .participante-nome {
-  flex: 0 1 80%; /* Ajuste de largura para caber na linha */
-  padding: 2%;
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.10);
-  color: black;
-  text-align: center; /* Alinha o texto à esquerda */
-  margin-right: 3%;
+  font-size: 15px;
+  font-weight: 600;
+  color: $offwhite;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 }
 
-.tipo-participante-chip {
-  flex: 0 0 30%; /* Ajuste de largura para caber na linha */
-  padding: 5px;
-  border-radius: 15px;
-  font-size: 14px;
+.tipo-participante-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: $background;
   text-align: center;
+  width: fit-content;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  @media (max-width: 768px) {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+.no-participantes {
+  padding: 16px;
+  text-align: center;
+  color: $offwhite;
+  opacity: 0.6;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Observação Section - Layout Moderno */
+.observacao-section {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.observacao-content {
+  padding: 12px 16px 16px 16px;
+  color: $offwhite;
+  font-size: 14px;
+  line-height: 1.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 10px 12px 12px 12px;
+  }
+}
+
+.observacao-text {
+  color: $offwhite;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.btn-ver-mais {
+  align-self: flex-start;
+  color: $cumes-04 !important; /* Amarelo ao invés de laranja */
+  font-weight: 600;
+  font-size: 13px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  
+  :deep(.q-btn__content) {
+    gap: 4px;
+  }
+  
+  :deep(.q-icon) {
+    color: $cumes-04 !important;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 }
 
 </style>

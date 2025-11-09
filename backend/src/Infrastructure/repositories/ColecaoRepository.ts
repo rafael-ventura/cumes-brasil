@@ -101,6 +101,7 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         const [colecoes, total] = await this.repository
           .createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
+          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecoes')
           .where('colecao.usuario.id = :usuarioId', { usuarioId })
           .andWhere(`colecao.id NOT IN (${subQuery.getQuery()})`)
           .setParameters(subQuery.getParameters())

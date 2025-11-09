@@ -6,6 +6,7 @@ export class ColecaoDTO {
     nome: string;
     descricao?: string;
     imagem?: ImagemDTO;
+    viaColecoes?: any[];
 
     constructor(entity: Colecao) {
         this.id = entity.id;
@@ -13,5 +14,6 @@ export class ColecaoDTO {
         this.descricao = entity.descricao;
 
         this.imagem = entity.imagem ? new ImagemDTO(entity.imagem as any) : undefined;
+        this.viaColecoes = entity.viaColecoes || [];
     }
 }

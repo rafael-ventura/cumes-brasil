@@ -1,22 +1,37 @@
 <template>
   <div @scroll="onScroll" class="item-sugestao-container">
     <!-- Campo de busca unificada -->
-    <q-input
-      v-model="unifiedSearch"
-      label="Buscar por nome, bairro ou montanha"
-      outlined
-      label-color="primary"
-      color="primary"
-      debounce="300"
-      class="search-input"
-      @input="onInputChange"
-    />
+    <div class="form-field">
+      <label class="field-label">Buscar por nome, bairro ou montanha</label>
+      <q-input
+        v-model="unifiedSearch"
+        outlined
+        debounce="300"
+        class="custom-input search-input"
+        dense
+        @input="onInputChange"
+      />
+    </div>
     <q-list>
       <q-item v-for="item in filteredItems" :key="item.id" clickable class="item-card">
         <q-item-section avatar>
-          <q-avatar size="50px">
-            <q-img :src="item.imagem?.url || placeholderImage" cover />
-          </q-avatar>
+          <div class="item-avatar-container">
+            <q-img 
+              v-if="itemType === 'via' && item.imagem?.url" 
+              :src="item.imagem.url" 
+              class="item-image"
+            />
+            <ImagePlaceholder 
+              v-else-if="itemType === 'colecao'"
+              fillColor="#8CB369"
+              class="item-placeholder"
+            />
+            <q-img 
+              v-else-if="itemType === 'via'"
+              :src="placeholderImage" 
+              class="item-image"
+            />
+          </div>
         </q-item-section>
         <q-item-section>
           <q-item-label class="item-label-primary">{{ item.nome }}</q-item-label>
@@ -51,6 +66,7 @@
 
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue';
+import ImagePlaceholder from 'components/ImagePlaceholder.vue';
 
 interface Item {
   id: number;
@@ -109,8 +125,8 @@ const itemInfo = (item: Item) => {
   if (props.itemType === 'via') {
     return item.montanha?.nome || '';
   } else if (props.itemType === 'colecao') {
-    console.log(item);
-    return item.vias?.length ? `${item.vias.length} vias` : '0 vias';
+    const quantidade = item.viaColecoes?.length || 0;
+    return quantidade > 0 ? `${quantidade} ${quantidade === 1 ? 'via' : 'vias'}` : '0 vias';
   }
   return '';
 };
@@ -135,13 +151,66 @@ const onScroll = async (event: Event) => {
 @import "src/css/app.scss";
 
 .item-sugestao-container {
-  max-height: 550px; /* Aumenta a altura total do modal */
-  background-color: $background;
-  border-radius: 10px;
-  padding: 16px;
+  max-height: 500px;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  padding: 0;
+}
+
+// Form Field
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: $cumes-04;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+// Custom Input Styling
+.custom-input {
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01 !important;
+      border-width: 2px !important;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    min-height: 36px;
+  }
+
+  :deep(input) {
+    color: $background !important;
+    padding: 8px 12px !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($background, 0.5) !important;
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03 !important;
+      border-width: 2px !important;
+    }
+  }
 }
 
 .q-list {
@@ -151,88 +220,115 @@ const onScroll = async (event: Event) => {
   padding: 0;
 }
 
-.search-input {
-  margin-bottom: 24px; /* Aumenta a distância entre o input e os itens */
-}
-
 .item-card {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba($cumes-01, 0.1);
   border-radius: 8px;
-  height: 80px; /* Define uma altura maior */
-  margin: 4px 0; /* Remover margens laterais */
-  padding: 0 12px; /* Padding lateral reduzido */
-  width: 100%; /* Ocupar largura total */
+  min-height: 60px;
+  margin: 6px 0;
+  padding: 6px 10px;
+  width: calc(100% - 8px);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba($cumes-01, 0.15);
+    transform: translateX(4px);
+  }
 }
 
 .q-item-section {
   flex-shrink: 0;
-  margin-right: 16px;
+  margin-right: 12px;
 }
 
-.q-avatar {
+.item-avatar-container {
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($cumes-01, 0.2);
+  transition: all 0.3s ease;
+  padding: 0;
+  
+  .item-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    padding: 0;
+  }
+  
+  .item-placeholder {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    :deep(.svg-placeholder) {
+      width: 100%;
+      height: 100%;
+      opacity: 0.8;
+    }
+  }
+  
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgba($cumes-01, 0.3);
+    
+    .item-image {
+      transform: scale(1.08);
+    }
+  }
 }
 
 .item-label-primary {
-  color: $primary;
-  font-weight: bold;
-  font-size: 0.9rem;
+  color: $offwhite;
+  font-weight: 700;
+  font-size: 15px;
   margin-bottom: 4px;
 }
 
 .item-caption {
-  color: $primary;
-  font-size: 0.8rem;
+  color: rgba($offwhite, 0.7);
+  font-size: 13px;
 }
 
 .q-btn {
   margin: 0;
   padding: 0;
-}
-
-.q-dialog-plugin {
-  min-width: 450px; /* Aumenta a largura do modal em 50px */
-  max-height: 550px; /* Aumenta a altura do modal em 50px */
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  background-color: $background;
-  border-radius: 10px;
-}
-
-.card-actions {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .q-pagination {
-    flex-grow: 1;
-    margin-left: 16px;
-    font-size: 0.8rem; /* Fonte um pouco menor */
-    color: white; /* Cor branca para os itens de paginação */
+  min-width: 36px;
+  height: 36px;
+  
+  :deep(.q-icon) {
+    font-size: 20px;
   }
-
-  .items-per-page-select {
-    width: 130px;
-    border-radius: 5px;
-  }
-
-  .q-btn {
-    color: $cumes-03;
-    border: 1px solid $cumes-03;
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-
+  
+  &.q-btn--flat {
+    color: $cumes-01 !important;
+    
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba($cumes-01, 0.2) !important;
+    }
+    
+    &[disabled] {
+      color: rgba($cumes-01, 0.5) !important;
     }
   }
+}
+
+.loading-item,
+.no-results {
+  padding: 16px;
+  text-align: center;
+  color: $cumes-03;
+  font-weight: 600;
 }
 </style>

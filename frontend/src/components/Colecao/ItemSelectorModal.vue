@@ -1,38 +1,51 @@
 <template>
   <q-dialog v-model="isOpen" @hide="handleHide" @show="onDialogShow">
-    <q-card class="q-dialog-plugin">
-      <q-card-section class="title-section">
-        <div class="title-text">{{ title }}</div>
+    <q-card class="my-card">
+      <q-card-section class="card-header">
+        <div class="card-title">
+          <q-icon name="style" size="28px" class="title-icon" />
+          <span>{{ title }}</span>
+        </div>
       </q-card-section>
-      <q-card-section>
+
+      <q-card-section class="card-body">
         <ItemSugestao
           :items="items"
           :itemType="itemType"
           @add-item="addItem"
         />
       </q-card-section>
+
       <q-card-actions align="right" class="card-actions">
-        <q-select
-          v-model="itemsPerPage"
-          :options="itemsPerPageOptions"
-          label="Itens por página"
-          dense
-          outlined
-          color="secondary"
-          class="items-per-page-select"
-          @update:model-value="onItemsPerPageChange"
-        />
-        <q-pagination
-          v-model="currentPage"
-          :max="totalPages"
-          boundary-numbers
-          max-pages="5"
-          size="md"
-          color="secondary"
-          text-color="black"
-          @update:model-value="onPageChange"
-        />
-        <q-btn flat label="Cancelar" v-close-popup />
+        <div class="actions-content">
+          <div class="field-label">Itens por página</div>
+          <q-select
+            v-model="itemsPerPage"
+            :options="itemsPerPageOptions"
+            class="custom-select items-per-page-select"
+            dense
+            outlined
+            @update:model-value="onItemsPerPageChange"
+          />
+          <q-pagination
+            v-if="totalPages > 1"
+            v-model="currentPage"
+            :max="totalPages"
+            boundary-numbers
+            max-pages="5"
+            size="sm"
+            class="custom-pagination"
+            @update:model-value="onPageChange"
+          />
+          <div class="spacer" v-if="totalPages <= 1"></div>
+          <q-btn 
+            label="Fechar" 
+            class="btn-secondary-custom"
+            v-close-popup
+            unelevated
+            no-caps
+          />
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -74,6 +87,8 @@ const loadItems = async (page = 1) => {
     totalPages.value = Math.ceil(result.total / itemsPerPage.value);
   } catch (error) {
     console.error('Erro ao carregar itens:', error);
+    items.value = [];
+    totalPages.value = 1;
   }
 };
 
@@ -110,81 +125,192 @@ const onDialogShow = async () => {
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
-.q-dialog-plugin {
-  min-width: 400px;
-  max-height: 500px;
-  overflow-y: auto;
+.my-card {
+  min-width: 320px;
+  max-width: 500px;
+  width: 92vw;
+  border-radius: 16px;
+  margin: auto;
+  background-color: $background;
+  border: 2px solid $cumes-01;
+  box-shadow: 0 8px 32px $box-shadow-dark;
+  overflow: hidden;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  background-color: $background; /* Fundo geral */
-  border-radius: 10px;
+  
+  @media (min-width: 768px) {
+    width: 600px;
+    max-width: 600px;
+  }
+  
+  @media (min-width: 1024px) {
+    width: 750px;
+    max-width: 750px;
+  }
+  
+  @media (min-width: 1440px) {
+    width: 850px;
+    max-width: 850px;
+  }
 }
 
-.title-section {
-  background-color: $cumes-03; /* Cor de destaque para o título */
-  color: white;
-  padding: 2.5rem 16px 16px;
-  border-top-left-radius: 10px; /* Bordas arredondadas integrando ao card */
-  border-top-right-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
-  text-align: center;
+// Header do Card
+.card-header {
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  padding: 24px 32px;
+  border-bottom: 3px solid $cumes-03;
 }
 
-.title-text {
-  font-size: 1.2rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  position: relative;
-}
-
-.title-text::after {
-  content: '';
-  position: absolute;
-  bottom: -0.4rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%;
-  height: 0.2rem;
-  background-color: white;
-  border-radius: 5px;
-}
-
-.card-actions {
-  margin-top: auto;
+.card-title {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  color: $offwhite;
+  text-shadow: 0 2px 4px $text-shadow-default;
 
-  .q-pagination {
-    flex-grow: 1;
-    margin-left: 16px;
-    font-size: 0.9rem; /* Ajusta tamanho da fonte */
-    color: $cumes-01; /* Usa cor padrão */
+  .title-icon {
+    color: $cumes-04;
+  }
+}
+
+// Body do Card
+.card-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+
+  @media (max-width: 600px) {
+    padding: 16px;
+  }
+}
+
+// Card Actions
+.card-actions {
+  padding: 16px 24px;
+  border-top: 1px solid rgba($cumes-03, 0.2);
+  background-color: $background;
+}
+
+.actions-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: $cumes-04;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+}
+
+// Custom Select Styling
+.custom-select {
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01 !important;
+      border-width: 2px !important;
+    }
   }
 
-  .items-per-page-select {
-    width: 130px;
-    border: 1px solid $cumes-01; /* Borda com cor padrão */
-    border-radius: 5px;
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    min-height: 36px;
   }
 
-  .q-btn {
-    color: $cumes-03;
-    border: 1px solid $cumes-03; /* Borda com cor do botão */
-    background-color: transparent;
-    transition: background-color 0.3s ease;
+  :deep(.q-field__input) {
+    color: $background !important;
+    padding: 8px 12px !important;
+    min-height: 36px;
+  }
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.1); /* Fundo leve no hover */
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03 !important;
+      border-width: 2px !important;
     }
   }
 }
 
-.item-sugestao-container {
-  background-color: $background;
-  padding: 16px;
-  border-radius: 0 0 10px 10px; /* Faz o container parecer integrado ao título */
+.items-per-page-select {
+  width: 140px;
+  min-width: 140px;
+}
+
+// Custom Pagination
+.custom-pagination {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+
+  :deep(.q-btn) {
+    color: $cumes-03 !important;
+    background-color: transparent !important;
+    min-width: 33px;
+    height: 33px;
+    border: 1px solid rgba($cumes-03, 0.3) !important;
+    border-radius: 6px !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    
+    &.q-btn--active {
+      background-color: $cumes-03 !important;
+      color: $offwhite !important;
+      border-color: $cumes-03 !important;
+      font-weight: 800 !important;
+    }
+
+    &:hover:not(.q-btn--active) {
+      background-color: rgba($cumes-03, 0.15) !important;
+      border-color: rgba($cumes-03, 0.5) !important;
+    }
+  }
+
+  :deep(.q-pagination__input) {
+    color: $cumes-04 !important;
+  }
+}
+
+// Secondary Button
+.btn-secondary-custom {
+  background: transparent !important;
+  color: $cumes-01 !important;
+  border: 2px solid $cumes-01 !important;
+  padding: 8px 24px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  min-height: 36px !important;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($cumes-01, 0.1) !important;
+  }
 }
 
 </style>
