@@ -9,9 +9,14 @@ class ImageService {
 
   getFullImageUrl(relativePath: string): string {
     if (!relativePath) return '';
-    if (relativePath.startsWith('http')) return relativePath;
+    // Se já é uma URL completa (http/https), retornar como está
+    if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+      return relativePath;
+    }
 
-    return `${this.assetsUrl}/${relativePath.replace(/^\/?assets?\//, '')}`;
+    // Processar URL relativa
+    const cleanPath = relativePath.replace(/^\/?assets?\//, '');
+    return `${this.assetsUrl}/${cleanPath}`;
   }
 
   async getImageById(id: number): Promise<any> {

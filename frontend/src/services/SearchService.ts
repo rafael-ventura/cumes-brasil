@@ -10,8 +10,13 @@ class SearchService {
     const searchResult = response.data as SearchResult;
     // Formatar as entidades do tipo Via
     if (searchRequest.entityType === 'Via') {
-      searchResult.items = searchResult.items.map((item: any) => formatVia(item as Via));
-      searchRequest.items = searchResult.items.map((item: any) => ImagemService.getFullImageUrl(item.imagem.url));
+      searchResult.items = searchResult.items.map((item: any) => {
+        const via = formatVia(item as Via);
+        if (via.imagem?.url) {
+          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        }
+        return via;
+      });
     }
     return searchResult;
   }

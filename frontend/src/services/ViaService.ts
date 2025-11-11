@@ -26,7 +26,11 @@ class ViaService {
       const response = await api.get('/vias/', { params });
       const vias = response.data.vias as Via[];
       const total = response.data.total as number;
-      vias.forEach(via => adjustImageUrls(via.imagem));
+      vias.forEach(via => {
+        if (via.imagem) {
+          adjustImageUrls(via.imagem);
+        }
+      });
       return {
         vias,
         total
@@ -62,7 +66,13 @@ class ViaService {
   }
 
   private async adjustAndFormatVia (via: Via): Promise<Via> {
-    adjustImageUrls(via.imagem);
+    if (via.imagem) {
+      adjustImageUrls(via.imagem);
+    }
+    // Processar imagem da montanha também
+    if (via.montanha?.imagem) {
+      adjustImageUrls(via.montanha.imagem);
+    }
     via.croquis = await croquiService.getCroquiByViaId(via.id);
     via.croquis.forEach(croqui => adjustImageUrls(croqui));
     return formatVia(via);

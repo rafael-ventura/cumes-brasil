@@ -33,7 +33,7 @@
         >
           <q-item-section avatar>
             <q-avatar square size="60px" class="custom-avatar">
-              <q-img :src="via.imagem?.url || 'https://via.placeholder.com/60'" />
+              <q-img :src="getViaImageUrlFull(via) || 'https://via.placeholder.com/60'" />
             </q-avatar>
           </q-item-section>
           <q-item-section>
@@ -82,6 +82,7 @@
 import { ref, watch } from 'vue';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 interface ViaWithSelected extends Via {
   selected?: boolean;

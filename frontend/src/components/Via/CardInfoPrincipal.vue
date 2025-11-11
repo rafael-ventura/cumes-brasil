@@ -2,13 +2,26 @@
   <div class="card-info-principal">
     <!-- Imagem com Botão Sobreposto -->
     <q-img
-      v-if="via && via.imagem && via.imagem.url"
-      :src="via.imagem.url"
+      v-if="viaImageUrl"
+      :src="viaImageUrl"
       :alt="via.nome"
       class="card-imagem"
+      loading="lazy"
     >
       <BotaoVoltar class="btn-back" />
+      <template v-slot:error>
+        <div class="full-width full-height flex flex-center bg-grey-3 text-grey-8">
+          <div class="text-center">
+            <q-icon name="image" size="64px" />
+            <div class="text-body2 q-mt-sm">Imagem não disponível</div>
+          </div>
+        </div>
+      </template>
     </q-img>
+    <div v-else class="card-imagem-placeholder">
+      <q-icon name="image" size="64px" />
+      <div class="text-body2 q-mt-sm">Sem imagem</div>
+    </div>
 
     <h2 class="via-nome" v-if="via?.nome && via.nome !== 'N/A'">
       {{ via.nome }}
@@ -34,10 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps({
   via: {
@@ -47,6 +61,7 @@ const props = defineProps({
 });
 
 const showGrauInfo = ref(false);
+const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 </script>
 
@@ -70,6 +85,18 @@ const showGrauInfo = ref(false);
   border-radius: 10px 10px 0 0;
   object-fit: cover;
   position: relative;
+}
+
+.card-imagem-placeholder {
+  width: 100%;
+  height: 250px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $cumes-02;
+  color: $offwhite;
 }
 
 .btn-back {

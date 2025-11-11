@@ -2,7 +2,15 @@
   <div v-if="via">
     <q-card class="card-item" @click="emitClick">
       <div class="card-image-container">
-        <img :src="via.imagem.url" class="card-image" alt="via image" />
+        <img 
+          v-if="viaImageUrl" 
+          :src="viaImageUrl" 
+          class="card-image" 
+          alt="via image" 
+        />
+        <div v-else class="card-image-placeholder">
+          <q-icon name="image" size="48px" />
+        </div>
       </div>
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
@@ -19,11 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import { Via } from 'src/models/Via';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps<{ via: Via }>();
 const emits = defineEmits(['click']);
+
+const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 const emitClick = () => {
   props.via.nome &&
@@ -64,6 +76,18 @@ const emitClick = () => {
   border-top-right-radius: 10px;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $cumes-02;
+  color: $offwhite;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .card-item:hover .card-image {

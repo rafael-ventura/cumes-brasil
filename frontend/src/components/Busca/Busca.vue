@@ -141,7 +141,9 @@ const searchEntities = async (reset = false) => {
     if (props.entity === 'via') {
       searchResult.items = searchResult.items.map((item: any) => {
         const via = formatVia(item as Via);
-        via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        if (via.imagem?.url) {
+          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+        }
         return via;
       });
     }

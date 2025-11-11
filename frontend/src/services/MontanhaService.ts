@@ -25,7 +25,9 @@ export class MontanhaService {
       const response = await api.get(url);
       const montanha = response.data as Montanha;
 
-      adjustImageUrls(montanha.imagem);
+      if (montanha.imagem) {
+        adjustImageUrls(montanha.imagem);
+      }
       return montanha;
     } catch (error: any) {
       handleApiError(error, 'Erro desconhecido ao buscar montanha');
@@ -38,7 +40,11 @@ export class MontanhaService {
       const montanhas = response.data as Montanha[];
 
       montanhas.forEach(
-        (montanha: Montanha) => adjustImageUrls(montanha.imagem)
+        (montanha: Montanha) => {
+          if (montanha.imagem) {
+            adjustImageUrls(montanha.imagem);
+          }
+        }
       );
       return montanhas;
     } catch (error: any) {

@@ -3,8 +3,8 @@
     <!-- Imagem da Via -->
     <div class="imagem-container">
       <img
-        v-if="via?.imagem?.url"
-        :src="via.imagem.url"
+        v-if="viaImageUrl"
+        :src="viaImageUrl"
         alt="Imagem da Via"
         class="via-imagem"
       />
@@ -121,6 +121,7 @@ import { Escalada } from 'src/models/Escalada';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps({
   escalada: {
@@ -134,6 +135,8 @@ const via = ref<Via | null>(null);
 const dropdownOpen = ref(false);
 const observacaoExpandida = ref(false);
 const observacaoDropdownOpen = ref(true); // Começa aberto por padrão
+
+const viaImageUrl = computed(() => getViaImageUrlFull(via.value));
 
 // Observa mudanças na prop escalada
 watch(() => props.escalada, (newEscalada) => {
