@@ -30,39 +30,6 @@
 - ~~Revisar e padronizar camada de validação de dados nas controllers~~
 - ~~Garantir que services seguem padrões e usam middlewares corretamente~~
 - ~~Verificar herança de classes base em services, validations e repositories~~
-
-- **Padronizar todos os modais e formulários do sistema** 🎨
-  - **Referência**: `PerfilEditaForm.vue` + seção "Modais e Formulários" do `DESIGN_FRONTEND.md`
-  - **Objetivo**: Garantir consistência visual e de código em todo o sistema
-  
-  **Padrão a seguir:**
-  - Fundo do modal: `$background` (escuro)
-  - Header com gradiente verde + ícone amarelo + border laranja
-  - Inputs com fundo `$offwhite` (claro sobre escuro)
-  - Labels amarelas (`$cumes-04`) em uppercase
-  - Padding controlado: `padding: 0 !important` no container, `10px 14px` no input
-  - Botões com `!important` e estilos padronizados
-  - Tamanhos responsivos (320px → 600px → 700px → 800px)
-  
-  **Modais/Forms a refatorar:**
-  - [ ] Modal de criar/editar Via
-  - [ ] Modal de criar/editar Montanha
-  - [ ] Modal de criar/editar Face/Setor
-  - [ ] Modal de criar Escalada
-  - [ ] Modal de criar/editar Coleção
-  - [ ] Modal de configuração de Coleções
-  - [ ] Formulário de busca/filtros
-  - [ ] Outros modais identificados no sistema
-  
-  **Checklist por modal:**
-  - [ ] Substituir cores hardcoded por variáveis do design system
-  - [ ] Aplicar estrutura: `.modal-header` + `.modal-body` + `.modal-actions`
-  - [ ] Ajustar inputs: fundo offwhite, texto escuro, padding controlado
-  - [ ] Padronizar labels: amarelo, uppercase, weight 700
-  - [ ] Aplicar tamanhos responsivos
-  - [ ] Adicionar `!important` onde necessário
-  - [ ] Testar em mobile e desktop
-
 - **Implementar interfaces nas camadas do backend**
   - Criar interfaces para **Services**
   - Criar interfaces para **Repositories**
@@ -108,7 +75,21 @@
 - ~~Coleção Detalhada~~
 - ~~Escaladas~~
 - ~~Favoritas~~
-- ~~**Ajustar largura maxima das telas em desktop (evitar 100% width)**~~
+- ~~Ajustar largura maxima das telas em desktop (evitar 100% width)~~
+
+---
+
+### Epic: Ajustar Modais e Formulários 💻
+
+- ~~Home~~
+- ~~Perfil~~
+- ~~Vias (listagem)~~
+- ~~Via Detalhada~~
+- ~~Coleções (listagem)~~
+- ~~Coleção Detalhada~~
+- ~~Escaladas~~
+- ~~Favoritas~~
+- **Auth(Login/Register/RedefinirSenha)**
 
 ---
 

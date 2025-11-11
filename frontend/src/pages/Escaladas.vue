@@ -84,11 +84,11 @@ defineOptions({
 
 .titulo-pagina {
   font-size: 40px;
-  font-weight: 700; /* Mesmo estilo de fonte de Colecoes */
+  font-weight: 700;
   text-align: center;
   color: $cumes-01;
-  text-shadow: 0 2px 4px $text-shadow-default; /* Mesmo text-shadow de Colecoes */
-  
+  text-shadow: 0 2px 4px $text-shadow-default;
+
   @media (max-width: 768px) {
     font-size: 32px;
   }
