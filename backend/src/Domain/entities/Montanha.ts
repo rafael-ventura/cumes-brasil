@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Fonte } from "./Fonte";
 import { Imagem } from "./Imagem";
 import { Face } from "./Face";
 import { Via } from "./Via";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
+import { Bairro } from "./Bairro";
 
 @Entity()
 export class Montanha extends BaseEntityWithTimestamps {
@@ -13,9 +14,6 @@ export class Montanha extends BaseEntityWithTimestamps {
   @Column({ nullable: false })
   nome: string;
 
-  @Column({ nullable: true })
-  bairro?: string;
-
   @Column("int", { nullable: true })
   altura?: number;
 
@@ -24,6 +22,9 @@ export class Montanha extends BaseEntityWithTimestamps {
 
   @ManyToOne(() => Imagem)
   imagem: number;
+
+  @ManyToOne(() => Bairro, bairro => bairro.montanhas)
+  bairro: Bairro;
 
   @OneToMany(() => Face, face => face.montanha)
   faces: Face[];
