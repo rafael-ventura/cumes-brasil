@@ -2,25 +2,35 @@
 
 ## 🐛 FIXES
 
-- ~~Corrigir bug na **tela de perfil** - não permitia adicionar foto quando perfil não tinha foto~~
-- Ajustar Escolha de Via Predileta na **tela de Perfil**
+- ~~Corrigir bug na **tela de perfil**~~
+  - ~~não permitia adicionar foto quando perfil não tinha foto~~
+- ~~Ajustar Escolha de Via Predileta na **tela de Perfil**~~
+  - ~~Modal não abria ao clicar no botão~~
+  - ~~Foto e nome da montanha sumiam após salvar via predileta~~
+- ~~Corrigir tamanho do SVG placeholder de croqui na Via Detalhada~~
+  - ~~SVG estava muito grande (ocupava 100% do espaço)~~
+  - ~~Reduzido para 80px e ajustado estilo~~
+- ~~Corrigir atualização de coleção~~
+  - ~~Validação exigia id no body, mas id vem da URL~~
+- ~~Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)~~
+  - ~~Botão estava aparecendo por cima da TopBar ao fazer scroll~~
+  - ~~Ajustado z-index de 1000 para 999 (abaixo da TopBar)~~
 
-- **Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)**
-  - Botão está aparecendo por cima da TopBar ao fazer scroll
-  - Ajustar z-index para ficar abaixo da navbar
-  - Testar comportamento no scroll
+- ~~Ajustar tamanho das modais de Bio e Via Predileta no Perfil~~
+  - ~~Modais ocupavam muito espaço vertical para pouca informação~~
+  - ~~Desktop: Reduzida altura (min-height: auto), centralizado conteúdo, padding reduzido (24px)~~
+  - ~~Mobile: Ajustado padding e proporções, mantendo funcionalidade~~
+  - ~~Proporção visual mais equilibrada~~
 
-- **Ajustar tamanho das modais de Bio e Via Predileta no Perfil**
-  - Modais ocupam muito espaço vertical para pouca informação
-  - Desktop: Reduzir altura e centralizar melhor
-  - Mobile: Ajustar padding interno para aproveitar melhor o espaço
-  - Manter proporção visual equilibrada
+- ~~Corrigir layout das telas de Login e Registro~~
+  - ~~Imagem de fundo ficou "estrangulada" após ajuste de `max-width` no MainLayout~~
+  - ~~Páginas de autenticação devem ocupar 100% da largura (fullscreen)~~
+  - ~~Excluir Login/Register da regra de padding do `MainLayout.vue`~~
+  - ~~Aplicada classe condicional para rotas de autenticação (login, register, reset-password)~~
 
-- **Corrigir layout das telas de Login e Registro**
-  - Imagem de fundo ficou "estrangulada" após ajuste de `max-width` no MainLayout
-  - Páginas de autenticação devem ocupar 100% da largura (fullscreen)
-  - Excluir Login/Register da regra de padding do `MainLayout.vue`
-  - Alternativa: Criar layout separado para autenticação sem constraints de width
+- ~~Ajustar botões de status no Perfil (Mobile)~~
+  - ~~Botões (Coleções, Favoritas, Escaladas) devem ficar na mesma linha no mobile~~
+  - ~~Ajustado flex-wrap para nowrap e tamanhos de fonte para caberem na mesma linha~~
 
 ---
 
@@ -41,10 +51,15 @@
   - **Otimizar joins desnecessários**
   - Avaliar uso de eager/lazy loading
 
-- **Implementar fallback inteligente de imagens**
-  - **Se via não tem foto → usar foto da montanha**
-  - **Se montanha não tem foto → usar placeholder padrão**
-  - Atualizar componentes de exibição de via
+- ~~Implementar fallback inteligente de imagens~~
+  - ~~Se via não tem foto → usar foto da montanha~~
+  - ~~Se montanha não tem foto → usar placeholder padrão~~
+  - ~~Função `getViaImageUrlFull` implementada em `utils.ts`~~
+  - ~~Atualizado em componentes: ViaCard, ViaCardSmall, CardInfoPrincipal, EscaladaCard~~
+
+- **Melhorar scroll na tela de Vias**
+  - Scroll está confuso/desorganizado
+  - Revisar comportamento de scroll e ajustar para melhor UX
 
 ---
 
@@ -89,7 +104,7 @@
 - ~~Coleção Detalhada~~
 - ~~Escaladas~~
 - ~~Favoritas~~
-- **Auth(Login/Register/RedefinirSenha)**
+- ~~Auth(Login/Register/RedefinirSenha)~~
 
 ---
 
@@ -119,35 +134,6 @@
   - Implementar lazy loading de imagens
   - Adicionar skeleton loading durante carregamento
   - Cache de páginas já visitadas (opcional)
-
----
-
-### Epic: Vias Clássicas do CERJ 🏔️
-
-**Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
-
-**Tarefas:**
-
-- Adicionar campo `is_classica_cerj` na entidade Via (backend)
-  - Boolean/flag no banco de dados
-  - Adicionar no DTO de Via
-  - Atualizar validações e controllers
-
-- Criar badge/tag visual para vias clássicas
-  - Design do badge (ícone + texto)
-  - Adicionar nos cards de via
-  - Adicionar na tela de via detalhada
-  - Usar cor de destaque da paleta ($cumes-04 ou $cumes-05)
-
-- Adicionar filtro de vias clássicas na busca
-  - Checkbox/toggle no filtro
-  - Integrar com SearchService
-  - Atualizar query no ViaRepository
-
-- Criar card personalizado na Home
-  - Card especial "Clássicas do CERJ"
-  - Listar X vias clássicas aleatórias
-  - Link para busca filtrada por clássicas
 
 ---
 
@@ -200,6 +186,35 @@ Continente
 
 ---
 
+### Epic: Vias Clássicas do CERJ 🏔️
+
+**Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
+
+**Tarefas:**
+
+- Adicionar campo `is_classica_cerj` na entidade Via (backend)
+  - Boolean/flag no banco de dados
+  - Adicionar no DTO de Via
+  - Atualizar validações e controllers
+
+- Criar badge/tag visual para vias clássicas
+  - Design do badge (ícone + texto)
+  - Adicionar nos cards de via
+  - Adicionar na tela de via detalhada
+  - Usar cor de destaque da paleta ($cumes-04 ou $cumes-05)
+
+- Adicionar filtro de vias clássicas na busca
+  - Checkbox/toggle no filtro
+  - Integrar com SearchService
+  - Atualizar query no ViaRepository
+
+- Criar card personalizado na Home
+  - Card especial "Clássicas do CERJ"
+  - Listar X vias clássicas aleatórias
+  - Link para busca filtrada por clássicas
+
+---
+
 ### Epic: Sistema Colaborativo de Fotos de Vias ⭐
 
 **Objetivo:** Permitir que usuários contribuam com fotos de vias, com sistema de moderação e créditos aos autores.
@@ -238,5 +253,141 @@ Continente
   - Endpoint para listar sugestões pendentes
   - Botões de aprovar/rejeitar (apenas admin)
   - Notificação ao usuário sobre status (futuro)
+
+---
+
+### Epic: Redesenhar Tela de Vias/Busca 🔍 (Prioridade Mínima)
+
+**Objetivo:** Transformar a tela de busca/vias em uma experiência de navegação por categorias, ao invés de carregar todas as vias de uma vez.
+
+**Tarefas:**
+
+- Criar seção inicial de navegação por tópicos/categorias
+  - Seção de Estados do Brasil (navegação por estado)
+  - Seção de Vias por Cidade
+  - Seção de Vias Mais Recentes
+  - Seção "Ver Todas as Vias" (leva para tela de busca completa)
+
+- Migrar lógica de filtros personalizados da Home
+  - Mover filtros personalizados para a tela de busca completa
+  - Atualizar tela de busca com paginação, ordenação e filtros melhorados
+
+- Criar tela de busca completa aprimorada
+  - Paginação otimizada
+  - Ordenação (por nome, data, grau, etc)
+  - Sistema de filtros avançado
+  - Melhorar UX de navegação
+
+**Nota:** A Home será atualizada em outra epic para focar em atualizações e dicas do usuário de outras páginas.
+
+---
+
+### Epic: Redesenhar Home no Estilo Rede Social 📱
+
+**Objetivo:** Transformar a tela Home em um feed estilo rede social, mostrando atividades recentes da comunidade de escaladores.
+
+**Tarefas:**
+
+- **Adicionar feed de últimas escaladas registradas**
+  - Mostrar últimas escaladas de qualquer via do sistema por qualquer usuário
+  - Exibir: nome da via, grau badge, usuário que registrou, preview do texto de observação
+  - Permitir clicar e navegar para tela específica da escalada
+  - Criar tela de escalada específica (detalhes da escalada)
+  - Adicionar foto do usuário e data da escalada
+  - Permitir interações (curtir, comentar - futuro)
+
+- **Adicionar seção de vias mais recentes cadastradas**
+  - Mostrar vias recém-cadastradas no sistema
+  - Exibir card com foto, nome, grau e localização
+  - Permitir navegação para via detalhada
+
+- **Adicionar seção de usuários ativos**
+  - Mostrar outros usuários da plataforma
+  - Exibir foto de perfil, nome e localização
+  - Permitir visualizar perfil de outros usuários
+  - Mostrar estatísticas básicas (escaladas, favoritas, coleções)
+
+- **Criar layout de feed vertical**
+  - Scroll infinito ou paginação
+  - Cards estilo timeline/post
+  - Ordenação por data (mais recente primeiro)
+  - Filtros opcionais (tipo de conteúdo, usuários seguidos - futuro)
+
+- **Melhorar experiência visual**
+  - Design moderno e limpo estilo rede social
+  - Animações suaves de transição
+  - Loading states e skeletons
+  - Responsivo mobile e desktop
+
+---
+
+### Epic: Sistema de Notificações Push via PWA 📲
+
+**Objetivo:** Implementar notificações push no celular usando recursos de PWA (Progressive Web App) para enviar notificações aos usuários, similar a um app nativo.
+
+**Contexto Técnico:**
+
+- Aplicação já é PWA (verificar configuração atual)
+- Explorar Service Workers para notificações push
+- Integrar com Web Push API
+- Backend precisa suportar envio de notificações
+
+**Tarefas:**
+
+- **Configurar PWA para notificações**
+  - Verificar e otimizar manifest.json
+  - Configurar Service Worker
+  - Implementar solicitação de permissão de notificações
+  - Criar UI para gerenciar preferências de notificações
+
+- **Implementar Web Push API no frontend**
+  - Registrar service worker
+  - Solicitar permissão do usuário
+  - Obter subscription (endpoint, keys)
+  - Enviar subscription para backend
+  - Gerenciar estado de permissão
+
+- **Criar endpoints no backend**
+  - POST `/api/notifications/subscribe` - registrar subscription do usuário
+  - GET `/api/notifications/subscriptions` - listar subscriptions do usuário
+  - DELETE `/api/notifications/unsubscribe` - remover subscription
+  - POST `/api/notifications/send` - enviar notificação (admin/sistema)
+
+- **Implementar sistema de notificações no backend**
+  - Integrar com biblioteca de push notifications (web-push)
+  - Criar serviço para enviar notificações
+  - Armazenar subscriptions no banco de dados
+  - Criar fila/jobs para envio assíncrono (opcional)
+
+- **Definir tipos de notificações**
+  - Nova escalada registrada (seguindo usuário)
+  - Nova via adicionada em coleção favorita
+  - Comentário em escalada (futuro)
+  - Mensagem direta (futuro)
+  - Lembretes e atualizações do sistema
+
+- **Criar sistema de preferências**
+  - Permitir usuário escolher quais notificações receber
+  - Toggle por tipo de notificação
+  - Salvar preferências no perfil do usuário
+  - Interface no perfil para gerenciar notificações
+
+- **Implementar notificações em tempo real**
+  - WebSocket ou Server-Sent Events (opcional)
+  - Notificações instantâneas quando online
+  - Notificações push quando offline/background
+
+- **Testes e validação**
+  - Testar em diferentes navegadores (Chrome, Firefox, Safari)
+  - Testar em Android e iOS
+  - Validar comportamento offline
+  - Testar permissões e bloqueios
+
+**Notas Técnicas:**
+
+- iOS tem limitações com notificações push em PWA (requer iOS 16.4+)
+- Chrome/Edge têm melhor suporte para Web Push
+- Considerar fallback para notificações in-app se push não disponível
+- Implementar badge de notificações não lidas
 
 ---

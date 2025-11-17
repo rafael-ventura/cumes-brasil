@@ -24,11 +24,16 @@ class ViaService {
       if (limit !== undefined) params.limit = limit;
 
       const response = await api.get('/vias/', { params });
-      const vias = response.data.vias as Via[];
+      // A API retorna 'items' mas o frontend espera 'vias'
+      const vias = (response.data.items || response.data.vias) as Via[];
       const total = response.data.total as number;
       vias.forEach(via => {
         if (via.imagem) {
           adjustImageUrls(via.imagem);
+        }
+        // Processar imagem da montanha também
+        if (via.montanha?.imagem) {
+          adjustImageUrls(via.montanha.imagem);
         }
       });
       return {

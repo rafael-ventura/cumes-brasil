@@ -27,7 +27,8 @@ export default {
     },
 
     updateBody(colecao: any) {
-        ValidationBase.requireIdOnBody(colecao);
+        ValidationBase.requireObject(colecao);
+        // O id vem da URL, não precisa estar no body
     }
 }
 

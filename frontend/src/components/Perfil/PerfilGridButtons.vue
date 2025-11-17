@@ -1,19 +1,19 @@
 <template>
-  <q-item-section>
-    <div class="row q-col-gutter-sm justify-around margin">
-      <div v-for="(item, index) in items" :key="index" class="col-xs-4 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-        <q-item flat :label="item.label" clickable :to="item.to" class="shadow-item box-item" :style="{ backgroundColor: item.color }">
-          <q-item-section class="q-column items-center text-center">
-            <div class="row items-center justify-center">
-              <div class="large-text">{{ item.num }}</div>
-              <q-icon :name="item.icon" class="medium-icon left-margem" />
-            </div>
-            <div class="texto text-h7">{{ item.label }}</div>
-          </q-item-section>
-        </q-item>
+  <div class="stats-container">
+    <router-link
+      v-for="(item, index) in items"
+      :key="index"
+      :to="item.to"
+      class="stat-card"
+      :style="{ backgroundColor: item.color }"
+    >
+      <div class="stat-content">
+        <div class="stat-number">{{ item.num }}</div>
+        <q-icon :name="item.icon" class="stat-icon" />
+        <div class="stat-label">{{ item.label }}</div>
       </div>
-    </div>
-  </q-item-section>
+    </router-link>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -27,27 +27,35 @@ defineProps<{
 <style scoped lang="scss">
 @import "src/css/app.scss";
 
-.large-text {
-  font-size: 18px;
-  font-weight: bold;
+.stats-container {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: nowrap;
 
   @media (min-width: 1024px) {
-    font-size: 24px;
+    gap: 10px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: stretch;
   }
 }
 
-.box-item {
+.stat-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding: 5px;
-  min-width: 80px;
-  max-width: 140px;
-  min-height: 80px;
   border-radius: 10px;
   transition: all 0.3s ease;
   cursor: pointer;
+  text-decoration: none;
+  padding: 8px 10px;
+  min-width: 0;
+  min-height: 60px;
+  flex: 1 1 0;
+  margin: 0 !important;
 
   &:hover {
     transform: scale(1.05);
@@ -55,44 +63,54 @@ defineProps<{
   }
 
   @media (min-width: 1024px) {
-    padding: 16px;
-    min-width: 120px;
-    max-width: 180px;
-    min-height: 120px;
+    padding: 8px 20px;
+    min-height: 40px;
     border-radius: 16px;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0 !important;
   }
 }
 
-.margin {
-  margin: 0;
+.stat-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
 
   @media (min-width: 1024px) {
-    margin: 0;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    width: 100%;
+    gap: 10px;
   }
 }
 
-.texto {
+.stat-number {
+  font-size: 16px;
+  font-weight: bold;
+  color: $background;
+
+  @media (min-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+.stat-icon {
   font-size: 18px;
+  color: $background;
 
   @media (min-width: 1024px) {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 20px;
   }
 }
 
-.q-item-section {
-  @media (min-width: 1024px) {
-    padding: 0;
-  }
-}
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: $background;
+  white-space: nowrap;
 
-.medium-icon {
   @media (min-width: 1024px) {
-    font-size: 28px !important;
+    font-size: 14px;
   }
 }
 </style>

@@ -51,6 +51,9 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
         return this.repository.createQueryBuilder("usuario")
             .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
+            .leftJoinAndSelect('via_preferida.montanha', 'montanha')
+            .leftJoinAndSelect('montanha.imagem', 'montanhaImagem')
+            .leftJoinAndSelect('via_preferida.imagem', 'viaImagem')
             .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
             .where('usuario.id = :id', { id })
             .getOne();

@@ -4,75 +4,100 @@
       <q-img src="/logo-black.svg" alt="Cumes Brasil" class="logo-tamanho" />
     </div>
     <div class="form-container">
-      <q-card class="reset-password-card">
-        <q-card-section>
-          <div class="text-h6 titulo-redefinir-senha">Redefinir Senha</div>
+      <q-card class="my-card">
+        <q-card-section class="card-header">
+          <div class="card-title">
+            <q-icon name="lock_reset" size="28px" class="title-icon" />
+            <span>Redefinir Senha</span>
+          </div>
         </q-card-section>
 
-        <q-card-section v-if="token">
-          <form @submit.prevent="onResetPassword">
-            <div class="custom-input-auth">
-              <div class="input-container">
-                <q-icon name="lock" class="input-icon" />
-                <label for="senha" class="input-label">Senha</label>
-              </div>
-              <InputText
+        <q-card-section v-if="token" class="card-body">
+          <q-form @submit.prevent="onResetPassword" class="edit-form">
+            <div class="form-field">
+              <label class="field-label">Nova Senha *</label>
+              <q-input
                 id="senha"
                 v-model="password"
-                :class="{ 'p-invalid': password.length < 6 }"
+                type="password"
                 placeholder="Digite sua nova senha"
-                :feedback="false"
-              />
-              <small v-if="password.length < 6" class="error-message">
-                A senha deve conter pelo menos 6 caracteres
-              </small>
+                :rules="[
+                  val => !!val || 'Campo obrigatório',
+                  val => val.length >= 6 || 'A senha deve conter pelo menos 6 caracteres'
+                ]"
+                outlined
+                dense
+                class="custom-input"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+              </q-input>
             </div>
 
-            <div class="custom-input-auth">
-              <div class="input-container">
-                <q-icon name="lock" class="input-icon" />
-                <label for="confirmarSenha" class="input-label">Confirmar Senha</label>
-              </div>
-              <InputText
+            <div class="form-field">
+              <label class="field-label">Confirmar Senha *</label>
+              <q-input
                 id="confirmarSenha"
                 v-model="passwordRepeated"
-                :class="{ 'p-invalid': passwordRepeated !== password }"
+                type="password"
                 placeholder="Confirme sua senha"
-              />
-              <small v-if="passwordRepeated !== password" class="error-message senha-nao-conferem">
-                Senhas não conferem
-              </small>
+                :rules="[
+                  val => !!val || 'Campo obrigatório',
+                  val => val === password || 'Senhas não conferem'
+                ]"
+                outlined
+                dense
+                class="custom-input"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+              </q-input>
             </div>
 
-            <div class="action-buttons">
+            <div class="form-actions">
               <BotaoVoltar class="btn-back"/>
-              <q-btn type="submit" label="Redefinir Senha" class="register-btn"/>
+              <q-btn 
+                type="submit" 
+                label="Redefinir Senha" 
+                class="btn-primary-custom"
+                no-caps
+              />
             </div>
-          </form>
+          </q-form>
         </q-card-section>
 
-        <q-card-section v-else>
-          <form @submit.prevent="onGeneratePasswordToken">
-            <div class="custom-input-auth">
-              <div class="input-container">
-                <q-icon name="mail" class="input-icon" />
-                <label for="email" class="input-label">Email</label>
-              </div>
-              <InputText
+        <q-card-section v-else class="card-body">
+          <q-form @submit.prevent="onGeneratePasswordToken" class="edit-form">
+            <div class="form-field">
+              <label class="field-label">Email *</label>
+              <q-input
                 id="email"
                 v-model="email"
-                class="custom-input-field"
-                :class="{ 'p-invalid': !email }"
+                type="email"
                 placeholder="Digite seu email"
-              />
-              <small v-if="!email" class="error-message">Campo obrigatório</small>
+                :rules="[ val => !!val || 'Campo obrigatório' ]"
+                outlined
+                dense
+                class="custom-input"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="mail" />
+                </template>
+              </q-input>
             </div>
 
-            <div class="action-buttons">
+            <div class="form-actions">
               <BotaoVoltar class="btn-back"/>
-              <q-btn type="submit" label="Redefinir" class="register-btn"/>
+              <q-btn 
+                type="submit" 
+                label="Redefinir" 
+                class="btn-primary-custom"
+                no-caps
+              />
             </div>
-          </form>
+          </q-form>
         </q-card-section>
       </q-card>
     </div>
@@ -85,8 +110,6 @@ import {onMounted, ref} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {createNotifyConfig} from 'src/utils/utils'
 import {Notify} from 'quasar'
-import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
 import BotaoVoltar from "components/BotaoVoltar.vue";
 
 defineOptions({
@@ -136,7 +159,6 @@ const onResetPassword = async () => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
-@import 'src/css/inputs.scss';
 
 .fundo-redefinir-senha {
   background-image: url('/login2.jpg');
@@ -147,6 +169,7 @@ const onResetPassword = async () => {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding: 20px;
 
   @media (max-width: 800px) {
     background-image: url('/login.png');
@@ -158,6 +181,7 @@ const onResetPassword = async () => {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .logo-tamanho {
@@ -167,66 +191,167 @@ const onResetPassword = async () => {
 
 .form-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 40px;
 }
 
-.reset-password-card {
+.my-card {
+  min-width: 320px;
+  max-width: 500px;
   width: 100%;
-  background-color: rgba($background, 0.85);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  margin: auto;
+  background-color: $background;
+  border: 2px solid $cumes-01;
+  box-shadow: 0 8px 32px $box-shadow-dark;
+  overflow: hidden;
+  
+  @media (min-width: 768px) {
+    width: 500px;
+    max-width: 500px;
+  }
+  
+  @media (min-width: 1024px) {
+    width: 500px;
+    max-width: 500px;
+  }
 }
 
-.titulo-redefinir-senha {
-  font-size: 1.5rem;
-  text-align: center;
-  color: $primary;
-  margin-bottom: 20px;
+// Header do Card
+.card-header {
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  padding: 24px 32px;
+  border-bottom: 3px solid $cumes-03;
 }
 
-.custom-input-auth {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.input-container {
+.card-title {
   display: flex;
   align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  color: $offwhite;
+  text-shadow: 0 2px 4px $text-shadow-default;
+
+  .title-icon {
+    color: $cumes-04;
+  }
 }
 
-.input-label {
-  font-size: 1em;
-  color: $primary;
-  margin-left: 0.5em;
+// Body do Card
+.card-body {
+  padding: 32px;
+
+  @media (max-width: 600px) {
+    padding: 24px 20px;
+  }
 }
 
-.input-icon {
-  color: $primary;
-  font-size: 1.2em;
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.action-buttons {
+// Form Fields
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: $cumes-04;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+// Custom Input Styling
+.custom-input {
+  :deep(.q-field__control) {
+    background-color: $offwhite;
+    border-radius: 8px;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01;
+      border-width: 2px;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 14px !important;
+  }
+
+  :deep(input) {
+    padding: 10px 14px !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($background, 0.5);
+  }
+
+  :deep(.q-field__prepend) {
+    padding-left: 12px;
+    color: $cumes-01;
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03;
+      border-width: 2px;
+    }
+  }
+
+  &:deep(.q-field--error) {
+    .q-field__control::before {
+      border-color: $error-color;
+    }
+  }
+}
+
+// Form Actions
+.form-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba($cumes-03, 0.2);
 }
 
 .btn-back {
-  margin-left: 0.5rem;
+  margin-left: 0;
 }
 
-.register-btn {
-  max-width: 160px;
-  height: 40px;
-  text-align: center;
-  font-size: 0.95em;
-  color: $primary;
-  border: 1px solid $primary;
-  border-radius: 15px;
+// Custom Primary Button
+.btn-primary-custom {
+  background: $cumes-01 !important;
+  color: $offwhite !important;
+  padding: 12px 32px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px $box-shadow-medium !important;
+
+  &:hover {
+    background: darken($cumes-01, 10%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px $box-shadow-strong !important;
+  }
+
+  &:active {
+    transform: translateY(0) !important;
+  }
 }
 </style>

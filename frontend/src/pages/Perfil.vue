@@ -1,10 +1,10 @@
 <template>
   <q-page :class="pageClass">
     <!-- Botão de Configuração (apenas mobile) -->
-    <q-btn 
+    <q-btn
       v-if="!isDesktop"
-      icon="settings" 
-      class="settings-btn-mobile" 
+      icon="settings"
+      class="settings-btn-mobile"
       @click="isConfigDialogOpen = true"
     />
 
@@ -45,9 +45,11 @@
             <q-icon name="edit" size="32px" class="overlay-icon" />
           </div>
         </div>
-        
+
         <div class="user-info-section">
-          <h3 class="user-name-desktop">{{ user?.nome }}</h3>
+          <div class="user-name-row">
+            <h3 class="user-name-desktop">{{ user?.nome }}</h3>
+          </div>
           <div class="user-details-desktop">
             <div class="detail-item" :class="{ 'empty': !user?.localizacao }">
               <div class="detail-label">Localização</div>
@@ -74,9 +76,9 @@
         </div>
 
         <!-- Botão de Configuração dentro do header -->
-        <q-btn 
-          icon="settings" 
-          class="settings-btn-header" 
+        <q-btn
+          icon="settings"
+          class="settings-btn-header"
           @click="isConfigDialogOpen = true"
           round
           size="md"
@@ -117,11 +119,11 @@
             <span>Configurações</span>
           </div>
         </q-card-section>
-        
+
         <q-list class="config-list">
-          <q-item 
-            clickable 
-            @click="openEditDialog()" 
+          <q-item
+            clickable
+            @click="openEditDialog()"
             class="config-item"
             v-ripple
           >
@@ -136,12 +138,12 @@
               <q-icon name="chevron_right" size="20px" />
             </q-item-section>
           </q-item>
-          
+
           <q-separator spaced />
-          
-          <q-item 
-            clickable 
-            @click="logout" 
+
+          <q-item
+            clickable
+            @click="logout"
             class="config-item logout-item"
             v-ripple
           >
@@ -254,7 +256,7 @@ const handleResize = () => {
 
 onMounted(async () => {
   window.addEventListener('resize', handleResize);
-  
+
   try {
     await AuthenticateService.redirecionaSeNaoAutenticado(router);
 
@@ -436,7 +438,7 @@ const handleEditSubmit = async () => {
   &.logout-item {
     &:hover {
       background-color: rgba($error-color, 0.05);
-      
+
       .item-label {
         color: $error-color;
       }
@@ -504,7 +506,7 @@ const handleEditSubmit = async () => {
 // Header Desktop - Foto e Informações
 .desktop-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 32px;
   background-color: $cumes-01;
   border-radius: 16px;
@@ -522,12 +524,13 @@ const handleEditSubmit = async () => {
 // Botão de Config no Header
 .settings-btn-header {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 32px;
+  right: 32px;
   color: $offwhite;
   background-color: $cumes-02;
   box-shadow: 0 4px 12px $box-shadow-dark;
   transition: all 0.3s ease;
+  align-self: flex-start;
 
   &:hover {
     transform: scale(1.1);
@@ -540,11 +543,13 @@ const handleEditSubmit = async () => {
 .desktop-stats {
   background-color: $cumes-01;
   border-radius: 16px;
-  padding: 24px 32px;
+  padding: 16px 16px;
   box-shadow: 0 4px 16px $box-shadow-medium;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 // Foto de Perfil Desktop
@@ -598,6 +603,12 @@ const handleEditSubmit = async () => {
   flex: 1;
 }
 
+.user-name-row {
+  display: flex;
+  align-items: center;
+  min-height: 48px; // Altura aproximada do botão de config para alinhar
+}
+
 .user-name-desktop {
   font-size: 36px;
   font-weight: 800;
@@ -605,12 +616,13 @@ const handleEditSubmit = async () => {
   margin: 0;
   text-shadow: 0 3px 6px $text-shadow-default;
   letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
 .user-details-desktop {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 
     .detail-item {
     display: flex;
@@ -618,11 +630,12 @@ const handleEditSubmit = async () => {
     gap: 6px;
     font-size: 15px;
     color: $offwhite;
-    padding: 12px 16px;
+    padding: 14px 16px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     border-left: 4px solid $cumes-04;
     transition: all 0.3s ease;
+    width: 100%;
 
     &:hover {
       background: rgba(0, 0, 0, 0.3);
@@ -643,7 +656,7 @@ const handleEditSubmit = async () => {
           font-style: italic;
           opacity: 0.7;
         }
-        
+
         .q-icon {
           opacity: 0.5;
         }
@@ -656,27 +669,31 @@ const handleEditSubmit = async () => {
     }
 
     .detail-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       color: $cumes-04;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       opacity: 0.9;
+      line-height: 1.2;
     }
 
     .detail-content {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      line-height: 1.3;
 
       .q-icon {
         color: $offwhite;
         opacity: 0.8;
+        font-size: 16px;
       }
 
       span {
         font-weight: 500;
         color: $offwhite;
+        font-size: 14px;
       }
     }
   }
@@ -693,11 +710,11 @@ const handleEditSubmit = async () => {
 .content-right {
   background-color: $background;
   border-radius: 16px;
-  padding: 32px;
+  padding: 16px;
   border: 2px solid $cumes-03;
   box-shadow: 0 4px 16px $box-shadow-medium;
   transition: all 0.3s ease;
-  min-height: 350px;
+  min-height: auto;
   display: flex;
   flex-direction: column;
 
@@ -723,21 +740,21 @@ const handleEditSubmit = async () => {
 
     .detail-item {
       align-items: center;
-      
+
       .detail-label {
         text-align: center;
       }
-      
+
       .detail-content {
         justify-content: center;
       }
     }
   }
-  
+
   .desktop-content {
     grid-template-columns: 1fr;
   }
-  
+
   .settings-btn-header {
     top: 16px;
     right: 16px;

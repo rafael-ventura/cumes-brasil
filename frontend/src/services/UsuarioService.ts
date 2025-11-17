@@ -44,6 +44,16 @@ class UsuarioService {
       if (usuario.foto_perfil) {
         adjustImageUrls(usuario.foto_perfil);
       }
+      
+      // Processar imagens da via predileta se existir
+      if (usuario.via_preferida) {
+        if (usuario.via_preferida.imagem) {
+          adjustImageUrls(usuario.via_preferida.imagem);
+        }
+        if (usuario.via_preferida.montanha?.imagem) {
+          adjustImageUrls(usuario.via_preferida.montanha.imagem);
+        }
+      }
 
       return usuario;
     } catch (error: any) {

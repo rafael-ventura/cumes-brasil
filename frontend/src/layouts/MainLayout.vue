@@ -16,17 +16,31 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 import NavBar from 'layouts/NavBar.vue';
 import TopBar from 'layouts/TopBar.vue';
 import ScrollToTop from 'components/ScrolToTop.vue';
 
 const windowWidth = ref(window.innerWidth);
+const route = useRoute();
 
 // Detectar se é desktop (breakpoint: 1024px)
 const isDesktop = computed(() => windowWidth.value >= 1024);
 
+// Verificar se é rota de autenticação
+const isAuthRoute = computed(() => {
+  const path = route.path;
+  return path.startsWith('/auth/login') || 
+         path.startsWith('/auth/register') || 
+         path.startsWith('/auth/reset-password');
+});
+
 // Classe dinâmica para o page container
 const pageContainerClass = computed(() => {
+  if (isAuthRoute.value) {
+    // Rotas de autenticação não devem ter max-width nem padding lateral
+    return isDesktop.value ? 'page-container-auth-desktop' : 'page-container-auth-mobile';
+  }
   if (isDesktop.value) {
     return 'page-container-desktop';
   }
@@ -62,5 +76,23 @@ onUnmounted(() => {
   margin: 0 auto;
   padding-left: 16px;
   padding-right: 16px;
+}
+
+// Container para Autenticação Mobile (sem padding lateral, fullscreen)
+.page-container-auth-mobile {
+  padding-bottom: 80px;
+  padding-left: 0;
+  padding-right: 0;
+  max-width: 100%;
+  margin: 0;
+}
+
+// Container para Autenticação Desktop (sem max-width nem padding lateral, fullscreen)
+.page-container-auth-desktop {
+  padding-top: 70px;
+  padding-left: 0;
+  padding-right: 0;
+  max-width: 100%;
+  margin: 0;
 }
 </style>

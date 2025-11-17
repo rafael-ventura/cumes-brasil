@@ -31,9 +31,7 @@
       <template v-else>
         <div class="no-photo">
           <svg
-            fill="#000000"
-            height="100%"
-            width="100%"
+            fill="rgba(255, 255, 255, 0.3)"
             viewBox="0 0 455 455"
             xmlns="http://www.w3.org/2000/svg"
             class="svg-placeholder"
@@ -161,14 +159,18 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
-  background-color: $cumes-03;
+  min-height: 200px;
+  padding: 40px 20px;
+  background-color: $background;
   border-radius: 8px;
 }
 
 .svg-placeholder {
-  width: 80%;
-  height: auto;
+  width: 80px;
+  height: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  opacity: 0.4;
 }
 
 .nav-button {
