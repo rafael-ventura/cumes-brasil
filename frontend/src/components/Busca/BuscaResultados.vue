@@ -18,8 +18,18 @@
         @update:model-value="changeSorting"
       />
     </div>
+
+    <!-- Skeleton Loading -->
+    <div v-if="loading" class="skeleton-container">
+      <div v-for="i in itemsPerPage" :key="i" class="skeleton-card">
+        <q-skeleton type="rect" height="200px" />
+        <q-skeleton type="text" width="80%" class="q-mt-sm" />
+        <q-skeleton type="text" width="60%" />
+      </div>
+    </div>
+
     <!-- Renderiza ViaCard se entityType for 'via' -->
-    <div v-if="entityType === 'via' && sortedResults">
+    <div v-else-if="entityType === 'via' && sortedResults">
       <ViaLista :vias="sortedResults as Via[]" />
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
@@ -35,8 +45,23 @@
       />
     </div>
     <!-- Mensagem se não houver resultados -->
-    <div v-if="results && results.length === 0">
+    <div v-else-if="!loading && results && results.length === 0">
       <p class="result-not-found"> Nenhum resultado foi encontrado.</p>
+    </div>
+
+    <!-- Controles de Paginação -->
+    <div class="pagination-wrapper">
+      <PaginacaoPadrao
+        v-if="!loading && totalPages && totalPages > 0 && !hidePagination"
+        :current-page="currentPage || 1"
+        :total-pages="totalPages"
+        :items-per-page="itemsPerPage || 20"
+        :items-per-page-options="entityType === 'colecao' ? [9, 10, 25, 50, 100] : [10, 25, 50, 100]"
+        :total-records="totalItems || 0"
+        variant="page"
+        @page-change="onPageChange"
+        @items-per-page-change="onItemsPerPageChange"
+      />
     </div>
   </div>
 </template>
@@ -48,6 +73,7 @@ import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
 import { IColecao } from 'src/models/IColecao';
 import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
+import PaginacaoPadrao from 'components/PaginacaoPadrao.vue';
 
 // Use defineProps without the type argument
 const props = defineProps({
@@ -60,11 +86,40 @@ const props = defineProps({
     required: true
   },
   totalItems: Number,
+  totalPages: {
+    type: Number,
+    default: 1
+  },
+  currentPage: {
+    type: Number,
+    default: 1
+  },
+  itemsPerPage: {
+    type: Number,
+    default: 20
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  hidePagination: {
+    type: Boolean,
+    default: false
+  },
   initialSort: Object,
   enableSortOptions: Array
 });
 
-const emit = defineEmits(['select', 'change-sort']);
+const emit = defineEmits(['select', 'change-sort', 'page-change', 'items-per-page-change']);
+
+// Funções de paginação
+const onPageChange = (page: number) => {
+  emit('page-change', page);
+};
+
+const onItemsPerPageChange = (newItemsPerPage: number) => {
+  emit('items-per-page-change', newItemsPerPage);
+};
 
 // Opções padrão de ordenação
 const defaultSortOptions = ref([
@@ -234,5 +289,30 @@ const selectItem = (item: Via | IColecao | any) => {
   align-self: center;
   color: $cumes-03;
   font-weight: 600;
+}
+
+.skeleton-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.skeleton-card {
+  background: $offwhite;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.pagination-wrapper {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 0 16px;
+  
+  @media (max-width: 768px) {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 0 8px;
+  }
 }
 </style>

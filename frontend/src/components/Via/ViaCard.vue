@@ -6,7 +6,8 @@
           v-if="viaImageUrl" 
           :src="viaImageUrl" 
           class="card-image" 
-          alt="via image" 
+          alt="via image"
+          loading="lazy"
         />
         <div v-else class="card-image-placeholder">
           <q-icon name="image" size="48px" />

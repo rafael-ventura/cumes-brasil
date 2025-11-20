@@ -73,6 +73,9 @@
         @update:model-value="isConfigDialogOpen = $event"
         @edit="handleEditColecao"
       />
+      
+      <!-- Espaçamento no final da página -->
+      <div class="page-bottom-spacer"></div>
     </div>
   </q-page>
 </template>
@@ -332,6 +335,15 @@ const handleEditColecao = async (dados: { nome: string; descricao: string }) => 
   bottom: 120px; /* Ajuste para manter o botão acima da navbar */
   right: 16px;
   z-index: 2; /* Garante que o botão esteja acima do conteúdo */
+}
+
+.page-bottom-spacer {
+  height: 48px;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    height: 150px; /* Espaço para botões flutuantes no mobile */
+  }
 }
 
 </style>

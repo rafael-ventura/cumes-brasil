@@ -444,6 +444,34 @@ const onDialogShow = async () => {
       border-width: 2px !important;
     }
   }
+  
+  // Menu do dropdown - simples
+  :deep(.q-menu) {
+    background-color: $offwhite !important;
+    border: 2px solid $cumes-01 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px $box-shadow-medium !important;
+    min-width: 140px !important;
+    max-width: 140px !important;
+    
+    .q-item {
+      color: $background !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      padding: 10px 14px !important;
+      min-height: 40px !important;
+      
+      &:hover {
+        background-color: rgba($cumes-01, 0.1) !important;
+      }
+      
+      &.q-item--active {
+        background-color: $cumes-01 !important;
+        color: $offwhite !important;
+        font-weight: 700 !important;
+      }
+    }
+  }
 }
 
 .items-per-page-select {

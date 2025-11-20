@@ -18,7 +18,6 @@
 
       <q-card-actions align="right" class="card-actions">
         <div class="actions-content">
-          <div class="field-label">Itens por página</div>
           <q-select
             v-model="itemsPerPage"
             :options="itemsPerPageOptions"
@@ -197,15 +196,17 @@ const onDialogShow = async () => {
 .actions-content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
+  overflow: hidden;
 
   @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
   }
 }
 
@@ -220,6 +221,12 @@ const onDialogShow = async () => {
   text-transform: uppercase;
   letter-spacing: 0.8px;
   white-space: nowrap;
+  flex-shrink: 0;
+  
+  @media (max-width: 600px) {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
 }
 
 // Custom Select Styling
@@ -255,11 +262,45 @@ const onDialogShow = async () => {
       border-width: 2px !important;
     }
   }
+  
+  // Menu do dropdown - simples
+  :deep(.q-menu) {
+    background-color: $offwhite !important;
+    border: 2px solid $cumes-01 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px $box-shadow-medium !important;
+    min-width: 140px !important;
+    max-width: 140px !important;
+    
+    .q-item {
+      color: $background !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      padding: 10px 14px !important;
+      min-height: 40px !important;
+      
+      &:hover {
+        background-color: rgba($cumes-01, 0.1) !important;
+      }
+      
+      &.q-item--active {
+        background-color: $cumes-01 !important;
+        color: $offwhite !important;
+        font-weight: 700 !important;
+      }
+    }
+  }
 }
 
 .items-per-page-select {
   width: 140px;
   min-width: 140px;
+  flex-shrink: 0;
+  
+  @media (max-width: 600px) {
+    width: 60px;
+    min-width: 60px;
+  }
 }
 
 // Custom Pagination
@@ -267,6 +308,13 @@ const onDialogShow = async () => {
   flex: 1;
   display: flex;
   justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  
+  @media (max-width: 600px) {
+    flex: 1;
+    min-width: 0;
+  }
 
   :deep(.q-btn) {
     color: $cumes-03 !important;

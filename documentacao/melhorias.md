@@ -256,7 +256,7 @@ Continente
 
 ---
 
-### Epic: Redesenhar Tela de Vias/Busca 🔍 (Prioridade Mínima)
+### Epic: Redesenhar Tela de Vias/Busca 🔍
 
 **Objetivo:** Transformar a tela de busca/vias em uma experiência de navegação por categorias, ao invés de carregar todas as vias de uma vez.
 
@@ -323,71 +323,31 @@ Continente
 
 ### Epic: Sistema de Notificações Push via PWA 📲
 
-**Objetivo:** Implementar notificações push no celular usando recursos de PWA (Progressive Web App) para enviar notificações aos usuários, similar a um app nativo.
-
-**Contexto Técnico:**
-
-- Aplicação já é PWA (verificar configuração atual)
-- Explorar Service Workers para notificações push
-- Integrar com Web Push API
-- Backend precisa suportar envio de notificações
+**Objetivo:** Implementar notificações push simples: lembretes para planejar escaladas e avisos sobre novas vias adicionadas ao catálogo.
 
 **Tarefas:**
 
-- **Configurar PWA para notificações**
-  - Verificar e otimizar manifest.json
-  - Configurar Service Worker
-  - Implementar solicitação de permissão de notificações
-  - Criar UI para gerenciar preferências de notificações
+- Configurar Web Push API no backend
+  - Instalar biblioteca `web-push` e gerar VAPID keys
+  - Criar entidade `PushSubscription` no banco
+  - Criar endpoints para subscribe/unsubscribe e preferências
 
-- **Implementar Web Push API no frontend**
-  - Registrar service worker
-  - Solicitar permissão do usuário
-  - Obter subscription (endpoint, keys)
-  - Enviar subscription para backend
-  - Gerenciar estado de permissão
+- Implementar serviço de notificações no backend
+  - Criar `NotificationService` para enviar push
+  - Criar job agendado para lembretes periódicos (semanal/quinzenal)
+  - Trigger ao criar via: contar novas vias e enviar notificação quando atingir limite (ex: 5-10 vias)
 
-- **Criar endpoints no backend**
-  - POST `/api/notifications/subscribe` - registrar subscription do usuário
-  - GET `/api/notifications/subscriptions` - listar subscriptions do usuário
-  - DELETE `/api/notifications/unsubscribe` - remover subscription
-  - POST `/api/notifications/send` - enviar notificação (admin/sistema)
+- Configurar Service Worker no frontend
+  - Adicionar handler de push notifications
+  - Implementar solicitação de permissão
+  - Criar utilitário para gerenciar subscription
 
-- **Implementar sistema de notificações no backend**
-  - Integrar com biblioteca de push notifications (web-push)
-  - Criar serviço para enviar notificações
-  - Armazenar subscriptions no banco de dados
-  - Criar fila/jobs para envio assíncrono (opcional)
+- Criar UI de preferências no Perfil
+  - Seção "Notificações" com toggles
+  - Toggle "Receber lembretes para planejar escaladas" (com frequência)
+  - Toggle "Receber avisos de novas vias"
+  - Indicador de status da permissão
 
-- **Definir tipos de notificações**
-  - Nova escalada registrada (seguindo usuário)
-  - Nova via adicionada em coleção favorita
-  - Comentário em escalada (futuro)
-  - Mensagem direta (futuro)
-  - Lembretes e atualizações do sistema
-
-- **Criar sistema de preferências**
-  - Permitir usuário escolher quais notificações receber
-  - Toggle por tipo de notificação
-  - Salvar preferências no perfil do usuário
-  - Interface no perfil para gerenciar notificações
-
-- **Implementar notificações em tempo real**
-  - WebSocket ou Server-Sent Events (opcional)
-  - Notificações instantâneas quando online
-  - Notificações push quando offline/background
-
-- **Testes e validação**
-  - Testar em diferentes navegadores (Chrome, Firefox, Safari)
-  - Testar em Android e iOS
-  - Validar comportamento offline
-  - Testar permissões e bloqueios
-
-**Notas Técnicas:**
-
-- iOS tem limitações com notificações push em PWA (requer iOS 16.4+)
-- Chrome/Edge têm melhor suporte para Web Push
-- Considerar fallback para notificações in-app se push não disponível
-- Implementar badge de notificações não lidas
+- Testar em Android (Chrome), iOS (Safari 16.4+) e desktop
 
 ---

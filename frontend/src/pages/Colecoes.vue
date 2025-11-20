@@ -26,6 +26,9 @@
       @update:isOpen="isAddColecaoModalOpen = $event"
       @collection-added="addColecao"
     />
+    
+    <!-- Espaçamento no final da página -->
+    <div class="page-bottom-spacer"></div>
   </q-page>
 </template>
 
@@ -101,6 +104,15 @@ const goToColecaoDetalhada = (colecao: IColecao) => {
   
   @media (max-width: 768px) {
     font-size: 32px;
+  }
+}
+
+.page-bottom-spacer {
+  height: 48px;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    height: 32px;
   }
 }
 </style>

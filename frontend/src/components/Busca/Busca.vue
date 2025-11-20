@@ -18,9 +18,18 @@
       :enableSortOptions="enableSortOptions"
       @change-sort="updateSorting"
       :totalItems="totalItems"
+      :totalPages="totalPages"
+      :currentPage="filters.page"
+      :itemsPerPage="filters.itemsPerPage || 20"
+      :loading="loading"
+      :hidePagination="props.hidePagination"
+      @page-change="onPageChange"
+      @items-per-page-change="onItemsPerPageChange"
     />
+    
+    <!-- Espaçamento no final -->
+    <div class="busca-bottom-spacer"></div>
   </div>
-  <div ref="observer" class="observer-element"></div>
 </template>
 
 <script setup lang="ts">
@@ -40,6 +49,7 @@ const props = defineProps<{
   hideHeader?: boolean
   searchHeader?: string
   enableSortOptions?: { field: string, label: string }[];
+  hidePagination?: boolean;
 }>();
 
 defineOptions({
@@ -48,7 +58,33 @@ defineOptions({
 const emit = defineEmits(['select', 'atualizar-results']);
 const route = useRoute();
 
-const filters = ref(<BuscaRequest>{
+// Carregar itemsPerPage do localStorage ou usar padrão
+const getStoredItemsPerPage = (): number => {
+  // Para coleções
+  if (props.entity === 'colecao') {
+    const stored = localStorage.getItem('colecoes_items_per_page');
+    if (stored) {
+      const value = parseInt(stored, 10);
+      if ([9, 10, 25, 50, 100].includes(value)) {
+        return value;
+      }
+    }
+    return 9; // padrão para coleções
+  }
+  
+  // Para vias
+  const stored = localStorage.getItem('vias_items_per_page');
+  if (stored) {
+    const value = parseInt(stored, 10);
+    if ([10, 25, 50, 100].includes(value)) {
+      return value;
+    }
+  }
+  return 20; // padrão para vias
+};
+
+// Preparar filtros iniciais, preservando itemsPerPage do localStorage
+const initialFilters: BuscaRequest = {
   unifiedSearch: '',
   selectedDifficulty: null,
   selectedExtensionCategory: null,
@@ -57,18 +93,26 @@ const filters = ref(<BuscaRequest>{
   page: 1,
   sortField: null,
   sortOrder: null,
-  itemsPerPage: 20,
+  itemsPerPage: getStoredItemsPerPage(),
   ...props.staticFilters,
   ...route.query
-});
+};
+
+// Se itemsPerPage vier da query string, usar ele; senão manter do localStorage
+if (route.query.itemsPerPage) {
+  const queryItemsPerPage = parseInt(route.query.itemsPerPage as string, 10);
+  if ([10, 25, 50, 100].includes(queryItemsPerPage)) {
+    initialFilters.itemsPerPage = queryItemsPerPage;
+  }
+}
+
+const filters = ref(initialFilters);
 
 const results = ref();
 const totalItems = ref(0);
 const totalPages = ref(1);
 const loading = ref(false);
-const observer = ref<HTMLElement | null>(null);
 const isSorting = ref(false);
-let observerInstance: IntersectionObserver | null = null;
 
 onMounted(async () => {
   if (props.initialData && props.initialData.length) {
@@ -77,7 +121,6 @@ onMounted(async () => {
   } else {
     searchEntities(true);
   }
-  createObserver();
 });
 
 // Função para atualizar a ordenação ao receber uma mudança
@@ -102,28 +145,24 @@ watch(
   { deep: true }
 );
 
-onUnmounted(() => {
-  if (observerInstance) {
-    observerInstance.disconnect();
-  }
-});
+// Handlers para paginação
+const onPageChange = (page: number) => {
+  // Atualizar o filtro imediatamente
+  filters.value.page = page;
+  // Fazer a busca
+  searchEntities(true);
+};
 
-const createObserver = () => {
-  observerInstance = new IntersectionObserver((entries) => {
-    const entry = entries[0];
-    if (entry.isIntersecting && filters.value.page < totalPages.value && !loading.value) {
-      filters.value.page++;
-      searchEntities(false);
-    }
-  }, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 1.0
-  });
-
-  if (observer.value) {
-    observerInstance.observe(observer.value);
+const onItemsPerPageChange = (newItemsPerPage: number) => {
+  filters.value.itemsPerPage = newItemsPerPage;
+  filters.value.page = 1; // Resetar para primeira página
+  // Salvar no localStorage com chave específica para cada tipo de entidade
+  if (props.entity === 'colecao') {
+    localStorage.setItem('colecoes_items_per_page', newItemsPerPage.toString());
+  } else {
+    localStorage.setItem('vias_items_per_page', newItemsPerPage.toString());
   }
+  searchEntities(true);
 };
 
 const searchEntities = async (reset = false) => {
@@ -147,13 +186,10 @@ const searchEntities = async (reset = false) => {
         return via;
       });
     }
-    if (reset) {
-      results.value = searchResult.items;
-    } else {
-      results.value = [...results.value, ...searchResult.items];
-    }
-    totalPages.value = searchResult.totalPages;
-    totalItems.value = searchResult.totalItems;
+    // Sempre substituir resultados ao invés de acumular (paginação tradicional)
+    results.value = searchResult.items;
+    totalPages.value = searchResult.totalPages || 1;
+    totalItems.value = searchResult.totalItems || 0;
     emit('atualizar-results', results.value);
   } catch (error) {
     console.error('Erro ao buscar entidades:', error);
@@ -219,5 +255,14 @@ const selectItem = (item: any) => {
   font-size: 18px;
   font-weight: bold;
   color: $cumes-03;
+}
+
+.busca-bottom-spacer {
+  height: 48px;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    height: 32px;
+  }
 }
 </style>
