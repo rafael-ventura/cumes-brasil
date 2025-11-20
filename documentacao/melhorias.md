@@ -32,6 +32,11 @@
   - ~~Botões (Coleções, Favoritas, Escaladas) devem ficar na mesma linha no mobile~~
   - ~~Ajustado flex-wrap para nowrap e tamanhos de fonte para caberem na mesma linha~~
 
+- **Ordenar coleções por data de adição na tela de Coleções**
+  - Coleções devem ser ordenadas por data de criação (mais recentes primeiro)
+  - Adicionar ordenação padrão no ColecaoRepository
+  - Atualizar frontend para exibir na ordem correta
+
 ---
 
 ## 🔧 REFATORAÇÃO & MELHORIAS
@@ -108,32 +113,36 @@
 
 ---
 
-### Epic: Paginação de Vias 📄
+### ~~Epic: Paginação de Vias 📄~~
 
 **Objetivo:** Melhorar performance e experiência de navegação com paginação adequada.
 
 **Tarefas:**
 
-- Revisar paginação atual
-  - Verificar implementação no ViaRepository
-  - Validar retorno de totalPages e total items
-  - Garantir consistência nos endpoints
+- ~~Revisar paginação atual~~
+  - ~~Verificar implementação no ViaRepository~~
+  - ~~Validar retorno de totalPages e total items~~
+  - ~~Garantir consistência nos endpoints~~
 
-- Melhorar componente de paginação no frontend
-  - Adicionar controles de navegação (Anterior/Próximo)
-  - Mostrar informação de página atual (ex: "Página 1 de 10")
-  - Adicionar opção de "Ir para página"
-  - Melhorar UX mobile e desktop
+- ~~Melhorar componente de paginação no frontend~~
+  - ~~Criar componente reutilizável PaginacaoPadrao com PrimeVue Paginator~~
+  - ~~Adicionar controles de navegação (Primeira/Anterior/Próxima/Última)~~
+  - ~~Mostrar 5 páginas visíveis no desktop (1, 2, 3, 4, 5, ..., última)~~
+  - ~~Melhorar UX mobile e desktop com responsividade~~
+  - ~~Aplicar highlight discreto na página ativa~~
 
-- Adicionar controle de itens por página
-  - Dropdown para selecionar (10, 25, 50, 100)
-  - Persistir preferência no localStorage
-  - Atualizar query automaticamente
+- ~~Adicionar controle de itens por página~~
+  - ~~Dropdown para selecionar (10, 25, 50, 100)~~
+  - ~~Persistir preferência no localStorage (chaves separadas para vias e coleções)~~
+  - ~~Atualizar query automaticamente~~
+  - ~~Padrão de 9 itens para coleções, 20 para vias~~
+  - ~~Esconder label "Itens por página" em modais~~
 
-- Otimizar performance
-  - Implementar lazy loading de imagens
-  - Adicionar skeleton loading durante carregamento
-  - Cache de páginas já visitadas (opcional)
+- ~~Otimizar performance~~
+  - ~~Implementar lazy loading de imagens (loading="lazy")~~
+  - ~~Adicionar skeleton loading durante carregamento~~
+  - ~~Integrar nas telas de Vias, Coleções e Coleção Detalhada~~
+  - ~~Adicionar espaçamento adequado no final das páginas~~
 
 ---
 
@@ -351,3 +360,78 @@ Continente
 - Testar em Android (Chrome), iOS (Safari 16.4+) e desktop
 
 ---
+
+### Epic: Adicionar lógica de Imagem em Coleção
+
+**Objetivo:** Permitir que a entidade de Coleção Detalhada mostre a foto/imagem associada a ela nos cards de "coleções" e ""
+
+**Tarefas:**
+
+- Adicionar campo de imagem na entidade Coleção
+- Exibir imagem nos cards de coleções
+- Atualizar formulários de criação/edição
+
+---
+
+### Epic: Refazer Design dos Filtros 🎨
+
+**Objetivo:** Modernizar e melhorar a experiência visual e funcional dos filtros de busca.
+
+**Contexto:** Os filtros atuais precisam de uma atualização visual e melhor organização para melhorar a usabilidade.
+
+**Tarefas:**
+
+- Redesenhar layout dos filtros
+- Melhorar organização visual e hierarquia
+- Ajustar responsividade mobile e desktop
+- Padronizar com design system do projeto
+
+---
+
+### Epic: Refazer Estilização da Barra de Busca 🔍
+
+**Objetivo:** Modernizar o componente de busca para melhorar a experiência do usuário.
+
+**Contexto:** A barra de busca atual precisa de atualização visual e melhorias de UX.
+
+**Tarefas:**
+
+- Redesenhar componente de busca
+- Melhorar feedback visual durante digitação
+- Adicionar sugestões/autocomplete (opcional)
+- Ajustar responsividade e acessibilidade
+
+---
+
+### Epic: Adicionar Propriedades de Tipo na Via 🧗
+
+**Objetivo:** Adicionar campos de tipo de rocha e tipo de escalada na entidade Via para melhor categorização.
+
+**Contexto:** Após a reestruturação do sistema de localização geográfica, adicionar propriedades que permitam filtrar e categorizar vias por características técnicas.
+
+**Tarefas:**
+
+- Adicionar campo `tipo_rocha` na entidade Via (backend)
+  - Exemplos: granito, gnaisse, calcário, etc.
+- Adicionar campo `tipo_escalada` na entidade Via (backend)
+  - Exemplos: esportiva, tradicional, mista, etc.
+- Atualizar DTOs e validações
+- Adicionar filtros na busca por tipo de rocha e tipo de escalada
+- Atualizar formulários de criação/edição de vias
+- Analisar referências (lista de vias do Bugim) para definir valores possíveis
+
+---
+
+### Epic: Adicionar Vias do Bugim 📋
+
+**Objetivo:** Importar e adaptar as vias do projeto cumes-crawler para o modelo de dados atual.
+
+**Contexto:** Existe uma planilha com vias do Bugim no projeto cumes-crawler que precisa ser integrada ao sistema.
+
+**Tarefas:**
+
+- Analisar estrutura da planilha no projeto cumes-crawler
+- Criar script de migração/importação
+- Adaptar dados para o modelo de dados atual
+- Validar e importar vias
+- Verificar duplicatas e conflitos
