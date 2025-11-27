@@ -41,10 +41,15 @@
   - **Otimizar joins desnecessários**
   - Avaliar uso de eager/lazy loading
 
-- **Implementar fallback inteligente de imagens**
-  - **Se via não tem foto → usar foto da montanha**
-  - **Se montanha não tem foto → usar placeholder padrão**
-  - Atualizar componentes de exibição de via
+- ~~Implementar fallback inteligente de imagens~~
+  - ~~Se via não tem foto → usar foto da montanha~~
+  - ~~Se montanha não tem foto → usar placeholder padrão~~
+  - ~~Função `getViaImageUrlFull` implementada em `utils.ts`~~
+  - ~~Atualizado em componentes: ViaCard, ViaCardSmall, CardInfoPrincipal, EscaladaCard~~
+
+- ~~Melhorar scroll na tela de Vias~~
+  - ~~Scroll está confuso/desorganizado~~
+  - ~~Revisar comportamento de scroll e ajustar para melhor UX~~
 
 ---
 
