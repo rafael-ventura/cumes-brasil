@@ -22,10 +22,25 @@ const showDetails = (colecao: IColecao) => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
 .colecao-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 20px;
   padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 20px;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    padding: 24px;
+  }
 }
 </style>

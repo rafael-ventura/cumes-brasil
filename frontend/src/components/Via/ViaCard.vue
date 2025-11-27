@@ -2,7 +2,15 @@
   <div v-if="via">
     <q-card class="card-item" @click="emitClick">
       <div class="card-image-container">
-        <img :src="via.imagem.url" class="card-image" alt="via image" />
+        <img 
+          v-if="viaImageUrl" 
+          :src="viaImageUrl" 
+          class="card-image" 
+          alt="via image" 
+        />
+        <div v-else class="card-image-placeholder">
+          <q-icon name="image" size="48px" />
+        </div>
       </div>
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
@@ -19,11 +27,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import { Via } from 'src/models/Via';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps<{ via: Via }>();
 const emits = defineEmits(['click']);
+
+const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 const emitClick = () => {
   props.via.nome &&
@@ -35,17 +47,26 @@ const emitClick = () => {
 @import "src/css/app.scss";
 
 .card-item {
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: $background;
   width: 100%;
   height: 315px;
   margin: 0;
   padding: 0;
+  box-shadow: 0 4px 12px $box-shadow-medium;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px $box-shadow-strong;
+  }
 }
 
 .card-image-container {
   width: 100%;
   height: 175px;
+  overflow: hidden;
 }
 
 .card-image {
@@ -54,32 +75,55 @@ const emitClick = () => {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $cumes-02;
+  color: $offwhite;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.card-item:hover .card-image {
+  transform: scale(1.05);
 }
 
 .card-info {
-  background-color: $cumes-01;
-  padding: 10px;
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  padding: 12px;
   height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .via-nome {
-  font-size: 22px;
-  font-weight: bold;
-  color: black;
+  font-size: 20px;
+  font-weight: 700;
+  color: $offwhite;
+  text-shadow: 0 2px 4px $text-shadow-default;
+  line-height: 1.2;
 }
 
 .montanha-face {
   display: flex;
   align-items: center;
-  font-size: 16px;
-  color: black;
+  font-size: 15px;
+  color: $offwhite;
+  opacity: 0.95;
 }
 
 .montanha-icon {
-  margin-right: 10px;
+  margin-right: 8px;
+  color: $cumes-04;
 }
 
 .grau-badge-container {

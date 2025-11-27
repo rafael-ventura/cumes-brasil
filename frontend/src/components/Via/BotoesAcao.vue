@@ -78,8 +78,12 @@ const checkIfFavorited = () => {
 };
 
 // Funções para emitir eventos para o componente pai
-const handleEscaladaClick = () => {
+const handleEscaladaClick = async () => {
+  if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
+    return;
+  }
   emit('acao:escalada');
+  toggleEscaladaModal();
 };
 
 const handleFavoritoClick = () => {

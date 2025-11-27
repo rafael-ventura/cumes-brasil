@@ -4,7 +4,7 @@ import { Fonte } from 'src/models/Fonte';
 
 export interface Montanha {
   fonte: Fonte;
-  imagem: Imagem;
+  imagem?: Imagem;
   altura?: number;
   bairro?: string;
   faces: Face[];

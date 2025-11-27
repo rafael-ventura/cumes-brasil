@@ -14,6 +14,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
     private withRelations(qb: any) {
         return qb
             .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("montanha.imagem", "montanhaImagem")
             .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
             .leftJoinAndSelect("via.fonte", "fonte")
             .leftJoinAndSelect("via.face", "face")
@@ -148,6 +149,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         let qb = this.repository.createQueryBuilder("via")
             .leftJoinAndSelect("via.montanha", "montanha")
+            .leftJoinAndSelect("montanha.imagem", "montanhaImagem")
             .leftJoinAndSelect("via.imagem", "imagem");
 
         if (colecaoId) {

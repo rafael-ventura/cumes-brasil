@@ -85,7 +85,11 @@ class ColecaoService {
         }
       });
       const vias = resposta.data.items.map(formatVia);
-      vias.forEach((via: any) => adjustImageUrls(via.imagem));
+      vias.forEach((via: any) => {
+        if (via.imagem) {
+          adjustImageUrls(via.imagem);
+        }
+      });
       return {
         vias,
         total: resposta.data.total
@@ -181,7 +185,11 @@ class ColecaoService {
     try {
       const resposta = await api.get(url);
       const vias = resposta.data.vias.map(formatVia);
-      vias.forEach((via: any) => adjustImageUrls(via.imagem));
+      vias.forEach((via: any) => {
+        if (via.imagem) {
+          adjustImageUrls(via.imagem);
+        }
+      });
       return vias;
     } catch (erro) {
       handleApiError(erro, 'Erro ao buscar vias.');

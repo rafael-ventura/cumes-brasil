@@ -35,9 +35,32 @@ export class EscaladaService {
 		return await this.repository.getAll(limit);
 	}
 
-	async create(escalada: Escalada): Promise<void> {
+	async create(escalada: Escalada): Promise<Escalada> {
 		EscaladaValidation.valida(escalada);
-		return this.repository.save(escalada);
+		
+		// Importa as entidades necessárias
+		const { Participante } = await import('../../Domain/entities/Participante');
+		
+		// Prepara os participantes
+		const participantesData = escalada.participantes?.map(p => {
+			const participante = new Participante();
+			participante.nome = p.nome;
+			participante.tipo = p.tipo;
+			if (p.email) {
+				participante.email = p.email;
+			}
+			return participante;
+		}) || [];
+		
+		// Cria a entidade Escalada
+		const novaEscalada = new Escalada();
+		novaEscalada.data = escalada.data;
+		novaEscalada.observacao = escalada.observacao;
+		novaEscalada.usuario = { id: escalada.usuario } as any;
+		novaEscalada.via = { id: escalada.via } as any;
+		novaEscalada.participantes = participantesData;
+		
+		return await this.repository.save(novaEscalada);
 	}
 
 	async update(escalada: Escalada): Promise<void> {
@@ -46,12 +69,28 @@ export class EscaladaService {
 			throw new NotFoundError("Escalada não encontrada");
 		}
 
+		// Importa a entidade Participante
+		const { Participante } = await import('../../Domain/entities/Participante');
+		
+		// Remove participantes existentes
+		escaladaExiste.participantes.forEach(participante => participante.remove());
+		
+		// Prepara os novos participantes
+		const participantesData = escalada.participantes?.map(p => {
+			const participante = new Participante();
+			participante.nome = p.nome;
+			participante.tipo = p.tipo;
+			if (p.email) {
+				participante.email = p.email;
+			}
+			return participante;
+		}) || [];
+
 		escaladaExiste.data = escalada.data;
 		escaladaExiste.observacao = escalada.observacao;
-		escaladaExiste.participantes.forEach(participante => participante.remove());
-		escaladaExiste.participantes = escalada.participantes;
+		escaladaExiste.participantes = participantesData;
 
-		return this.repository.save(escaladaExiste);
+		await this.repository.save(escaladaExiste);
 	}
 
 	async delete(id: number): Promise<void> {

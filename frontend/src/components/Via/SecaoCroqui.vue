@@ -114,10 +114,12 @@ const downloadImage = async (image: { url: string; nome: string }) => {
 };
 
 onMounted(() => {
-  images.value = props.croquis.map((croqui) => ({
-    url: croqui.imagem.url,
-    nome: croqui.nome
-  }));
+  images.value = props.croquis
+    .filter((croqui) => croqui.imagem?.url)
+    .map((croqui) => ({
+      url: croqui.imagem!.url,
+      nome: croqui.nome
+    }));
 });
 </script>
 

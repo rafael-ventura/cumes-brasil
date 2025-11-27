@@ -20,6 +20,6 @@ export interface Via {
   via_principal?: Via;
   fonte: Fonte;
   face: Face;
-  imagem: Imagem;
+  imagem?: Imagem;
   croquis: Croqui[];
 }

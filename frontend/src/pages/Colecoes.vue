@@ -1,12 +1,12 @@
 <template>
+  <div class="titulo-pagina">Minhas Coleções</div>
   <q-page>
-    <div class="titulo-pagina">Minhas Coleções</div>
     <Busca
       ref="searchEntityRef"
       entity="colecao"
       @select="goToColecaoDetalhada"
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
-      :hideHeader="true"
+      :hide-header="true"
     >
       <template #subHeader>
         <SubNavbar />
@@ -93,7 +93,14 @@ const goToColecaoDetalhada = (colecao: IColecao) => {
 
 .titulo-pagina {
   font-size: 40px;
+  font-weight: 700;
   text-align: center;
   color: $cumes-01;
+  text-shadow: 0 2px 4px $text-shadow-default;
+  /* Removido margin-bottom para alinhar com outras abas */
+  
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
 }
 </style>

@@ -8,26 +8,25 @@
         debounce="300"
         outlined
         color="secondary"
-        class="unified-search"
+        class="unified-search custom-input"
         label-color="secondary"
         rounded
         @keydown="onInputChange"
       >
         <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
-          <q-btn
-            flat
-            dense
-            round
-            icon="filter_alt"
-            class="filter-btn"
-            @click="showFilterModal = true"
-          />
-          <q-icon
-            name="delete"
-            class="cursor-pointer text-negative"
-            @click="clearFilters"
-          />
+          <div class="append-buttons">
+            <q-icon
+              name="filter_alt"
+              class="cursor-pointer filter-icon"
+              @click="showFilterModal = true"
+            />
+            <q-icon
+              name="delete"
+              class="cursor-pointer text-negative delete-icon"
+              @click="clearFilters"
+            />
+          </div>
         </template>
       </q-input>
     </div>
@@ -39,10 +38,10 @@
         :key="filter.key"
         class="filter-tag"
       >
-        <span class="text-black">{{ filter.label }}</span>
+        <span>{{ filter.label }}</span>
         <q-icon
           name="close"
-          class="text-black remove-filter-icon"
+          class="remove-filter-icon"
           @click="removeFilter(filter.key)"
         />
       </div>
@@ -51,11 +50,14 @@
     <!-- Modal de Filtros Avançados para Vias -->
     <q-dialog v-model="showFilterModal" persistent>
       <q-card class="filter-modal">
-        <q-card-section class="q-pb-none">
-          <div class="modal-header">Filtros Avançados</div>
+        <q-card-section class="modal-header-section">
+          <div class="modal-header">
+            <q-icon name="filter_alt" size="28px" class="title-icon" />
+            <span>Filtros Avançados</span>
+          </div>
         </q-card-section>
 
-        <q-card-section v-if="entity == 'via'">
+        <q-card-section v-if="entity == 'via'" class="modal-body-section">
           <div class="modal-filters">
             <!-- Botões de seleção de filtros -->
             <q-btn
@@ -94,52 +96,58 @@
 
           <!-- Campos dinâmicos de filtros dentro do modal -->
           <div v-if="showFilterInputInModal.selectedDifficulty" class="q-pt-lg">
+            <div class="field-label">Selecione o Grau</div>
             <q-select
               v-model="localFilters.selectedDifficulty"
               :options="difficulties"
-              label="Selecione o Grau"
               outlined
+              class="custom-select"
               @update:model-value="updateActiveFilters"
             />
           </div>
 
           <div v-if="showFilterInputInModal.selectedExtension" class="q-pt-lg">
-            <q-btn
-              class="q-pr-md"
-              v-for="(range, label) in extensionCategories"
-              :key="label"
-              size="sm"
-              :class="{ 'selected': localFilters.selectedExtensionCategory === range }"
-              @click="filterByExtension(label)"
-              :label="label"
-            />
+            <div class="field-label">Selecione a Extensão</div>
+            <div class="extension-buttons">
+              <q-btn
+                class="extension-btn"
+                v-for="(range, label) in extensionCategories"
+                :key="label"
+                size="sm"
+                :class="{ 'selected': localFilters.selectedExtensionCategory === range }"
+                @click="filterByExtension(label)"
+                :label="label"
+              />
+            </div>
           </div>
 
           <div v-if="showFilterInputInModal.selectedCrux" class="q-pt-lg">
+            <div class="field-label">Selecione o Crux</div>
             <q-select
               v-model="localFilters.selectedCrux"
               :options="difficulties"
-              label="Selecione o Crux"
               outlined
+              class="custom-select"
               @update:model-value="updateActiveFilters"
             />
           </div>
 
           <div v-if="showFilterInputInModal.selectedExposicao" class="q-pt-lg">
+            <div class="field-label">Selecione a Exposição</div>
             <q-select
               v-model="localFilters.selectedExposicao"
               :options="exposures"
-              label="Selecione a Exposição"
               outlined
+              class="custom-select"
               @update:model-value="updateActiveFilters"
             />
           </div>
         </q-card-section>
 
         <!-- Botões de Ação -->
-        <q-card-actions align="right">
-          <q-btn flat label="Aplicar" color="secondary" @click="applyFilterChanges" />
-          <q-btn flat label="Fechar" color="negative" @click="showFilterModal = false" />
+        <q-card-actions align="right" class="modal-actions">
+          <q-btn flat label="Aplicar" class="btn-primary-custom" @click="applyFilterChanges" />
+          <q-btn flat label="Fechar" class="btn-secondary-custom" @click="showFilterModal = false" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -331,17 +339,144 @@ const filterByExtension = (category: string) => {
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
+
+// Input de busca unificado - igual ao PerfilEditaForm
+.custom-input {
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01 !important;
+      border-width: 2px !important;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 10px 14px !important;
+  }
+
+  :deep(input),
+  :deep(input[type="text"]),
+  :deep(.q-field__input) {
+    color: $background !important;
+    padding: 10px 14px !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($background, 0.5) !important;
+  }
+
+  :deep(.q-field__label) {
+    color: $cumes-03 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    font-size: 13px !important;
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03 !important;
+      border-width: 2px !important;
+    }
+  }
+
+  &:deep(.q-field--error) {
+    .q-field__control::before {
+      border-color: $error-color !important;
+    }
+  }
+
+  // Botão de filtro dentro do append
+  :deep(.q-field__append) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-right: 8px;
+  }
+
+  :deep(.q-field__append .append-buttons) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+  }
+
+  :deep(.q-field__append .filter-icon) {
+    font-size: 24px !important;
+    color: $cumes-03 !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  :deep(.q-field__append .delete-icon) {
+    font-size: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Modal de filtros
 .filter-modal {
-  background-color: #2c2c2c;
-  border-radius: 8px;
-  padding: 16px;
+  background-color: $background !important;
+  border: 2px solid $cumes-01 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px $box-shadow-dark !important;
+  max-width: 500px !important;
+  width: 92vw !important;
+
+  @media (min-width: 768px) {
+    width: 600px !important;
+  }
+
+  @media (min-width: 1024px) {
+    width: 700px !important;
+  }
+}
+
+.modal-header-section {
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%) !important;
+  border-bottom: 3px solid $cumes-03 !important;
+  padding: 16px !important;
 }
 
 .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 24px;
-  font-weight: bold;
-  color: $cumes-03;
-  margin-bottom: 16px;
+  font-weight: 700;
+  color: $offwhite;
+  
+  .title-icon {
+    color: $cumes-04;
+  }
+}
+
+.modal-body-section {
+  background-color: $background;
+  padding: 20px !important;
 }
 
 .modal-filters {
@@ -350,6 +485,75 @@ const filterByExtension = (category: string) => {
   gap: 12px;
 }
 
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: $cumes-04;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+}
+
+// Selects customizados
+.custom-select {
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    
+    &::before {
+      border-color: $cumes-01 !important;
+      border-width: 2px !important;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 10px 14px !important;
+  }
+
+  :deep(.q-field__input) {
+    color: $background !important;
+    padding: 10px 14px !important;
+  }
+
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03 !important;
+      border-width: 2px !important;
+    }
+  }
+}
+
+// Botões de extensão
+.extension-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.extension-btn {
+  background-color: $offwhite !important;
+  color: $background !important;
+  border: 2px solid $cumes-01 !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  font-weight: 600 !important;
+
+  &.selected {
+    background-color: $cumes-01 !important;
+    color: $offwhite !important;
+    border-color: $cumes-01 !important;
+  }
+
+  &:hover {
+    background-color: rgba($cumes-01, 0.1) !important;
+  }
+}
+
+// Filtros ativos
 .active-filters {
   margin-top: 16px;
   display: flex;
@@ -358,35 +562,85 @@ const filterByExtension = (category: string) => {
 }
 
 .filter-tag {
-  background-color: $cumes-03; /* Fundo laranja */
-  padding: 4px 8px; /* Espaçamento interno */
-  border-radius: 4px; /* Bordas arredondadas */
+  background-color: $cumes-03;
+  padding: 6px 12px;
+  border-radius: 8px;
   display: flex;
-  align-items: center; /* Alinha o texto no centro */
-  gap: 4px; /* Espaço entre o texto e o ícone */
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px $box-shadow-light;
+
+  span {
+    color: $offwhite !important;
+    font-weight: 600;
+    font-size: 13px;
+  }
 }
 
 .remove-filter-icon {
   font-size: 16px;
   cursor: pointer;
-  color: #2c2c2c; /* Cor do ícone */
-  border: 1px solid $cumes-03;
-  border-radius: 50%; /* Ícone circular */
-  margin-left: 4px; /* Margem à esquerda */
+  color: $offwhite !important;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 2px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 }
 
+// Botões de filtro no modal
 .q-btn.filter-btn {
-  background-color: #333333;
-  color: $cumes-03;
+  background-color: $offwhite !important;
+  color: $background !important;
+  border: 2px solid $cumes-01 !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+  &:hover {
+    background-color: rgba($cumes-01, 0.1) !important;
+  }
+
+  &.active {
+    background-color: $cumes-01 !important;
+    color: $offwhite !important;
+    border-color: $cumes-01 !important;
+  }
 }
 
-.q-btn.filter-btn.active {
-  background-color: $cumes-03;
-  color: #333333;
+// Botões do modal
+.btn-primary-custom {
+  background: $cumes-01 !important;
+  color: $offwhite !important;
+  padding: 12px 32px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px $box-shadow-medium !important;
+
+  &:hover {
+    background: darken($cumes-01, 10%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px $box-shadow-strong !important;
+  }
 }
 
-.selected {
-  background-color: $cumes-03;
-  color: #2c2c2c;
+.btn-secondary-custom {
+  background: transparent !important;
+  color: $cumes-01 !important;
+  border: 2px solid $cumes-01 !important;
+  padding: 12px 32px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+
+  &:hover {
+    background: rgba($cumes-01, 0.1) !important;
+  }
 }
 </style>

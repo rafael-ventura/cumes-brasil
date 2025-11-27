@@ -74,7 +74,7 @@ const handleClick = () => {
     }
 
     .card-image-wrapper {
-      background: linear-gradient(135deg, rgba($cumes-01, 0.15) 0%, rgba($cumes-03, 0.15) 100%);
+      background: linear-gradient(135deg, rgba($cumes-01, 0.30) 0%, rgba($cumes-03, 0.28) 100%);
     }
   }
 
@@ -84,7 +84,7 @@ const handleClick = () => {
 }
 
 .card-image-wrapper {
-  background: linear-gradient(135deg, rgba($cumes-01, 0.08) 0%, rgba($cumes-03, 0.08) 100%);
+  background: linear-gradient(135deg, rgba($cumes-01, 0.20) 0%, rgba($cumes-03, 0.18) 100%);
   padding: 48px 40px;
   display: flex;
   align-items: center;

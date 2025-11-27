@@ -27,4 +27,10 @@ export class ImagemRepository extends BaseRepository<Imagem> {
   async getByCroquiId (croquiId: number): Promise<Imagem | null> {
     return this.repository.findOne({ where: { croquis: { id: croquiId } } as any });
   }
+
+  async getDefaultByTipoEntidade (tipoEntidade: string): Promise<Imagem | null> {
+    return this.repository.findOne({ 
+      where: { tipo_entidade: tipoEntidade } as any 
+    });
+  }
 }

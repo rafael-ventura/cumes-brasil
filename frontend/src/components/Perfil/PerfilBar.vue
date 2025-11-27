@@ -108,7 +108,7 @@ const dataFormatada = computed(() => {
 .profile-card-container {
   padding: 16px;
   background-color: $cumes-01;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px $box-shadow-strong;
   margin: auto;
 
   @media (min-width: 1024px) {
@@ -116,8 +116,12 @@ const dataFormatada = computed(() => {
     min-height: 400px;
   }
 
-  @media (max-width: 600px) {
-    padding: 12px;
+  // Mobile: encostado no topo, 100% largura, bordas inferiores arredondadas
+  @media (max-width: 1023px) {
+    padding: 16px;
+    margin: 0;
+    width: 100%;
+    border-radius: 0 0 24px 24px;
   }
 }
 
@@ -165,7 +169,7 @@ const dataFormatada = computed(() => {
   height: 160px;
   border-radius: 50%;
   border: 3px solid $cumes-04;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px $box-shadow-strong;
   object-fit: cover;
 
   @media (min-width: 1024px) {
@@ -288,7 +292,7 @@ const dataFormatada = computed(() => {
   font-size: 18px;
   font-weight: bold;
   color: $cumes-04;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 3px $text-shadow-default;
 
   @media (min-width: 1024px) {
     font-size: 20px;

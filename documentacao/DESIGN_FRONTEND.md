@@ -169,6 +169,198 @@ Ao criar um novo componente, verifique:
 
 ---
 
+## 🎭 Modais e Formulários
+
+### Estrutura Padrão de Modais
+
+Todos os modais devem seguir esta estrutura:
+
+```vue
+<q-card class="modal-card">
+  <!-- Header com gradiente -->
+  <q-card-section class="modal-header">
+    <div class="modal-title">
+      <q-icon name="icon_name" size="28px" class="title-icon" />
+      <span>Título do Modal</span>
+    </div>
+  </q-card-section>
+
+  <!-- Body com fundo escuro -->
+  <q-card-section class="modal-body">
+    <!-- Conteúdo aqui -->
+  </q-card-section>
+
+  <!-- Actions (opcional) -->
+  <q-card-actions class="modal-actions">
+    <!-- Botões aqui -->
+  </q-card-actions>
+</q-card>
+```
+
+### Cores de Modais
+
+```scss
+// Card principal
+.modal-card {
+  background-color: $background;  // Fundo escuro
+  border: 2px solid $cumes-01;    // Borda verde
+  border-radius: 16px;
+  box-shadow: 0 8px 32px $box-shadow-dark;
+}
+
+// Header com gradiente
+.modal-header {
+  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  border-bottom: 3px solid $cumes-03;
+}
+
+// Título
+.modal-title {
+  color: $offwhite;  // Texto branco suave
+  
+  .title-icon {
+    color: $cumes-04;  // Ícone amarelo
+  }
+}
+```
+
+### Inputs em Formulários
+
+**REGRA IMPORTANTE**: Inputs sempre com fundo claro em modais escuros.
+
+```scss
+.custom-input {
+  :deep(.q-field__control) {
+    background-color: $offwhite;  // Fundo claro
+    border-radius: 8px;
+    padding: 0 !important;  // Remove padding do container
+    
+    &::before {
+      border-color: $cumes-01;  // Borda verde
+      border-width: 2px;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background;  // Texto escuro sobre fundo claro
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 14px !important;  // Padding controlado
+  }
+
+  :deep(input) {
+    padding: 10px 14px !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($background, 0.5);  // Placeholder translúcido
+  }
+
+  // Estado focused
+  &:deep(.q-field--focused) {
+    .q-field__control::before {
+      border-color: $cumes-03;  // Muda para laranja
+      border-width: 2px;
+    }
+  }
+
+  // Estado de erro
+  &:deep(.q-field--error) {
+    .q-field__control::before {
+      border-color: $error-color;
+    }
+  }
+}
+```
+
+### Labels de Formulário
+
+```scss
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: $cumes-04;  // Amarelo - destaca sobre fundo escuro
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+```
+
+### Botões em Modais
+
+#### Botão Primário (Salvar, Confirmar)
+
+```scss
+.btn-primary-custom {
+  background: $cumes-01 !important;
+  color: $offwhite !important;
+  padding: 12px 32px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px $box-shadow-medium !important;
+
+  &:hover {
+    background: darken($cumes-01, 10%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px $box-shadow-strong !important;
+  }
+}
+```
+
+#### Botão Secundário (Cancelar)
+
+```scss
+.btn-secondary-custom {
+  background: transparent !important;
+  color: $cumes-01 !important;
+  border: 2px solid $cumes-01 !important;
+  padding: 12px 32px !important;
+
+  &:hover {
+    background: rgba($cumes-01, 0.1) !important;
+  }
+}
+```
+
+### Tamanhos de Modais
+
+```scss
+// Mobile
+width: 92vw;
+max-width: 500px;
+
+// Tablet
+@media (min-width: 768px) {
+  width: 600px;
+}
+
+// Desktop
+@media (min-width: 1024px) {
+  width: 700px;
+}
+
+// Large Desktop
+@media (min-width: 1440px) {
+  width: 800px;
+}
+```
+
+### ⚠️ Regras Importantes
+
+1. **Sempre use `!important`** em estilos de inputs e botões para evitar conflitos com o Quasar
+2. **Padding controlado**: `padding: 0 !important` no container, `10px 14px` no input
+3. **Contraste**: Fundo escuro (`$background`) + inputs claros (`$offwhite`)
+4. **Labels**: Use `$cumes-04` (amarelo) para máxima visibilidade
+5. **Borders**: `2px solid $cumes-01`, muda para `$cumes-03` no focus
+
+### Exemplo Completo
+
+Ver implementação de referência em:
+- `frontend/src/components/Perfil/PerfilEditaForm.vue`
+- `frontend/src/components/Perfil/PerfilEditaFormAddPrediletaModal.vue`
+
+---
+
 ## 📚 Referências
 
 ### Arquivos Principais
@@ -191,7 +383,13 @@ R: Soft para cards sutis, Light para elevação leve, Medium para destaque, Stro
 **P: Onde usar as variáveis `$action-*`?**
 R: Em qualquer elemento relacionado às 3 ações principais do usuário: Escaladas, Favoritos, Coleções.
 
+**P: Como estilizar inputs em modais?**
+R: Sempre use fundo `$offwhite` com texto `$background`. Ver seção "Modais e Formulários" para código completo.
+
+**P: Por que usar `!important` nos inputs?**
+R: Para evitar conflitos com os estilos padrão do Quasar e garantir consistência visual.
+
 ---
 
-*Última atualização: 2025-01-08*
-*Versão: 1.0*
+*Última atualização: 2025-11-08*
+*Versão: 1.1 - Adicionada seção de Modais e Formulários*

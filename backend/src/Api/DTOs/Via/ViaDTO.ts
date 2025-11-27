@@ -43,14 +43,36 @@ export class ViaDTO {
         this.detalhes = entity.detalhes;
         this.data = entity.data;
 
-        // Relações com objetos completos
-        this.imagem = entity.imagem 
-            ? new ImagemDTO(entity.imagem as any) 
-            : undefined;
-
+        // Montanha primeiro (precisa estar carregada para o fallback de imagem)
         this.montanha = entity.montanha 
             ? new MontanhaDTO(entity.montanha as any) 
             : undefined;
+
+        // Lógica de fallback de imagem:
+        // 1. Se a via tem imagem (carregada como objeto), usar ela
+        // 2. Se não tem, usar a imagem da montanha (do MontanhaDTO que já foi criado)
+        // 3. Se a montanha também não tem, usar imagem default
+        const viaImagem = entity.imagem && typeof entity.imagem === 'object' && (entity.imagem as any).url 
+            ? entity.imagem 
+            : null;
+
+        if (viaImagem) {
+            // Usar imagem da via
+            this.imagem = new ImagemDTO(viaImagem as any);
+        } else if (this.montanha?.imagem) {
+            // Usar imagem da montanha (já processada pelo MontanhaDTO)
+            this.imagem = this.montanha.imagem;
+        } else {
+            // Usar imagem default para via
+            // ID 4 corresponde à imagem default de via conforme dados iniciais
+            const imagemDefault = {
+                id: 4,
+                url: "/assets/via-default-01.webp",
+                descricao: "Foto Default para Via",
+                tipo_entidade: "via"
+            };
+            this.imagem = new ImagemDTO(imagemDefault as any);
+        }
 
         this.face = entity.face 
             ? new FaceDTO(entity.face as any) 

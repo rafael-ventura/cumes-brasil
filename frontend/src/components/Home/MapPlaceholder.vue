@@ -14,7 +14,7 @@
   align-items: center;
   border-radius: 8px;
   font-size: 18px;
-  color: white;
+  color: $offwhite;
   font-weight: bold;
   margin-top: 40px;
 }

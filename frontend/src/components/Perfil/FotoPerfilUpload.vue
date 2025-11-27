@@ -230,11 +230,12 @@ const deleteFoto = async () => {
   display: flex;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba($background, 0.15);
   flex-direction: column;
   align-items: center;
-  border: 1px solid $cumes-03;
+  border: 2px solid $cumes-03;
   padding: 16px;
+  border-radius: 12px;
   
   @media (max-width: 600px) {
     padding: 12px;
@@ -246,11 +247,11 @@ const deleteFoto = async () => {
   top: 12px;
   right: 12px;
   z-index: 10;
-  background-color: rgba(255, 0, 0, 0.1);
+  background-color: rgba($error-color, 0.15);
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgba($error-color, 0.25);
     transform: scale(1.1);
   }
 
@@ -273,7 +274,7 @@ const deleteFoto = async () => {
   margin-bottom: 16px;
   max-width: 100%;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px $box-shadow-dark;
 }
 
 .my-profile-pic {
@@ -318,12 +319,16 @@ const deleteFoto = async () => {
 }
 
 .btn-escuro {
-  background-color: rgba(0, 0, 0, 0.66);
+  background-color: $cumes-01;
   color: $offwhite;
   transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px $box-shadow-medium;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: darken($cumes-01, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px $box-shadow-strong;
   }
 }
 
@@ -343,34 +348,54 @@ const deleteFoto = async () => {
 .delete-dialog {
   min-width: 400px;
   border-radius: 12px;
+  background-color: $offwhite;
+  border: 2px solid $error-color;
 
   @media (max-width: 600px) {
     min-width: 90vw;
   }
 
   .text-h6 {
-    font-weight: bold;
-    color: $cumes-03;
+    font-weight: 700;
+    color: $error-color;
+    font-size: 20px;
   }
 
   .text-body1 {
     font-size: 16px;
-    color: $offwhite;
+    color: $background;
+    font-weight: 500;
   }
 
   .text-body2 {
     font-size: 14px;
+    color: $cumes-02;
   }
 }
 
 .btn-cancelar {
-  padding: 8px 20px;
+  padding: 10px 24px;
   font-size: 14px;
+  font-weight: 600;
+  background-color: rgba($cumes-01, 0.1);
+  color: $cumes-01;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: rgba($cumes-01, 0.2);
+  }
 }
 
 .btn-confirmar {
-  padding: 8px 20px;
+  padding: 10px 24px;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
+  background-color: $error-color;
+  color: $offwhite;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: darken($error-color, 10%);
+  }
 }
 </style>

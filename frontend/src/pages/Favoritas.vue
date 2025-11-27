@@ -30,12 +30,7 @@
     </Busca>
 
     <!-- Botão para adicionar vias -->
-    <q-btn
-      fab
-      icon="add"
-      class="botao-add fixed-bottom-right"
-      @click="openAddViaModal"
-    />
+    <BotaoAdicionar @add="openAddViaModal" />
     <AddViaModal
       :isOpen="isAddViaModalOpen"
       :colecaoId="colecaoId ?? 0"
@@ -53,6 +48,7 @@ import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import Busca from 'components/Busca/Busca.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
+import BotaoAdicionar from 'components/BotaoAdicionar.vue';
 
 defineOptions({
   name: 'FavoritasPage'
@@ -127,14 +123,13 @@ const viaAdded = () => {
 
 .titulo-pagina {
   font-size: 40px;
+  font-weight: 700; /* Mesmo estilo de fonte de Colecoes */
   text-align: center;
   color: $cumes-01;
-}
-
-.fixed-bottom-right {
-  position: fixed;
-  bottom: 120px;
-  right: 16px;
-  z-index: 2;
+  text-shadow: 0 2px 4px $text-shadow-default; /* Mesmo text-shadow de Colecoes */
+  
+  @media (max-width: 768px) {
+    font-size: 32px;
+  }
 }
 </style>

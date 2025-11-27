@@ -37,17 +37,20 @@ const extensaoValida = computed(() => {
 @import 'src/css/app.scss';
 
 .grau-badge {
-  width: 70%;
+  width: 90%;
   max-width: 800px;
-  padding: 1%;
-  border: 1px solid black;
-  border-radius: 10px;
-  background-color: $cumes-03;
-  color: black;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, $cumes-04 0%, darken($cumes-04, 10%) 100%);
+  color: $background;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px $box-shadow-medium;
+  border: 2px solid rgba($cumes-03, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info-icon {
