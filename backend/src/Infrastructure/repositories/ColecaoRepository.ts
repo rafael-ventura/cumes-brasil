@@ -132,7 +132,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         let qb = this.repository.createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
-          .leftJoinAndSelect('via.montanha', 'montanha')
+          .leftJoinAndSelect('via.localizacao', 'localizacao')
+          .leftJoinAndSelect('localizacao.bairro', 'bairro')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
             .leftJoinAndSelect('colecao.usuario', 'usuario');
 

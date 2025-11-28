@@ -59,7 +59,7 @@ export class ViaService extends BaseService<Via, ViaRepository> {
       case "grau":
         return this.repository.countByField("via.grau", validValue);
       case "bairro":
-        return this.repository.countByField("LOWER(montanha.bairro)", typeof validValue !== "number" ? validValue?.toLowerCase() : validValue);
+        return this.repository.countByBairro(typeof validValue !== "number" ? validValue : String(validValue));
       case "exposicao":
         return this.repository.countByField("via.exposicao", validValue, "<=");
       case "duracao":

@@ -13,11 +13,12 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
     private withRelations(qb: any) {
         return qb
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("montanha.imagem", "montanhaImagem")
+            .leftJoinAndSelect("via.localizacao", "localizacao")
+            .leftJoinAndSelect("localizacao.bairro", "bairro")
+            .leftJoinAndSelect("localizacao.cidade", "cidade")
+            .leftJoinAndSelect("localizacao.estado", "estado")
             .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
             .leftJoinAndSelect("via.fonte", "fonte")
-            .leftJoinAndSelect("via.face", "face")
             .leftJoinAndSelect("via.imagem", "imagem")
             .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
             .leftJoinAndSelect("viaCroquis.croqui", "croqui");
@@ -148,8 +149,8 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         } = query;
 
         let qb = this.repository.createQueryBuilder("via")
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("montanha.imagem", "montanhaImagem")
+            .leftJoinAndSelect("via.localizacao", "localizacao")
+            .leftJoinAndSelect("localizacao.bairro", "bairro")
             .leftJoinAndSelect("via.imagem", "imagem");
 
         if (colecaoId) {
@@ -159,17 +160,18 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         if (unifiedSearch) {
             qb = qb.andWhere(
-                "(via.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR montanha.bairro LIKE :unifiedSearch)",
+                "(via.nome LIKE :unifiedSearch OR localizacao.bairro.nome LIKE :unifiedSearch)",
                 {unifiedSearch: `%${unifiedSearch}%`}
             );
         }
 
         if (bairro) {
-            qb = qb.andWhere("LOWER(montanha.bairro) = :bairro", {bairro: bairro.toLowerCase()});
+            qb = qb.andWhere("LOWER(bairro.nome) = :bairro", {bairro: bairro.toLowerCase()});
         }
 
         if (selectedMountain) {
-            qb = qb.andWhere("montanha.nome = :selectedMountain", {selectedMountain});
+            // TODO: Implementar busca por montanha através de localização ou criar relação via -> montanha
+            // Por enquanto, removido pois não temos mais relação direta
         }
 
         if (selectedDifficulty) {
@@ -216,8 +218,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
     }
 
     async countByField(field: string, value: any, operator: string = "="): Promise<number> {
-        const queryBuilder = this.repository.createQueryBuilder("via")
-            .leftJoin("via.montanha", "montanha");
+        const queryBuilder = this.repository.createQueryBuilder("via");
 
         if (field === "via.exposicao" || field === "via.duracao") {
             queryBuilder.where(`${field} LIKE :value`, {value: `%${value}%`});
@@ -226,5 +227,13 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         }
 
         return queryBuilder.getCount();
+    }
+
+    async countByBairro(bairro: string): Promise<number> {
+        return this.repository.createQueryBuilder("via")
+            .leftJoin("via.localizacao", "localizacao")
+            .leftJoin("localizacao.bairro", "bairro")
+            .where("LOWER(bairro.nome) = :bairro", { bairro: bairro.toLowerCase() })
+            .getCount();
     }
 }

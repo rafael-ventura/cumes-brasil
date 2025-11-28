@@ -9,9 +9,23 @@ import {Usuario} from "../../Domain/entities/Usuario";
 import {Face} from "../../Domain/entities/Face";
 import {Montanha} from "../../Domain/entities/Montanha";
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
+import {Continente} from "../../Domain/entities/Continente";
+import {Pais} from "../../Domain/entities/Pais";
+import {Regiao} from "../../Domain/entities/Regiao";
+import {Estado} from "../../Domain/entities/Estado";
+import {Cidade} from "../../Domain/entities/Cidade";
+import {Bairro} from "../../Domain/entities/Bairro";
+import {Localizacao} from "../../Domain/entities/Localizacao";
 import path from "path";
 
 const basePath = path.resolve(__dirname, "../../Infrastructure/initialData");
+const continentesJson = JSON.parse(fs.readFileSync(`${basePath}/continentes.json`, "utf8"));
+const paisesJson = JSON.parse(fs.readFileSync(`${basePath}/paises.json`, "utf8"));
+const regioesJson = JSON.parse(fs.readFileSync(`${basePath}/regioes.json`, "utf8"));
+const estadosJson = JSON.parse(fs.readFileSync(`${basePath}/estados.json`, "utf8"));
+const cidadesJson = JSON.parse(fs.readFileSync(`${basePath}/cidades.json`, "utf8"));
+const bairrosJson = JSON.parse(fs.readFileSync(`${basePath}/bairros.json`, "utf8"));
+const localizacoesJson = JSON.parse(fs.readFileSync(`${basePath}/localizacoes.json`, "utf8"));
 const fontesJson = JSON.parse(fs.readFileSync(`${basePath}/fontes.json`, "utf8"));
 const imagensJson = JSON.parse(fs.readFileSync(`${basePath}/imagens.json`, "utf8"));
 const viasJson = JSON.parse(fs.readFileSync(`${basePath}/vias.json`, "utf8"));
@@ -26,12 +40,23 @@ export async function loadData() {
   await queryRunner.connect();
 
   try {
+    // Carregar hierarquia geográfica (ordem é importante)
+    await insertData(queryRunner, Continente, continentesJson);
+    await insertData(queryRunner, Pais, paisesJson);
+    await insertData(queryRunner, Regiao, regioesJson);
+    await insertData(queryRunner, Estado, estadosJson);
+    await insertData(queryRunner, Cidade, cidadesJson);
+    await insertData(queryRunner, Bairro, bairrosJson);
+    await insertData(queryRunner, Localizacao, localizacoesJson);
+    
+    // Carregar dados existentes
     await insertData(queryRunner, Fonte, fontesJson);
     await insertData(queryRunner, Imagem, imagensJson);
     await insertData(queryRunner, Montanha, montanhasJson);
     await insertData(queryRunner, Face, facesJson);
     await insertData(queryRunner, Croqui, croquisJson);
     await insertData(queryRunner, Via, viasJson);
+    
     await insertData(queryRunner, Usuario, usuariosJson);
     await associateViaCroqui(queryRunner);
   } catch (error) {
@@ -58,6 +83,7 @@ async function insertData<T>(
     await queryRunner.rollbackTransaction();
   }
 }
+
 
 async function associateViaCroqui(queryRunner: QueryRunner) {
   await queryRunner.startTransaction();

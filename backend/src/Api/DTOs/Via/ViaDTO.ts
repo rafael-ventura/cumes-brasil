@@ -1,6 +1,4 @@
 import { ImagemDTO } from "../Imagem/ImagemDTO";
-import { MontanhaDTO } from "../Montanha/MontanhaDTO";
-import { FaceDTO } from "../Face/FaceDTO";
 import { FonteDTO } from "../Fonte/FonteDTO";
 import { Via } from "../../../Domain/entities/Via";
 
@@ -19,8 +17,7 @@ export class ViaDTO {
 
     // Relações como objetos completos (informações essenciais)
     imagem?: ImagemDTO;
-    montanha?: MontanhaDTO;
-    face?: FaceDTO;
+    localizacao?: any; // TODO: Criar LocalizacaoDTO
     fonte?: FonteDTO;
     via_principal?: { id: number; nome: string; grau?: string };
 
@@ -43,15 +40,14 @@ export class ViaDTO {
         this.detalhes = entity.detalhes;
         this.data = entity.data;
 
-        // Montanha primeiro (precisa estar carregada para o fallback de imagem)
-        this.montanha = entity.montanha 
-            ? new MontanhaDTO(entity.montanha as any) 
-            : undefined;
+        // Localizacao
+        if (entity.localizacao && typeof entity.localizacao === 'object') {
+            this.localizacao = entity.localizacao;
+        }
 
         // Lógica de fallback de imagem:
         // 1. Se a via tem imagem (carregada como objeto), usar ela
-        // 2. Se não tem, usar a imagem da montanha (do MontanhaDTO que já foi criado)
-        // 3. Se a montanha também não tem, usar imagem default
+        // 2. Se não tem, usar imagem default
         const viaImagem = entity.imagem && typeof entity.imagem === 'object' && (entity.imagem as any).url 
             ? entity.imagem 
             : null;
@@ -59,9 +55,6 @@ export class ViaDTO {
         if (viaImagem) {
             // Usar imagem da via
             this.imagem = new ImagemDTO(viaImagem as any);
-        } else if (this.montanha?.imagem) {
-            // Usar imagem da montanha (já processada pelo MontanhaDTO)
-            this.imagem = this.montanha.imagem;
         } else {
             // Usar imagem default para via
             // ID 4 corresponde à imagem default de via conforme dados iniciais
@@ -74,11 +67,7 @@ export class ViaDTO {
             this.imagem = new ImagemDTO(imagemDefault as any);
         }
 
-        this.face = entity.face 
-            ? new FaceDTO(entity.face as any) 
-            : undefined;
-
-        this.fonte = entity.fonte 
+        this.fonte = entity.fonte && typeof entity.fonte === 'object'
             ? new FonteDTO(entity.fonte as any) 
             : undefined;
 

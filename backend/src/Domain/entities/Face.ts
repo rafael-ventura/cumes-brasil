@@ -1,7 +1,7 @@
 import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Montanha} from "./Montanha";
 import {Fonte} from "./Fonte";
-import {Via} from "./Via";
+import {Setor} from "./Setor";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
@@ -21,7 +21,7 @@ export class Face extends BaseEntityWithTimestamps {
     @ManyToOne(() => Fonte, fonte => fonte.faces)
     fonte: number;
 
-    @OneToMany(() => Via, via => via.face)
-    vias: Via[];
+  @OneToMany(() => Setor, setor => setor.face)
+  setores: Setor[];
 
 }

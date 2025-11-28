@@ -9,7 +9,6 @@ export class MontanhaRepository extends BaseRepository<Montanha> implements ICru
 
     async getById(id: number, relations?: string[]): Promise<Montanha | null> {
         return this.repository.createQueryBuilder("montanha")
-            .leftJoinAndSelect("montanha.fonte", "fonte")
             .leftJoinAndSelect("montanha.imagem", "imagem")
             .where("montanha.id = :id", { id })
             .getOne();
@@ -17,7 +16,6 @@ export class MontanhaRepository extends BaseRepository<Montanha> implements ICru
 
     async getAll(): Promise<Montanha[]> {
         return this.repository.createQueryBuilder("montanha")
-            .leftJoinAndSelect("montanha.fonte", "fonte")
             .leftJoinAndSelect("montanha.imagem", "imagem")
             .getMany();
     }
