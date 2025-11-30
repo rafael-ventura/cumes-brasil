@@ -156,7 +156,7 @@
 
 ---
 
-### Epic: Reestruturação do Sistema de Localização Geográfica 🗺️
+### ~~Epic: Reestruturação do Sistema de Localização Geográfica 🗺️~~
 
 **Objetivo:** Implementar hierarquia geográfica detalhada para permitir categorização avançada, filtros precisos e integração futura com mapas interativos.
 

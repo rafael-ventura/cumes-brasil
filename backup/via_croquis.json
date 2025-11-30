@@ -1,0 +1,172 @@
+[
+  {
+    "id": 1,
+    "via_id": 136,
+    "croqui_id": 1
+  },
+  {
+    "id": 2,
+    "via_id": 136,
+    "croqui_id": 2
+  },
+  {
+    "id": 3,
+    "via_id": 137,
+    "croqui_id": 1
+  },
+  {
+    "id": 4,
+    "via_id": 137,
+    "croqui_id": 2
+  },
+  {
+    "id": 5,
+    "via_id": 138,
+    "croqui_id": 1
+  },
+  {
+    "id": 6,
+    "via_id": 138,
+    "croqui_id": 2
+  },
+  {
+    "id": 7,
+    "via_id": 139,
+    "croqui_id": 1
+  },
+  {
+    "id": 8,
+    "via_id": 139,
+    "croqui_id": 2
+  },
+  {
+    "id": 9,
+    "via_id": 140,
+    "croqui_id": 1
+  },
+  {
+    "id": 10,
+    "via_id": 140,
+    "croqui_id": 2
+  },
+  {
+    "id": 11,
+    "via_id": 141,
+    "croqui_id": 1
+  },
+  {
+    "id": 12,
+    "via_id": 141,
+    "croqui_id": 2
+  },
+  {
+    "id": 13,
+    "via_id": 142,
+    "croqui_id": 1
+  },
+  {
+    "id": 14,
+    "via_id": 142,
+    "croqui_id": 2
+  },
+  {
+    "id": 15,
+    "via_id": 143,
+    "croqui_id": 1
+  },
+  {
+    "id": 16,
+    "via_id": 143,
+    "croqui_id": 2
+  },
+  {
+    "id": 17,
+    "via_id": 144,
+    "croqui_id": 1
+  },
+  {
+    "id": 18,
+    "via_id": 144,
+    "croqui_id": 2
+  },
+  {
+    "id": 19,
+    "via_id": 145,
+    "croqui_id": 1
+  },
+  {
+    "id": 20,
+    "via_id": 145,
+    "croqui_id": 2
+  },
+  {
+    "id": 21,
+    "via_id": 146,
+    "croqui_id": 1
+  },
+  {
+    "id": 22,
+    "via_id": 146,
+    "croqui_id": 2
+  },
+  {
+    "id": 23,
+    "via_id": 147,
+    "croqui_id": 1
+  },
+  {
+    "id": 24,
+    "via_id": 147,
+    "croqui_id": 2
+  },
+  {
+    "id": 25,
+    "via_id": 148,
+    "croqui_id": 1
+  },
+  {
+    "id": 26,
+    "via_id": 148,
+    "croqui_id": 2
+  },
+  {
+    "id": 27,
+    "via_id": 1,
+    "croqui_id": 3
+  },
+  {
+    "id": 28,
+    "via_id": 125,
+    "croqui_id": 4
+  },
+  {
+    "id": 29,
+    "via_id": 3,
+    "croqui_id": 5
+  },
+  {
+    "id": 30,
+    "via_id": 4,
+    "croqui_id": 6
+  },
+  {
+    "id": 31,
+    "via_id": 7,
+    "croqui_id": 7
+  },
+  {
+    "id": 32,
+    "via_id": 22,
+    "croqui_id": 8
+  },
+  {
+    "id": 33,
+    "via_id": 27,
+    "croqui_id": 9
+  },
+  {
+    "id": 34,
+    "via_id": 27,
+    "croqui_id": 10
+  }
+]

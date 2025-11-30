@@ -14,9 +14,11 @@
       </div>
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
-        <div class="montanha-face">
-          <q-icon class="montanha-icon" name="terrain" size="20px" />
-          {{ via.montanha.nome }}<span v-if="via.face && via.face.nome">, {{ via.face.nome }}</span>
+        <div class="localizacao-info" v-if="via.localizacao">
+          <q-icon class="localizacao-icon" name="location_on" size="20px" />
+          <span v-if="via.localizacao.estado">{{ via.localizacao.estado.sigla }}</span>
+          <span v-if="via.localizacao.cidade">, {{ via.localizacao.cidade.nome }}</span>
+          <span v-if="via.localizacao.bairro">, {{ via.localizacao.bairro.nome }}</span>
         </div>
         <div class="grau-badge-container">
           <GrauBadge :via="via" />
@@ -113,7 +115,7 @@ const emitClick = () => {
   line-height: 1.2;
 }
 
-.montanha-face {
+.localizacao-info {
   display: flex;
   align-items: center;
   font-size: 15px;
@@ -121,7 +123,7 @@ const emitClick = () => {
   opacity: 0.95;
 }
 
-.montanha-icon {
+.localizacao-icon {
   margin-right: 8px;
   color: $cumes-04;
 }

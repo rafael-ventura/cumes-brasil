@@ -14,9 +14,12 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
     private withRelations(qb: any) {
         return qb
             .leftJoinAndSelect("via.localizacao", "localizacao")
-            .leftJoinAndSelect("localizacao.bairro", "bairro")
-            .leftJoinAndSelect("localizacao.cidade", "cidade")
+            .leftJoinAndSelect("localizacao.continente", "continente")
+            .leftJoinAndSelect("localizacao.pais", "pais")
+            .leftJoinAndSelect("localizacao.regiao", "regiao")
             .leftJoinAndSelect("localizacao.estado", "estado")
+            .leftJoinAndSelect("localizacao.cidade", "cidade")
+            .leftJoinAndSelect("localizacao.bairro", "bairro")
             .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
             .leftJoinAndSelect("via.fonte", "fonte")
             .leftJoinAndSelect("via.imagem", "imagem")
@@ -150,6 +153,11 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         let qb = this.repository.createQueryBuilder("via")
             .leftJoinAndSelect("via.localizacao", "localizacao")
+            .leftJoinAndSelect("localizacao.continente", "continente")
+            .leftJoinAndSelect("localizacao.pais", "pais")
+            .leftJoinAndSelect("localizacao.regiao", "regiao")
+            .leftJoinAndSelect("localizacao.estado", "estado")
+            .leftJoinAndSelect("localizacao.cidade", "cidade")
             .leftJoinAndSelect("localizacao.bairro", "bairro")
             .leftJoinAndSelect("via.imagem", "imagem");
 

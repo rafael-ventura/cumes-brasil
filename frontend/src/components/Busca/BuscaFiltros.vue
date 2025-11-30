@@ -4,7 +4,7 @@
     <div class="q-pt-lg">
       <q-input
         v-model="localFilters.unifiedSearch"
-        :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou montanha'"
+        :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou localização'"
         debounce="300"
         outlined
         color="secondary"
@@ -251,14 +251,15 @@ const applyFilterChanges = () => {
   showFilterModal.value = false;
 };
 
-// Inicializa as montanhas
-onMounted(async () => {
-  try {
-    mountainOptions.value = await montanhaService.getAllName();
-  } catch (error) {
-    console.error('Error getting mountains:', error);
-  }
-});
+// Inicializa as montanhas - removido pois não temos mais relação direta via -> montanha
+// TODO: Implementar busca por montanha através de localização se necessário
+// onMounted(async () => {
+//   try {
+//     mountainOptions.value = await montanhaService.getAllName();
+//   } catch (error) {
+//     console.error('Error getting mountains:', error);
+//   }
+// });
 
 // Atualiza a busca automaticamente a partir de 2 letras
 const onInputChange = (event: KeyboardEvent) => {

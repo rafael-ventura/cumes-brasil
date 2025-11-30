@@ -38,9 +38,11 @@
           </q-item-section>
           <q-item-section>
             <q-item-label class="via-nome">{{ via.nome }}</q-item-label>
-            <q-item-label caption class="via-montanha">
-              <q-icon name="terrain" size="14px" />
-              {{ via.montanha.nome }}
+            <q-item-label caption class="via-localizacao" v-if="via.localizacao">
+              <q-icon name="location_on" size="14px" />
+              <span v-if="via.localizacao.estado">{{ via.localizacao.estado.sigla }}</span>
+              <span v-if="via.localizacao.cidade">, {{ via.localizacao.cidade.nome }}</span>
+              <span v-if="via.localizacao.bairro">, {{ via.localizacao.bairro.nome }}</span>
             </q-item-label>
           </q-item-section>
           <q-item-section side>

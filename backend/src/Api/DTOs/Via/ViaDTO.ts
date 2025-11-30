@@ -1,5 +1,6 @@
 import { ImagemDTO } from "../Imagem/ImagemDTO";
 import { FonteDTO } from "../Fonte/FonteDTO";
+import { LocalizacaoDTO } from "../Localizacao/LocalizacaoDTO";
 import { Via } from "../../../Domain/entities/Via";
 
 export class ViaDTO {
@@ -17,9 +18,13 @@ export class ViaDTO {
 
     // Relações como objetos completos (informações essenciais)
     imagem?: ImagemDTO;
-    localizacao?: any; // TODO: Criar LocalizacaoDTO
+    localizacao?: LocalizacaoDTO;
     fonte?: FonteDTO;
     via_principal?: { id: number; nome: string; grau?: string };
+    
+    // Coordenadas geográficas
+    latitude?: number;
+    longitude?: number;
 
     // Arrays de IDs para relações de muitos-para-muitos
     variantesIds?: number[];
@@ -39,10 +44,14 @@ export class ViaDTO {
         this.conquistadores = entity.conquistadores;
         this.detalhes = entity.detalhes;
         this.data = entity.data;
+        
+        // Coordenadas geográficas
+        this.latitude = entity.latitude ? Number(entity.latitude) : undefined;
+        this.longitude = entity.longitude ? Number(entity.longitude) : undefined;
 
         // Localizacao
         if (entity.localizacao && typeof entity.localizacao === 'object') {
-            this.localizacao = entity.localizacao;
+            this.localizacao = new LocalizacaoDTO(entity.localizacao);
         }
 
         // Lógica de fallback de imagem:

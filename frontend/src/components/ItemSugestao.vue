@@ -2,7 +2,7 @@
   <div @scroll="onScroll" class="item-sugestao-container">
     <!-- Campo de busca unificada -->
     <div class="form-field">
-      <label class="field-label">Buscar por nome, bairro ou montanha</label>
+      <label class="field-label">Buscar por nome, bairro ou localização</label>
       <q-input
         v-model="unifiedSearch"
         outlined
@@ -72,7 +72,11 @@ interface Item {
   id: number;
   nome: string;
   imagem?: { url: string };
-  montanha?: { nome: string; bairro: string };
+  localizacao?: {
+    estado?: { nome: string; sigla: string };
+    cidade?: { nome: string };
+    bairro?: { nome: string };
+  };
   added?: boolean;
   lentgh?: any[];
   [key: string]: any;
@@ -98,8 +102,9 @@ const filteredItems = computed(() => {
     return props.items.filter(item => {
       return (
         item.nome.toLowerCase().includes(query) ||
-        (item.montanha?.nome?.toLowerCase().includes(query)) ||
-        (item.montanha?.bairro?.toLowerCase().includes(query))
+        (item.localizacao?.estado?.nome?.toLowerCase().includes(query)) ||
+        (item.localizacao?.cidade?.nome?.toLowerCase().includes(query)) ||
+        (item.localizacao?.bairro?.nome?.toLowerCase().includes(query))
       );
     });
   } else {
@@ -123,7 +128,14 @@ const addItem = (item: Item) => {
 // Função para exibir informações do item
 const itemInfo = (item: Item) => {
   if (props.itemType === 'via') {
-    return item.montanha?.nome || '';
+    if (item.localizacao) {
+      const parts = [];
+      if (item.localizacao.estado) parts.push(item.localizacao.estado.sigla);
+      if (item.localizacao.cidade) parts.push(item.localizacao.cidade.nome);
+      if (item.localizacao.bairro) parts.push(item.localizacao.bairro.nome);
+      return parts.join(', ') || '';
+    }
+    return '';
   } else if (props.itemType === 'colecao') {
     const quantidade = item.viaColecoes?.length || 0;
     return quantidade > 0 ? `${quantidade} ${quantidade === 1 ? 'via' : 'vias'}` : '0 vias';

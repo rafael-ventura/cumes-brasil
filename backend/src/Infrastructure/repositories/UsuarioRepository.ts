@@ -14,6 +14,13 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
     async getById(id: number, relations?: string[]): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
+            .leftJoinAndSelect('via_preferida.localizacao', 'localizacao')
+            .leftJoinAndSelect('localizacao.continente', 'continente')
+            .leftJoinAndSelect('localizacao.pais', 'pais')
+            .leftJoinAndSelect('localizacao.regiao', 'regiao')
+            .leftJoinAndSelect('localizacao.estado', 'estado')
+            .leftJoinAndSelect('localizacao.cidade', 'cidade')
+            .leftJoinAndSelect('localizacao.bairro', 'bairro')
             .leftJoinAndSelect("usuario.foto_perfil", "foto_perfil")
             .where("usuario.id = :id", { id })
             .getOne();
@@ -51,6 +58,13 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
         return this.repository.createQueryBuilder("usuario")
             .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
+            .leftJoinAndSelect('via_preferida.localizacao', 'localizacao')
+            .leftJoinAndSelect('localizacao.continente', 'continente')
+            .leftJoinAndSelect('localizacao.pais', 'pais')
+            .leftJoinAndSelect('localizacao.regiao', 'regiao')
+            .leftJoinAndSelect('localizacao.estado', 'estado')
+            .leftJoinAndSelect('localizacao.cidade', 'cidade')
+            .leftJoinAndSelect('localizacao.bairro', 'bairro')
             .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
             .where('usuario.id = :id', { id })
             .getOne();

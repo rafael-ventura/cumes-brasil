@@ -20,6 +20,13 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.localizacao', 'localizacao')
+          .leftJoinAndSelect('localizacao.continente', 'continente')
+          .leftJoinAndSelect('localizacao.pais', 'pais')
+          .leftJoinAndSelect('localizacao.regiao', 'regiao')
+          .leftJoinAndSelect('localizacao.estado', 'estado')
+          .leftJoinAndSelect('localizacao.cidade', 'cidade')
+          .leftJoinAndSelect('localizacao.bairro', 'bairro')
           .where('colecao.id = :id', { id })
           .getOne();
     }
@@ -30,6 +37,13 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.localizacao', 'localizacao')
+          .leftJoinAndSelect('localizacao.continente', 'continente')
+          .leftJoinAndSelect('localizacao.pais', 'pais')
+          .leftJoinAndSelect('localizacao.regiao', 'regiao')
+          .leftJoinAndSelect('localizacao.estado', 'estado')
+          .leftJoinAndSelect('localizacao.cidade', 'cidade')
+          .leftJoinAndSelect('localizacao.bairro', 'bairro')
           .getMany();
     }
 
@@ -39,6 +53,13 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.localizacao', 'localizacao')
+          .leftJoinAndSelect('localizacao.continente', 'continente')
+          .leftJoinAndSelect('localizacao.pais', 'pais')
+          .leftJoinAndSelect('localizacao.regiao', 'regiao')
+          .leftJoinAndSelect('localizacao.estado', 'estado')
+          .leftJoinAndSelect('localizacao.cidade', 'cidade')
+          .leftJoinAndSelect('localizacao.bairro', 'bairro')
           .where('usuario.id = :usuario_id', { usuario_id })
           .getMany();
     }
@@ -133,6 +154,11 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
           .leftJoinAndSelect('via.localizacao', 'localizacao')
+          .leftJoinAndSelect('localizacao.continente', 'continente')
+          .leftJoinAndSelect('localizacao.pais', 'pais')
+          .leftJoinAndSelect('localizacao.regiao', 'regiao')
+          .leftJoinAndSelect('localizacao.estado', 'estado')
+          .leftJoinAndSelect('localizacao.cidade', 'cidade')
           .leftJoinAndSelect('localizacao.bairro', 'bairro')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
             .leftJoinAndSelect('colecao.usuario', 'usuario');
@@ -155,9 +181,10 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
             qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
-        // Filtro por nome da montanha caso você queira buscar coleções que tenham vias em uma determinada montanha)
+        // Filtro por nome da montanha - removido pois não temos mais relação direta via -> montanha
+        // TODO: Implementar busca por montanha através de localização se necessário
         if (nomeMontanha) {
-            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
+            // Por enquanto, busca desabilitada
         }
 
         // Aplicação da ordenação dinâmica
