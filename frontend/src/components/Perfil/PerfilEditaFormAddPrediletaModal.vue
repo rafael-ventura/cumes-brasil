@@ -26,44 +26,49 @@
           </q-input>
         </div>
 
-        <!-- Lista de vias -->
-        <q-list class="vias-list">
-          <q-item 
-            v-for="via in filteredVias" 
-            :key="via.id" 
-            clickable 
-            @click="selectVia(via)"
-            class="via-item"
-            :class="{ 'via-selected': via.id.toString() === viaPreferidaId }"
-          >
-            <q-item-section>
-              <q-item-label class="via-nome">{{ via.nome }}</q-item-label>
-              <q-item-label caption class="via-montanha" v-if="via.montanha">
-                <q-icon name="terrain" size="14px" />
-                {{ via.montanha.nome }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn
-                flat
-                round
-                :icon="via.id.toString() === viaPreferidaId ? 'check_circle' : 'add_circle'"
-                :class="via.id.toString() === viaPreferidaId ? 'btn-selected' : 'btn-add'"
-                @click.stop="selectVia(via)"
-                :disabled="via.id.toString() === viaPreferidaId"
-                size="md"
-              />
-            </q-item-section>
-          </q-item>
-          
-          <!-- Mensagem se não houver resultados -->
-          <q-item v-if="!filteredVias.length && !loading" class="no-results">
-            <q-item-section>
-              <q-item-label>Nenhuma via encontrada.</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-card-section>
+      <q-list class="vias-list">
+        <q-item
+          v-for="via in vias"
+          :key="via.id"
+          clickable
+          @click="addVia(via)"
+          class="via-item"
+          :class="{ 'via-selected': via.selected }"
+        >
+          <q-item-section avatar>
+            <q-avatar square size="60px" class="custom-avatar">
+              <q-img :src="getViaImageUrlFull(via) || 'https://via.placeholder.com/60'" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="via-nome">{{ via.nome }}</q-item-label>
+            <q-item-label caption class="via-localizacao" v-if="via.localizacao">
+              <q-icon name="location_on" size="14px" />
+              <span v-if="via.localizacao.estado">{{ via.localizacao.estado.sigla }}</span>
+              <span v-if="via.localizacao.cidade">, {{ via.localizacao.cidade.nome }}</span>
+              <span v-if="via.localizacao.bairro">, {{ via.localizacao.bairro.nome }}</span>
+            </q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-btn
+              flat
+              round
+              :icon="via.selected ? 'check_circle' : 'add_circle'"
+              :class="via.selected ? 'btn-selected' : 'btn-add'"
+              @click.stop="selectedVia(via)"
+              :disabled="via.selected"
+              size="md"
+            />
+          </q-item-section>
+        </q-item>
+        <q-item v-if="!vias.length" class="empty-state">
+          <q-item-section class="text-center">
+            <q-icon name="search_off" size="48px" color="grey-6" />
+            <q-item-label class="empty-text">Nenhuma via encontrada</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-card-section>
 
       <q-card-actions align="right" class="card-actions">
         <div class="actions-content">
@@ -87,8 +92,8 @@
             @update:model-value="onPageChange"
           />
           <div class="spacer" v-if="totalPages <= 1"></div>
-          <q-btn 
-            label="Fechar" 
+          <q-btn
+            label="Fechar"
             class="btn-secondary-custom"
             v-close-popup
             unelevated
@@ -105,7 +110,7 @@ import { ref, watch, computed } from 'vue';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
 
-const props = defineProps<{ 
+const props = defineProps<{
   viaPreferidaId: string;
   modelValue?: boolean;
 }>();
@@ -205,17 +210,17 @@ const onDialogShow = async () => {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  
+
   @media (min-width: 768px) {
     width: 600px;
     max-width: 600px;
   }
-  
+
   @media (min-width: 1024px) {
     width: 750px;
     max-width: 750px;
   }
-  
+
   @media (min-width: 1440px) {
     width: 850px;
     max-width: 850px;
@@ -276,7 +281,7 @@ const onDialogShow = async () => {
     background-color: $offwhite !important;
     border-radius: 8px !important;
     padding: 0 !important;
-    
+
     &::before {
       border-color: $cumes-01 !important;
       border-width: 2px !important;
@@ -356,7 +361,7 @@ const onDialogShow = async () => {
   display: flex;
   align-items: center;
   gap: 4px;
-  
+
   .q-icon {
     color: $cumes-04;
   }
@@ -364,11 +369,11 @@ const onDialogShow = async () => {
 
 .btn-add {
   color: $cumes-01 !important;
-  
+
   &:hover {
     background-color: rgba($cumes-01, 0.2) !important;
   }
-  
+
   &[disabled] {
     color: rgba($cumes-01, 0.5) !important;
   }
@@ -417,7 +422,7 @@ const onDialogShow = async () => {
     background-color: $offwhite !important;
     border-radius: 8px !important;
     padding: 0 !important;
-    
+
     &::before {
       border-color: $cumes-01 !important;
       border-width: 2px !important;
@@ -444,7 +449,7 @@ const onDialogShow = async () => {
       border-width: 2px !important;
     }
   }
-  
+
   // Menu do dropdown - simples
   :deep(.q-menu) {
     background-color: $offwhite !important;
@@ -453,18 +458,18 @@ const onDialogShow = async () => {
     box-shadow: 0 4px 12px $box-shadow-medium !important;
     min-width: 140px !important;
     max-width: 140px !important;
-    
+
     .q-item {
       color: $background !important;
       font-size: 14px !important;
       font-weight: 600 !important;
       padding: 10px 14px !important;
       min-height: 40px !important;
-      
+
       &:hover {
         background-color: rgba($cumes-01, 0.1) !important;
       }
-      
+
       &.q-item--active {
         background-color: $cumes-01 !important;
         color: $offwhite !important;
@@ -494,7 +499,7 @@ const onDialogShow = async () => {
     border-radius: 6px !important;
     font-weight: 700 !important;
     font-size: 14px !important;
-    
+
     &.q-btn--active {
       background-color: $cumes-03 !important;
       color: $offwhite !important;

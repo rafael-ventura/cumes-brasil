@@ -101,6 +101,8 @@
 
 - Refazer visual da tela de home
 - Adicionar endpoint de contagem para status na tela de home
+- Refazer visual da tela de home
+- Adicionar endpoint de contagem para status na tela de home
 
 ---
 
@@ -108,12 +110,24 @@
 ### ~~Epic: Gestão de Perfil de Usuário~~
 
 - Adicionar opção de remover foto do perfil do usuário
+- Adicionar opção de remover foto do perfil do usuário
 
 ---
 
 <a id="epic-versão-desktopresponsiva"></a>
 ### ~~Epic: Versão Desktop/Responsiva 💻~~
 
+- Home
+- Login
+- Register
+- Perfil
+- Vias (listagem)
+- Via Detalhada
+- Coleções (listagem)
+- Coleção Detalhada
+- Escaladas
+- Favoritas
+- Ajustar largura maxima das telas em desktop (evitar 100% width)
 - Home
 - Login
 - Register

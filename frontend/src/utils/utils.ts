@@ -146,15 +146,14 @@ export function adjustImageUrls (entity: any): void {
 }
 
 /**
- * Obtém a URL da imagem de uma via com fallback inteligente:
+ * Obtém a URL da imagem de uma via:
  * 1. Se a via tem imagem, retorna a URL da imagem da via
- * 2. Se não tem, retorna a URL da imagem da montanha
- * 3. Se a montanha também não tem, retorna null (para usar placeholder)
+ * 2. Se não tem, retorna null (para usar placeholder)
  * 
- * @param via - Objeto Via com montanha e imagem opcionais
+ * @param via - Objeto Via com imagem opcional
  * @returns URL da imagem ou null se não houver imagem disponível
  */
-export function getViaImageUrl (via: { imagem?: { url?: string } | null; montanha?: { imagem?: { url?: string } | null } | null } | null | undefined): string | null {
+export function getViaImageUrl (via: { imagem?: { url?: string } | null } | null | undefined): string | null {
   if (!via) return null;
   
   // 1. Tentar usar imagem da via
@@ -162,23 +161,18 @@ export function getViaImageUrl (via: { imagem?: { url?: string } | null; montanh
     return via.imagem.url;
   }
   
-  // 2. Tentar usar imagem da montanha
-  if (via.montanha?.imagem?.url) {
-    return via.montanha.imagem.url;
-  }
-  
-  // 3. Não há imagem disponível
+  // 2. Não há imagem disponível
   return null;
 }
 
 /**
- * Obtém a URL da imagem de uma via com fallback inteligente e aplica o ajuste de URL completo.
+ * Obtém a URL da imagem de uma via e aplica o ajuste de URL completo.
  * Esta função combina getViaImageUrl com o ajuste de URL do ImagemService.
  * 
- * @param via - Objeto Via com montanha e imagem opcionais
+ * @param via - Objeto Via com imagem opcional
  * @returns URL completa da imagem ou null se não houver imagem disponível
  */
-export function getViaImageUrlFull (via: { imagem?: { url?: string } | null; montanha?: { imagem?: { url?: string } | null } | null } | null | undefined): string | null {
+export function getViaImageUrlFull (via: { imagem?: { url?: string } | null } | null | undefined): string | null {
   const imageUrl = getViaImageUrl(via);
   if (!imageUrl) return null;
   

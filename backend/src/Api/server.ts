@@ -107,13 +107,69 @@ app.use(notFoundMiddleware);
 app.use(errorRequestMiddleware);
 
 /**
+ * Verifica se o banco de dados existe e cria se necessário
+ */
+async function ensureDatabaseExists(): Promise<void> {
+    const pg = require('pg');
+    const {Client} = pg;
+    const dbName = process.env.DB_NAME;
+    
+    if (!dbName) {
+        throw new Error('DB_NAME não está configurado nas variáveis de ambiente');
+    }
+
+    // Conectar ao PostgreSQL usando o banco padrão 'postgres'
+    const adminClient = new Client({
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT || '5432', 10),
+        user: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: 'postgres' // Conecta ao banco padrão
+    });
+
+    try {
+        await adminClient.connect();
+        
+        // Verificar se o banco existe
+        const result = await adminClient.query(
+            `SELECT 1 FROM pg_database WHERE datname = $1`,
+            [dbName]
+        );
+
+        if (result.rows.length === 0) {
+            // Banco não existe, criar
+            safeLogger.info(`Banco de dados '${dbName}' não encontrado. Criando...`);
+            await adminClient.query(`CREATE DATABASE "${dbName}"`);
+            safeLogger.info(`Banco de dados '${dbName}' criado com sucesso`);
+        } else {
+            safeLogger.info(`Banco de dados '${dbName}' já existe`);
+        }
+    } catch (error: any) {
+        safeLogger.error('Erro ao verificar/criar banco de dados', {
+            error: error.message,
+            stack: error.stack
+        });
+        throw error;
+    } finally {
+        await adminClient.end();
+    }
+}
+
+/**
  * Inicialização da base de dados
+ * - Verifica/cria o banco se necessário
  * - Conecta no banco via TypeORM
  * - Executa carga inicial se necessário
  */
-AppDataSource.initialize()
-    .then(async () => {
+async function initializeDatabase() {
+    try {
+        // Primeiro, garantir que o banco existe
+        await ensureDatabaseExists();
+        
+        // Depois, inicializar o AppDataSource
+        await AppDataSource.initialize();
         safeLogger.info('Conexão com o banco de dados estabelecida com sucesso');
+        
         const viaRepository = AppDataSource.getRepository(Via);
         const count = await viaRepository.count();
 
@@ -124,15 +180,17 @@ AppDataSource.initialize()
         } else {
             safeLogger.info('Registros já existentes na tabela Via, pulando a carga de dados', {count});
         }
-    })
-    .catch((error) => {
-        safeLogger.info("DB Password:", {password: process.env.DB_PASSWORD});
-        safeLogger.error('Erro ao conectar com o banco de dados', {
+    } catch (error: any) {
+        safeLogger.error('Erro ao inicializar banco de dados', {
             error: error.message,
             stack: error.stack
         });
         process.exit(1);
-    });
+    }
+}
+
+// Inicializar banco de dados
+initializeDatabase();
 
 /**
  * Inicialização do servidor HTTP

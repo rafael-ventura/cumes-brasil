@@ -20,6 +20,36 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.montanha', 'montanha')
+          .leftJoinAndSelect('vias.face', 'face')
+          .leftJoinAndSelect('vias.setor', 'setor')
+          // Localização através de Setor
+          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
+          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
+          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
+          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
+          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
+          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
+          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
+          .leftJoinAndSelect('setor.face', 'setorFace')
+          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
+          // Localização através de Face
+          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
+          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
+          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
+          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
+          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
+          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
+          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
+          .leftJoinAndSelect('face.montanha', 'faceMontanha')
+          // Localização através de Montanha
+          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
+          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
+          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
+          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
+          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
+          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
+          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .where('colecao.id = :id', { id })
           .getOne();
     }
@@ -30,6 +60,36 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.montanha', 'montanha')
+          .leftJoinAndSelect('vias.face', 'face')
+          .leftJoinAndSelect('vias.setor', 'setor')
+          // Localização através de Setor
+          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
+          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
+          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
+          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
+          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
+          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
+          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
+          .leftJoinAndSelect('setor.face', 'setorFace')
+          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
+          // Localização através de Face
+          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
+          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
+          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
+          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
+          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
+          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
+          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
+          .leftJoinAndSelect('face.montanha', 'faceMontanha')
+          // Localização através de Montanha
+          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
+          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
+          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
+          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
+          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
+          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
+          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .getMany();
     }
 
@@ -39,6 +99,36 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.montanha', 'montanha')
+          .leftJoinAndSelect('vias.face', 'face')
+          .leftJoinAndSelect('vias.setor', 'setor')
+          // Localização através de Setor
+          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
+          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
+          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
+          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
+          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
+          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
+          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
+          .leftJoinAndSelect('setor.face', 'setorFace')
+          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
+          // Localização através de Face
+          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
+          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
+          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
+          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
+          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
+          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
+          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
+          .leftJoinAndSelect('face.montanha', 'faceMontanha')
+          // Localização através de Montanha
+          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
+          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
+          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
+          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
+          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
+          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
+          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .where('usuario.id = :usuario_id', { usuario_id })
           .getMany();
     }
@@ -133,8 +223,37 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
           .leftJoinAndSelect('via.montanha', 'montanha')
+          .leftJoinAndSelect('via.face', 'face')
+          .leftJoinAndSelect('via.setor', 'setor')
+          // Localização através de Setor
+          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
+          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
+          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
+          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
+          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
+          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
+          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
+          .leftJoinAndSelect('setor.face', 'setorFace')
+          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
+          // Localização através de Face
+          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
+          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
+          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
+          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
+          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
+          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
+          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
+          .leftJoinAndSelect('face.montanha', 'faceMontanha')
+          // Localização através de Montanha
+          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
+          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
+          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
+          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
+          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
+          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
+          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
-            .leftJoinAndSelect('colecao.usuario', 'usuario');
+          .leftJoinAndSelect('colecao.usuario', 'usuario');
 
         // Filtro default pelo ID do usuário logado
         qb = qb.andWhere('colecao.usuario.id = :usuarioId', { usuarioId });
@@ -154,9 +273,10 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
             qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
-        // Filtro por nome da montanha caso você queira buscar coleções que tenham vias em uma determinada montanha)
+        // Filtro por nome da montanha - removido pois não temos mais relação direta via -> montanha
+        // TODO: Implementar busca por montanha através de localização se necessário
         if (nomeMontanha) {
-            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
+            // Por enquanto, busca desabilitada
         }
 
         // Aplicação da ordenação dinâmica

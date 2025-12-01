@@ -31,11 +31,11 @@
         <q-badge class="badge-data">{{ formattedDataConquista }}</q-badge>
       </div>
 
-      <!-- Altura da Montanha -->
-      <div class="detalhe-item" v-if="via.montanha?.altura">
-        <span>Altura da Montanha:</span>
+      <!-- Coordenadas Geográficas -->
+      <div class="detalhe-item" v-if="via.latitude && via.longitude">
+        <span>Coordenadas:</span>
         <q-badge class="badge-highlight">
-          {{ via.montanha.altura }} metros
+          {{ via.latitude.toFixed(6) }}, {{ via.longitude.toFixed(6) }}
         </q-badge>
       </div>
 

@@ -74,10 +74,6 @@ class ViaService {
     if (via.imagem) {
       adjustImageUrls(via.imagem);
     }
-    // Processar imagem da montanha também
-    if (via.montanha?.imagem) {
-      adjustImageUrls(via.montanha.imagem);
-    }
     via.croquis = await croquiService.getCroquiByViaId(via.id);
     via.croquis.forEach(croqui => adjustImageUrls(croqui));
     return formatVia(via);

@@ -15,6 +15,7 @@
 
     <!-- Lista com Croqui e Detalhes -->
     <q-list bordered>
+      <SecaoLocalizacao v-if="via" :via="via" />
       <SecaoCroqui v-if="via" :croquis="via.croquis" />
       <SecaoGrau v-if="via" :via="via"/>
       <SecaoMaisDetalhes v-if="via" :via="via" />
@@ -33,6 +34,7 @@ import SecaoCroqui from 'components/Via/SecaoCroqui.vue';
 import SecaoMaisDetalhes from 'components/Via/SecaoMaisDetalhes.vue';
 import AuthenticateService from 'src/services/AuthenticateService';
 import SecaoGrau from 'components/Via/SecaoGrau.vue';
+import SecaoLocalizacao from 'components/Via/SecaoLocalizacao.vue';
 
 const route = useRoute();
 const router = useRouter();
