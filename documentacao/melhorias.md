@@ -4,6 +4,10 @@
 
 - ~~Corrigir bug na **tela de perfil** - não permitia adicionar foto quando perfil não tinha foto~~
 - Ajustar Escolha de Via Predileta na **tela de Perfil**
+- Delete não está funcionando. Deve deletar foto logicamente e usar foto padrão do sistema
+- **Filtro de montanha na busca está desabilitado**
+  - Após refatoração de localização, filtro de montanha foi removido
+  - Precisa ser reimplementado usando a nova estrutura (via setor/face/montanha)
 
 - **Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)**
   - Botão está aparecendo por cima da TopBar ao fazer scroll
@@ -41,59 +45,66 @@
   - **Otimizar joins desnecessários**
   - Avaliar uso de eager/lazy loading
 
-- **Implementar fallback inteligente de imagens**
-  - **Se via não tem foto → usar foto da montanha**
-  - **Se montanha não tem foto → usar placeholder padrão**
-  - Atualizar componentes de exibição de via
+- ~~Implementar fallback inteligente de imagens~~
+  - ~~Se via não tem foto → usar foto da montanha~~
+  - ~~Se montanha não tem foto → usar placeholder padrão~~
+  - ~~Função `getViaImageUrlFull` implementada em `utils.ts`~~
+  - ~~Atualizado em componentes: ViaCard, ViaCardSmall, CardInfoPrincipal, EscaladaCard~~
+
+- ~~Melhorar scroll na tela de Vias~~
+  - ~~Scroll está confuso/desorganizado~~
+  - ~~Revisar comportamento de scroll e ajustar para melhor UX~~
+
+- Melhoria do modal de atualização/remoção de foto do perfil
 
 ---
 
 ## ✨ FEATURES
 
-### Epic: Renovação da Home
+### ~~Epic: Renovação da Home~~
 
-- ~~Refazer visual da tela de home~~
-- ~~Adicionar endpoint de contagem para status na tela de home~~
-
----
-
-### Epic: Gestão de Perfil de Usuário
-
-- ~~Adicionar opção de remover foto do perfil do usuário~~
+- Refazer visual da tela de home
+- Adicionar endpoint de contagem para status na tela de home
 
 ---
 
-### Epic: Versão Desktop/Responsiva 💻
+### ~~Epic: Gestão de Perfil de Usuário~~
 
-- ~~Home~~
-- ~~Login~~
-- ~~Register~~
-- ~~Perfil~~
-- ~~Vias (listagem)~~
-- ~~Via Detalhada~~
-- ~~Coleções (listagem)~~
-- ~~Coleção Detalhada~~
-- ~~Escaladas~~
-- ~~Favoritas~~
-- ~~Ajustar largura maxima das telas em desktop (evitar 100% width)~~
+- Adicionar opção de remover foto do perfil do usuário
 
 ---
 
-### Epic: Ajustar Modais e Formulários 💻
+### ~~Epic: Versão Desktop/Responsiva 💻~~
 
-- ~~Home~~
-- ~~Perfil~~
-- ~~Vias (listagem)~~
-- ~~Via Detalhada~~
-- ~~Coleções (listagem)~~
-- ~~Coleção Detalhada~~
-- ~~Escaladas~~
-- ~~Favoritas~~
-- **Auth(Login/Register/RedefinirSenha)**
+- Home
+- Login
+- Register
+- Perfil
+- Vias (listagem)
+- Via Detalhada
+- Coleções (listagem)
+- Coleção Detalhada
+- Escaladas
+- Favoritas
+- Ajustar largura maxima das telas em desktop (evitar 100% width)
 
 ---
 
-### Epic: Paginação de Vias 📄
+### ~~Epic: Ajustar Modais e Formulários 💻~~
+
+- Home
+- Perfil
+- Vias (listagem)
+- Via Detalhada
+- Coleções (listagem)
+- Coleção Detalhada
+- Escaladas
+- Favoritas
+- Auth(Login/Register/RedefinirSenha)
+
+---
+
+### ~~Epic: Paginação de Vias 📄~~
 
 **Objetivo:** Melhorar performance e experiência de navegação com paginação adequada.
 
@@ -122,7 +133,7 @@
 
 ---
 
-### Epic: Vias Clássicas do CERJ 🏔️
+### ~~Epic: Vias Clássicas do CERJ 🏔️~~
 
 **Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
 
@@ -151,7 +162,7 @@
 
 ---
 
-### Epic: Reestruturação do Sistema de Localização Geográfica 🗺️
+### ~~Epic: Reestruturação do Sistema de Localização Geográfica 🗺️~~
 
 **Objetivo:** Implementar hierarquia geográfica detalhada para permitir categorização avançada, filtros precisos e integração futura com mapas interativos.
 
@@ -238,5 +249,17 @@ Continente
   - Endpoint para listar sugestões pendentes
   - Botões de aprovar/rejeitar (apenas admin)
   - Notificação ao usuário sobre status (futuro)
+
+---
+
+### Epic: Refatorar Lógica de Filtros 🔍
+
+**Objetivo:** Ajustar a busca e ordenação dos campos, tentar deixar mais reutilizável e legível.
+
+**Tarefas:**
+
+- Refatorar lógica de filtros
+- Refatorar visualmente os filtros
+- Melhorar reutilização e legibilidade do código
 
 ---

@@ -35,12 +35,15 @@
     />
 
     <!-- Localização -->
-    <p class="via-localizacao">
-      <span v-if="via?.montanha?.nome && via.montanha.nome !== 'N/A'">
-        {{ via.montanha.nome }}
+    <p class="via-localizacao" v-if="via?.localizacao">
+      <span v-if="via.localizacao.estado">
+        {{ via.localizacao.estado.sigla }}
       </span>
-      <span v-if="via?.face?.nome && via.face.nome !== 'N/A'">
-        , Face {{ via.face.nome }}
+      <span v-if="via.localizacao.cidade">
+        , {{ via.localizacao.cidade.nome }}
+      </span>
+      <span v-if="via.localizacao.bairro">
+        , {{ via.localizacao.bairro.nome }}
       </span>
     </p>
   </div>

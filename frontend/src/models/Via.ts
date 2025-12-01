@@ -1,8 +1,7 @@
-import { Montanha } from 'src/models/Montanha';
 import { Imagem } from 'src/models/Imagem';
-import { Face } from 'src/models/Face';
 import { Fonte } from 'src/models/Fonte';
 import { Croqui } from 'src/models/Croqui';
+import { Localizacao } from 'src/models/Localizacao';
 
 export interface Via {
   id: number;
@@ -16,10 +15,66 @@ export interface Via {
   conquistadores?: string;
   detalhes?: string;
   data?: string;
-  montanha: Montanha;
+  latitude?: number;
+  longitude?: number;
+  localizacao?: Localizacao; // Obtida através de setor/face/montanha (prioridade: setor > face > montanha)
+  montanha?: {
+    id: number;
+    nome: string;
+    altura?: number;
+    latitude?: number;
+    longitude?: number;
+    localizacoes?: Localizacao[];
+  };
+  face?: {
+    id: number;
+    nome: string;
+    fantasia?: string;
+    latitude?: number;
+    longitude?: number;
+    montanha?: {
+      id: number;
+      nome: string;
+      altura?: number;
+      latitude?: number;
+      longitude?: number;
+      localizacoes?: Localizacao[];
+    };
+    localizacoes?: Localizacao[];
+  };
+  setor?: {
+    id: number;
+    nome: string;
+    latitude?: number;
+    longitude?: number;
+    face?: {
+      id: number;
+      nome: string;
+      fantasia?: string;
+      latitude?: number;
+      longitude?: number;
+      montanha?: {
+        id: number;
+        nome: string;
+        altura?: number;
+        latitude?: number;
+        longitude?: number;
+        localizacoes?: Localizacao[];
+      };
+      localizacoes?: Localizacao[];
+    };
+    montanha?: {
+      id: number;
+      nome: string;
+      altura?: number;
+      latitude?: number;
+      longitude?: number;
+      localizacoes?: Localizacao[];
+    };
+    localizacoes?: Localizacao[];
+  };
   via_principal?: Via;
-  fonte: Fonte;
-  face: Face;
+  fonte?: Fonte;
   imagem?: Imagem;
   croquis: Croqui[];
 }

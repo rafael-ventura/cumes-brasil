@@ -57,7 +57,7 @@ export class UsuarioController {
         if (!resultado) {
             throw new NotFoundError('Perfil não encontrado.');
         }
-        res.json(resultado);
+        res.json(new UsuarioDTO(resultado));
     };
 
     editarDados = async (req: Request, res: Response) => {

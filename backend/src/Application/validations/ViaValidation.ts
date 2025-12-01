@@ -62,5 +62,42 @@ export default {
       default:
         throw new BadRequestError('Filtro inválido.');
     }
+  },
+
+  /**
+   * Valida a estrutura física da via (montanha, face, setor)
+   * Regra: A via deve estar em apenas UMA das três opções (setor, face ou montanha)
+   * Prioridade: setor > face > montanha
+   */
+  validaEstruturaFisica(via: any): void {
+    const temSetor = via.setor || via.setorId;
+    const temFace = via.face || via.faceId;
+    const temMontanha = via.montanha || via.montanhaId;
+
+    const quantidadePreenchida = [temSetor, temFace, temMontanha].filter(Boolean).length;
+
+    if (quantidadePreenchida === 0) {
+      throw new BadRequestError('Via deve estar associada a uma montanha, face ou setor.');
+    }
+
+    if (quantidadePreenchida > 1) {
+      throw new BadRequestError(
+        'Via não pode estar associada a múltiplas estruturas físicas simultaneamente. ' +
+        'Escolha apenas uma: setor, face ou montanha.'
+      );
+    }
+
+    // Validações adicionais de consistência
+    if (temSetor && temFace) {
+      throw new BadRequestError('Via não pode estar em setor e face simultaneamente. Se estiver em setor, a face já está implícita.');
+    }
+
+    if (temSetor && temMontanha) {
+      throw new BadRequestError('Via não pode estar em setor e montanha simultaneamente. Se estiver em setor, a montanha já está implícita.');
+    }
+
+    if (temFace && temMontanha) {
+      throw new BadRequestError('Via não pode estar em face e montanha simultaneamente. Se estiver em face, a montanha já está implícita.');
+    }
   }
 };

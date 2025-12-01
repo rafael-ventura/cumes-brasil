@@ -11,6 +11,14 @@ import {Via} from '../../Domain/entities/Via';
 import {Participante} from '../../Domain/entities/Participante';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
+import {Continente} from '../../Domain/entities/Continente';
+import {Pais} from '../../Domain/entities/Pais';
+import {Regiao} from '../../Domain/entities/Regiao';
+import {Estado} from '../../Domain/entities/Estado';
+import {Cidade} from '../../Domain/entities/Cidade';
+import {Bairro} from '../../Domain/entities/Bairro';
+import {Setor} from '../../Domain/entities/Setor';
+import {Localizacao} from '../../Domain/entities/Localizacao';
 
 
 export const AppDataSource = new DataSource({
@@ -35,8 +43,16 @@ export const AppDataSource = new DataSource({
         Via,
         Participante,
         ViaColecao,
-        ViaCroqui
-    ], //Adicione as entidades que você criou
+        ViaCroqui,
+        Continente,
+        Pais,
+        Regiao,
+        Estado,
+        Cidade,
+        Bairro,
+        Setor,
+        Localizacao
+    ],
     migrations: ['dist/Infrastructure/migrations/*.js'],
     ssl: false
 });

@@ -1,23 +1,28 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm';
 import { Croqui } from './Croqui';
-import { Montanha } from './Montanha';
 import { Fonte } from './Fonte';
-import { Face } from './Face';
 import { Imagem } from './Imagem';
+import { Montanha } from './Montanha';
+import { Face } from './Face';
+import { Setor } from './Setor';
 import { Escalada } from './Escalada';
 import { ViaColecao } from './ViaColecao';
 import {ViaCroqui} from "./ViaCroqui";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
+@Index(['montanha'])
+@Index(['face'])
+@Index(['setor'])
+@Index(['nome'])
+@Index(['grau'])
 export class Via extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
@@ -60,8 +65,21 @@ export class Via extends BaseEntityWithTimestamps {
   @Column({ nullable: true })
   data: string;
 
-  @ManyToOne(() => Montanha, montanha => montanha.vias)
-  montanha: number;
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  latitude: number;
+
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  longitude: number;
 
   @ManyToOne(() => Via, via => via.variantes)
   viaPrincipal: number;
@@ -72,11 +90,17 @@ export class Via extends BaseEntityWithTimestamps {
   @ManyToOne(() => Fonte, fonte => fonte.vias)
   fonte: number;
 
-  @ManyToOne(() => Face, face => face.vias)
-  face: number;
-
   @ManyToOne(() => Imagem, imagem => imagem.vias)
   imagem: number;
+
+  @ManyToOne(() => Montanha, { nullable: true })
+  montanha: Montanha;
+
+  @ManyToOne(() => Face, { nullable: true })
+  face: Face;
+
+  @ManyToOne(() => Setor, { nullable: true })
+  setor: Setor;
 
   @OneToMany(() => ViaCroqui, viaCroqui => viaCroqui.via)
   viaCroquis: ViaCroqui[];
