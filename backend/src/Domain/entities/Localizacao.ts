@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 import { Continente } from "./Continente";
 import { Pais } from "./Pais";
@@ -6,6 +6,9 @@ import { Regiao } from "./Regiao";
 import { Estado } from "./Estado";
 import { Cidade } from "./Cidade";
 import { Bairro } from "./Bairro";
+import { Montanha } from "./Montanha";
+import { Face } from "./Face";
+import { Setor } from "./Setor";
 import { Via } from "./Via";
 
 @Entity()
@@ -36,7 +39,13 @@ export class Localizacao extends BaseEntityWithTimestamps {
   @ManyToOne(() => Bairro, bairro => bairro.localizacoes, { nullable: true })
   bairro: Bairro;
 
-  @OneToMany(() => Via, via => via.localizacao)
-  vias: Via[];
+  @ManyToMany(() => Montanha, montanha => montanha.localizacoes)
+  montanhas: Montanha[];
+
+  @ManyToMany(() => Face, face => face.localizacoes)
+  faces: Face[];
+
+  @ManyToMany(() => Setor, setor => setor.localizacoes)
+  setores: Setor[];
 }
 

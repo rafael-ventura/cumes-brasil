@@ -17,7 +17,62 @@ export interface Via {
   data?: string;
   latitude?: number;
   longitude?: number;
-  localizacao?: Localizacao;
+  localizacao?: Localizacao; // Obtida através de setor/face/montanha (prioridade: setor > face > montanha)
+  montanha?: {
+    id: number;
+    nome: string;
+    altura?: number;
+    latitude?: number;
+    longitude?: number;
+    localizacoes?: Localizacao[];
+  };
+  face?: {
+    id: number;
+    nome: string;
+    fantasia?: string;
+    latitude?: number;
+    longitude?: number;
+    montanha?: {
+      id: number;
+      nome: string;
+      altura?: number;
+      latitude?: number;
+      longitude?: number;
+      localizacoes?: Localizacao[];
+    };
+    localizacoes?: Localizacao[];
+  };
+  setor?: {
+    id: number;
+    nome: string;
+    latitude?: number;
+    longitude?: number;
+    face?: {
+      id: number;
+      nome: string;
+      fantasia?: string;
+      latitude?: number;
+      longitude?: number;
+      montanha?: {
+        id: number;
+        nome: string;
+        altura?: number;
+        latitude?: number;
+        longitude?: number;
+        localizacoes?: Localizacao[];
+      };
+      localizacoes?: Localizacao[];
+    };
+    montanha?: {
+      id: number;
+      nome: string;
+      altura?: number;
+      latitude?: number;
+      longitude?: number;
+      localizacoes?: Localizacao[];
+    };
+    localizacoes?: Localizacao[];
+  };
   via_principal?: Via;
   fonte?: Fonte;
   imagem?: Imagem;

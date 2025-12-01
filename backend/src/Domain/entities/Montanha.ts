@@ -1,7 +1,9 @@
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
 import { Imagem } from "./Imagem";
 import { Face } from "./Face";
 import { Setor } from "./Setor";
+import { Via } from "./Via";
+import { Localizacao } from "./Localizacao";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
@@ -16,6 +18,22 @@ export class Montanha extends BaseEntityWithTimestamps {
   @Column("int", { nullable: true })
   altura?: number;
 
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  latitude: number;
+
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 7,
+    nullable: true
+  })
+  longitude: number;
+
   @ManyToOne(() => Imagem)
   imagem: number;
 
@@ -25,4 +43,11 @@ export class Montanha extends BaseEntityWithTimestamps {
 
   @OneToMany(() => Setor, setor => setor.montanha)
   setores: Setor[];
+
+  @OneToMany(() => Via, via => via.montanha)
+  vias: Via[];
+
+  @ManyToMany(() => Localizacao, localizacao => localizacao.montanhas)
+  @JoinTable({ name: "montanha_localizacoes" })
+  localizacoes: Localizacao[];
 }

@@ -9,7 +9,45 @@
     @collapse="isExpanded = false"
   >
     <div class="localizacao-container" v-if="via?.localizacao">
-      <!-- Informações Principais (sempre visíveis) -->
+      <!-- Informações de Montanha/Face/Setor (primeiros) -->
+      <div 
+        class="localizacao-fisica" 
+        v-if="(via.setor?.montanha?.nome || via.setor?.face?.montanha?.nome || via.face?.montanha?.nome || via.montanha?.nome) || (via.setor?.face?.nome || via.face?.nome) || via.setor?.nome"
+      >
+        <!-- Montanha (prioridade: setor > face > montanha direta) -->
+        <div 
+          class="info-item" 
+          v-if="via.setor?.montanha?.nome || via.setor?.face?.montanha?.nome || via.face?.montanha?.nome || via.montanha?.nome"
+        >
+          <q-icon name="terrain" size="20px" class="icon-montanha" />
+          <span class="label">Montanha:</span>
+          <span class="value">
+            {{ via.setor?.montanha?.nome || via.setor?.face?.montanha?.nome || via.face?.montanha?.nome || via.montanha?.nome }}
+          </span>
+        </div>
+        
+        <!-- Face (prioridade: setor > face direta) -->
+        <div 
+          class="info-item" 
+          v-if="via.setor?.face?.nome || via.face?.nome"
+        >
+          <q-icon name="layers" size="20px" class="icon-face" />
+          <span class="label">Face:</span>
+          <span class="value">{{ via.setor?.face?.nome || via.face?.nome }}</span>
+        </div>
+        
+        <!-- Setor -->
+        <div 
+          class="info-item" 
+          v-if="via.setor?.nome"
+        >
+          <q-icon name="category" size="20px" class="icon-setor" />
+          <span class="label">Setor:</span>
+          <span class="value">{{ via.setor.nome }}</span>
+        </div>
+      </div>
+
+      <!-- Informações Principais (Estado, Cidade, Bairro) -->
       <div class="localizacao-principal">
         <div class="info-item" v-if="via.localizacao.estado">
           <q-icon name="flag" size="20px" />
@@ -30,7 +68,7 @@
         </div>
       </div>
 
-      <!-- Informações Adicionais (expandidas) -->
+      <!-- Informações Adicionais (Região, País, Continente) -->
       <div class="localizacao-adicional">
         <div class="info-item" v-if="via.localizacao.regiao">
           <q-icon name="map" size="20px" />
@@ -101,8 +139,10 @@ const isExpanded = ref(false);
 .localizacao-principal {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  margin-top: 0;
   margin-bottom: 16px;
+  padding-top: 16px;
   padding-bottom: 16px;
   border-bottom: 2px solid $cumes-01;
 }
@@ -110,8 +150,49 @@ const isExpanded = ref(false);
 .localizacao-adicional {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 16px;
+}
+
+.localizacao-fisica {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-top: 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid $cumes-01;
+  
+  // Garantir que todos os itens tenham o mesmo tamanho e espaçamento
+  .info-item {
+    min-height: 32px; // Altura mínima consistente
+    display: flex;
+    align-items: center;
+    gap: 12px; // Distância igual entre ícone, label e value
+    
+    // Ícones diferentes para cada tipo, mas com mesmo tamanho e posicionamento
+    .icon-montanha {
+      color: $cumes-01;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .icon-face {
+      color: $cumes-01;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .icon-setor {
+      color: $cumes-01;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 
 .info-item {
@@ -119,10 +200,13 @@ const isExpanded = ref(false);
   align-items: center;
   gap: 12px;
   font-size: 16px;
+  min-height: 32px; // Altura mínima consistente para todos os itens
 
   .q-icon {
     color: $cumes-01;
     flex-shrink: 0;
+    width: 20px;
+    height: 20px;
   }
 
   .label {

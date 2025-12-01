@@ -9,14 +9,18 @@ import {
 import { Croqui } from './Croqui';
 import { Fonte } from './Fonte';
 import { Imagem } from './Imagem';
-import { Localizacao } from './Localizacao';
+import { Montanha } from './Montanha';
+import { Face } from './Face';
+import { Setor } from './Setor';
 import { Escalada } from './Escalada';
 import { ViaColecao } from './ViaColecao';
 import {ViaCroqui} from "./ViaCroqui";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
-@Index(['localizacao'])
+@Index(['montanha'])
+@Index(['face'])
+@Index(['setor'])
 @Index(['nome'])
 @Index(['grau'])
 export class Via extends BaseEntityWithTimestamps {
@@ -89,8 +93,14 @@ export class Via extends BaseEntityWithTimestamps {
   @ManyToOne(() => Imagem, imagem => imagem.vias)
   imagem: number;
 
-  @ManyToOne(() => Localizacao, localizacao => localizacao.vias, { nullable: false })
-  localizacao: Localizacao;
+  @ManyToOne(() => Montanha, { nullable: true })
+  montanha: Montanha;
+
+  @ManyToOne(() => Face, { nullable: true })
+  face: Face;
+
+  @ManyToOne(() => Setor, { nullable: true })
+  setor: Setor;
 
   @OneToMany(() => ViaCroqui, viaCroqui => viaCroqui.via)
   viaCroquis: ViaCroqui[];
