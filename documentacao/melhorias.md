@@ -1,56 +1,79 @@
 # Cumes Brasil - Backlog v3
 
-## 🐛 FIXES
+## 📑 Índice
 
-- ~~Corrigir bug na **tela de perfil**~~
-  - ~~não permitia adicionar foto quando perfil não tinha foto~~
-- ~~Ajustar Escolha de Via Predileta na **tela de Perfil**~~
-  - ~~Modal não abria ao clicar no botão~~
-  - ~~Foto e nome da montanha sumiam após salvar via predileta~~
-- ~~Corrigir tamanho do SVG placeholder de croqui na Via Detalhada~~
-  - ~~SVG estava muito grande (ocupava 100% do espaço)~~
-  - ~~Reduzido para 80px e ajustado estilo~~
-- ~~Corrigir atualização de coleção~~
-  - ~~Validação exigia id no body, mas id vem da URL~~
-- ~~Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)~~
-  - ~~Botão estava aparecendo por cima da TopBar ao fazer scroll~~
-  - ~~Ajustado z-index de 1000 para 999 (abaixo da TopBar)~~
+### Seções Principais
+- [🐛 FIXES](#fixes)
+- [🔧 REFATORAÇÃO & MELHORIAS](#refatoração--melhorias)
+- [✨ FEATURES](#features)
 
-- ~~Ajustar tamanho das modais de Bio e Via Predileta no Perfil~~
-  - ~~Modais ocupavam muito espaço vertical para pouca informação~~
-  - ~~Desktop: Reduzida altura (min-height: auto), centralizado conteúdo, padding reduzido (24px)~~
-  - ~~Mobile: Ajustado padding e proporções, mantendo funcionalidade~~
-  - ~~Proporção visual mais equilibrada~~
+### FIXES
+- [Ajustar Escolha de Via Predileta na tela de Perfil](#ajustar-escolha-de-via-predileta-na-tela-de-perfil)
+- [Filtro de montanha na busca está desabilitado](#filtro-de-montanha-na-busca-está-desabilitado)
+- [Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)](#corrigir-z-index-do-botão-voltar-na-via-detalhada-desktop)
+- [Ajustar tamanho das modais de Bio e Via Predileta no Perfil](#ajustar-tamanho-das-modais-de-bio-e-via-predileta-no-perfil)
+- [Corrigir layout das telas de Login e Registro](#corrigir-layout-das-telas-de-login-e-registro)
 
-- ~~Corrigir layout das telas de Login e Registro~~
-  - ~~Imagem de fundo ficou "estrangulada" após ajuste de `max-width` no MainLayout~~
-  - ~~Páginas de autenticação devem ocupar 100% da largura (fullscreen)~~
-  - ~~Excluir Login/Register da regra de padding do `MainLayout.vue`~~
-  - ~~Aplicada classe condicional para rotas de autenticação (login, register, reset-password)~~
+### REFATORAÇÃO & MELHORIAS
+- [Implementar interfaces nas camadas do backend](#implementar-interfaces-nas-camadas-do-backend)
+- [Otimizar consultas SQL e TypeORM nos repositories](#otimizar-consultas-sql-e-typeorm-nos-repositories)
+- [Melhoria do modal de atualização/remoção de foto do perfil](#melhoria-do-modal-de-atualizaçãoremoção-de-foto-do-perfil)
 
-- ~~Ajustar botões de status no Perfil (Mobile)~~
-  - ~~Botões (Coleções, Favoritas, Escaladas) devem ficar na mesma linha no mobile~~
-  - ~~Ajustado flex-wrap para nowrap e tamanhos de fonte para caberem na mesma linha~~
-
-- **Ordenar coleções por data de adição na tela de Coleções**
-  - Coleções devem ser ordenadas por data de criação (mais recentes primeiro)
-  - Adicionar ordenação padrão no ColecaoRepository
-  - Atualizar frontend para exibir na ordem correta
+### FEATURES - Epics
+- [Epic: Renovação da Home](#epic-renovação-da-home)
+- [Epic: Gestão de Perfil de Usuário](#epic-gestão-de-perfil-de-usuário)
+- [Epic: Versão Desktop/Responsiva 💻](#epic-versão-desktopresponsiva)
+- [Epic: Ajustar Modais e Formulários 💻](#epic-ajustar-modais-e-formulários)
+- [Epic: Paginação de Vias 📄](#epic-paginação-de-vias)
+- [Epic: Vias Clássicas do CERJ 🏔️](#epic-vias-clássicas-do-cerj)
+- [Epic: Reestruturação do Sistema de Localização Geográfica 🗺️](#epic-reestruturação-do-sistema-de-localização-geográfica)
+- [Epic: Sistema Colaborativo de Fotos de Vias ⭐](#epic-sistema-colaborativo-de-fotos-de-vias)
+- [Epic: Refatorar Lógica de Filtros 🔍](#epic-refatorar-lógica-de-filtros)
 
 ---
 
+<a id="fixes"></a>
+## 🐛 FIXES
+
+- ~~Corrigir bug na **tela de perfil** - não permitia adicionar foto quando perfil não tinha foto~~
+- <a id="ajustar-escolha-de-via-predileta-na-tela-de-perfil"></a>Ajustar Escolha de Via Predileta na **tela de Perfil**
+- Delete não está funcionando. Deve deletar foto logicamente e usar foto padrão do sistema
+- <a id="filtro-de-montanha-na-busca-está-desabilitado"></a>**Filtro de montanha na busca está desabilitado**
+  - Após refatoração de localização, filtro de montanha foi removido
+  - Precisa ser reimplementado usando a nova estrutura (via setor/face/montanha)
+
+- <a id="corrigir-z-index-do-botão-voltar-na-via-detalhada-desktop"></a>**Corrigir z-index do botão "Voltar" na Via Detalhada (Desktop)**
+  - Botão está aparecendo por cima da TopBar ao fazer scroll
+  - Ajustar z-index para ficar abaixo da navbar
+  - Testar comportamento no scroll
+
+- <a id="ajustar-tamanho-das-modais-de-bio-e-via-predileta-no-perfil"></a>**Ajustar tamanho das modais de Bio e Via Predileta no Perfil**
+  - Modais ocupam muito espaço vertical para pouca informação
+  - Desktop: Reduzir altura e centralizar melhor
+  - Mobile: Ajustar padding interno para aproveitar melhor o espaço
+  - Manter proporção visual equilibrada
+
+- <a id="corrigir-layout-das-telas-de-login-e-registro"></a>**Corrigir layout das telas de Login e Registro**
+  - Imagem de fundo ficou "estrangulada" após ajuste de `max-width` no MainLayout
+  - Páginas de autenticação devem ocupar 100% da largura (fullscreen)
+  - Excluir Login/Register da regra de padding do `MainLayout.vue`
+  - Alternativa: Criar layout separado para autenticação sem constraints de width
+
+---
+
+<a id="refatoração--melhorias"></a>
 ## 🔧 REFATORAÇÃO & MELHORIAS
 
 - ~~Padronizar middleware de erro em todas as controllers~~
 - ~~Revisar e padronizar camada de validação de dados nas controllers~~
 - ~~Garantir que services seguem padrões e usam middlewares corretamente~~
 - ~~Verificar herança de classes base em services, validations e repositories~~
-- **Implementar interfaces nas camadas do backend**
+- <a id="implementar-interfaces-nas-camadas-do-backend"></a>**Implementar interfaces nas camadas do backend**
   - Criar interfaces para **Services**
   - Criar interfaces para **Repositories**
   - Ajustar injeção de dependência para usar interfaces ao invés de classes concretas
 
-- **Otimizar consultas SQL e TypeORM nos repositories** 🔥
+- <a id="otimizar-consultas-sql-e-typeorm-nos-repositories"></a>**Otimizar consultas SQL e TypeORM nos repositories** 🔥
   - **Revisar índices**
   - Identificar N+1 queries
   - **Otimizar joins desnecessários**
@@ -62,91 +85,126 @@
   - ~~Função `getViaImageUrlFull` implementada em `utils.ts`~~
   - ~~Atualizado em componentes: ViaCard, ViaCardSmall, CardInfoPrincipal, EscaladaCard~~
 
-- **Melhorar scroll na tela de Vias**
-  - Scroll está confuso/desorganizado
-  - Revisar comportamento de scroll e ajustar para melhor UX
+- ~~Melhorar scroll na tela de Vias~~
+  - ~~Scroll está confuso/desorganizado~~
+  - ~~Revisar comportamento de scroll e ajustar para melhor UX~~
+
+- <a id="melhoria-do-modal-de-atualizaçãoremoção-de-foto-do-perfil"></a>Melhoria do modal de atualização/remoção de foto do perfil
 
 ---
 
+<a id="features"></a>
 ## ✨ FEATURES
 
-### Epic: Renovação da Home
+<a id="epic-renovação-da-home"></a>
+### ~~Epic: Renovação da Home~~
 
-- ~~Refazer visual da tela de home~~
-- ~~Adicionar endpoint de contagem para status na tela de home~~
-
----
-
-### Epic: Gestão de Perfil de Usuário
-
-- ~~Adicionar opção de remover foto do perfil do usuário~~
+- Refazer visual da tela de home
+- Adicionar endpoint de contagem para status na tela de home
 
 ---
 
-### Epic: Versão Desktop/Responsiva 💻
+<a id="epic-gestão-de-perfil-de-usuário"></a>
+### ~~Epic: Gestão de Perfil de Usuário~~
 
-- ~~Home~~
-- ~~Login~~
-- ~~Register~~
-- ~~Perfil~~
-- ~~Vias (listagem)~~
-- ~~Via Detalhada~~
-- ~~Coleções (listagem)~~
-- ~~Coleção Detalhada~~
-- ~~Escaladas~~
-- ~~Favoritas~~
-- ~~Ajustar largura maxima das telas em desktop (evitar 100% width)~~
+- Adicionar opção de remover foto do perfil do usuário
 
 ---
 
-### Epic: Ajustar Modais e Formulários 💻
+<a id="epic-versão-desktopresponsiva"></a>
+### ~~Epic: Versão Desktop/Responsiva 💻~~
 
-- ~~Home~~
-- ~~Perfil~~
-- ~~Vias (listagem)~~
-- ~~Via Detalhada~~
-- ~~Coleções (listagem)~~
-- ~~Coleção Detalhada~~
-- ~~Escaladas~~
-- ~~Favoritas~~
-- ~~Auth(Login/Register/RedefinirSenha)~~
+- Home
+- Login
+- Register
+- Perfil
+- Vias (listagem)
+- Via Detalhada
+- Coleções (listagem)
+- Coleção Detalhada
+- Escaladas
+- Favoritas
+- Ajustar largura maxima das telas em desktop (evitar 100% width)
 
 ---
 
+<a id="epic-ajustar-modais-e-formulários"></a>
+### ~~Epic: Ajustar Modais e Formulários 💻~~
+
+- Home
+- Perfil
+- Vias (listagem)
+- Via Detalhada
+- Coleções (listagem)
+- Coleção Detalhada
+- Escaladas
+- Favoritas
+- Auth(Login/Register/RedefinirSenha)
+
+---
+
+<a id="epic-paginação-de-vias"></a>
 ### ~~Epic: Paginação de Vias 📄~~
 
 **Objetivo:** Melhorar performance e experiência de navegação com paginação adequada.
 
 **Tarefas:**
 
-- ~~Revisar paginação atual~~
-  - ~~Verificar implementação no ViaRepository~~
-  - ~~Validar retorno de totalPages e total items~~
-  - ~~Garantir consistência nos endpoints~~
+- Revisar paginação atual
+  - Verificar implementação no ViaRepository
+  - Validar retorno de totalPages e total items
+  - Garantir consistência nos endpoints
 
-- ~~Melhorar componente de paginação no frontend~~
-  - ~~Criar componente reutilizável PaginacaoPadrao com PrimeVue Paginator~~
-  - ~~Adicionar controles de navegação (Primeira/Anterior/Próxima/Última)~~
-  - ~~Mostrar 5 páginas visíveis no desktop (1, 2, 3, 4, 5, ..., última)~~
-  - ~~Melhorar UX mobile e desktop com responsividade~~
-  - ~~Aplicar highlight discreto na página ativa~~
+- Melhorar componente de paginação no frontend
+  - Adicionar controles de navegação (Anterior/Próximo)
+  - Mostrar informação de página atual (ex: "Página 1 de 10")
+  - Adicionar opção de "Ir para página"
+  - Melhorar UX mobile e desktop
 
-- ~~Adicionar controle de itens por página~~
-  - ~~Dropdown para selecionar (10, 25, 50, 100)~~
-  - ~~Persistir preferência no localStorage (chaves separadas para vias e coleções)~~
-  - ~~Atualizar query automaticamente~~
-  - ~~Padrão de 9 itens para coleções, 20 para vias~~
-  - ~~Esconder label "Itens por página" em modais~~
+- Adicionar controle de itens por página
+  - Dropdown para selecionar (10, 25, 50, 100)
+  - Persistir preferência no localStorage
+  - Atualizar query automaticamente
 
-- ~~Otimizar performance~~
-  - ~~Implementar lazy loading de imagens (loading="lazy")~~
-  - ~~Adicionar skeleton loading durante carregamento~~
-  - ~~Integrar nas telas de Vias, Coleções e Coleção Detalhada~~
-  - ~~Adicionar espaçamento adequado no final das páginas~~
+- Otimizar performance
+  - Implementar lazy loading de imagens
+  - Adicionar skeleton loading durante carregamento
+  - Cache de páginas já visitadas (opcional)
 
 ---
 
-### Epic: Reestruturação do Sistema de Localização Geográfica 🗺️
+<a id="epic-vias-clássicas-do-cerj"></a>
+### ~~Epic: Vias Clássicas do CERJ 🏔️~~
+
+**Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
+
+**Tarefas:**
+
+- Adicionar campo `is_classica_cerj` na entidade Via (backend)
+  - Boolean/flag no banco de dados
+  - Adicionar no DTO de Via
+  - Atualizar validações e controllers
+
+- Criar badge/tag visual para vias clássicas
+  - Design do badge (ícone + texto)
+  - Adicionar nos cards de via
+  - Adicionar na tela de via detalhada
+  - Usar cor de destaque da paleta ($cumes-04 ou $cumes-05)
+
+- Adicionar filtro de vias clássicas na busca
+  - Checkbox/toggle no filtro
+  - Integrar com SearchService
+  - Atualizar query no ViaRepository
+
+- Criar card personalizado na Home
+  - Card especial "Clássicas do CERJ"
+  - Listar X vias clássicas aleatórias
+  - Link para busca filtrada por clássicas
+
+---
+
+<a id="epic-reestruturação-do-sistema-de-localização-geográfica"></a>
+### ~~Epic: Reestruturação do Sistema de Localização Geográfica 🗺️~~
 
 **Objetivo:** Implementar hierarquia geográfica detalhada para permitir categorização avançada, filtros precisos e integração futura com mapas interativos.
 
@@ -195,35 +253,7 @@ Continente
 
 ---
 
-### Epic: Vias Clássicas do CERJ 🏔️
-
-**Objetivo:** Destacar e facilitar identificação das vias clássicas do Centro Excursionista Rio de Janeiro.
-
-**Tarefas:**
-
-- Adicionar campo `is_classica_cerj` na entidade Via (backend)
-  - Boolean/flag no banco de dados
-  - Adicionar no DTO de Via
-  - Atualizar validações e controllers
-
-- Criar badge/tag visual para vias clássicas
-  - Design do badge (ícone + texto)
-  - Adicionar nos cards de via
-  - Adicionar na tela de via detalhada
-  - Usar cor de destaque da paleta ($cumes-04 ou $cumes-05)
-
-- Adicionar filtro de vias clássicas na busca
-  - Checkbox/toggle no filtro
-  - Integrar com SearchService
-  - Atualizar query no ViaRepository
-
-- Criar card personalizado na Home
-  - Card especial "Clássicas do CERJ"
-  - Listar X vias clássicas aleatórias
-  - Link para busca filtrada por clássicas
-
----
-
+<a id="epic-sistema-colaborativo-de-fotos-de-vias"></a>
 ### Epic: Sistema Colaborativo de Fotos de Vias ⭐
 
 **Objetivo:** Permitir que usuários contribuam com fotos de vias, com sistema de moderação e créditos aos autores.
@@ -265,173 +295,15 @@ Continente
 
 ---
 
-### Epic: Redesenhar Tela de Vias/Busca 🔍
+<a id="epic-refatorar-lógica-de-filtros"></a>
+### Epic: Refatorar Lógica de Filtros 🔍
 
-**Objetivo:** Transformar a tela de busca/vias em uma experiência de navegação por categorias, ao invés de carregar todas as vias de uma vez.
+**Objetivo:** Ajustar a busca e ordenação dos campos, tentar deixar mais reutilizável e legível.
 
 **Tarefas:**
 
-- Criar seção inicial de navegação por tópicos/categorias
-  - Seção de Estados do Brasil (navegação por estado)
-  - Seção de Vias por Cidade
-  - Seção de Vias Mais Recentes
-  - Seção "Ver Todas as Vias" (leva para tela de busca completa)
-
-- Migrar lógica de filtros personalizados da Home
-  - Mover filtros personalizados para a tela de busca completa
-  - Atualizar tela de busca com paginação, ordenação e filtros melhorados
-
-- Criar tela de busca completa aprimorada
-  - Paginação otimizada
-  - Ordenação (por nome, data, grau, etc)
-  - Sistema de filtros avançado
-  - Melhorar UX de navegação
-
-**Nota:** A Home será atualizada em outra epic para focar em atualizações e dicas do usuário de outras páginas.
+- Refatorar lógica de filtros
+- Refatorar visualmente os filtros
+- Melhorar reutilização e legibilidade do código
 
 ---
-
-### Epic: Redesenhar Home no Estilo Rede Social 📱
-
-**Objetivo:** Transformar a tela Home em um feed estilo rede social, mostrando atividades recentes da comunidade de escaladores.
-
-**Tarefas:**
-
-- **Adicionar feed de últimas escaladas registradas**
-  - Mostrar últimas escaladas de qualquer via do sistema por qualquer usuário
-  - Exibir: nome da via, grau badge, usuário que registrou, preview do texto de observação
-  - Permitir clicar e navegar para tela específica da escalada
-  - Criar tela de escalada específica (detalhes da escalada)
-  - Adicionar foto do usuário e data da escalada
-  - Permitir interações (curtir, comentar - futuro)
-
-- **Adicionar seção de vias mais recentes cadastradas**
-  - Mostrar vias recém-cadastradas no sistema
-  - Exibir card com foto, nome, grau e localização
-  - Permitir navegação para via detalhada
-
-- **Adicionar seção de usuários ativos**
-  - Mostrar outros usuários da plataforma
-  - Exibir foto de perfil, nome e localização
-  - Permitir visualizar perfil de outros usuários
-  - Mostrar estatísticas básicas (escaladas, favoritas, coleções)
-
-- **Criar layout de feed vertical**
-  - Scroll infinito ou paginação
-  - Cards estilo timeline/post
-  - Ordenação por data (mais recente primeiro)
-  - Filtros opcionais (tipo de conteúdo, usuários seguidos - futuro)
-
-- **Melhorar experiência visual**
-  - Design moderno e limpo estilo rede social
-  - Animações suaves de transição
-  - Loading states e skeletons
-  - Responsivo mobile e desktop
-
----
-
-### Epic: Sistema de Notificações Push via PWA 📲
-
-**Objetivo:** Implementar notificações push simples: lembretes para planejar escaladas e avisos sobre novas vias adicionadas ao catálogo.
-
-**Tarefas:**
-
-- Configurar Web Push API no backend
-  - Instalar biblioteca `web-push` e gerar VAPID keys
-  - Criar entidade `PushSubscription` no banco
-  - Criar endpoints para subscribe/unsubscribe e preferências
-
-- Implementar serviço de notificações no backend
-  - Criar `NotificationService` para enviar push
-  - Criar job agendado para lembretes periódicos (semanal/quinzenal)
-  - Trigger ao criar via: contar novas vias e enviar notificação quando atingir limite (ex: 5-10 vias)
-
-- Configurar Service Worker no frontend
-  - Adicionar handler de push notifications
-  - Implementar solicitação de permissão
-  - Criar utilitário para gerenciar subscription
-
-- Criar UI de preferências no Perfil
-  - Seção "Notificações" com toggles
-  - Toggle "Receber lembretes para planejar escaladas" (com frequência)
-  - Toggle "Receber avisos de novas vias"
-  - Indicador de status da permissão
-
-- Testar em Android (Chrome), iOS (Safari 16.4+) e desktop
-
----
-
-### Epic: Adicionar lógica de Imagem em Coleção
-
-**Objetivo:** Permitir que a entidade de Coleção Detalhada mostre a foto/imagem associada a ela nos cards de "coleções" e ""
-
-**Tarefas:**
-
-- Adicionar campo de imagem na entidade Coleção
-- Exibir imagem nos cards de coleções
-- Atualizar formulários de criação/edição
-
----
-
-### Epic: Refazer Design dos Filtros 🎨
-
-**Objetivo:** Modernizar e melhorar a experiência visual e funcional dos filtros de busca.
-
-**Contexto:** Os filtros atuais precisam de uma atualização visual e melhor organização para melhorar a usabilidade.
-
-**Tarefas:**
-
-- Redesenhar layout dos filtros
-- Melhorar organização visual e hierarquia
-- Ajustar responsividade mobile e desktop
-- Padronizar com design system do projeto
-
----
-
-### Epic: Refazer Estilização da Barra de Busca 🔍
-
-**Objetivo:** Modernizar o componente de busca para melhorar a experiência do usuário.
-
-**Contexto:** A barra de busca atual precisa de atualização visual e melhorias de UX.
-
-**Tarefas:**
-
-- Redesenhar componente de busca
-- Melhorar feedback visual durante digitação
-- Adicionar sugestões/autocomplete (opcional)
-- Ajustar responsividade e acessibilidade
-
----
-
-### Epic: Adicionar Propriedades de Tipo na Via 🧗
-
-**Objetivo:** Adicionar campos de tipo de rocha e tipo de escalada na entidade Via para melhor categorização.
-
-**Contexto:** Após a reestruturação do sistema de localização geográfica, adicionar propriedades que permitam filtrar e categorizar vias por características técnicas.
-
-**Tarefas:**
-
-- Adicionar campo `tipo_rocha` na entidade Via (backend)
-  - Exemplos: granito, gnaisse, calcário, etc.
-- Adicionar campo `tipo_escalada` na entidade Via (backend)
-  - Exemplos: esportiva, tradicional, mista, etc.
-- Atualizar DTOs e validações
-- Adicionar filtros na busca por tipo de rocha e tipo de escalada
-- Atualizar formulários de criação/edição de vias
-- Analisar referências (lista de vias do Bugim) para definir valores possíveis
-
----
-
-### Epic: Adicionar Vias do Bugim 📋
-
-**Objetivo:** Importar e adaptar as vias do projeto cumes-crawler para o modelo de dados atual.
-
-**Contexto:** Existe uma planilha com vias do Bugim no projeto cumes-crawler que precisa ser integrada ao sistema.
-
-**Tarefas:**
-
-- Analisar estrutura da planilha no projeto cumes-crawler
-- Criar script de migração/importação
-- Adaptar dados para o modelo de dados atual
-- Validar e importar vias
-- Verificar duplicatas e conflitos
