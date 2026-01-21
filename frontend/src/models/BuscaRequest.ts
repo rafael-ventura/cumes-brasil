@@ -1,3 +1,5 @@
+import { ModalidadeEscalada } from './ModalidadeEscalada';
+
 export interface BuscaRequest {
   unifiedSearch?: string; // searchQuery
   selectedMountain?: number | null;
@@ -7,6 +9,9 @@ export interface BuscaRequest {
   selectedExtensionCategory?: number[] | null;
   selectedCrux?: string | null;
   selectedExposicao?: string | null;
+  tipo_rocha?: string | null;
+  tipo_escalada?: string | null;
+  modalidade?: ModalidadeEscalada | null;
   page: number;
   itemsPerPage?: number;
   entityType?: string;

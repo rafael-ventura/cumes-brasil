@@ -47,6 +47,30 @@
         </q-badge>
       </div>
 
+      <!-- Tipo de Rocha -->
+      <div class="detalhe-item" v-if="via.tipo_rocha">
+        <span>Tipo de Rocha:</span>
+        <q-badge class="badge-highlight">
+          {{ via.tipo_rocha }}
+        </q-badge>
+      </div>
+
+      <!-- Tipo de Escalada -->
+      <div class="detalhe-item" v-if="via.tipo_escalada">
+        <span>Tipo de Escalada:</span>
+        <q-badge class="badge-highlight">
+          {{ via.tipo_escalada }}
+        </q-badge>
+      </div>
+
+      <!-- Modalidade -->
+      <div class="detalhe-item" v-if="via.modalidade">
+        <span>Modalidade:</span>
+        <q-badge class="badge-highlight">
+          {{ formattedModalidade }}
+        </q-badge>
+      </div>
+
       <!-- Descrição -->
       <div class="detalhe-item descricao-container">
         <span>Descrição:</span>
@@ -61,6 +85,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Via } from 'src/models/Via';
+import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
 const props = defineProps<{
   via: Via;
@@ -81,6 +106,22 @@ const formattedDataConquista = computed(() => {
   if (isNaN(data.getTime())) return null; // Verifica se a data é válida
 
   return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+});
+
+// Formatar modalidade em português
+const formattedModalidade = computed(() => {
+  if (!props.via.modalidade) return null;
+  
+  const modalidadeMap: Record<ModalidadeEscalada, string> = {
+    [ModalidadeEscalada.TRADICIONAL]: 'Tradicional',
+    [ModalidadeEscalada.ESPORTIVA]: 'Esportiva',
+    [ModalidadeEscalada.BOULDER]: 'Boulder',
+    [ModalidadeEscalada.BIG_WALL]: 'Big Wall',
+    [ModalidadeEscalada.ARTIFICIAL]: 'Artificial',
+    [ModalidadeEscalada.PSICOBLOC]: 'Psicobloc'
+  };
+  
+  return modalidadeMap[props.via.modalidade] || props.via.modalidade;
 });
 
 // Define as cores disponíveis para os badges (quantidade controlada pelo SCSS)

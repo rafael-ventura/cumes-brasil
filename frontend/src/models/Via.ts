@@ -2,6 +2,7 @@ import { Imagem } from 'src/models/Imagem';
 import { Fonte } from 'src/models/Fonte';
 import { Croqui } from 'src/models/Croqui';
 import { Localizacao } from 'src/models/Localizacao';
+import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
 export interface Via {
   id: number;
@@ -15,6 +16,9 @@ export interface Via {
   conquistadores?: string;
   detalhes?: string;
   data?: string;
+  tipo_rocha?: string;
+  tipo_escalada?: string;
+  modalidade?: ModalidadeEscalada;
   latitude?: number;
   longitude?: number;
   localizacao?: Localizacao; // Obtida através de setor/face/montanha (prioridade: setor > face > montanha)

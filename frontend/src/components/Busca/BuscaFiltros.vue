@@ -92,6 +92,30 @@
               @click="toggleFilterInModal('selectedExposicao')"
               rounded
             />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: showFilterInputInModal.tipo_rocha }"
+              icon="landscape"
+              label="Tipo de Rocha"
+              @click="toggleFilterInModal('tipo_rocha')"
+              rounded
+            />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: showFilterInputInModal.tipo_escalada }"
+              icon="sports_climbing"
+              label="Tipo de Escalada"
+              @click="toggleFilterInModal('tipo_escalada')"
+              rounded
+            />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: showFilterInputInModal.modalidade }"
+              icon="category"
+              label="Modalidade"
+              @click="toggleFilterInModal('modalidade')"
+              rounded
+            />
           </div>
 
           <!-- Campos dinâmicos de filtros dentro do modal -->
@@ -142,6 +166,52 @@
               @update:model-value="updateActiveFilters"
             />
           </div>
+
+          <div v-if="showFilterInputInModal.tipo_rocha" class="q-pt-lg">
+            <div class="field-label">Tipo de Rocha</div>
+            <q-input
+              v-model="localFilters.tipo_rocha"
+              placeholder="Ex: granito, calcário, arenito..."
+              outlined
+              class="custom-input"
+              @update:model-value="updateActiveFilters"
+            />
+          </div>
+
+          <div v-if="showFilterInputInModal.tipo_escalada" class="q-pt-lg">
+            <div class="field-label">Tipo de Escalada</div>
+            <q-input
+              v-model="localFilters.tipo_escalada"
+              placeholder="Ex: agarras, aderência, chaminé..."
+              outlined
+              class="custom-input"
+              @update:model-value="updateActiveFilters"
+            />
+          </div>
+
+          <div v-if="showFilterInputInModal.modalidade" class="q-pt-lg">
+            <div class="field-label">Selecione a Modalidade</div>
+            <q-select
+              v-model="localFilters.modalidade"
+              :options="modalidadeOptions"
+              outlined
+              class="custom-select"
+              @update:model-value="updateActiveFilters"
+            >
+              <template #option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label>{{ modalidadeLabels[scope.opt] || scope.opt }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #selected>
+                <span v-if="localFilters.modalidade">
+                  {{ modalidadeLabels[localFilters.modalidade] || localFilters.modalidade }}
+                </span>
+              </template>
+            </q-select>
+          </div>
         </q-card-section>
 
         <!-- Botões de Ação -->
@@ -158,6 +228,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
+import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
 // Props e emissões
 const props = defineProps<{ entity: string, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
@@ -169,6 +240,9 @@ const localFilters = ref<BuscaRequest>({
   selectedDifficulty: null,
   selectedExtension: null,
   selectedCrux: null,
+  tipo_rocha: null,
+  tipo_escalada: null,
+  modalidade: null,
   page: 1,
   itemsPerPage: 10
 });
@@ -192,6 +266,26 @@ const difficulties = [
 ];
 const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
 const mountainOptions = ref<any[]>([]);
+
+// Opções de modalidade formatadas em português para o select
+const modalidadeOptions = [
+  ModalidadeEscalada.TRADICIONAL,
+  ModalidadeEscalada.ESPORTIVA,
+  ModalidadeEscalada.BOULDER,
+  ModalidadeEscalada.BIG_WALL,
+  ModalidadeEscalada.ARTIFICIAL,
+  ModalidadeEscalada.PSICOBLOC
+];
+
+// Mapa para converter enum para label em português
+const modalidadeLabels: Record<ModalidadeEscalada, string> = {
+  [ModalidadeEscalada.TRADICIONAL]: 'Tradicional',
+  [ModalidadeEscalada.ESPORTIVA]: 'Esportiva',
+  [ModalidadeEscalada.BOULDER]: 'Boulder',
+  [ModalidadeEscalada.BIG_WALL]: 'Big Wall',
+  [ModalidadeEscalada.ARTIFICIAL]: 'Artificial',
+  [ModalidadeEscalada.PSICOBLOC]: 'Psicobloc'
+};
 
 // Atualiza a lista de filtros ativos
 const updateActiveFilters = () => {
@@ -223,6 +317,27 @@ const activeFiltersList = computed(() => {
     filters.push({ label: `Crux: ${localFilters.value.selectedCrux}`, key: 'selectedCrux' });
   }
 
+  // Adiciona o filtro de exposição se estiver selecionado
+  if (localFilters.value.selectedExposicao) {
+    filters.push({ label: `Exposição: ${localFilters.value.selectedExposicao}`, key: 'selectedExposicao' });
+  }
+
+  // Adiciona o filtro de tipo de rocha se estiver preenchido
+  if (localFilters.value.tipo_rocha) {
+    filters.push({ label: `Tipo de Rocha: ${localFilters.value.tipo_rocha}`, key: 'tipo_rocha' });
+  }
+
+  // Adiciona o filtro de tipo de escalada se estiver preenchido
+  if (localFilters.value.tipo_escalada) {
+    filters.push({ label: `Tipo de Escalada: ${localFilters.value.tipo_escalada}`, key: 'tipo_escalada' });
+  }
+
+  // Adiciona o filtro de modalidade se estiver selecionado
+  if (localFilters.value.modalidade) {
+    const modalidadeLabel = modalidadeLabels[localFilters.value.modalidade] || localFilters.value.modalidade;
+    filters.push({ label: `Modalidade: ${modalidadeLabel}`, key: 'modalidade' });
+  }
+
   return filters;
 });
 
@@ -233,7 +348,15 @@ const removeFilter = (key: string) => {
   } else if (key === 'selectedExtensionCategory') {
     localFilters.value.selectedExtensionCategory = null;
   } else if (key === 'selectedCrux') {
-    localFilters.value.selectedCrux = '';
+    localFilters.value.selectedCrux = null;
+  } else if (key === 'selectedExposicao') {
+    localFilters.value.selectedExposicao = null;
+  } else if (key === 'tipo_rocha') {
+    localFilters.value.tipo_rocha = null;
+  } else if (key === 'tipo_escalada') {
+    localFilters.value.tipo_escalada = null;
+  } else if (key === 'modalidade') {
+    localFilters.value.modalidade = null;
   }
 
   // Atualiza a lista de filtros e emite a mudança
@@ -298,6 +421,9 @@ const clearFilters = () => {
     selectedDifficulty: null,
     selectedExtension: null,
     selectedCrux: null,
+    tipo_rocha: null,
+    tipo_escalada: null,
+    modalidade: null,
     page: 1,
     itemsPerPage: 10,
     ...props.staticFilters
@@ -308,6 +434,10 @@ const clearFilters = () => {
   showFilterInput.value.selectedDifficulty = false;
   showFilterInput.value.selectedCrux = false;
   showFilterInput.value.selectedExtension = false;
+  showFilterInput.value.selectedExposicao = false;
+  showFilterInput.value.tipo_rocha = false;
+  showFilterInput.value.tipo_escalada = false;
+  showFilterInput.value.modalidade = false;
   showExtensionFilters.value = false;
   emitFilters();
 };

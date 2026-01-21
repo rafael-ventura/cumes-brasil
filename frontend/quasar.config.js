@@ -21,7 +21,6 @@ module.exports = configure(function () {
     ],
 
     extras: [
-      'roboto-font',
       'material-icons'
     ],
 

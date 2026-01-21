@@ -185,6 +185,9 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             selectedExposicao,
             colecaoId,
             bairro,
+            tipo_rocha,
+            tipo_escalada,
+            modalidade,
             page = 1,
             itemsPerPage = 10,
             sortField,
@@ -269,6 +272,18 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             } else {
                 qb = qb.andWhere("via.exposicao LIKE :selectedExposicao", {selectedExposicao: `${selectedExposicao[0]}%`});
             }
+        }
+
+        if (tipo_rocha) {
+            qb = qb.andWhere("LOWER(via.tipo_rocha) LIKE :tipo_rocha", {tipo_rocha: `%${tipo_rocha.toLowerCase()}%`});
+        }
+
+        if (tipo_escalada) {
+            qb = qb.andWhere("LOWER(via.tipo_escalada) LIKE :tipo_escalada", {tipo_escalada: `%${tipo_escalada.toLowerCase()}%`});
+        }
+
+        if (modalidade) {
+            qb = qb.andWhere("via.modalidade = :modalidade", {modalidade});
         }
 
         if (sortField && sortOrder) {
