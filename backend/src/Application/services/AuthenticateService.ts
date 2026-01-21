@@ -5,20 +5,20 @@ import { OAuth2Client } from "google-auth-library";
 import { ObjectLiteral } from "typeorm";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
-import {errorsMessage, successMessage} from "../errors/constants";
+import { errorsMessage, successMessage } from "../errors/constants";
 import UserValidation from "../validations/UserValidation";
 import BadRequestError from "../errors/BadRequestError";
 import InvalidTokenError from "../errors/InvalidTokenError";
 import GoogleAuthenticateService from "./GoogleAuthenticateService";
-import {Imagem} from "../../Domain/entities/Imagem";
-import {ImagemRepository} from "../../Infrastructure/repositories/ImagemRepository";
-import {Usuario} from "../../Domain/entities/Usuario";
-import {Colecao} from "../../Domain/entities/Colecao";
-import {Container} from "typedi";
-import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
+import { Imagem } from "../../Domain/entities/Imagem";
+import { ImagemRepository } from "../../Infrastructure/repositories/ImagemRepository";
+import { Usuario } from "../../Domain/entities/Usuario";
+import { Colecao } from "../../Domain/entities/Colecao";
+import { Container } from "typedi";
+import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
 import TokenValidation from "../validations/TokenValidation";
-import {ResetUserPasswordTokenService} from "./ResetUserPasswordTokenService";
-import {MailService} from "./MailService";
+import { ResetUserPasswordTokenService } from "./ResetUserPasswordTokenService";
+import { MailService } from "./MailService";
 
 class AuthService {
     private usuarioRepository: UsuarioRepository;
@@ -38,22 +38,15 @@ class AuthService {
 
     async register(nome: string, email: string, senha: string): Promise<any> {
         UserValidation.registerValidation(nome, email, senha);
-
         const existingUser = await this.usuarioRepository.findByEmail(email);
         if (existingUser != null) {
             throw new BadRequestError(errorsMessage.USER_ALREADY_EXISTS);
         }
         const senhaHash = await bcrypt.hash(senha, 10);
-        let imagem: Imagem | null = await this.imagemRepository.getById(3)
+        const imagem: Imagem | null = await this.imagemRepository.getById(3);
         if (imagem != null) {
-            let newImagem = new Imagem();
-            newImagem.url = imagem.url;
-            newImagem.descricao = imagem.descricao;
-            newImagem.tipo_entidade = imagem.tipo_entidade;
-            newImagem = await this.imagemRepository.create(newImagem);
-            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, newImagem);
+            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, imagem);
             await this.createDefaultCollections(user);
-            
             // Retorna token após registro bem-sucedido
             const token = this.generateToken(user.id.toString());
             return { token, usuarioId: user.id, auth: true };
@@ -197,7 +190,7 @@ class AuthService {
 
         await this.usuarioRepository.resetPassword(user.id, user);
 
-        return {message: successMessage.USER_RESET_PASSWORD_UPDATED};
+        return { message: successMessage.USER_RESET_PASSWORD_UPDATED };
     }
 }
 
