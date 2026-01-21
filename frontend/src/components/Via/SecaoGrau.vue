@@ -9,39 +9,38 @@
     @collapse="isExpanded = false"
   >
     <div class="detalhes-container">
-      <div class="detalhe-item" v-if="formattedGrau">
+      <!-- Grau - sempre exibe, mesmo se for "-" -->
+      <div class="detalhe-item">
         <div class="detalhe-grau">
           <span>Grau:</span>
           <q-icon name="info" @click.stop="showGrauInfo = true" class="info-icon" />
         </div>
-        <span class="valor-detalhe">{{ formattedGrau }}</span>
+        <span class="valor-detalhe" :class="{ 'valor-vazio': formattedGrau === '-' }">{{ formattedGrau }}</span>
       </div>
 
-      <!-- Crux -->
-      <div class="detalhe-item" v-if="formattedCrux">
+      <!-- Crux - sempre exibe -->
+      <div class="detalhe-item">
         <span>Crux:</span>
-        <span class="valor-detalhe">{{ formattedCrux }}</span>
+        <span class="valor-detalhe" :class="{ 'valor-vazio': formattedCrux === '-' }">{{ formattedCrux }}</span>
       </div>
 
-      <!-- Artificial -->
-      <div class="detalhe-item" v-if="formattedArtificial">
+      <!-- Artificial - sempre exibe -->
+      <div class="detalhe-item">
         <span>Artificial:</span>
-        <span class="valor-detalhe">{{ formattedArtificial }}</span>
+        <span class="valor-detalhe" :class="{ 'valor-vazio': formattedArtificial === '-' }">{{ formattedArtificial }}</span>
       </div>
 
-      <!-- Exposição -->
-      <div class="detalhe-item" v-if="formattedExposicao">
+      <!-- Exposição - sempre exibe -->
+      <div class="detalhe-item">
         <span>Exposição:</span>
-        <span class="valor-detalhe">{{ formattedExposicao }}</span>
+        <span class="valor-detalhe" :class="{ 'valor-vazio': formattedExposicao === '-' }">{{ formattedExposicao }}</span>
       </div>
 
-      <!-- Duração -->
-      <div class="detalhe-item" v-if="formattedDuracao">
+      <!-- Duração - sempre exibe -->
+      <div class="detalhe-item">
         <span>Duração:</span>
-        <span class="valor-detalhe">{{ formattedDuracao }}</span>
+        <span class="valor-detalhe" :class="{ 'valor-vazio': formattedDuracao === '-' }">{{ formattedDuracao }}</span>
       </div>
-
-      <!-- Outros itens permanecem os mesmos -->
     </div>
 
     <q-dialog v-model="showGrauInfo">
@@ -75,12 +74,31 @@ const props = defineProps<{
 
 const showGrauInfo = ref(false);
 
-// Formatação dos dados com ajuste para não adicionar sufixo se o valor for "NA"
-const formattedGrau = computed(() => props.via.grau && props.via.grau !== 'NA' ? `${props.via.grau}` : 'NA');
-const formattedCrux = computed(() => props.via.crux || 'NA');
-const formattedArtificial = computed(() => props.via.artificial && props.via.artificial !== 'N/A' ? `A${props.via.artificial}` : 'N/A');
-const formattedExposicao = computed(() => props.via.exposicao && props.via.exposicao !== 'N/A' ? `E${props.via.exposicao}` : 'N/A');
-const formattedDuracao = computed(() => props.via.duracao && props.via.duracao !== 'N/A' ? `D${props.via.duracao}` : 'N/A');
+// Formatação dos dados - retorna "-" quando não há informação
+const formattedGrau = computed(() => {
+  if (!props.via.grau || props.via.grau === 'NA' || props.via.grau === 'N/A') return '-';
+  return props.via.grau;
+});
+
+const formattedCrux = computed(() => {
+  if (!props.via.crux || props.via.crux === 'NA' || props.via.crux === 'N/A') return '-';
+  return props.via.crux;
+});
+
+const formattedArtificial = computed(() => {
+  if (!props.via.artificial || props.via.artificial === 'N/A' || props.via.artificial === 'NA') return '-';
+  return `A${props.via.artificial}`;
+});
+
+const formattedExposicao = computed(() => {
+  if (!props.via.exposicao || props.via.exposicao === 'N/A' || props.via.exposicao === 'NA') return '-';
+  return `E${props.via.exposicao}`;
+});
+
+const formattedDuracao = computed(() => {
+  if (!props.via.duracao || props.via.duracao === 'N/A' || props.via.duracao === 'NA') return '-';
+  return `D${props.via.duracao}`;
+});
 
 // Outros dados permanecem os mesmos
 computed(() => props.via.fonte ? props.via.fonte.autor.split(';').map(fonte => fonte.trim()) : []);
@@ -132,6 +150,11 @@ const isExpanded = ref(false);
 
 .valor-detalhe {
   margin-left: auto;
+}
+
+.valor-vazio {
+  color: rgba($cumes-03, 0.5);
+  font-style: italic;
 }
 
 .info-icon {

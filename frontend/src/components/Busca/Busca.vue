@@ -26,7 +26,7 @@
       @page-change="onPageChange"
       @items-per-page-change="onItemsPerPageChange"
     />
-    
+
     <!-- Espaçamento no final -->
     <div class="busca-bottom-spacer"></div>
   </div>
@@ -71,7 +71,7 @@ const getStoredItemsPerPage = (): number => {
     }
     return 9; // padrão para coleções
   }
-  
+
   // Para vias
   const stored = localStorage.getItem('vias_items_per_page');
   if (stored) {
@@ -90,6 +90,9 @@ const initialFilters: BuscaRequest = {
   selectedExtensionCategory: null,
   selectedCrux: null,
   selectedExposicao: null,
+  tipo_rocha: null,
+  tipo_escalada: null,
+  modalidade: null,
   page: 1,
   sortField: null,
   sortOrder: null,
@@ -260,7 +263,7 @@ const selectItem = (item: any) => {
 .busca-bottom-spacer {
   height: 48px;
   width: 100%;
-  
+
   @media (max-width: 768px) {
     height: 32px;
   }

@@ -1,4 +1,27 @@
 // ============================================
+// TIPOGRAFIA - INTER FONT
+// ============================================
+// Aplicar fonte Inter apenas no body, deixando herdar naturalmente
+// Os ícones serão protegidos pelas regras específicas abaixo
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Garantir que ícones do Quasar (Material Icons) mantenham sua fonte original
+.q-icon {
+  font-family: 'Material Icons' !important;
+}
+
+// Garantir que ícones do PrimeVue mantenham sua fonte original
+[class*="pi-"],
+i[class*="pi-"] {
+  font-family: 'PrimeIcons' !important;
+}
+
+// ============================================
 // PALETA DE CORES - CUMES BRASIL
 // ============================================
 

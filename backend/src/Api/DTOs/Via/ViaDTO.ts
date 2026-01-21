@@ -2,6 +2,7 @@ import { ImagemDTO } from "../Imagem/ImagemDTO";
 import { FonteDTO } from "../Fonte/FonteDTO";
 import { LocalizacaoDTO } from "../Localizacao/LocalizacaoDTO";
 import { Via } from "../../../Domain/entities/Via";
+import { ModalidadeEscalada } from "../../../Domain/enum/EModalidadeEscalada";
 
 export class ViaDTO {
     id: number;
@@ -15,6 +16,9 @@ export class ViaDTO {
     conquistadores?: string;
     detalhes?: string;
     data?: string;
+    tipo_rocha?: string;
+    tipo_escalada?: string;
+    modalidade?: ModalidadeEscalada;
 
     // Relações como objetos completos (informações essenciais)
     imagem?: ImagemDTO;
@@ -99,6 +103,9 @@ export class ViaDTO {
         this.conquistadores = entity.conquistadores;
         this.detalhes = entity.detalhes;
         this.data = entity.data;
+        this.tipo_rocha = entity.tipo_rocha;
+        this.tipo_escalada = entity.tipo_escalada;
+        this.modalidade = entity.modalidade;
         
         // Coordenadas geográficas
         this.latitude = entity.latitude ? Number(entity.latitude) : undefined;
