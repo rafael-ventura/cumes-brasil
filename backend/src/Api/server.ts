@@ -179,6 +179,10 @@ async function initializeDatabase() {
             safeLogger.info('Carga inicial realizada com sucesso');
         } else {
             safeLogger.info('Registros já existentes na tabela Via, pulando a carga de dados', {count});
+            
+            // Mesmo pulando a carga, garantir que as sequências estão corretas
+            // Isso previne erros se dados foram inseridos manualmente ou se houve algum problema anterior
+            await fixSequencesOnStartup();
         }
     } catch (error: any) {
         safeLogger.error('Erro ao inicializar banco de dados', {
@@ -186,6 +190,54 @@ async function initializeDatabase() {
             stack: error.stack
         });
         process.exit(1);
+    }
+}
+
+/**
+ * Corrige as sequências do banco de dados na inicialização
+ * Útil quando dados foram inseridos manualmente ou houve problemas anteriores
+ */
+async function fixSequencesOnStartup() {
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    
+    try {
+        safeLogger.info('🔧 Verificando e corrigindo sequências do banco de dados...');
+        
+        const tables = [
+            'continente', 'pais', 'regiao', 'estado', 'cidade', 'bairro', 'localizacao',
+            'fonte', 'imagem', 'montanha', 'face', 'setor', 'croqui', 'via', 'usuario',
+            'colecao', 'escalada', 'participante', 'via_croqui'
+        ];
+        
+        for (const table of tables) {
+            try {
+                const result = await queryRunner.query(`SELECT MAX(id) as max_id FROM "${table}"`);
+                const maxId = result[0]?.max_id;
+                
+                if (maxId) {
+                    // Verificar o valor atual da sequência
+                    const seqResult = await queryRunner.query(`SELECT last_value FROM ${table}_id_seq`);
+                    const currentSeq = seqResult[0]?.last_value;
+                    
+                    // Só ajustar se a sequência estiver desatualizada
+                    if (currentSeq < maxId) {
+                        await queryRunner.query(`SELECT setval('${table}_id_seq', ${maxId})`);
+                        safeLogger.info(`  ✅ Sequência ${table}_id_seq ajustada de ${currentSeq} para ${maxId}`);
+                    }
+                }
+            } catch (error) {
+                // Ignorar erros (tabela pode não existir ou não ter sequência)
+            }
+        }
+        
+        safeLogger.info('✅ Verificação de sequências concluída');
+    } catch (error: any) {
+        safeLogger.error('Erro ao corrigir sequências', {
+            error: error.message
+        });
+    } finally {
+        await queryRunner.release();
     }
 }
 

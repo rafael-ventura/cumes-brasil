@@ -66,6 +66,9 @@ export async function loadData() {
     await insertData(queryRunner, Usuario, usuariosJson);
     await associateViaCroqui(queryRunner);
     await associateLocalizacoes(queryRunner);
+    
+    // Corrigir sequências após inserir dados com IDs específicos
+    await fixSequences(queryRunner);
 
     // Se chegou até aqui, tudo deu certo - commit de tudo
     await queryRunner.commitTransaction();
@@ -234,7 +237,18 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
   for (const montanhaData of montanhasJson) {
     if (montanhaData.localizacoes && montanhaData.localizacoes.length > 0) {
       try {
-        const montanhaId = montanhaData.id;
+        // Buscar o ID da montanha pelo nome (já que não temos ID no JSON)
+        const montanhaResult = await queryRunner.manager.query(
+          'SELECT id FROM montanha WHERE nome = $1',
+          [montanhaData.nome]
+        );
+        
+        if (montanhaResult.length === 0) {
+          console.warn(`⚠️ Montanha "${montanhaData.nome}" não encontrada no banco`);
+          continue;
+        }
+        
+        const montanhaId = montanhaResult[0].id;
         const localizacaoIds = montanhaData.localizacoes;
         
         for (const locId of localizacaoIds) {
@@ -244,7 +258,7 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
           
           if (locExists.length === 0) {
-            console.warn(`⚠️ Localização ${locId} não encontrada para montanha ${montanhaId}`);
+            console.warn(`⚠️ Localização ${locId} não encontrada para montanha ${montanhaData.nome}`);
             continue;
           }
           
@@ -254,7 +268,7 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
         }
       } catch (error) {
-        console.error(`❌ Erro ao associar localizações à montanha ${montanhaData.id}:`, error);
+        console.error(`❌ Erro ao associar localizações à montanha "${montanhaData.nome}":`, error);
         throw error;
       }
     }
@@ -266,7 +280,18 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
   for (const faceData of facesJson) {
     if (faceData.localizacoes && faceData.localizacoes.length > 0) {
       try {
-        const faceId = faceData.id;
+        // Buscar o ID da face pelo nome e montanha (já que não temos ID no JSON)
+        const faceResult = await queryRunner.manager.query(
+          'SELECT id FROM face WHERE nome = $1 AND "montanhaId" = $2',
+          [faceData.nome, faceData.montanha]
+        );
+        
+        if (faceResult.length === 0) {
+          console.warn(`⚠️ Face "${faceData.nome}" (montanha ${faceData.montanha}) não encontrada no banco`);
+          continue;
+        }
+        
+        const faceId = faceResult[0].id;
         const localizacaoIds = faceData.localizacoes;
         
         for (const locId of localizacaoIds) {
@@ -276,7 +301,7 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
           
           if (locExists.length === 0) {
-            console.warn(`⚠️ Localização ${locId} não encontrada para face ${faceId}`);
+            console.warn(`⚠️ Localização ${locId} não encontrada para face "${faceData.nome}"`);
             continue;
           }
           
@@ -286,7 +311,7 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
         }
       } catch (error) {
-        console.error(`❌ Erro ao associar localizações à face ${faceData.id}:`, error);
+        console.error(`❌ Erro ao associar localizações à face "${faceData.nome}":`, error);
         throw error;
       }
     }
@@ -299,7 +324,18 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
   for (const setorData of setoresJson) {
     if (setorData.localizacoes && setorData.localizacoes.length > 0) {
       try {
-        const setorId = setorData.id;
+        // Buscar o ID do setor pelo nome e face (já que não temos ID no JSON)
+        const setorResult = await queryRunner.manager.query(
+          'SELECT id FROM setor WHERE nome = $1 AND "faceId" = $2',
+          [setorData.nome, setorData.face]
+        );
+        
+        if (setorResult.length === 0) {
+          console.warn(`⚠️ Setor "${setorData.nome}" (face ${setorData.face}) não encontrado no banco`);
+          continue;
+        }
+        
+        const setorId = setorResult[0].id;
         const localizacaoIds = setorData.localizacoes;
         
         for (const locId of localizacaoIds) {
@@ -309,7 +345,7 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
           
           if (locExists.length === 0) {
-            console.warn(`⚠️ Localização ${locId} não encontrada para setor ${setorId}`);
+            console.warn(`⚠️ Localização ${locId} não encontrada para setor "${setorData.nome}"`);
             continue;
           }
           
@@ -319,11 +355,41 @@ async function associateLocalizacoes(queryRunner: QueryRunner) {
           );
         }
       } catch (error) {
-        console.error(`❌ Erro ao associar localizações ao setor ${setorData.id}:`, error);
+        console.error(`❌ Erro ao associar localizações ao setor "${setorData.nome}":`, error);
         throw error;
       }
     }
   }
 
   console.log("✅ Localizações associadas com sucesso.");
+}
+
+async function fixSequences(queryRunner: QueryRunner) {
+  console.log("🔧 Corrigindo sequências do banco de dados...");
+  
+  // Lista de tabelas que têm sequências (tabelas com ID auto-incremento)
+  const tables = [
+    'continente', 'pais', 'regiao', 'estado', 'cidade', 'bairro', 'localizacao',
+    'fonte', 'imagem', 'montanha', 'face', 'setor', 'croqui', 'via', 'usuario',
+    'colecao', 'escalada', 'participante', 'via_croqui'
+  ];
+  
+  for (const table of tables) {
+    try {
+      // Verificar se a tabela existe e tem registros
+      const result = await queryRunner.query(`SELECT MAX(id) as max_id FROM "${table}"`);
+      const maxId = result[0]?.max_id;
+      
+      if (maxId) {
+        // Ajustar a sequência para o próximo valor após o MAX
+        await queryRunner.query(`SELECT setval('${table}_id_seq', ${maxId})`);
+        console.log(`  ✅ Sequência ${table}_id_seq ajustada para ${maxId}`);
+      }
+    } catch (error) {
+      // Ignorar erros (tabela pode não existir ou não ter sequência)
+      console.log(`  ⚠️ Não foi possível ajustar sequência para ${table}`);
+    }
+  }
+  
+  console.log("✅ Sequências corrigidas com sucesso!");
 }

@@ -1,97 +1,83 @@
 [
   {
-    "id": 1,
     "url": "/assets/colecao-default-01.webp",
     "descricao": "Foto Default para Colecao",
     "fonte_id": 3,
     "tipo_entidade": "colecao"
   },
   {
-    "id": 2,
     "url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
     "descricao": "Foto Default para Montanha - Montanha Brasileira",
     "fonte_id": 4,
     "tipo_entidade": "montanha"
   },
   {
-    "id": 3,
     "url": "/assets/usuario-default-01.webp",
     "descricao": "Foto Default para Usuário",
     "fonte_id": 1,
     "tipo_entidade": "usuario"
   },
   {
-    "id": 4,
     "url": "/assets/via-default-01.webp",
     "descricao": "Foto Default para Via",
     "fonte_id": 1,
     "tipo_entidade": "via"
   },
   {
-    "id": 5,
     "url": "/assets/croquis/croqui_01.webp",
     "descricao": "Croquis da Anibal - Mapa Desenhado",
     "fonte_id": 2,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 6,
     "url": "/assets/croquis/croqui_02.webp",
     "descricao": "Croquis da Anibal - Foto das Vias",
     "fonte_id": 2,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 7,
     "url": "/assets/croquis/croqui_29_dezembro.webp",
     "descricao": "Croqui Via 29 de Dezembro",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 8,
     "url": "/assets/croquis/croqui_22_outubro.webp",
     "descricao": "Croqui Via 22 de Outubro",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 9,
     "url": "/assets/croquis/croqui_semisonic.webp",
     "descricao": "Croqui Via Semisonic",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 10,
     "url": "/assets/croquis/croqui_ratos_da_montanha.webp",
     "descricao": "Croqui Via Ratos da Montanha",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 11,
     "url": "/assets/croquis/croqui_ponto_noturno.webp",
     "descricao": "Croqui Via Ponto Noturno",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 12,
     "url": "/assets/croquis/croqui_unha_de_gato.webp",
     "descricao": "Croqui Via Unha de Gato",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 13,
     "url": "/assets/croquis/croqui_fissura_do_ingles.webp",
     "descricao": "Croqui Via Fissura do Ingles - Resumido",
     "fonte_id": 7,
     "tipo_entidade": "croqui"
   },
   {
-    "id": 14,
     "url": "/assets/croquis/croqui_fissura_do_ingles_02.webp",
     "descricao": "Croqui Via Fissura do Ingles - Detalhado",
     "fonte_id": 7,

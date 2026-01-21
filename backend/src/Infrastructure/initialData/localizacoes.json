@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -9,7 +8,6 @@
     "bairro": 1
   },
   {
-    "id": 2,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -18,7 +16,6 @@
     "bairro": 2
   },
   {
-    "id": 3,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -27,7 +24,6 @@
     "bairro": 3
   },
   {
-    "id": 4,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -36,7 +32,6 @@
     "bairro": 4
   },
   {
-    "id": 5,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -45,7 +40,6 @@
     "bairro": 5
   },
   {
-    "id": 6,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -54,7 +48,6 @@
     "bairro": 6
   },
   {
-    "id": 7,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -63,7 +56,6 @@
     "bairro": 7
   },
   {
-    "id": 8,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -71,7 +63,6 @@
     "cidade": 1
   },
   {
-    "id": 9,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -80,7 +71,6 @@
     "bairro": 8
   },
   {
-    "id": 10,
     "continente": 1,
     "pais": 1,
     "regiao": 1,
@@ -89,7 +79,6 @@
     "bairro": 9
   },
   {
-    "id": 11,
     "continente": 1,
     "pais": 1,
     "regiao": 1,

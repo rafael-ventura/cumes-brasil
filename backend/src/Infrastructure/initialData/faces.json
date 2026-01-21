@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "nome": "Nordeste (Forte Duque de Caxias)",
     "montanha": 1,
     "fonte": 2,
@@ -9,7 +8,6 @@
     ]
   },
   {
-    "id": 2,
     "nome": "Norte (Forte Duque de Caxias)",
     "montanha": 1,
     "fonte": 2,
@@ -18,7 +16,6 @@
     ]
   },
   {
-    "id": 3,
     "nome": "Noroeste (Forte Duque de Caxias)",
     "montanha": 1,
     "fonte": 2,
@@ -27,7 +24,6 @@
     ]
   },
   {
-    "id": 4,
     "nome": "Sudoeste (Praia do Leme/Copacabana)",
     "montanha": 1,
     "fonte": 2,
@@ -36,7 +32,6 @@
     ]
   },
   {
-    "id": 5,
     "nome": "Falésia à beira-mar (Forte Duque de Caxias)",
     "montanha": 1,
     "fonte": 2,
@@ -45,7 +40,6 @@
     ]
   },
   {
-    "id": 6,
     "nome": "Sudoeste (Forte Duque de Caxias)",
     "montanha": 11,
     "fonte": 2,
@@ -54,7 +48,6 @@
     ]
   },
   {
-    "id": 7,
     "nome": "Leste",
     "montanha": 11,
     "fonte": 2,
@@ -63,7 +56,6 @@
     ]
   },
   {
-    "id": 8,
     "nome": "Falésia da Enseada",
     "montanha": 11,
     "fonte": 2,
@@ -72,7 +64,6 @@
     ]
   },
   {
-    "id": 9,
     "nome": "Sul (Parque da Chacrinha)",
     "montanha": 2,
     "fonte": 2,
@@ -81,7 +72,6 @@
     ]
   },
   {
-    "id": 10,
     "nome": "Noroeste (Balancé)",
     "montanha": 2,
     "fonte": 2,
@@ -90,7 +80,6 @@
     ]
   },
   {
-    "id": 11,
     "nome": "Noroeste (Cemitério São João Batista)",
     "montanha": 2,
     "fonte": 2,
@@ -99,7 +88,6 @@
     ]
   },
   {
-    "id": 12,
     "nome": "Leste",
     "montanha": 4,
     "fonte": 2,
@@ -108,7 +96,6 @@
     ]
   },
   {
-    "id": 13,
     "nome": "Sudoeste",
     "montanha": 4,
     "fonte": 2,
@@ -117,7 +104,6 @@
     ]
   },
   {
-    "id": 14,
     "nome": "Falésia do Muro",
     "montanha": 5,
     "fonte": 2,
@@ -126,7 +112,6 @@
     ]
   },
   {
-    "id": 15,
     "nome": "Falésia Laranjão",
     "montanha": 5,
     "fonte": 2,
@@ -135,7 +120,6 @@
     ]
   },
   {
-    "id": 16,
     "nome": "Norte/Noroeste (Lagoa/Fonte da Saudade)",
     "montanha": 5,
     "fonte": 2,
@@ -144,7 +128,6 @@
     ]
   },
   {
-    "id": 17,
     "nome": "Falésia do mirante",
     "montanha": 5,
     "fonte": 2,
@@ -153,7 +136,6 @@
     ]
   },
   {
-    "id": 18,
     "nome": "Oeste/Sudoeste (Parque da Catacumba)",
     "montanha": 5,
     "fonte": 2,
@@ -162,7 +144,6 @@
     ]
   },
   {
-    "id": 19,
     "nome": "Sul (Rua Constante Ramos)",
     "montanha": 5,
     "fonte": 2,
@@ -171,7 +152,6 @@
     ]
   },
   {
-    "id": 20,
     "nome": "Leste (Túnel Major Rubens Vaz)",
     "montanha": 5,
     "fonte": 2,
@@ -180,7 +160,6 @@
     ]
   },
   {
-    "id": 21,
     "nome": "Nordeste (Rua Santa Clara)",
     "montanha": 5,
     "fonte": 2,
@@ -189,7 +168,6 @@
     ]
   },
   {
-    "id": 22,
     "nome": "Norte/Noroeste (Platô da Lagoa)",
     "montanha": 6,
     "fonte": 2,
@@ -198,7 +176,6 @@
     ]
   },
   {
-    "id": 23,
     "nome": "Norte (Lagoa/Fonte da Saudade)",
     "montanha": 7,
     "fonte": 2,
@@ -207,7 +184,6 @@
     ]
   },
   {
-    "id": 24,
     "nome": "Falésia do Humaitá",
     "montanha": 8,
     "fonte": 2,
@@ -216,7 +192,6 @@
     ]
   },
   {
-    "id": 25,
     "nome": "Nordeste (Túnel Sá Freire Alvim)",
     "montanha": 9,
     "fonte": 2,
@@ -225,7 +200,6 @@
     ]
   },
   {
-    "id": 26,
     "nome": "Norte (Rua Percy Murray)",
     "montanha": 9,
     "fonte": 2,
@@ -234,7 +208,6 @@
     ]
   },
   {
-    "id": 27,
     "nome": "Norte (Rua Presidente Afonso Lopes)",
     "montanha": 9,
     "fonte": 2,
@@ -243,7 +216,6 @@
     ]
   },
   {
-    "id": 28,
     "nome": "Campo Escola de Escalada da Aníbal Moreira",
     "montanha": 10,
     "fonte": 3,
@@ -252,7 +224,6 @@
     ]
   },
   {
-    "id": 29,
     "nome": "Parede da Ilusão Idiótica",
     "montanha": 13,
     "fonte": 2,
@@ -261,7 +232,6 @@
     ]
   },
   {
-    "id": 30,
     "nome": "Parede Principal",
     "montanha": 13,
     "fonte": 2,
@@ -270,7 +240,6 @@
     ]
   },
   {
-    "id": 31,
     "nome": "Sul (Avenida Niemeyer)",
     "montanha": 14,
     "fonte": 2,
@@ -279,7 +248,6 @@
     ]
   },
   {
-    "id": 32,
     "nome": "Leste (Praça Rubem Dário)",
     "montanha": 15,
     "fonte": 2,
@@ -288,7 +256,6 @@
     ]
   },
   {
-    "id": 33,
     "nome": "Sul (Avenida Niemeyer)",
     "montanha": 18,
     "fonte": 2,
@@ -297,7 +264,6 @@
     ]
   },
   {
-    "id": 34,
     "nome": "Leste (Parque do Penhasco Dois Irmãos)",
     "montanha": 18,
     "fonte": 2,
@@ -306,7 +272,6 @@
     ]
   },
   {
-    "id": 35,
     "nome": "Nordeste (Parque do Penhasco Dois Irmãos)",
     "montanha": 18,
     "fonte": 2,
@@ -315,7 +280,6 @@
     ]
   },
   {
-    "id": 36,
     "nome": "Noroeste (Rocinha)",
     "montanha": 18,
     "fonte": 2,
@@ -324,14 +288,12 @@
     ]
   },
   {
-    "id": 37,
     "nome": "Pedra da Abelha",
     "montanha": 3,
     "fonte": 2,
     "localizacoes": []
   },
   {
-    "id": 38,
     "nome": "Pedra do Arpoador",
     "montanha": 12,
     "fonte": 2,
@@ -340,7 +302,6 @@
     ]
   },
   {
-    "id": 39,
     "nome": "Falésia do Alto Leblon I",
     "montanha": 16,
     "fonte": 2,
@@ -349,7 +310,6 @@
     ]
   },
   {
-    "id": 40,
     "nome": "Falésia do Alto Leblon II",
     "montanha": 17,
     "fonte": 2,

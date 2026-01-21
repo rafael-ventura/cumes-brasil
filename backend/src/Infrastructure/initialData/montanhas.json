@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "nome": "Morro do Leme",
     "altura": 125,
     "imagem": 2,
@@ -9,7 +8,6 @@
     ]
   },
   {
-    "id": 2,
     "nome": "Morro de São João",
     "altura": 242,
     "imagem": 2,
@@ -18,7 +16,6 @@
     ]
   },
   {
-    "id": 3,
     "nome": "Morro de São João (Pedra da Abelha)",
     "altura": 242,
     "imagem": 2,
@@ -27,7 +24,6 @@
     ]
   },
   {
-    "id": 4,
     "nome": "Agulha do Inhangá",
     "altura": 164,
     "imagem": 2,
@@ -36,7 +32,6 @@
     ]
   },
   {
-    "id": 5,
     "nome": "Morro dos Cabritos",
     "altura": 379,
     "imagem": 2,
@@ -45,7 +40,6 @@
     ]
   },
   {
-    "id": 6,
     "nome": "Morro da Catacumba",
     "altura": 131,
     "imagem": 2,
@@ -54,7 +48,6 @@
     ]
   },
   {
-    "id": 7,
     "nome": "Pedra do Urubu",
     "altura": 111,
     "imagem": 2,
@@ -63,7 +56,6 @@
     ]
   },
   {
-    "id": 8,
     "nome": "Morro da Saudade",
     "altura": 244,
     "imagem": 2,
@@ -72,7 +64,6 @@
     ]
   },
   {
-    "id": 9,
     "nome": "Morro do Cantagalo",
     "altura": 201,
     "imagem": 2,
@@ -81,7 +72,6 @@
     ]
   },
   {
-    "id": 10,
     "nome": "Pedreira da Rua Aníbal Moreira",
     "altura": 36,
     "imagem": 2,
@@ -90,7 +80,6 @@
     ]
   },
   {
-    "id": 11,
     "nome": "Morro do Urubu",
     "altura": 120,
     "imagem": 2,
@@ -99,7 +88,6 @@
     ]
   },
   {
-    "id": 12,
     "nome": "Ponta do Arpoador",
     "altura": 9,
     "imagem": 2,
@@ -108,7 +96,6 @@
     ]
   },
   {
-    "id": 13,
     "nome": "Falésias do Vidigal",
     "altura": 0,
     "imagem": 2,
@@ -117,7 +104,6 @@
     ]
   },
   {
-    "id": 14,
     "nome": "Falésias da Niemeyer",
     "altura": 0,
     "imagem": 2,
@@ -126,7 +112,6 @@
     ]
   },
   {
-    "id": 15,
     "nome": "Falésia do Leblon",
     "altura": 0,
     "imagem": 2,
@@ -135,7 +120,6 @@
     ]
   },
   {
-    "id": 16,
     "nome": "Falésia do Alto Leblon I",
     "altura": 0,
     "imagem": 2,
@@ -144,7 +128,6 @@
     ]
   },
   {
-    "id": 17,
     "nome": "Falésia do Alto Leblon II",
     "altura": 0,
     "imagem": 2,
@@ -153,7 +136,6 @@
     ]
   },
   {
-    "id": 18,
     "nome": "Irmão Menor do Leblon",
     "altura": 440,
     "imagem": 2,

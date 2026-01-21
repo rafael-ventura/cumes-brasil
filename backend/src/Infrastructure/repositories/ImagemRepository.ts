@@ -6,6 +6,21 @@ export class ImagemRepository extends BaseRepository<Imagem> {
     super(Imagem);
   }
 
+  // Método para criar nova imagem garantindo INSERT (não UPDATE)
+  async createNew(imagemData: Partial<Imagem>): Promise<Imagem> {
+    // Criar objeto completamente limpo sem nenhuma referência
+    const cleanData: any = {
+      url: imagemData.url,
+      tipo_entidade: imagemData.tipo_entidade,
+      descricao: imagemData.descricao
+    };
+    
+    // Usar insert() ao invés de save() para garantir que é INSERT e não UPDATE
+    const result = await this.repository.insert(cleanData);
+    const id = result.identifiers[0].id;
+    return this.getById(id) as Promise<Imagem>;
+  }
+
   // Métodos específicos abaixo
 
   async getByColecaoId (colecaoId: number): Promise<Imagem | null> {

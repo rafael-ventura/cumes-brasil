@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "nome": "29 de dezembro",
     "grau": "2",
     "crux": "IIsup",
@@ -17,7 +16,6 @@
     "face": 1
   },
   {
-    "id": 2,
     "nome": "Fenda do Forte",
     "grau": "",
     "crux": "Vsup",
@@ -34,7 +32,6 @@
     "face": 1
   },
   {
-    "id": 3,
     "nome": "Semisonic",
     "grau": "2",
     "crux": "IV",
@@ -51,7 +48,6 @@
     "face": 2
   },
   {
-    "id": 4,
     "nome": "Ratos de montanha",
     "grau": "5",
     "crux": "VIIa",
@@ -68,7 +64,6 @@
     "face": 3
   },
   {
-    "id": 5,
     "nome": "Paredão do Leme",
     "grau": "2",
     "crux": "III",
@@ -85,7 +80,6 @@
     "face": 3
   },
   {
-    "id": 6,
     "nome": "João Belamy",
     "grau": "4",
     "crux": "V",
@@ -102,7 +96,6 @@
     "face": 4
   },
   {
-    "id": 7,
     "nome": "Ponto Noturno",
     "grau": "4",
     "crux": "VI",
@@ -120,7 +113,6 @@
     "face": 4
   },
   {
-    "id": 8,
     "nome": "Um dia de sol",
     "grau": "4",
     "crux": "VIsup",
@@ -138,7 +130,6 @@
     "face": 4
   },
   {
-    "id": 9,
     "nome": "Um dia de sorte",
     "grau": "",
     "crux": "VIIa",
@@ -155,7 +146,6 @@
     "face": 4
   },
   {
-    "id": 10,
     "nome": "Diedro Mar Grosso",
     "grau": "",
     "crux": "IVsup",
@@ -172,7 +162,6 @@
     "face": 4
   },
   {
-    "id": 11,
     "nome": "Tsunami",
     "grau": "",
     "crux": "III",
@@ -189,7 +178,6 @@
     "face": 4
   },
   {
-    "id": 12,
     "nome": "Travessia Dois em um",
     "grau": "3",
     "crux": "V",
@@ -206,7 +194,6 @@
     "face": 4
   },
   {
-    "id": 13,
     "nome": "Depois da tempestade",
     "grau": "",
     "crux": "III",
@@ -223,7 +210,6 @@
     "face": 4
   },
   {
-    "id": 14,
     "nome": "Maré negra",
     "grau": "",
     "crux": "V",
@@ -240,7 +226,6 @@
     "face": 4
   },
   {
-    "id": 15,
     "nome": "Insolação",
     "grau": "",
     "crux": "IIIsup",
@@ -257,7 +242,6 @@
     "face": 4
   },
   {
-    "id": 16,
     "nome": "Ressaca",
     "grau": "",
     "crux": "V",
@@ -274,7 +258,6 @@
     "face": 4
   },
   {
-    "id": 17,
     "nome": "Rio 40 graus",
     "grau": "",
     "crux": "VIIa",
@@ -291,7 +274,6 @@
     "face": 4
   },
   {
-    "id": 18,
     "nome": "Bicho-papão",
     "grau": "",
     "crux": "VIIIa/b",
@@ -308,7 +290,6 @@
     "face": 4
   },
   {
-    "id": 19,
     "nome": "Marola",
     "grau": "",
     "crux": "VIIIb",
@@ -325,7 +306,6 @@
     "face": 4
   },
   {
-    "id": 20,
     "nome": "Jovem Colonião",
     "grau": "",
     "crux": "VIIa",
@@ -342,7 +322,6 @@
     "face": 5
   },
   {
-    "id": 21,
     "nome": "Arco do Triunfo",
     "grau": "5",
     "crux": "VISup",
@@ -359,7 +338,6 @@
     "face": 6
   },
   {
-    "id": 22,
     "nome": "Unha de gato",
     "grau": "4",
     "crux": "VIIb/c",
@@ -376,7 +354,6 @@
     "face": 6
   },
   {
-    "id": 23,
     "nome": "Mundo cão",
     "grau": "",
     "crux": "VIIIb/c",
@@ -393,7 +370,6 @@
     "face": 6
   },
   {
-    "id": 24,
     "nome": "Zé Buscapé",
     "grau": "2",
     "crux": "IIIsup",
@@ -411,7 +387,6 @@
     "face": 7
   },
   {
-    "id": 25,
     "nome": "Estopim",
     "grau": "",
     "crux": "V",
@@ -428,7 +403,6 @@
     "face": 8
   },
   {
-    "id": 26,
     "nome": "Ascensão e Queda",
     "grau": "5",
     "crux": "VI",
@@ -446,7 +420,6 @@
     "face": 9
   },
   {
-    "id": 27,
     "nome": "Fissura do inglês",
     "grau": "4",
     "crux": "VIsup",
@@ -463,7 +436,6 @@
     "face": 9
   },
   {
-    "id": 28,
     "nome": "Sucata",
     "grau": "3",
     "crux": "IIIsup",
@@ -480,7 +452,6 @@
     "face": 9
   },
   {
-    "id": 29,
     "nome": "Fissura São João",
     "grau": "4",
     "crux": "VI",
@@ -498,7 +469,6 @@
     "face": 9
   },
   {
-    "id": 30,
     "nome": "Andrômeda",
     "grau": "",
     "crux": "VIIIc",
@@ -515,7 +485,6 @@
     "face": 9
   },
   {
-    "id": 31,
     "nome": "Sombras eternas",
     "grau": "",
     "crux": "IXa",
@@ -532,7 +501,6 @@
     "face": 9
   },
   {
-    "id": 32,
     "nome": "Filhos do meio-fio",
     "grau": "",
     "crux": "VIIIc",
@@ -549,7 +517,6 @@
     "face": 9
   },
   {
-    "id": 33,
     "nome": "Meteorito",
     "grau": "",
     "crux": "VIIIc",
@@ -566,7 +533,6 @@
     "face": 9
   },
   {
-    "id": 34,
     "nome": "Nebulosa",
     "grau": "",
     "crux": "VIIIb",
@@ -583,7 +549,6 @@
     "face": 9
   },
   {
-    "id": 35,
     "nome": "Shackleton",
     "grau": "",
     "crux": "VI",
@@ -600,7 +565,6 @@
     "face": 9
   },
   {
-    "id": 36,
     "nome": "Copa do Mundo",
     "grau": "",
     "crux": "IV",
@@ -617,7 +581,6 @@
     "face": 10
   },
   {
-    "id": 37,
     "nome": "Olhos de anjo",
     "grau": "3",
     "crux": "Vsup",
@@ -634,7 +597,6 @@
     "face": 11
   },
   {
-    "id": 38,
     "nome": "São Pedro",
     "grau": "2",
     "crux": "IVsup",
@@ -651,7 +613,6 @@
     "face": 11
   },
   {
-    "id": 39,
     "nome": "Balança-Mas-Não-Cai",
     "grau": "4",
     "crux": "VIIa",
@@ -668,7 +629,6 @@
     "face": 11
   },
   {
-    "id": 40,
     "nome": "Francesco Berardi",
     "grau": "4",
     "crux": "V",
@@ -685,7 +645,6 @@
     "face": 11
   },
   {
-    "id": 41,
     "nome": "Nós e a eternidade",
     "grau": "4",
     "crux": "VI",
@@ -702,7 +661,6 @@
     "face": 11
   },
   {
-    "id": 42,
     "nome": "Sete Palmos",
     "grau": "4",
     "crux": "VIIb",
@@ -719,7 +677,6 @@
     "face": 11
   },
   {
-    "id": 43,
     "nome": "Forças ocultas",
     "grau": "3",
     "crux": "VIIb",
@@ -736,7 +693,6 @@
     "face": 11
   },
   {
-    "id": 44,
     "nome": "Aristóteles contemplando o busto de Homero",
     "grau": "",
     "crux": "",
@@ -753,7 +709,6 @@
     "face": 12
   },
   {
-    "id": 45,
     "nome": "Via normal",
     "grau": "",
     "crux": "II",
@@ -770,7 +725,6 @@
     "face": 13
   },
   {
-    "id": 46,
     "nome": "Chamonix",
     "grau": "",
     "crux": "III (A1/VIIIa)",
@@ -787,7 +741,6 @@
     "face": 13
   },
   {
-    "id": 47,
     "nome": "Passo do gigante",
     "grau": "2",
     "crux": "",
@@ -804,7 +757,6 @@
     "face": 13
   },
   {
-    "id": 48,
     "nome": "Jânio Quadros",
     "grau": "2",
     "crux": "",
@@ -821,7 +773,6 @@
     "face": 13
   },
   {
-    "id": 49,
     "nome": "Aresta Fuligem",
     "grau": "",
     "crux": "VI",
@@ -838,7 +789,6 @@
     "face": 14
   },
   {
-    "id": 50,
     "nome": "Bagaço da laranja",
     "grau": "",
     "crux": "VIIc",
@@ -855,7 +805,6 @@
     "face": 15
   },
   {
-    "id": 51,
     "nome": "Bem-Te-Vi",
     "grau": "3",
     "crux": "IV",
@@ -872,7 +821,6 @@
     "face": 16
   },
   {
-    "id": 52,
     "nome": "Encruzilhada",
     "grau": "4",
     "crux": "IVsup",
@@ -889,7 +837,6 @@
     "face": 16
   },
   {
-    "id": 53,
     "nome": "Via do Beto",
     "grau": "4",
     "crux": "IVsup",
@@ -906,7 +853,6 @@
     "face": 16
   },
   {
-    "id": 54,
     "nome": "Amnésia Audaciosa",
     "grau": "4",
     "crux": "IVsup",
@@ -923,7 +869,6 @@
     "face": 16
   },
   {
-    "id": 55,
     "nome": "Lagoa",
     "grau": "3",
     "crux": "IV",
@@ -940,7 +885,6 @@
     "face": 16
   },
   {
-    "id": 56,
     "nome": "O satânico Dr. Pow",
     "grau": "4",
     "crux": "IVsup",
@@ -957,7 +901,6 @@
     "face": 16
   },
   {
-    "id": 57,
     "nome": "Cabrito Cabreiro",
     "grau": "4",
     "crux": "V",
@@ -974,7 +917,6 @@
     "face": 16
   },
   {
-    "id": 58,
     "nome": "A fogueira das vaidades",
     "grau": "4",
     "crux": "V",
@@ -992,7 +934,6 @@
     "face": 16
   },
   {
-    "id": 59,
     "nome": "Grande guerreiro",
     "grau": "4",
     "crux": "IV",
@@ -1009,7 +950,6 @@
     "face": 16
   },
   {
-    "id": 60,
     "nome": "Cabrito em chamas",
     "grau": "4",
     "crux": "IVsup",
@@ -1027,7 +967,6 @@
     "face": 16
   },
   {
-    "id": 61,
     "nome": "Os exércitos de um homem só",
     "grau": "3",
     "crux": "III",
@@ -1044,7 +983,6 @@
     "face": 16
   },
   {
-    "id": 62,
     "nome": "Carioca",
     "grau": "2",
     "crux": "III",
@@ -1061,7 +999,6 @@
     "face": 16
   },
   {
-    "id": 63,
     "nome": "Es muerto",
     "grau": "",
     "crux": "Vsup",
@@ -1078,7 +1015,6 @@
     "face": 17
   },
   {
-    "id": 64,
     "nome": "PFF2",
     "grau": "2",
     "crux": "II",
@@ -1095,7 +1031,6 @@
     "face": 18
   },
   {
-    "id": 65,
     "nome": "Cristal acima",
     "grau": "3",
     "crux": "IV",
@@ -1112,7 +1047,6 @@
     "face": 18
   },
   {
-    "id": 66,
     "nome": "Chuva de pedra",
     "grau": "4",
     "crux": "VI",
@@ -1129,7 +1063,6 @@
     "face": 18
   },
   {
-    "id": 67,
     "nome": "Tamau",
     "grau": "3",
     "crux": "III",
@@ -1146,7 +1079,6 @@
     "face": 18
   },
   {
-    "id": 68,
     "nome": "Onde as ruas não têm nome",
     "grau": "5",
     "crux": "VI",
@@ -1163,7 +1095,6 @@
     "face": 18
   },
   {
-    "id": 69,
     "nome": "Casa da mãe Joana",
     "grau": "4",
     "crux": "IVsup",
@@ -1180,7 +1111,6 @@
     "face": 18
   },
   {
-    "id": 70,
     "nome": "Eram os deuses astronautas",
     "grau": "4",
     "crux": "IVsup",
@@ -1197,7 +1127,6 @@
     "face": 18
   },
   {
-    "id": 71,
     "nome": "Padecendo no paraíso",
     "grau": "5",
     "crux": "VIIa",
@@ -1214,7 +1143,6 @@
     "face": 18
   },
   {
-    "id": 72,
     "nome": "Última opção/Opção completa",
     "grau": "3",
     "crux": "VI",
@@ -1232,7 +1160,6 @@
     "face": 18
   },
   {
-    "id": 73,
     "nome": "Dirceu Gouveia",
     "grau": "2",
     "crux": "III",
@@ -1249,7 +1176,6 @@
     "face": 18
   },
   {
-    "id": 74,
     "nome": "Lilith",
     "grau": "2",
     "crux": "IIIsup",
@@ -1267,7 +1193,6 @@
     "face": 18
   },
   {
-    "id": 75,
     "nome": "Ferrugem",
     "grau": "2",
     "crux": "III",
@@ -1284,7 +1209,6 @@
     "face": 18
   },
   {
-    "id": 76,
     "nome": "Antares",
     "grau": "2",
     "crux": "II",
@@ -1302,7 +1226,6 @@
     "face": 18
   },
   {
-    "id": 77,
     "nome": "La Belle de Jour",
     "grau": "2",
     "crux": "Vsup",
@@ -1319,7 +1242,6 @@
     "face": 18
   },
   {
-    "id": 78,
     "nome": "Frank Justus",
     "grau": "3",
     "crux": "IIIsup",
@@ -1336,7 +1258,6 @@
     "face": 19
   },
   {
-    "id": 79,
     "nome": "Genitália",
     "grau": "",
     "crux": "VIIIc",
@@ -1353,7 +1274,6 @@
     "face": 19
   },
   {
-    "id": 80,
     "nome": "Lá de casa dá pra ver",
     "grau": "4",
     "crux": "V",
@@ -1370,7 +1290,6 @@
     "face": 19
   },
   {
-    "id": 81,
     "nome": "Pra galera",
     "grau": "3",
     "crux": "III",
@@ -1387,7 +1306,6 @@
     "face": 19
   },
   {
-    "id": 82,
     "nome": "Au-Au",
     "grau": "2",
     "crux": "II",
@@ -1403,7 +1321,6 @@
     "face": 20
   },
   {
-    "id": 83,
     "nome": "Anarquista",
     "grau": "",
     "crux": "VIIc",
@@ -1421,7 +1338,6 @@
     "face": 21
   },
   {
-    "id": 84,
     "nome": "Chaminé Cinquentenário",
     "grau": "4",
     "crux": "V",
@@ -1438,7 +1354,6 @@
     "face": 21
   },
   {
-    "id": 85,
     "nome": "Heróis dos Cabritos",
     "grau": "3",
     "crux": "IV",
@@ -1455,7 +1370,6 @@
     "face": 21
   },
   {
-    "id": 86,
     "nome": "Fazendo a cabeça",
     "grau": "",
     "crux": "VIIa",
@@ -1472,7 +1386,6 @@
     "face": 22
   },
   {
-    "id": 87,
     "nome": "Veias abertas",
     "grau": "5",
     "crux": "VIIb/c",
@@ -1489,7 +1402,6 @@
     "face": 22
   },
   {
-    "id": 88,
     "nome": "Lagoa Rasta",
     "grau": "",
     "crux": "VIIc",
@@ -1507,7 +1419,6 @@
     "face": 22
   },
   {
-    "id": 89,
     "nome": "Monstro da Lagoa Negra",
     "grau": "",
     "crux": "Xa",
@@ -1524,7 +1435,6 @@
     "face": 22
   },
   {
-    "id": 90,
     "nome": "Três porquinhos",
     "grau": "",
     "crux": "VIsup",
@@ -1541,7 +1451,6 @@
     "face": 22
   },
   {
-    "id": 91,
     "nome": "Execução penal",
     "grau": "",
     "crux": "IXa",
@@ -1558,7 +1467,6 @@
     "face": 22
   },
   {
-    "id": 92,
     "nome": "Lagoa Rasta",
     "grau": "",
     "crux": "VIIc",
@@ -1575,7 +1483,6 @@
     "face": 22
   },
   {
-    "id": 93,
     "nome": "Cristais canibais",
     "grau": "",
     "crux": "VIIb",
@@ -1593,7 +1500,6 @@
     "face": 22
   },
   {
-    "id": 94,
     "nome": "Maldita",
     "grau": "",
     "crux": "VIIa",
@@ -1610,7 +1516,6 @@
     "face": 22
   },
   {
-    "id": 95,
     "nome": "Prusquistão em casa",
     "grau": "",
     "crux": "IVsup",
@@ -1627,7 +1532,6 @@
     "face": 22
   },
   {
-    "id": 96,
     "nome": "Melzinho da Lagoa",
     "grau": "",
     "crux": "VIsup",
@@ -1644,7 +1548,6 @@
     "face": 22
   },
   {
-    "id": 97,
     "nome": "Pequena Notável",
     "grau": "",
     "crux": "VI",
@@ -1661,7 +1564,6 @@
     "face": 23
   },
   {
-    "id": 98,
     "nome": "O psicopata",
     "grau": "",
     "crux": "II",
@@ -1678,7 +1580,6 @@
     "face": 24
   },
   {
-    "id": 99,
     "nome": "Humaitá verde",
     "grau": "",
     "crux": "VI",
@@ -1695,7 +1596,6 @@
     "face": 24
   },
   {
-    "id": 100,
     "nome": "1990",
     "grau": "4",
     "crux": "V",
@@ -1712,7 +1612,6 @@
     "face": 25
   },
   {
-    "id": 101,
     "nome": "Walmir de Castro",
     "grau": "4",
     "crux": "IVsup",
@@ -1729,7 +1628,6 @@
     "face": 25
   },
   {
-    "id": 102,
     "nome": "A Corrida do Ouro",
     "grau": "",
     "crux": "VIsup",
@@ -1746,7 +1644,6 @@
     "face": 26
   },
   {
-    "id": 103,
     "nome": "Calis",
     "grau": "5",
     "crux": "VI",
@@ -1764,7 +1661,6 @@
     "face": 26
   },
   {
-    "id": 104,
     "nome": "Chaminé do Prego",
     "grau": "2",
     "crux": "III",
@@ -1782,7 +1678,6 @@
     "face": 26
   },
   {
-    "id": 105,
     "nome": "El Cracatón Cracato",
     "grau": "",
     "crux": "",
@@ -1799,7 +1694,6 @@
     "face": 26
   },
   {
-    "id": 106,
     "nome": "Liga da Justiça",
     "grau": "",
     "crux": "",
@@ -1816,7 +1710,6 @@
     "face": 26
   },
   {
-    "id": 107,
     "nome": "The Hole is Lower",
     "grau": "",
     "crux": "VIIa",
@@ -1833,7 +1726,6 @@
     "face": 26
   },
   {
-    "id": 108,
     "nome": "Litle Black Fuck",
     "grau": "",
     "crux": "VIsup",
@@ -1850,7 +1742,6 @@
     "face": 26
   },
   {
-    "id": 109,
     "nome": "Teoria da Linha Reta",
     "grau": "",
     "crux": "VII(3)",
@@ -1867,7 +1758,6 @@
     "face": 26
   },
   {
-    "id": 110,
     "nome": "Chaminé do Morcego",
     "grau": "",
     "crux": "IIsup",
@@ -1885,7 +1775,6 @@
     "face": 26
   },
   {
-    "id": 111,
     "nome": "Porco-espinho",
     "grau": "",
     "crux": "V",
@@ -1902,7 +1791,6 @@
     "face": 27
   },
   {
-    "id": 112,
     "nome": "Donos do nada",
     "grau": "",
     "crux": "VIsup",
@@ -1919,7 +1807,6 @@
     "face": 27
   },
   {
-    "id": 113,
     "nome": "Porcos guerreiros",
     "grau": "",
     "crux": "VII",
@@ -1937,7 +1824,6 @@
     "face": 27
   },
   {
-    "id": 114,
     "nome": "Guilherme",
     "grau": "",
     "crux": "VIIb",
@@ -1954,7 +1840,6 @@
     "face": 27
   },
   {
-    "id": 115,
     "nome": "Chaminé do Funil",
     "grau": "2",
     "crux": "III",
@@ -1971,7 +1856,6 @@
     "face": 27
   },
   {
-    "id": 116,
     "nome": "Mangangá",
     "grau": "",
     "crux": "IVsup",
@@ -1988,7 +1872,6 @@
     "face": 27
   },
   {
-    "id": 117,
     "nome": "Alpamayo",
     "grau": "4",
     "crux": "VIsup",
@@ -2005,7 +1888,6 @@
     "face": 27
   },
   {
-    "id": 118,
     "nome": "Achados e Perdidos",
     "grau": "",
     "crux": "V",
@@ -2022,7 +1904,6 @@
     "face": 27
   },
   {
-    "id": 119,
     "nome": "Meia-sola",
     "grau": "",
     "crux": "IVsup",
@@ -2039,7 +1920,6 @@
     "face": 27
   },
   {
-    "id": 120,
     "nome": "Tá pronto",
     "grau": "",
     "crux": "V",
@@ -2056,7 +1936,6 @@
     "face": 27
   },
   {
-    "id": 121,
     "nome": "Vertigem",
     "grau": "",
     "crux": "Vsup",
@@ -2073,7 +1952,6 @@
     "face": 27
   },
   {
-    "id": 122,
     "nome": "Adrenalina Mil",
     "grau": "5",
     "crux": "VIIa",
@@ -2090,7 +1968,6 @@
     "face": 27
   },
   {
-    "id": 123,
     "nome": "Urbanóide",
     "grau": "4",
     "crux": "V",
@@ -2108,7 +1985,6 @@
     "face": 27
   },
   {
-    "id": 124,
     "nome": "Lembranças de um passado",
     "grau": "4",
     "crux": "V",
@@ -2125,7 +2001,6 @@
     "face": 27
   },
   {
-    "id": 125,
     "nome": "22 de outubro",
     "grau": "4",
     "crux": "V",
@@ -2142,7 +2017,6 @@
     "face": 27
   },
   {
-    "id": 126,
     "nome": "Gasparito",
     "grau": "4",
     "crux": "IVsup",
@@ -2159,7 +2033,6 @@
     "face": 27
   },
   {
-    "id": 127,
     "nome": "Carlos Alexandre",
     "grau": "3",
     "crux": "III",
@@ -2177,7 +2050,6 @@
     "face": 27
   },
   {
-    "id": 128,
     "nome": "Falcão à espreita",
     "grau": "4",
     "crux": "IVsup",
@@ -2194,7 +2066,6 @@
     "face": 27
   },
   {
-    "id": 129,
     "nome": "Caverna de cristal",
     "grau": "4",
     "crux": "VI",
@@ -2211,7 +2082,6 @@
     "face": 27
   },
   {
-    "id": 130,
     "nome": "Brilho da noite",
     "grau": "3",
     "crux": "IIIsup",
@@ -2228,7 +2098,6 @@
     "face": 27
   },
   {
-    "id": 131,
     "nome": "Paixão de Cris",
     "grau": "3",
     "crux": "IIIsup",
@@ -2245,7 +2114,6 @@
     "face": 27
   },
   {
-    "id": 132,
     "nome": "Labirintite",
     "grau": "4",
     "crux": "IVsup",
@@ -2262,7 +2130,6 @@
     "face": 27
   },
   {
-    "id": 133,
     "nome": "Rumores da Algazarra",
     "grau": "3",
     "crux": "Vsup",
@@ -2279,7 +2146,6 @@
     "face": 27
   },
   {
-    "id": 134,
     "nome": "Via Láctea",
     "grau": "2",
     "crux": "IIIsup",
@@ -2296,7 +2162,6 @@
     "face": 27
   },
   {
-    "id": 135,
     "nome": "Guanabara",
     "grau": "2",
     "crux": "IV",
@@ -2313,7 +2178,6 @@
     "face": 27
   },
   {
-    "id": 136,
     "nome": "Mandei um barro",
     "grau": "",
     "crux": "IV",
@@ -2331,7 +2195,6 @@
     "face": 28
   },
   {
-    "id": 137,
     "nome": "Os Amanayés",
     "grau": "",
     "crux": "IV",
@@ -2349,7 +2212,6 @@
     "face": 28
   },
   {
-    "id": 138,
     "nome": "Noite e dia",
     "grau": "",
     "crux": "VIIa",
@@ -2367,7 +2229,6 @@
     "face": 28
   },
   {
-    "id": 139,
     "nome": "Sulamita",
     "grau": "",
     "crux": "VIsup",
@@ -2385,7 +2246,6 @@
     "face": 28
   },
   {
-    "id": 140,
     "nome": "Livrai-me de mim mesmo",
     "grau": "",
     "crux": "IV",
@@ -2403,7 +2263,6 @@
     "face": 28
   },
   {
-    "id": 141,
     "nome": "Retinha do Graal",
     "grau": "",
     "crux": "Vsup",
@@ -2421,7 +2280,6 @@
     "face": 28
   },
   {
-    "id": 142,
     "nome": "As bolas do Wilson",
     "grau": "",
     "crux": "IIsup",
@@ -2439,7 +2297,6 @@
     "face": 28
   },
   {
-    "id": 143,
     "nome": "23 de abril",
     "grau": "",
     "crux": "IIIsup",
@@ -2457,7 +2314,6 @@
     "face": 28
   },
   {
-    "id": 144,
     "nome": "Vovô Abílio foi às compras",
     "grau": "",
     "crux": "IVsup",
@@ -2475,7 +2331,6 @@
     "face": 28
   },
   {
-    "id": 145,
     "nome": "Sônia Trote",
     "grau": "",
     "crux": "III",
@@ -2493,7 +2348,6 @@
     "face": 28
   },
   {
-    "id": 146,
     "nome": "Saidinha de banco",
     "grau": "",
     "crux": "III",
@@ -2511,7 +2365,6 @@
     "face": 28
   },
   {
-    "id": 147,
     "nome": "30 de setembro",
     "grau": "",
     "crux": "IIIsup",
@@ -2529,7 +2382,6 @@
     "face": 28
   },
   {
-    "id": 148,
     "nome": "13 de outubro",
     "grau": "",
     "crux": "IVsup",
@@ -2547,7 +2399,6 @@
     "face": 28
   },
   {
-    "id": 149,
     "nome": "Cariocando",
     "grau": "",
     "crux": "VIIIc",
@@ -2564,7 +2415,6 @@
     "face": 38
   },
   {
-    "id": 150,
     "nome": "Ilusão idiótica",
     "grau": "",
     "crux": "Vsup",
@@ -2582,7 +2432,6 @@
     "face": 29
   },
   {
-    "id": 151,
     "nome": "Cresça e apareça",
     "grau": "",
     "crux": "V(2)",
@@ -2599,7 +2448,6 @@
     "face": 30
   },
   {
-    "id": 152,
     "nome": "Ponto final",
     "grau": "",
     "crux": "VIIa",
@@ -2616,7 +2464,6 @@
     "face": 30
   },
   {
-    "id": 153,
     "nome": "Funeral elétrico",
     "grau": "",
     "crux": "VIsup",
@@ -2633,7 +2480,6 @@
     "face": 30
   },
   {
-    "id": 154,
     "nome": "Nosso povo, nossa gente",
     "grau": "",
     "crux": "II",
@@ -2650,7 +2496,6 @@
     "face": 30
   },
   {
-    "id": 155,
     "nome": "Esquadrilha da fumaça",
     "grau": "",
     "crux": "III",
@@ -2667,7 +2512,6 @@
     "face": 30
   },
   {
-    "id": 156,
     "nome": "Nocaute",
     "grau": "",
     "crux": "VI",
@@ -2684,7 +2528,6 @@
     "face": 30
   },
   {
-    "id": 157,
     "nome": "Viagra",
     "grau": "",
     "crux": "VIIa",
@@ -2701,7 +2544,6 @@
     "face": 31
   },
   {
-    "id": 158,
     "nome": "Kenga",
     "grau": "",
     "crux": "VIII",
@@ -2718,7 +2560,6 @@
     "face": 31
   },
   {
-    "id": 159,
     "nome": "Ejaculatio Praecocis",
     "grau": "",
     "crux": "VIIIa",
@@ -2735,7 +2576,6 @@
     "face": 31
   },
   {
-    "id": 160,
     "nome": "Vadias na marquise",
     "grau": "",
     "crux": "VIIc",
@@ -2752,7 +2592,6 @@
     "face": 31
   },
   {
-    "id": 161,
     "nome": "KY",
     "grau": "",
     "crux": "Vsup",
@@ -2769,7 +2608,6 @@
     "face": 31
   },
   {
-    "id": 162,
     "nome": "Fist-Fucking",
     "grau": "",
     "crux": "VIIb",
@@ -2786,7 +2624,6 @@
     "face": 31
   },
   {
-    "id": 163,
     "nome": "Rainha pornô",
     "grau": "",
     "crux": "VIIa",
@@ -2803,7 +2640,6 @@
     "face": 31
   },
   {
-    "id": 164,
     "nome": "O Voyeur",
     "grau": "",
     "crux": "VIIb",
@@ -2820,7 +2656,6 @@
     "face": 31
   },
   {
-    "id": 165,
     "nome": "A festa da Dona Aurora",
     "grau": "",
     "crux": "IVsup",
@@ -2837,7 +2672,6 @@
     "face": 31
   },
   {
-    "id": 166,
     "nome": "Noturnos",
     "grau": "",
     "crux": "Isup",
@@ -2854,7 +2688,6 @@
     "face": 32
   },
   {
-    "id": 167,
     "nome": "Cupim de pedra",
     "grau": "",
     "crux": "II",
@@ -2871,7 +2704,6 @@
     "face": 32
   },
   {
-    "id": 168,
     "nome": "Crucifixo",
     "grau": "",
     "crux": "II",
@@ -2888,7 +2720,6 @@
     "face": 32
   },
   {
-    "id": 169,
     "nome": "Mico da onda",
     "grau": "",
     "crux": "",
@@ -2905,7 +2736,6 @@
     "face": 39
   },
   {
-    "id": 170,
     "nome": "Macumbalê",
     "grau": "",
     "crux": "VIIb",
@@ -2923,7 +2753,6 @@
     "face": 39
   },
   {
-    "id": 171,
     "nome": "Raízes do Pontão",
     "grau": "",
     "crux": "V",
@@ -2940,7 +2769,6 @@
     "face": 39
   },
   {
-    "id": 172,
     "nome": "Tempestade incessante",
     "grau": "",
     "crux": "V",
@@ -2957,7 +2785,6 @@
     "face": 40
   },
   {
-    "id": 173,
     "nome": "A um passo do asfalto",
     "grau": "",
     "crux": "VIIb",
@@ -2974,7 +2801,6 @@
     "face": 40
   },
   {
-    "id": 174,
     "nome": "Pablito e o lagarto na terra do mosquito",
     "grau": "",
     "crux": "VIIc",
@@ -2991,7 +2817,6 @@
     "face": 40
   },
   {
-    "id": 175,
     "nome": "Anta & Anta S.A.",
     "grau": "3",
     "crux": "IVsup",
@@ -3007,7 +2832,6 @@
     "face": 33
   },
   {
-    "id": 176,
     "nome": "Bill liberou",
     "grau": "3",
     "crux": "IVsup",
@@ -3023,7 +2847,6 @@
     "face": 33
   },
   {
-    "id": 177,
     "nome": "Vera Regina",
     "grau": "4",
     "crux": "Vsup",
@@ -3041,7 +2864,6 @@
     "face": 34
   },
   {
-    "id": 178,
     "nome": "Rafael e o sapo na festa do céu",
     "grau": "5",
     "crux": "VIsup",
@@ -3059,7 +2881,6 @@
     "face": 34
   },
   {
-    "id": 179,
     "nome": "Sombra e água fresca",
     "grau": "5",
     "crux": "VI",
@@ -3077,7 +2898,6 @@
     "face": 34
   },
   {
-    "id": 180,
     "nome": "Ninguém merece",
     "grau": "VI",
     "crux": "VI",
@@ -3094,7 +2914,6 @@
     "face": 34
   },
   {
-    "id": 181,
     "nome": "Solaris",
     "grau": "5",
     "crux": "Vsup",
@@ -3112,7 +2931,6 @@
     "face": 34
   },
   {
-    "id": 182,
     "nome": "Caixa de Pandora",
     "grau": "5",
     "crux": "VI",
@@ -3129,7 +2947,6 @@
     "face": 34
   },
   {
-    "id": 183,
     "nome": "Marizel",
     "grau": "4",
     "crux": "V",
@@ -3147,7 +2964,6 @@
     "face": 34
   },
   {
-    "id": 184,
     "nome": "Paulista",
     "grau": "3",
     "crux": "V",
@@ -3165,7 +2981,6 @@
     "face": 35
   },
   {
-    "id": 185,
     "nome": "Tamanho não é documento",
     "grau": "5",
     "crux": "VIIa",
@@ -3182,7 +2997,6 @@
     "face": 35
   },
   {
-    "id": 186,
     "nome": "Chaminé Ivo Pereira",
     "grau": "3",
     "crux": "",

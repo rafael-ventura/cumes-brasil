@@ -1,46 +1,37 @@
 [
   {
-    "id": 1,
     "via_id": 136,
     "croqui_id": 1
   },
   {
-    "id": 2,
     "via_id": 136,
     "croqui_id": 2
   },
   {
-    "id": 3,
     "via_id": 137,
     "croqui_id": 1
   },
   {
-    "id": 4,
     "via_id": 137,
     "croqui_id": 2
   },
   {
-    "id": 5,
     "via_id": 138,
     "croqui_id": 1
   },
   {
-    "id": 6,
     "via_id": 138,
     "croqui_id": 2
   },
   {
-    "id": 7,
     "via_id": 139,
     "croqui_id": 1
   },
   {
-    "id": 8,
     "via_id": 139,
     "croqui_id": 2
   },
   {
-    "id": 9,
     "via_id": 140,
     "croqui_id": 1
   },

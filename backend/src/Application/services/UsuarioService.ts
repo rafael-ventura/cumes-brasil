@@ -99,8 +99,8 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         // Buscar imagem atual do usuário
         let imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
 
-        // Remover a imagem antiga do S3, se existir
-        if (imagemAtual && process.env.CLOUDFRONT_URL) {
+        // Remover a imagem antiga do S3, se existir e não for a padrão (ID 3)
+        if (imagemAtual && imagemAtual.id !== 3 && process.env.CLOUDFRONT_URL) {
             console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`); // TODO: Adicionar logger
             const fileName = imagemAtual.url.split('/').pop(); // Pega o nome do arquivo
             if (fileName) {
@@ -120,22 +120,32 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         }
 
         let novaImagemUpdate;
-        console.log(imagemAtual);
         if (imagemAtual != null) {
-            if (imagemAtual.id && imagemAtual.id == 3) {
-                let novaImagem = new Imagem(); // Se já existia uma, reaproveita
-                novaImagem.url = imageUrl;
-                novaImagem.tipo_entidade = 'usuario';
-                novaImagem.descricao = `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`;
-                // Se a imagem atual for a default (id 3), cria uma nova entrada
-                novaImagemUpdate = await this.imagemService.create(novaImagem);
-                console.log("chegou no if", novaImagemUpdate);
+            if (imagemAtual.id === 3) {
+                // Se a imagem atual é a padrão (ID 3), criar uma nova entidade
+                const novaImagemData = {
+                    url: imageUrl,
+                    tipo_entidade: 'usuario',
+                    descricao: `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`
+                };
+                
+                // Usar createNew para garantir INSERT (não UPDATE)
+                novaImagemUpdate = await this.imagemRepository.createNew(novaImagemData);
             } else {
-                // Atualizar banco de dados com a URL da imagem
+                // Atualizar a imagem existente do usuário
                 imagemAtual.url = imageUrl;
+                imagemAtual.descricao = `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`;
                 novaImagemUpdate = await this.imagemService.update(imagemAtual.id, imagemAtual);
-                console.log("chegou no else", novaImagemUpdate);
             }
+        } else {
+            // Se não tem imagem atual, criar nova
+            const novaImagemData = {
+                url: imageUrl,
+                tipo_entidade: 'usuario',
+                descricao: `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`
+            };
+            
+            novaImagemUpdate = await this.imagemRepository.createNew(novaImagemData);
         }
 
 
