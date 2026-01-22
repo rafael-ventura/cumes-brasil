@@ -122,14 +122,12 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         let novaImagemUpdate;
         if (imagemAtual != null) {
             if (imagemAtual.id === 3) {
-                // Se a imagem atual é a padrão (ID 3), criar uma nova entidade
                 const novaImagemData = {
                     url: imageUrl,
                     tipo_entidade: 'usuario',
                     descricao: `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`
                 };
                 
-                // Usar createNew para garantir INSERT (não UPDATE)
                 novaImagemUpdate = await this.imagemRepository.createNew(novaImagemData);
             } else {
                 // Atualizar a imagem existente do usuário

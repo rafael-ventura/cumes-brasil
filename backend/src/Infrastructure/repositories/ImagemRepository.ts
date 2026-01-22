@@ -15,7 +15,6 @@ export class ImagemRepository extends BaseRepository<Imagem> {
       descricao: imagemData.descricao
     };
     
-    // Usar insert() ao invés de save() para garantir que é INSERT e não UPDATE
     const result = await this.repository.insert(cleanData);
     const id = result.identifiers[0].id;
     return this.getById(id) as Promise<Imagem>;
