@@ -183,6 +183,8 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         }
     }
 
+    // TODO- REVISAR
+    /*
     private async removerFotoPerfil(usuario: Usuario) {
         const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
 
@@ -225,4 +227,5 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
             await this.imagemService.delete(imagemAtual.id);
         }
     }
+    */
 }
