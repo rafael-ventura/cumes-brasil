@@ -127,7 +127,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
                     tipo_entidade: 'usuario',
                     descricao: `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`
                 };
-                
+
                 novaImagemUpdate = await this.imagemRepository.createNew(novaImagemData);
             } else {
                 // Atualizar a imagem existente do usuário
@@ -142,7 +142,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
                 tipo_entidade: 'usuario',
                 descricao: `Foto de perfil do usuário ${usuario.nome} (${usuario.id})`
             };
-            
+
             novaImagemUpdate = await this.imagemRepository.createNew(novaImagemData);
         }
 
@@ -160,7 +160,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         if (!usuario) {
             throw new BadRequestError('Usuário não encontrado.');
         }
-        // Buscar imagem atual do usuário
+        // Buscar imagem atual do usuário = 15
         const imagemAtual = await this.imagemService.getByUsuarioId(usuarioId);
         // Remover a imagem antiga do S3 ou do sistema de arquivos, se existir e não for a default
         if (imagemAtual && imagemAtual.id !== 3) {
@@ -172,16 +172,15 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
                 }
             }
             // Excluir a imagem antiga do banco
-            await this.imagemService.delete(imagemAtual.id);
+            let imagemDefault = await this.imagemService.getById(3);
+            if (imagemDefault != null) {
+                usuario.foto_perfil = imagemDefault;
+                await this.repository.updateFotoPerfil(usuario.id, imagemDefault.id);
+                await this.imagemService.delete(imagemAtual.id);
+            }
+        }else {
+            console.log("Nunca vai conseguir excluir essa otários!")
         }
-        // Buscar a imagem default (ID 3)
-        const imagemDefault = await this.imagemService.getById(3);
-        if (!imagemDefault) {
-            throw new BadRequestError('Imagem padrão não encontrada no sistema.');
-        }
-        // Atribuir a imagem padrão diretamente ao usuário
-        usuario.foto_perfil = imagemDefault;
-        await this.repository.updateFotoPerfil(usuario.id, imagemDefault.id);
     }
 
     private async removerFotoPerfil(usuario: Usuario) {
