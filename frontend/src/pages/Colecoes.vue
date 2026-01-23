@@ -5,7 +5,7 @@
       ref="searchEntityRef"
       entity="colecao"
       @select="goToColecaoDetalhada"
-      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+      :enableSortOptions="[{ field: 'nome', label: 'Nome' }, { field: 'updated_at', label: 'Data de Modificação' }]"
       :hide-header="true"
     >
       <template #subHeader>

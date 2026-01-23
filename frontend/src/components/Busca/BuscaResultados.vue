@@ -125,8 +125,9 @@ const onItemsPerPageChange = (newItemsPerPage: number) => {
 const defaultSortOptions = ref([
   { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
   { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
-  { label: 'Mais recente', value: { field: 'data_adicao', direction: 'desc' } },
-  { label: 'Mais antiga', value: { field: 'data_adicao', direction: 'asc' } }
+  { label: 'Mais recente', value: { field: 'created_at', direction: 'desc' } },
+  { label: 'Mais antiga', value: { field: 'created_at', direction: 'asc' } },
+  { label: 'Última modificação', value: { field: 'updated_at', direction: 'desc' } }
 ]);
 
 // Filtrar as opções de ordenação com base na configuração do componente pai
