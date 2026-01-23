@@ -3,11 +3,18 @@
     <!-- Botão de deletar no canto superior direito -->
     <q-btn
       round
+      icon="edit"
+      class="alinha"
+      @click="openFileDialog"
+    >
+      <q-tooltip>Selecionar nova foto</q-tooltip>
+    </q-btn>
+    <q-btn
+      round
       flat
       icon="delete"
       class="btn-delete"
       @click="showDeleteDialog = true"
-      color="negative"
     >
       <q-tooltip>Excluir foto</q-tooltip>
     </q-btn>
@@ -27,15 +34,7 @@
     />
     
     <div class="uploader-content">
-      <q-btn
-        flat
-        icon="edit"
-        class="btn alinha btn-escuro"
-        @click="openFileDialog"
-        label="Alterar Foto"
-      >
-        <q-tooltip>Selecionar nova foto</q-tooltip>
-      </q-btn>
+      
       
       <q-separator spaced/>
       
@@ -54,7 +53,7 @@
       <q-btn
         v-if="fotoPreview"
         class="q-mt-sm btn btn-escuro btn-salvar"
-        label="Salvar nova foto"
+        label="Salvar"
         @click="saveFoto"
         icon="save"
         dense
@@ -236,6 +235,7 @@ const deleteFoto = async () => {
   border: 2px solid $cumes-03;
   padding: 16px;
   border-radius: 12px;
+  overflow: hidden;
   
   @media (max-width: 600px) {
     padding: 12px;
@@ -247,11 +247,12 @@ const deleteFoto = async () => {
   top: 12px;
   right: 12px;
   z-index: 10;
-  background-color: rgba($error-color, 0.15);
+  background-color: darken($error-color, 0.9);
+  color: $offwhite;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: rgba($error-color, 0.25);
+    background-color: darken($error-color, 10%);
     transform: scale(1.1);
   }
 
@@ -261,13 +262,45 @@ const deleteFoto = async () => {
   }
 }
 
+.alinha {
+  background-color: $cumes-01;
+  align-self: flex-start;
+  position: absolute;
+  top: 12px;
+  right: 60px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: darken($cumes-01, 10%);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 600px) {
+    top: 8px;
+    right: 60px;
+  }
+}
+
+.btn-escuro {
+  background-color: $cumes-01;
+  color: $offwhite;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px $box-shadow-medium;
+
+  &:hover {
+    background-color: darken($cumes-01, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px $box-shadow-strong;
+  }
+}
+
 .uploader-content {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 20px;
 }
 
 .imagem-preview {
@@ -304,32 +337,6 @@ const deleteFoto = async () => {
   padding: 10px;
   font-size: large;
   text-transform: uppercase;
-}
-
-.alinha {
-  align-self: flex-start;
-  padding: 12px 24px;
-  font-size: 16px;
-  margin-bottom: 16px;
-
-  @media (max-width: 600px) {
-    padding: 10px 16px;
-    font-size: 14px;
-  }
-}
-
-.btn-escuro {
-  background-color: $cumes-01;
-  color: $offwhite;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  box-shadow: 0 2px 8px $box-shadow-medium;
-
-  &:hover {
-    background-color: darken($cumes-01, 10%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px $box-shadow-strong;
-  }
 }
 
 .btn-salvar {
