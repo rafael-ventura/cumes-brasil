@@ -281,7 +281,20 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
 
         // Aplicação da ordenação dinâmica
         if (sortField && sortOrder) {
-            qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase());
+            if (sortField === 'updated_at') {
+                // Ordenar pela última via adicionada à coleção (via_colecao.created_at mais recente)
+                // Usamos uma subquery para pegar o MAX(created_at) de via_colecao por coleção
+                qb = qb
+                  .addSelect(subQuery => {
+                      return subQuery
+                        .select('MAX(vc.created_at)', 'max_via_added')
+                        .from('via_colecao', 'vc')
+                        .where('vc.colecaoId = colecao.id');
+                  }, 'ultima_via_adicionada')
+                  .orderBy('ultima_via_adicionada', sortOrder.toUpperCase() as 'ASC' | 'DESC');
+            } else {
+                qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
+            }
         }
 
         // Contar o total de itens (coleções) correspondentes
