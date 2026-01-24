@@ -207,7 +207,24 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .leftJoinAndSelect("setorLocalizacoes.cidade", "setorCidade")
             .leftJoinAndSelect("setorLocalizacoes.bairro", "setorBairro")
             .leftJoinAndSelect("setor.face", "setorFace")
+            // Localização através da Face do Setor
+            .leftJoinAndSelect("setorFace.localizacoes", "setorFaceLocalizacoes")
+            .leftJoinAndSelect("setorFaceLocalizacoes.continente", "setorFaceContinente")
+            .leftJoinAndSelect("setorFaceLocalizacoes.pais", "setorFacePais")
+            .leftJoinAndSelect("setorFaceLocalizacoes.regiao", "setorFaceRegiao")
+            .leftJoinAndSelect("setorFaceLocalizacoes.estado", "setorFaceEstado")
+            .leftJoinAndSelect("setorFaceLocalizacoes.cidade", "setorFaceCidade")
+            .leftJoinAndSelect("setorFaceLocalizacoes.bairro", "setorFaceBairro")
+            .leftJoinAndSelect("setorFace.montanha", "setorFaceMontanha")
             .leftJoinAndSelect("setor.montanha", "setorMontanha")
+            // Localização através da Montanha do Setor
+            .leftJoinAndSelect("setorMontanha.localizacoes", "setorMontanhaLocalizacoes")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.continente", "setorMontanhaContinente")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.pais", "setorMontanhaPais")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.regiao", "setorMontanhaRegiao")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.estado", "setorMontanhaEstado")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.cidade", "setorMontanhaCidade")
+            .leftJoinAndSelect("setorMontanhaLocalizacoes.bairro", "setorMontanhaBairro")
             // Localização através de Face
             .leftJoinAndSelect("face.localizacoes", "faceLocalizacoes")
             .leftJoinAndSelect("faceLocalizacoes.continente", "faceContinente")
@@ -234,21 +251,21 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         if (unifiedSearch) {
             qb = qb.andWhere(
-                "(via.nome LIKE :unifiedSearch OR setorBairro.nome LIKE :unifiedSearch OR faceBairro.nome LIKE :unifiedSearch OR montanhaBairro.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR faceMontanha.nome LIKE :unifiedSearch OR setorMontanha.nome LIKE :unifiedSearch)",
+                "(via.nome LIKE :unifiedSearch OR setorBairro.nome LIKE :unifiedSearch OR setorFaceBairro.nome LIKE :unifiedSearch OR setorMontanhaBairro.nome LIKE :unifiedSearch OR faceBairro.nome LIKE :unifiedSearch OR montanhaBairro.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR faceMontanha.nome LIKE :unifiedSearch OR setorMontanha.nome LIKE :unifiedSearch OR setorFaceMontanha.nome LIKE :unifiedSearch)",
                 {unifiedSearch: `%${unifiedSearch}%`}
             );
         }
 
         if (bairro) {
             qb = qb.andWhere(
-                "(LOWER(setorBairro.nome) = :bairro OR LOWER(faceBairro.nome) = :bairro OR LOWER(montanhaBairro.nome) = :bairro)",
+                "(LOWER(setorBairro.nome) = :bairro OR LOWER(setorFaceBairro.nome) = :bairro OR LOWER(setorMontanhaBairro.nome) = :bairro OR LOWER(faceBairro.nome) = :bairro OR LOWER(montanhaBairro.nome) = :bairro)",
                 {bairro: bairro.toLowerCase()}
             );
         }
 
         if (selectedMountain) {
             qb = qb.andWhere(
-                "(montanha.id = :selectedMountain OR faceMontanha.id = :selectedMountain OR setorMontanha.id = :selectedMountain)",
+                "(montanha.id = :selectedMountain OR faceMontanha.id = :selectedMountain OR setorMontanha.id = :selectedMountain OR setorFaceMontanha.id = :selectedMountain)",
                 { selectedMountain }
             );
         }
@@ -325,6 +342,12 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .leftJoin("via.setor", "setor")
             .leftJoin("setor.localizacoes", "setorLocalizacoes")
             .leftJoin("setorLocalizacoes.bairro", "setorBairro")
+            .leftJoin("setor.face", "setorFace")
+            .leftJoin("setorFace.localizacoes", "setorFaceLocalizacoes")
+            .leftJoin("setorFaceLocalizacoes.bairro", "setorFaceBairro")
+            .leftJoin("setor.montanha", "setorMontanha")
+            .leftJoin("setorMontanha.localizacoes", "setorMontanhaLocalizacoes")
+            .leftJoin("setorMontanhaLocalizacoes.bairro", "setorMontanhaBairro")
             .leftJoin("via.face", "face")
             .leftJoin("face.localizacoes", "faceLocalizacoes")
             .leftJoin("faceLocalizacoes.bairro", "faceBairro")
@@ -332,7 +355,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .leftJoin("montanha.localizacoes", "montanhaLocalizacoes")
             .leftJoin("montanhaLocalizacoes.bairro", "montanhaBairro")
             .where(
-                "(LOWER(setorBairro.nome) = :bairro OR LOWER(faceBairro.nome) = :bairro OR LOWER(montanhaBairro.nome) = :bairro)",
+                "(LOWER(setorBairro.nome) = :bairro OR LOWER(setorFaceBairro.nome) = :bairro OR LOWER(setorMontanhaBairro.nome) = :bairro OR LOWER(faceBairro.nome) = :bairro OR LOWER(montanhaBairro.nome) = :bairro)",
                 { bairro: bairro.toLowerCase() }
             )
             .getCount();
