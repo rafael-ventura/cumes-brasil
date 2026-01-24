@@ -116,6 +116,14 @@
               @click="toggleFilterInModal('modalidade')"
               rounded
             />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: showFilterInputInModal.selectedMountain }"
+              icon="landscape"
+              label="Montanha"
+              @click="toggleFilterInModal('selectedMountain')"
+              rounded
+            />
           </div>
 
           <!-- Campos dinâmicos de filtros dentro do modal -->
@@ -208,6 +216,34 @@
               <template #selected>
                 <span v-if="localFilters.modalidade">
                   {{ modalidadeLabels[localFilters.modalidade] || localFilters.modalidade }}
+                </span>
+              </template>
+            </q-select>
+          </div>
+
+          <div v-if="showFilterInputInModal.selectedMountain" class="q-pt-lg">
+            <div class="field-label">Selecione a Montanha</div>
+            <q-select
+              v-model="localFilters.selectedMountain"
+              :options="mountainOptions"
+              option-label="nome"
+              option-value="id"
+              map-options
+              emit-value
+              outlined
+              class="custom-select"
+              @update:model-value="updateActiveFilters"
+            >
+              <template #option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.nome }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template #selected>
+                <span v-if="localFilters.selectedMountain">
+                  {{ mountainOptions.find(m => m.id === localFilters.selectedMountain)?.nome }}
                 </span>
               </template>
             </q-select>
@@ -338,6 +374,14 @@ const activeFiltersList = computed(() => {
     filters.push({ label: `Modalidade: ${modalidadeLabel}`, key: 'modalidade' });
   }
 
+  // Adiciona o filtro de montanha se estiver selecionado
+  if (localFilters.value.selectedMountain) {
+    const montanha = mountainOptions.value.find(m => m.id === localFilters.value.selectedMountain);
+    if (montanha) {
+      filters.push({ label: `Montanha: ${montanha.nome}`, key: 'selectedMountain' });
+    }
+  }
+
   return filters;
 });
 
@@ -357,6 +401,8 @@ const removeFilter = (key: string) => {
     localFilters.value.tipo_escalada = null;
   } else if (key === 'modalidade') {
     localFilters.value.modalidade = null;
+  } else if (key === 'selectedMountain') {
+    localFilters.value.selectedMountain = null;
   }
 
   // Atualiza a lista de filtros e emite a mudança
@@ -374,15 +420,14 @@ const applyFilterChanges = () => {
   showFilterModal.value = false;
 };
 
-// Inicializa as montanhas - removido pois não temos mais relação direta via -> montanha
-// TODO: Implementar busca por montanha através de localização se necessário
-// onMounted(async () => {
-//   try {
-//     mountainOptions.value = await montanhaService.getAllName();
-//   } catch (error) {
-//     console.error('Error getting mountains:', error);
-//   }
-// });
+// Inicializa as montanhas
+onMounted(async () => {
+  try {
+    mountainOptions.value = await montanhaService.getAll();
+  } catch (error) {
+    console.error('Error getting mountains:', error);
+  }
+});
 
 // Atualiza a busca automaticamente a partir de 2 letras
 const onInputChange = (event: KeyboardEvent) => {
@@ -438,6 +483,7 @@ const clearFilters = () => {
   showFilterInput.value.tipo_rocha = false;
   showFilterInput.value.tipo_escalada = false;
   showFilterInput.value.modalidade = false;
+  showFilterInput.value.selectedMountain = false;
   showExtensionFilters.value = false;
   emitFilters();
 };

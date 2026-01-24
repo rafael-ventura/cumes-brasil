@@ -234,21 +234,23 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         if (unifiedSearch) {
             qb = qb.andWhere(
-                "(via.nome LIKE :unifiedSearch OR setorLocalizacoes.bairro.nome LIKE :unifiedSearch OR faceLocalizacoes.bairro.nome LIKE :unifiedSearch OR montanhaLocalizacoes.bairro.nome LIKE :unifiedSearch)",
+                "(via.nome LIKE :unifiedSearch OR setorBairro.nome LIKE :unifiedSearch OR faceBairro.nome LIKE :unifiedSearch OR montanhaBairro.nome LIKE :unifiedSearch OR montanha.nome LIKE :unifiedSearch OR faceMontanha.nome LIKE :unifiedSearch OR setorMontanha.nome LIKE :unifiedSearch)",
                 {unifiedSearch: `%${unifiedSearch}%`}
             );
         }
 
         if (bairro) {
             qb = qb.andWhere(
-                "(LOWER(setorLocalizacoes.bairro.nome) = :bairro OR LOWER(faceLocalizacoes.bairro.nome) = :bairro OR LOWER(montanhaLocalizacoes.bairro.nome) = :bairro)",
+                "(LOWER(setorBairro.nome) = :bairro OR LOWER(faceBairro.nome) = :bairro OR LOWER(montanhaBairro.nome) = :bairro)",
                 {bairro: bairro.toLowerCase()}
             );
         }
 
         if (selectedMountain) {
-            // TODO: Implementar busca por montanha através de localização ou criar relação via -> montanha
-            // Por enquanto, removido pois não temos mais relação direta
+            qb = qb.andWhere(
+                "(montanha.id = :selectedMountain OR faceMontanha.id = :selectedMountain OR setorMontanha.id = :selectedMountain)",
+                { selectedMountain }
+            );
         }
 
         if (selectedDifficulty) {
