@@ -279,38 +279,73 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
             // Por enquanto, busca desabilitada
         }
 
-        // Aplicação da ordenação dinâmica
-        if (sortField && sortOrder) {
-            if (sortField === 'updated_at') {
-                // Ordenar pela última via adicionada à coleção (via_colecao.created_at mais recente)
-                // Usamos uma subquery para pegar o MAX(created_at) de via_colecao por coleção
-                qb = qb
-                  .addSelect(subQuery => {
-                      return subQuery
-                        .select('MAX(vc.created_at)', 'max_via_added')
-                        .from('via_colecao', 'vc')
-                        .where('vc.colecaoId = colecao.id');
-                  }, 'ultima_via_adicionada')
-                  .orderBy('ultima_via_adicionada', sortOrder.toUpperCase() as 'ASC' | 'DESC');
-            } else {
-                qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
-            }
+        // Aplicação da ordenação dinâmica (exceto updated_at que será tratado em memória)
+        const isUpdatedAtSort = sortField === 'updated_at';
+        
+        if (sortField && sortOrder && !isUpdatedAtSort) {
+            qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
         }
 
         // Contar o total de itens (coleções) correspondentes
         const totalItems = await qb.getCount();
 
-        // Buscar coleções paginadas
-        const items = await qb
-          .skip((page - 1) * itemsPerPage)
-          .take(itemsPerPage)
-          .getMany();
+        // Buscar coleções (sem paginação se precisar ordenar por updated_at)
+        let items: Colecao[];
+        
+        if (isUpdatedAtSort) {
+            // Buscar todas as coleções do usuário para ordenar em memória
+            items = await qb.getMany();
+            
+            // Buscar a data mais recente de via adicionada para cada coleção
+            const colecaoIds = items.map(c => c.id);
+            
+            if (colecaoIds.length > 0) {
+                const maxDates = await AppDataSource
+                  .getRepository(ViaColecao)
+                  .createQueryBuilder('vc')
+                  .select('vc.colecaoId', 'colecaoId')
+                  .addSelect('MAX(vc.created_at)', 'maxCreatedAt')
+                  .where('vc.colecaoId IN (:...colecaoIds)', { colecaoIds })
+                  .groupBy('vc.colecaoId')
+                  .getRawMany();
+
+                // Criar mapa de colecaoId -> maxCreatedAt
+                const maxDateMap = new Map<number, Date | null>();
+                for (const row of maxDates) {
+                    maxDateMap.set(row.colecaoId, row.maxCreatedAt ? new Date(row.maxCreatedAt) : null);
+                }
+
+                // Ordenar em memória
+                items.sort((a, b) => {
+                    const dateA = maxDateMap.get(a.id);
+                    const dateB = maxDateMap.get(b.id);
+                    
+                    // Coleções sem vias vão para o final (DESC) ou início (ASC)
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return sortOrder.toUpperCase() === 'DESC' ? 1 : -1;
+                    if (!dateB) return sortOrder.toUpperCase() === 'DESC' ? -1 : 1;
+                    
+                    const diff = dateA.getTime() - dateB.getTime();
+                    return sortOrder.toUpperCase() === 'DESC' ? -diff : diff;
+                });
+            }
+            
+            // Aplicar paginação em memória
+            const startIndex = (page - 1) * itemsPerPage;
+            items = items.slice(startIndex, startIndex + itemsPerPage);
+        } else {
+            // Paginação normal no banco
+            items = await qb
+              .skip((page - 1) * itemsPerPage)
+              .take(itemsPerPage)
+              .getMany();
+        }
 
         // Calcular total de páginas
         const totalPages = Math.ceil(totalItems / itemsPerPage);
 
         return {
-            items: items as Colecao[], // Garantir que o TypeScript entenda o tipo
+            items,
             totalPages,
             totalItems
         };
