@@ -7,6 +7,7 @@ import { Via } from '../../Domain/entities/Via';
 import { ViaColecao } from '../../Domain/entities/ViaColecao';
 import BaseRepository from './BaseRepository';
 import { ICrudRepository } from '../../Domain/interfaces/repositories/ICrudRepository';
+import { withColecaoRelations } from '../helpers/QueryRelations';
 
 @Service()
 export class ColecaoRepository extends BaseRepository<Colecao> implements ISearchRepository<Colecao>, ICrudRepository<Colecao> {
@@ -15,124 +16,23 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
     }
 
     async getById(id: number, relations?: string[]): Promise<Colecao | null> {
-        return this.repository.createQueryBuilder("colecao")
-          .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
-          .leftJoinAndSelect('viaColecao.via', 'vias')
-          .leftJoinAndSelect('vias.montanha', 'montanha')
-          .leftJoinAndSelect('vias.face', 'face')
-          .leftJoinAndSelect('vias.setor', 'setor')
-          // Localização através de Setor
-          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
-          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
-          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
-          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
-          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
-          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
-          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
-          .leftJoinAndSelect('setor.face', 'setorFace')
-          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
-          // Localização através de Face
-          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
-          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
-          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
-          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
-          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
-          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
-          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
-          .leftJoinAndSelect('face.montanha', 'faceMontanha')
-          // Localização através de Montanha
-          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
-          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
-          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
-          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
-          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
-          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
-          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
-          .where('colecao.id = :id', { id })
-          .getOne();
+        const qb = this.repository.createQueryBuilder('colecao')
+            .where('colecao.id = :id', { id });
+        
+        return withColecaoRelations(qb, 'full').getOne();
     }
 
     async getAll(): Promise<Colecao[]> {
-        return this.repository.createQueryBuilder("colecao")
-          .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
-          .leftJoinAndSelect('viaColecao.via', 'vias')
-          .leftJoinAndSelect('vias.montanha', 'montanha')
-          .leftJoinAndSelect('vias.face', 'face')
-          .leftJoinAndSelect('vias.setor', 'setor')
-          // Localização através de Setor
-          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
-          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
-          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
-          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
-          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
-          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
-          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
-          .leftJoinAndSelect('setor.face', 'setorFace')
-          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
-          // Localização através de Face
-          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
-          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
-          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
-          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
-          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
-          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
-          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
-          .leftJoinAndSelect('face.montanha', 'faceMontanha')
-          // Localização através de Montanha
-          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
-          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
-          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
-          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
-          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
-          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
-          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
-          .getMany();
+        const qb = this.repository.createQueryBuilder('colecao');
+        return withColecaoRelations(qb, 'light').getMany();
     }
 
     async getByUsuarioId(usuario_id: number): Promise<Colecao[]> {
-        return this.repository.createQueryBuilder("colecao")
-          .leftJoinAndSelect('colecao.usuario', 'usuario')
-          .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
-          .leftJoinAndSelect('viaColecao.via', 'vias')
-          .leftJoinAndSelect('vias.montanha', 'montanha')
-          .leftJoinAndSelect('vias.face', 'face')
-          .leftJoinAndSelect('vias.setor', 'setor')
-          // Localização através de Setor
-          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
-          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
-          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
-          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
-          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
-          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
-          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
-          .leftJoinAndSelect('setor.face', 'setorFace')
-          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
-          // Localização através de Face
-          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
-          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
-          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
-          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
-          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
-          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
-          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
-          .leftJoinAndSelect('face.montanha', 'faceMontanha')
-          // Localização através de Montanha
-          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
-          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
-          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
-          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
-          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
-          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
-          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
-          .where('usuario.id = :usuario_id', { usuario_id })
-          .getMany();
+        const qb = this.repository.createQueryBuilder('colecao')
+            .where('colecao.usuarioId = :usuario_id', { usuario_id });
+        
+        return withColecaoRelations(qb, 'light').getMany();
     }
-
 
     async create(colecaoData: Partial<Colecao>): Promise<Colecao> {
         return await this.repository.save(colecaoData);
@@ -192,7 +92,7 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecoes')
-          .where('colecao.usuario.id = :usuarioId', { usuarioId })
+          .where('colecao.usuarioId = :usuarioId', { usuarioId })
           .andWhere(`colecao.id NOT IN (${subQuery.getQuery()})`)
           .setParameters(subQuery.getParameters())
           .skip((page - 1) * limit)
@@ -218,45 +118,12 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
             itemsPerPage = 10
         } = query;
 
-        // Ajuste das junções
-        let qb = this.repository.createQueryBuilder('colecao')
-          .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
-          .leftJoinAndSelect('viaColecao.via', 'via')
-          .leftJoinAndSelect('via.montanha', 'montanha')
-          .leftJoinAndSelect('via.face', 'face')
-          .leftJoinAndSelect('via.setor', 'setor')
-          // Localização através de Setor
-          .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
-          .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
-          .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
-          .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
-          .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
-          .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
-          .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
-          .leftJoinAndSelect('setor.face', 'setorFace')
-          .leftJoinAndSelect('setor.montanha', 'setorMontanha')
-          // Localização através de Face
-          .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
-          .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
-          .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
-          .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
-          .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
-          .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
-          .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
-          .leftJoinAndSelect('face.montanha', 'faceMontanha')
-          // Localização através de Montanha
-          .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
-          .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
-          .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
-          .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
-          .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
-          .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
-          .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
-          .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.usuario', 'usuario');
+        // Usar helper para relations com nível light (listagem)
+        let qb = this.repository.createQueryBuilder('colecao');
+        qb = withColecaoRelations(qb, 'light');
 
         // Filtro default pelo ID do usuário logado
-        qb = qb.andWhere('colecao.usuario.id = :usuarioId', { usuarioId });
+        qb = qb.andWhere('colecao.usuarioId = :usuarioId', { usuarioId });
 
         // Filtro por ID da coleção
         if (colecaoId) {
@@ -270,76 +137,64 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
 
         // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
         if (nomeVia) {
-            qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
+            qb = qb.andWhere('vias.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
         }
 
-        // Filtro por nome da montanha - removido pois não temos mais relação direta via -> montanha
-        // TODO: Implementar busca por montanha através de localização se necessário
+        // Filtro por nome da montanha
         if (nomeMontanha) {
-            // Por enquanto, busca desabilitada
+            qb = qb.andWhere('montanha.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
         }
 
-        // Aplicação da ordenação dinâmica (exceto updated_at que será tratado em memória)
+        // Aplicação da ordenação
         const isUpdatedAtSort = sortField === 'updated_at';
         
-        if (sortField && sortOrder && !isUpdatedAtSort) {
+        if (isUpdatedAtSort && sortOrder) {
+            // Ordenação por última via adicionada usando subquery no banco
+            // Isso evita carregar todos os dados em memória para ordenar
+            qb = qb
+                .addSelect(subQuery => {
+                    return subQuery
+                        .select('MAX(vc.created_at)')
+                        .from('via_colecao', 'vc')
+                        .where('vc.colecaoId = colecao.id');
+                }, 'ultima_via_adicionada')
+                .orderBy(
+                    'ultima_via_adicionada', 
+                    sortOrder.toUpperCase() as 'ASC' | 'DESC', 
+                    'NULLS LAST'
+                );
+        } else if (sortField && sortOrder) {
             qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
         }
 
         // Contar o total de itens (coleções) correspondentes
-        const totalItems = await qb.getCount();
+        // Clone o queryBuilder para contagem sem a ordenação por subquery
+        const countQb = this.repository.createQueryBuilder('colecao')
+            .leftJoin('colecao.viaColecoes', 'viaColecaoCount')
+            .leftJoin('viaColecaoCount.via', 'viasCount')
+            .leftJoin('viasCount.montanha', 'montanhaCount')
+            .where('colecao.usuarioId = :usuarioId', { usuarioId });
 
-        // Buscar coleções (sem paginação se precisar ordenar por updated_at)
-        let items: Colecao[];
-        
-        if (isUpdatedAtSort) {
-            // Buscar todas as coleções do usuário para ordenar em memória
-            items = await qb.getMany();
-            
-            // Buscar a data mais recente de via adicionada para cada coleção
-            const colecaoIds = items.map(c => c.id);
-            
-            if (colecaoIds.length > 0) {
-                const maxDates = await AppDataSource
-                  .getRepository(ViaColecao)
-                  .createQueryBuilder('vc')
-                  .select('vc.colecaoId', 'colecaoId')
-                  .addSelect('MAX(vc.created_at)', 'maxCreatedAt')
-                  .where('vc.colecaoId IN (:...colecaoIds)', { colecaoIds })
-                  .groupBy('vc.colecaoId')
-                  .getRawMany();
-
-                // Criar mapa de colecaoId -> maxCreatedAt
-                const maxDateMap = new Map<number, Date | null>();
-                for (const row of maxDates) {
-                    maxDateMap.set(row.colecaoId, row.maxCreatedAt ? new Date(row.maxCreatedAt) : null);
-                }
-
-                // Ordenar em memória
-                items.sort((a, b) => {
-                    const dateA = maxDateMap.get(a.id);
-                    const dateB = maxDateMap.get(b.id);
-                    
-                    // Coleções sem vias vão para o final (DESC) ou início (ASC)
-                    if (!dateA && !dateB) return 0;
-                    if (!dateA) return sortOrder.toUpperCase() === 'DESC' ? 1 : -1;
-                    if (!dateB) return sortOrder.toUpperCase() === 'DESC' ? -1 : 1;
-                    
-                    const diff = dateA.getTime() - dateB.getTime();
-                    return sortOrder.toUpperCase() === 'DESC' ? -diff : diff;
-                });
-            }
-            
-            // Aplicar paginação em memória
-            const startIndex = (page - 1) * itemsPerPage;
-            items = items.slice(startIndex, startIndex + itemsPerPage);
-        } else {
-            // Paginação normal no banco
-            items = await qb
-              .skip((page - 1) * itemsPerPage)
-              .take(itemsPerPage)
-              .getMany();
+        if (colecaoId) {
+            countQb.andWhere('colecao.id = :colecaoId', { colecaoId });
         }
+        if (searchQuery) {
+            countQb.andWhere('colecao.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+        }
+        if (nomeVia) {
+            countQb.andWhere('viasCount.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
+        }
+        if (nomeMontanha) {
+            countQb.andWhere('montanhaCount.nome LIKE :nomeMontanha', { nomeMontanha: `%${nomeMontanha}%` });
+        }
+
+        const totalItems = await countQb.getCount();
+
+        // Paginação no banco
+        const items = await qb
+            .skip((page - 1) * itemsPerPage)
+            .take(itemsPerPage)
+            .getMany();
 
         // Calcular total de páginas
         const totalPages = Math.ceil(totalItems / itemsPerPage);
