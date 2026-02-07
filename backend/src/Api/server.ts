@@ -112,18 +112,18 @@ app.use(errorRequestMiddleware);
 async function ensureDatabaseExists(): Promise<void> {
     const pg = require('pg');
     const {Client} = pg;
-    const dbName = process.env.DB_NAME;
+    const dbName = process.env.POSTGRES_DB;
     
     if (!dbName) {
-        throw new Error('DB_NAME não está configurado nas variáveis de ambiente');
+        throw new Error('POSTGRES_DB não está configurado nas variáveis de ambiente');
     }
 
     // Conectar ao PostgreSQL usando o banco padrão 'postgres'
     const adminClient = new Client({
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT || '5432', 10),
-        user: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
+        host: process.env.POSTGRES_HOST,
+        port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
         database: 'postgres' // Conecta ao banco padrão
     });
 
