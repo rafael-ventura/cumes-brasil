@@ -8,7 +8,7 @@ services:
       dockerfile: backend/Dockerfile
     container_name: cumes-api
     env_file:
-      - .env.development
+      - .env
     ports:
       - "3001:3001"
     depends_on:
@@ -22,7 +22,7 @@ services:
     image: postgres:16-alpine
     container_name: cumes-postgres
     env_file:
-      - .env.development
+      - .env
     ports:
       - "5432:5432"
     volumes:
