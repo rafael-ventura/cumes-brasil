@@ -28,12 +28,12 @@
 
       <q-list class="vias-list">
         <q-item
-          v-for="via in vias"
+          v-for="via in filteredVias"
           :key="via.id"
           clickable
-          @click="addVia(via)"
+          @click="selectVia(via)"
           class="via-item"
-          :class="{ 'via-selected': via.selected }"
+          :class="{ 'via-selected': via.id.toString() === viaPreferidaId }"
         >
           <q-item-section avatar>
             <q-avatar square size="60px" class="custom-avatar">
@@ -53,10 +53,10 @@
             <q-btn
               flat
               round
-              :icon="via.selected ? 'check_circle' : 'add_circle'"
-              :class="via.selected ? 'btn-selected' : 'btn-add'"
-              @click.stop="selectedVia(via)"
-              :disabled="via.selected"
+              :icon="via.id.toString() === viaPreferidaId ? 'check_circle' : 'add_circle'"
+              :class="via.id.toString() === viaPreferidaId ? 'btn-selected' : 'btn-add'"
+              @click.stop="selectVia(via)"
+              :disabled="via.id.toString() === viaPreferidaId"
               size="md"
             />
           </q-item-section>
@@ -109,6 +109,7 @@
 import { ref, watch, computed } from 'vue';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
+import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps<{
   viaPreferidaId: string;
@@ -140,7 +141,7 @@ const filteredVias = computed(() => {
     return vias.value.filter(via =>
       via.nome.toLowerCase().includes(query) ||
       (via.montanha?.nome && via.montanha.nome.toLowerCase().includes(query)) ||
-      (via.montanha?.bairro && via.montanha.bairro.toLowerCase().includes(query))
+      (via.localizacao?.bairro?.nome && via.localizacao.bairro.nome.toLowerCase().includes(query))
     );
   }
   return vias.value;
@@ -317,6 +318,36 @@ const onDialogShow = async () => {
   }
 }
 
+// NOVAS REGRAS: centraliza o ícone de busca e ajusta espaçamentos
+.search-input {
+  :deep(.q-field__control) {
+    display: flex;
+    align-items: center;
+  }
+
+  /* garante uma área fixa para o prepend e centra o ícone nela */
+  :deep(.q-field__prepend) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* remove margens do próprio ícone */
+  :deep(.q-field__prepend .q-icon) {
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+
+  /* deixa o texto do input alinhado sem colar no prepend */
+  :deep(.q-field__native) {
+    padding-left: 8px !important;
+  }
+}
+
 // Vias List
 .vias-list {
   flex: 1;
@@ -355,15 +386,15 @@ const onDialogShow = async () => {
   margin-bottom: 4px;
 }
 
-.via-montanha {
-  color: rgba($offwhite, 0.7);
-  font-size: 13px;
+.via-localizacao {
+  color: $cumes-01;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 4px;
 
   .q-icon {
-    color: $cumes-04;
+    color: $cumes-03;
   }
 }
 
@@ -381,13 +412,6 @@ const onDialogShow = async () => {
 
 .btn-selected {
   color: $cumes-04 !important;
-}
-
-.no-results {
-  padding: 16px;
-  text-align: center;
-  color: $cumes-03;
-  font-weight: 600;
 }
 
 // Card Actions

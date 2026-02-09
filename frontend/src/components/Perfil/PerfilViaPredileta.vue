@@ -16,11 +16,6 @@
       </div>
     </div>
     
-    <div v-if="staySaved" class="actions-wrapper">
-      <q-btn flat label="Cancelar" class="btn-secondary" @click="cancelEdit" />
-      <q-btn flat label="Salvar" class="btn-primary" @click="savePreferida" />
-    </div>
-    
     <PerfilEditaFormAddPrediletaModal 
       v-model="isModalSelect"
       :viaPreferidaId="viaPreferidaId || ''" 
@@ -32,7 +27,7 @@
 <script setup lang="ts">
 import { IUsuario } from 'src/models/IUsuario';
 import ViaCardSmall from 'components/Via/ViaCardSmall.vue';
-import { watch, ref, defineEmits } from 'vue';
+import { watch, ref } from 'vue';
 import PerfilEditaFormAddPrediletaModal from 'components/Perfil/PerfilEditaFormAddPrediletaModal.vue';
 import { Via } from 'src/models/Via';
 import UsuarioService from 'src/services/UsuarioService';
@@ -61,12 +56,6 @@ watch(
   { immediate: true }
 );
 
-const cancelEdit = () => {
-  staySaved.value = false;
-  isModalSelect.value = false;
-  viaPreferida.value = localUser.value?.via_preferida || null; // Mantem preferida antiga se for cancelado
-};
-
 const toggleEditMode = () => {
   isModalSelect.value = !isModalSelect.value;
 };
@@ -80,7 +69,7 @@ const goToViaDetalhada = () => {
 const viaPreferidaUpdate = (newPreferida: Via) => {
   viaPreferida.value = newPreferida;
   staySaved.value = true;
-  isModalSelect.value = false;
+  savePreferida();
 };
 
 const savePreferida = async () => {
@@ -89,7 +78,6 @@ const savePreferida = async () => {
       console.error('Nenhuma via preferida selecionada.');
       return;
     }
-
     const formData = new FormData();
     formData.append('via_preferida_id', viaPreferida.value.id.toString());
 
