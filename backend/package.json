@@ -7,6 +7,8 @@
     "dev": "cross-env NODE_ENV=development ts-node src/Api/server.ts",
     "build": "tsc",
     "start": "node dist/Api/server.js",
+    "build:container": "docker compose -f ../docker-compose.dev.yml up -d --build",
+    "rebuild:container": "npm run build && npm run build:container",
     "start:pm2": "cross-env NODE_ENV=production pm2 start dist/Api/server.js --name cumes-api",
     "migration:run": "cross-env NODE_ENV=production npx typeorm migration:run -d ./dist/Infrastructure/config/db.js",
     "migration:generate": "cross-env NODE_ENV=development npx typeorm migration:generate ./src/Infrastructure/migrations/NewMigration -d ./dist/Infrastructure/config/db.js"
