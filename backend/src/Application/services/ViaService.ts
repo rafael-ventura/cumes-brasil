@@ -4,6 +4,7 @@ import ViaValidation from '../validations/ViaValidation';
 import NotFoundError from '../errors/NotFoundError';
 import BadRequestError from '../errors/BadRequestError';
 import BaseService from './BaseService';
+import { LoadStrategy } from '../../Domain/enum/ELoadStrategy';
 
 export class ViaService extends BaseService<Via, ViaRepository> {
 
@@ -11,34 +12,34 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     super(viaRepo);
   }
 
-  async getViaById(id: number): Promise<Via> {
-    const via = await this.repository.getById(id);
+  async getViaById(id: number, strategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via> {
+    const via = await this.repository.getById(id, strategy);
     if (!via) throw new NotFoundError("Via não encontrada");
     return via;
   }
 
-  async getVias(page?: number, limit?: number) {
+  async getVias(page?: number, limit?: number, strategy: LoadStrategy = LoadStrategy.LIST) {
     return page && limit
-        ? this.repository.getAllPaginated(page, limit as any)
-        : this.repository.getAllWithoutPagination();
+        ? this.repository.getAllPaginated(page, limit as any, strategy)
+        : this.repository.getAllWithoutPagination(strategy);
   }
 
-  async getRandomVia(): Promise<Via> {
-    const via = await this.repository.getRandom();
+  async getRandomVia(strategy: LoadStrategy = LoadStrategy.LIST): Promise<Via> {
+    const via = await this.repository.getRandom(strategy);
     if (!via) throw new NotFoundError("Nenhuma via encontrada");
     return via;
   }
 
-  async createVia(viaData: Partial<Via>): Promise<Via> {
+  async createVia(viaData: Partial<Via>, reloadStrategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via> {
     // Validar estrutura física antes de criar
     ViaValidation.validaEstruturaFisica(viaData);
-    return this.repository.create(viaData);
+    return this.repository.create(viaData, reloadStrategy);
   }
 
-  async updateVia(id: number, viaData: Partial<Via>): Promise<Via | null> {
+  async updateVia(id: number, viaData: Partial<Via>, reloadStrategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via | null> {
     // Validar estrutura física antes de atualizar
     ViaValidation.validaEstruturaFisica(viaData);
-    return this.repository.updateVia(id, viaData);
+    return this.repository.updateVia(id, viaData, reloadStrategy);
   }
 
   /**
@@ -181,15 +182,21 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     await this.repository.delete(id);
   }
 
-  async getViasIdByColecaoId(colecaoId: number, page: number, limit: number) {
-    return this.repository.getViasByColecaoId(colecaoId, page, limit);
+  async getViasIdByColecaoId(colecaoId: number, page: number, limit: number, strategy: LoadStrategy = LoadStrategy.LIST) {
+    return this.repository.getViasByColecaoId(colecaoId, page, limit, strategy);
   }
 
-  async getViasNotInColecaoForUser(colecaoId: number, usuarioId: number, page: number, limit: number) {
+  async getViasNotInColecaoForUser(
+    colecaoId: number,
+    usuarioId: number,
+    page: number,
+    limit: number,
+    strategy: LoadStrategy = LoadStrategy.LIST
+  ) {
     if (!colecaoId || !usuarioId) {
       throw new BadRequestError("Parâmetros inválidos: colecaoId ou usuarioId ausentes.");
     }
-    return this.repository.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit);
+    return this.repository.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit, strategy);
   }
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {

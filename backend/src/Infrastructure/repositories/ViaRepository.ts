@@ -5,78 +5,151 @@ import {ISearchResult} from '../../Domain/interfaces/models/ISearchResult';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
 import BaseRepository from './BaseRepository';
 import {ICrudRepository} from '../../Domain/interfaces/repositories/ICrudRepository';
+import {LoadStrategy} from '../../Domain/enum/ELoadStrategy';
+import {ViaRelationConfig} from '../config/ViaRelationConfig';
+import {resolveRelations} from '../config/RelationConfig';
+import {SelectQueryBuilder} from 'typeorm';
 
 export class ViaRepository extends BaseRepository<Via> implements ISearchRepository<Via>, ICrudRepository<Via> {
     constructor() {
         super(Via);
     }
 
-    private withRelations(qb: any) {
-        return qb
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("via.face", "face")
-            .leftJoinAndSelect("via.setor", "setor")
-            // Localização através de Setor
-            .leftJoinAndSelect("setor.localizacoes", "setorLocalizacoes")
-            .leftJoinAndSelect("setorLocalizacoes.continente", "setorContinente")
-            .leftJoinAndSelect("setorLocalizacoes.pais", "setorPais")
-            .leftJoinAndSelect("setorLocalizacoes.regiao", "setorRegiao")
-            .leftJoinAndSelect("setorLocalizacoes.estado", "setorEstado")
-            .leftJoinAndSelect("setorLocalizacoes.cidade", "setorCidade")
-            .leftJoinAndSelect("setorLocalizacoes.bairro", "setorBairro")
-            .leftJoinAndSelect("setor.face", "setorFace")
-            // Localização através da Face do Setor
-            .leftJoinAndSelect("setorFace.localizacoes", "setorFaceLocalizacoes")
-            .leftJoinAndSelect("setorFaceLocalizacoes.continente", "setorFaceContinente")
-            .leftJoinAndSelect("setorFaceLocalizacoes.pais", "setorFacePais")
-            .leftJoinAndSelect("setorFaceLocalizacoes.regiao", "setorFaceRegiao")
-            .leftJoinAndSelect("setorFaceLocalizacoes.estado", "setorFaceEstado")
-            .leftJoinAndSelect("setorFaceLocalizacoes.cidade", "setorFaceCidade")
-            .leftJoinAndSelect("setorFaceLocalizacoes.bairro", "setorFaceBairro")
-            .leftJoinAndSelect("setorFace.montanha", "setorFaceMontanha")
-            .leftJoinAndSelect("setor.montanha", "setorMontanha")
-            // Localização através da Montanha do Setor
-            .leftJoinAndSelect("setorMontanha.localizacoes", "setorMontanhaLocalizacoes")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.continente", "setorMontanhaContinente")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.pais", "setorMontanhaPais")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.regiao", "setorMontanhaRegiao")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.estado", "setorMontanhaEstado")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.cidade", "setorMontanhaCidade")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.bairro", "setorMontanhaBairro")
-            // Localização através de Face
-            .leftJoinAndSelect("face.localizacoes", "faceLocalizacoes")
-            .leftJoinAndSelect("faceLocalizacoes.continente", "faceContinente")
-            .leftJoinAndSelect("faceLocalizacoes.pais", "facePais")
-            .leftJoinAndSelect("faceLocalizacoes.regiao", "faceRegiao")
-            .leftJoinAndSelect("faceLocalizacoes.estado", "faceEstado")
-            .leftJoinAndSelect("faceLocalizacoes.cidade", "faceCidade")
-            .leftJoinAndSelect("faceLocalizacoes.bairro", "faceBairro")
-            .leftJoinAndSelect("face.montanha", "faceMontanha")
-            // Localização através de Montanha
-            .leftJoinAndSelect("montanha.localizacoes", "montanhaLocalizacoes")
-            .leftJoinAndSelect("montanhaLocalizacoes.continente", "montanhaContinente")
-            .leftJoinAndSelect("montanhaLocalizacoes.pais", "montanhaPais")
-            .leftJoinAndSelect("montanhaLocalizacoes.regiao", "montanhaRegiao")
-            .leftJoinAndSelect("montanhaLocalizacoes.estado", "montanhaEstado")
-            .leftJoinAndSelect("montanhaLocalizacoes.cidade", "montanhaCidade")
-            .leftJoinAndSelect("montanhaLocalizacoes.bairro", "montanhaBairro")
-            .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
-            .leftJoinAndSelect("via.fonte", "fonte")
-            .leftJoinAndSelect("via.imagem", "imagem")
-            .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
-            .leftJoinAndSelect("viaCroquis.croqui", "croqui");
+    /**
+     * Aplica relações ao Query Builder baseado em estratégia ou array customizado.
+     * 
+     * Devido à complexidade das relações aninhadas de Via (setor→face→montanha→localizações),
+     * este método mapeia estratégias de alto nível para os joins específicos necessários.
+     * 
+     * Princípios aplicados:
+     * - SRP: Método único responsável por aplicar joins
+     * - OCP: Extensível via novas estratégias sem modificar código
+     * - DRY: Elimina duplicação de lógica de joins entre métodos
+     * 
+     * @param qb - Query Builder do TypeORM
+     * @param strategy - Estratégia de carregamento
+     * @returns Query Builder com joins aplicados
+     */
+    private buildQueryWithRelations(
+        qb: SelectQueryBuilder<Via>,
+        strategy: LoadStrategy = LoadStrategy.DETAIL
+    ): SelectQueryBuilder<Via> {
+        // Aplica joins baseado na estratégia
+        switch (strategy) {
+            case LoadStrategy.MINIMAL:
+                // Sem joins - apenas campos da tabela via
+                return qb;
+
+            case LoadStrategy.LIST:
+                // Joins mínimos para listagem: estrutura básica + imagem
+                return qb
+                    .leftJoinAndSelect("via.montanha", "montanha")
+                    .leftJoinAndSelect("via.face", "face")
+                    .leftJoinAndSelect("via.setor", "setor")
+                    .leftJoinAndSelect("via.imagem", "imagem");
+
+            case LoadStrategy.DETAIL:
+            case LoadStrategy.FULL:
+                // Joins completos para visualização detalhada
+                return qb
+                    .leftJoinAndSelect("via.montanha", "montanha")
+                    .leftJoinAndSelect("via.face", "face")
+                    .leftJoinAndSelect("via.setor", "setor")
+                    // Localização através de Setor
+                    .leftJoinAndSelect("setor.localizacoes", "setorLocalizacoes")
+                    .leftJoinAndSelect("setorLocalizacoes.continente", "setorContinente")
+                    .leftJoinAndSelect("setorLocalizacoes.pais", "setorPais")
+                    .leftJoinAndSelect("setorLocalizacoes.regiao", "setorRegiao")
+                    .leftJoinAndSelect("setorLocalizacoes.estado", "setorEstado")
+                    .leftJoinAndSelect("setorLocalizacoes.cidade", "setorCidade")
+                    .leftJoinAndSelect("setorLocalizacoes.bairro", "setorBairro")
+                    .leftJoinAndSelect("setor.face", "setorFace")
+                    // Localização através da Face do Setor
+                    .leftJoinAndSelect("setorFace.localizacoes", "setorFaceLocalizacoes")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.continente", "setorFaceContinente")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.pais", "setorFacePais")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.regiao", "setorFaceRegiao")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.estado", "setorFaceEstado")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.cidade", "setorFaceCidade")
+                    .leftJoinAndSelect("setorFaceLocalizacoes.bairro", "setorFaceBairro")
+                    .leftJoinAndSelect("setorFace.montanha", "setorFaceMontanha")
+                    .leftJoinAndSelect("setor.montanha", "setorMontanha")
+                    // Localização através da Montanha do Setor
+                    .leftJoinAndSelect("setorMontanha.localizacoes", "setorMontanhaLocalizacoes")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.continente", "setorMontanhaContinente")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.pais", "setorMontanhaPais")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.regiao", "setorMontanhaRegiao")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.estado", "setorMontanhaEstado")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.cidade", "setorMontanhaCidade")
+                    .leftJoinAndSelect("setorMontanhaLocalizacoes.bairro", "setorMontanhaBairro")
+                    // Localização através de Face
+                    .leftJoinAndSelect("face.localizacoes", "faceLocalizacoes")
+                    .leftJoinAndSelect("faceLocalizacoes.continente", "faceContinente")
+                    .leftJoinAndSelect("faceLocalizacoes.pais", "facePais")
+                    .leftJoinAndSelect("faceLocalizacoes.regiao", "faceRegiao")
+                    .leftJoinAndSelect("faceLocalizacoes.estado", "faceEstado")
+                    .leftJoinAndSelect("faceLocalizacoes.cidade", "faceCidade")
+                    .leftJoinAndSelect("faceLocalizacoes.bairro", "faceBairro")
+                    .leftJoinAndSelect("face.montanha", "faceMontanha")
+                    // Localização através de Montanha
+                    .leftJoinAndSelect("montanha.localizacoes", "montanhaLocalizacoes")
+                    .leftJoinAndSelect("montanhaLocalizacoes.continente", "montanhaContinente")
+                    .leftJoinAndSelect("montanhaLocalizacoes.pais", "montanhaPais")
+                    .leftJoinAndSelect("montanhaLocalizacoes.regiao", "montanhaRegiao")
+                    .leftJoinAndSelect("montanhaLocalizacoes.estado", "montanhaEstado")
+                    .leftJoinAndSelect("montanhaLocalizacoes.cidade", "montanhaCidade")
+                    .leftJoinAndSelect("montanhaLocalizacoes.bairro", "montanhaBairro")
+                    // Via principal, fonte, imagem e croquis
+                    .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
+                    .leftJoinAndSelect("via.fonte", "fonte")
+                    .leftJoinAndSelect("via.imagem", "imagem")
+                    .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
+                    .leftJoinAndSelect("viaCroquis.croqui", "croqui");
+
+            default:
+                return qb;
+        }
     }
 
-    async getById(id: number, relations?: string[]): Promise<Via | null> {
-        return this.withRelations(
-            this.repository.createQueryBuilder("via").where("via.id = :id", {id})
-        ).getOne();
+    // Override com assinatura compatível com BaseRepository (aceita relations array)
+    async getById(id: number, relations?: string[]): Promise<Via | null>;
+    // Sobrecarga com LoadStrategy para uso otimizado
+    async getById(id: number, strategy: LoadStrategy): Promise<Via | null>;
+    // Implementação que aceita ambos
+    async getById(id: number, relationOrStrategy?: string[] | LoadStrategy): Promise<Via | null> {
+        const qb = this.repository.createQueryBuilder("via")
+            .where("via.id = :id", {id});
+        
+        // Se for array de strings, usar BaseRepository behavior (fallback)
+        if (Array.isArray(relationOrStrategy)) {
+            return super.getById(id, relationOrStrategy);
+        }
+        
+        // Se for LoadStrategy (ou undefined com default), usar novo comportamento
+        const strategy = relationOrStrategy || LoadStrategy.DETAIL;
+        return this.buildQueryWithRelations(qb, strategy).getOne();
     }
 
-    async getAllPaginated(page: number, limit: number): Promise<{ items: Via[]; total: number; totalPages: number }> {
-        const [vias, total] = await this.withRelations(
-            this.repository.createQueryBuilder("via")
-        )
+    // Compatibilidade com assinatura de BaseRepository
+    async getAllPaginated(page: number, limit: number, options?: any): Promise<{ items: Via[]; total: number; totalPages: number; }>;
+    // Sobrecarga com LoadStrategy
+    async getAllPaginated(page: number, limit: number, strategy: LoadStrategy): Promise<{ items: Via[]; total: number; totalPages: number; }>;
+    // Implementação
+    async getAllPaginated(
+        page: number,
+        limit: number,
+        strategyOrOptions?: LoadStrategy | any
+    ): Promise<{ items: Via[]; total: number; totalPages: number }> {
+        const qb = this.repository.createQueryBuilder("via");
+        
+        // Se for FindManyOptions (objeto com where, order, etc), usar abordagem tradicional
+        if (strategyOrOptions && typeof strategyOrOptions === 'object' && !(strategyOrOptions in LoadStrategy)) {
+            return super.getAllPaginated(page, limit, strategyOrOptions);
+        }
+        
+        // Se for LoadStrategy ou undefined, usar novo comportamento
+        const strategy = strategyOrOptions || LoadStrategy.LIST;
+        const [vias, total] = await this.buildQueryWithRelations(qb, strategy)
             .skip((page - 1) * limit)
             .take(limit)
             .getManyAndCount();
@@ -88,10 +161,13 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         };
     }
 
-    async getAllWithoutPagination(): Promise<{ items: Via[]; total: number; totalPages: number }> {
-        const [vias, total] = await this.withRelations(
-            this.repository.createQueryBuilder("via")
-        ).getManyAndCount();
+    async getAllWithoutPagination(
+        strategy: LoadStrategy = LoadStrategy.LIST
+    ): Promise<{ items: Via[]; total: number; totalPages: number }> {
+        const qb = this.repository.createQueryBuilder("via");
+        
+        const [vias, total] = await this.buildQueryWithRelations(qb, strategy)
+            .getManyAndCount();
 
         return {
             items: vias,
@@ -100,28 +176,36 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         };
     }
 
-    async getRandom(): Promise<Via | null> {
-        return this.withRelations(
-            this.repository.createQueryBuilder("via").orderBy("RANDOM()")
-        ).getOne();
+    async getRandom(strategy: LoadStrategy = LoadStrategy.LIST): Promise<Via | null> {
+        const qb = this.repository.createQueryBuilder("via").orderBy("RANDOM()");
+        return this.buildQueryWithRelations(qb, strategy).getOne();
     }
 
-    async create(via: Partial<Via>): Promise<Via> {
+    async create(via: Partial<Via>, reloadStrategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via> {
         const insertResult = await this.repository.insert(via);
         const id = insertResult.identifiers[0].id;
-        return this.getById(id) as Promise<Via>;
+        return this.getById(id, reloadStrategy) as Promise<Via>;
     }
 
-    async updateVia(id: number, viaData: Partial<Via>): Promise<Via | null> {
+    async updateVia(
+        id: number,
+        viaData: Partial<Via>,
+        reloadStrategy: LoadStrategy = LoadStrategy.DETAIL
+    ): Promise<Via | null> {
         await this.repository.update(id, viaData);
-        return this.getById(id);
+        return this.getById(id, reloadStrategy);
     }
 
     async delete(id: number): Promise<void> {
         await this.repository.delete(id);
     }
 
-    async getViasByColecaoId(colecaoId: number, page: number, limit: number): Promise<{
+    async getViasByColecaoId(
+        colecaoId: number,
+        page: number,
+        limit: number,
+        strategy: LoadStrategy = LoadStrategy.LIST
+    ): Promise<{
         items: Via[],
         total: number,
         totalPages: number
@@ -131,11 +215,11 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .select("via_colecao.viaId")
             .where("via_colecao.colecaoId = :colecaoId", {colecaoId});
 
-        const [vias, total] = await this.withRelations(
-            this.repository.createQueryBuilder("via")
-                .where(`via.id IN (${subQuery.getQuery()})`)
-                .setParameters(subQuery.getParameters())
-        )
+        const qb = this.repository.createQueryBuilder("via")
+            .where(`via.id IN (${subQuery.getQuery()})`)
+            .setParameters(subQuery.getParameters());
+
+        const [vias, total] = await this.buildQueryWithRelations(qb, strategy)
             .skip((page - 1) * limit)
             .take(limit)
             .getManyAndCount();
@@ -147,7 +231,13 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         };
     }
 
-    async getViasNotInColecaoForUser(colecaoId: number, usuarioId: number, page: number, limit: number): Promise<{
+    async getViasNotInColecaoForUser(
+        colecaoId: number,
+        usuarioId: number,
+        page: number,
+        limit: number,
+        strategy: LoadStrategy = LoadStrategy.LIST
+    ): Promise<{
         items: Via[],
         total: number,
         totalPages: number
@@ -159,11 +249,11 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .where("via_colecao.colecaoId = :colecaoId", {colecaoId})
             .andWhere("colecao.usuarioId = :usuarioId", {usuarioId});
 
-        const [vias, total] = await this.withRelations(
-            this.repository.createQueryBuilder("via")
-                .where(`via.id NOT IN (${subQuery.getQuery()})`)
-                .setParameters(subQuery.getParameters())
-        )
+        const qb = this.repository.createQueryBuilder("via")
+            .where(`via.id NOT IN (${subQuery.getQuery()})`)
+            .setParameters(subQuery.getParameters());
+
+        const [vias, total] = await this.buildQueryWithRelations(qb, strategy)
             .skip((page - 1) * limit)
             .take(limit)
             .getManyAndCount();
@@ -175,7 +265,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         };
     }
 
-    async search(query: any): Promise<ISearchResult<any>> {
+    async search(query: any, strategy: LoadStrategy = LoadStrategy.DETAIL): Promise<ISearchResult<any>> {
         const {
             unifiedSearch,
             selectedMountain,
@@ -194,56 +284,14 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             sortOrder,
         } = query;
 
-        let qb = this.repository.createQueryBuilder("via")
-            .leftJoinAndSelect("via.montanha", "montanha")
-            .leftJoinAndSelect("via.face", "face")
-            .leftJoinAndSelect("via.setor", "setor")
-            // Localização através de Setor
-            .leftJoinAndSelect("setor.localizacoes", "setorLocalizacoes")
-            .leftJoinAndSelect("setorLocalizacoes.continente", "setorContinente")
-            .leftJoinAndSelect("setorLocalizacoes.pais", "setorPais")
-            .leftJoinAndSelect("setorLocalizacoes.regiao", "setorRegiao")
-            .leftJoinAndSelect("setorLocalizacoes.estado", "setorEstado")
-            .leftJoinAndSelect("setorLocalizacoes.cidade", "setorCidade")
-            .leftJoinAndSelect("setorLocalizacoes.bairro", "setorBairro")
-            .leftJoinAndSelect("setor.face", "setorFace")
-            // Localização através da Face do Setor
-            .leftJoinAndSelect("setorFace.localizacoes", "setorFaceLocalizacoes")
-            .leftJoinAndSelect("setorFaceLocalizacoes.continente", "setorFaceContinente")
-            .leftJoinAndSelect("setorFaceLocalizacoes.pais", "setorFacePais")
-            .leftJoinAndSelect("setorFaceLocalizacoes.regiao", "setorFaceRegiao")
-            .leftJoinAndSelect("setorFaceLocalizacoes.estado", "setorFaceEstado")
-            .leftJoinAndSelect("setorFaceLocalizacoes.cidade", "setorFaceCidade")
-            .leftJoinAndSelect("setorFaceLocalizacoes.bairro", "setorFaceBairro")
-            .leftJoinAndSelect("setorFace.montanha", "setorFaceMontanha")
-            .leftJoinAndSelect("setor.montanha", "setorMontanha")
-            // Localização através da Montanha do Setor
-            .leftJoinAndSelect("setorMontanha.localizacoes", "setorMontanhaLocalizacoes")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.continente", "setorMontanhaContinente")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.pais", "setorMontanhaPais")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.regiao", "setorMontanhaRegiao")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.estado", "setorMontanhaEstado")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.cidade", "setorMontanhaCidade")
-            .leftJoinAndSelect("setorMontanhaLocalizacoes.bairro", "setorMontanhaBairro")
-            // Localização através de Face
-            .leftJoinAndSelect("face.localizacoes", "faceLocalizacoes")
-            .leftJoinAndSelect("faceLocalizacoes.continente", "faceContinente")
-            .leftJoinAndSelect("faceLocalizacoes.pais", "facePais")
-            .leftJoinAndSelect("faceLocalizacoes.regiao", "faceRegiao")
-            .leftJoinAndSelect("faceLocalizacoes.estado", "faceEstado")
-            .leftJoinAndSelect("faceLocalizacoes.cidade", "faceCidade")
-            .leftJoinAndSelect("faceLocalizacoes.bairro", "faceBairro")
-            .leftJoinAndSelect("face.montanha", "faceMontanha")
-            // Localização através de Montanha
-            .leftJoinAndSelect("montanha.localizacoes", "montanhaLocalizacoes")
-            .leftJoinAndSelect("montanhaLocalizacoes.continente", "montanhaContinente")
-            .leftJoinAndSelect("montanhaLocalizacoes.pais", "montanhaPais")
-            .leftJoinAndSelect("montanhaLocalizacoes.regiao", "montanhaRegiao")
-            .leftJoinAndSelect("montanhaLocalizacoes.estado", "montanhaEstado")
-            .leftJoinAndSelect("montanhaLocalizacoes.cidade", "montanhaCidade")
-            .leftJoinAndSelect("montanhaLocalizacoes.bairro", "montanhaBairro")
-            .leftJoinAndSelect("via.imagem", "imagem");
+        // Inicia query builder e aplica relações baseado na estratégia
+        // DETAIL é necessário para filtros de localização (bairro, unifiedSearch)
+        let qb = this.buildQueryWithRelations(
+            this.repository.createQueryBuilder("via"),
+            strategy
+        );
 
+        // Filtros adicionais
         if (colecaoId) {
             qb = qb.innerJoin("via.viaColecoes", "viaColecaoFilter", "viaColecaoFilter.colecaoId = :colecaoId", {colecaoId})
                 .addSelect("viaColecaoFilter.data_adicao", "data_adicao");

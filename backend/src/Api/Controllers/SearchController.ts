@@ -6,7 +6,7 @@ import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
 import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
 import {EscaladaRepository} from "../../Infrastructure/repositories/EscaladaRepository";
 import SearchValidation from '../../Application/validations/SearchValidation';
-import { ViaDTO } from "../DTOs/Via/ViaDTO";
+import { ViaListDTO } from "../DTOs/Via/ViaDTO";
 
 export class SearchController {
 	private serviceMap: { [key: string]: SearchService<any> } = {};
@@ -83,7 +83,7 @@ export class SearchController {
 		
 		// Converter para DTOs se for 'via'
 		const items = entityType === 'via' 
-			? searchResult.items.map((item: any) => new ViaDTO(item))
+			? searchResult.items.map((item: any) => new ViaListDTO(item))
 			: searchResult.items;
 		
 		// Adicione o totalItems ao resultado

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ViaService } from '../../Application/services/ViaService';
 import { Via } from '../../Domain/entities/Via';
 import ViaValidation from '../../Application/validations/ViaValidation';
-import { ViaDTO } from '../DTOs/Via/ViaDTO';
+import { ViaDTO, ViaDetailDTO, ViaListDTO } from '../DTOs/Via/ViaDTO';
 import { NotFoundError } from '../../Application/errors';
 
 export class ViaController {
@@ -15,7 +15,7 @@ export class ViaController {
 	getViaById = async (req: Request, res: Response) => {
 		const id = ViaValidation.idParam(req.params.id);
 		const via = await this.service.getViaById(id);
-		return res.status(200).json(new ViaDTO(via));
+		return res.status(200).json(new ViaDetailDTO(via));
 	};
 
 	getAllVia = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export class ViaController {
 		const result = await this.service.getVias(page, limit);
 
 		return res.status(200).json({
-			items: result.items.map(v => new ViaDTO(v)),
+			items: result.items.map(v => new ViaListDTO(v)),
 			total: result.total,
 			totalPages: result.totalPages
 		});
@@ -31,14 +31,14 @@ export class ViaController {
 
 	getRandomVia = async (_: Request, res: Response) => {
 		const via = await this.service.getRandomVia();
-		return res.status(200).json(new ViaDTO(via));
+		return res.status(200).json(new ViaListDTO(via));
 	};
 
 	createVia = async (req: Request, res: Response) => {
 		const via: Via = req.body;
 		ViaValidation.createBody(via);
 		const createdVia = await this.service.createVia(via);
-		return res.status(201).json(new ViaDTO(createdVia));
+		return res.status(201).json(new ViaDetailDTO(createdVia));
 	};
 
 	updateVia = async (req: Request, res: Response) => {
@@ -47,7 +47,7 @@ export class ViaController {
 		const updatedVia = await this.service.updateVia(via.id, via);
 		if (!updatedVia) throw new NotFoundError("Via não encontrada");
 
-		return res.status(200).json(new ViaDTO(updatedVia));
+		return res.status(200).json(new ViaDetailDTO(updatedVia));
 	};
 
 	deleteVia = async (req: Request, res: Response) => {
@@ -63,7 +63,7 @@ export class ViaController {
 	 const result = await this.service.getViasIdByColecaoId(colecaoId, page, limit);
 
 		return res.status(200).json({
-			items: result.items.map(v => new ViaDTO(v)),
+			items: result.items.map(v => new ViaListDTO(v)),
 			total: result.total,
 			totalPages: result.totalPages
 		});
@@ -77,7 +77,7 @@ export class ViaController {
 		const result = await this.service.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit);
 
 		return res.status(200).json({
-			items: result.items.map(v => new ViaDTO(v)),
+			items: result.items.map(v => new ViaListDTO(v)),
 			total: result.total,
 			totalPages: result.totalPages
 		});
