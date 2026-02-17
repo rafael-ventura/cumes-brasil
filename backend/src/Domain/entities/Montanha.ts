@@ -8,6 +8,7 @@ import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
 @Index(['nome'])
+@Index(['imagem'])
 export class Montanha extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,8 +36,7 @@ export class Montanha extends BaseEntityWithTimestamps {
   longitude: number;
 
   @ManyToOne(() => Imagem)
-  imagem: number;
-
+  imagem: Imagem;
 
   @OneToMany(() => Face, face => face.montanha)
   faces: Face[];

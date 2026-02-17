@@ -1,10 +1,15 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Via } from "./Via";
 import { Usuario } from "./Usuario";
 import { Participante } from "./Participante";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
+@Index(['usuario'])
+@Index(['via'])
+@Index(['data'])
+@Index(['usuario', 'data'])
+@Index(['via', 'data'])
 export class Escalada extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;

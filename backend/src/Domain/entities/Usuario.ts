@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Colecao } from "./Colecao";
 import { Imagem } from "./Imagem";
 import { Escalada } from "./Escalada";
@@ -6,6 +6,8 @@ import { Via } from "./Via";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
+@Index(['email'], { unique: true })
+@Index(['via_preferida'])
 export class Usuario extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,7 +15,7 @@ export class Usuario extends BaseEntityWithTimestamps {
   @Column({ nullable: false })
   nome: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   email: string;
 
   @Column({ nullable: true })

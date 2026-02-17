@@ -13,7 +13,7 @@ export class Croqui extends BaseEntityWithTimestamps {
   nome: string;
 
   @ManyToOne(() => Fonte, fonte => fonte.croquis)
-  fonte: number;
+  fonte: Fonte;
 
   @ManyToOne(() => Imagem, imagem => imagem.croquis, { nullable: true })
   imagem?: Imagem;

@@ -1,9 +1,9 @@
 import {
-    Column,
     CreateDateColumn,
-    Entity, JoinColumn,
+    Entity,
+    Index,
+    JoinColumn,
     ManyToOne,
-    ObjectLiteral,
     PrimaryGeneratedColumn
 } from 'typeorm';
 import { Via } from './Via';
@@ -11,6 +11,9 @@ import { Colecao } from './Colecao';
 import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
 @Entity()
+@Index(['via'])
+@Index(['colecao'])
+@Index(['via', 'colecao'], { unique: true })
 export class ViaColecao extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;

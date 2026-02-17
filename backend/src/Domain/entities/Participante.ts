@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Escalada } from "./Escalada";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
+@Index(['escalada'])
 export class Participante extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;

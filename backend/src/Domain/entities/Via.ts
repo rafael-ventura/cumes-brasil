@@ -27,6 +27,9 @@ import { ModalidadeEscalada } from '../enum/EModalidadeEscalada';
 @Index(['tipo_rocha'])
 @Index(['tipo_escalada'])
 @Index(['modalidade'])
+@Index(['fonte'])
+@Index(['imagem'])
+@Index(['viaPrincipal'])
 export class Via extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
@@ -99,16 +102,16 @@ export class Via extends BaseEntityWithTimestamps {
   modalidade: ModalidadeEscalada;
 
   @ManyToOne(() => Via, via => via.variantes)
-  viaPrincipal: number;
+  viaPrincipal: Via;
 
   @OneToMany(() => Via, via => via.viaPrincipal)
   variantes: Via[];
 
   @ManyToOne(() => Fonte, fonte => fonte.vias)
-  fonte: number;
+  fonte: Fonte;
 
   @ManyToOne(() => Imagem, imagem => imagem.vias)
-  imagem: number;
+  imagem: Imagem;
 
   @ManyToOne(() => Montanha, { nullable: true })
   montanha: Montanha;

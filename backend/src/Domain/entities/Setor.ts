@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, ManyToMany, JoinTable, Index } from "typeorm";
 import { Montanha } from "./Montanha";
 import { Face } from "./Face";
 import { Via } from "./Via";
@@ -6,6 +6,9 @@ import { Localizacao } from "./Localizacao";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
 
 @Entity()
+@Index(['montanha'])
+@Index(['face'])
+@Index(['nome'])
 export class Setor extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,10 +33,10 @@ export class Setor extends BaseEntityWithTimestamps {
   longitude: number;
 
   @ManyToOne(() => Montanha, montanha => montanha.setores)
-  montanha: number;
+  montanha: Montanha;
 
   @ManyToOne(() => Face, face => face.setores, { nullable: true })
-  face: number;
+  face: Face;
 
   @OneToMany(() => Via, via => via.setor)
   vias: Via[];
