@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 import {DataSource} from 'typeorm';
 import {Colecao} from '../../Domain/entities/Colecao';
 import {Croqui} from '../../Domain/entities/Croqui';
@@ -11,6 +13,7 @@ import {Via} from '../../Domain/entities/Via';
 import {Participante} from '../../Domain/entities/Participante';
 import {ViaColecao} from '../../Domain/entities/ViaColecao';
 import {ViaCroqui} from "../../Domain/entities/ViaCroqui";
+import {ViaImagem} from "../../Domain/entities/ViaImagem";
 import {Continente} from '../../Domain/entities/Continente';
 import {Pais} from '../../Domain/entities/Pais';
 import {Regiao} from '../../Domain/entities/Regiao';
@@ -24,12 +27,12 @@ import {Localizacao} from '../../Domain/entities/Localizacao';
 export const AppDataSource = new DataSource({
     schema: 'public',
     type: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    synchronize: true,
+    host: process.env.DB_HOST || process.env.POSTGRES_HOST,
+    port: parseInt(process.env.DB_PORT || process.env.POSTGRES_PORT || '5432', 10),
+    username: process.env.DB_USERNAME || process.env.POSTGRES_USER,
+    password: process.env.DB_PASSWORD || process.env.POSTGRES_PASSWORD,
+    database: process.env.DB_NAME || process.env.POSTGRES_DB,
+    synchronize: false,
     logging: false,
     entities: [
         Colecao,
@@ -44,6 +47,7 @@ export const AppDataSource = new DataSource({
         Participante,
         ViaColecao,
         ViaCroqui,
+        ViaImagem,
         Continente,
         Pais,
         Regiao,

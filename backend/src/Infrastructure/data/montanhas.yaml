@@ -1,0 +1,122 @@
+- nome: Morro do Leme
+  altura: 125
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Leme
+- nome: Morro de São João
+  altura: 242
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Botafogo
+- nome: Morro de São João (Pedra da Abelha)
+  altura: 242
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Botafogo
+- nome: Agulha do Inhangá
+  altura: 164
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Copacabana
+- nome: Morro dos Cabritos
+  altura: 379
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Copacabana
+- nome: Morro da Catacumba
+  altura: 131
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Lagoa
+- nome: Pedra do Urubu
+  altura: 111
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Lagoa
+- nome: Morro da Saudade
+  altura: 244
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Humaita
+- nome: Morro do Cantagalo
+  altura: 201
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Ipanema
+- nome: Pedreira da Rua Aníbal Moreira
+  altura: 36
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Tijuca
+- nome: Morro do Urubu
+  altura: 120
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Vidigal
+- nome: Ponta do Arpoador
+  altura: 9
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Ipanema
+- nome: Falésias do Vidigal
+  altura: 0
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Sao Conrado
+- nome: Falésias da Niemeyer
+  altura: 0
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes:
+    - Leblon
+- nome: Falésia do Leblon
+  altura: 0
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes: []
+- nome: Falésia do Alto Leblon I
+  altura: 0
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes: []
+- nome: Falésia do Alto Leblon II
+  altura: 0
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes: []
+- nome: Irmão Menor do Leblon
+  altura: 440
+  imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  localizacoes: []
+- nome: Caixa de Fósforos
+  altura: 20
+  localizacoes:
+    - Teresópolis
+- nome: Pedra da Agulha
+  altura: 0
+  localizacoes:
+    - Pancas
+- nome: Morro da Moganga
+  altura: 0
+  localizacoes:
+    - Tijuca
+- nome: Pão de Açúcar
+  altura: 396
+  localizacoes:
+    - Urca
+- nome: Pedra Bonita
+  altura: 693
+  localizacoes:
+    - Sao Conrado
+- nome: Paredão dos Coloridos
+  altura: 0
+  localizacoes:
+    - Urca
+- nome: Corcovado
+  altura: 710
+  localizacoes:
+    - Botafogo
+- nome: Pedra da Gávea
+  altura: 842
+  localizacoes:
+    - Sao Conrado
+- nome: Morro da Babilônia
+  altura: 147
+  localizacoes:
+    - Urca

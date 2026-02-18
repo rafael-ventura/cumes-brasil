@@ -62,7 +62,8 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .leftJoinAndSelect("montanhaLocalizacoes.bairro", "montanhaBairro")
             .leftJoinAndSelect("via.viaPrincipal", "viaPrincipal")
             .leftJoinAndSelect("via.fonte", "fonte")
-            .leftJoinAndSelect("via.imagem", "imagem")
+            .leftJoinAndSelect("via.viaImagens", "viaImagens")
+            .leftJoinAndSelect("viaImagens.imagem", "viaImagensImagem")
             .leftJoinAndSelect("via.viaCroquis", "viaCroquis")
             .leftJoinAndSelect("viaCroquis.croqui", "croqui");
     }
@@ -242,7 +243,8 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .leftJoinAndSelect("montanhaLocalizacoes.estado", "montanhaEstado")
             .leftJoinAndSelect("montanhaLocalizacoes.cidade", "montanhaCidade")
             .leftJoinAndSelect("montanhaLocalizacoes.bairro", "montanhaBairro")
-            .leftJoinAndSelect("via.imagem", "imagem");
+            .leftJoinAndSelect("via.viaImagens", "viaImagens")
+            .leftJoinAndSelect("viaImagens.imagem", "viaImagensImagem");
 
         if (colecaoId) {
             qb = qb.innerJoin("via.viaColecoes", "viaColecaoFilter", "viaColecaoFilter.colecaoId = :colecaoId", {colecaoId})

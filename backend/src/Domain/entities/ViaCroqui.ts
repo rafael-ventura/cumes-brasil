@@ -3,7 +3,7 @@ import {Via} from './Via';
 import {Croqui} from './Croqui';
 import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
-@Entity()
+@Entity('via_croqui')
 export class ViaCroqui extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;

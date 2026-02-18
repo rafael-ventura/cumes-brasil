@@ -19,7 +19,6 @@
   },
   "include": [
     "src/**/*",
-    "src/Infrastructure/initialData/*.json"
   ],
   "exclude": [
     "node_modules"

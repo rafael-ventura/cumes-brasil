@@ -102,7 +102,8 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         let qb = this.repository.createQueryBuilder("escalada")
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
-            .leftJoinAndSelect("via.imagem", "imagem") // Acessar a imagem através da via
+            .leftJoinAndSelect("via.viaImagens", "viaImagens")
+            .leftJoinAndSelect("viaImagens.imagem", "viaImagensImagem")
             //acessar tambem os participantes
             .leftJoinAndSelect("escalada.participantes", "participante")
             .orderBy("escalada.data", "DESC");

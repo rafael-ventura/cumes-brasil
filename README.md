@@ -16,28 +16,186 @@
 
 </div>
 
+---
+
 ## 📜 Sobre
 
-**Cumes Brasil** é um aplicativo **PWA (Progressive Web Application)** dedicado à comunidade de escalada no Brasil. Nosso objetivo é fornecer acesso rápido e offline a informações sobre vias de escalada, permitindo que escaladores de todos os níveis encontrem vias novas e desafiadoras.
+**Cumes Brasil** é um PWA dedicado à comunidade de escalada no Brasil. Oferece acesso rápido e offline a informações sobre vias de escalada, montanhas e faces.
 
-O sistema conta com **frontend em Vue.js (Quasar)** e um **backend Node.js com TypeORM**, utilizando **Docker e PostgreSQL** para armazenar os dados. Além disso, o projeto está hospedado na **AWS EC2**, com um pipeline automatizado para deploy contínuo.
+Stack: **Vue.js (Quasar)** + **Node.js (TypeORM)** + **PostgreSQL**. Hospedado na AWS EC2.
 
 ## 🚧 Aviso
 
-:warning: **Escalada é um esporte de risco. Avalie sempre as condições de uma via e esteja devidamente preparado.**
+:warning: **Escalada é um esporte de risco. Avalie sempre as condições e esteja devidamente preparado.**
 
-## 🚀 Funcionalidades
+---
 
-- 🧗‍♂️ **Exploração de Vias de Escalada:** Descubra vias com detalhes como graduação, extensão e tipo de escalada.
-- 📜 **Informações Detalhadas:** Cada via possui informações sobre conquistadores, ano de conquista e dados técnicos.
-- 📱 **Suporte Offline (PWA):** Acesse informações de escalada mesmo sem conexão à internet.
-- 🌐 **Compartilhamento e Colaboração:** Contribua com a comunidade adicionando novas vias e avaliações.
-- 🔍 **Pesquisa Avançada:** Filtros para buscar vias por dificuldade, localização e tipo de rocha.
-- 🔄 **Integração com APIs Externas:** Importação de dados de escaladas já registradas.
+## 🚀 Rodar o Projeto
+
+Escolha uma das opções abaixo.
+
+### Opção 1: Local (PostgreSQL + Node no seu PC)
+
+**Pré-requisitos:** Node.js 18+, npm, PostgreSQL instalado localmente.
+
+#### 1. Clonar e instalar
+
+```bash
+git clone https://github.com/rafael-ventura/cume-brasil.git
+cd cumes-brasil
+```
+
+#### 2. Banco de dados
+
+Crie o banco `cumes-brasil` no PostgreSQL (ou use um existente).
+
+#### 3. Variáveis de ambiente
+
+**Backend** – crie `backend/.env.development` (ou copie de `.env`):
+
+```env
+# Banco (localhost = PostgreSQL na sua máquina)
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=sua_senha
+DB_NAME=cumes-brasil
+
+# API
+API_HOSTNAME=localhost
+API_PORT=3001
+ASSETS_URL=http://localhost:3001/assets
+
+# Outros (podem deixar padrão)
+SECRET_KEY=local-dev-secret
+WEB_HOSTNAME=http://localhost:9200
+MAIL_USER=cumesbrasil@gmail.com
+MAIL_PASSWORD=seu_app_password
+```
+
+**Frontend** – crie `frontend/.env`:
+
+```env
+VITE_APP_API_URL=http://localhost:3001/api
+VITE_APP_SERVER_IP=http://localhost:3001
+VITE_APP_ASSETS_URL=http://localhost:3001/assets
+VITE_GOOGLE_CLIENT_ID=seu_google_client_id
+```
+
+#### 4. Rodar
+
+```bash
+# Terminal 1 – Backend
+cd backend
+npm install
+npm run build
+npm run migration:run:dev
+npm run dev
+
+# Terminal 2 – Frontend
+cd frontend
+npm install
+npm run dev
+```
+
+- **API:** http://localhost:3001  
+- **Frontend:** http://localhost:9200  
+
+---
+
+### Opção 2: Docker (tudo em containers)
+
+**Pré-requisitos:** Docker e Docker Compose instalados.
+
+#### 1. Clonar e configurar
+
+```bash
+git clone https://github.com/rafael-ventura/cume-brasil.git
+cd cumes-brasil
+```
+
+#### 2. Variáveis de ambiente
+
+Crie o arquivo `.env` na **raiz do projeto** (usado pelo `docker-compose.dev.yml`):
+
+**Backend (via .env na raiz):**
+
+```env
+SECRET_KEY=sua_secret_key
+
+# API
+API_HOSTNAME=0.0.0.0
+API_PORT=3001
+ASSETS_URL=http://localhost:3001/assets
+WEB_HOSTNAME=http://localhost:9200
+
+# Banco (host=postgres = nome do container)
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=sua_senha
+POSTGRES_DB=cumes-brasil
+
+# Email
+MAIL_USER=cumesbrasil@gmail.com
+MAIL_PASSWORD=seu_app_password
+```
+
+**Frontend** – crie `frontend/.env` apontando para a API:
+
+```env
+VITE_APP_API_URL=http://localhost:3001/api
+VITE_APP_SERVER_IP=http://localhost:3001
+VITE_APP_ASSETS_URL=http://localhost:3001/assets
+VITE_GOOGLE_CLIENT_ID=seu_google_client_id
+```
+
+> **Importante:** No Docker, use `POSTGRES_HOST=postgres` (nome do serviço). Localmente use `DB_HOST=localhost`.
+
+#### 3. Subir os containers
+
+```bash
+# Build do backend antes (o Dockerfile copia o dist/)
+cd backend && npm install && npm run build && cd ..
+
+# Subir API + PostgreSQL
+docker compose -f docker-compose.dev.yml up -d --build
+```
+
+#### 4. Rodar migrations e frontend
+
+```bash
+# Migrations (uma vez, após subir o Docker)
+cd backend && npm run migration:run:dev
+
+# Frontend (em outro terminal)
+cd frontend && npm install && npm run dev
+```
+
+#### 5. Parar
+
+```bash
+docker compose -f docker-compose.dev.yml down -v
+```
+
+- **API:** http://localhost:3001  
+- **Frontend:** http://localhost:9200  
+
+---
+
+## 📋 Resumo dos comandos
+
+| Ação | Local | Docker |
+|------|-------|--------|
+| Banco | PostgreSQL local | `docker compose -f docker-compose.dev.yml up -d --build` |
+| Backend | `npm run dev` | Já sobe com o compose |
+| Frontend | `npm run dev` | `npm run dev` (fora do Docker) |
+| Migrations | `npm run migration:run:dev` | `npm run migration:run:dev` |
+| Parar | Ctrl+C | `docker compose -f docker-compose.dev.yml down -v` |
+
+---
 
 ## 🔧 Tecnologias
-
-O projeto utiliza as seguintes tecnologias:
 
 ![Vue Badge](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white)
 ![Vite Badge](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
@@ -47,116 +205,47 @@ O projeto utiliza as seguintes tecnologias:
 ![Express.js Badge](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
 ![Docker Badge](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![PostgreSQL Badge](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
-![CloudFront Badge](https://img.shields.io/badge/AWS_CloudFront-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
-![S3 Badge](https://img.shields.io/badge/AWS_S3-569A31?style=for-the-badge&logo=amazonaws&logoColor=white)
 
-## 📚 Créditos
+---
 
-Os dados do Cumes Brasil são uma compilação de várias fontes, com créditos especiais para:
+## 🚀 Funcionalidades
 
-- **André Ilha** pelas vias da Zona Sul.
-- **Pedro Bugim** por seu blog e registros históricos.
-- **Companhia da Escalada** e **Daflon** por diversas contribuições valiosas.
+- 🧗‍♂️ Exploração de vias com graduação, extensão e tipo de escalada
+- 📜 Informações detalhadas (conquistadores, ano, dados técnicos)
+- 📱 Suporte offline (PWA)
+- 🔍 Pesquisa por dificuldade, localização e tipo de rocha
+- 🌐 Compartilhamento e colaboração da comunidade
 
-## 🚀 Configuração do Ambiente
-
-### **Pré-requisitos**
-Antes de iniciar, certifique-se de ter os seguintes itens instalados:
-
-- **Node.js** (>= 18)
-- **npm** ou **yarn**
-- **Docker**
-- **Git**
-
-### **Clonar o Repositório**
-```bash
-git clone https://github.com/rafael-ventura/cume-brasil.git
-cd cumes-brasil
-```
-
-### **Configurar o Banco de Dados**
-Você pode rodar o banco de dados localmente ou via Docker.
-
-#### **Usando Docker**
-1. **Rodar Apenas o Banco de Dados:**
-   ```bash
-   docker-compose up -d db
-   ```
-
-2. **Atualizar o Arquivo `.env`:**
-   ```env
-   DB_HOST=db
-   DB_PORT=5432  
-   DB_USERNAME=cumesbr
-   DB_PASSWORD=sua_senha
-   DB_NAME=cumes_brasil
-   ```
-
-#### **Usando PostgreSQL Local**
-1. **Instalar e Configurar o PostgreSQL**
-2. **Atualizar o `.env` conforme o banco local:**
-   ```env
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USERNAME=seu_usuario
-   DB_PASSWORD=sua_senha 
-   DB_NAME=cumes_brasil
-   ```
-
-### **Rodar a Aplicação**
-#### **Backend**
-```bash
-cd backend
-npm install
-npm run start
-```
-
-#### **Frontend**
-```bash
-cd frontend
-npm install
-quasar dev -m pwa
-```
+---
 
 ## 📦 Deploy
 
-O Cumes Brasil está hospedado na AWS EC2, utilizando S3 e CloudFront para servir os assets. O pipeline de CI/CD é gerenciado pelo GitHub Actions.
+O projeto está na AWS EC2, com S3 e CloudFront. Pipeline via GitHub Actions.
 
-### **Passos para Deploy Manual**
-1. **Atualizar o frontend:**
-   ```bash
-   npm run build
-   aws s3 sync ./dist s3://cumes-brasil-front
-   ```
+**Deploy manual:** build do frontend → sync S3; backend via SSH + `git pull` + `pm2 restart`.
 
-2. **Atualizar o backend via SSH:**
-   ```bash
-   ssh ubuntu@seu-servidor "cd /caminho/backend && git pull && npm install && pm2 restart all"
-   ```
+---
+
+## 📚 Créditos
+
+- **André Ilha** – vias da Zona Sul  
+- **Pedro Bugim** – blog e registros históricos  
+- **Companhia da Escalada** e **Daflon** – contribuições
+
+---
 
 ## 🤝 Contribua
 
-Quer ajudar no desenvolvimento do Cumes Brasil? Veja como:
+1. Fork o projeto  
+2. Crie uma branch: `git checkout -b minha-feature`  
+3. Commit: `git commit -m 'Add: minha nova feature'`  
+4. Push: `git push origin minha-feature`  
+5. Abra um Pull Request  
 
-1. **Fork** o projeto.
-2. Crie uma **Feature Branch**:
-   ```bash
-   git checkout -b minha-feature
-   ```
-3. Faça seu **commit**:
-   ```bash
-   git commit -m 'Add: minha nova feature'
-   ```
-4. Envie para o repositório:
-   ```bash
-   git push origin minha-feature
-   ```
-5. Abra um **Pull Request**.
+---
 
 ## 👥 Equipe
 
-Desenvolvido por:
-
-| <img src="https://avatars.githubusercontent.com/u/28628701?s=100&v=4" alt="Rafael Ventura" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/69773445?s=100&v=4" alt="Igor Costa" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/88738275?s=100&v=4" alt="Vitor Indio" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/22893710?s=100&v=4" alt="Elmo Junior" width="100px" /> | <img src="https://avatars.githubusercontent.com/u/13644652?v=4" alt="Luiz Fernando" width="100px" /> |
-|:----------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|
-|                          [Rafael Ventura](https://github.com/rafael-ventura)                               |                            [Igor Costa](https://github.com/igordeo-costa)                              |                             [Vitor Indio](https://github.com/vitorindio)                                |                               [Elmo Junior](https://github.com/elmojuh)                                 |                               [Luiz Fernando](https://github.com/luizfcneto)                        |
+| <img src="https://avatars.githubusercontent.com/u/28628701?s=100&v=4" alt="Rafael Ventura" width="80px" /> | <img src="https://avatars.githubusercontent.com/u/69773445?s=100&v=4" alt="Igor Costa" width="80px" /> | <img src="https://avatars.githubusercontent.com/u/88738275?s=100&v=4" alt="Vitor Indio" width="80px" /> | <img src="https://avatars.githubusercontent.com/u/22893710?s=100&v=4" alt="Elmo Junior" width="80px" /> | <img src="https://avatars.githubusercontent.com/u/13644652?v=4" alt="Luiz Fernando" width="80px" /> |
+|:---:|:---:|:---:|:---:|:---:|
+| [Rafael Ventura](https://github.com/rafael-ventura) | [Igor Costa](https://github.com/igordeo-costa) | [Vitor Indio](https://github.com/vitorindio) | [Elmo Junior](https://github.com/elmojuh) | [Luiz Fernando](https://github.com/luizfcneto) |

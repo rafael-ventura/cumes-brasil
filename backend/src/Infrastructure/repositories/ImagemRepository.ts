@@ -34,8 +34,20 @@ export class ImagemRepository extends BaseRepository<Imagem> {
     return this.repository.findOne({ where: { montanhas: { id: montanhaId } } as any });
   }
 
+  async getImagensByViaId (viaId: number): Promise<Imagem[]> {
+    const { ViaImagem } = await import('../../Domain/entities/ViaImagem');
+    const viaImagemRepo = this.repository.manager.getRepository(ViaImagem);
+    const viasImagens = await viaImagemRepo.find({
+      where: { via: { id: viaId } },
+      relations: ['imagem']
+    });
+    return viasImagens.map(vi => vi.imagem).filter(Boolean) as Imagem[];
+  }
+
+  /** Retorna primeira imagem da via (compatibilidade). */
   async getByViaId (viaId: number): Promise<Imagem | null> {
-    return this.repository.findOne({ where: { vias: { id: viaId } } as any });
+    const imagens = await this.getImagensByViaId(viaId);
+    return imagens.length > 0 ? imagens[0] : null;
   }
 
   async getByCroquiId (croquiId: number): Promise<Imagem | null> {

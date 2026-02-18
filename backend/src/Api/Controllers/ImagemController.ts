@@ -145,8 +145,8 @@ export class ImagemController {
      */
     getByViaId = async (req: Request, res: Response) => {
         const viaId = ImagemValidation.idParam(req.params.id);
-        const result = await this.service.getByViaId(viaId);
-        if (!result) {
+        const result = await this.service.getImagensByViaId(viaId);
+        if (!result || result.length === 0) {
             throw new NotFoundError("Imagens não encontradas");
         }
         res.json(result);

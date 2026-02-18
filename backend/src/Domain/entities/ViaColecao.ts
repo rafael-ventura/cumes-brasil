@@ -10,7 +10,7 @@ import { Via } from './Via';
 import { Colecao } from './Colecao';
 import { BaseEntityWithTimestamps } from './BaseEntityWithTimestamps';
 
-@Entity()
+@Entity('via_colecao')
 export class ViaColecao extends BaseEntityWithTimestamps {
     @PrimaryGeneratedColumn()
     id: number;

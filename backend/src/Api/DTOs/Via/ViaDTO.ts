@@ -15,13 +15,18 @@ export class ViaDTO {
     extensao?: number;
     conquistadores?: string;
     detalhes?: string;
+    historia_resumo?: string;
+    via_cerj?: boolean;
+    equipamentos?: string;
+    tracklog_aproximacao?: string;
     data?: string;
     tipo_rocha?: string;
     tipo_escalada?: string;
     modalidade?: ModalidadeEscalada;
 
     // Relações como objetos completos (informações essenciais)
-    imagem?: ImagemDTO;
+    imagem?: ImagemDTO; // Primeira imagem (backward compat)
+    imagens?: ImagemDTO[]; // Todas as imagens da via
     localizacao?: LocalizacaoDTO; // Localização obtida através de setor/face/montanha (prioridade: setor > face > montanha)
     montanha?: {
         id: number;
@@ -102,6 +107,10 @@ export class ViaDTO {
         this.extensao = entity.extensao ? Number(entity.extensao) : undefined;
         this.conquistadores = entity.conquistadores;
         this.detalhes = entity.detalhes;
+        this.historia_resumo = entity.historia_resumo;
+        this.via_cerj = entity.via_cerj;
+        this.equipamentos = entity.equipamentos;
+        this.tracklog_aproximacao = entity.tracklog_aproximacao;
         this.data = entity.data;
         this.tipo_rocha = entity.tipo_rocha;
         this.tipo_escalada = entity.tipo_escalada;
@@ -220,27 +229,21 @@ export class ViaDTO {
             }
         }
 
-        // Lógica de fallback de imagem:
-        // 1. Se a via tem imagem (carregada como objeto), usar ela
-        // 2. Se não tem, usar imagem default
-        const viaImagem = entity.imagem && typeof entity.imagem === 'object' && (entity.imagem as any).url 
-            ? entity.imagem 
-            : null;
+        // Imagens da via (via viaImagens)
+        const viaImagens = entity.viaImagens && Array.isArray(entity.viaImagens)
+            ? [...entity.viaImagens]
+            : [];
+        const imagensObjetos = viaImagens
+            .map((vi: any) => vi.imagem)
+            .filter((img: any) => img && typeof img === 'object' && img.url);
 
-        if (viaImagem) {
-            // Usar imagem da via
-            this.imagem = new ImagemDTO(viaImagem as any);
-        } else {
-            // Usar imagem default para via
-            // ID 4 corresponde à imagem default de via conforme dados iniciais
-            const imagemDefault = {
-                id: 4,
-                url: "/assets/via-default-01.webp",
-                descricao: "Foto Default para Via",
-                tipo_entidade: "via"
-            };
-            this.imagem = new ImagemDTO(imagemDefault as any);
-        }
+        this.imagens = imagensObjetos.map((img: any) => new ImagemDTO(img));
+        this.imagem = this.imagens.length > 0 ? this.imagens[0] : new ImagemDTO({
+            id: 4,
+            url: "/assets/via-default-01.webp",
+            descricao: "Foto Default para Via",
+            tipo_entidade: "via"
+        } as any);
 
         this.fonte = entity.fonte && typeof entity.fonte === 'object'
             ? new FonteDTO(entity.fonte as any) 

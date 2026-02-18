@@ -6,9 +6,8 @@ import helmet from 'helmet';
 import routes from './routes/routes';
 import 'reflect-metadata';
 import {AppDataSource} from '../Infrastructure/config/db';
-import {loadData} from '../Infrastructure/initialData/initialLoad';
-import {Via} from '../Domain/entities/Via';
 import path from 'path';
+import {Via} from '../Domain/entities/Via';
 import {safeLogger} from '../Infrastructure/config/logger';
 import {errorRequestMiddleware, notFoundMiddleware} from './Middlewares/ErrorRequestMiddleware';
 import {generalRateLimiter, getRateLimitInfo} from './Middlewares/RateLimitMiddleware';
@@ -112,18 +111,18 @@ app.use(errorRequestMiddleware);
 async function ensureDatabaseExists(): Promise<void> {
     const pg = require('pg');
     const {Client} = pg;
-    const dbName = process.env.POSTGRES_DB;
+    const dbName = process.env.DB_NAME || process.env.POSTGRES_DB;
     
     if (!dbName) {
-        throw new Error('POSTGRES_DB não está configurado nas variáveis de ambiente');
+        throw new Error('DB_NAME ou POSTGRES_DB não está configurado nas variáveis de ambiente');
     }
 
     // Conectar ao PostgreSQL usando o banco padrão 'postgres'
     const adminClient = new Client({
-        host: process.env.POSTGRES_HOST,
-        port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
-        user: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
+        host: process.env.DB_HOST || process.env.POSTGRES_HOST,
+        port: parseInt(process.env.DB_PORT || process.env.POSTGRES_PORT || '5432', 10),
+        user: process.env.DB_USERNAME || process.env.POSTGRES_USER,
+        password: process.env.DB_PASSWORD || process.env.POSTGRES_PASSWORD,
         database: 'postgres' // Conecta ao banco padrão
     });
 
@@ -174,14 +173,9 @@ async function initializeDatabase() {
         const count = await viaRepository.count();
 
         if (count === 0) {
-            safeLogger.info('Nenhum registro encontrado na tabela Via, iniciando carga de dados...');
-            await loadData();
-            safeLogger.info('Carga inicial realizada com sucesso');
+            safeLogger.info('Banco vazio. Execute "npm run seed" para carregar dados iniciais.');
         } else {
-            safeLogger.info('Registros já existentes na tabela Via, pulando a carga de dados', {count});
-            
-            // Mesmo pulando a carga, garantir que as sequências estão corretas
-            // Isso previne erros se dados foram inseridos manualmente ou se houve algum problema anterior
+            safeLogger.info('Registros já existentes', { count });
             await fixSequencesOnStartup();
         }
     } catch (error: any) {
@@ -207,7 +201,7 @@ async function fixSequencesOnStartup() {
         const tables = [
             'continente', 'pais', 'regiao', 'estado', 'cidade', 'bairro', 'localizacao',
             'fonte', 'imagem', 'montanha', 'face', 'setor', 'croqui', 'via', 'usuario',
-            'colecao', 'escalada', 'participante', 'via_croqui'
+            'colecao', 'escalada', 'participante', 'via_colecao', 'via_croqui', 'via_imagem'
         ];
         
         for (const table of tables) {
