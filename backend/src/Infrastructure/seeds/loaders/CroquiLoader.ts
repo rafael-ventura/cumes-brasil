@@ -15,6 +15,7 @@ interface CroquiYaml {
   nome: string;
   imagem: string;
   fonte: string;
+  legenda?: string;
 }
 
 export async function runCroquiLoader(refs: ReferenciasIds): Promise<Map<string, number>> {
@@ -31,7 +32,10 @@ export async function runCroquiLoader(refs: ReferenciasIds): Promise<Map<string,
     const key = `${c.nome}|${c.imagem}`;
     let ent = await repo.findOne({ where: { nome: c.nome, imagem: { id: imagemId } } });
     if (!ent) {
-      ent = repo.create({ nome: c.nome, fonte: fonteId, imagem: { id: imagemId } as any });
+      ent = repo.create({ nome: c.nome, fonte: fonteId, imagem: { id: imagemId } as any, legenda: c.legenda });
+      await repo.save(ent);
+    } else if (c.legenda !== undefined) {
+      ent.legenda = c.legenda;
       await repo.save(ent);
     }
     ids.set(key, ent.id);

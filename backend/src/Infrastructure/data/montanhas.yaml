@@ -84,3 +84,39 @@
   altura: 440
   imagem: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
   localizacoes: []
+- nome: Caixa de Fósforos
+  altura: 20
+  localizacoes:
+    - Teresópolis
+- nome: Pedra da Agulha
+  altura: 0
+  localizacoes:
+    - Pancas
+- nome: Morro da Moganga
+  altura: 0
+  localizacoes:
+    - Tijuca
+- nome: Pão de Açúcar
+  altura: 396
+  localizacoes:
+    - Urca
+- nome: Pedra Bonita
+  altura: 693
+  localizacoes:
+    - Sao Conrado
+- nome: Paredão dos Coloridos
+  altura: 0
+  localizacoes:
+    - Urca
+- nome: Corcovado
+  altura: 710
+  localizacoes:
+    - Botafogo
+- nome: Pedra da Gávea
+  altura: 842
+  localizacoes:
+    - Sao Conrado
+- nome: Morro da Babilônia
+  altura: 147
+  localizacoes:
+    - Urca

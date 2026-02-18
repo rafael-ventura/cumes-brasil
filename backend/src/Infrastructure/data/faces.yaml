@@ -177,6 +177,11 @@
   montanha: Morro de São João (Pedra da Abelha)
   fonte: André Ilha; Kika Bradford
   localizacoes: []
+- nome: Sul (Parque da Chacrinha)
+  montanha: Morro de São João (Pedra da Abelha)
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Botafogo
 - nome: Pedra do Arpoador
   montanha: Ponta do Arpoador
   fonte: André Ilha; Kika Bradford
@@ -190,3 +195,53 @@
   montanha: Falésia do Alto Leblon II
   fonte: André Ilha; Kika Bradford
   localizacoes: []
+- nome: Face Leste
+  montanha: Caixa de Fósforos
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Teresópolis
+- nome: Faces Leste e Norte
+  montanha: Pedra da Agulha
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Pancas
+- nome: Face Noroeste
+  montanha: Morro da Moganga
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Tijuca
+- nome: Face Oeste do Totem
+  montanha: Pão de Açúcar
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Urca
+- nome: Face Sudoeste
+  montanha: Pedra Bonita
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Sao Conrado
+- nome: Face Sul
+  montanha: Pão de Açúcar
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Urca
+- nome: Face Leste
+  montanha: Corcovado
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Botafogo
+- nome: Face Sul
+  montanha: Paredão dos Coloridos
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Urca
+- nome: Face Nordeste
+  montanha: Pedra da Gávea
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Sao Conrado
+- nome: Face Norte
+  montanha: Morro da Babilônia
+  fonte: CERJ (Vias Clássicas)
+  localizacoes:
+    - Urca

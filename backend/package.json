@@ -11,7 +11,9 @@
     "migration:run": "cross-env NODE_ENV=production npx typeorm migration:run -d ./dist/Infrastructure/config/db.js",
     "migration:run:dev": "cross-env NODE_ENV=development npx typeorm migration:run -d ./dist/Infrastructure/config/db.js",
     "migration:generate": "cross-env NODE_ENV=development npx typeorm migration:generate ./src/Infrastructure/migrations/NewMigration -d ./dist/Infrastructure/config/db.js",
-    "seed": "cross-env NODE_ENV=development ts-node src/Infrastructure/seeds/seed.ts"
+    "seed": "cross-env NODE_ENV=development ts-node src/Infrastructure/seeds/seed.ts",
+    "db:reset": "cross-env NODE_ENV=development ts-node scripts/db-reset.ts",
+    "db:fresh": "npm run db:reset && npm run build && npm run migration:run:dev && npm run seed"
   },
   "dependencies": {
     "@aws-sdk/credential-providers": "^3.738.0",

@@ -131,17 +131,18 @@ export async function runReferenciasLoader(): Promise<ReferenciasIds> {
     ids.cidades.set(`${c.estado}|${c.nome}`, ent.id);
   }
 
-  // Bairros (assumindo RJ para cidades do Rio de Janeiro)
-  const bairros = loadYaml<{ nome: string; cidade: string }[]>('bairros.yaml');
+  // Bairros (estado opcional, default RJ para compatibilidade)
+  const bairros = loadYaml<{ nome: string; cidade: string; estado?: string }[]>('bairros.yaml');
   for (const b of bairros) {
-    const cidadeId = ids.cidades.get(`RJ|${b.cidade}`);
-    if (!cidadeId) throw new Error(`Cidade não encontrada: ${b.cidade}`);
+    const estadoSigla = b.estado || 'RJ';
+    const cidadeId = ids.cidades.get(`${estadoSigla}|${b.cidade}`);
+    if (!cidadeId) throw new Error(`Cidade não encontrada: ${b.cidade} (${estadoSigla})`);
     let ent = await repoBairro.findOne({ where: { nome: b.nome, cidade: { id: cidadeId } } });
     if (!ent) {
       ent = repoBairro.create({ nome: b.nome, cidade: { id: cidadeId } as Cidade });
       await repoBairro.save(ent);
     }
-    ids.bairros.set(`RJ|${b.cidade}|${b.nome}`, ent.id);
+    ids.bairros.set(`${estadoSigla}|${b.cidade}|${b.nome}`, ent.id);
   }
 
   // Localizações

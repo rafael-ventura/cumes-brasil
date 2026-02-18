@@ -1638,3 +1638,143 @@
   montanha: Irmão Menor do Leblon
   face: Noroeste (Rocinha)
   fonte: André Ilha; Kika Bradford
+# --- Vias Clássicas do CERJ ---
+- nome: Artificial da Caixa de Fósforos
+  grau: A1
+  crux: A1
+  artificial: A1
+  extensao: 20
+  conquistadores: Sylvio Joaquim Mendes; Índio do Brasil Luz; Jahir Leopoldino da Costa
+  data: '1944-02-03'
+  montanha: Caixa de Fósforos
+  face: Face Leste
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Primeira conquista emblemática do recém-criado CERJ em 1944. Pequena formação em Salinas (Teresópolis), escalada em 3 dias. O artificial foi instalado em 1969.
+  equipamentos: Corda de 60 metros; Costuras diversas; Fitas e/ou estribos
+- nome: Chaminé Brasília
+  grau: '5'
+  crux: VI A1
+  exposicao: E4
+  duracao: D5
+  extensao: 450
+  conquistadores: Giuseppe Pellegrini; Carlos Russo; Emil Mesquita; Nélson Bravin; Rodolpho Kern
+  data: '1959-07-16'
+  montanha: Pedra da Agulha
+  face: Faces Leste e Norte
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Maior chaminé já conquistada no Brasil. Via de conquista da Pedra da Agulha (Pancas-ES). Apenas 10 repetições em mais de 60 anos. Nome em homenagem à fundação de Brasília.
+  equipamentos: 2 cordas de 60 metros; Fitas longas; Equipamentos móveis diversos
+- nome: Chaminé Moganga
+  grau: '1'
+  crux: II
+  exposicao: E1
+  duracao: D1
+  extensao: 245
+  conquistadores: Nelson Teixeira; Eduardo Enéas Galvão; Mário G. de Mello Filho; Hamilkar Reigas; Dirceu Barboza
+  data: '1939-07-16'
+  montanha: Morro da Moganga
+  face: Face Noroeste
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Primeira via do CERJ (então CBE), em 1939, ano de fundação do clube. Iniciou a tradição de conquistas que já se estende por mais de 85 anos.
+  equipamentos: Corda de 60m; 02 costuras (01 longa); 01 Camalot #.75; 01 Friend #3.5
+- nome: Chaminé Stop
+  grau: '4'
+  crux: IV
+  exposicao: E3
+  duracao: D3
+  extensao: 230
+  conquistadores: Sylvio Joaquim Mendes; Guido Vegelle; Rolf Vegelle
+  data: '1944-10-15'
+  montanha: Pão de Açúcar
+  face: Face Oeste do Totem
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Primeira via técnica a fazer cume no Pão de Açúcar. Nome em homenagem a José Rodrigues Stop, fundador do CERJ. Reformada em 2021 com chapeletas rapeláveis.
+  equipamentos: Corda de 60 metros; 5 a 9 costuras (médias e longas)
+- nome: Lionel Terray
+  grau: '3'
+  crux: IV
+  exposicao: E2
+  duracao: D2
+  extensao: 180
+  conquistadores: Salomyth Fernandes; Raimundo Luiz Minchetti; Alice Maryan
+  data: '1965-10-17'
+  montanha: Pedra Bonita
+  face: Face Sudoeste
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Homenagem ao alpinista francês Lionel Terray, falecido um mês antes da conquista. Via de aventura com vista privilegiada da Pedra da Gávea e São Conrado.
+  equipamentos: Corda de 60m; 12 costuras; Fitas extras para o artificial; Peças móveis opcionais
+- nome: Paredão Coringa
+  grau: '3'
+  crux: IIIsup
+  exposicao: E1
+  duracao: D1
+  extensao: 100
+  conquistadores: Denise Emmer; Giuseppe Pellegrini; Paulo 'Bruxo' Ferreira
+  data: '1981-01-01'
+  montanha: Pão de Açúcar
+  face: Face Sul
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Conhecida como "o terceiro grau mais difícil do Brasil". Conquista de Denise Emmer e Giuseppe Pellegrini. Muito frequentada, termina no Costão.
+  equipamentos: Corda de 60m; 15 costuras (1 longa opcional)
+- nome: Paredão K2
+  grau: '4'
+  crux: V
+  exposicao: E2
+  duracao: D1
+  extensao: 145
+  conquistadores: Etzel Ritter von Stockert; José Roberto Costa; Roberto Fischer
+  data: '1962-01-01'
+  montanha: Corcovado
+  face: Face Leste
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Via clássica do Corcovado que termina aos pés do Cristo Redentor. Nome do Grupo K2, em homenagem à montanha conquistada por italianos em 1954.
+  equipamentos: Corda de 60m; Costuras; Peças móveis
+- nome: Paredão Vermelho
+  grau: '3'
+  crux: IV
+  exposicao: E2
+  duracao: D1
+  extensao: 120
+  conquistadores: Salomyth Fernandes; Carlos Bernardo
+  data: '1974-12-01'
+  montanha: Paredão dos Coloridos
+  face: Face Sul
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Via que inaugurou o Paredão dos Coloridos em 1974. Nome em homenagem à Praia Vermelha. Funciona como campo escola para iniciantes.
+  equipamentos: Corda de 60m; Costuras; Peças móveis
+- nome: Passagem dos Olhos
+  grau: '3'
+  crux: IV
+  exposicao: E2
+  duracao: D2
+  extensao: 145
+  conquistadores: Sylvio Joaquim Mendes; Índio do Brasil Luz; Reynaldo dos Santos; Reinaldo Behnken; Walter dos Santos; Germano Vasco Pires
+  data: '1945-05-06'
+  montanha: Pedra da Gávea
+  face: Face Nordeste
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Travessia lendária na Face do Imperador, da Orelha Esquerda à Direita passando pelos olhos. Conquista em 3 partes (1945, 1946, 1960). Reforma do cabo de via ferrata em 2023.
+  equipamentos: Corda de 60m; Costuras; Peças móveis
+- nome: Paredão Reinaldo Behnken
+  grau: '3'
+  crux: IIIsup
+  exposicao: E2
+  duracao: D1
+  extensao: 185
+  conquistadores: Giuseppe Pellegrini; Mário Arnaud; Oswaldo Pereira
+  data: '1984-02-10'
+  montanha: Morro da Babilônia
+  face: Face Norte
+  fonte: CERJ (Vias Clássicas)
+  via_cerj: true
+  historia_resumo: Última conquista de Giuseppe Pellegrini. Homenagem a Reinaldo Behnken, grande escalador CERJ dos anos 1940. Muito usada em cursos de primeiro de cordada.
+  equipamentos: Corda de 60m; Costuras; Peças móveis

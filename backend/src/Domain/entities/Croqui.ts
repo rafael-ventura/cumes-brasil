@@ -12,6 +12,9 @@ export class Croqui extends BaseEntityWithTimestamps {
   @Column({ nullable: false })
   nome: string;
 
+  @Column({ type: 'text', nullable: true })
+  legenda: string;
+
   @ManyToOne(() => Fonte, fonte => fonte.croquis)
   fonte: number;
 

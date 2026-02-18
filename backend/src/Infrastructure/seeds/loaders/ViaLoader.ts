@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Via } from '../../../Domain/entities/Via';
+import { ViaImagem } from '../../../Domain/entities/ViaImagem';
 import { Montanha } from '../../../Domain/entities/Montanha';
 import { Face } from '../../../Domain/entities/Face';
 import { ReferenciasIds } from './ReferenciasLoader';
@@ -25,6 +26,10 @@ interface ViaYaml {
   extensao?: number;
   conquistadores?: string;
   detalhes?: string;
+  historia_resumo?: string;
+  via_cerj?: boolean;
+  equipamentos?: string;
+  tracklog_aproximacao?: string;
   data?: string;
   montanha: string;
   face: string;
@@ -39,6 +44,7 @@ export async function runViaLoader(
 ): Promise<Map<string, number>> {
   const ids = new Map<string, number>();
   const repo = AppDataSource.getRepository(Via);
+  const viaImagemRepo = AppDataSource.getRepository(ViaImagem);
   const data = loadYaml<ViaYaml[]>('vias.yaml');
   const imagemId = refs.imagens.get(VIA_IMAGEM_DEFAULT);
 
@@ -65,13 +71,26 @@ export async function runViaLoader(
         extensao: v.extensao,
         conquistadores: v.conquistadores,
         detalhes: v.detalhes,
+        historia_resumo: v.historia_resumo,
+        via_cerj: v.via_cerj ?? false,
+        equipamentos: v.equipamentos,
+        tracklog_aproximacao: v.tracklog_aproximacao,
         data: v.data,
         montanha: { id: montanhaId } as Montanha,
         face: { id: faceId } as Face,
         fonte: fonteId,
-        imagem: imagemId,
         viaPrincipal: viaPrincipalId
       });
+      await repo.save(ent);
+      if (imagemId) {
+        const vi = viaImagemRepo.create({ via: ent, imagem: { id: imagemId } as any });
+        await viaImagemRepo.save(vi);
+      }
+    } else if (v.via_cerj !== undefined || v.historia_resumo !== undefined || v.equipamentos !== undefined || v.tracklog_aproximacao !== undefined) {
+      if (v.via_cerj !== undefined) ent.via_cerj = v.via_cerj;
+      if (v.historia_resumo !== undefined) ent.historia_resumo = v.historia_resumo;
+      if (v.equipamentos !== undefined) ent.equipamentos = v.equipamentos;
+      if (v.tracklog_aproximacao !== undefined) ent.tracklog_aproximacao = v.tracklog_aproximacao;
       await repo.save(ent);
     }
     ids.set(v.nome, ent.id);

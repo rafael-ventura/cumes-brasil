@@ -69,6 +69,10 @@ export class ImagemService extends BaseService<Imagem, ImagemRepository> {
     return this.repository.getByViaId(viaId);
   }
 
+  async getImagensByViaId (viaId: number): Promise<Imagem[]> {
+    return this.repository.getImagensByViaId(viaId);
+  }
+
   async getByCroquiId (croquiId: number): Promise<Imagem | null> {
     return this.repository.getByCroquiId(croquiId);
   }

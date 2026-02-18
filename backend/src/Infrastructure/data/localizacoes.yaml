@@ -63,3 +63,21 @@
   estado: RJ
   cidade: Rio de Janeiro
   bairro: Leblon
+- continente: America do Sul
+  pais: Brasil
+  regiao: Sudeste
+  estado: RJ
+  cidade: Rio de Janeiro
+  bairro: Urca
+- continente: America do Sul
+  pais: Brasil
+  regiao: Sudeste
+  estado: RJ
+  cidade: Teresópolis
+  bairro: Teresópolis
+- continente: America do Sul
+  pais: Brasil
+  regiao: Sudeste
+  estado: ES
+  cidade: Pancas
+  bairro: Pancas

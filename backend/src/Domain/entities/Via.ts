@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Croqui } from './Croqui';
 import { Fonte } from './Fonte';
-import { Imagem } from './Imagem';
+import { ViaImagem } from './ViaImagem';
 import { Montanha } from './Montanha';
 import { Face } from './Face';
 import { Setor } from './Setor';
@@ -67,6 +67,18 @@ export class Via extends BaseEntityWithTimestamps {
   detalhes: string;
 
   @Column({ nullable: true })
+  historia_resumo: string;
+
+  @Column({ type: 'boolean', default: false })
+  via_cerj: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  equipamentos: string;
+
+  @Column({ nullable: true })
+  tracklog_aproximacao: string;
+
+  @Column({ nullable: true })
   data: string;
 
   @Column({
@@ -107,8 +119,8 @@ export class Via extends BaseEntityWithTimestamps {
   @ManyToOne(() => Fonte, fonte => fonte.vias)
   fonte: number;
 
-  @ManyToOne(() => Imagem, imagem => imagem.vias)
-  imagem: number;
+  @OneToMany(() => ViaImagem, vi => vi.via, { cascade: true })
+  viaImagens: ViaImagem[];
 
   @ManyToOne(() => Montanha, { nullable: true })
   montanha: Montanha;

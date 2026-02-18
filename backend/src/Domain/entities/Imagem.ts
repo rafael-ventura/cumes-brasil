@@ -1,7 +1,7 @@
 import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Fonte} from "./Fonte";
 import {Colecao} from "./Colecao";
-import {Via} from "./Via";
+import {ViaImagem} from "./ViaImagem";
 import {Montanha} from "./Montanha";
 import {Usuario} from "./Usuario";
 import {Croqui} from "./Croqui";
@@ -31,8 +31,8 @@ export class Imagem extends BaseEntityWithTimestamps {
   @OneToMany(() => Colecao, colecao => colecao.imagem)
   colecoes: Colecao[];
 
-  @OneToMany(() => Via, via => via.imagem)
-  vias: Via[];
+  @OneToMany(() => ViaImagem, vi => vi.imagem)
+  viaImagens: ViaImagem[];
 
   @OneToMany(() => Montanha, montanha => montanha.imagem)
   montanhas: Montanha[];
