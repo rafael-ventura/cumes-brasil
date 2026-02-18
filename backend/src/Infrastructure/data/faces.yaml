@@ -1,0 +1,192 @@
+- nome: Nordeste (Forte Duque de Caxias)
+  montanha: Morro do Leme
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leme
+- nome: Norte (Forte Duque de Caxias)
+  montanha: Morro do Leme
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leme
+- nome: Noroeste (Forte Duque de Caxias)
+  montanha: Morro do Leme
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leme
+- nome: Sudoeste (Praia do Leme/Copacabana)
+  montanha: Morro do Leme
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leme
+- nome: Falésia à beira-mar (Forte Duque de Caxias)
+  montanha: Morro do Leme
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leme
+- nome: Sudoeste (Forte Duque de Caxias)
+  montanha: Morro do Urubu
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Vidigal
+- nome: Leste
+  montanha: Morro do Urubu
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Vidigal
+- nome: Falésia da Enseada
+  montanha: Morro do Urubu
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Vidigal
+- nome: Sul (Parque da Chacrinha)
+  montanha: Morro de São João
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Botafogo
+- nome: Noroeste (Balancé)
+  montanha: Morro de São João
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Botafogo
+- nome: Noroeste (Cemitério São João Batista)
+  montanha: Morro de São João
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Botafogo
+- nome: Leste
+  montanha: Agulha do Inhangá
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Sudoeste
+  montanha: Agulha do Inhangá
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Falésia do Muro
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Falésia Laranjão
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Falésia do mirante
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Oeste/Sudoeste (Parque da Catacumba)
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Sul (Rua Constante Ramos)
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Leste (Túnel Major Rubens Vaz)
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Nordeste (Rua Santa Clara)
+  montanha: Morro dos Cabritos
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Copacabana
+- nome: Norte/Noroeste (Platô da Lagoa)
+  montanha: Morro da Catacumba
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Lagoa
+- nome: Norte (Lagoa/Fonte da Saudade)
+  montanha: Pedra do Urubu
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Lagoa
+- nome: Falésia do Humaitá
+  montanha: Morro da Saudade
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Humaita
+- nome: Nordeste (Túnel Sá Freire Alvim)
+  montanha: Morro do Cantagalo
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Ipanema
+- nome: Norte (Rua Percy Murray)
+  montanha: Morro do Cantagalo
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Ipanema
+- nome: Norte (Rua Presidente Afonso Lopes)
+  montanha: Morro do Cantagalo
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Ipanema
+- nome: Campo Escola de Escalada da Aníbal Moreira
+  montanha: Pedreira da Rua Aníbal Moreira
+  fonte: Pedro Bugim
+  localizacoes:
+    - Tijuca
+- nome: Parede da Ilusão Idiótica
+  montanha: Falésias do Vidigal
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Sao Conrado
+- nome: Parede Principal
+  montanha: Falésias do Vidigal
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Sao Conrado
+- nome: Sul (Avenida Niemeyer)
+  montanha: Falésias da Niemeyer
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Leblon
+- nome: Leste (Praça Rubem Dário)
+  montanha: Falésia do Leblon
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Sul (Avenida Niemeyer)
+  montanha: Irmão Menor do Leblon
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Leste (Parque do Penhasco Dois Irmãos)
+  montanha: Irmão Menor do Leblon
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Nordeste (Parque do Penhasco Dois Irmãos)
+  montanha: Irmão Menor do Leblon
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Noroeste (Rocinha)
+  montanha: Irmão Menor do Leblon
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Pedra da Abelha
+  montanha: Morro de São João (Pedra da Abelha)
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Pedra do Arpoador
+  montanha: Ponta do Arpoador
+  fonte: André Ilha; Kika Bradford
+  localizacoes:
+    - Ipanema
+- nome: Falésia do Alto Leblon I
+  montanha: Falésia do Alto Leblon I
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []
+- nome: Falésia do Alto Leblon II
+  montanha: Falésia do Alto Leblon II
+  fonte: André Ilha; Kika Bradford
+  localizacoes: []

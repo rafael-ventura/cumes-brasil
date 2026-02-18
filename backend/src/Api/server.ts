@@ -6,10 +6,8 @@ import helmet from 'helmet';
 import routes from './routes/routes';
 import 'reflect-metadata';
 import {AppDataSource} from '../Infrastructure/config/db';
-import fs from 'fs';
 import path from 'path';
 import {Via} from '../Domain/entities/Via';
-import path from 'path';
 import {safeLogger} from '../Infrastructure/config/logger';
 import {errorRequestMiddleware, notFoundMiddleware} from './Middlewares/ErrorRequestMiddleware';
 import {generalRateLimiter, getRateLimitInfo} from './Middlewares/RateLimitMiddleware';
@@ -175,14 +173,9 @@ async function initializeDatabase() {
         const count = await viaRepository.count();
 
         if (count === 0) {
-            safeLogger.info('Nenhum registro encontrado na tabela Via, executando dump inicial...');
-            await runInitialDataSql();
-            safeLogger.info('Dump inicial executado com sucesso');
+            safeLogger.info('Banco vazio. Execute "npm run seed" para carregar dados iniciais.');
         } else {
-            safeLogger.info('Registros já existentes na tabela Via, pulando a carga de dados', {count});
-            
-            // Mesmo pulando a carga, garantir que as sequências estão corretas
-            // Isso previne erros se dados foram inseridos manualmente ou se houve algum problema anterior
+            safeLogger.info('Registros já existentes', { count });
             await fixSequencesOnStartup();
         }
     } catch (error: any) {
@@ -191,38 +184,6 @@ async function initializeDatabase() {
             stack: error.stack
         });
         process.exit(1);
-    }
-}
-
-/**
- * Executa o dump SQL inicial (initialData.sql) quando o banco está vazio.
- * Usado na primeira execução local e em produção.
- */
-async function runInitialDataSql() {
-    const sqlPath = path.resolve(__dirname, '../Infrastructure/initialData/initialData.sql');
-    const sql = fs.readFileSync(sqlPath, 'utf8');
-
-    const queryRunner = AppDataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-        // node-pg executa um statement por vez; split por ;\n (evita ; dentro de strings)
-        const statements = sql
-            .split(/;\s*\n/)
-            .map(s => s.split('\n').filter(line => !line.trim().startsWith('--')).join('\n').trim())
-            .filter(s => s.length > 0 && s !== 'BEGIN' && s !== 'COMMIT');
-
-        for (const stmt of statements) {
-            const fullStmt = stmt.endsWith(';') ? stmt : stmt + ';';
-            await queryRunner.query(fullStmt);
-        }
-        await queryRunner.commitTransaction();
-    } catch (error) {
-        await queryRunner.rollbackTransaction();
-        throw error;
-    } finally {
-        await queryRunner.release();
     }
 }
 
@@ -240,7 +201,7 @@ async function fixSequencesOnStartup() {
         const tables = [
             'continente', 'pais', 'regiao', 'estado', 'cidade', 'bairro', 'localizacao',
             'fonte', 'imagem', 'montanha', 'face', 'setor', 'croqui', 'via', 'usuario',
-            'colecao', 'escalada', 'participante', 'via_croqui'
+            'colecao', 'escalada', 'participante', 'via_colecao', 'via_croqui'
         ];
         
         for (const table of tables) {

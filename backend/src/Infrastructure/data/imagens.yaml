@@ -1,0 +1,56 @@
+- url: /assets/colecao-default-01.webp
+  descricao: Foto Default para Colecao
+  fonte: Pedro Bugim
+  tipo_entidade: colecao
+- url: https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80
+  descricao: Foto Default para Montanha - Montanha Brasileira
+  fonte: Itaway Ecotours
+  tipo_entidade: montanha
+- url: /assets/usuario-default-01.webp
+  descricao: Foto Default para Usuário
+  fonte: Deus Ex Machina
+  tipo_entidade: usuario
+- url: /assets/via-default-01.webp
+  descricao: Foto Default para Via
+  fonte: Deus Ex Machina
+  tipo_entidade: via
+- url: /assets/croquis/croqui_01.webp
+  descricao: Croquis da Anibal - Mapa Desenhado
+  fonte: André Ilha; Kika Bradford
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_02.webp
+  descricao: Croquis da Anibal - Foto das Vias
+  fonte: André Ilha; Kika Bradford
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_29_dezembro.webp
+  descricao: Croqui Via 29 de Dezembro
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_22_outubro.webp
+  descricao: Croqui Via 22 de Outubro
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_semisonic.webp
+  descricao: Croqui Via Semisonic
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_ratos_da_montanha.webp
+  descricao: Croqui Via Ratos da Montanha
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_ponto_noturno.webp
+  descricao: Croqui Via Ponto Noturno
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_unha_de_gato.webp
+  descricao: Croqui Via Unha de Gato
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_fissura_do_ingles.webp
+  descricao: Croqui Via Fissura do Ingles - Resumido
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_fissura_do_ingles_02.webp
+  descricao: Croqui Via Fissura do Ingles - Detalhado
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui

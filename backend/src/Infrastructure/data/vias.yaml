@@ -1,0 +1,1640 @@
+- nome: 29 de dezembro
+  grau: '2'
+  crux: IIsup
+  extensao: 55
+  conquistadores: Jofre Telles;Marina Mello
+  data: '2005-08-05'
+  montanha: Morro do Leme
+  face: Nordeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Fenda do Forte
+  crux: Vsup
+  exposicao: E2
+  extensao: 18
+  conquistadores: Ivan Cristie;Paulo Henrique "PH" Santos
+  data: '2005-01-15'
+  montanha: Morro do Leme
+  face: Nordeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Semisonic
+  grau: '2'
+  crux: IV
+  exposicao: E2/E3
+  extensao: 140
+  conquistadores: Paulo Henrique "PH" Santos (solo encordado)
+  data: '2004-06-21'
+  montanha: Morro do Leme
+  face: Norte (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Ratos de montanha
+  grau: '5'
+  crux: VIIa
+  duracao: D1
+  exposicao: E3
+  extensao: 110
+  conquistadores: Leandro Chen; Marcos "Snakinho" Piffer;Marcus Vinícius Ferreira;Patrícia Duffes; Paulo Henrique "PH" Santos
+  data: '2005-04-14'
+  montanha: Morro do Leme
+  face: Noroeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Paredão do Leme
+  grau: '2'
+  crux: III
+  extensao: 135
+  conquistadores: Alexandre Decker; Hélio Barroso; Nélson Busi
+  data: '1967-08-12'
+  montanha: Morro do Leme
+  face: Noroeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: João Belamy
+  grau: '4'
+  crux: V
+  extensao: 100
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães; Felipe Barbosa
+  data: '2006-11-18'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Ponto Noturno
+  grau: '4'
+  crux: VI
+  exposicao: E2
+  extensao: 105
+  conquistadores: Marcos Fontainha; Paulo Henrique "PH" Santos
+  data: '2005-06-10'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: 29 de dezembro
+- nome: Um dia de sol
+  grau: '4'
+  crux: VIsup
+  extensao: 95
+  conquistadores: Luiz Vulcanis; Pedro Bugim
+  data: '2006-10-15'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Fenda do Forte
+- nome: Um dia de sorte
+  crux: VIIa
+  extensao: 25
+  conquistadores: Pedro Bugim; Rodrigo Taveira
+  data: '2007-03-18'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Diedro Mar Grosso
+  crux: IVsup
+  extensao: 25
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães
+  data: '2004-12-25'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Tsunami
+  crux: III
+  extensao: 20
+  conquistadores: André Ilha;Rodolfo Campos
+  data: '2005-05-29'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Travessia Dois em um
+  grau: '3'
+  crux: V
+  extensao: 70
+  conquistadores: Antônio "Tonico" Magalhães; Felipe Barbosa; Juliano Magalhães
+  data: '2005-10-14'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Depois da tempestade
+  crux: III
+  extensao: 20
+  conquistadores: Aline Garcia; Pedro Bugim
+  data: '2006-01-28'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Maré negra
+  crux: V
+  exposicao: E3
+  extensao: 25
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2006-01-15'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Insolação
+  crux: IIIsup
+  extensao: 20
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães
+  data: '2005-12-23'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Ressaca
+  crux: V
+  extensao: 15
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães
+  data: '2005-12-23'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Rio 40 graus
+  crux: VIIa
+  extensao: 12
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães
+  data: '2005-12-26'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Bicho-papão
+  crux: VIIIa/b
+  extensao: 10
+  conquistadores: André Ilha; Paulo Henrique "PH" Santos
+  data: '2006-01-29'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Marola
+  crux: VIIIb
+  extensao: 15
+  conquistadores: Marcos Fontainha; Paulo Henrique "PH" Santos
+  data: '2006-01-08'
+  montanha: Morro do Leme
+  face: Sudoeste (Praia do Leme/Copacabana)
+  fonte: André Ilha; Kika Bradford
+- nome: Jovem Colonião
+  crux: VIIa
+  extensao: 20
+  conquistadores: Paulo Henrique "PH" Santos (solo)
+  data: '2005-04-06'
+  montanha: Morro do Leme
+  face: Falésia à beira-mar (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Arco do Triunfo
+  grau: '5'
+  crux: VISup
+  artificial: A0/VIIa
+  duracao: D1
+  exposicao: E1
+  extensao: 42
+  conquistadores: Marcus Vinícius; Paulo Henrique "PH" Santos
+  data: '2004-04-03'
+  montanha: Morro do Urubu
+  face: Sudoeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Unha de gato
+  grau: '4'
+  crux: VIIb/c
+  exposicao: E1
+  extensao: 45
+  conquistadores: Paulo Henrique "PH" Santos; Thiago Pedroso
+  data: '2004-03-21'
+  montanha: Morro do Urubu
+  face: Sudoeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Mundo cão
+  crux: VIIIb/c
+  extensao: 30
+  conquistadores: André Ilha; Paulo Henrique "PH" Santos; Thiago Pedroso
+  data: '2004-05-08'
+  montanha: Morro do Urubu
+  face: Sudoeste (Forte Duque de Caxias)
+  fonte: André Ilha; Kika Bradford
+- nome: Zé Buscapé
+  grau: '2'
+  crux: IIIsup
+  extensao: 105
+  conquistadores: Leonardi Cupollilo; Paulo Henrique "PH" Santos
+  data: '2004-08-08'
+  montanha: Morro do Urubu
+  face: Leste
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Semisonic
+- nome: Estopim
+  crux: V
+  exposicao: E2
+  extensao: 35
+  conquistadores: Patrícia Duffles; Paulo Henrique "PH" Santos
+  data: '2005-03-19'
+  montanha: Morro do Urubu
+  face: Falésia da Enseada
+  fonte: André Ilha; Kika Bradford
+- nome: Ascensão e Queda
+  grau: '5'
+  crux: VI
+  artificial: A0(3)
+  duracao: D2
+  exposicao: E2
+  extensao: 125
+  conquistadores: Alfredo Neto;Flávio Abreu;Guilherme "Piu-Piu" Fonseca
+  data: '2002-10-10'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Ratos de montanha
+- nome: Fissura do inglês
+  grau: '4'
+  crux: VIsup
+  exposicao: E2/3
+  extensao: 170
+  conquistadores: Heckel Capucci; Rodolfo Chermont
+  data: '1970-03-13'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Sucata
+  grau: '3'
+  crux: IIIsup
+  exposicao: E2/3
+  extensao: 160
+  conquistadores: Álvaro Borges; Carlos Eduardo "Cadu" Pinto; Heldo da Fonseca; Sebastião Cazeiro
+  data: '1971-10-16'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Fissura São João
+  grau: '4'
+  crux: VI
+  exposicao: E2/3
+  extensao: 105
+  conquistadores: Alfredo Maciel;Arcindo Madeira;Edi Martins; Mário Arnauld
+  data: '1978-02-12'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Paredão do Leme
+- nome: Andrômeda
+  crux: VIIIc
+  extensao: 30
+  conquistadores: José Marcos; Marcello Ramos; Marcelo Braga; Pascal
+  data: '1986-01-01'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Sombras eternas
+  crux: IXa
+  extensao: 20
+  conquistadores: Alexandre Barradas; André Luís; Eduardo Bittencourt; Márcio Lozada
+  data: '1990-01-01'
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Filhos do meio-fio
+  crux: VIIIc
+  extensao: 30
+  conquistadores: Alexandre Portela; Luis Cláudio "Pita" Bittencourt; Sérgio Tartari
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Meteorito
+  crux: VIIIc
+  extensao: 30
+  conquistadores: Alexandre Portela; Sérgio Tartari
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Nebulosa
+  crux: VIIIb
+  extensao: 30
+  conquistadores: Alexandre Portela; Sérgio Tartari
+  montanha: Morro de São João
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Shackleton
+  crux: VI
+  extensao: 15
+  conquistadores: Alfredo Neto; Hernando Bedoya; Sérgio "Bula" Rozencwaig
+  data: '2002-01-26'
+  montanha: Morro de São João (Pedra da Abelha)
+  face: Sul (Parque da Chacrinha)
+  fonte: André Ilha; Kika Bradford
+- nome: Copa do Mundo
+  crux: IV
+  extensao: 45
+  conquistadores: Hildson "Hillo" Santana; André Almeida; Robson Richers
+  data: '1994-01-01'
+  montanha: Morro de São João
+  face: Noroeste (Balancé)
+  fonte: André Ilha; Kika Bradford
+- nome: Olhos de anjo
+  grau: '3'
+  crux: Vsup
+  exposicao: E2/3
+  extensao: 85
+  conquistadores: Ana Paula Braga; Renato Souto
+  data: '1998-10-20'
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: São Pedro
+  grau: '2'
+  crux: IVsup
+  extensao: 110
+  conquistadores: Edi Martins; Mário Arnaud
+  data: '1979-02-23'
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Balança-Mas-Não-Cai
+  grau: '4'
+  crux: VIIa
+  exposicao: E2/3
+  extensao: 100
+  conquistadores: Daniel "Goiaba" Lacerda; Eloy Corso; Hildson "Hillo" Santana; Marcelo Moraes; Sancho Corá
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Francesco Berardi
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 85
+  conquistadores: Juratan Câmara; Marco Vidon
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Nós e a eternidade
+  grau: '4'
+  crux: VI
+  extensao: 60
+  conquistadores: André Ilha; Marco Vidon
+  data: '1988-01-23'
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Sete Palmos
+  grau: '4'
+  crux: VIIb
+  extensao: 60
+  conquistadores: Juratan Câmara; Marco Vidon
+  data: '1988-05-03'
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Forças ocultas
+  grau: '3'
+  crux: VIIb
+  extensao: 60
+  conquistadores: André Ilha; Marco Vidon
+  data: '1988-04-26'
+  montanha: Morro de São João
+  face: Noroeste (Cemitério São João Batista)
+  fonte: André Ilha; Kika Bradford
+- nome: Aristóteles contemplando o busto de Homero
+  artificial: A2
+  extensao: 55
+  conquistadores: Alain Villaume
+  montanha: Agulha do Inhangá
+  face: Leste
+  fonte: André Ilha; Kika Bradford
+- nome: Via normal
+  crux: II
+  extensao: 10
+  montanha: Agulha do Inhangá
+  face: Sudoeste
+  fonte: André Ilha; Kika Bradford
+- nome: Chamonix
+  crux: III (A1/VIIIa)
+  extensao: 50
+  conquistadores: Alexandre Decker; Anselmo Pires; Jair Lourenço; Jaime Pitaluga; Juarez Trigueiro
+  data: '1965-01-23'
+  montanha: Agulha do Inhangá
+  face: Sudoeste
+  fonte: André Ilha; Kika Bradford
+- nome: Passo do gigante
+  grau: '2'
+  montanha: Agulha do Inhangá
+  face: Sudoeste
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: João Belamy
+- nome: Jânio Quadros
+  grau: '2'
+  conquistadores: Carlos Cerqueira; José Schuster; Raimundo Minchetti; Rogério Santana
+  data: '1963-01-01'
+  montanha: Agulha do Inhangá
+  face: Sudoeste
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Ponto Noturno
+- nome: Aresta Fuligem
+  crux: VI
+  exposicao: E2/3
+  extensao: 12
+  conquistadores: André "Batata" Padrenosso; Marcus "Kiko" Araújo; Ricardo Bastos
+  data: '2007-08-05'
+  montanha: Morro dos Cabritos
+  face: Falésia do Muro
+  fonte: André Ilha; Kika Bradford
+- nome: Bagaço da laranja
+  crux: VIIc
+  extensao: 12
+  conquistadores: Júlio Campanella
+  data: '1994-01-01'
+  montanha: Morro dos Cabritos
+  face: Falésia Laranjão
+  fonte: André Ilha; Kika Bradford
+- nome: Bem-Te-Vi
+  grau: '3'
+  crux: IV
+  extensao: 160
+  conquistadores: André Ilha; José "Camelô" Lozada; Renato Souto
+  data: '1990-09-13'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Encruzilhada
+  grau: '4'
+  crux: IVsup
+  exposicao: E2/3
+  extensao: 235
+  conquistadores: Júlio Campanella; Leandro Moura
+  data: '2002-08-22'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Via do Beto
+  grau: '4'
+  crux: IVsup
+  exposicao: E5
+  extensao: 180
+  conquistadores: Herbert Fortes
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Amnésia Audaciosa
+  grau: '4'
+  crux: IVsup
+  exposicao: E2/3
+  extensao: 120
+  conquistadores: André Ilha; Bóris Flegr; Carlos "Chuchu" Arruzo; Francisco "Playboy" Castagnaro; Ivan Azevedo; Monique Correa; Rodolfo Campos
+  data: '2007-04-15'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Lagoa
+  grau: '3'
+  crux: IV
+  extensao: 245
+  conquistadores: Fernando Gusmão; Gilberto Chiarelli; José Carlos Almeida
+  data: '1970-10-17'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: O satânico Dr. Pow
+  grau: '4'
+  crux: IVsup
+  exposicao: E2/3
+  extensao: 215
+  conquistadores: Bruno Dias; Jean Pierre Von Der Weid; Luis Alexandre; Pedro "Pow" Aragão; Ricardo Moraes
+  data: '2004-06-04'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Cabrito Cabreiro
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 230
+  conquistadores: André Kühner; Júlio Campanella; Nilton Campos
+  data: '2000-09-11'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: A fogueira das vaidades
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 165
+  conquistadores: Arthur Solleiro; Pedro "Pow" Aragão; Ricardo de Moraes
+  data: '2002-01-04'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Um dia de sol
+- nome: Grande guerreiro
+  grau: '4'
+  crux: IV
+  exposicao: E2/3
+  extensao: 220
+  conquistadores: Frederico Noritomi; Guiderlan "Dolly" Mantovani; Hernande Oliveira; Manuel do Rosário; Rodolfo Campos
+  data: '2002-03-24'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Cabrito em chamas
+  grau: '4'
+  crux: IVsup
+  exposicao: E3
+  extensao: 170
+  conquistadores: André Kühner; Arianne Carvalhedo; Gabriela Saliba
+  data: '2001-09-01'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Um dia de sorte
+- nome: Os exércitos de um homem só
+  grau: '3'
+  crux: III
+  extensao: 200
+  conquistadores: Pedro "Pow" Aragão
+  data: '2001-10-08'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Carioca
+  grau: '2'
+  crux: III
+  extensao: 100
+  conquistadores: Francisco Menescal; Hudson Machado; Jarci Machado; Luiz Menescal; Ricardo Menescal
+  data: '1947-12-07'
+  montanha: Morro dos Cabritos
+  face: Norte/Noroeste (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: Es muerto
+  crux: Vsup
+  exposicao: E4/5
+  extensao: 25
+  conquistadores: Hernande Oliveira; Rodolfo Campos
+  data: '2001-08-18'
+  montanha: Morro dos Cabritos
+  face: Falésia do mirante
+  fonte: André Ilha; Kika Bradford
+- nome: PFF2
+  grau: '2'
+  crux: II
+  extensao: 400
+  conquistadores: Ferando Fuhrkin; Paulo Favaron
+  data: '1992-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Cristal acima
+  grau: '3'
+  crux: IV
+  exposicao: E2/E3
+  extensao: 135
+  conquistadores: Fábio Serfaty; Márcio Carilho
+  data: '2005-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Chuva de pedra
+  grau: '4'
+  crux: VI
+  extensao: 140
+  conquistadores: Ana Cláudia "Lila" Flosi; Ian Lima; Rodrigo Motta
+  data: '2010-10-13'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Tamau
+  grau: '3'
+  crux: III
+  extensao: 280
+  conquistadores: Luiz Octávio "Tavinho" Cardozo; Maurício Mota
+  data: '1977-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Onde as ruas não têm nome
+  grau: '5'
+  crux: VI
+  exposicao: E4/5
+  extensao: 95
+  conquistadores: Alcino Falcão; Luis Cláudio "Ralf" Cortes
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Casa da mãe Joana
+  grau: '4'
+  crux: IVsup
+  exposicao: E4
+  extensao: 200
+  conquistadores: Alexandre Portela; Herbert Fortes; Fernando Vieira
+  data: '2003-02-04'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Eram os deuses astronautas
+  grau: '4'
+  crux: IVsup
+  extensao: 150
+  conquistadores: Toti "Pitoco" Jordan; Eduardo Luna
+  data: '2003-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Padecendo no paraíso
+  grau: '5'
+  crux: VIIa
+  extensao: 90
+  conquistadores: Fernando Vieira; Juliano Lindner; Márcio Carrilho
+  data: '2001-02-03'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Última opção/Opção completa
+  grau: '3'
+  crux: VI
+  extensao: 270
+  conquistadores: Alexandre Siqueira; Jacques Cardeman; Leonardo "Leo" Siqueira; Márcio Amaral; Michel Cipolati; Guilherme "Piu-Piu" Fonseca; Miguel Rego
+  data: '1998-05-28'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Diedro Mar Grosso
+- nome: Dirceu Gouveia
+  grau: '2'
+  crux: III
+  extensao: 270
+  conquistadores: Juratan Câmara; Luciano Perez
+  data: '1985-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Lilith
+  grau: '2'
+  crux: IIIsup
+  extensao: 90
+  conquistadores: Kátia Torres; Lilian White; Sílvia Fittipaldi; Valéria Conforto
+  data: '1987-08-10'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Tsunami
+- nome: Ferrugem
+  grau: '2'
+  crux: III
+  extensao: 270
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Antares
+  grau: '2'
+  crux: II
+  extensao: 320
+  conquistadores: Denise Emmer; Giuseppe Pellegrini
+  data: '1977-11-02'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Travessia Dois em um
+- nome: La Belle de Jour
+  grau: '2'
+  crux: Vsup
+  exposicao: E3
+  extensao: 205
+  conquistadores: Autor Desconhecido;André Araújo; Flávio Leone
+  data: '2003-01-01'
+  montanha: Morro dos Cabritos
+  face: Oeste/Sudoeste (Parque da Catacumba)
+  fonte: André Ilha; Kika Bradford
+- nome: Frank Justus
+  grau: '3'
+  crux: IIIsup
+  extensao: 200
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Lima
+  montanha: Morro dos Cabritos
+  face: Sul (Rua Constante Ramos)
+  fonte: André Ilha; Kika Bradford
+- nome: Genitália
+  crux: VIIIc
+  extensao: 50
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Lima; Ricardo Zugliani
+  montanha: Morro dos Cabritos
+  face: Sul (Rua Constante Ramos)
+  fonte: André Ilha; Kika Bradford
+- nome: Lá de casa dá pra ver
+  grau: '4'
+  crux: V
+  extensao: 135
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Lima
+  montanha: Morro dos Cabritos
+  face: Sul (Rua Constante Ramos)
+  fonte: André Ilha; Kika Bradford
+- nome: Pra galera
+  grau: '3'
+  crux: III
+  extensao: 150
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Lima
+  montanha: Morro dos Cabritos
+  face: Sul (Rua Constante Ramos)
+  fonte: André Ilha; Kika Bradford
+- nome: Au-Au
+  grau: '2'
+  crux: II
+  conquistadores: Bruno Cruz; Marcelo Ramos
+  data: '1984-01-01'
+  montanha: Morro dos Cabritos
+  face: Leste (Túnel Major Rubens Vaz)
+  fonte: André Ilha; Kika Bradford
+- nome: Anarquista
+  crux: VIIc
+  artificial: A1(2)
+  extensao: 50
+  conquistadores: Fábio da Silveira; Sérgio Tartari
+  data: '1983-01-01'
+  montanha: Morro dos Cabritos
+  face: Nordeste (Rua Santa Clara)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Maré negra
+- nome: Chaminé Cinquentenário
+  grau: '4'
+  crux: V
+  artificial: C
+  extensao: 110
+  conquistadores: Amauri Dantas; Jorge Poggi
+  data: '1969-11-08'
+  montanha: Morro dos Cabritos
+  face: Nordeste (Rua Santa Clara)
+  fonte: André Ilha; Kika Bradford
+- nome: Heróis dos Cabritos
+  grau: '3'
+  crux: IV
+  exposicao: E3
+  extensao: 100
+  conquistadores: Gideão "Xaropinho" Mello; Stephany Rayol
+  data: '2010-12-14'
+  montanha: Morro dos Cabritos
+  face: Nordeste (Rua Santa Clara)
+  fonte: André Ilha; Kika Bradford
+- nome: Fazendo a cabeça
+  crux: VIIa
+  extensao: 15
+  conquistadores: André "Rato Kühner; Júlio Campanella
+  data: '2002-04-05'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Veias abertas
+  grau: '5'
+  crux: VIIb/c
+  extensao: 75
+  conquistadores: Bruno Menescal; Sérgio Tartari; André Ilha; Lúcia Duarte
+  data: '1991-10-13'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Lagoa Rasta
+  crux: VIIc
+  extensao: 60
+  conquistadores: Júlio Campanella; Marcelo "Pedal Verde" Silva
+  data: '2000-08-29'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Insolação
+- nome: Monstro da Lagoa Negra
+  crux: Xa
+  extensao: 10
+  conquistadores: Luis Cláudio "Ralf" Cortes; Marcelo Braga; Daniel Hans "Coçada"
+  data: '2003-03-01'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Três porquinhos
+  crux: VIsup
+  extensao: 7
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Execução penal
+  crux: IXa
+  extensao: 12
+  conquistadores: Flávio Leone; André Araújo; Charles Weksler
+  data: '2003-08-17'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Lagoa Rasta
+  crux: VIIc
+  extensao: 60
+  conquistadores: Júlio Campanella; Marcelo "Pedal Verde" Silva
+  data: '2000-08-29'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Cristais canibais
+  crux: VIIb
+  extensao: 40
+  conquistadores: André Ilha; Eduardo Cabral
+  data: '1993-04-29'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Rio 40 graus
+- nome: Maldita
+  crux: VIIa
+  extensao: 23
+  conquistadores: André "Rato" Kühner; Gabriela Saliba; José Carlos "Leleco" Leal
+  data: '2002-01-01'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Prusquistão em casa
+  crux: IVsup
+  extensao: 23
+  conquistadores: André "Rato" Kühner; Nilton Campos
+  data: '2003-10-01'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Melzinho da Lagoa
+  crux: VIsup
+  extensao: 15
+  conquistadores: Antônio "Tonico" Magalhães; Juliano Magalhães
+  data: '2010-01-01'
+  montanha: Morro da Catacumba
+  face: Norte/Noroeste (Platô da Lagoa)
+  fonte: André Ilha; Kika Bradford
+- nome: Pequena Notável
+  crux: VI
+  extensao: 30
+  conquistadores: André Ilha; Lúcia Duarte
+  data: '1984-03-24'
+  montanha: Pedra do Urubu
+  face: Norte (Lagoa/Fonte da Saudade)
+  fonte: André Ilha; Kika Bradford
+- nome: O psicopata
+  crux: II
+  exposicao: E2/3
+  extensao: 20
+  conquistadores: André Ilha; Christian "Tita" Steinhauser; Rodrigo Guardatti; Daniel Toffoli
+  data: '2007-02-10'
+  montanha: Morro da Saudade
+  face: Falésia do Humaitá
+  fonte: André Ilha; Kika Bradford
+- nome: Humaitá verde
+  crux: VI
+  extensao: 20
+  conquistadores: André Ilha; Christian "Tita" Steinhauser; Rodrigo Guardatti; Daniel Toffoli
+  data: '2007-02-10'
+  montanha: Morro da Saudade
+  face: Falésia do Humaitá
+  fonte: André Ilha; Kika Bradford
+- nome: '1990'
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 145
+  conquistadores: Alcino Falcão; Edilson "Tilo" Catarino
+  data: '1990-01-01'
+  montanha: Morro do Cantagalo
+  face: Nordeste (Túnel Sá Freire Alvim)
+  fonte: André Ilha; Kika Bradford
+- nome: Walmir de Castro
+  grau: '4'
+  crux: IVsup
+  extensao: 60
+  conquistadores: Fernando de Andrade; Hamilton Maciel; Válter Martins
+  data: '1952-11-16'
+  montanha: Morro do Cantagalo
+  face: Nordeste (Túnel Sá Freire Alvim)
+  fonte: André Ilha; Kika Bradford
+- nome: A Corrida do Ouro
+  crux: VIsup
+  exposicao: E3/4
+  extensao: 50
+  conquistadores: Autor desconhecido; Pedro "Pow" Aragão; Ricardo de Moraes
+  data: '2002-02-28'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: Calis
+  grau: '5'
+  crux: VI
+  exposicao: E2/E3
+  extensao: 100
+  conquistadores: Carlos Alexandre; Felis Pires; Daniel Towersey; Gustavo Sampaio
+  data: '2000-12-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Marola
+- nome: Chaminé do Prego
+  grau: '2'
+  crux: III
+  extensao: 55
+  conquistadores: Fritz Reuter; Haroldo Penna
+  data: '1931-11-22'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Arco do Triunfo
+- nome: El Cracatón Cracato
+  artificial: A2+
+  extensao: 60
+  conquistadores: Eduardo "Barão" Ribeiro; Júlio Campanella; Arthur Esteves; Kika Bradford
+  data: '2009-05-05'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: Liga da Justiça
+  artificial: A2+
+  extensao: 30
+  conquistadores: Kika Bradford; Pedro Bugim
+  data: '2008-10-25'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: The Hole is Lower
+  crux: VIIa
+  extensao: 45
+  conquistadores: Flávio "Bagre" Carneiro; Gustavo Sampaio
+  data: '2001-03-15'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: Litle Black Fuck
+  crux: VIsup
+  extensao: 20
+  conquistadores: Flávio Leone; Márcio Gonçalves
+  data: '2010-04-28'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: Teoria da Linha Reta
+  crux: VII(3)
+  extensao: 15
+  conquistadores: André Almeida; Flávio Leone
+  data: '2006-10-13'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+- nome: Chaminé do Morcego
+  crux: IIsup
+  extensao: 45
+  conquistadores: Fritz Reuter; Haroldo Penna; Rudolph Dietrich
+  data: '1931-11-29'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Percy Murray)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Unha de gato
+- nome: Porco-espinho
+  crux: V
+  extensao: 20
+  conquistadores: André "Rato" Kühner; Nilton Campos
+  data: '2004-01-30'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Donos do nada
+  crux: VIsup
+  extensao: 13
+  conquistadores: André "Rato" Kühner; José Carlos "Leleco" Leal
+  data: '2004-01-06'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Porcos guerreiros
+  crux: VII
+  extensao: 30
+  conquistadores: André Ilha; Pedro "Pow" Aragão
+  data: '2002-01-27'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Estopim
+- nome: Guilherme
+  crux: VIIb
+  extensao: 25
+  conquistadores: Guilherme Ribeiro; José Roberto Costa; Waldemar "Waldo" Guimarães
+  data: '1965-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Chaminé do Funil
+  grau: '2'
+  crux: III
+  extensao: 50
+  conquistadores: Fritz Reuter; Haroldo Penna
+  data: '1931-11-22'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Mangangá
+  crux: IVsup
+  exposicao: E3
+  extensao: 40
+  conquistadores: Aline Rezende; Bruno Gandelman; Gustavo Sampaio
+  data: '2000-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Alpamayo
+  grau: '4'
+  crux: VIsup
+  extensao: 75
+  conquistadores: André Ilha; Anthony "Tony" Adler
+  data: '1979-02-24'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Achados e Perdidos
+  crux: V
+  extensao: 25
+  conquistadores: André "Rato" Kühner; Fernando Sabioni; Nilton Campos
+  data: '2004-01-17'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Meia-sola
+  crux: IVsup
+  exposicao: E3
+  extensao: 20
+  conquistadores: Marco "Skaninho" Piffer; Nilton Campos
+  data: '2004-01-24'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Tá pronto
+  crux: V
+  exposicao: E2/3
+  extensao: 30
+  conquistadores: André "Rato" Kühner; Nilton Campos
+  data: '2004-01-14'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Vertigem
+  crux: Vsup
+  extensao: 40
+  conquistadores: Flávio Leone; Márcio Gonçalves
+  data: '2010-04-28'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Adrenalina Mil
+  grau: '5'
+  crux: VIIa
+  extensao: 85
+  conquistadores: Luciano Perez; Luis Octávio "Tavinho" Cardozo;Mário Arnauld;Maurício Mota; Nelson Machado
+  data: '1988-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Urbanóide
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 105
+  conquistadores: Carlos Alexandre; Giovanni Tartari; Marcelo Braga; Sérgio Tartari
+  data: '1983-08-29'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Ascensão e Queda
+- nome: Lembranças de um passado
+  grau: '4'
+  crux: V
+  extensao: 105
+  conquistadores: Júlio Campanella; Paulo Oliveira; Felipe "Felipinho" Assad; Lino
+  data: '2001-09-21'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: 22 de outubro
+  grau: '4'
+  crux: V
+  exposicao: E1/E2
+  extensao: 100
+  conquistadores: Leandro Chen; Rafael Wojcik
+  data: '2001-10-24'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Gasparito
+  grau: '4'
+  crux: IVsup
+  extensao: 135
+  conquistadores: Cid Villar; José "Camelô" Lozada; Jorge "JL" Luiz; Luis Octávio "Tavinho" Cardozo; Maurício Mota
+  data: '1986-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Carlos Alexandre
+  grau: '3'
+  crux: III
+  exposicao: E2/3
+  extensao: 170
+  conquistadores: Luis Octávio "Tavinho" Cardozo; Maurício Mota
+  data: '1978-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Fissura do inglês
+- nome: Falcão à espreita
+  grau: '4'
+  crux: IVsup
+  exposicao: E3
+  extensao: 100
+  conquistadores: Alcino Falcão; André Kühner; Leandro Chen; Rodrigo Molina
+  data: '2004-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Caverna de cristal
+  grau: '4'
+  crux: VI
+  extensao: 140
+  conquistadores: Fernando Vieira; Juliano Lindner; Flávia Maximo
+  data: '2001-08-10'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Brilho da noite
+  grau: '3'
+  crux: IIIsup
+  extensao: 120
+  conquistadores: Fernando Vieira; Juliano Lindner
+  data: '2001-01-17'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Paixão de Cris
+  grau: '3'
+  crux: IIIsup
+  extensao: 90
+  conquistadores: Dalton Chiarelli; Juratan Câmara; Marco Vidon; Pedro Caliano
+  data: '1987-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Labirintite
+  grau: '4'
+  crux: IVsup
+  extensao: 100
+  conquistadores: Fábio Serfaty; Márcio Carrilho
+  data: '2002-01-01'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Rumores da Algazarra
+  grau: '3'
+  crux: Vsup
+  extensao: 100
+  conquistadores: Jorge Schubert; Renato Souto
+  data: '1988-09-10'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Via Láctea
+  grau: '2'
+  crux: IIIsup
+  extensao: 95
+  conquistadores: Benito Esteves; José "Camelô" Lozada; Pedro Caliano; Renato Souto; Roberto Luiz "Puú" Souza; Wagner Lozada
+  data: '1980-06-26'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Guanabara
+  grau: '2'
+  crux: IV
+  extensao: 95
+  conquistadores: Benito Esteves; José "Camelô" Lozada; Juratan Câmara; Renato Souto
+  data: '1979-02-02'
+  montanha: Morro do Cantagalo
+  face: Norte (Rua Presidente Afonso Lopes)
+  fonte: André Ilha; Kika Bradford
+- nome: Mandei um barro
+  crux: IV
+  extensao: 10
+  conquistadores: Alexandre Faia
+  data: '2011-03-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Os Amanayés
+  crux: IV
+  extensao: 15
+  conquistadores: Alexandre Faia
+  data: '2011-02-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Noite e dia
+  crux: VIIa
+  extensao: 20
+  conquistadores: Pedro Bugim; Maria Fernanda Patrício
+  data: '2012-07-15'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Sulamita
+  crux: VIsup
+  extensao: 20
+  conquistadores: Paulo "Macaco"
+  data: '1997-01-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Livrai-me de mim mesmo
+  crux: IV
+  extensao: 20
+  conquistadores: Alexandre Faia; Ricardo Almeida
+  data: '2011-04-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Retinha do Graal
+  crux: Vsup
+  extensao: 15
+  conquistadores: Eduardo "47"
+  data: '2011-03-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: As bolas do Wilson
+  crux: IIsup
+  extensao: 20
+  conquistadores: Pedro Bugim; Sérgio "Garfield"
+  data: '2011-04-21'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: 23 de abril
+  crux: IIIsup
+  extensao: 20
+  conquistadores: Pedro Bugim;Laura Petroni; João Pedro Vergnano
+  data: '2019-04-23'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Vovô Abílio foi às compras
+  crux: IVsup
+  extensao: 15
+  conquistadores: Alexandre Faia; Ricardo Almeida
+  data: '2011-03-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Sônia Trote
+  crux: III
+  extensao: 20
+  conquistadores: Alexandre Faia; Ricardo Almeida
+  data: '2011-03-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Saidinha de banco
+  crux: III
+  extensao: 20
+  conquistadores: Alexandre Faia; Ricardo Almeida
+  data: '2011-03-01'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: 30 de setembro
+  crux: IIIsup
+  extensao: 20
+  conquistadores: Pedro Bugim;Laura Petroni; Carlos Alberto Carrozino
+  data: '2018-09-30'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: 13 de outubro
+  crux: IVsup
+  extensao: 20
+  conquistadores: Pedro Bugim;Laura Petroni; João Pedro Vergnano
+  data: '2019-10-13'
+  montanha: Pedreira da Rua Aníbal Moreira
+  face: Campo Escola de Escalada da Aníbal Moreira
+  fonte: Pedro Bugim
+  viaPrincipal: Fenda do Forte
+- nome: Cariocando
+  crux: VIIIc
+  extensao: 9
+  conquistadores: Hildson "Hillo" Santana; Carlos San Miguel
+  data: '2003-05-01'
+  montanha: Ponta do Arpoador
+  face: Pedra do Arpoador
+  fonte: André Ilha; Kika Bradford
+- nome: Ilusão idiótica
+  crux: Vsup
+  exposicao: E3
+  extensao: 45
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2007-01-07'
+  montanha: Falésias do Vidigal
+  face: Parede da Ilusão Idiótica
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Sombras eternas
+- nome: Cresça e apareça
+  crux: V(2)
+  extensao: 10
+  conquistadores: André Ilha; Kika Bradford; Yuri Berezovoy
+  data: '2007-07-07'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Ponto final
+  crux: VIIa
+  artificial: A1
+  extensao: 20
+  conquistadores: André Ilha; Kika Bradford; Yuri Berezovoy
+  data: '2008-02-24'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Funeral elétrico
+  crux: VIsup
+  exposicao: E3
+  extensao: 10
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2007-02-11'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Nosso povo, nossa gente
+  crux: II
+  extensao: 10
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2007-03-11'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Esquadrilha da fumaça
+  crux: III
+  extensao: 10
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2007-03-04'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Nocaute
+  crux: VI
+  extensao: 12
+  conquistadores: André Ilha; Yuri Berezovoy
+  data: '2006-11-25'
+  montanha: Falésias do Vidigal
+  face: Parede Principal
+  fonte: André Ilha; Kika Bradford
+- nome: Viagra
+  crux: VIIa
+  extensao: 15
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Zugliani
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Kenga
+  crux: VIII
+  extensao: 15
+  conquistadores: Marcelo "Pedal Verde" Silva; Ricardo Zugliani
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Ejaculatio Praecocis
+  crux: VIIIa
+  exposicao: E3
+  extensao: 15
+  conquistadores: Alexandre "Prusik" Moreira; Marcelo "Cabeludo" Gorini
+  data: '2000-01-01'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Vadias na marquise
+  crux: VIIc
+  extensao: 15
+  conquistadores: Alexandre "Prusik" Moreira; Marcelo "Cabeludo" Gorini
+  data: '2000-01-01'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: KY
+  crux: Vsup
+  extensao: 15
+  conquistadores: Alexandre "Prusik" Moreira; Marcelo "Cabeludo" Gorini
+  data: '2000-01-01'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Fist-Fucking
+  crux: VIIb
+  extensao: 15
+  conquistadores: Alexandre "Prusik" Moreira; Marcelo "Cabeludo" Gorini
+  data: '2000-01-01'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Rainha pornô
+  crux: VIIa
+  extensao: 12
+  conquistadores: André Ilha; Alexandre "Prusik" Moreira
+  data: '2001-12-02'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: O Voyeur
+  crux: VIIb
+  extensao: 12
+  conquistadores: Alexandre "Prusik" Moreira; Marcelo "Cabeludo" Gorini
+  data: '2000-01-01'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: A festa da Dona Aurora
+  crux: IVsup
+  artificial: A2
+  extensao: 12
+  conquistadores: André Ilha; Rodrigo Guardatti
+  data: '2008-11-16'
+  montanha: Falésias da Niemeyer
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Noturnos
+  crux: Isup
+  extensao: 25
+  conquistadores: Bernardo Cruz; Felipe Travassos; Luciano Deodato
+  data: '1993-07-11'
+  montanha: Falésia do Leblon
+  face: Leste (Praça Rubem Dário)
+  fonte: André Ilha; Kika Bradford
+- nome: Cupim de pedra
+  crux: II
+  extensao: 30
+  conquistadores: Alexandre Melo; Felipe Travassos; Vinícius Almeida Jr.
+  data: '2001-03-04'
+  montanha: Falésia do Leblon
+  face: Leste (Praça Rubem Dário)
+  fonte: André Ilha; Kika Bradford
+- nome: Crucifixo
+  crux: II
+  extensao: 35
+  conquistadores: Almir Jerônimo; Bernardo Cruz; Felipe Travassos; Paulo Demétrio
+  data: '1993-08-09'
+  montanha: Falésia do Leblon
+  face: Leste (Praça Rubem Dário)
+  fonte: André Ilha; Kika Bradford
+- nome: Mico da onda
+  artificial: A1
+  extensao: 15
+  conquistadores: Cláudio Peixoto
+  montanha: Falésia do Alto Leblon I
+  face: Falésia do Alto Leblon I
+  fonte: André Ilha; Kika Bradford
+- nome: Macumbalê
+  crux: VIIb
+  extensao: 30
+  conquistadores: Cláudio Peixoto; Raphael Raine
+  montanha: Falésia do Alto Leblon I
+  face: Falésia do Alto Leblon I
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Filhos do meio-fio
+- nome: Raízes do Pontão
+  crux: V
+  extensao: 23
+  conquistadores: Cláudio Peixoto
+  montanha: Falésia do Alto Leblon I
+  face: Falésia do Alto Leblon I
+  fonte: André Ilha; Kika Bradford
+- nome: Tempestade incessante
+  crux: V
+  extensao: 6
+  conquistadores: Cláudio Peixoto
+  montanha: Falésia do Alto Leblon II
+  face: Falésia do Alto Leblon II
+  fonte: André Ilha; Kika Bradford
+- nome: A um passo do asfalto
+  crux: VIIb
+  extensao: 10
+  conquistadores: Cláudio Peixoto
+  montanha: Falésia do Alto Leblon II
+  face: Falésia do Alto Leblon II
+  fonte: André Ilha; Kika Bradford
+- nome: Pablito e o lagarto na terra do mosquito
+  crux: VIIc
+  extensao: 7
+  conquistadores: Cláudio Peixoto
+  montanha: Falésia do Alto Leblon II
+  face: Falésia do Alto Leblon II
+  fonte: André Ilha; Kika Bradford
+- nome: Anta & Anta S.A.
+  grau: '3'
+  crux: IVsup
+  conquistadores: Carlos Eduardo "Cadu" Pinto; Eugênio "Empadão" Epprecht; Roland Cialon
+  data: '1972-06-03'
+  montanha: Irmão Menor do Leblon
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Bill liberou
+  grau: '3'
+  crux: IVsup
+  conquistadores: Marcelo Ramos; Mauro Silva
+  data: '1983-02-24'
+  montanha: Irmão Menor do Leblon
+  face: Sul (Avenida Niemeyer)
+  fonte: André Ilha; Kika Bradford
+- nome: Vera Regina
+  grau: '4'
+  crux: Vsup
+  artificial: A1(3)
+  extensao: 220
+  conquistadores: Carlos Carrozino; Cláudio Leuzinger; Paulo "Pauleca" Boaventura; Rubem Klein
+  data: '1965-05-25'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Meteorito
+- nome: Rafael e o sapo na festa do céu
+  grau: '5'
+  crux: VIsup
+  exposicao: E2/3
+  extensao: 240
+  conquistadores: Fernando Vieira; Juliano Lindner
+  data: '2001-03-12'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Shackleton
+- nome: Sombra e água fresca
+  grau: '5'
+  crux: VI
+  extensao: 350
+  conquistadores: Carlos "Paulista" Braga; Luis "Penacho" Bevilacqua; Rodolfo Chermont
+  data: '1970-09-01'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Copa do Mundo
+- nome: Ninguém merece
+  grau: VI
+  crux: VI
+  exposicao: E4
+  extensao: 150
+  conquistadores: André "Rato" Kühner; Fernando Sabioni; George "Jujo" Salamani; Nilton Campos
+  data: '2003-08-15'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+- nome: Solaris
+  grau: '5'
+  crux: Vsup
+  extensao: 175
+  conquistadores: Sérgio Bruno; Fernando Poyares
+  data: '1981-04-17'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Olhos de anjo
+- nome: Caixa de Pandora
+  grau: '5'
+  crux: VI
+  extensao: 255
+  conquistadores: Ivan Calou; Jean-Pierre Von Der Weid; Luis Alexandre
+  data: '1999-07-17'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+- nome: Marizel
+  grau: '4'
+  crux: V
+  exposicao: E2/3
+  extensao: 210
+  conquistadores: Felis Pires; Ruy Mazurek
+  data: '1978-01-01'
+  montanha: Irmão Menor do Leblon
+  face: Leste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: São Pedro
+- nome: Paulista
+  grau: '3'
+  crux: V
+  extensao: 190
+  conquistadores: Cristiano Requião; Eugênio "Empadão" Epprecht
+  data: '1972-03-30'
+  montanha: Irmão Menor do Leblon
+  face: Nordeste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+  viaPrincipal: Balança-Mas-Não-Cai
+- nome: Tamanho não é documento
+  grau: '5'
+  crux: VIIa
+  exposicao: E2/3
+  extensao: 100
+  conquistadores: André "Rato" Kühner; Fernando Sabioni; Gabriela Saliba; Patrícia Duffles
+  data: '2001-01-20'
+  montanha: Irmão Menor do Leblon
+  face: Nordeste (Parque do Penhasco Dois Irmãos)
+  fonte: André Ilha; Kika Bradford
+- nome: Chaminé Ivo Pereira
+  grau: '3'
+  conquistadores: Almy Ulisséa; Ivo Pereira; Oscar Azambuja
+  data: '1935-09-01'
+  montanha: Irmão Menor do Leblon
+  face: Noroeste (Rocinha)
+  fonte: André Ilha; Kika Bradford

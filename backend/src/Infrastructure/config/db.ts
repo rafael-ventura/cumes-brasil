@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 import {DataSource} from 'typeorm';
 import {Colecao} from '../../Domain/entities/Colecao';
 import {Croqui} from '../../Domain/entities/Croqui';
@@ -29,7 +31,7 @@ export const AppDataSource = new DataSource({
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [
         Colecao,
