@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
@@ -141,9 +141,19 @@ const filteredSortOptions = computed(() => {
   return defaultSortOptions.value.filter(option => props.enableSortOptions?.some((sortOption: any) => sortOption.field === option.value.field));
 });
 
-// Ordenação atual
+// Ordenação atual (sincroniza com initialSort da URL)
 const currentSortOption = ref(
   props.initialSort ? props.initialSort : filteredSortOptions.value[0]?.value
+);
+
+watch(
+  () => props.initialSort,
+  (newSort) => {
+    if (newSort && newSort.field && newSort.direction) {
+      currentSortOption.value = newSort;
+    }
+  },
+  { immediate: true }
 );
 
 // Aplica a ordenação nos resultados

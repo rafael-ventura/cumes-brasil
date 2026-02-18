@@ -189,6 +189,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             tipo_rocha,
             tipo_escalada,
             modalidade,
+            via_cerj,
             page = 1,
             itemsPerPage = 10,
             sortField,
@@ -305,6 +306,10 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
         if (modalidade) {
             qb = qb.andWhere("via.modalidade = :modalidade", {modalidade});
+        }
+
+        if (via_cerj === true) {
+            qb = qb.andWhere("via.via_cerj = :via_cerj", {via_cerj: true});
         }
 
         if (sortField && sortOrder) {

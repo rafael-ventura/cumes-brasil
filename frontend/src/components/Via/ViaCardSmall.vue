@@ -14,7 +14,10 @@
       </div>
     </div>
     <div class="right-section">
-      <div class="via-nome">{{ props.via.nome }}</div>
+      <div class="via-nome-row">
+        <span class="via-nome">{{ props.via.nome }}</span>
+        <BadgeCerj v-if="props.via.via_cerj" :via="props.via" />
+      </div>
       <div class="montanha-info" v-if="props.via.montanha">
         <q-icon name="terrain" size="14px" class="montanha-icon" />
         <span>{{ props.via.montanha.nome }}</span>
@@ -30,6 +33,7 @@
 import { computed } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'components/Via/GrauBadge.vue';
+import BadgeCerj from 'components/Via/BadgeCerj.vue';
 import { getViaImageUrlFull } from 'src/utils/utils';
 
 const props = defineProps<{ via: Via }>();
@@ -109,6 +113,13 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
   flex-direction: column;
   justify-content: center;
   gap: 8px;
+}
+
+.via-nome-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .via-nome {

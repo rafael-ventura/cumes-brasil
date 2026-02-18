@@ -13,8 +13,8 @@ export default {
       throw new BadRequestError('Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).');
     }
 
-    if (!['grau', 'bairro', 'exposicao', 'duracao'].includes(key)) {
-      throw new BadRequestError('Filtro inválido. Use grau, bairro, exposicao ou duracao.');
+    if (!['grau', 'bairro', 'exposicao', 'duracao', 'via_cerj'].includes(key)) {
+      throw new BadRequestError('Filtro inválido. Use grau, bairro, exposicao, duracao ou via_cerj.');
     }
 
     return { key, value };
@@ -35,7 +35,7 @@ export default {
   updateBody(via: any) {
     ValidationBase.requireIdOnBody(via);
   },
-  validaValores(key: string, value: string): string | number {
+  validaValores(key: string, value: string): string | number | boolean {
     switch (key) {
       case 'grau': {
         const grauParsed = parseInt(value, 10);
@@ -58,6 +58,12 @@ export default {
           throw new BadRequestError('O parâmetro "duracao" deve ser D1, D2, D3, D4 ou D5.');
         }
         return value.trim().toUpperCase();
+      }
+      case 'via_cerj': {
+        if (value.toLowerCase() !== 'true') {
+          throw new BadRequestError('O parâmetro "via_cerj" deve ser true.');
+        }
+        return true;
       }
       default:
         throw new BadRequestError('Filtro inválido.');

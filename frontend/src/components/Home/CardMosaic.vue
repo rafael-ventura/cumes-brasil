@@ -3,12 +3,23 @@
     <div class="mosaic-grid">
       <CategoryCard
         v-for="(card, index) in cards"
-        :key="index"
+        :key="`cat-${index}`"
         :card="card"
         :loading="loading"
         @navigate="handleNavigate"
         class="mosaic-item"
-        :style="{ animationDelay: `${index * 100}ms` }"
+        :style="{ animationDelay: `${index * 80}ms` }"
+      />
+      <SurpriseCard
+        :loading="loading"
+        class="mosaic-item mosaic-surprise"
+        :style="{ animationDelay: `${cards.length * 80}ms` }"
+      />
+      <UltimasAdicionadasCard
+        :loading="loading"
+        @navigate="handleNavigate"
+        class="mosaic-item mosaic-ultimas"
+        :style="{ animationDelay: `${(cards.length + 1) * 80}ms` }"
       />
     </div>
   </div>
@@ -17,6 +28,8 @@
 <script setup lang="ts">
 import { Card } from 'pages/Home.vue';
 import CategoryCard from './CategoryCard.vue';
+import SurpriseCard from './SurpriseCard.vue';
+import UltimasAdicionadasCard from './UltimasAdicionadasCard.vue';
 
 defineProps<{
   cards: Card[];
@@ -24,11 +37,11 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  navigate: [filterType: string];
+  navigate: [filterType: string | { sortField: string; sortOrder: string }];
 }>();
 
-const handleNavigate = (filterType: string) => {
-  emit('navigate', filterType);
+const handleNavigate = (payload: string | { sortField: string; sortOrder: string }) => {
+  emit('navigate', payload);
 };
 </script>
 
@@ -42,25 +55,14 @@ const handleNavigate = (filterType: string) => {
 
 .mosaic-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
 
-  // Primeira linha: 3 cards (cada um ocupa 2 colunas)
-  .mosaic-item:nth-child(1),
-  .mosaic-item:nth-child(2),
-  .mosaic-item:nth-child(3) {
-    grid-column: span 2;
-  }
-
-  // Segunda linha: 2 cards centralizados (cada um ocupa 2 colunas, com 1 coluna vazia em cada lado)
-  .mosaic-item:nth-child(4) {
-    grid-column: 2 / span 2;
-  }
-
-  .mosaic-item:nth-child(5) {
-    grid-column: 4 / span 2;
+  // Todos os cards ocupam 1 coluna no desktop
+  .mosaic-item {
+    grid-column: span 1;
   }
 }
 
@@ -81,14 +83,6 @@ const handleNavigate = (filterType: string) => {
   .mosaic-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-
-    .mosaic-item:nth-child(1),
-    .mosaic-item:nth-child(2),
-    .mosaic-item:nth-child(3),
-    .mosaic-item:nth-child(4),
-    .mosaic-item:nth-child(5) {
-      grid-column: span 1;
-    }
   }
 }
 
@@ -101,14 +95,6 @@ const handleNavigate = (filterType: string) => {
   .mosaic-grid {
     grid-template-columns: 1fr;
     gap: 16px;
-
-    .mosaic-item:nth-child(1),
-    .mosaic-item:nth-child(2),
-    .mosaic-item:nth-child(3),
-    .mosaic-item:nth-child(4),
-    .mosaic-item:nth-child(5) {
-      grid-column: span 1;
-    }
   }
 }
 

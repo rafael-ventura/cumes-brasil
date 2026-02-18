@@ -5,6 +5,7 @@
   "main": "dist/Api/server.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node src/Api/server.ts",
+    "dev:watch": "cross-env NODE_ENV=development nodemon",
     "build": "tsc",
     "start": "node dist/Api/server.js",
     "start:pm2": "cross-env NODE_ENV=production pm2 start dist/Api/server.js --name cumes-api",
@@ -58,6 +59,7 @@
     "@types/nodemailer": "^6.4.16",
     "@types/pg": "^8.11.10",
     "cross-env": "^7.0.3",
+    "nodemon": "^3.1.11",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
