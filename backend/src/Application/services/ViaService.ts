@@ -199,13 +199,15 @@ export class ViaService extends BaseService<Via, ViaRepository> {
       case "grau":
         return this.repository.countByField("via.grau", validValue);
       case "bairro":
-        return this.repository.countByBairro(typeof validValue !== "number" ? validValue : String(validValue));
+        return this.repository.countByBairro(String(validValue));
       case "exposicao":
         return this.repository.countByField("via.exposicao", validValue, "<=");
       case "duracao":
         return this.repository.countByField("via.duracao", validValue, "=");
+      case "via_cerj":
+        return this.repository.countByField("via.via_cerj", true);
       default:
-        throw new BadRequestError("Filtro inválido. Use grau, bairro, exposicao ou duracao.");
+        throw new BadRequestError("Filtro inválido. Use grau, bairro, exposicao, duracao ou via_cerj.");
     }
   }
 }

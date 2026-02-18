@@ -15,6 +15,10 @@ export interface Via {
   extensao?: number;
   conquistadores?: string;
   detalhes?: string;
+  historia_resumo?: string;
+  via_cerj?: boolean;
+  equipamentos?: string;
+  tracklog_aproximacao?: string;
   data?: string;
   tipo_rocha?: string;
   tipo_escalada?: string;
@@ -80,5 +84,6 @@ export interface Via {
   via_principal?: Via;
   fonte?: Fonte;
   imagem?: Imagem;
+  imagens?: Imagem[];
   croquis: Croqui[];
 }

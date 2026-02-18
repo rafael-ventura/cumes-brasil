@@ -12,6 +12,7 @@ export interface BuscaRequest {
   tipo_rocha?: string | null;
   tipo_escalada?: string | null;
   modalidade?: ModalidadeEscalada | null;
+  via_cerj?: boolean | null;
   page: number;
   itemsPerPage?: number;
   entityType?: string;
