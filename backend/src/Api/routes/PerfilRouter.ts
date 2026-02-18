@@ -1,19 +1,11 @@
 import { Router } from 'express';
-
+import { Container } from 'typedi';
 import { UsuarioController } from '../Controllers/UsuarioController';
-import { UsuarioService } from '../../Application/services/UsuarioService';
-import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
-import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
-import { ImagemService } from '../../Application/services/ImagemService';
-import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
 import { MulterMiddleware } from "../Middlewares/MulterMiddleware";
 import {authenticateToken} from "../Middlewares/AuthenticateMiddleware";
-import UsuarioRouter from "./UsuarioRouter";
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
-
-const usuarioController = new UsuarioController(usuarioService)
+const usuarioController = Container.get(UsuarioController);
 
 const PerfilRouter = Router();
 

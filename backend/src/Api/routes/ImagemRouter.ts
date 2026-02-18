@@ -1,11 +1,9 @@
 import { Router } from "express";
+import { Container } from 'typedi';
 import { ImagemController } from "../Controllers/ImagemController";
-import { ImagemService } from "../../Application/services/ImagemService";
-import { ImagemRepository } from "../../Infrastructure/repositories/ImagemRepository";
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const imagemService = new ImagemService(new ImagemRepository());
-const imagemController = new ImagemController(imagemService);
+const imagemController = Container.get(ImagemController);
 
 const ImagemRouter = Router();
 

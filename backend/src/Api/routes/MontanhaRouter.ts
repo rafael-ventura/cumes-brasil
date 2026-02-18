@@ -1,12 +1,9 @@
 import { Router } from "express";
+import { Container } from 'typedi';
 import { MontanhaController } from "../Controllers/MontanhaController";
-import { MontanhaService } from "../../Application/services/MontanhaService";
-import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const montanhaRepository = new MontanhaRepository();
-const montanhaService = new MontanhaService(montanhaRepository);
-const montanhaController = new MontanhaController(montanhaService);
+const montanhaController = Container.get(MontanhaController);
 
 const MontanhaRouter = Router();
 

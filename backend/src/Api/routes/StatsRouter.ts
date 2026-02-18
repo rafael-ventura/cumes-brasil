@@ -1,17 +1,9 @@
 import { Router } from 'express';
+import { Container } from 'typedi';
 import { StatsController } from '../Controllers/StatsController';
-import { StatsService } from '../../Application/services/StatsService';
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
-import { MontanhaRepository } from '../../Infrastructure/repositories/MontanhaRepository';
-import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const statsService = new StatsService(
-    new ViaRepository(),
-    new MontanhaRepository(),
-    new UsuarioRepository()
-);
-const statsController = new StatsController(statsService);
+const statsController = Container.get(StatsController);
 
 const StatsRouter = Router();
 

@@ -1,11 +1,9 @@
 import { Router } from "express";
+import { Container } from 'typedi';
 import { FonteController } from "../Controllers/FonteController";
-import { FonteService } from "../../Application/services/FonteService";
-import { FonteRepository } from "../../Infrastructure/repositories/FonteRepository";
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const fonteService = new FonteService(new FonteRepository());
-const fonteController = new FonteController(fonteService);
+const fonteController = Container.get(FonteController);
 
 const FonteRouter = Router();
 

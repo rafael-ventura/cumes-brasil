@@ -1,13 +1,9 @@
 import { Router } from 'express';
-
+import { Container } from 'typedi';
 import { ColecaoController } from '../Controllers/ColecaoController';
-import { ColecaoService } from '../../Application/services/ColecaoService';
-import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const colecaoRepository = new ColecaoRepository();
-const colecaoService = new ColecaoService(colecaoRepository);
-const colecaoController = new ColecaoController(colecaoService);
+const colecaoController = Container.get(ColecaoController);
 
 const ColecaoRouter = Router();
 

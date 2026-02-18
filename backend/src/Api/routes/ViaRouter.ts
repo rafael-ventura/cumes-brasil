@@ -1,12 +1,9 @@
 import { Router } from 'express';
+import { Container } from 'typedi';
 import { ViaController } from '../Controllers/ViaController';
-import { ViaService } from '../../Application/services/ViaService';
-import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const viaRepository = new ViaRepository();
-const viaService = new ViaService(viaRepository);
-const viaController = new ViaController(viaService);
+const viaController = Container.get(ViaController);
 
 const ViaRouter = Router();
 

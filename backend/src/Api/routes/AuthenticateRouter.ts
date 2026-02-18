@@ -1,19 +1,13 @@
 import { Router } from 'express';
+import { Container } from 'typedi';
 import AuthController from '../Controllers/AuthenticateController';
 import { UsuarioController } from '../Controllers/UsuarioController';
-import { UsuarioService } from '../../Application/services/UsuarioService';
-import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
-import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
-import { ImagemService } from '../../Application/services/ImagemService';
-import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
-import UsuarioRouter from "./UsuarioRouter";
 
+// Obter controllers do Container de DI (TypeDI)
 const AuthenticateRouter = Router();
-const authController = new AuthController();
-const usuarioService = new UsuarioService(new UsuarioRepository(), new ImagemService(new ImagemRepository()), new ViaRepository(), new ImagemRepository());
-
-const usuarioController = new UsuarioController(usuarioService);
+const authController = Container.get(AuthController);
+const usuarioController = Container.get(UsuarioController);
 
 // Rota de login
 AuthenticateRouter.post("/login", asyncErrorHandler(authController.login));

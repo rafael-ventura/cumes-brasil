@@ -1,17 +1,9 @@
 import {Router} from "express";
-
-import {CroquiService} from "../../Application/services/CroquiService";
-import {CroquiRepository} from "../../Infrastructure/repositories/CroquiRepository";
+import { Container } from 'typedi';
 import {CroquiController} from "../Controllers/CroquiController";
-import {ViaRepository} from "../../Infrastructure/repositories/ViaRepository";
-import {ViaCroquiRepository} from "../../Infrastructure/repositories/ViaCroquiRepository";
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
-const viaRepository = new ViaRepository();
-const croquiRepository = new CroquiRepository();
-const viaCroquiRepository = new ViaCroquiRepository();
-const croquiService = new CroquiService(croquiRepository, viaRepository, viaCroquiRepository);
-const croquiController = new CroquiController(croquiService);
+const croquiController = Container.get(CroquiController);
 
 const CroquiRouter = Router();
 

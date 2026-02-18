@@ -4,6 +4,7 @@ import { ViaRepository } from "../../Infrastructure/repositories/ViaRepository";
 import { MontanhaRepository } from "../../Infrastructure/repositories/MontanhaRepository";
 import { ISearchResult } from "../../Domain/interfaces/models/ISearchResult";
 import {ColecaoRepository} from "../../Infrastructure/repositories/ColecaoRepository";
+import {ViaColecaoRepository} from "../../Infrastructure/repositories/ViaColecaoRepository";
 import {EscaladaRepository} from "../../Infrastructure/repositories/EscaladaRepository";
 import SearchValidation from '../../Application/validations/SearchValidation';
 import { ViaListDTO } from "../DTOs/Via/ViaDTO";
@@ -16,13 +17,17 @@ export class SearchController {
 		if (!this.serviceMap[entityType]) {
 			switch (entityType) {
 				case 'via':
-					this.serviceMap[entityType] = new SearchService(new ViaRepository());
+					this.serviceMap[entityType] = new SearchService(
+						new ViaRepository(new ViaColecaoRepository())
+					);
 					break;
 				case 'montanha':
 					this.serviceMap[entityType] = new SearchService(new MontanhaRepository());
 					break;
 				case 'colecao':
-					this.serviceMap[entityType] = new SearchService<ColecaoRepository>(new ColecaoRepository());
+					this.serviceMap[entityType] = new SearchService<ColecaoRepository>(
+						new ColecaoRepository(new ViaColecaoRepository())
+					);
 					break;
 				case 'escalada':
 					this.serviceMap[entityType] = new SearchService(new EscaladaRepository());
