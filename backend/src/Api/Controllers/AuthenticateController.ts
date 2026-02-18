@@ -1,21 +1,18 @@
-// controllers/auth.controller.ts
-
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../../Application/services/AuthenticateService';
-import HandleErrors from '../../Application/errors/HandleErrors';
 import UserValidation from '../../Application/validations/UserValidation';
 import TokenValidation from '../../Application/validations/TokenValidation';
+import { Service } from 'typedi';
 
+@Service()
 class AuthController {
     private authService: AuthService;
 
-    constructor() {
-        this.authService = new AuthService();
-        this.login = this.login.bind(this);
-        this.googleLogin = this.googleLogin.bind(this);
+    constructor(authService: AuthService) {
+        this.authService = authService;
     }
 
-    async login(req: Request, res: Response, next: NextFunction) {
+    login = async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body;
         UserValidation.authenticateValidation(email, password);
         const result = await this.authService.login(email, password);
@@ -23,7 +20,7 @@ class AuthController {
     }
 
 
-    async googleLogin(req: Request, res: Response, next: NextFunction) {
+    googleLogin = async (req: Request, res: Response, next: NextFunction) => {
         const { authorizationCode } = req.body;
         if (!authorizationCode) {
             UserValidation.generateResetPasswordValidation(authorizationCode as any);
@@ -51,14 +48,11 @@ class AuthController {
         });
     }
 
-    /**
-     * Criar lógica para resetar senha do usuario
-     */
     resetPassword = async (req: Request, res: Response, next: NextFunction) => {
         const token = req.params?.token ?? '';
         TokenValidation.resetUserPasswordToken(token);
         UserValidation.resetPasswordValidation(req.body?.password, req.body?.passwordRepeated);
-        const response = await this.authService.updateUserPassword(req.body?.password, req.body?.passwordRepeated, token);
+        const response = await this.authService.updateUserPassword(req.body.password, token);
         res.status(201).json({
             message: response.message
         });

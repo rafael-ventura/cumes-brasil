@@ -1,77 +1,68 @@
-// Middlewares/AuthenticateMiddleware.ts
-
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { OAuth2Client } from 'google-auth-library';
+import { Container } from 'typedi';
 import { safeLogger } from '../../Infrastructure/config/logger';
 import { UnauthorizedError } from '../../Application/errors';
+import { TokenService } from '../../Application/services/TokenService';
 
-// Adiciona uma propriedade personalizada 'user' à definição de tipo_entidade 'Request'
 declare global {
     namespace Express {
         interface Request {
-            user: any;
+            user?: {
+                usuarioId: string;
+                type: string;
+                iat?: number;
+                exp?: number;
+                sub?: string;
+            };
         }
     }
 }
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-// Função para validar se o token JWT é válido
-function isTokenExpired(token: string): boolean {
-    try {
-        const decoded = jwt.decode(token) as any;
-        if (!decoded || !decoded.exp) return true;
-        
-        const currentTime = Math.floor(Date.now() / 1000);
-        return decoded.exp < currentTime;
-    } catch (error) {
-        return true;
+/**
+ * Extrai token do header Authorization.
+ * @param authHeader - Header de autorização
+ * @returns Token extraído ou null
+ */
+function extractToken(authHeader: string | undefined): string | null {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
     }
+    return authHeader.substring(7); // Remove 'Bearer '
 }
 
+/**
+ * Middleware de autenticação obrigatória.
+ * Valida token JWT e popula req.user com dados do usuário.
+ * 
+ * @throws UnauthorizedError se token ausente, inválido ou expirado
+ */
 export async function authenticateToken(req: Request, res: Response, next: NextFunction) {
     try {
-        const authHeader = req.headers['authorization'];
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            throw new UnauthorizedError('Token não fornecido ou inválido');
-        }
+        const token = extractToken(req.headers['authorization']);
         
-        const token = authHeader.split(' ')[1];
+        if (!token) {
+            throw new UnauthorizedError('Token não fornecido');
+        }
+
+        const tokenService = Container.get(TokenService);
+        const decoded = tokenService.verify(token);
         
-        // Verificar se o token está expirado
-        if (isTokenExpired(token)) {
-            throw new UnauthorizedError('Token expirado');
-        }
-
-        const secretKey = process.env.SECRET_KEY;
-        if (!secretKey) {
-            safeLogger.error('SECRET_KEY não configurada');
-            throw new UnauthorizedError('Erro de configuração do servidor');
-        }
-
-        // Tente verificar com a chave secreta primeiro
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (!err) {
-                req.user = decoded;
-                return next();
-            }
-
-            // Se falhar, tente verificar como um ID Token do Google
-            client.verifyIdToken({
-                idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            }).then((ticket) => {
-                const payload = ticket.getPayload();
-                req.user = payload;
-                next();
-            }).catch((error) => {
-                safeLogger.error('Erro na verificação do token Google', { error: error.message });
-                throw new UnauthorizedError('Token inválido');
-            });
-        });
+        req.user = {
+            usuarioId: decoded.usuarioId,
+            type: decoded.type || 'access_token',
+            iat: decoded.iat,
+            exp: decoded.exp,
+            sub: decoded.sub
+        };
+        
+        next();
     } catch (error) {
         if (error instanceof UnauthorizedError) {
+            safeLogger.warn('Tentativa de acesso não autorizado', { 
+                path: req.path,
+                ip: req.ip,
+                error: error.message 
+            });
             return res.status(401).json({ 
                 error: error.message,
                 statusCode: 401
@@ -79,7 +70,11 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
         }
         
         const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-        safeLogger.error('Erro inesperado na autenticação', { error: errorMessage });
+        safeLogger.error('Erro inesperado na autenticação', { 
+            path: req.path,
+            error: errorMessage 
+        });
+        
         return res.status(500).json({ 
             error: 'Erro interno do servidor',
             statusCode: 500
@@ -87,45 +82,49 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     }
 }
 
-// Middleware opcional para autenticação (não falha se não houver token)
+/**
+ * Middleware de autenticação opcional.
+ * Valida token se presente, mas não bloqueia se ausente ou inválido.
+ * 
+ * Útil para rotas que podem funcionar tanto autenticadas quanto não autenticadas
+ * (ex: busca pública, mas com recursos extras se autenticado).
+ */
 export async function optionalAuthenticateToken(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.headers['authorization'];
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return next(); // Continua sem autenticação
-    }
-    
     try {
-        const token = authHeader.split(' ')[1];
+        const token = extractToken(req.headers['authorization']);
         
-        if (isTokenExpired(token)) {
-            return next(); // Continua sem autenticação
+        // Se não há token, continua sem autenticação
+        if (!token) {
+            return next();
         }
 
-        const secretKey = process.env.SECRET_KEY;
-        if (!secretKey) {
-            return next(); // Continua sem autenticação
+        // Tenta validar token
+        const tokenService = Container.get(TokenService);
+        
+        // Se token expirado, continua sem autenticação (não bloqueia)
+        if (tokenService.isExpired(token)) {
+            return next();
         }
-
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (!err) {
-                req.user = decoded;
-                return next();
-            }
-
-            // Tenta verificar como token Google
-            client.verifyIdToken({
-                idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            }).then((ticket) => {
-                const payload = ticket.getPayload();
-                req.user = payload;
-                next();
-            }).catch(() => {
-                next(); // Continua sem autenticação
-            });
+        
+        // Tenta validar
+        const decoded = tokenService.verify(token);
+        
+        // Popula req.user se validação bem-sucedida
+        req.user = {
+            usuarioId: decoded.usuarioId,
+            type: decoded.type || 'access_token',
+            iat: decoded.iat,
+            exp: decoded.exp,
+            sub: decoded.sub
+        };
+    } catch (error) {
+        // Em caso de erro, apenas loga mas continua sem autenticação
+        safeLogger.debug('Token opcional inválido, continuando sem autenticação', {
+            path: req.path,
+            error: error instanceof Error ? error.message : 'Erro desconhecido'
         });
-    } catch (error: any) {
-        next(); // Continua sem autenticação
+    } finally {
+        // Sempre continua, com ou sem autenticação
+        next();
     }
 }

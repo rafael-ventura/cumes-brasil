@@ -4,7 +4,9 @@ import {Fonte} from "../../Domain/entities/Fonte";
 import {FonteDTO} from "../DTOs/Fonte/FonteDTO";
 import { NotFoundError } from '../../Application/errors';
 import FonteValidation from '../../Application/validations/FonteValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class FonteController {
     private service: FonteService;
 

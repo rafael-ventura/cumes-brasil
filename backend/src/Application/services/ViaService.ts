@@ -5,41 +5,80 @@ import NotFoundError from '../errors/NotFoundError';
 import BadRequestError from '../errors/BadRequestError';
 import BaseService from './BaseService';
 import { LoadStrategy } from '../../Domain/enum/ELoadStrategy';
+import { Service } from 'typedi';
 
+@Service()
 export class ViaService extends BaseService<Via, ViaRepository> {
 
   constructor(viaRepo: ViaRepository) {
     super(viaRepo);
   }
 
+
+  /**
+   * Busca via por ID com detalhes completos.
+   * 
+   * @param id - ID da via
+   * @param strategy - Estratégia de carregamento (default: DETAIL)
+   */
   async getViaById(id: number, strategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via> {
-    const via = await this.repository.getById(id, strategy);
+    const via = await this.repository.getById(id, { strategy });
     if (!via) throw new NotFoundError("Via não encontrada");
     return via;
   }
 
+  /**
+   * Lista vias com paginação.
+   * 
+   * @param page - Número da página (opcional)
+   * @param limit - Itens por página (opcional)
+   * @param strategy - Estratégia de carregamento (default: LIST)
+   */
+  /**
+   * Lista vias com paginação.
+   * 
+   * @param page - Número da página (opcional)
+   * @param limit - Itens por página (opcional)
+   * @param strategy - Estratégia de carregamento (default: LIST)
+   */
   async getVias(page?: number, limit?: number, strategy: LoadStrategy = LoadStrategy.LIST) {
     return page && limit
-        ? this.repository.getAllPaginated(page, limit as any, strategy)
-        : this.repository.getAllWithoutPagination(strategy);
+        ? this.repository.getAllPaginated(page, limit as any, { strategy })
+        : this.repository.getAllWithoutPagination({ strategy });
   }
 
+  /**
+   * Busca via aleatória para "Inspire-se".
+   * 
+   * @param strategy - Estratégia de carregamento (default: LIST)
+   */
   async getRandomVia(strategy: LoadStrategy = LoadStrategy.LIST): Promise<Via> {
-    const via = await this.repository.getRandom(strategy);
+    const via = await this.repository.getRandom({ strategy });
     if (!via) throw new NotFoundError("Nenhuma via encontrada");
     return via;
   }
 
+  /**
+   * Cria nova via.
+   * @param viaData - Dados da via
+   * @param reloadStrategy - Estratégia de recarregamento após criação (default: DETAIL)
+   */
   async createVia(viaData: Partial<Via>, reloadStrategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via> {
     // Validar estrutura física antes de criar
     ViaValidation.validaEstruturaFisica(viaData);
-    return this.repository.create(viaData, reloadStrategy);
+    return this.repository.create(viaData, undefined, { strategy: reloadStrategy });
   }
 
+  /**
+   * Atualiza via existente.
+   * @param id - ID da via
+   * @param viaData - Dados para atualizar
+   * @param reloadStrategy - Estratégia de recarregamento após atualização (default: DETAIL)
+   */
   async updateVia(id: number, viaData: Partial<Via>, reloadStrategy: LoadStrategy = LoadStrategy.DETAIL): Promise<Via | null> {
     // Validar estrutura física antes de atualizar
     ViaValidation.validaEstruturaFisica(viaData);
-    return this.repository.updateVia(id, viaData, reloadStrategy);
+    return this.repository.updateVia(id, viaData, undefined, { strategy: reloadStrategy });
   }
 
   /**
@@ -53,7 +92,6 @@ export class ViaService extends BaseService<Via, ViaRepository> {
   } | null {
     if (!via) return null;
 
-    // Prioridade: setor > face > montanha
     if (via.setor) {
       const setor = via.setor as any;
       return {
@@ -123,9 +161,6 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     return null;
   }
 
-  /**
-   * Obtém a montanha associada à via (direta ou através de face/setor)
-   */
   getMontanha(via: Via): any | null {
     const estrutura = this.getEstruturaFisica(via);
     if (!estrutura) return null;
@@ -137,9 +172,6 @@ export class ViaService extends BaseService<Via, ViaRepository> {
            null;
   }
 
-  /**
-   * Obtém a face associada à via (direta ou através de setor)
-   */
   getFace(via: Via): any | null {
     const estrutura = this.getEstruturaFisica(via);
     if (!estrutura) return null;
@@ -147,9 +179,6 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     return estrutura.setor?.face || estrutura.face || null;
   }
 
-  /**
-   * Obtém o setor associado à via
-   */
   getSetor(via: Via): any | null {
     const estrutura = this.getEstruturaFisica(via);
     if (!estrutura) return null;
@@ -157,23 +186,14 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     return estrutura.setor || null;
   }
 
-  /**
-   * Verifica se a via está em um setor
-   */
   estaEmSetor(via: Via): boolean {
     return !!this.getSetor(via);
   }
 
-  /**
-   * Verifica se a via está em uma face (diretamente ou através de setor)
-   */
   estaEmFace(via: Via): boolean {
     return !!this.getFace(via);
   }
 
-  /**
-   * Verifica se a via está em uma montanha (diretamente, através de face ou setor)
-   */
   estaEmMontanha(via: Via): boolean {
     return !!this.getMontanha(via);
   }
@@ -182,10 +202,27 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     await this.repository.delete(id);
   }
 
+  /**
+   * Busca vias de uma coleção.
+   * 
+   * @param colecaoId - ID da coleção
+   * @param page - Número da página
+   * @param limit - Itens por página
+   * @param strategy - Estratégia de carregamento (default: LIST)
+   */
   async getViasIdByColecaoId(colecaoId: number, page: number, limit: number, strategy: LoadStrategy = LoadStrategy.LIST) {
-    return this.repository.getViasByColecaoId(colecaoId, page, limit, strategy);
+    return this.repository.getViasByColecaoId(colecaoId, page, limit, { strategy });
   }
 
+  /**
+   * Busca vias que NÃO estão em uma coleção do usuário.
+   * 
+   * @param colecaoId - ID da coleção
+   * @param usuarioId - ID do usuário
+   * @param page - Número da página
+   * @param limit - Itens por página
+   * @param strategy - Estratégia de carregamento (default: LIST)
+   */
   async getViasNotInColecaoForUser(
     colecaoId: number,
     usuarioId: number,
@@ -196,7 +233,7 @@ export class ViaService extends BaseService<Via, ViaRepository> {
     if (!colecaoId || !usuarioId) {
       throw new BadRequestError("Parâmetros inválidos: colecaoId ou usuarioId ausentes.");
     }
-    return this.repository.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit, strategy);
+    return this.repository.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit, { strategy });
   }
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {

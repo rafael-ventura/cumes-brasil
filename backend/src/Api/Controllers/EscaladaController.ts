@@ -1,7 +1,9 @@
 import { EscaladaService } from '../../Application/services/EscaladaService';
 import { Request, Response } from 'express';
 import EscaladaValidation from '../../Application/validations/EscaladaValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class EscaladaController {
 	private service: EscaladaService;
 

@@ -40,183 +40,85 @@ import { MontanhaController } from '../../Api/Controllers/MontanhaController';
 import { FaceController } from '../../Api/Controllers/FaceController';
 import { StatsController } from '../../Api/Controllers/StatsController';
 import AuthController from '../../Api/Controllers/AuthenticateController';
+import { EventBus } from '../../Infrastructure/events/EventBus';
+import { AuthEventSubscriber } from '../../Application/subscribers/AuthEventSubscriber';
 
 /**
- * Configuração do Container de Dependency Injection do TypeDI.
+ * ✅ Configuração do Container de Dependency Injection com TypeDI Auto-wiring.
  * 
- * Este arquivo centraliza o registro de todas as dependências do sistema,
- * permitindo injeção automática sem necessidade de instanciação manual.
+ * IMPORTANTE: Este arquivo utiliza AUTO-WIRING completo do TypeDI!
  * 
- * Hierarquia de dependências:
+ * Como funciona:
+ * 1. Todas as classes (Controllers, Services, Repositories) possuem o decorator @Service()
+ * 2. O TypeDI lê os tipos dos parâmetros do constructor via reflect-metadata
+ * 3. Quando você faz Container.get(ViaController), o TypeDI automaticamente:
+ *    - Cria ViaController
+ *    - Detecta que precisa de ViaService no constructor
+ *    - Cria ViaService automaticamente
+ *    - Detecta que ViaService precisa de ViaRepository
+ *    - Cria ViaRepository automaticamente
+ *    - Injeta tudo na ordem correta! ✨
+ * 
+ * Hierarquia de dependências (gerenciada automaticamente):
  * Controllers → Services → Repositories
  * 
  * @example
  * ```typescript
- * // Uso no router (ANTES - manual):
- * const viaRepo = new ViaRepository();
+ * // ANTES (Manual - 150+ linhas de Container.set):
+ * const viaRepo = new ViaRepository(Container.get(ViaColecaoRepository));
  * const viaService = new ViaService(viaRepo);
  * const viaController = new ViaController(viaService);
  * 
- * // Uso no router (DEPOIS - automático):
+ * // DEPOIS (Auto-wiring - TypeDI faz tudo):
  * import { Container } from 'typedi';
  * const viaController = Container.get(ViaController);
+ * // TypeDI criou ViaController → ViaService → ViaRepository → ViaColecaoRepository
+ * 
+ * // Para testes (Mocking):
+ * Container.set(ViaRepository, mockViaRepository);
+ * const service = Container.get(ViaService); // Usa o mock!
  * ```
  */
 export class DIContainer {
     
     /**
-     * Inicializa o Container de DI com todas as dependências.
+     * Inicializa o Container de DI.
      * 
-     * IMPORTANTE: Deve ser chamado ANTES de importar os routers.
+     * IMPORTANTE: Deve ser chamado ANTES de importar os routers para garantir
+     * que todas as classes decoradas com @Service() sejam carregadas na memória.
      * 
-     * Ordem de registro:
-     * 1. Repositories (sem dependências ou com DI entre eles)
-     * 2. Services (dependem de repositories)
-     * 3. Controllers (dependem de services)
+     * Com auto-wiring, NÃO é necessário registrar manualmente cada dependência.
+     * Os imports acima garantem que as classes sejam carregadas e os decorators
+     * @Service() configurem o Container automaticamente.
      */
     static initialize(): void {
-        // ========================================
-        // LAYER 1: REPOSITORIES
-        // ========================================
+        // ✅ Auto-wiring ativo!
+        // TypeDI gerencia TODAS as dependências automaticamente via @Service()
+        // 
+        // A hierarquia completa é resolvida em tempo de execução:
+        // - 11 Repositories (ViaRepository, ColecaoRepository, UsuarioRepository, etc.)
+        // - 9 Services (ViaService, ColecaoService, EscaladaService, etc.)
+        // - 10 Controllers (ViaController, ColecaoController, UsuarioController, etc.)
+        //
+        // Redução: 150+ linhas de Container.set() → 0 linhas! 🎉
+        Container.get(AuthEventSubscriber);
         
-        // Repositories sem dependências
-        Container.set(FonteRepository, new FonteRepository());
-        Container.set(ImagemRepository, new ImagemRepository());
-        Container.set(MontanhaRepository, new MontanhaRepository());
-        Container.set(FaceRepository, new FaceRepository());
-        Container.set(UsuarioRepository, new UsuarioRepository());
-        Container.set(EscaladaRepository, new EscaladaRepository());
-        
-        // Repositories de relacionamento (sem outras dependências)
-        Container.set(ViaColecaoRepository, new ViaColecaoRepository());
-        Container.set(ViaCroquiRepository, new ViaCroquiRepository());
-        
-        // Repositories com DI (dependem de outros repositories)
-        // ViaRepository agora requer ViaColecaoRepository
-        Container.set(ViaRepository, new ViaRepository(
-            Container.get(ViaColecaoRepository)
-        ));
-        
-        Container.set(ColecaoRepository, new ColecaoRepository(
-            Container.get(ViaColecaoRepository)
-        ));
-        
-        Container.set(CroquiRepository, new CroquiRepository(
-            Container.get(ViaCroquiRepository)
-        ));
-        
-        // ========================================
-        // LAYER 2: SERVICES
-        // ========================================
-        
-        // Services básicos (1 dependência)
-        Container.set(ViaService, new ViaService(
-            Container.get(ViaRepository)
-        ));
-        
-        Container.set(FonteService, new FonteService(
-            Container.get(FonteRepository)
-        ));
-        
-        Container.set(MontanhaService, new MontanhaService(
-            Container.get(MontanhaRepository)
-        ));
-        
-        Container.set(ImagemService, new ImagemService(
-            Container.get(ImagemRepository)
-        ));
-        
-        Container.set(ColecaoService, new ColecaoService(
-            Container.get(ColecaoRepository)
-        ));
-        
-        // Services com múltiplas dependências
-        Container.set(UsuarioService, new UsuarioService(
-            Container.get(UsuarioRepository),
-            Container.get(ImagemService),
-            Container.get(ViaRepository),
-            Container.get(ImagemRepository)
-        ));
-        
-        Container.set(FaceService, new FaceService(
-            Container.get(FaceRepository),
-            Container.get(FonteService),
-            Container.get(MontanhaService)
-        ));
-        
-        Container.set(CroquiService, new CroquiService(
-            Container.get(CroquiRepository),
-            Container.get(ViaRepository),
-            Container.get(ViaCroquiRepository)
-        ));
-        
-        Container.set(EscaladaService, new EscaladaService(
-            Container.get(EscaladaRepository),
-            Container.get(UsuarioService),
-            Container.get(ViaService)
-        ));
-        
-        Container.set(StatsService, new StatsService(
-            Container.get(ViaRepository),
-            Container.get(MontanhaRepository),
-            Container.get(UsuarioRepository)
-        ));
-        
-        // ========================================
-        // LAYER 3: CONTROLLERS
-        // ========================================
-        
-        Container.set(ViaController, new ViaController(
-            Container.get(ViaService)
-        ));
-        
-        Container.set(ColecaoController, new ColecaoController(
-            Container.get(ColecaoService)
-        ));
-        
-        Container.set(CroquiController, new CroquiController(
-            Container.get(CroquiService)
-        ));
-        
-        Container.set(EscaladaController, new EscaladaController(
-            Container.get(EscaladaService)
-        ));
-        
-        Container.set(ImagemController, new ImagemController(
-            Container.get(ImagemService)
-        ));
-        
-        Container.set(UsuarioController, new UsuarioController(
-            Container.get(UsuarioService)
-        ));
-        
-        Container.set(FonteController, new FonteController(
-            Container.get(FonteService)
-        ));
-        
-        Container.set(MontanhaController, new MontanhaController(
-            Container.get(MontanhaService)
-        ));
-        
-        Container.set(FaceController, new FaceController(
-            Container.get(FaceService)
-        ));
-        
-        Container.set(StatsController, new StatsController(
-            Container.get(StatsService)
-        ));
-        
-        // Controllers sem dependências
-        Container.set(SearchController, new SearchController());
-        Container.set(AuthController, new AuthController());
-        
-        console.log('TypeDI Container inicializado com sucesso');
+        console.log('✅ TypeDI Auto-wiring habilitado - Container DI inicializado com sucesso!');
     }
     
     /**
      * Limpa o Container (útil para testes).
      * 
-     * Remove todas as instâncias registradas.
+     * Remove todas as instâncias registradas, permitindo re-configuração
+     * com mocks ou stubs para testes unitários.
+     * 
+     * @example
+     * ```typescript
+     * // Em um teste:
+     * DIContainer.reset();
+     * Container.set(ViaRepository, mockViaRepository);
+     * const service = Container.get(ViaService); // Usa o mock!
+     * ```
      */
     static reset(): void {
         Container.reset();

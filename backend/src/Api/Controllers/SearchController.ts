@@ -8,29 +8,34 @@ import {ViaColecaoRepository} from "../../Infrastructure/repositories/ViaColecao
 import {EscaladaRepository} from "../../Infrastructure/repositories/EscaladaRepository";
 import SearchValidation from '../../Application/validations/SearchValidation';
 import { ViaListDTO } from "../DTOs/Via/ViaDTO";
+import { Service } from 'typedi';
 
+@Service()
 export class SearchController {
 	private serviceMap: { [key: string]: SearchService<any> } = {};
+
+	constructor(
+		private viaRepository: ViaRepository,
+		private montanhaRepository: MontanhaRepository,
+		private colecaoRepository: ColecaoRepository,
+		private escaladaRepository: EscaladaRepository
+	) {}
 
 	// Criar repositories de forma lazy (apenas quando necessário, após AppDataSource estar inicializado)
 	private getService(entityType: string): SearchService<any> {
 		if (!this.serviceMap[entityType]) {
 			switch (entityType) {
 				case 'via':
-					this.serviceMap[entityType] = new SearchService(
-						new ViaRepository(new ViaColecaoRepository())
-					);
+					this.serviceMap[entityType] = new SearchService(this.viaRepository);
 					break;
 				case 'montanha':
-					this.serviceMap[entityType] = new SearchService(new MontanhaRepository());
+					this.serviceMap[entityType] = new SearchService(this.montanhaRepository);
 					break;
 				case 'colecao':
-					this.serviceMap[entityType] = new SearchService<ColecaoRepository>(
-						new ColecaoRepository(new ViaColecaoRepository())
-					);
+					this.serviceMap[entityType] = new SearchService(this.colecaoRepository);
 					break;
 				case 'escalada':
-					this.serviceMap[entityType] = new SearchService(new EscaladaRepository());
+					this.serviceMap[entityType] = new SearchService(this.escaladaRepository);
 					break;
 				default:
 					throw new Error(`Tipo de entidade não suportado: ${entityType}`);

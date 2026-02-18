@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { StatsService } from '../../Application/services/StatsService';
+import { Service } from 'typedi';
 
+@Service()
 export class StatsController {
     private service: StatsService;
 

@@ -1,6 +1,7 @@
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { MontanhaRepository } from '../../Infrastructure/repositories/MontanhaRepository';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
+import { Service } from 'typedi';
 
 export interface IStats {
     vias: number;
@@ -8,6 +9,7 @@ export interface IStats {
     usuarios: number;
 }
 
+@Service()
 export class StatsService {
     private viaRepository: ViaRepository;
     private montanhaRepository: MontanhaRepository;
@@ -24,18 +26,10 @@ export class StatsService {
     }
 
     async getGeneralStats(): Promise<IStats> {
-        // Busca os totais diretamente dos repositórios usando TypeORM
-        // @ts-ignore - Acessa propriedade protegida do BaseRepository
-        const viaRepo = this.viaRepository.repository;
-        // @ts-ignore
-        const montanhaRepo = this.montanhaRepository.repository;
-        // @ts-ignore
-        const usuarioRepo = this.usuarioRepository.repository;
-
         const [vias, montanhas, usuarios] = await Promise.all([
-            viaRepo.count(),
-            montanhaRepo.count(),
-            usuarioRepo.count()
+            this.viaRepository.countAll(),
+            this.montanhaRepository.countAll(),
+            this.usuarioRepository.countAll()
         ]);
 
         return {

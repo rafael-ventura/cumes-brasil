@@ -3,10 +3,14 @@ import EscaladaValidation from '../validations/EscaladaValidation';
 import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
 import { UsuarioService } from './UsuarioService';
 import { ViaService } from './ViaService';
+import { LoadStrategy } from '../../Domain/enum/ELoadStrategy';
 import { ObjectLiteral } from 'typeorm';
 import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
+import { Participante } from '../../Domain/entities/Participante';
+import { Service } from 'typedi';
 
+@Service()
 export class EscaladaService {
 	private repository: EscaladaRepository;
 	private usuarioService: UsuarioService;
@@ -25,23 +29,29 @@ export class EscaladaService {
 	async getById(id: number): Promise<Escalada | null> {
 		if (!id) {
 			throw new BadRequestError("ID da Escalada não fornecido");
-		} else if (isNaN(id)) {
+		} else if (Number.isNaN(id)) {
 			throw new BadRequestError("ID da Escalada inválido");
 		}
-		return await this.repository.getById(id);
+		return await this.repository.getById(id, { strategy: LoadStrategy.DETAIL });
 	}
 
+    /**
+     * @param limit - Número máximo de resultados (opcional)
+     * @returns Lista de escaladas ordenadas por data DESC
+     */
 	async getAll(limit?: number | undefined): Promise<Escalada[] | null> {
-		return await this.repository.getAll(limit);
+		const escaladas = await this.repository.getAll({ strategy: LoadStrategy.LIST });
+		
+		if (limit && escaladas.length > limit) {
+			return escaladas.slice(0, limit);
+		}
+		
+		return escaladas;
 	}
 
 	async create(escalada: Escalada): Promise<Escalada> {
 		EscaladaValidation.valida(escalada);
 		
-		// Importa as entidades necessárias
-		const { Participante } = await import('../../Domain/entities/Participante');
-		
-		// Prepara os participantes
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
@@ -52,7 +62,6 @@ export class EscaladaService {
 			return participante;
 		}) || [];
 		
-		// Cria a entidade Escalada
 		const novaEscalada = new Escalada();
 		novaEscalada.data = escalada.data;
 		novaEscalada.observacao = escalada.observacao;
@@ -64,18 +73,13 @@ export class EscaladaService {
 	}
 
 	async update(escalada: Escalada): Promise<void> {
-		const escaladaExiste = await this.repository.getById(escalada.id);
+		const escaladaExiste = await this.repository.getById(escalada.id, { strategy: LoadStrategy.MINIMAL });
 		if (!escaladaExiste) {
 			throw new NotFoundError("Escalada não encontrada");
 		}
 
-		// Importa a entidade Participante
-		const { Participante } = await import('../../Domain/entities/Participante');
-		
-		// Remove participantes existentes
 		escaladaExiste.participantes.forEach(participante => participante.remove());
 		
-		// Prepara os novos participantes
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
@@ -94,7 +98,7 @@ export class EscaladaService {
 	}
 
 	async delete(id: number): Promise<void> {
-		const escaladaExiste = await this.repository.getById(id);
+		const escaladaExiste = await this.repository.getById(id, { strategy: LoadStrategy.MINIMAL });
 		if (!escaladaExiste) {
 			throw new NotFoundError("Escalada não encontrada");
 		}
@@ -104,31 +108,31 @@ export class EscaladaService {
 	async getEscaladasDoUsuario(usuario_id: number): Promise<ObjectLiteral[]> {
 		if (!usuario_id) {
 			throw new BadRequestError("ID do usuário não fornecido");
-		} else if (isNaN(usuario_id)) {
+		} else if (Number.isNaN(usuario_id)) {
 			throw new BadRequestError("ID do usuário inválido");
 		}
-		return this.repository.getByUsuarioId(usuario_id);
+		return this.repository.getByUsuarioId(usuario_id, { strategy: LoadStrategy.LIST });
 	}
 
 	async getEscaladasDaVia(via_id: number, limit?: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
 			throw new BadRequestError("ID da via não fornecido");
-		} else if (isNaN(via_id)) {
+		} else if (Number.isNaN(via_id)) {
 			throw new BadRequestError("ID da via inválido");
 		}
-		return this.repository.getByViaId(via_id, limit);
+		return this.repository.getByViaId(via_id, limit, { strategy: LoadStrategy.LIST });
 	}
 
 	async getEscaladasDaViaDoUsuario(usuario_id: number, via_id: number, limit?: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
 			throw new BadRequestError("ID da via não fornecido");
-		} else if (isNaN(via_id)) {
+		} else if (Number.isNaN(via_id)) {
 			throw new BadRequestError("ID da via inválido");
 		} else if (!usuario_id) {
 			throw new BadRequestError("ID do usuário não fornecido");
-		} else if (isNaN(usuario_id)) {
+		} else if (Number.isNaN(usuario_id)) {
 			throw new BadRequestError("ID do usuário inválido");
 		}
-		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit);
+		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit, { strategy: LoadStrategy.LIST });
 	}
 }

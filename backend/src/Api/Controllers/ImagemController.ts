@@ -4,7 +4,9 @@ import {Imagem} from "../../Domain/entities/Imagem";
 import {ImagemDTO} from "../DTOs/Imagem/ImagemDTO";
 import { NotFoundError } from '../../Application/errors';
 import ImagemValidation from '../../Application/validations/ImagemValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class ImagemController {
     private service: ImagemService;
 

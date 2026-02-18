@@ -4,7 +4,9 @@ import {Croqui} from "../../Domain/entities/Croqui";
 import {CroquiDTO} from "../DTOs/Croqui/CroquiDTO";
 import { NotFoundError } from '../../Application/errors';
 import CroquiValidation from '../../Application/validations/CroquiValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class CroquiController {
     private service: CroquiService;
 

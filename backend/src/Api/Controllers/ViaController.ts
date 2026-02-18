@@ -4,7 +4,9 @@ import { Via } from '../../Domain/entities/Via';
 import ViaValidation from '../../Application/validations/ViaValidation';
 import { ViaDTO, ViaDetailDTO, ViaListDTO } from '../DTOs/Via/ViaDTO';
 import { NotFoundError } from '../../Application/errors';
+import { Service } from 'typedi';
 
+@Service()
 export class ViaController {
 	private service: ViaService;
 

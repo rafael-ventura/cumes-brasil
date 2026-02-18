@@ -31,6 +31,8 @@ export const AppDataSource = new DataSource({
     database: process.env.POSTGRES_DB,
     synchronize: true,
     logging: false,
+    // logging: ["query", "error", "schema"],
+    maxQueryExecutionTime: 1000,  // 1 segundo
     entities: [
         Colecao,
         Croqui,

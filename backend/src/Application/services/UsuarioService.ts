@@ -1,6 +1,7 @@
 import { Usuario } from '../../Domain/entities/Usuario';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { LoadStrategy } from '../../Domain/enum/ELoadStrategy';
 import { Service } from 'typedi';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemService } from './ImagemService';
@@ -26,20 +27,22 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         this.imagemRepository = imagemRepository;
     }
 
+    /**
+     * REFATORADO: Usa API options-based ({ strategy })
+     */
     async getUsuarioById(id: number): Promise<Usuario | null> {
-        return this.repository.getById(id);
-    }
-
-    async getUsuarios(): Promise<Usuario[]> {
-        return this.repository.getAll();
+        return await this.repository.getById(id, { strategy: LoadStrategy.DETAIL });
     }
 
     async updateUsuario(usuario: Usuario): Promise<void> {
         await this.repository.update(usuario.id, usuario);
     }
 
+    /**
+     * REFATORADO: Usa API options-based ({ strategy })
+     */
     async deleteUsuario(id: number): Promise<void> {
-        const user = await this.repository.getById(id);
+        const user = await this.repository.getById(id, { strategy: LoadStrategy.MINIMAL });
         if (!user) {
             throw new NotFoundError("Usuario não encontrado");
         }
@@ -47,6 +50,9 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         await this.repository.delete(id);
     }
 
+    /**
+     * REFATORADO: Usa API options-based ({ strategy })
+     */
     async getPerfil(id: number): Promise<Usuario | null> {
         return this.repository.getPerfilSemHash(id);
     }

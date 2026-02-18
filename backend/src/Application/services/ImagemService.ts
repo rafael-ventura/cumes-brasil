@@ -3,7 +3,9 @@ import { ImagemRepository } from '../../Infrastructure/repositories/ImagemReposi
 import BadRequestError from '../errors/BadRequestError';
 import NotFoundError from '../errors/NotFoundError';
 import BaseService from './BaseService';
+import { Service } from 'typedi';
 
+@Service()
 export class ImagemService extends BaseService<Imagem, ImagemRepository> {
 
   constructor (imagemRepository: ImagemRepository) {

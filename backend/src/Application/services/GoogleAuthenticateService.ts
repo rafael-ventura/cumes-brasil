@@ -1,7 +1,9 @@
 import { OAuth2Client } from 'google-auth-library';
 import InvalidTokenError from '../errors/InvalidTokenError';
 import { errorsMessage } from '../errors/constants';
+import { Service } from 'typedi';
 
+@Service()
 export default class GoogleAuthenticateService {
     private client: OAuth2Client;
 

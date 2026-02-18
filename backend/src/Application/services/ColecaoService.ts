@@ -1,9 +1,12 @@
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Colecao } from '../../Domain/entities/Colecao';
+import { LoadStrategy } from '../../Domain/enum/ELoadStrategy';
 import NotFoundError from '../errors/NotFoundError';
 import BadRequestError from '../errors/BadRequestError';
 import BaseService from './BaseService';
+import { Service } from 'typedi';
 
+@Service()
 export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   constructor(
     colecaoRepo: ColecaoRepository
@@ -12,15 +15,15 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   }
 
   async getColecaoById(id: number): Promise<Colecao | null> {
-    return this.repository.getById(id);
+    return this.repository.getById(id, { strategy: LoadStrategy.DETAIL });
   }
 
   async getAllColecoes(): Promise<Colecao[]> {
-    return this.repository.getAll();
+    return this.repository.getAll({ strategy: LoadStrategy.LIST });
   }
 
   async getColecoesByUsuarioId(usuarioId: number): Promise<Colecao[]> {
-    return this.repository.getByUsuarioId(usuarioId);
+    return this.repository.getByUsuarioId(usuarioId, { strategy: LoadStrategy.LIST });
   }
 
   async createColecao(colecaoData: Partial<Colecao>): Promise<void> {
@@ -28,7 +31,7 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   }
 
   async updateColecao(id: number, colecaoData: Partial<Colecao>): Promise<void> {
-    const colecao = await this.repository.getById(id);
+    const colecao = await this.repository.getById(id, { strategy: LoadStrategy.MINIMAL });
     if (!colecao) {
       throw new NotFoundError('Coleção não encontrada');
     }
@@ -36,7 +39,7 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
   }
 
   async deleteColecao(id: number): Promise<void> {
-    const colecao = await this.repository.getById(id);
+    const colecao = await this.repository.getById(id, { strategy: LoadStrategy.MINIMAL });
     if (!colecao) {
       throw new NotFoundError('Coleção não encontrada');
     }

@@ -3,7 +3,9 @@ import { FaceService } from "../../Application/services/FaceService";
 import { Face } from "../../Domain/entities/Face";
 import { NotFoundError } from '../../Application/errors';
 import FaceValidation from '../../Application/validations/FaceValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class FaceController {
 	private service: FaceService;
 

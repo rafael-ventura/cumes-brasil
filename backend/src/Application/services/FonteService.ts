@@ -3,7 +3,9 @@ import { FonteRepository } from "../../Infrastructure/repositories/FonteReposito
 import BadRequestError from "../errors/BadRequestError";
 import NotFoundError from "../errors/NotFoundError";
 import BaseService from "./BaseService";
+import { Service } from 'typedi';
 
+@Service()
 export class FonteService extends BaseService<Fonte, FonteRepository> {
 
     constructor(fonteRepository: FonteRepository) {

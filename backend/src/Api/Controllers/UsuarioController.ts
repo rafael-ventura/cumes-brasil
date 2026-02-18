@@ -2,9 +2,11 @@ import {UsuarioService} from '../../Application/services/UsuarioService';
 import {Request, Response} from 'express';
 import {Usuario} from '../../Domain/entities/Usuario';
 import {UsuarioDTO} from "../DTOs/Usuario/UsuarioDTO";
-import { NotFoundError } from '../../Application/errors';
+import { NotFoundError, UnauthorizedError } from '../../Application/errors';
 import UsuarioValidation from '../../Application/validations/UsuarioValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class UsuarioController {
     private service: UsuarioService;
 
@@ -21,14 +23,6 @@ export class UsuarioController {
         return res.json(new UsuarioDTO(usuario));
     };
 
-    getAll = async (_: Request, res: Response) => {
-        const usuarios = await this.service.getUsuarios();
-        if (!usuarios || usuarios.length === 0) {
-            throw new NotFoundError("Nenhum usuário encontrado");
-        }
-        return res.json(usuarios.map(u => new UsuarioDTO(u)));
-    };
-
     update = async (req: Request, res: Response) => {
         const usuario: Usuario = req.body;
         UsuarioValidation.updateBody(usuario);
@@ -37,7 +31,11 @@ export class UsuarioController {
     };
 
     editarFotoPerfil = async (req: Request, res: Response) => {
-        const usuarioId = req.user.usuarioId;
+        if (!req.user) {
+            throw new UnauthorizedError('Usuário não autenticado');
+        }
+        
+        const usuarioId = parseInt(req.user.usuarioId);
         const file = req.file;
         UsuarioValidation.editarFoto(file);
         await this.service.atualizarFotoPerfil(usuarioId, file);
@@ -52,6 +50,10 @@ export class UsuarioController {
     };
 
     getPerfil = async (req: Request, res: Response) => {
+        if (!req.user) {
+            throw new UnauthorizedError('Usuário não autenticado');
+        }
+        
         const usuarioId = parseInt(req.user.usuarioId);
         const resultado = await this.service.getPerfil(usuarioId);
         if (!resultado) {
@@ -61,6 +63,10 @@ export class UsuarioController {
     };
 
     editarDados = async (req: Request, res: Response) => {
+        if (!req.user) {
+            throw new UnauthorizedError('Usuário não autenticado');
+        }
+        
         const usuarioId = parseInt(req.user.usuarioId);
         const usuarioDados: any = req.body;
         UsuarioValidation.editarDados(usuarioDados);
@@ -70,6 +76,10 @@ export class UsuarioController {
     };
 
     excluirFotoPerfil = async (req: Request, res: Response) => {
+        if (!req.user) {
+            throw new UnauthorizedError('Usuário não autenticado');
+        }
+        
         const usuarioId = parseInt(req.user.usuarioId);
         await this.service.excluirFotoPerfil(usuarioId);
 

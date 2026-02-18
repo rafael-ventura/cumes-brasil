@@ -3,7 +3,9 @@ import {Request, Response} from "express";
 import {MontanhaDTO} from "../DTOs/Montanha/MontanhaDTO";
 import { NotFoundError } from '../../Application/errors';
 import MontanhaValidation from '../../Application/validations/MontanhaValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class MontanhaController {
     private service: MontanhaService;
 

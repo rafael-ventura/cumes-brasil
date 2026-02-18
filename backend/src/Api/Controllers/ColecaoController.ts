@@ -4,7 +4,9 @@ import {Request, Response} from 'express';
 import {ColecaoDTO} from "../DTOs/Colecao/ColecaoDTO";
 import { NotFoundError } from '../../Application/errors';
 import ColecaoValidation from '../../Application/validations/ColecaoValidation';
+import { Service } from 'typedi';
 
+@Service()
 export class ColecaoController {
     private service: ColecaoService;
 
