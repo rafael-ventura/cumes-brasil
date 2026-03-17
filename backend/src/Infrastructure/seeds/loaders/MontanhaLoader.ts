@@ -1,16 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Montanha } from '../../../Domain/entities/Montanha';
 import { Localizacao } from '../../../Domain/entities/Localizacao';
 import { ReferenciasIds } from './ReferenciasLoader';
-
-function loadYaml<T>(file: string): T {
-  const p = path.join(process.cwd(), 'src', 'Infrastructure', 'data', file);
-  if (!fs.existsSync(p)) return [] as unknown as T;
-  return yaml.load(fs.readFileSync(p, 'utf-8')) as T;
-}
+import { loadYaml, resolveLocalizacaoIds } from '../seedUtils';
 
 interface MontanhaYaml {
   nome: string;
@@ -41,9 +33,7 @@ export async function runMontanhaLoader(refs: ReferenciasIds): Promise<Map<strin
     ids.set(m.nome, ent.id);
 
     if (m.localizacoes?.length) {
-      const locIds = m.localizacoes
-        .map((b) => Array.from(refs.localizacoes.entries()).find(([k]) => k.endsWith(`|${b}`))?.[1])
-        .filter((id): id is number => id != null);
+      const locIds = resolveLocalizacaoIds(m.localizacoes, refs.localizacoes);
       if (locIds.length) {
         const montanha = await repo.findOne({ where: { id: ent.id }, relations: ['localizacoes'] });
         if (montanha) {
@@ -54,6 +44,6 @@ export async function runMontanhaLoader(refs: ReferenciasIds): Promise<Map<strin
     }
   }
 
-  console.log(`MontanhaLoader: ${ids.size} montanhas`);
+  console.log(`[MontanhaLoader] ${ids.size} montanhas`);
   return ids;
 }

@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Continente } from '../../../Domain/entities/Continente';
 import { Pais } from '../../../Domain/entities/Pais';
@@ -11,8 +8,7 @@ import { Bairro } from '../../../Domain/entities/Bairro';
 import { Localizacao } from '../../../Domain/entities/Localizacao';
 import { Fonte } from '../../../Domain/entities/Fonte';
 import { Imagem } from '../../../Domain/entities/Imagem';
-
-const DATA_DIR = path.join(process.cwd(), 'src', 'Infrastructure', 'data');
+import { loadYaml } from '../seedUtils';
 
 export interface ReferenciasIds {
   continentes: Map<string, number>;
@@ -25,13 +21,6 @@ export interface ReferenciasIds {
   fontes: Map<string, number>;
   fonteByAutor: Map<string, number>;
   imagens: Map<string, number>;
-}
-
-function loadYaml<T>(filename: string): T {
-  const filepath = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(filepath)) return [] as unknown as T;
-  const content = fs.readFileSync(filepath, 'utf-8');
-  return yaml.load(content) as T;
 }
 
 function locKey(loc: { continente: string; pais: string; regiao?: string; estado: string; cidade: string; bairro?: string }): string {
@@ -213,6 +202,8 @@ export async function runReferenciasLoader(): Promise<ReferenciasIds> {
     ids.imagens.set(img.url, ent.id);
   }
 
-  console.log('ReferenciasLoader: OK');
+  const total = ids.continentes.size + ids.paises.size + ids.regioes.size + ids.estados.size +
+    ids.cidades.size + ids.bairros.size + ids.localizacoes.size + ids.fontes.size + ids.imagens.size;
+  console.log(`[ReferenciasLoader] ${total} registros de referência carregados`);
   return ids;
 }

@@ -1,16 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Face } from '../../../Domain/entities/Face';
 import { Localizacao } from '../../../Domain/entities/Localizacao';
 import { ReferenciasIds } from './ReferenciasLoader';
-
-function loadYaml<T>(file: string): T {
-  const p = path.join(process.cwd(), 'src', 'Infrastructure', 'data', file);
-  if (!fs.existsSync(p)) return [] as unknown as T;
-  return yaml.load(fs.readFileSync(p, 'utf-8')) as T;
-}
+import { loadYaml, resolveLocalizacaoIds } from '../seedUtils';
 
 interface FaceYaml {
   nome: string;
@@ -41,9 +33,7 @@ export async function runFacesLoader(
     ids.set(`${f.montanha}|${f.nome}`, ent.id);
 
     if (f.localizacoes?.length) {
-      const locIds = f.localizacoes
-        .map((b) => Array.from(refs.localizacoes.entries()).find(([k]) => k.endsWith(`|${b}`))?.[1])
-        .filter((id): id is number => id != null);
+      const locIds = resolveLocalizacaoIds(f.localizacoes, refs.localizacoes);
       if (locIds.length) {
         const face = await repo.findOne({ where: { id: ent.id }, relations: ['localizacoes'] });
         if (face) {
@@ -54,6 +44,6 @@ export async function runFacesLoader(
     }
   }
 
-  console.log(`FacesLoader: ${ids.size} faces`);
+  console.log(`[FacesLoader] ${ids.size} faces`);
   return ids;
 }

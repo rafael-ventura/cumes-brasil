@@ -10,11 +10,14 @@
 - nome: Croqui da via 22 de outubro
   imagem: /assets/croquis/croqui_22_outubro.webp
   fonte: Clube Excursionista Carioca
+- nome: Croqui da via Arco do Triunfo
+  imagem: /assets/croquis/croqui_arco_do_triunfo.webp
+  fonte: Clube Excursionista Carioca
 - nome: Croqui da via Semisonic
   imagem: /assets/croquis/croqui_semisonic.webp
   fonte: Clube Excursionista Carioca
 - nome: Croqui da via Ratos da Montanha
-  imagem: /assets/croquis/croqui_ratos_da_montanha.webp
+  imagem: /assets/croquis/croqui_ratos_da_motanha.webp
   fonte: Clube Excursionista Carioca
 - nome: Croqui da Ponto Noturno
   imagem: /assets/croquis/croqui_ponto_noturno.webp
@@ -28,3 +31,28 @@
 - nome: Croqui da Via Fissura do Ingles - Detalhado
   imagem: /assets/croquis/croqui_fissura_do_ingles_02.webp
   fonte: Clube Excursionista Carioca
+# Croquis das 10 vias clássicas do CERJ
+- nome: Croqui Artificial da Caixa de Fósforos
+  imagem: /assets/croquis/croqui_artificial_caixa_de_fosforos.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Chaminé Brasília
+  imagem: /assets/croquis/croqui_chamine_Brasilia.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Chaminé Moganga
+  imagem: /assets/croquis/croqui_chamine_moganga.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Lionel Terray
+  imagem: /assets/croquis/croqui_lionel_terray.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Paredão K2
+  imagem: /assets/croquis/croqui_paredao_k2.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Paredão Vermelho
+  imagem: /assets/croquis/croqui_paredao_vermelho.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Passagem dos Olhos
+  imagem: /assets/croquis/croqui_passagem_dos_olhos.webp
+  fonte: CERJ (Vias Clássicas)
+- nome: Croqui Paredão Reinaldo Behnken
+  imagem: /assets/croquis/croqui_reinaldo_behnken.webp
+  fonte: CERJ (Vias Clássicas)

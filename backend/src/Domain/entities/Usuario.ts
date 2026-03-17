@@ -39,6 +39,7 @@ export class Usuario extends BaseEntityWithTimestamps {
   via_preferida: Via;
 
   @ManyToOne(() => Imagem, imagem => imagem.usuarios)
+  @JoinColumn({ name: "foto_perfilId" })
   foto_perfil: Imagem;
 
   @OneToMany(() => Colecao, colecao => colecao.usuario)

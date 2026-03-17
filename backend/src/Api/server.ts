@@ -210,7 +210,7 @@ async function fixSequencesOnStartup() {
                 const maxId = result[0]?.max_id;
                 
                 if (maxId) {
-                    // Verificar o valor atual da sequência
+                    // Verificar o valor atual da sequência (identificador entre aspas para PostgreSQL)
                     const seqResult = await queryRunner.query(`SELECT last_value FROM ${table}_id_seq`);
                     const currentSeq = seqResult[0]?.last_value;
                     
@@ -235,32 +235,44 @@ async function fixSequencesOnStartup() {
     }
 }
 
-// Inicializar banco de dados
-initializeDatabase();
-
 /**
  * Inicialização do servidor HTTP
+ * - Aguarda o banco estar pronto antes de subir
  * - Exibe logs com configuração básica e limites aplicados
  */
-app.listen(PORT, HOSTNAME, () => {
-    const rateLimitInfo = getRateLimitInfo();
-
-    safeLogger.info('Servidor iniciado com sucesso', {
-        port: PORT,
-        hostname: HOSTNAME,
-        environment: process.env.NODE_ENV || 'development'
-    });
-
-    safeLogger.info('Configurações do servidor', {
-        awsRegion: process.env.AWS_REGION ? 'Configurado' : 'Não configurado',
-        awsS3Bucket: process.env.AWS_S3_BUCKET_NAME ? 'Configurado' : 'Não configurado',
-        cloudfrontUrl: process.env.CLOUDFRONT_URL ? 'Configurado' : 'Não configurado',
-        googleClientId: process.env.GOOGLE_CLIENT_ID ? 'Configurado' : 'Não configurado'
-    });
-
-    safeLogger.info('Configuração de Rate Limiting', {
-        enabled: rateLimitInfo.enabled,
-        environment: rateLimitInfo.environment,
-        limits: rateLimitInfo.limits
-    });
+process.on('unhandledRejection', (reason, promise) => {
+    safeLogger.error('Unhandled Rejection', { reason, promise: String(promise) });
 });
+
+async function startServer() {
+    try {
+        await initializeDatabase();
+        app.listen(PORT, HOSTNAME, () => {
+            const rateLimitInfo = getRateLimitInfo();
+            safeLogger.info('Servidor iniciado com sucesso', {
+                port: PORT,
+                hostname: HOSTNAME,
+                environment: process.env.NODE_ENV || 'development'
+            });
+            safeLogger.info('Configurações do servidor', {
+                awsRegion: process.env.AWS_REGION ? 'Configurado' : 'Não configurado',
+                awsS3Bucket: process.env.AWS_S3_BUCKET_NAME ? 'Configurado' : 'Não configurado',
+                cloudfrontUrl: process.env.CLOUDFRONT_URL ? 'Configurado' : 'Não configurado',
+                googleClientId: process.env.GOOGLE_CLIENT_ID ? 'Configurado' : 'Não configurado'
+            });
+            safeLogger.info('Configuração de Rate Limiting', {
+                enabled: rateLimitInfo.enabled,
+                environment: rateLimitInfo.environment,
+                limits: rateLimitInfo.limits
+            });
+        });
+    } catch (error: any) {
+        safeLogger.error('Falha ao iniciar servidor', {
+            error: error?.message,
+            stack: error?.stack
+        });
+        process.exit(1);
+    }
+}
+
+startServer();

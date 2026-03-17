@@ -10,7 +10,7 @@
   descricao: Foto Default para Usuário
   fonte: Deus Ex Machina
   tipo_entidade: usuario
-- url: /assets/via-default-01.webp
+- url: /assets/vias/via-default-01.webp
   descricao: Foto Default para Via
   fonte: Deus Ex Machina
   tipo_entidade: via
@@ -30,11 +30,15 @@
   descricao: Croqui Via 22 de Outubro
   fonte: Clube Excursionista Carioca
   tipo_entidade: croqui
+- url: /assets/croquis/croqui_arco_do_triunfo.webp
+  descricao: Croqui Via Arco do Triunfo
+  fonte: Clube Excursionista Carioca
+  tipo_entidade: croqui
 - url: /assets/croquis/croqui_semisonic.webp
   descricao: Croqui Via Semisonic
   fonte: Clube Excursionista Carioca
   tipo_entidade: croqui
-- url: /assets/croquis/croqui_ratos_da_montanha.webp
+- url: /assets/croquis/croqui_ratos_da_motanha.webp
   descricao: Croqui Via Ratos da Montanha
   fonte: Clube Excursionista Carioca
   tipo_entidade: croqui
@@ -54,3 +58,77 @@
   descricao: Croqui Via Fissura do Ingles - Detalhado
   fonte: Clube Excursionista Carioca
   tipo_entidade: croqui
+# Croquis das 10 vias clássicas do CERJ
+- url: /assets/croquis/croqui_artificial_caixa_de_fosforos.webp
+  descricao: Croqui Artificial da Caixa de Fósforos
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_chamine_Brasilia.webp
+  descricao: Croqui Chaminé Brasília
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_chamine_moganga.webp
+  descricao: Croqui Chaminé Moganga
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_lionel_terray.webp
+  descricao: Croqui Lionel Terray
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_paredao_k2.webp
+  descricao: Croqui Paredão K2
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_paredao_vermelho.webp
+  descricao: Croqui Paredão Vermelho
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_passagem_dos_olhos.webp
+  descricao: Croqui Passagem dos Olhos
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+- url: /assets/croquis/croqui_reinaldo_behnken.webp
+  descricao: Croqui Paredão Reinaldo Behnken
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: croqui
+# Imagens das 10 vias clássicas do CERJ
+- url: /assets/vias/via-artificial-da-caixa-de-fosforos.png
+  descricao: Via Artificial da Caixa de Fósforos
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-chamine-brasilia.png
+  descricao: Via Chaminé Brasília
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-chamine-moganga.png
+  descricao: Via Chaminé Moganga
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-chamine-stop.png
+  descricao: Via Chaminé Stop
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-lionel-terray.png
+  descricao: Via Lionel Terray
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-paredao-coringa.png
+  descricao: Via Paredão Coringa
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-paredao-k2.png
+  descricao: Via Paredão K2
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/fotos classicas/Paredão Vermelho.png
+  descricao: Via Paredão Vermelho
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-passagem-dos-olhos .png
+  descricao: Via Passagem dos Olhos
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via
+- url: /assets/vias/via-paredao-reinaldo-behnken.png
+  descricao: Via Paredão Reinaldo Behnken
+  fonte: CERJ (Vias Clássicas)
+  tipo_entidade: via

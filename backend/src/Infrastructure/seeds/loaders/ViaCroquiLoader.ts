@@ -1,14 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { ViaCroqui } from '../../../Domain/entities/ViaCroqui';
-
-function loadYaml<T>(file: string): T {
-  const p = path.join(process.cwd(), 'src', 'Infrastructure', 'data', file);
-  if (!fs.existsSync(p)) return [] as unknown as T;
-  return yaml.load(fs.readFileSync(p, 'utf-8')) as T;
-}
+import { loadYaml } from '../seedUtils';
 
 interface ViaCroquiYaml {
   via: string;
@@ -41,5 +33,5 @@ export async function runViaCroquiLoader(
     }
   }
 
-  console.log('ViaCroquiLoader: OK');
+  console.log('[ViaCroquiLoader] vínculos via-croqui sincronizados');
 }
