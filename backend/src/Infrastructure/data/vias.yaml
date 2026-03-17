@@ -1954,7 +1954,7 @@
   face: Face Sul
   fonte: CERJ (Vias Clássicas)
   via_cerj: true
-  imagem: /assets/vias/fotos classicas/Paredão Vermelho.png
+  imagem: /assets/vias/via-paredao-vermelho.png
   croqui: /assets/croquis/croqui_paredao_vermelho.webp
   historia_resumo: Via que inaugurou o Paredão dos Coloridos em 1974. Nome em homenagem à Praia Vermelha. Funciona como campo escola para iniciantes.
   equipamentos: Corda de 60m; Costuras; Peças móveis
@@ -1970,7 +1970,7 @@
   face: Face Nordeste
   fonte: CERJ (Vias Clássicas)
   via_cerj: true
-  imagem: /assets/vias/via-passagem-dos-olhos .png
+  imagem: /assets/vias/via-passagem-dos-olhos.png
   croqui: /assets/croquis/croqui_passagem_dos_olhos.webp
   historia_resumo: Travessia lendária na Face do Imperador, da Orelha Esquerda à Direita passando pelos olhos. Conquista em 3 partes (1945, 1946, 1960). Reforma do cabo de via ferrata em 2023.
   equipamentos: Corda de 60m; Costuras; Peças móveis

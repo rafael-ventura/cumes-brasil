@@ -13,7 +13,7 @@ export class MulterMiddleware {
     ? multer.memoryStorage() // Salva na memória (para enviar ao S3)
     : multer.diskStorage({
       destination: (req, file, cb) => {
-        const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets');
+        const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets', 'usuarios');
         console.log('📂 Salvando imagem localmente em:', uploadPath); //TODO: ADD LOGGER
         cb(null, uploadPath);
       },

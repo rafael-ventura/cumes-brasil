@@ -1,4 +1,4 @@
-- url: /assets/colecao-default-01.webp
+- url: /assets/colecoes/colecao-default-01.webp
   descricao: Foto Default para Colecao
   fonte: Pedro Bugim
   tipo_entidade: colecao
@@ -6,7 +6,7 @@
   descricao: Foto Default para Montanha - Montanha Brasileira
   fonte: Itaway Ecotours
   tipo_entidade: montanha
-- url: /assets/usuario-default-01.webp
+- url: /assets/usuarios/usuario-default-01.webp
   descricao: Foto Default para Usuário
   fonte: Deus Ex Machina
   tipo_entidade: usuario
@@ -120,11 +120,11 @@
   descricao: Via Paredão K2
   fonte: CERJ (Vias Clássicas)
   tipo_entidade: via
-- url: /assets/vias/fotos classicas/Paredão Vermelho.png
+- url: /assets/vias/via-paredao-vermelho.png
   descricao: Via Paredão Vermelho
   fonte: CERJ (Vias Clássicas)
   tipo_entidade: via
-- url: /assets/vias/via-passagem-dos-olhos .png
+- url: /assets/vias/via-passagem-dos-olhos.png
   descricao: Via Passagem dos Olhos
   fonte: CERJ (Vias Clássicas)
   tipo_entidade: via
