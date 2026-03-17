@@ -5,7 +5,11 @@
       ref="searchEntityRef"
       entity="via"
       @select="goViaDetalhadaView($event.id)"
-      :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
+      :enableSortOptions="[
+        { field: 'nome', label: 'Nome' },
+        { field: 'created_at', label: 'Data de adição' },
+        { field: 'updated_at', label: 'Última modificação' }
+      ]"
       :hide-header="true"
     >
       <template #filters="{ filters }">

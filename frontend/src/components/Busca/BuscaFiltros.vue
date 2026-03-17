@@ -124,6 +124,24 @@
               @click="toggleFilterInModal('selectedMountain')"
               rounded
             />
+            <q-btn
+              class="filter-btn"
+              :class="{ active: showFilterInputInModal.via_cerj }"
+              icon="emoji_events"
+              label="Clássicas CERJ"
+              @click="toggleFilterInModal('via_cerj')"
+              rounded
+            />
+          </div>
+
+          <div v-if="showFilterInputInModal.via_cerj" class="q-pt-lg">
+            <div class="field-label">Vias Clássicas do CERJ</div>
+            <q-toggle
+              v-model="localFilters.via_cerj"
+              label="Apenas vias clássicas do CERJ"
+              color="secondary"
+              @update:model-value="updateActiveFilters"
+            />
           </div>
 
           <!-- Campos dinâmicos de filtros dentro do modal -->
@@ -261,18 +279,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
 // Props e emissões
-const props = defineProps<{ entity: string, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
+const props = defineProps<{ entity: string, filters?: Partial<BuscaRequest>, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
 const emit = defineEmits(['applyFilters']);
 const showExtensionFilters = ref(false);
 const localFilters = ref<BuscaRequest>({
   unifiedSearch: '',
   selectedMountain: null,
+  via_cerj: null,
   selectedDifficulty: null,
   selectedExtension: null,
   selectedCrux: null,
@@ -283,6 +302,7 @@ const localFilters = ref<BuscaRequest>({
   itemsPerPage: 10
 });
 const showFilterInputInModal = ref<Record<string, boolean>>({});
+const isSyncingFromProps = ref(false);
 const showFilterModal = ref(false); // Controle de exibição do modal
 const showFilterInput = ref<Record<string, boolean>>({});
 const activeFilters = ref<Record<string, boolean>>({}); // Filtros ativos
@@ -374,6 +394,11 @@ const activeFiltersList = computed(() => {
     filters.push({ label: `Modalidade: ${modalidadeLabel}`, key: 'modalidade' });
   }
 
+  // Adiciona o filtro de vias clássicas CERJ se estiver ativo
+  if (localFilters.value.via_cerj === true) {
+    filters.push({ label: 'Clássicas CERJ', key: 'via_cerj' });
+  }
+
   // Adiciona o filtro de montanha se estiver selecionado
   if (localFilters.value.selectedMountain) {
     const montanha = mountainOptions.value.find(m => m.id === localFilters.value.selectedMountain);
@@ -403,6 +428,8 @@ const removeFilter = (key: string) => {
     localFilters.value.modalidade = null;
   } else if (key === 'selectedMountain') {
     localFilters.value.selectedMountain = null;
+  } else if (key === 'via_cerj') {
+    localFilters.value.via_cerj = null;
   }
 
   // Atualiza a lista de filtros e emite a mudança
@@ -419,6 +446,24 @@ const applyFilterChanges = () => {
   emitFilters();
   showFilterModal.value = false;
 };
+
+// Sincroniza localFilters quando filters do parent mudam (ex: vindo da Home com filterType)
+watch(
+  () => props.filters,
+  (newFilters) => {
+    if (newFilters && Object.keys(newFilters).length) {
+      isSyncingFromProps.value = true;
+      localFilters.value = { ...localFilters.value, ...newFilters };
+      // Expande seções do modal para filtros ativos vindos da URL
+      if (newFilters.via_cerj === true) showFilterInputInModal.value.via_cerj = true;
+      if (newFilters.selectedDifficulty) showFilterInputInModal.value.selectedDifficulty = true;
+      if (newFilters.selectedExposicao) showFilterInputInModal.value.selectedExposicao = true;
+      if (newFilters.bairro) showFilterInputInModal.value.selectedMountain = true;
+      nextTick(() => { isSyncingFromProps.value = false; });
+    }
+  },
+  { immediate: true, deep: true }
+);
 
 // Inicializa as montanhas
 onMounted(async () => {
@@ -440,10 +485,11 @@ const onInputChange = (event: KeyboardEvent) => {
   }
 };
 
-// Dispara a busca ao selecionar um filtro
+// Dispara a busca ao selecionar um filtro (não emite quando sincronizando de props/URL)
 watch(
   () => localFilters.value,
   (newFilters, oldFilters) => {
+    if (isSyncingFromProps.value) return;
     if (JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
       emitFilters();
     }
@@ -461,6 +507,7 @@ const clearFilters = () => {
   localFilters.value = {
     unifiedSearch: '',
     selectedMountain: null,
+    via_cerj: null,
     bairro: '',
     selectedExposicao: null,
     selectedDifficulty: null,
@@ -484,6 +531,7 @@ const clearFilters = () => {
   showFilterInput.value.tipo_escalada = false;
   showFilterInput.value.modalidade = false;
   showFilterInput.value.selectedMountain = false;
+  showFilterInput.value.via_cerj = false;
   showExtensionFilters.value = false;
   emitFilters();
 };

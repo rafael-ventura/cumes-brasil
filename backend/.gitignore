@@ -62,8 +62,10 @@ backend/.env.development
 
 dist/
 
-# Assets e uploads de usuários (exceto logo e imagens estáticas)
-assets/foto_perfil-*
-assets/croquis/
-uploads/
+# Uploads de usuários gerados em runtime — não versionar
+assets/usuarios/*
+# Manter pasta e imagem default rastreadas
+!assets/usuarios/.gitkeep
+!assets/usuarios/usuario-default-01.webp
+!assets/usuarios/usuario-default-01.jpg
 

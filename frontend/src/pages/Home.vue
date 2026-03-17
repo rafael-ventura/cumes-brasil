@@ -43,14 +43,8 @@
       @navigate="goToFilteredSearch"
     />
 
-    <!-- Section Header Random -->
-    <div class="section-header random-section">
-      <h2 class="section-title">Feeling aventureiro?</h2>
-      <p class="section-subtitle">Deixe o destino escolher sua próxima escalada</p>
-    </div>
-
-    <!-- Componente de Via Aleatória -->
-    <RandomViaCard />
+    <!-- Destaque Clássicas do CERJ -->
+    <DestaqueCerj />
 
   </q-page>
 </template>
@@ -59,7 +53,7 @@
 import { onMounted, ref, computed } from 'vue';
 import HomeService from 'src/services/HomeService';
 import CardMosaic from 'src/components/Home/CardMosaic.vue';
-import RandomViaCard from 'src/components/Home/RandomViaCard.vue';
+import DestaqueCerj from 'src/components/Home/DestaqueCerj.vue';
 import { useRouter } from 'vue-router';
 import CopacabanaImage from 'src/assets/home/copacabana.webp';
 import TerceiroGrauImage from 'src/assets/home/terceiroGrau.webp';
@@ -111,6 +105,12 @@ const cards = ref<Card[]>([
   {
     title: 'Vias no Bairro da Urca',
     filterType: 'bairro=urca',
+    count: 0,
+    image: UrcaImage
+  },
+  {
+    title: 'Clássicas do CERJ',
+    filterType: 'via_cerj=true',
     count: 0,
     image: UrcaImage
   }
@@ -187,11 +187,18 @@ async function loadStatsData() {
   }
 }
 
-function goToFilteredSearch (filterType: string) {
-  router.push({
-    name: 'busca',
-    query: { filterType }
-  });
+function goToFilteredSearch (filterType: string | { sortField: string; sortOrder: string }) {
+  if (typeof filterType === 'object') {
+    router.push({
+      name: 'busca',
+      query: { sortField: filterType.sortField, sortOrder: filterType.sortOrder }
+    });
+  } else {
+    router.push({
+      name: 'busca',
+      query: { filterType }
+    });
+  }
 }
 
 function getPrimeIcon(materialIcon: string): string {
@@ -354,10 +361,6 @@ function getPrimeIcon(materialIcon: string): string {
 .section-header {
   text-align: center;
   margin: 32px 24px 40px;
-
-  &.random-section {
-    margin-top: 80px;
-  }
 }
 
 .section-title {
@@ -418,10 +421,6 @@ function getPrimeIcon(materialIcon: string): string {
 
   .section-header {
     margin: 40px 16px 32px;
-
-    &.random-section {
-      margin-top: 56px;
-    }
   }
 }
 

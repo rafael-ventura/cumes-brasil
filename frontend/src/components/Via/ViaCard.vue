@@ -2,6 +2,7 @@
   <div v-if="via">
     <q-card class="card-item" @click="emitClick">
       <div class="card-image-container">
+        <BadgeCerj v-if="via.via_cerj" :via="via" class="badge-cerj-overlay" />
         <img 
           v-if="viaImageUrl" 
           :src="viaImageUrl" 
@@ -32,6 +33,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
+import BadgeCerj from 'src/components/Via/BadgeCerj.vue';
 import { Via } from 'src/models/Via';
 import { getViaImageUrlFull } from 'src/utils/utils';
 
@@ -70,6 +72,14 @@ const emitClick = () => {
   width: 100%;
   height: 175px;
   overflow: hidden;
+  position: relative;
+}
+
+.badge-cerj-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
 }
 
 .card-image {

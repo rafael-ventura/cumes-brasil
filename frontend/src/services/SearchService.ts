@@ -9,7 +9,7 @@ class SearchService {
     const response = await api.post('/search', searchRequest);
     const searchResult = response.data as SearchResult;
     // Formatar as entidades do tipo Via
-    if (searchRequest.entityType === 'Via') {
+    if (searchRequest.entityType === 'via' || searchRequest.entityType === 'Via') {
       searchResult.items = searchResult.items.map((item: any) => {
         const via = formatVia(item as Via);
         if (via.imagem?.url) {

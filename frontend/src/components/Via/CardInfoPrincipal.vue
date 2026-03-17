@@ -23,9 +23,10 @@
       <div class="text-body2 q-mt-sm">Sem imagem</div>
     </div>
 
-    <h2 class="via-nome" v-if="via?.nome && via.nome !== 'N/A'">
-      {{ via.nome }}
-    </h2>
+    <div class="via-nome-row" v-if="via?.nome && via.nome !== 'N/A'">
+      <h2 class="via-nome">{{ via.nome }}</h2>
+      <BadgeCerj v-if="via.via_cerj" :via="via" />
+    </div>
 
     <!-- GrauBadge -->
     <GrauBadge
@@ -53,6 +54,7 @@
 import { ref, computed } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
+import BadgeCerj from 'src/components/Via/BadgeCerj.vue';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
 import { getViaImageUrlFull } from 'src/utils/utils';
 
@@ -109,14 +111,22 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
   z-index: 2;
 }
 
+.via-nome-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 16px 0 8px 0;
+  padding: 0 16px;
+}
+
 .via-nome {
   font-size: clamp(24px, 5vw, 36px);
   font-weight: bold;
   color: black;
   text-align: left;
-  width: 100%;
-  margin: 16px 0 8px 0;
-  padding: 0 16px;
+  margin: 0;
 }
 
 .via-localizacao {

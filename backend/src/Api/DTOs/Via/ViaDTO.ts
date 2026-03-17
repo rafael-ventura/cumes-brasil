@@ -240,7 +240,7 @@ export class ViaDTO {
         this.imagens = imagensObjetos.map((img: any) => new ImagemDTO(img));
         this.imagem = this.imagens.length > 0 ? this.imagens[0] : new ImagemDTO({
             id: 4,
-            url: "/assets/via-default-01.webp",
+            url: "/assets/vias/via-default-01.webp",
             descricao: "Foto Default para Via",
             tipo_entidade: "via"
         } as any);

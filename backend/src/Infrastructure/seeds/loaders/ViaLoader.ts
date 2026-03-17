@@ -1,20 +1,19 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Via } from '../../../Domain/entities/Via';
 import { ViaImagem } from '../../../Domain/entities/ViaImagem';
 import { Montanha } from '../../../Domain/entities/Montanha';
 import { Face } from '../../../Domain/entities/Face';
 import { ReferenciasIds } from './ReferenciasLoader';
+import { loadYaml } from '../seedUtils';
 
-const VIA_IMAGEM_DEFAULT = '/assets/via-default-01.webp';
+const VIA_IMAGEM_DEFAULT = '/assets/vias/via-default-01.webp';
 
-function loadYaml<T>(file: string): T {
-  const p = path.join(process.cwd(), 'src', 'Infrastructure', 'data', file);
-  if (!fs.existsSync(p)) return [] as unknown as T;
-  return yaml.load(fs.readFileSync(p, 'utf-8')) as T;
-}
+/**
+ * Campos simples da Via que são atualizados no upsert quando presentes no YAML.
+ * Para adicionar um novo campo atualizável: basta incluí-lo aqui e na interface ViaYaml.
+ */
+const UPSERT_FIELDS = ['via_cerj', 'historia_resumo', 'equipamentos', 'tracklog_aproximacao'] as const;
+type UpsertField = (typeof UPSERT_FIELDS)[number];
 
 interface ViaYaml {
   nome: string;
@@ -35,6 +34,7 @@ interface ViaYaml {
   face: string;
   fonte: string;
   viaPrincipal?: string;
+  imagem?: string;
 }
 
 export async function runViaLoader(
@@ -82,20 +82,33 @@ export async function runViaLoader(
         viaPrincipal: viaPrincipalId
       });
       await repo.save(ent);
-      if (imagemId) {
-        const vi = viaImagemRepo.create({ via: ent, imagem: { id: imagemId } as any });
+      const imgId = v.imagem ? refs.imagens.get(v.imagem) : imagemId;
+      if (imgId) {
+        const vi = viaImagemRepo.create({ via: ent, imagem: { id: imgId } as any });
         await viaImagemRepo.save(vi);
       }
-    } else if (v.via_cerj !== undefined || v.historia_resumo !== undefined || v.equipamentos !== undefined || v.tracklog_aproximacao !== undefined) {
-      if (v.via_cerj !== undefined) ent.via_cerj = v.via_cerj;
-      if (v.historia_resumo !== undefined) ent.historia_resumo = v.historia_resumo;
-      if (v.equipamentos !== undefined) ent.equipamentos = v.equipamentos;
-      if (v.tracklog_aproximacao !== undefined) ent.tracklog_aproximacao = v.tracklog_aproximacao;
+    } else {
+      for (const field of UPSERT_FIELDS) {
+        if (v[field] !== undefined) (ent as unknown as Record<UpsertField, ViaYaml[UpsertField]>)[field] = v[field]!;
+      }
       await repo.save(ent);
+      if (v.imagem) {
+        const imgId = refs.imagens.get(v.imagem);
+        if (imgId) {
+          const existing = await viaImagemRepo.findOne({ where: { via: { id: ent.id } } });
+          if (existing) {
+            existing.imagem = { id: imgId } as any;
+            await viaImagemRepo.save(existing);
+          } else {
+            const vi = viaImagemRepo.create({ via: ent, imagem: { id: imgId } as any });
+            await viaImagemRepo.save(vi);
+          }
+        }
+      }
     }
     ids.set(v.nome, ent.id);
   }
 
-  console.log(`ViaLoader: ${ids.size} vias`);
+  console.log(`[ViaLoader] ${ids.size} vias`);
   return ids;
 }

@@ -198,7 +198,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
     }
 
     private async excluirImagemAntiga(imagemAtual: Imagem) {
-        const defaultImageUrl = '/assets/usuario-default-01.jpg';
+        const defaultImageUrl = '/assets/usuarios/usuario-default-01.jpg';
 
         if (imagemAtual.url !== defaultImageUrl) {
             const oldImagePath = path.resolve(

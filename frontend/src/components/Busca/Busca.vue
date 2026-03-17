@@ -16,6 +16,7 @@
       :entityType="props.entity"
       @select="selectItem"
       :enableSortOptions="enableSortOptions"
+      :initialSort="filters.sortField && filters.sortOrder ? { field: filters.sortField, direction: (filters.sortOrder === 'DESC' ? 'desc' : 'asc') } : undefined"
       @change-sort="updateSorting"
       :totalItems="totalItems"
       :totalPages="totalPages"
@@ -83,7 +84,35 @@ const getStoredItemsPerPage = (): number => {
   return 20; // padrão para vias
 };
 
+// Parse filterType e sort da query (ex: via_cerj=true, sort=created_at_desc) para filtros
+function parseFilterTypeFromQuery(): Partial<BuscaRequest> {
+  const result: Partial<BuscaRequest> = {};
+
+  // Ordenação via query params
+  const sortField = route.query.sortField as string | undefined;
+  const sortOrder = route.query.sortOrder as string | undefined;
+  if (sortField && sortOrder) {
+    result.sortField = sortField;
+    result.sortOrder = sortOrder.toUpperCase();
+  }
+
+  const filterType = route.query.filterType as string | undefined;
+  if (!filterType || !filterType.includes('=')) return result;
+  const [key, value] = filterType.split('=');
+  if (key === 'via_cerj' && value === 'true') {
+    return { ...result, via_cerj: true };
+  }
+  if (key === 'grau') return { ...result, selectedDifficulty: value };
+  if (key === 'bairro') return { ...result, bairro: value };
+  if (key === 'exposicao') return { ...result, selectedExposicao: value.toUpperCase() };
+  if (key === 'sort' && value === 'created_at_desc') {
+    return { ...result, sortField: 'created_at', sortOrder: 'DESC' };
+  }
+  return result;
+}
+
 // Preparar filtros iniciais, preservando itemsPerPage do localStorage
+const queryFilters = parseFilterTypeFromQuery();
 const initialFilters: BuscaRequest = {
   unifiedSearch: '',
   selectedDifficulty: null,
@@ -93,12 +122,13 @@ const initialFilters: BuscaRequest = {
   tipo_rocha: null,
   tipo_escalada: null,
   modalidade: null,
+  via_cerj: null,
   page: 1,
   sortField: null,
   sortOrder: null,
   itemsPerPage: getStoredItemsPerPage(),
   ...props.staticFilters,
-  ...route.query
+  ...queryFilters
 };
 
 // Se itemsPerPage vier da query string, usar ele; senão manter do localStorage

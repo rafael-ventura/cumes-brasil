@@ -1,15 +1,7 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import { AppDataSource } from '../../config/db';
 import { Croqui } from '../../../Domain/entities/Croqui';
 import { ReferenciasIds } from './ReferenciasLoader';
-
-function loadYaml<T>(file: string): T {
-  const p = path.join(process.cwd(), 'src', 'Infrastructure', 'data', file);
-  if (!fs.existsSync(p)) return [] as unknown as T;
-  return yaml.load(fs.readFileSync(p, 'utf-8')) as T;
-}
+import { loadYaml } from '../seedUtils';
 
 interface CroquiYaml {
   nome: string;
@@ -41,6 +33,6 @@ export async function runCroquiLoader(refs: ReferenciasIds): Promise<Map<string,
     ids.set(key, ent.id);
   }
 
-  console.log(`CroquiLoader: ${ids.size} croquis`);
+  console.log(`[CroquiLoader] ${ids.size} croquis`);
   return ids;
 }

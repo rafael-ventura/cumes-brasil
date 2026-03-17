@@ -122,9 +122,11 @@ export function formatVia (via: Via): Via {
     formattedVia.extensao = Math.round(Number(formattedVia.extensao));
   }
 
-  // Define valores padrão para campos vazios
+  // Define valores padrão para campos vazios (exclui booleanos como via_cerj)
+  const skipNaKeys = ['via_cerj', 'id', 'latitude', 'longitude', 'extensao'];
   const keys = Object.keys(formattedVia) as ViaKey[];
   for (const key of keys) {
+    if (skipNaKeys.includes(key)) continue;
     if (formattedVia[key] === '' || formattedVia[key] === null || formattedVia[key] === undefined) {
       formattedVia[key] = 'N/A' as never;
     }
@@ -153,15 +155,20 @@ export function adjustImageUrls (entity: any): void {
  * @param via - Objeto Via com imagem opcional
  * @returns URL da imagem ou null se não houver imagem disponível
  */
-export function getViaImageUrl (via: { imagem?: { url?: string } | null } | null | undefined): string | null {
+export function getViaImageUrl (via: { imagem?: { url?: string } | null; imagens?: { url?: string }[] } | null | undefined): string | null {
   if (!via) return null;
   
-  // 1. Tentar usar imagem da via
+  // 1. Tentar usar imagem da via (backward compat)
   if (via.imagem?.url) {
     return via.imagem.url;
   }
   
-  // 2. Não há imagem disponível
+  // 2. Tentar usar primeira imagem do array imagens
+  if (via.imagens?.length && via.imagens[0]?.url) {
+    return via.imagens[0].url;
+  }
+  
+  // 3. Não há imagem disponível
   return null;
 }
 

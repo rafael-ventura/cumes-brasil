@@ -71,6 +71,31 @@
         </q-badge>
       </div>
 
+      <!-- História (vias CERJ) -->
+      <div class="detalhe-item" v-if="via.historia_resumo">
+        <span>História:</span>
+        <span class="valor-detalhe descricao">{{ via.historia_resumo }}</span>
+      </div>
+
+      <!-- Equipamentos (vias CERJ) -->
+      <div class="detalhe-item" v-if="via.equipamentos">
+        <span>Equipamentos:</span>
+        <span class="valor-detalhe">{{ via.equipamentos }}</span>
+      </div>
+
+      <!-- Tracklog de Aproximação -->
+      <div class="detalhe-item" v-if="via.tracklog_aproximacao">
+        <span>Tracklog de Aproximação:</span>
+        <a
+          :href="via.tracklog_aproximacao"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tracklog-link"
+        >
+          Ver rota de aproximação
+        </a>
+      </div>
+
       <!-- Descrição -->
       <div class="detalhe-item descricao-container">
         <span>Descrição:</span>
@@ -231,5 +256,16 @@ const badgeColors = ['cumes-01', 'cumes-03', 'primary', 'secondary'];
 .descricao-vazia {
   color: gray;
   font-style: italic;
+}
+
+.tracklog-link {
+  margin-top: 4px;
+  color: $cumes-04;
+  font-weight: 600;
+  text-decoration: underline;
+
+  &:hover {
+    color: darken($cumes-04, 10%);
+  }
 }
 </style>
