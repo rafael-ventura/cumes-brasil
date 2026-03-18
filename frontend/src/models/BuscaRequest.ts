@@ -1,22 +1,28 @@
 import { ModalidadeEscalada } from './ModalidadeEscalada';
 
 export interface BuscaRequest {
-  unifiedSearch?: string; // searchQuery
-  selectedMountain?: number | null;
-  bairro?: string | null;
-  selectedDifficulty?: string | null;
-  selectedExtension?: string | null;
-  selectedExtensionCategory?: number[] | null;
-  selectedCrux?: string | null;
-  selectedExposicao?: string | null;
-  tipo_rocha?: string | null;
-  tipo_escalada?: string | null;
+  tipoEntidade?: string;
+  termoBusca?: string;
+  montanhaId?: number | null;
+  nomeBairro?: string | null;
+  paisId?: number | null;
+  estadoId?: number | null;
+  cidadeId?: number | null;
+  bairroId?: number | null;
+  grau?: string | null;
+  faixaExtensao?: number[] | null;
+  crux?: string | null;
+  exposicao?: string | null;
+  tipoRocha?: string | null;
+  tipoEscalada?: string | null;
   modalidade?: ModalidadeEscalada | null;
-  via_cerj?: boolean | null;
-  page: number;
-  itemsPerPage?: number;
-  entityType?: string;
+  artificial?: string | null;
+  viaCerj?: boolean | null;
+  semGrau?: boolean | null;
+  semLocalizacao?: boolean | null;
+  pagina: number;
+  itensPorPagina?: number;
   colecaoId?: number;
-  sortField?: string | null;
-  sortOrder?: string | null;
+  campoOrdenacao?: string | null;
+  direcaoOrdenacao?: string | null;
 }

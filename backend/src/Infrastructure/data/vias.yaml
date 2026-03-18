@@ -1759,7 +1759,7 @@
   fonte: André Ilha; Kika Bradford
   viaPrincipal: Copa do Mundo
 - nome: Ninguém merece
-  grau: VI
+  grau: 6
   crux: VI
   exposicao: E4
   extensao: 150
@@ -1834,8 +1834,6 @@
   fonte: André Ilha; Kika Bradford
 # --- Vias Clássicas do CERJ ---
 - nome: Artificial da Caixa de Fósforos
-  grau: A1
-  crux: A1
   artificial: A1
   extensao: 20
   conquistadores: Sylvio Joaquim Mendes; Índio do Brasil Luz; Jahir Leopoldino da Costa

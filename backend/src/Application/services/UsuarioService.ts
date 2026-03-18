@@ -115,8 +115,8 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
             const fileName = `perfil/userId-${usuarioId}-${Date.now()}${path.extname(file.originalname)}`;
             imageUrl = await this.s3Service.uploadFileS3(fileName, file.buffer, file.mimetype);
         } else {
-            // Desenvolvimento: Usar caminho local
-            imageUrl = `/assets/${file.filename}`;
+            // Desenvolvimento: Usar caminho local (Multer salva em assets/usuarios/)
+            imageUrl = `/assets/usuarios/${file.filename}`;
         }
 
         let novaImagemUpdate;

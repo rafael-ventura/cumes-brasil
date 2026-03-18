@@ -3,6 +3,11 @@ import BadRequestError from "../errors/BadRequestError";
 
 export default {
   validaController(filter: string): { key: string; value: string } {
+    const filtrosSemValor = ['sem_grau', 'sem_localizacao'];
+    if (filtrosSemValor.includes(filter)) {
+      return { key: filter, value: '' };
+    }
+
     if (!filter || !filter.includes('=')) {
       throw new BadRequestError('Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).');
     }
@@ -13,8 +18,9 @@ export default {
       throw new BadRequestError('Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).');
     }
 
-    if (!['grau', 'bairro', 'exposicao', 'duracao', 'via_cerj'].includes(key)) {
-      throw new BadRequestError('Filtro inválido. Use grau, bairro, exposicao, duracao ou via_cerj.');
+    const filtrosValidos = ['grau', 'bairro', 'exposicao', 'duracao', 'via_cerj'];
+    if (!filtrosValidos.includes(key)) {
+      throw new BadRequestError('Filtro inválido.');
     }
 
     return { key, value };

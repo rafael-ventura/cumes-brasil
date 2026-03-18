@@ -1,19 +1,15 @@
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
+import { FiltrosBuscaBase } from '../../Domain/interfaces/models/FiltrosBusca';
 
 export class SearchService<T> {
     private repository: ISearchRepository<T>;
 
-    constructor(repository: any) {
+    constructor(repository: ISearchRepository<T>) {
         this.repository = repository;
     }
 
-    async search(filters: any): Promise<ISearchResult<T>> {
-        const { items, totalItems, totalPages }: any = await this.repository.search(filters);
-        return {
-            items,
-            totalPages,
-            totalItems
-        };
+    async search(filtros: FiltrosBuscaBase): Promise<ISearchResult<T>> {
+        return this.repository.search(filtros);
     }
 }

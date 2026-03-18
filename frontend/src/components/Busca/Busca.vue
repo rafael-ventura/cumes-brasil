@@ -9,244 +9,237 @@
     </div>
 
     <div class="slot-container no-border">
-      <slot name="filters" :filters="filters"/>
+      <slot name="filters" :filters="filtros"/>
     </div>
     <BuscaResultados
-      :results="results"
+      :results="resultados"
       :entityType="props.entity"
-      @select="selectItem"
+      @select="selecionarItem"
       :enableSortOptions="enableSortOptions"
-      :initialSort="filters.sortField && filters.sortOrder ? { field: filters.sortField, direction: (filters.sortOrder === 'DESC' ? 'desc' : 'asc') } : undefined"
-      @change-sort="updateSorting"
-      :totalItems="totalItems"
-      :totalPages="totalPages"
-      :currentPage="filters.page"
-      :itemsPerPage="filters.itemsPerPage || 20"
-      :loading="loading"
+      :initialSort="filtros.campoOrdenacao && filtros.direcaoOrdenacao
+        ? { field: filtros.campoOrdenacao, direction: filtros.direcaoOrdenacao === 'DESC' ? 'desc' : 'asc' }
+        : undefined"
+      @change-sort="atualizarOrdenacao"
+      :totalItems="totalItens"
+      :totalPages="totalPaginas"
+      :currentPage="filtros.pagina"
+      :itemsPerPage="filtros.itensPorPagina || 20"
+      :loading="carregando"
       :hidePagination="props.hidePagination"
       @page-change="onPageChange"
       @items-per-page-change="onItemsPerPageChange"
     />
 
-    <!-- Espaçamento no final -->
     <div class="busca-bottom-spacer"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import searchService from 'src/services/SearchService';
 import BuscaResultados from 'components/Busca/BuscaResultados.vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
-import ImagemService from 'src/services/ImagemService';
-import { formatVia } from 'src/utils/utils';
 import { useRoute } from 'vue-router';
-import { Via } from 'src/models/Via';
 
 const props = defineProps<{
   entity: 'via' | 'colecao' | 'escalada';
   initialData?: any[];
-  staticFilters?: Partial<any>
-  hideHeader?: boolean
-  searchHeader?: string
-  enableSortOptions?: { field: string, label: string }[];
+  staticFilters?: Partial<any>;
+  hideHeader?: boolean;
+  searchHeader?: string;
+  enableSortOptions?: { field: string; label: string }[];
   hidePagination?: boolean;
 }>();
 
-defineOptions({
-  name: 'BuscaComponent'
-});
+defineOptions({ name: 'BuscaComponent' });
 const emit = defineEmits(['select', 'atualizar-results']);
 const route = useRoute();
 
-// Carregar itemsPerPage do localStorage ou usar padrão
-const getStoredItemsPerPage = (): number => {
-  // Para coleções
-  if (props.entity === 'colecao') {
-    const stored = localStorage.getItem('colecoes_items_per_page');
-    if (stored) {
-      const value = parseInt(stored, 10);
-      if ([9, 10, 25, 50, 100].includes(value)) {
-        return value;
-      }
-    }
-    return 9; // padrão para coleções
+// ─── Itens por página salvos no localStorage ────────────────────────
+
+function getItensPorPaginaSalvos(): number {
+  const chave = props.entity === 'colecao' ? 'colecoes_items_per_page' : 'vias_items_per_page';
+  const valorPadrao = props.entity === 'colecao' ? 9 : 20;
+  const opcoes = props.entity === 'colecao' ? [9, 10, 25, 50, 100] : [10, 25, 50, 100];
+
+  const salvo = localStorage.getItem(chave);
+  if (salvo) {
+    const valor = parseInt(salvo, 10);
+    if (opcoes.includes(valor)) return valor;
+  }
+  return valorPadrao;
+}
+
+// ─── Parsear filtros da URL (query string) ──────────────────────────
+
+function parseFiltrosDaQuery(): Partial<BuscaRequest> {
+  const resultado: Partial<BuscaRequest> = {};
+
+  const campoOrdenacao = route.query.sortField as string | undefined;
+  const direcaoOrdenacao = route.query.sortOrder as string | undefined;
+  if (campoOrdenacao && direcaoOrdenacao) {
+    resultado.campoOrdenacao = campoOrdenacao;
+    resultado.direcaoOrdenacao = direcaoOrdenacao.toUpperCase();
   }
 
-  // Para vias
-  const stored = localStorage.getItem('vias_items_per_page');
-  if (stored) {
-    const value = parseInt(stored, 10);
-    if ([10, 25, 50, 100].includes(value)) {
-      return value;
-    }
-  }
-  return 20; // padrão para vias
-};
-
-// Parse filterType e sort da query (ex: via_cerj=true, sort=created_at_desc) para filtros
-function parseFilterTypeFromQuery(): Partial<BuscaRequest> {
-  const result: Partial<BuscaRequest> = {};
-
-  // Ordenação via query params
-  const sortField = route.query.sortField as string | undefined;
-  const sortOrder = route.query.sortOrder as string | undefined;
-  if (sortField && sortOrder) {
-    result.sortField = sortField;
-    result.sortOrder = sortOrder.toUpperCase();
+  const termoBusca = route.query.search as string | undefined;
+  if (termoBusca) {
+    resultado.termoBusca = termoBusca;
   }
 
   const filterType = route.query.filterType as string | undefined;
-  if (!filterType || !filterType.includes('=')) return result;
-  const [key, value] = filterType.split('=');
-  if (key === 'via_cerj' && value === 'true') {
-    return { ...result, via_cerj: true };
-  }
-  if (key === 'grau') return { ...result, selectedDifficulty: value };
-  if (key === 'bairro') return { ...result, bairro: value };
-  if (key === 'exposicao') return { ...result, selectedExposicao: value.toUpperCase() };
-  if (key === 'sort' && value === 'created_at_desc') {
-    return { ...result, sortField: 'created_at', sortOrder: 'DESC' };
-  }
-  return result;
+  if (!filterType || !filterType.includes('=')) return resultado;
+  const [chave, valor] = filterType.split('=');
+
+  const filtroMap: Record<string, () => Partial<BuscaRequest>> = {
+    via_cerj: () => valor === 'true' ? { viaCerj: true } : {},
+    grau: () => ({ grau: valor }),
+    bairro: () => ({ nomeBairro: valor }),
+    exposicao: () => ({ exposicao: valor.toUpperCase() }),
+    modalidade: () => ({ modalidade: valor as any }),
+    montanha: () => ({ montanhaId: parseInt(valor) }),
+    paisId: () => ({ paisId: parseInt(valor) }),
+    estadoId: () => ({ estadoId: parseInt(valor) }),
+    cidadeId: () => ({ cidadeId: parseInt(valor) }),
+    bairroId: () => ({ bairroId: parseInt(valor) }),
+    sem_grau: () => ({ semGrau: true }),
+    sem_localizacao: () => ({ semLocalizacao: true }),
+    sort: () => valor === 'created_at_desc' ? { campoOrdenacao: 'created_at', direcaoOrdenacao: 'DESC' } : {},
+  };
+
+  const handler = filtroMap[chave];
+  return handler ? { ...resultado, ...handler() } : resultado;
 }
 
-// Preparar filtros iniciais, preservando itemsPerPage do localStorage
-const queryFilters = parseFilterTypeFromQuery();
-const initialFilters: BuscaRequest = {
-  unifiedSearch: '',
-  selectedDifficulty: null,
-  selectedExtensionCategory: null,
-  selectedCrux: null,
-  selectedExposicao: null,
-  tipo_rocha: null,
-  tipo_escalada: null,
+// ─── Estado ─────────────────────────────────────────────────────────
+
+const filtrosDaQuery = parseFiltrosDaQuery();
+
+const filtrosIniciais: BuscaRequest = {
+  termoBusca: '',
+  grau: null,
+  faixaExtensao: null,
+  exposicao: null,
   modalidade: null,
-  via_cerj: null,
-  page: 1,
-  sortField: null,
-  sortOrder: null,
-  itemsPerPage: getStoredItemsPerPage(),
+  viaCerj: null,
+  pagina: 1,
+  campoOrdenacao: null,
+  direcaoOrdenacao: null,
+  itensPorPagina: getItensPorPaginaSalvos(),
   ...props.staticFilters,
-  ...queryFilters
+  ...filtrosDaQuery,
 };
 
-// Se itemsPerPage vier da query string, usar ele; senão manter do localStorage
 if (route.query.itemsPerPage) {
-  const queryItemsPerPage = parseInt(route.query.itemsPerPage as string, 10);
-  if ([10, 25, 50, 100].includes(queryItemsPerPage)) {
-    initialFilters.itemsPerPage = queryItemsPerPage;
+  const queryIpp = parseInt(route.query.itemsPerPage as string, 10);
+  if ([10, 25, 50, 100].includes(queryIpp)) {
+    filtrosIniciais.itensPorPagina = queryIpp;
   }
 }
 
-const filters = ref(initialFilters);
+const filtros = ref(filtrosIniciais);
 
-const results = ref();
-const totalItems = ref(0);
-const totalPages = ref(1);
-const loading = ref(false);
-const isSorting = ref(false);
+const resultados = ref<any[]>([]);
+const totalItens = ref(0);
+const totalPaginas = ref(1);
+const carregando = ref(false);
+
+// ─── Lifecycle ──────────────────────────────────────────────────────
 
 onMounted(async () => {
   if (props.initialData && props.initialData.length) {
-    results.value = props.initialData;
-    emit('atualizar-results', results.value);
+    resultados.value = props.initialData;
+    emit('atualizar-results', resultados.value);
   } else {
-    searchEntities(true);
+    buscarEntidades();
   }
 });
 
-// Função para atualizar a ordenação ao receber uma mudança
-const updateSorting = (sortOption: any) => {
-  isSorting.value = true; // Indica que estamos alterando a ordenação
-  filters.value = {
-    ...filters.value,
-    page: 1, // Reiniciar a página ao aplicar nova ordenação
-    sortField: sortOption.field,
-    sortOrder: sortOption.direction
+// ─── Busca ──────────────────────────────────────────────────────────
+
+async function buscarEntidades() {
+  if (carregando.value) return;
+  carregando.value = true;
+
+  try {
+    const requisicao = {
+      ...filtros.value,
+      ...props.staticFilters,
+      tipoEntidade: props.entity,
+    };
+    const resultado = await searchService.search(requisicao);
+
+    resultados.value = resultado.items;
+    totalPaginas.value = resultado.totalPages || 1;
+    totalItens.value = resultado.totalItems || 0;
+    emit('atualizar-results', resultados.value);
+  } catch (erro) {
+    console.error('Erro ao buscar entidades:', erro);
+  } finally {
+    carregando.value = false;
+  }
+}
+
+// ─── Ordenação ──────────────────────────────────────────────────────
+
+function atualizarOrdenacao(opcao: any) {
+  filtros.value = {
+    ...filtros.value,
+    pagina: 1,
+    campoOrdenacao: opcao.field,
+    direcaoOrdenacao: opcao.direction,
   };
-  searchEntities(true); // Realiza a busca com a nova ordenação
-};
+  buscarEntidades();
+}
+
+// ─── Paginação ──────────────────────────────────────────────────────
+
+function onPageChange(novaPagina: number) {
+  filtros.value.pagina = novaPagina;
+  buscarEntidades();
+}
+
+function onItemsPerPageChange(novosItensPorPagina: number) {
+  filtros.value.itensPorPagina = novosItensPorPagina;
+  filtros.value.pagina = 1;
+
+  const chave = props.entity === 'colecao' ? 'colecoes_items_per_page' : 'vias_items_per_page';
+  localStorage.setItem(chave, novosItensPorPagina.toString());
+
+  buscarEntidades();
+}
+
+// ─── Filtros ────────────────────────────────────────────────────────
+
+function handleApplyFilters(novosFiltros: BuscaRequest) {
+  filtros.value = {
+    ...filtros.value,
+    ...props.staticFilters,
+    ...novosFiltros,
+    pagina: 1,
+  };
+  buscarEntidades();
+}
+
+// ─── Watchers ───────────────────────────────────────────────────────
 
 watch(
-  () => filters.value,
-  (newFilters, oldFilters) => {
-    if (newFilters.page === 1 && JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
-      searchEntities(true);
+  () => filtros.value,
+  (novosFiltros, filtrosAnteriores) => {
+    if (novosFiltros.pagina === 1 && JSON.stringify(novosFiltros) !== JSON.stringify(filtrosAnteriores)) {
+      buscarEntidades();
     }
   },
   { deep: true }
 );
 
-// Handlers para paginação
-const onPageChange = (page: number) => {
-  // Atualizar o filtro imediatamente
-  filters.value.page = page;
-  // Fazer a busca
-  searchEntities(true);
-};
+// ─── API pública ────────────────────────────────────────────────────
 
-const onItemsPerPageChange = (newItemsPerPage: number) => {
-  filters.value.itemsPerPage = newItemsPerPage;
-  filters.value.page = 1; // Resetar para primeira página
-  // Salvar no localStorage com chave específica para cada tipo de entidade
-  if (props.entity === 'colecao') {
-    localStorage.setItem('colecoes_items_per_page', newItemsPerPage.toString());
-  } else {
-    localStorage.setItem('vias_items_per_page', newItemsPerPage.toString());
-  }
-  searchEntities(true);
-};
-
-const searchEntities = async (reset = false) => {
-  if (loading.value) return;
-  loading.value = true;
-
-  try {
-    const searchRequest = {
-      ...filters.value,
-      ...props.staticFilters,
-      entityType: props.entity
-    };
-    const searchResult = await searchService.search(searchRequest);
-
-    if (props.entity === 'via') {
-      searchResult.items = searchResult.items.map((item: any) => {
-        const via = formatVia(item as Via);
-        if (via.imagem?.url) {
-          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
-        }
-        return via;
-      });
-    }
-    // Sempre substituir resultados ao invés de acumular (paginação tradicional)
-    results.value = searchResult.items;
-    totalPages.value = searchResult.totalPages || 1;
-    totalItems.value = searchResult.totalItems || 0;
-    emit('atualizar-results', results.value);
-  } catch (error) {
-    console.error('Erro ao buscar entidades:', error);
-  } finally {
-    loading.value = false;
-    isSorting.value = false; // Redefine o sinalizador após concluir a ordenação
-  }
-};
-
-const handleApplyFilters = (newFilters: BuscaRequest) => {
-  filters.value = {
-    ...filters.value,
-    ...props.staticFilters,
-    ...newFilters,
-    page: 1
-  };
-  searchEntities(true);
-};
+function selecionarItem(item: any) {
+  emit('select', item);
+}
 
 defineExpose({ handleApplyFilters });
-
-const selectItem = (item: any) => {
-  emit('select', item);
-};
 </script>
 
 <style scoped lang="scss">
@@ -257,45 +250,14 @@ const selectItem = (item: any) => {
   margin-bottom: 16px;
 }
 
-.search-header h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: $cumes-03;
-}
-
 .slot-container {
   padding: 16px;
   background-color: $background;
 }
 
-.slot-container * {
-  color: $cumes-03;
-}
-
-.text-h2 {
-  color: $cumes-03;
-}
-
-.end-of-list-card {
-  margin-top: 16px;
-  padding: 16px;
-  text-align: center;
-  background-color: $background;
-  border-radius: 8px;
-}
-
-.end-of-list-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: $cumes-03;
-}
-
 .busca-bottom-spacer {
   height: 48px;
   width: 100%;
-
-  @media (max-width: 768px) {
-    height: 32px;
-  }
+  @media (max-width: 768px) { height: 32px; }
 }
 </style>

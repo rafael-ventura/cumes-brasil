@@ -2,6 +2,7 @@ import { AppDataSource } from '../config/db';
 import { Escalada } from '../../Domain/entities/Escalada';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
+import { FiltrosBuscaEscalada } from '../../Domain/interfaces/models/FiltrosBusca';
 
 export class EscaladaRepository implements ISearchRepository<Escalada> {
     private repository = AppDataSource.getRepository(Escalada);
@@ -92,13 +93,13 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         return query.getMany();
     }
 
-    async search(filters: any): Promise<ISearchResult<Escalada>> {
+    async search(filtros: FiltrosBuscaEscalada): Promise<ISearchResult<Escalada>> {
         const {
-            unifiedSearch,
-            page = 1,
+            termoBusca,
+            pagina = 1,
             usuarioId,
-            itemsPerPage = 10
-        } = filters;
+            itensPorPagina = 10
+        } = filtros;
         let qb = this.repository.createQueryBuilder("escalada")
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
@@ -112,8 +113,8 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
 
         qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId });
         // Filtrar por nome da via (se necessário)
-        if (unifiedSearch) {
-            qb = qb.andWhere("via.nome LIKE :unifiedSearch", { unifiedSearch: `%${unifiedSearch}%` });
+        if (termoBusca) {
+            qb = qb.andWhere("via.nome LIKE :termo", { termo: `%${termoBusca}%` });
         }
 
         // Não temos suporte a ordenação por campo em Escalada
@@ -124,13 +125,12 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         // Total de escaladas que correspondem aos filtros
         const totalItems = await qb.getCount();
 
-        // Escaladas paginadas
         const items = await qb
-            .skip((page - 1) * itemsPerPage)
-            .take(itemsPerPage)
+            .skip((pagina - 1) * itensPorPagina)
+            .take(itensPorPagina)
             .getMany();
 
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const totalPages = Math.ceil(totalItems / itensPorPagina);
 
         return {
             items,

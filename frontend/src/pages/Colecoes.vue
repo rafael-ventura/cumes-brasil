@@ -12,8 +12,8 @@
         <SubNavbar />
       </template>
 
-      <template #filters="{ filters }">
-        <BuscaFiltros :entity="'colecao'" :filters="filters" :enabledFilters="['searchQuery']"
+      <template #filters="{ filters: filtros }">
+        <BuscaFiltros :entity="'colecao'" :filters="filtros" :enabledFilters="['searchQuery']"
                       @applyFilters="handleApplyFilters" unifiedSearchLabel="Nome da Coleção" />
       </template>
     </Busca>

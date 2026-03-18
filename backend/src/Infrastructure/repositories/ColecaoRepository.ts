@@ -3,6 +3,7 @@ import { Colecao } from '../../Domain/entities/Colecao';
 import { Service } from 'typedi';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
+import { FiltrosBuscaColecao } from '../../Domain/interfaces/models/FiltrosBusca';
 import { Via } from '../../Domain/entities/Via';
 import { ViaColecao } from '../../Domain/entities/ViaColecao';
 import BaseRepository from './BaseRepository';
@@ -205,18 +206,18 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         };
     }
 
-    async search(query: any): Promise<ISearchResult<Colecao>> {
+    async search(filtros: FiltrosBuscaColecao): Promise<ISearchResult<Colecao>> {
         const {
-            searchQuery,
+            termoBusca,
             colecaoId,
             usuarioId,
             nomeVia,
             nomeMontanha,
-            sortField,
-            sortOrder,
-            page = 1,
-            itemsPerPage = 10
-        } = query;
+            campoOrdenacao,
+            direcaoOrdenacao,
+            pagina = 1,
+            itensPorPagina = 10
+        } = filtros;
 
         // Ajuste das junções
         let qb = this.repository.createQueryBuilder('colecao')
@@ -264,8 +265,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         }
 
         // Filtro por nome da coleção
-        if (searchQuery) {
-            qb = qb.andWhere('colecao.nome LIKE :searchQuery', { searchQuery: `%${searchQuery}%` });
+        if (termoBusca) {
+            qb = qb.andWhere('colecao.nome LIKE :termoBusca', { termoBusca: `%${termoBusca}%` });
         }
 
         // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
@@ -280,10 +281,10 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         }
 
         // Aplicação da ordenação dinâmica (exceto updated_at que será tratado em memória)
-        const isUpdatedAtSort = sortField === 'updated_at';
+        const isUpdatedAtSort = campoOrdenacao === 'updated_at';
         
-        if (sortField && sortOrder && !isUpdatedAtSort) {
-            qb = qb.orderBy(`colecao.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
+        if (campoOrdenacao && direcaoOrdenacao && !isUpdatedAtSort) {
+            qb = qb.orderBy(`colecao.${campoOrdenacao}`, direcaoOrdenacao.toUpperCase() as 'ASC' | 'DESC');
         }
 
         // Contar o total de itens (coleções) correspondentes
@@ -322,27 +323,25 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
                     
                     // Coleções sem vias vão para o final (DESC) ou início (ASC)
                     if (!dateA && !dateB) return 0;
-                    if (!dateA) return sortOrder.toUpperCase() === 'DESC' ? 1 : -1;
-                    if (!dateB) return sortOrder.toUpperCase() === 'DESC' ? -1 : 1;
+                    if (!dateA) return direcaoOrdenacao?.toUpperCase() === 'DESC' ? 1 : -1;
+                    if (!dateB) return direcaoOrdenacao?.toUpperCase() === 'DESC' ? -1 : 1;
                     
                     const diff = dateA.getTime() - dateB.getTime();
-                    return sortOrder.toUpperCase() === 'DESC' ? -diff : diff;
+                    return direcaoOrdenacao?.toUpperCase() === 'DESC' ? -diff : diff;
                 });
             }
             
             // Aplicar paginação em memória
-            const startIndex = (page - 1) * itemsPerPage;
-            items = items.slice(startIndex, startIndex + itemsPerPage);
+            const inicio = (pagina - 1) * itensPorPagina;
+            items = items.slice(inicio, inicio + itensPorPagina);
         } else {
-            // Paginação normal no banco
             items = await qb
-              .skip((page - 1) * itemsPerPage)
-              .take(itemsPerPage)
+              .skip((pagina - 1) * itensPorPagina)
+              .take(itensPorPagina)
               .getMany();
         }
 
-        // Calcular total de páginas
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const totalPages = Math.ceil(totalItems / itensPorPagina);
 
         return {
             items,

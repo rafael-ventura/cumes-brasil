@@ -17,7 +17,7 @@
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
         <div class="localizacao-info" v-if="via.localizacao">
-          <q-icon class="localizacao-icon" name="location_on" size="20px" />
+          <q-icon class="localizacao-icon" name="location_on" size="14px" />
           <span v-if="via.localizacao.estado">{{ via.localizacao.estado.sigla }}</span>
           <span v-if="via.localizacao.cidade">, {{ via.localizacao.cidade.nome }}</span>
           <span v-if="via.localizacao.bairro">, {{ via.localizacao.bairro.nome }}</span>
@@ -52,43 +52,40 @@ const emitClick = () => {
 @import "src/css/app.scss";
 
 .card-item {
-  border-radius: 12px;
+  border-radius: 14px;
   background-color: $background;
   width: 100%;
-  height: 315px;
   margin: 0;
   padding: 0;
-  box-shadow: 0 4px 12px $box-shadow-medium;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px $box-shadow-soft;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 20px $box-shadow-strong;
+    box-shadow: 0 8px 24px $box-shadow-strong;
   }
 }
 
 .card-image-container {
   width: 100%;
-  height: 175px;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   position: relative;
 }
 
 .badge-cerj-overlay {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   z-index: 2;
 }
 
 .card-image {
   width: 100%;
   height: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease;
 }
 
 .card-image-placeholder {
@@ -99,48 +96,54 @@ const emitClick = () => {
   justify-content: center;
   background-color: $cumes-02;
   color: $offwhite;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
 .card-item:hover .card-image {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .card-info {
   background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
-  padding: 12px;
-  height: 140px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  gap: 6px;
 }
 
 .via-nome {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 700;
   color: $offwhite;
-  text-shadow: 0 2px 4px $text-shadow-default;
-  line-height: 1.2;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .localizacao-info {
   display: flex;
   align-items: center;
-  font-size: 15px;
-  color: $offwhite;
-  opacity: 0.95;
+  font-size: 12px;
+  color: rgba($offwhite, 0.8);
+  line-height: 1.3;
+  gap: 2px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .localizacao-icon {
-  margin-right: 8px;
+  flex-shrink: 0;
+  margin-right: 4px;
   color: $cumes-04;
+  font-size: 14px !important;
 }
 
 .grau-badge-container {
   display: flex;
-  justify-content: center;
+  margin-top: 2px;
 }
 </style>
