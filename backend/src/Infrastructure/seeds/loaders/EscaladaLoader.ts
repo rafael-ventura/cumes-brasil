@@ -9,19 +9,22 @@ interface EscaladaTesteYaml {
 }
 
 /**
- * Cria escaladas para o usuário de teste.
- * Idempotente: evita duplicar escaladas do mesmo usuário na mesma via/data.
+ * Cria ou atualiza escaladas para o usuário de teste.
+ * Idempotente: busca por usuário + via + dia (ignora hora),
+ * e atualiza data + created_at se o registro já existir.
  */
 export async function runEscaladaLoader(
   usuarioId: number,
   viaIds: Map<string, number>
 ): Promise<void> {
   const escaladaRepo = AppDataSource.getRepository(Escalada);
-  const data = loadYaml<EscaladaTesteYaml[]>('escaladas-teste.yaml');
-  if (!data || data.length === 0) return;
+  const yamlData = loadYaml<EscaladaTesteYaml[]>('escaladas-teste.yaml');
+  if (!yamlData || yamlData.length === 0) return;
 
   let criadas = 0;
-  for (const item of data) {
+  let atualizadas = 0;
+
+  for (const item of yamlData) {
     const viaId = viaIds.get(item.via);
     if (!viaId) {
       console.warn(`[EscaladaLoader] Via não encontrada: ${item.via}`);
@@ -29,14 +32,29 @@ export async function runEscaladaLoader(
     }
 
     const dataEscalada = new Date(item.data);
-    const existente = await escaladaRepo.findOne({
-      where: {
-        usuario: { id: usuarioId },
-        via: { id: viaId },
-        data: dataEscalada
-      }
-    });
-    if (existente) continue;
+
+    // Busca por usuário + via + mesmo dia (tolerante a mudanças de hora no YAML)
+    const inicioDia = new Date(dataEscalada);
+    inicioDia.setHours(0, 0, 0, 0);
+    const fimDia = new Date(dataEscalada);
+    fimDia.setHours(23, 59, 59, 999);
+
+    const existente = await escaladaRepo
+      .createQueryBuilder('e')
+      .where('e.usuarioId = :usuarioId', { usuarioId })
+      .andWhere('e.viaId = :viaId', { viaId })
+      .andWhere('e.data >= :inicio AND e.data <= :fim', { inicio: inicioDia, fim: fimDia })
+      .getOne();
+
+    if (existente) {
+      // Atualiza data e created_at para refletir o YAML atual
+      await escaladaRepo.query(
+        `UPDATE escalada SET data = $1, created_at = $1, observacao = $2 WHERE id = $3`,
+        [dataEscalada, item.observacao ?? null, existente.id]
+      );
+      atualizadas++;
+      continue;
+    }
 
     const escalada = escaladaRepo.create({
       data: dataEscalada,
@@ -53,7 +71,6 @@ export async function runEscaladaLoader(
     criadas++;
   }
 
-  if (criadas > 0) {
-    console.log(`[EscaladaLoader] ${criadas} escaladas criadas para o usuário de teste`);
-  }
+  if (criadas > 0) console.log(`[EscaladaLoader] ${criadas} escaladas criadas para o usuário de teste`);
+  if (atualizadas > 0) console.log(`[EscaladaLoader] ${atualizadas} escaladas atualizadas`);
 }
