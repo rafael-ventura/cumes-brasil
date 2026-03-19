@@ -88,6 +88,9 @@ export class UsuarioController {
         if (!resultado) {
             throw new NotFoundError('Perfil não encontrado.');
         }
+        if (!resultado.usuario.perfil_publico) {
+            return res.status(403).json({ error: 'Perfil privado', privado: true });
+        }
         const dto = new PerfilPublicoDTO(
             resultado.usuario,
             resultado.numEscaladas,

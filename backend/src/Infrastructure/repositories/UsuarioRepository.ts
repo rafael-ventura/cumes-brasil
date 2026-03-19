@@ -146,8 +146,8 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
             .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
             .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
             .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
+            .addSelect(['usuario.perfil_publico'])
             .where('usuario.username = :username', { username })
-            .andWhere('usuario.perfil_publico = :publico', { publico: true })
             .getOne();
     }
 

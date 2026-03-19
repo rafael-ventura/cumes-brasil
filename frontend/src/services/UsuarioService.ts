@@ -37,7 +37,7 @@ class UsuarioService {
     }
   }
 
-  async getPerfilPorUsername (username: string): Promise<IUsuario & { username?: string; numEscaladas?: number; numColecoes?: number; numFavoritas?: number }> {
+  async getPerfilPorUsername (username: string): Promise<(IUsuario & { username?: string; numEscaladas?: number; numColecoes?: number; numFavoritas?: number }) | { privado: true } | null> {
     try {
       const response = await api.get(`/u/${username}`);
       const dados = response.data;
@@ -52,7 +52,10 @@ class UsuarioService {
       }
       return dados;
     } catch (error: any) {
-      handleApiError(error, 'Perfil não encontrado');
+      if (error.response?.status === 403 && error.response?.data?.privado) {
+        return { privado: true };
+      }
+      return null;
     }
   }
 

@@ -1,16 +1,28 @@
 <template>
   <div v-if="resolvendo">
-    <div class="perfil-carregando">
+    <div class="perfil-estado">
       <i class="pi pi-spin pi-spinner" />
       <span>Carregando...</span>
     </div>
   </div>
+
   <Perfil v-else-if="eProprioPerfil && usuario" :user-inicial="usuario" />
+
   <PerfilPublico v-else-if="usuario" :user="usuario" />
-  <div v-else-if="erro" class="perfil-erro">
+
+  <!-- Perfil privado -->
+  <div v-else-if="privado" class="perfil-estado perfil-privado">
+    <i class="pi pi-lock" />
+    <span class="privado-titulo">Perfil privado</span>
+    <span class="privado-sub">Este escalador preferiu manter seu perfil privado.</span>
+    <q-btn unelevated no-caps label="Voltar" class="btn-voltar" @click="router.back()" />
+  </div>
+
+  <!-- Não encontrado -->
+  <div v-else-if="erro" class="perfil-estado">
     <i class="pi pi-user-minus" />
     <span>Perfil não encontrado</span>
-    <q-btn flat label="Voltar" class="btn-voltar" @click="router.push('/')" />
+    <q-btn flat no-caps label="Voltar" class="btn-voltar" @click="router.push('/')" />
   </div>
 </template>
 
@@ -28,6 +40,7 @@ const router = useRouter();
 
 const usuario = ref<(IUsuario & { username?: string }) | null>(null);
 const resolvendo = ref(true);
+const privado = ref(false);
 const erro = ref(false);
 
 const usernameParam = computed(() => route.params.username as string);
@@ -43,6 +56,11 @@ async function resolverPerfil() {
     return;
   }
 
+  usuario.value = null;
+  privado.value = false;
+  erro.value = false;
+  resolvendo.value = true;
+
   const username = usernameParam.value;
   if (!username) {
     resolvendo.value = false;
@@ -51,13 +69,8 @@ async function resolverPerfil() {
   }
 
   if (username === 'me') {
-    if (!AuthenticateService.isTokenValid()) {
-      router.replace('/auth/login');
-      return;
-    }
     try {
       const perfil = await UserService.getPerfil();
-      // Sincroniza username no localStorage caso sessão seja antiga
       if (perfil.username && !localStorage.getItem('username')) {
         localStorage.setItem('username', perfil.username);
       }
@@ -76,10 +89,14 @@ async function resolverPerfil() {
 
   try {
     const dados = await UserService.getPerfilPorUsername(username);
-    usuario.value = dados ?? null;
-    erro.value = !dados;
+    if (!dados) {
+      erro.value = true;
+    } else if ('privado' in dados) {
+      privado.value = true;
+    } else {
+      usuario.value = dados;
+    }
   } catch {
-    usuario.value = null;
     erro.value = true;
   } finally {
     resolvendo.value = false;
@@ -87,10 +104,7 @@ async function resolverPerfil() {
 }
 
 watch(() => route.params.username, () => {
-  if (route.params.username !== 'me') {
-    resolvendo.value = true;
-    resolverPerfil();
-  }
+  resolverPerfil();
 }, { immediate: false });
 
 onMounted(resolverPerfil);
@@ -99,26 +113,47 @@ onMounted(resolverPerfil);
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
-.perfil-carregando,
-.perfil-erro {
+.perfil-estado {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  min-height: 40vh;
+  min-height: 50vh;
   color: rgba($offwhite, 0.6);
   font-size: 16px;
   font-weight: 600;
 
   i {
-    font-size: 48px;
+    font-size: 56px;
     color: $cumes-03;
   }
 }
 
+.perfil-privado {
+  i { color: $cumes-04; }
+}
+
+.privado-titulo {
+  font-size: 22px;
+  font-weight: 800;
+  color: $cumes-04;
+}
+
+.privado-sub {
+  font-size: 14px;
+  color: rgba($offwhite, 0.45);
+  font-weight: 400;
+  text-align: center;
+  max-width: 280px;
+}
+
 .btn-voltar {
-  color: $cumes-01;
+  background: $cumes-01 !important;
+  color: $offwhite !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  padding: 8px 24px !important;
   margin-top: 8px;
 }
 </style>
