@@ -32,8 +32,9 @@ const erro = ref(false);
 
 const usernameParam = computed(() => route.params.username as string);
 const eProprioPerfil = computed(() => {
-  const usernameAtual = localStorage.getItem('username');
-  return !!usernameAtual && !!usuario.value?.username && usuario.value.username === usernameAtual;
+  if (!AuthenticateService.isTokenValid()) return false;
+  const idAtual = localStorage.getItem('usuarioId');
+  return !!idAtual && !!usuario.value && String(usuario.value.id) === idAtual;
 });
 
 async function resolverPerfil() {
