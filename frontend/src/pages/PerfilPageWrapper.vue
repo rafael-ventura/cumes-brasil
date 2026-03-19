@@ -38,6 +38,11 @@ const eProprioPerfil = computed(() => {
 });
 
 async function resolverPerfil() {
+  if (!AuthenticateService.isTokenValid()) {
+    router.replace('/auth/login');
+    return;
+  }
+
   const username = usernameParam.value;
   if (!username) {
     resolvendo.value = false;
