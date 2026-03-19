@@ -7,18 +7,13 @@
   </div>
 
   <Perfil v-else-if="eProprioPerfil && usuario" :user-inicial="usuario" />
-
   <PerfilPublico v-else-if="usuario" :user="usuario" />
-
-  <!-- Perfil privado -->
   <div v-else-if="privado" class="perfil-estado perfil-privado">
     <i class="pi pi-lock" />
     <span class="privado-titulo">Perfil privado</span>
     <span class="privado-sub">Este escalador preferiu manter seu perfil privado.</span>
     <q-btn unelevated no-caps label="Voltar" class="btn-voltar" @click="router.back()" />
   </div>
-
-  <!-- Não encontrado -->
   <div v-else-if="erro" class="perfil-estado">
     <i class="pi pi-user-minus" />
     <span>Perfil não encontrado</span>
@@ -85,6 +80,20 @@ async function resolverPerfil() {
       erro.value = true;
       return;
     }
+  }
+
+  // Se é o próprio username, busca perfil autenticado completo
+  const usernameLogado = localStorage.getItem('username');
+  if (AuthenticateService.isTokenValid() && usernameLogado && username === usernameLogado) {
+    try {
+      const perfil = await UserService.getPerfil();
+      usuario.value = perfil;
+    } catch {
+      erro.value = true;
+    } finally {
+      resolvendo.value = false;
+    }
+    return;
   }
 
   try {
