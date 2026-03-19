@@ -131,4 +131,8 @@ export class EscaladaService {
 		}
 		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit);
 	}
+
+	async getFeed(pagina: number, itensPorPagina: number): Promise<{ items: Escalada[]; totalPages: number; totalItems: number }> {
+		return this.repository.getFeed(pagina, itensPorPagina);
+	}
 }

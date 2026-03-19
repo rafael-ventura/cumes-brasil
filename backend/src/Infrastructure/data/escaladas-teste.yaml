@@ -1,0 +1,17 @@
+# Escaladas para o usuário de teste (teste@cumes.com.br)
+# Nomes das vias devem existir em vias.yaml
+- via: 29 de dezembro
+  data: '2025-03-10'
+  observacao: 'Ótimo dia, via limpa e seca'
+- via: Fenda do Forte
+  data: '2025-02-28'
+- via: Semisonic
+  data: '2025-02-15'
+  observacao: 'Encordado em trio, vista incrível'
+- via: Ponto Noturno
+  data: '2025-01-20'
+- via: João Belamy
+  data: '2024-12-01'
+- via: Ratos de montanha
+  data: '2024-11-15'
+  observacao: 'Primeira vez na via, dia memorável'

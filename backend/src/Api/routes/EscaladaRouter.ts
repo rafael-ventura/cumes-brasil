@@ -25,9 +25,20 @@ EscaladaRouter.get(
   asyncErrorHandler(escaladaController.getAllEscalada)
 );
 EscaladaRouter.get(
+  "/feed",
+  authenticateToken,
+  asyncErrorHandler(escaladaController.getFeed)
+);
+EscaladaRouter.get(
   "/usuario",
   authenticateToken,
   asyncErrorHandler(escaladaController.getByUsuarioId)
+);
+
+// /:id deve vir após rotas fixas (/feed, /usuario) para não interceptá-las
+EscaladaRouter.get(
+  "/:id",
+  asyncErrorHandler(escaladaController.getEscaladaById)
 );
 
 EscaladaRouter.post(

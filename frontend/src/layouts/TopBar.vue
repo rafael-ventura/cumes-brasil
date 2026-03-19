@@ -17,26 +17,37 @@
         <i :class="`pi ${item.icon} menu-icon`"></i>
         <span class="menu-label">{{ item.label }}</span>
       </div>
+      <div
+        @click="irParaPerfil"
+        :class="['menu-item', { 'menu-item-active': isSelected('/perfil') }]"
+      >
+        <i class="pi pi-user menu-icon"></i>
+        <span class="menu-label">Perfil</span>
+      </div>
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const router = useRouter();
 const route = useRoute();
 
-// Menu items
 const menuItems = [
   { path: '/', icon: 'pi-home', label: 'Home' },
   { path: '/explorar', icon: 'pi-compass', label: 'Explorar' },
   { path: '/colecoes', icon: 'pi-bookmark', label: 'Coleções' },
-  { path: '/perfil', icon: 'pi-user', label: 'Perfil' }
 ];
 
 const goTo = (path: string) => {
   router.push(path);
+};
+
+const irParaPerfil = () => {
+  const username = AuthenticateService.getUsername();
+  router.push(username ? `/perfil/${username}` : '/perfil/me');
 };
 
 const isSelected = (path: string) => {

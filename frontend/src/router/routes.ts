@@ -46,8 +46,28 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/Escaladas.vue')
       },
       {
+        path: 'escaladas/:id',
+        name: 'EscaladaDetalhada',
+        component: () => import('pages/EscaladaDetalhada.vue')
+      },
+      {
         path: 'perfil',
-        component: () => import('pages/Perfil.vue')
+        redirect: { name: 'PerfilMe' }
+      },
+      {
+        path: 'perfil/me',
+        name: 'PerfilMe',
+        component: () => import('pages/PerfilPageWrapper.vue')
+      },
+      {
+        path: 'perfil/:username',
+        name: 'Perfil',
+        component: () => import('pages/PerfilPageWrapper.vue')
+      },
+      {
+        path: 'u/:username',
+        name: 'PerfilPublico',
+        redirect: (to) => ({ path: `/perfil/${to.params.username}` })
       },
       {
         path: 'auth',

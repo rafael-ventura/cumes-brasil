@@ -61,6 +61,34 @@
       </div>
     </section>
 
+    <!-- Seção: Feed de escaladas (apenas logado) -->
+    <section v-if="estaLogado" class="section">
+      <div class="section-header">
+        <i class="pi pi-users section-icon" />
+        <span class="section-title">Últimas escaladas</span>
+      </div>
+
+      <div v-if="carregandoFeed" class="feed-loading">
+        <i class="pi pi-spin pi-spinner" />
+        <span>Carregando...</span>
+      </div>
+      <div v-else-if="feedItems.length === 0" class="feed-vazio">
+        <i class="pi pi-inbox" />
+        <span>Nenhuma escalada registrada ainda</span>
+      </div>
+      <div v-else class="feed-lista">
+        <FeedEscaladaPost
+          v-for="item in feedItems"
+          :key="item.id"
+          :escalada="item"
+        />
+        <button v-if="temMaisFeed" class="feed-carregar-mais" @click.stop="carregarMaisFeed">
+          <i class="pi pi-plus-circle" />
+          <span>Ver mais escaladas</span>
+        </button>
+      </div>
+    </section>
+
     <!-- Seção: Ações rápidas -->
     <section class="section">
       <div class="section-header">
@@ -112,6 +140,9 @@ import { onMounted, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import HomeService from 'src/services/HomeService';
 import ViaService from 'src/services/ViaService';
+import EscaladaService from 'src/services/EscaladaService';
+import AuthenticateService from 'src/services/AuthenticateService';
+import FeedEscaladaPost from 'src/components/Home/FeedEscaladaPost.vue';
 
 defineOptions({ name: 'HomePage' });
 
@@ -119,6 +150,15 @@ const router = useRouter();
 
 // Estado reativo
 const carregandoStats = ref(true);
+const feedItems = ref<any[]>([]);
+const feedPagina = ref(1);
+const feedTotalPages = ref(1);
+const carregandoFeed = ref(false);
+
+const ITENS_POR_PAGINA = 10;
+
+const estaLogado = computed(() => AuthenticateService.isTokenValid());
+const temMaisFeed = computed(() => feedPagina.value < feedTotalPages.value);
 const totalVias = ref(0);
 const totalMontanhas = ref(0);
 const totalEscaladores = ref(0);
@@ -149,8 +189,8 @@ const dadosEstatisticas = computed(() => [
   { icone: 'pi-users', valor: totalEscaladores.value, rotulo: 'Escaladores' },
 ]);
 
-// Cache de imagens (7 dias)
-const CHAVE_CACHE = 'home_card_images';
+// Cache de imagens (7 dias) — v3: invalida cache com nulls de fetch anterior com bug
+const CHAVE_CACHE = 'home_card_images_v3';
 const DIAS_CACHE = 7;
 
 interface CacheImagem {
@@ -217,7 +257,39 @@ onMounted(async () => {
       card.urlImagem = imagensCache[card.tipoFiltro] ?? null;
     });
   }
+
+  if (estaLogado.value) {
+    carregarFeed();
+  }
 });
+
+async function carregarFeed() {
+  feedPagina.value = 1;
+  carregandoFeed.value = true;
+  try {
+    const result = await EscaladaService.obterFeed(1, ITENS_POR_PAGINA);
+    feedItems.value = result.items;
+
+    feedTotalPages.value = result.totalPages;
+  } catch {
+    feedItems.value = [];
+  } finally {
+    carregandoFeed.value = false;
+  }
+}
+
+async function carregarMaisFeed() {
+  if (carregandoFeed.value || !temMaisFeed.value) return;
+  carregandoFeed.value = true;
+  try {
+    const proximaPagina = feedPagina.value + 1;
+    const result = await EscaladaService.obterFeed(proximaPagina, ITENS_POR_PAGINA);
+    feedItems.value = [...feedItems.value, ...result.items];
+    feedPagina.value = proximaPagina;
+  } finally {
+    carregandoFeed.value = false;
+  }
+}
 
 // Navegação
 function irParaBuscaFiltrada(tipoFiltro: string | { campoOrdenacao: string; direcaoOrdenacao: string }) {
@@ -489,6 +561,66 @@ async function irParaViaAleatoria() {
   font-size: 14px;
   flex-shrink: 0;
   align-self: flex-end;
+}
+
+// ================================
+// FEED DE ESCALADAS — lista vertical
+// ================================
+.feed-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba($offwhite, 0.12);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 768px) { max-height: 380px; }
+}
+
+.feed-loading,
+.feed-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: rgba($offwhite, 0.5);
+  font-size: 15px;
+  font-weight: 600;
+
+  i { font-size: 24px; }
+}
+
+.feed-carregar-mais {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba($cumes-01, 0.4);
+  background: transparent;
+  cursor: pointer;
+  color: $cumes-01;
+  font-size: 13px;
+  font-weight: 700;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  i { font-size: 16px; }
+
+  &:hover {
+    border-color: $cumes-01;
+    background: rgba($cumes-01, 0.07);
+  }
 }
 
 // ================================

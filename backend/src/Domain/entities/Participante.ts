@@ -16,6 +16,9 @@ export class Participante extends BaseEntityWithTimestamps {
     @Column({ nullable: true })
     email: string;
 
+    @Column({ nullable: true, length: 30 })
+    username: string;
+
     @ManyToOne(() => Escalada, escalada => escalada.participantes, { onDelete: "CASCADE" })
     escalada: Escalada;
 }

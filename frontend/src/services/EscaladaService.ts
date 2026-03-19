@@ -21,6 +21,18 @@ class EscaladaService {
       return [];
     }
   }
+
+  async obterPorId (id: number): Promise<any> {
+    const response = await api.get(`/escaladas/${id}`);
+    return response.data;
+  }
+
+  async obterFeed (pagina: number, itensPorPagina: number): Promise<{ items: Escalada[]; totalPages: number; totalItems: number }> {
+    const response = await api.get('/escaladas/feed', {
+      params: { pagina, itensPorPagina }
+    });
+    return response.data;
+  }
 }
 
 export default new EscaladaService();

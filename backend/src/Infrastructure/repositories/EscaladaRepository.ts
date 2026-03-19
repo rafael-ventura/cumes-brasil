@@ -9,12 +9,17 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
     USER_INFO = ["usuario.id", "usuario.nome", "usuario.email",
         "usuario.data_atividade", "usuario.clube_organizacao", "localizacao",
         "biografia"];
+    USER_INFO_PUBLICO = ["usuario.id", "usuario.nome", "usuario.username"];
 
     async getById(id: number): Promise<Escalada | null> {
         return this.repository.createQueryBuilder("escalada")
-          .leftJoinAndSelect('escalada.usuario', 'usuario')
-          .leftJoinAndSelect('escalada.via', 'via')
-            .leftJoinAndSelect("escalada.participantes", "participante")
+            .leftJoin('escalada.usuario', 'usuario')
+            .addSelect(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.perfil_publico'])
+            .leftJoinAndSelect('usuario.foto_perfil', 'usuarioFotoPerfil')
+            .leftJoinAndSelect('escalada.via', 'via')
+            .leftJoinAndSelect('via.viaImagens', 'viaImagens')
+            .leftJoinAndSelect('viaImagens.imagem', 'viaImagensImagem')
+            .leftJoinAndSelect('escalada.participantes', 'participante')
             .where("escalada.id = :id", { id })
             .getOne();
     }
@@ -137,5 +142,29 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             totalPages,
             totalItems
         };
+    }
+
+    async getFeed(pagina: number, itensPorPagina: number): Promise<{ items: Escalada[]; totalPages: number; totalItems: number }> {
+        const qb = this.repository.createQueryBuilder("escalada")
+            .leftJoin('escalada.usuario', 'usuario')
+            .addSelect(this.USER_INFO_PUBLICO)
+            .leftJoinAndSelect('usuario.foto_perfil', 'usuarioFotoPerfil')
+            .leftJoinAndSelect('escalada.via', 'via')
+            .leftJoinAndSelect('via.viaImagens', 'viaImagens')
+            .leftJoinAndSelect('viaImagens.imagem', 'viaImagensImagem')
+            .leftJoinAndSelect('escalada.participantes', 'participante')
+            .andWhere('usuario.perfil_publico = :publico', { publico: true })
+            .orderBy('escalada.created_at', 'DESC');
+
+        const totalItems = await qb.getCount();
+
+        const items = await qb
+            .skip((pagina - 1) * itensPorPagina)
+            .take(itensPorPagina)
+            .getMany();
+
+        const totalPages = Math.ceil(totalItems / itensPorPagina);
+
+        return { items, totalPages, totalItems };
     }
 }

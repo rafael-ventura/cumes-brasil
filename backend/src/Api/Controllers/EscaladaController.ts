@@ -18,8 +18,16 @@ export class EscaladaController {
 	 */
 	getEscaladaById = async (req: Request, res: Response) => {
 		const id = EscaladaValidation.idParam(req.params.id);
-		const result = await this.service.getById(id);
-		res.json(result);
+		const escalada = await this.service.getById(id);
+		if (!escalada) {
+			return res.status(404).json({ error: 'Escalada não encontrada' });
+		}
+		const usuarioIdRequisicao = (req as any).user?.usuarioId;
+		const ehDono = usuarioIdRequisicao && String(escalada.usuario?.id) === String(usuarioIdRequisicao);
+		if (!escalada.usuario?.perfil_publico && !ehDono) {
+			return res.status(404).json({ error: 'Escalada não encontrada' });
+		}
+		return res.json(escalada);
 	};
 
 	/**
@@ -109,5 +117,12 @@ export class EscaladaController {
 		const viaId = EscaladaValidation.idParam(req.params.id);
 		const result = await this.service.getEscaladasDaVia(viaId);
 		res.json(result);
-	}
+	};
+
+	getFeed = async (req: Request, res: Response) => {
+		const pagina = EscaladaValidation.queryInt(req.query.pagina, 'pagina', false) ?? 1;
+		const itensPorPagina = EscaladaValidation.queryInt(req.query.itensPorPagina, 'itensPorPagina', false) ?? 15;
+		const result = await this.service.getFeed(pagina, itensPorPagina);
+		res.json(result);
+	};
 }

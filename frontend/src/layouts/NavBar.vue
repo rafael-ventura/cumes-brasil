@@ -1,44 +1,44 @@
 <template>
   <q-footer elevated class="text-black">
     <q-toolbar class="q-pa-md justify-around">
-      <!-- Home -->
+      <!-- Início -->
       <q-btn
         flat
         round
         size="md"
         icon="home"
-        @click="goTo('/')"
-        :class="{ 'selected-tab': isSelected('/') }"
+        @click="irPara('/')"
+        :class="{ 'selected-tab': estaSelecionado('/') }"
       />
 
-      <!-- Search -->
+      <!-- Explorar -->
       <q-btn
         flat
         round
         size="md"
         icon="search"
-        @click="goTo('/explorar')"
-        :class="{ 'selected-tab': isSelected('/explorar') || isSelected('/busca') }"
+        @click="irPara('/explorar')"
+        :class="{ 'selected-tab': estaSelecionado('/explorar') || estaSelecionado('/busca') }"
       />
 
-      <!-- Collections -->
+      <!-- Coleções -->
       <q-btn
         flat
         round
         size="md"
         icon="style"
-        @click="goTo('/colecoes')"
-        :class="{ 'selected-tab': isSelected('/colecoes') }"
+        @click="irPara('/colecoes')"
+        :class="{ 'selected-tab': estaSelecionado('/colecoes') }"
       />
 
-      <!-- Profile -->
+      <!-- Perfil -->
       <q-btn
         flat
         round
         size="md"
         icon="account_circle"
-        @click="goTo('/perfil')"
-        :class="{ 'selected-tab': isSelected('/perfil') }"
+        @click="irParaPerfil"
+        :class="{ 'selected-tab': estaSelecionado('/perfil') }"
       />
 
       <!-- Dark mode toggle -->
@@ -55,18 +55,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Dark } from 'quasar';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const router = useRouter();
 const route = useRoute();
-ref(Dark.isActive);
-const goTo = (path: string) => {
-  router.push(path);
+
+const irPara = (caminho: string) => {
+  router.push(caminho);
 };
-const isSelected = (path: string) => {
-  return route.path === path;
+
+const irParaPerfil = () => {
+  const username = AuthenticateService.getUsername();
+  router.push(username ? `/perfil/${username}` : '/perfil/me');
+};
+
+const estaSelecionado = (caminho: string) => {
+  if (caminho === '/perfil') return route.path.startsWith('/perfil');
+  return route.path === caminho;
 };
 </script>
 
