@@ -4,10 +4,10 @@
       <div class="profile-row">
         <div class="profile-picture-container">
           <img
-            :src="localUser?.foto_perfil?.url || 'https://via.placeholder.com/150'"
+            :src="urlFotoPerfil(localUser)"
             alt="Foto de Perfil"
             class="profile-picture"
-            @click="expandImage(props.user?.foto_perfil?.url || 'https://via.placeholder.com/150')"
+            @click="expandImage(urlFotoPerfil(props.user))"
           />
         </div>
         <div class="escalando-info">
@@ -31,7 +31,7 @@
     </div>
     <q-dialog v-model="isImageModalOpen">
       <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;">
-        <template v-slot:default>
+        <template v-if="!readonly" v-slot:default>
           <FotoPerfilUpload @closeDialogPai="closeImagePai" @submit="updateUserFotoPerfil" />
         </template>
       </q-img>
@@ -42,21 +42,27 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
+import ImagemService from 'src/services/ImagemService';
 import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user: IUsuario | undefined }>();
+const props = defineProps<{ user: IUsuario | undefined; readonly?: boolean }>();
 const emits = defineEmits(['submit']);
 
 const localUser = ref<IUsuario | undefined>(props.user);
 const isImageModalOpen = ref(false);
 const expandedImageUrl = ref<string | undefined>(undefined);
 
+function urlFotoPerfil(user: IUsuario | undefined): string {
+  const url = user?.foto_perfil?.url;
+  return url ? ImagemService.getFullImageUrl(url) : 'https://via.placeholder.com/150';
+}
+
 watch(
   () => props.user,
   (newUser) => {
     if (newUser) {
       localUser.value = newUser;
-      expandedImageUrl.value = newUser.foto_perfil?.url || 'https://via.placeholder.com/150';
+      expandedImageUrl.value = urlFotoPerfil(newUser);
     }
   },
   { immediate: true }

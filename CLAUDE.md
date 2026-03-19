@@ -48,6 +48,7 @@ npm run migration:run:dev
 ### Epics em andamento
 - **Vias Clássicas do CERJ** — backend e frontend concluídos (badge nos cards, filtro na busca, card na home e na explorar)
 - **Redesenho da tela de Vias/Busca** — concluído: tela Explorar com categorias, filtros avançados em painel lateral, Home com cards visuais com foto, padronização ptBR
+- **Perfil público/privado** — concluído: campo `perfil_publico` em Usuario (default true), toggle no PerfilEditaForm, feed e rota `GET /u/:username` filtram perfis privados
 - **Sistema Colaborativo de Fotos** — entidade `ViaImageSuggestion` + upload por usuários + moderação
 - **Imagem em Coleção** — adicionar campo de imagem na entidade `Colecao`
 
@@ -145,6 +146,9 @@ interface CardExplorar {
 - **`aws-sdk` v2** no `S3Helper` — débito técnico consciente, migração para v3 está pendente
 - **YAMLs são a fonte de verdade dos dados** — não editar diretamente no banco; sempre via `src/Infrastructure/data/*.yaml` + `npm run seed`
 - **Imagens precisam de `@JoinColumn`** — relações com `Imagem` na entidade `Usuario` usam `foto_perfilId` (com maiúscula no I)
+- **Perfil público/privado** — `Usuario.perfil_publico` (default `true`). Perfis privados: não aparecem no feed nem em `GET /u/:username` (404). Toggle em PerfilEditaForm.
+- **Rota de perfil** — `/perfil/:username` (próprio ou visitante). `/perfil` e `/perfil/me` redirecionam para o perfil do usuário logado. Guard em `PerfilPageWrapper` diferencia dono (edição) de visitante (somente leitura).
+- **Usuário de teste** — criado pelo seed: `teste@cumes.com.br` / `teste123`, username `cumes_teste`. Já vem com escaladas de exemplo (ver `escaladas-teste.yaml`).
 - **Infra AWS desativada** por falta de créditos — ver `documentacao/LEGADO-AWS.md` se precisar reativar
 
 ---

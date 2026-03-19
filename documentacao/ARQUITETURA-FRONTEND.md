@@ -58,7 +58,7 @@ Cada domínio tem um service singleton em `src/services/`:
 | `AuthenticateService` | Login, registro, Google OAuth, reset de senha |
 | `ViaService` | Listagem, detalhes, favoritar vias |
 | `ColecaoService` | CRUD de coleções e favoritos |
-| `UsuarioService` | Perfil do usuário |
+| `UsuarioService` | Perfil do usuário, edição (incl. toggle perfil público/privado) |
 | `EscaladaService` | Registros de escalada |
 | `SearchService` | Busca e filtros de vias |
 | `HomeService` | Stats e dados da home |
@@ -86,7 +86,7 @@ Arquivo: `src/router/routes.ts`
 
 - Todas as páginas são **lazy-loaded** (`() => import('./pages/...')`)
 - Hash mode ou history mode via `VUE_ROUTER_MODE` (env)
-- Rotas principais: `/`, `/busca`, `/vias/:id`, `/colecoes`, `/colecoes/:id`, `/favoritas`, `/escaladas`, `/perfil`, `/auth/*`
+- Rotas principais: `/`, `/busca`, `/vias/:id`, `/colecoes`, `/colecoes/:id`, `/favoritas`, `/escaladas`, `/perfil/:username` (próprio ou visitante), `/u/:username` (redireciona para `/perfil/:username`), `/auth/*`
 - `MainLayout` envolve todas as rotas autenticadas
 
 ---

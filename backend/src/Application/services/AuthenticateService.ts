@@ -36,20 +36,28 @@ class AuthService {
         this.secretKey = process.env.SECRET_KEY || "";
     }
 
-    async register(nome: string, email: string, senha: string): Promise<any> {
-        UserValidation.registerValidation(nome, email, senha);
+    async register(nome: string, email: string, senha: string, username?: string): Promise<any> {
+        UserValidation.registerValidation(nome, email, senha, username);
         const existingUser = await this.usuarioRepository.findByEmail(email);
         if (existingUser != null) {
             throw new BadRequestError(errorsMessage.USER_ALREADY_EXISTS);
         }
+        let usernameFinal = username ? UserValidation.usernameValidation(username) : undefined;
+        if (usernameFinal) {
+            const usernameEmUso = await this.usuarioRepository.usernameExiste(usernameFinal);
+            if (usernameEmUso) {
+                throw new BadRequestError('Username já está em uso');
+            }
+        } else {
+            usernameFinal = await this.usuarioRepository.gerarUsernameDisponivel(nome);
+        }
         const senhaHash = await bcrypt.hash(senha, 10);
         const imagem: Imagem | null = await this.imagemRepository.getById(3);
         if (imagem != null) {
-            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, imagem);
+            const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, imagem, usernameFinal);
             await this.createDefaultCollections(user);
-            // Retorna token após registro bem-sucedido
             const token = this.generateToken(user.id.toString());
-            return { token, usuarioId: user.id, auth: true };
+            return { token, usuarioId: user.id, username: user.username, auth: true };
         }
         throw new BadRequestError('Erro ao criar usuário: imagem padrão não encontrada');
     }
@@ -65,7 +73,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { "token": token, "usuarioId": user.id, auth: true };
+        return { token, usuarioId: user.id, username: user.username, auth: true };
     }
 
     async googleLogin(authorizationCode: string): Promise<any> {
@@ -95,23 +103,22 @@ class AuthService {
         let user = await this.usuarioRepository.findByEmail(email);
         if (!user) {
             const passwordHash = await bcrypt.hash(idToken, 10);
-            // Use a foto do Google ou a imagem padrão (ID 3)
+            const usernameGoogle = await this.usuarioRepository.gerarUsernameDisponivel(name);
             if (picture) {
                 let newFotoUsuario: Imagem = new Imagem();
                 newFotoUsuario.url = highQualityPicture;
                 newFotoUsuario.descricao = `foto de perfil do google do usuário ${name} (${usuarioId})`;
-                newFotoUsuario.tipo_entidade = "usuario"
+                newFotoUsuario.tipo_entidade = "usuario";
                 newFotoUsuario = await this.imagemRepository.create(newFotoUsuario);
-                user = await this.usuarioRepository.createUsuario(name, email, passwordHash, newFotoUsuario);
+                user = await this.usuarioRepository.createUsuario(name, email, passwordHash, newFotoUsuario, usernameGoogle);
                 await this.createDefaultCollections(user);
             } else {
-                const fotoPerfil = await this.imagemRepository.getById(3) // Default image perfil foto
+                const fotoPerfil = await this.imagemRepository.getById(3);
                 if (fotoPerfil) {
-                    await this.usuarioRepository.createUsuario(name, email, passwordHash, fotoPerfil);
+                    user = await this.usuarioRepository.createUsuario(name, email, passwordHash, fotoPerfil, usernameGoogle);
+                    await this.createDefaultCollections(user);
                 }
             }
-            user = await this.usuarioRepository.findByEmail(email);
-
             if (!user) {
                 throw new BadRequestError(errorsMessage.USER_NOT_FOUND);
             }
@@ -119,7 +126,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, usuarioId: user.id, auth: true };
+        return { token, usuarioId: user.id, username: user.username, auth: true };
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {

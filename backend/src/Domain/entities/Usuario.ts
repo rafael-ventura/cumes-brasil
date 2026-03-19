@@ -13,6 +13,9 @@ export class Usuario extends BaseEntityWithTimestamps {
   @Column({ nullable: false })
   nome: string;
 
+  @Column({ unique: true, nullable: true })
+  username: string;
+
   @Column({ nullable: false })
   email: string;
 
@@ -33,6 +36,9 @@ export class Usuario extends BaseEntityWithTimestamps {
 
   @Column({ nullable: true })
   biografia: string;
+
+  @Column({ default: true })
+  perfil_publico: boolean;
 
   @ManyToOne(() => Via, { nullable: true })
   @JoinColumn({ name: "via_preferida" })

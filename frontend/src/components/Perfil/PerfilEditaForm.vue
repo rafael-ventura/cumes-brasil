@@ -27,6 +27,24 @@
         </div>
 
         <div class="form-field">
+          <label class="field-label">Username *</label>
+          <q-input
+            id="username"
+            v-model="username"
+            type="text"
+            placeholder="ex: joao_escalador"
+            :rules="[
+              val => !!val || 'Campo obrigatório',
+              val => !val || /^[a-z0-9_]{3,30}$/.test(val.toLowerCase()) || 'Apenas letras minúsculas, números e _ (3-30 caracteres)'
+            ]"
+            outlined
+            class="custom-input"
+            dense
+            @blur="username = username ? username.trim().toLowerCase() : ''"
+          />
+        </div>
+
+        <div class="form-field">
           <label class="field-label">Data de Atividade</label>
           <q-input
             id="date"
@@ -65,6 +83,16 @@
           />
         </div>
 
+        <div class="form-field form-field-toggle">
+          <label class="field-label">Perfil público</label>
+          <q-toggle
+            v-model="perfilPublico"
+            color="cumes-01"
+            label="Qualquer pessoa pode ver meu perfil e minhas escaladas no feed"
+            class="toggle-perfil"
+          />
+        </div>
+
         <!-- Botões -->
         <div class="form-actions">
           <q-btn 
@@ -94,10 +122,12 @@ const $q = useQuasar();
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
 const nome = ref(localUser.value?.nome || '');
+const username = ref(localUser.value?.username || '');
 const email = ref(localUser.value?.email || '');
 const dataAtividade = ref(localUser.value?.data_atividade);
 const clubeOrganizacao = ref(localUser.value?.clube_organizacao || '');
 const localizacao = ref(localUser.value?.localizacao || '');
+const perfilPublico = ref(localUser.value?.perfil_publico !== false);
 const formattedDataAtividade = ref(dataAtividade.value ? formatDateToYYYYMMDD(dataAtividade.value) : '');
 const isDeleteAccountDialogOpen = ref(false);
 
@@ -107,10 +137,12 @@ watch(
     if (newUser) {
       localUser.value = { ...newUser };
       nome.value = newUser.nome;
+      username.value = newUser.username || '';
       email.value = newUser.email;
       dataAtividade.value = newUser.data_atividade;
       clubeOrganizacao.value = newUser.clube_organizacao || '';
       localizacao.value = newUser.localizacao || '';
+      perfilPublico.value = newUser.perfil_publico !== false;
     }
   },
   {
@@ -122,6 +154,7 @@ const onSubmit = async () => {
   try {
     const formData = new FormData();
     formData.append('nome', nome.value);
+    formData.append('username', username.value.trim().toLowerCase());
     formData.append('email', email.value);
     if (formattedDataAtividade.value) {
       formData.append('data_atividade', formatDateToDDMMYYYY(formattedDataAtividade.value));
@@ -131,10 +164,8 @@ const onSubmit = async () => {
     }
     if (localizacao.value) {
       formData.append('localizacao', localizacao.value);
-    } else {
-      // Se não houver foto, enviar a foto padrão (ID 3)
-      formData.append('removerFoto', 'true');
     }
+    formData.append('perfil_publico', String(perfilPublico.value));
     // Chamar o serviço com FormData e obter o usuário atualizado
     const updatedUser = await UserService.editarDados(formData);
     emits('submit', updatedUser);
@@ -224,6 +255,13 @@ const onSubmit = async () => {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.form-field-toggle {
+  .toggle-perfil :deep(.q-toggle__label) {
+    color: $offwhite;
+    font-size: 14px;
+  }
 }
 
 .field-label {

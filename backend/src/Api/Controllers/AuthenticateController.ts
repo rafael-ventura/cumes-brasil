@@ -36,10 +36,11 @@ class AuthController {
         const {
             nome,
             email,
-            senha
+            senha,
+            username
         } = req.body;
-        UserValidation.registerValidation(nome, email, senha);
-        const result = await this.authService.register(nome, email, senha);
+        UserValidation.registerValidation(nome, email, senha, username);
+        const result = await this.authService.register(nome, email, senha, username);
         res.status(201).json(result);
     };
 

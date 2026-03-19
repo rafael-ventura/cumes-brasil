@@ -94,10 +94,11 @@ src/
 O seed carrega dados dos arquivos `src/Infrastructure/data/*.yaml` para o banco, em ordem de dependência:
 
 ```
-ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader
+ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader → UsuarioLoader → EscaladaLoader
 ```
 
 - Os YAMLs são a **fonte de verdade** dos dados
+- **Usuário de teste**: criado pelo UsuarioLoader — email `teste@cumes.com.br`, senha `teste123`. Recebe escaladas de exemplo em `escaladas-teste.yaml`.
 - O seed é **idempotente**: pode ser re-executado sem duplicar dados
 - Para adicionar um campo simples atualizável em Via: inclua na interface `ViaYaml` e no array `UPSERT_FIELDS` em `ViaLoader.ts`
 - Utilitários compartilhados do seed ficam em `seeds/seedUtils.ts`

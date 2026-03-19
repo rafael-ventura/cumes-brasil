@@ -7,10 +7,11 @@ export class UsuarioDTO {
     nome: string;
     email: string;
     idade?: number;
-    biografia?: string;
-    clube_organizacao?: string;
-    localizacao?: string;
-    data_atividade?: string;
+  biografia?: string;
+  clube_organizacao?: string;
+  localizacao?: string;
+  perfil_publico?: boolean;
+  data_atividade?: string;
     foto_perfil?: ImagemDTO;
     via_preferida?: ViaDTO;
 
@@ -22,6 +23,7 @@ export class UsuarioDTO {
         this.biografia = entity.biografia;
         this.clube_organizacao = entity.clube_organizacao;
         this.localizacao = entity.localizacao;
+        this.perfil_publico = entity.perfil_publico;
         this.data_atividade = entity.data_atividade;
 
         this.foto_perfil = entity.foto_perfil

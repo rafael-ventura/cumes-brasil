@@ -19,6 +19,14 @@ import SearchRouter from './SearchRouter';
 import PerfilRouter from "./PerfilRouter";
 import { authRateLimiter, uploadRateLimiter, createContentRateLimiter } from '../Middlewares/RateLimitMiddleware';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
+import { UsuarioController } from '../Controllers/UsuarioController';
+import { UsuarioService } from '../../Application/services/UsuarioService';
+import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
+import { ImagemService } from '../../Application/services/ImagemService';
+import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
+import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 
 // TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
 // TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
@@ -35,6 +43,19 @@ routes.use("/auth", authRateLimiter, AuthenticateRouter);
 
 // Rotas públicas
 routes.use("/stats", StatsRouter);
+
+// Perfil público por username (sem auth)
+const perfilPublicoUsuarioService = new UsuarioService(
+    new UsuarioRepository(),
+    new ImagemService(new ImagemRepository()),
+    new ViaRepository(),
+    new ImagemRepository(),
+    new EscaladaRepository(),
+    new ColecaoRepository()
+);
+const perfilPublicoController = new UsuarioController(perfilPublicoUsuarioService);
+routes.get("/u/:username", asyncErrorHandler(perfilPublicoController.getPerfilPorUsername));
+
 routes.use("/vias", ViaRouter);
 routes.use("/fontes", FonteRouter);
 routes.use("/montanhas", MontanhaRouter);

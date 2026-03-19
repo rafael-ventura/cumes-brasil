@@ -54,6 +54,7 @@ Usuario ── Colecao ── ColecaoVia ── Via
         └─ Escalada ── Via
         └─ foto_perfil → Imagem
         └─ via_predileta → Via
+        └─ perfil_publico (boolean, default true) — perfis privados não aparecem no feed nem em GET /u/:username
 ```
 
 **Campos importantes da Via:**
@@ -71,8 +72,11 @@ Dados vivem nos YAMLs em `src/Infrastructure/data/`. O seed é **idempotente**.
 
 **Ordem de execução (dependências em cascata):**
 ```
-ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader
+ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader → UsuarioLoader → EscaladaLoader
 ```
+
+- **UsuarioLoader**: cria usuário de teste (`teste@cumes.com.br` / `teste123`) se não existir, com coleção Favoritas.
+- **EscaladaLoader**: cria escaladas de exemplo para o usuário de teste a partir de `escaladas-teste.yaml`.
 
 - Utilitários compartilhados em `seeds/seedUtils.ts` (`loadYaml<T>`, `resolveLocalizacaoIds`)
 - `ViaLoader` usa `UPSERT_FIELDS` — array declarativo dos campos atualizados no re-seed

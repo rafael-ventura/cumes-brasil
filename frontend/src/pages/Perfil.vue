@@ -13,7 +13,7 @@
       <!-- PerfilBar e PerfilGridButtons -->
       <div class="row q-col-gutter-none">
         <div class="col-12">
-          <PerfilBar :user="user" @submit="handleEditSubmit" />
+          <PerfilBar :user="user" @submit="aoSalvarEdicao" />
         </div>
         <div class="col-12">
           <PerfilGridButtons :items="items" />
@@ -23,10 +23,10 @@
       <!-- PerfilBio e PerfilPredileta -->
       <div class="row q-col-gutter-none">
         <div class="col-12 perfil-div">
-          <PerfilBio :user="user" @bio-updated="updateUserBio" />
+          <PerfilBio :user="user" @bio-updated="atualizarBiografia" />
         </div>
         <div class="col-12 caixa2">
-          <PerfilViaPredileta :user="user" @submit="handleEditSubmit"/>
+          <PerfilViaPredileta :user="user" @submit="aoSalvarEdicao"/>
         </div>
       </div>
     </div>
@@ -35,9 +35,9 @@
     <div v-else class="desktop-layout">
       <!-- Header com foto e informações principais -->
       <div class="desktop-header">
-        <div class="profile-picture-wrapper" @click="expandImage">
+        <div class="profile-picture-wrapper" @click="expandirImagem">
           <img
-            :src="user?.foto_perfil?.url || 'https://via.placeholder.com/150'"
+            :src="urlFotoPerfil"
             alt="Foto de Perfil"
             class="desktop-profile-picture"
           />
@@ -93,10 +93,10 @@
       <!-- Conteúdo principal em colunas -->
       <div class="desktop-content">
         <div class="content-left">
-          <PerfilBio :user="user" @bio-updated="updateUserBio" />
+          <PerfilBio :user="user" @bio-updated="atualizarBiografia" />
         </div>
         <div class="content-right">
-          <PerfilViaPredileta :user="user" @submit="handleEditSubmit"/>
+          <PerfilViaPredileta :user="user" @submit="aoSalvarEdicao"/>
         </div>
       </div>
     </div>
@@ -105,7 +105,7 @@
     <q-dialog v-model="isImageModalOpen">
       <q-img :src="expandedImageUrl" style="min-width: 50vw; min-height: 50vh;">
         <template v-slot:default>
-          <FotoPerfilUpload @closeDialogPai="closeImagePai" @submit="updateUserFotoPerfil" />
+          <FotoPerfilUpload @closeDialogPai="fecharImagemPai" @submit="atualizarFotoPerfil" />
         </template>
       </q-img>
     </q-dialog>
@@ -123,7 +123,7 @@
         <q-list class="config-list">
           <q-item
             clickable
-            @click="openEditDialog()"
+            @click="abrirEdicao()"
             class="config-item"
             v-ripple
           >
@@ -143,7 +143,7 @@
 
           <q-item
             clickable
-            @click="logout"
+            @click="sair"
             class="config-item logout-item"
             v-ripple
           >
@@ -164,7 +164,7 @@
 
     <!-- Perfil de Edição -->
     <q-dialog v-model="isEditDialogOpen">
-      <PerfilEditaForm v-if="user" :user="user" @submit="handleEditSubmit" />
+      <PerfilEditaForm v-if="user" :user="user" @submit="aoSalvarEdicao" />
     </q-dialog>
   </q-page>
 </template>
@@ -184,9 +184,11 @@ import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
 import EscaladaService from 'src/services/EscaladaService';
 import { Escalada } from 'src/models/Escalada';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
+import ImagemService from 'src/services/ImagemService';
 
+const props = defineProps<{ userInicial?: IUsuario }>();
 const router = useRouter();
-const user = ref<IUsuario | undefined>(undefined);
+const user = ref<IUsuario | undefined>(props.userInicial);
 const numColecoes = ref();
 const numEscaladas = ref();
 const numFavoritas = ref();
@@ -203,6 +205,11 @@ defineOptions({
 
 // Detectar se é desktop (breakpoint: 1024px)
 const isDesktop = computed(() => windowWidth.value >= 1024);
+
+const urlFotoPerfil = computed(() => {
+  const url = user.value?.foto_perfil?.url;
+  return url ? ImagemService.getFullImageUrl(url) : 'https://via.placeholder.com/150';
+});
 
 // Classe dinâmica para o page
 const pageClass = computed(() => {
@@ -249,18 +256,19 @@ const anosEscalando = computed(() => {
   return `${Math.floor(diasEscalados.value / 365)} ano(s)`;
 });
 
-// Listener para resize
-const handleResize = () => {
+const aoRedimensionar = () => {
   windowWidth.value = window.innerWidth;
 };
 
 onMounted(async () => {
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', aoRedimensionar);
 
   try {
     await AuthenticateService.redirecionaSeNaoAutenticado(router);
 
-    user.value = await UserService.getPerfil();
+    if (!props.userInicial) {
+      user.value = await UserService.getPerfil();
+    }
     const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
     const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
     const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
@@ -280,21 +288,21 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
+  window.removeEventListener('resize', aoRedimensionar);
 });
 
-const expandImage = () => {
-  expandedImageUrl.value = user.value?.foto_perfil?.url || 'https://via.placeholder.com/150';
+const expandirImagem = () => {
+  expandedImageUrl.value = urlFotoPerfil.value;
   isImageModalOpen.value = true;
 };
 
-const closeImagePai = (fecharImagem: boolean) => {
+const fecharImagemPai = (fecharImagem: boolean) => {
   if (fecharImagem) {
     expandedImageUrl.value = '';
   }
 };
 
-const updateUserFotoPerfil = async () => {
+const atualizarFotoPerfil = async () => {
   try {
     user.value = await UserService.getPerfil();
     isImageModalOpen.value = false;
@@ -303,27 +311,27 @@ const updateUserFotoPerfil = async () => {
   }
 };
 
-const updateUserBio = (newBio: string) => {
+const atualizarBiografia = (novaBio: string) => {
   if (user.value) {
-    user.value.biografia = newBio;
-    user.value = { ...user.value }; // Trigger reatividade
+    user.value.biografia = novaBio;
+    user.value = { ...user.value };
   }
 };
 
-const logout = () => {
+const sair = () => {
   UserService.logout();
   router.push('/auth/login');
 };
 
-const openEditDialog = () => {
+const abrirEdicao = () => {
   isConfigDialogOpen.value = false;
   isEditDialogOpen.value = true;
 };
 
-const handleEditSubmit = async () => {
+const aoSalvarEdicao = async () => {
   try {
-    user.value = await UserService.getPerfil(); // Atualiza o estado local com o perfil atualizado;
-    isEditDialogOpen.value = false; // Fecha o modal de edição
+    user.value = await UserService.getPerfil();
+    isEditDialogOpen.value = false;
   } catch (error) {
     console.error('Erro ao atualizar o perfil:', error);
   }

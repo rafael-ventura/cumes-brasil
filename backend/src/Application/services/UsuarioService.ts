@@ -1,6 +1,8 @@
 import { Usuario } from '../../Domain/entities/Usuario';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
+import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
+import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Service } from 'typedi';
 import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemService } from './ImagemService';
@@ -11,6 +13,7 @@ import { ImagemRepository } from '../../Infrastructure/repositories/ImagemReposi
 import S3Helper from '../../Infrastructure/helpers/S3Helper';
 import NotFoundError from '../errors/NotFoundError';
 import BaseService from './BaseService';
+import UserValidation from '../validations/UserValidation';
 
 @Service()
 export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
@@ -18,12 +21,23 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
     private imagemService: ImagemService;
     private imagemRepository: ImagemRepository;
     private s3Service: S3Helper = new S3Helper();
+    private escaladaRepo?: EscaladaRepository;
+    private colecaoRepo?: ColecaoRepository;
 
-    constructor(usuarioRepo: UsuarioRepository, imagemService: ImagemService, viaRepo: ViaRepository, imagemRepository: ImagemRepository) {
+    constructor(
+        usuarioRepo: UsuarioRepository,
+        imagemService: ImagemService,
+        viaRepo: ViaRepository,
+        imagemRepository: ImagemRepository,
+        escaladaRepo?: EscaladaRepository,
+        colecaoRepo?: ColecaoRepository
+    ) {
         super(usuarioRepo);
         this.imagemService = imagemService;
         this.viaRepo = viaRepo;
         this.imagemRepository = imagemRepository;
+        this.escaladaRepo = escaladaRepo;
+        this.colecaoRepo = colecaoRepo;
     }
 
     async getUsuarioById(id: number): Promise<Usuario | null> {
@@ -51,6 +65,28 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         return this.repository.getPerfilSemHash(id);
     }
 
+    async getPerfilPorUsername(username: string): Promise<{ usuario: Usuario; numEscaladas: number; numColecoes: number; numFavoritas: number } | null> {
+        const usuario = await this.repository.getPerfilPublicoPorUsername(username);
+        if (!usuario) return null;
+
+        let numEscaladas = 0;
+        let numColecoes = 0;
+        let numFavoritas = 0;
+
+        if (this.escaladaRepo) {
+            const escaladas = await this.escaladaRepo.getByUsuarioId(usuario.id);
+            numEscaladas = escaladas.length;
+        }
+        if (this.colecaoRepo) {
+            const colecoes = await this.colecaoRepo.getByUsuarioId(usuario.id);
+            numColecoes = colecoes.length;
+            const favoritas = colecoes.find(c => c.nome === 'Favoritas');
+            numFavoritas = favoritas ? (favoritas.viaColecoes?.length ?? 0) : 0;
+        }
+
+        return { usuario, numEscaladas, numColecoes, numFavoritas };
+    }
+
     async editarDados(id: number, usuarioDados: any, file?: Express.Multer.File): Promise<void> {
         const usuario = await this.repository.findOne({
             where: { id },
@@ -71,6 +107,23 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         usuario.clube_organizacao = usuarioDados.clube_organizacao || usuario.clube_organizacao;
         usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
         usuario.biografia = usuarioDados.biografia || usuario.biografia;
+
+        if (usuarioDados.perfil_publico !== undefined) {
+            usuario.perfil_publico = usuarioDados.perfil_publico === true || usuarioDados.perfil_publico === 'true';
+        }
+
+        if (usuarioDados.username !== undefined) {
+            const usernameTrimmed = String(usuarioDados.username).trim().toLowerCase();
+            if (usernameTrimmed && usernameTrimmed !== usuario.username) {
+                const emUso = await this.repository.usernameExiste(usernameTrimmed, usuario.id);
+                if (emUso) {
+                    throw new BadRequestError('Username já está em uso');
+                }
+                UserValidation.usernameValidation(usernameTrimmed);
+                usuario.username = usernameTrimmed;
+            }
+        }
+
         await this.atualizarViaPreferida(usuario, usuarioDados.via_preferida_id);
         await this.repository.update(usuario.id, usuario);
     }

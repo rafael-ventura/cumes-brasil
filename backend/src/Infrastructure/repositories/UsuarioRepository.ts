@@ -55,13 +55,18 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
             .getMany();
     }
 
-    async createUsuario(nome: string, email: string, senhaHash: string, imagem: Imagem): Promise<Usuario> {
-        return this.repository.save({
+    async createUsuario(nome: string, email: string, senhaHash: string, imagem: Imagem, username?: string): Promise<Usuario> {
+        const dados: Partial<Usuario> = {
             nome,
             email,
             password_hash: senhaHash,
-            foto_perfil: imagem
-        });
+            foto_perfil: imagem,
+            perfil_publico: true
+        };
+        if (username) {
+            dados.username = username;
+        }
+        return this.repository.save(dados);
     }
 
     async update(id: number, usuarioData: Partial<Usuario>): Promise<void> {
@@ -77,9 +82,78 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
         return user ?? null;
     }
 
+    async findByUsername(username: string): Promise<Usuario | null> {
+        const user = await this.repository.findOne({ where: { username } });
+        return user ?? null;
+    }
+
+    async usernameExiste(username: string, excluirId?: number): Promise<boolean> {
+        const qb = this.repository.createQueryBuilder('usuario')
+            .where('usuario.username = :username', { username });
+        if (excluirId) {
+            qb.andWhere('usuario.id != :excluirId', { excluirId });
+        }
+        const count = await qb.getCount();
+        return count > 0;
+    }
+
+    async gerarUsernameDisponivel(baseNome: string): Promise<string> {
+        const base = baseNome
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '_')
+            .substring(0, 30) || 'usuario';
+        let username = base;
+        let sufixo = 1;
+        while (await this.usernameExiste(username)) {
+            username = `${base}_${sufixo}`;
+            sufixo++;
+        }
+        return username;
+    }
+
+    async getPerfilPublicoPorUsername(username: string): Promise<Usuario | null> {
+        return this.repository.createQueryBuilder("usuario")
+            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
+            .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
+            .leftJoinAndSelect('via_preferida.setor', 'setor')
+            .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
+            .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
+            .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
+            .leftJoinAndSelect('setorLocalizacoes.regiao', 'setorRegiao')
+            .leftJoinAndSelect('setorLocalizacoes.estado', 'setorEstado')
+            .leftJoinAndSelect('setorLocalizacoes.cidade', 'setorCidade')
+            .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
+            .leftJoinAndSelect('setor.face', 'setorFace')
+            .leftJoinAndSelect('setor.montanha', 'setorMontanha')
+            .leftJoinAndSelect('via_preferida.face', 'face')
+            .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
+            .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
+            .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
+            .leftJoinAndSelect('faceLocalizacoes.regiao', 'faceRegiao')
+            .leftJoinAndSelect('faceLocalizacoes.estado', 'faceEstado')
+            .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
+            .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
+            .leftJoinAndSelect('face.montanha', 'faceMontanha')
+            .leftJoinAndSelect('via_preferida.montanha', 'montanha')
+            .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
+            .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
+            .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
+            .leftJoinAndSelect('montanhaLocalizacoes.regiao', 'montanhaRegiao')
+            .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
+            .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
+            .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
+            .leftJoinAndSelect('usuario.foto_perfil', 'foto_perfil')
+            .where('usuario.username = :username', { username })
+            .andWhere('usuario.perfil_publico = :publico', { publico: true })
+            .getOne();
+    }
+
     async getPerfilSemHash(id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-            .select(['usuario.nome', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
+            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.perfil_publico', 'usuario.via_preferida'])
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
             // Localização através de Setor
             .leftJoinAndSelect('via_preferida.setor', 'setor')

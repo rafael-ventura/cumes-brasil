@@ -17,7 +17,6 @@
     "db:fresh": "npm run db:reset && npm run build && npm run migration:run:dev && npm run seed"
   },
   "dependencies": {
-    "aws-sdk": "^2.1692.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

@@ -1,10 +1,11 @@
 <template>
   <div class="stats-container">
-    <router-link
+    <component
       v-for="(item, index) in items"
       :key="index"
-      :to="item.to"
-      class="stat-card"
+      :is="readonly ? 'div' : 'router-link'"
+      :to="readonly ? undefined : item.to"
+      :class="['stat-card', { 'stat-card-readonly': readonly }]"
       :style="{ backgroundColor: item.color }"
     >
       <div class="stat-content">
@@ -12,15 +13,15 @@
         <q-icon :name="item.icon" class="stat-icon" />
         <div class="stat-label">{{ item.label }}</div>
       </div>
-    </router-link>
+    </component>
   </div>
 </template>
 
 <script setup lang="ts">
 
-// Recebe as props do componente pai
 defineProps<{
   items: Array<{ label: string; num: number; icon: string; color: string; to: string }>;
+  readonly?: boolean;
 }>();
 </script>
 
@@ -52,6 +53,11 @@ defineProps<{
   cursor: pointer;
   text-decoration: none;
   padding: 8px 10px;
+  color: inherit;
+
+  &.stat-card-readonly {
+    cursor: default;
+  }
   min-width: 0;
   min-height: 60px;
   flex: 1 1 0;

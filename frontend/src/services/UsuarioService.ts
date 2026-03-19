@@ -27,13 +27,32 @@ class UsuarioService {
       // Ajustando URLs das imagens dos usuários
       usuarios.forEach(usuario => {
         if (usuario.foto_perfil) {
-          adjustImageUrls({ imagem: usuario.foto_perfil });
+          adjustImageUrls(usuario.foto_perfil);
         }
       });
 
       return usuarios;
     } catch (error: any) {
       handleApiError(error, 'Erro ao buscar usuários');
+    }
+  }
+
+  async getPerfilPorUsername (username: string): Promise<IUsuario & { username?: string; numEscaladas?: number; numColecoes?: number; numFavoritas?: number }> {
+    try {
+      const response = await api.get(`/u/${username}`);
+      const dados = response.data;
+      if (dados.foto_perfil) {
+        adjustImageUrls(dados.foto_perfil);
+      }
+      if (dados.via_preferida?.imagem) {
+        adjustImageUrls(dados.via_preferida.imagem);
+      }
+      if (dados.via_preferida?.montanha?.imagem) {
+        adjustImageUrls(dados.via_preferida.montanha.imagem);
+      }
+      return dados;
+    } catch (error: any) {
+      handleApiError(error, 'Perfil não encontrado');
     }
   }
 
@@ -79,7 +98,11 @@ class UsuarioService {
   async editarDados (formData: FormData) {
     try {
       const response = await api.put('/perfil', formData);
-      return response.data as IUsuario;
+      const usuario = response.data as IUsuario;
+      if (usuario.foto_perfil) {
+        adjustImageUrls(usuario.foto_perfil);
+      }
+      return usuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao atualizar dados');
     }

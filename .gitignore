@@ -52,6 +52,7 @@ package-lock.json
 # Environment files
 *.env
 *.env.production
+.env.homolog
 
 # Ignore banco de dados
 *.db

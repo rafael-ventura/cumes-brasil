@@ -2,10 +2,10 @@
   <div class="div-externa">
     <div class="title-box">
       <div class="titulo">Bio</div>
-      <q-icon name="edit" size="20px" class="icon" @click="toggleEditMode" />
+      <q-icon v-if="!readonly" name="edit" size="20px" class="icon" @click="toggleEditMode" />
     </div>
     <div class="content-wrapper">
-      <div v-if="!isEditing" class="bio-content">
+      <div v-if="!isEditing || readonly" class="bio-content">
         <div 
           ref="bioTextRef" 
           class="descricao-bio"
@@ -26,7 +26,7 @@
       </div>
       <q-input v-else v-model="newBio" type="textarea" class="custom-input" outlined/>
     </div>
-    <div v-if="isEditing" class="actions-wrapper">
+    <div v-if="isEditing && !readonly" class="actions-wrapper">
       <q-btn flat label="Cancelar" class="btn-secondary" @click="cancelEdit" />
       <q-btn flat label="Salvar" class="btn-primary" @click="saveBio" />
     </div>
@@ -65,7 +65,7 @@ import { computed, ref, onMounted, onUpdated, watch, nextTick } from 'vue';
 import UserService from 'src/services/UsuarioService';
 import { IUsuario } from 'src/models/IUsuario';
 
-const props = defineProps<{ user?: IUsuario | null }>();
+const props = defineProps<{ user?: IUsuario | null; readonly?: boolean }>();
 const emits = defineEmits(['bio-updated']);
 
 const isEditing = ref(false);

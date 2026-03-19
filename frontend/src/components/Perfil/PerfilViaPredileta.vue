@@ -2,7 +2,7 @@
   <div class="div-externa">
     <div class="title-box">
       <div class="titulo">Via Predileta</div>
-      <q-icon name="edit" size="20px" class="icon" @click="toggleEditMode"/>
+      <q-icon v-if="!readonly" name="edit" size="20px" class="icon" @click="toggleEditMode"/>
     </div>
 
     <!-- Exibição dos detalhes da via favorita -->
@@ -17,6 +17,7 @@
     </div>
     
     <PerfilEditaFormAddPrediletaModal 
+      v-if="!readonly"
       v-model="isModalSelect"
       :viaPreferidaId="viaPreferidaId || ''" 
       @viaPreferidaUpdate="viaPreferidaUpdate" 
@@ -35,7 +36,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const props = defineProps<{ user?: IUsuario | null }>();
+const props = defineProps<{ user?: IUsuario | null; readonly?: boolean }>();
 const emits = defineEmits(['submit', 'waiting']);
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
