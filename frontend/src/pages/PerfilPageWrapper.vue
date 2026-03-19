@@ -19,6 +19,11 @@
     <span>Perfil não encontrado</span>
     <q-btn flat no-caps label="Voltar" class="btn-voltar" @click="router.push('/')" />
   </div>
+  <div v-else class="perfil-estado">
+    <i class="pi pi-user-minus" />
+    <span>Perfil não encontrado</span>
+    <q-btn flat no-caps label="Voltar" class="btn-voltar" @click="router.push('/')" />
+  </div>
 </template>
 
 <script setup lang="ts">
