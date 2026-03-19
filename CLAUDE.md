@@ -46,14 +46,96 @@ npm run migration:run:dev
 - **Modal de foto do perfil** — modal de atualização/remoção precisa de melhoria
 
 ### Epics em andamento
-- **Vias Clássicas do CERJ** — backend concluído (`via_cerj: true` no seed, field na entidade); frontend ainda precisa: badge visual nos cards, filtro na busca, card "Clássicas do CERJ" na home
+- **Vias Clássicas do CERJ** — backend e frontend concluídos (badge nos cards, filtro na busca, card na home e na explorar)
+- **Redesenho da tela de Vias/Busca** — concluído: tela Explorar com categorias, filtros avançados em painel lateral, Home com cards visuais com foto, padronização ptBR
 - **Sistema Colaborativo de Fotos** — entidade `ViaImageSuggestion` + upload por usuários + moderação
-- **Redesenho da tela de Vias/Busca** — navegação por categorias, filtros avançados
 - **Imagem em Coleção** — adicionar campo de imagem na entidade `Colecao`
 
 ### Refactors pendentes
 - Interfaces para Services e Repositories no backend (TypeDI com interfaces, não classes concretas)
 - Otimização de queries TypeORM (N+1, índices, eager/lazy loading)
+
+---
+
+## Convenções Git
+
+### Branches
+
+Formato: `#<numero-tarefa>-<nome>-<descricao-kebab-case>`
+
+- O número vem do Trello (card da tarefa)
+- Nome é o primeiro nome de quem está trabalhando
+- Descrição curta em kebab-case
+
+Exemplos reais:
+```
+#2-rafael-vias-classicas-do-CERJ
+#22-rafael-ajustar-sql
+#13-ELMO-ordenar-colecao-por-data-de-adicao
+#17-vitor-otimizar-consultas-sql
+```
+
+### Commits
+
+Formato: **Conventional Commits** em português.
+
+```
+<tipo>: <descrição curta em português>
+```
+
+Tipos usados no projeto:
+- `feat:` — funcionalidade nova
+- `fix:` — correção de bug
+- `refactor:` — reestruturação sem mudar comportamento
+- `style:` — ajustes visuais (CSS, layout, cores)
+- `docs:` — documentação
+- `chore:` — manutenção, configs, deps
+
+Exemplos reais:
+```
+feat: implementa estrutura de localização e refatora componentes relacionados
+fix: corrige inconsistencias de cores entre paginas
+refactor: reorganizar pasta assets e corrigir upload de fotos
+style: ajusta espacamentos na hero section da Home
+docs: adicionar índice com navegação no arquivo melhorias.md
+```
+
+Quando o commit está vinculado a uma tarefa específica, pode prefixar com `#N`:
+```
+#14- filtro de montanha na tela de busca
+#2-rafael: Vias Classicas do CERJ
+```
+
+---
+
+## Padrões de Código
+
+### Nomes de variáveis e funções
+
+- **ptBR camelCase** em todo código do projeto (variáveis, funções, interfaces, campos)
+- Nomes de frameworks/libs mantêm seus nomes originais (`useRouter`, `ref`, `onMounted`)
+- Constantes em `UPPER_SNAKE_CASE` com palavras em ptBR (`CHAVE_CACHE`, `DIAS_CACHE`)
+
+### Exemplos
+
+```typescript
+// Variáveis
+const carregando = ref(true);
+const totalVias = ref(0);
+const filtrosLocalizacaoAtual = ref({});
+
+// Funções
+function irParaBuscaFiltrada(tipoFiltro: string) { ... }
+function aoMudarLocalizacao(filtros: Record<string, number>) { ... }
+async function obterEstatisticas(): Promise<IEstatisticas> { ... }
+
+// Interfaces
+interface CardExplorar {
+  titulo: string;
+  tipoFiltro: string;
+  contagem: number | null;
+}
+```
 
 ---
 

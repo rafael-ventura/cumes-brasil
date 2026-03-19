@@ -8,6 +8,7 @@ import CroquiRouter from './CroquiRouter';
 import ColecaoRouter from './ColecaoRouter';
 import EscaladaRouter from './EscaladaRouter';
 import StatsRouter from './StatsRouter';
+import LocalizacaoRouter from './LocalizacaoRouter';
 import { ConexaoController } from '../Controllers/ConexaoController';
 import { ConexaoService } from '../../Application/services/ConexaoService';
 import { AppDataSource } from '../../Infrastructure/config/db';
@@ -39,6 +40,7 @@ routes.use("/fontes", FonteRouter);
 routes.use("/montanhas", MontanhaRouter);
 routes.use("/faces", FaceRouter);
 routes.use("/croquis", CroquiRouter);
+routes.use("/localizacoes", LocalizacaoRouter);
 
 // Rotas de upload com rate limiting específico
 routes.use("/imagens", uploadRateLimiter, ImagemRouter);

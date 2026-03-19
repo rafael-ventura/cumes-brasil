@@ -1,329 +1,259 @@
 <template>
-  <div class="margem">
+  <div class="busca-filtros">
     <!-- Campo de busca unificado -->
-    <div class="q-pt-lg">
+    <div class="busca-input-wrapper">
       <q-input
-        v-model="localFilters.unifiedSearch"
-        :label="unifiedSearchLabel ? unifiedSearchLabel : 'Buscar por nome, bairro ou localização'"
+        v-model="localFilters.termoBusca"
+        :label="unifiedSearchLabel || 'Buscar por nome, bairro ou localização'"
         debounce="300"
         outlined
         color="secondary"
-        class="unified-search custom-input"
         label-color="secondary"
+        class="busca-input"
         rounded
         @keydown="onInputChange"
       >
-        <!-- Botão para abrir o modal de filtros avançados -->
         <template #append>
-          <div class="append-buttons">
+          <div class="append-actions">
             <q-icon
-              name="filter_alt"
-              class="cursor-pointer filter-icon"
-              @click="showFilterModal = true"
+              v-if="entity === 'via'"
+              name="tune"
+              class="cursor-pointer icone-filtro"
+              :class="{ ativo: temFiltrosAtivos }"
+              @click="painelAberto = true"
             />
             <q-icon
+              v-if="temFiltrosAtivos"
               name="delete"
-              class="cursor-pointer text-negative delete-icon"
-              @click="clearFilters"
+              class="cursor-pointer icone-limpar"
+              @click="limparTudo"
             />
           </div>
         </template>
       </q-input>
     </div>
 
-    <!-- Mostrar filtros ativos -->
-    <div v-if="activeFiltersList.length > 0" class="active-filters">
+    <!-- Filtros ativos (tags) -->
+    <div v-if="listaFiltrosAtivos.length > 0" class="filtros-ativos">
       <div
-        v-for="filter in activeFiltersList"
-        :key="filter.key"
-        class="filter-tag"
+        v-for="filtro in listaFiltrosAtivos"
+        :key="filtro.key"
+        class="filtro-tag"
       >
-        <span>{{ filter.label }}</span>
+        <span>{{ filtro.label }}</span>
         <q-icon
           name="close"
-          class="remove-filter-icon"
-          @click="removeFilter(filter.key)"
+          class="tag-remover"
+          @click="removerFiltro(filtro.key)"
         />
       </div>
     </div>
 
-    <!-- Modal de Filtros Avançados para Vias -->
-    <q-dialog v-model="showFilterModal" persistent>
-      <q-card class="filter-modal">
-        <q-card-section class="modal-header-section">
-          <div class="modal-header">
-            <q-icon name="filter_alt" size="28px" class="title-icon" />
-            <span>Filtros Avançados</span>
-          </div>
-        </q-card-section>
-
-        <q-card-section v-if="entity == 'via'" class="modal-body-section">
-          <div class="modal-filters">
-            <!-- Botões de seleção de filtros -->
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.selectedDifficulty }"
-              icon="signal_cellular_alt"
-              label="Grau"
-              @click="toggleFilterInModal('selectedDifficulty')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.selectedExtension }"
-              icon="height"
-              label="Extensão"
-              @click="toggleFilterInModal('selectedExtension')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.selectedCrux }"
-              icon="trending_up"
-              label="Crux"
-              @click="toggleFilterInModal('selectedCrux')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.selectedExposicao }"
-              icon="warning"
-              label="Exposição"
-              @click="toggleFilterInModal('selectedExposicao')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.tipo_rocha }"
-              icon="landscape"
-              label="Tipo de Rocha"
-              @click="toggleFilterInModal('tipo_rocha')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.tipo_escalada }"
-              icon="sports_climbing"
-              label="Tipo de Escalada"
-              @click="toggleFilterInModal('tipo_escalada')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.modalidade }"
-              icon="category"
-              label="Modalidade"
-              @click="toggleFilterInModal('modalidade')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.selectedMountain }"
-              icon="landscape"
-              label="Montanha"
-              @click="toggleFilterInModal('selectedMountain')"
-              rounded
-            />
-            <q-btn
-              class="filter-btn"
-              :class="{ active: showFilterInputInModal.via_cerj }"
-              icon="emoji_events"
-              label="Clássicas CERJ"
-              @click="toggleFilterInModal('via_cerj')"
-              rounded
-            />
-          </div>
-
-          <div v-if="showFilterInputInModal.via_cerj" class="q-pt-lg">
-            <div class="field-label">Vias Clássicas do CERJ</div>
-            <q-toggle
-              v-model="localFilters.via_cerj"
-              label="Apenas vias clássicas do CERJ"
-              color="secondary"
-              @update:model-value="updateActiveFilters"
-            />
-          </div>
-
-          <!-- Campos dinâmicos de filtros dentro do modal -->
-          <div v-if="showFilterInputInModal.selectedDifficulty" class="q-pt-lg">
-            <div class="field-label">Selecione o Grau</div>
-            <q-select
-              v-model="localFilters.selectedDifficulty"
-              :options="difficulties"
-              outlined
-              class="custom-select"
-              @update:model-value="updateActiveFilters"
-            />
-          </div>
-
-          <div v-if="showFilterInputInModal.selectedExtension" class="q-pt-lg">
-            <div class="field-label">Selecione a Extensão</div>
-            <div class="extension-buttons">
-              <q-btn
-                class="extension-btn"
-                v-for="(range, label) in extensionCategories"
-                :key="label"
-                size="sm"
-                :class="{ 'selected': localFilters.selectedExtensionCategory === range }"
-                @click="filterByExtension(label)"
-                :label="label"
+    <!-- Painel de Filtros (Teleport para body para ficar acima de tudo) -->
+    <Teleport to="body">
+      <transition name="fade">
+        <div
+          v-if="painelAberto"
+          class="filtros-backdrop"
+          @click="fecharPainel"
+        />
+      </transition>
+      <transition name="painel">
+        <div v-if="painelAberto" class="filtros-painel">
+          <!-- Header sticky -->
+          <div class="painel-header">
+            <div class="header-esquerda">
+              <q-icon name="tune" size="20px" class="header-icone" />
+              <span class="header-titulo">Filtros</span>
+            </div>
+            <div class="header-direita">
+              <button
+                v-if="temFiltrosAtivos"
+                class="btn-limpar-header"
+                @click="limparFiltrosVia"
+              >Limpar tudo</button>
+              <q-icon
+                name="close"
+                size="22px"
+                class="cursor-pointer btn-fechar"
+                @click="fecharPainel"
               />
             </div>
           </div>
 
-          <div v-if="showFilterInputInModal.selectedCrux" class="q-pt-lg">
-            <div class="field-label">Selecione o Crux</div>
-            <q-select
-              v-model="localFilters.selectedCrux"
-              :options="difficulties"
-              outlined
-              class="custom-select"
-              @update:model-value="updateActiveFilters"
-            />
+          <!-- Body scrollable -->
+          <div class="painel-body">
+            <!-- Grau -->
+            <div class="filtro-secao">
+              <div class="secao-label">Grau</div>
+              <div class="chips-grid">
+                <button
+                  v-for="g in grauOptions"
+                  :key="'grau-' + g"
+                  class="chip"
+                  :class="{ selected: localFilters.grau === g }"
+                  @click="toggleChip('grau', g)"
+                >{{ g }}</button>
+              </div>
+            </div>
+
+            <!-- Extensão -->
+            <div class="filtro-secao">
+              <div class="secao-label">Extensão</div>
+              <div class="chips-grid">
+                <button
+                  v-for="(range, label) in extensionCategories"
+                  :key="label"
+                  class="chip chip-wide"
+                  :class="{ selected: extensaoSelecionada(range) }"
+                  @click="toggleExtensao(label)"
+                >{{ label }}</button>
+              </div>
+            </div>
+
+            <!-- Exposição -->
+            <div class="filtro-secao">
+              <div class="secao-label">Exposição</div>
+              <div class="chips-grid">
+                <button
+                  v-for="e in exposures"
+                  :key="e"
+                  class="chip"
+                  :class="{ selected: localFilters.exposicao === e }"
+                  @click="toggleChip('exposicao', e)"
+                >{{ e.toUpperCase() }}</button>
+              </div>
+            </div>
+
+            <!-- Artificial -->
+            <div class="filtro-secao">
+              <div class="secao-label">Artificial</div>
+              <div class="chips-grid">
+                <button
+                  v-for="a in artificialOptions"
+                  :key="'art-' + a"
+                  class="chip"
+                  :class="{ selected: localFilters.artificial === a }"
+                  @click="toggleChip('artificial', a)"
+                >{{ a }}</button>
+              </div>
+            </div>
+
+            <!-- Modalidade -->
+            <div class="filtro-secao">
+              <div class="secao-label">Modalidade</div>
+              <div class="chips-grid">
+                <button
+                  v-for="m in modalidadeOptions"
+                  :key="m"
+                  class="chip chip-wide"
+                  :class="{ selected: localFilters.modalidade === m }"
+                  @click="toggleChip('modalidade', m)"
+                >{{ modalidadeLabels[m] }}</button>
+              </div>
+            </div>
+
+            <!-- Montanha -->
+            <div class="filtro-secao">
+              <div class="secao-label">Montanha</div>
+              <q-select
+                v-model="localFilters.montanhaId"
+                :options="filteredMountains"
+                option-label="nome"
+                option-value="id"
+                map-options
+                emit-value
+                outlined
+                dense
+                clearable
+                use-input
+                input-debounce="150"
+                class="filtro-select"
+                placeholder="Buscar montanha..."
+                @filter="onFilterMountains"
+              >
+                <template #no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">Nenhuma encontrada</q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+
+            <!-- Clássicas CERJ -->
+            <div class="filtro-secao">
+              <button
+                class="chip chip-cerj"
+                :class="{ selected: localFilters.viaCerj === true }"
+                @click="localFilters.viaCerj = localFilters.viaCerj ? null : true"
+              >
+                <q-icon name="emoji_events" size="16px" />
+                <span>Apenas Clássicas CERJ</span>
+              </button>
+            </div>
           </div>
 
-          <div v-if="showFilterInputInModal.selectedExposicao" class="q-pt-lg">
-            <div class="field-label">Selecione a Exposição</div>
-            <q-select
-              v-model="localFilters.selectedExposicao"
-              :options="exposures"
-              outlined
-              class="custom-select"
-              @update:model-value="updateActiveFilters"
-            />
+          <!-- Footer sticky -->
+          <div class="painel-footer">
+            <button class="btn-aplicar" @click="fecharPainel">
+              Aplicar filtros
+            </button>
           </div>
-
-          <div v-if="showFilterInputInModal.tipo_rocha" class="q-pt-lg">
-            <div class="field-label">Tipo de Rocha</div>
-            <q-input
-              v-model="localFilters.tipo_rocha"
-              placeholder="Ex: granito, calcário, arenito..."
-              outlined
-              class="custom-input"
-              @update:model-value="updateActiveFilters"
-            />
-          </div>
-
-          <div v-if="showFilterInputInModal.tipo_escalada" class="q-pt-lg">
-            <div class="field-label">Tipo de Escalada</div>
-            <q-input
-              v-model="localFilters.tipo_escalada"
-              placeholder="Ex: agarras, aderência, chaminé..."
-              outlined
-              class="custom-input"
-              @update:model-value="updateActiveFilters"
-            />
-          </div>
-
-          <div v-if="showFilterInputInModal.modalidade" class="q-pt-lg">
-            <div class="field-label">Selecione a Modalidade</div>
-            <q-select
-              v-model="localFilters.modalidade"
-              :options="modalidadeOptions"
-              outlined
-              class="custom-select"
-              @update:model-value="updateActiveFilters"
-            >
-              <template #option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>{{ modalidadeLabels[scope.opt] || scope.opt }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #selected>
-                <span v-if="localFilters.modalidade">
-                  {{ modalidadeLabels[localFilters.modalidade] || localFilters.modalidade }}
-                </span>
-              </template>
-            </q-select>
-          </div>
-
-          <div v-if="showFilterInputInModal.selectedMountain" class="q-pt-lg">
-            <div class="field-label">Selecione a Montanha</div>
-            <q-select
-              v-model="localFilters.selectedMountain"
-              :options="mountainOptions"
-              option-label="nome"
-              option-value="id"
-              map-options
-              emit-value
-              outlined
-              class="custom-select"
-              @update:model-value="updateActiveFilters"
-            >
-              <template #option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.nome }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template #selected>
-                <span v-if="localFilters.selectedMountain">
-                  {{ mountainOptions.find(m => m.id === localFilters.selectedMountain)?.nome }}
-                </span>
-              </template>
-            </q-select>
-          </div>
-        </q-card-section>
-
-        <!-- Botões de Ação -->
-        <q-card-actions align="right" class="modal-actions">
-          <q-btn flat label="Aplicar" class="btn-primary-custom" @click="applyFilterChanges" />
-          <q-btn flat label="Fechar" class="btn-secondary-custom" @click="showFilterModal = false" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
-// Props e emissões
-const props = defineProps<{ entity: string, filters?: Partial<BuscaRequest>, staticFilters?: Partial<any>, unifiedSearchLabel?: string }>();
+const props = defineProps<{
+  entity: string;
+  filters?: Partial<BuscaRequest>;
+  staticFilters?: Partial<any>;
+  unifiedSearchLabel?: string;
+  enabledFilters?: string[];
+}>();
+
 const emit = defineEmits(['applyFilters']);
-const showExtensionFilters = ref(false);
-const localFilters = ref<BuscaRequest>({
-  unifiedSearch: '',
-  selectedMountain: null,
-  via_cerj: null,
-  selectedDifficulty: null,
-  selectedExtension: null,
-  selectedCrux: null,
-  tipo_rocha: null,
-  tipo_escalada: null,
-  modalidade: null,
-  page: 1,
-  itemsPerPage: 10
-});
-const showFilterInputInModal = ref<Record<string, boolean>>({});
+
+// --- Estado ---
+
+const painelAberto = ref(false);
 const isSyncingFromProps = ref(false);
-const showFilterModal = ref(false); // Controle de exibição do modal
-const showFilterInput = ref<Record<string, boolean>>({});
-const activeFilters = ref<Record<string, boolean>>({}); // Filtros ativos
-const extensionCategories = ref({
-  'Menor que 50 metros': [0, 50],
-  'Entre 50 e 100 metros': [50, 100],
-  'Entre 100 e 200 metros': [100, 200],
-  'Entre 200 e 300 metros': [200, 300],
-  'Mais de 300 metros': [300, Infinity]
+
+const localFilters = ref<BuscaRequest>({
+  termoBusca: '',
+  montanhaId: null,
+  viaCerj: null,
+  grau: null,
+  faixaExtensao: null,
+  artificial: null,
+  modalidade: null,
+  pagina: 1,
+  itensPorPagina: 10
 });
-type ExtensionCategory = keyof typeof extensionCategories.value;
 
-const difficulties = [
-  '1', 'Isup', '2', '3', '4', '5',
-  'IIsup', 'IIIsup', 'IVsup', 'Vsup', 'VIIb', '6', 'VIsup', 'VIIa',
-  'VIIIb', 'VIIc', 'VIIIc', 'IXa', 'Xa', 'VII(3)', '7', 'V(2)', 'VIII', 'VIIIa'
-];
+// --- Dados de referência ---
+
+const grauOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
+
 const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
-const mountainOptions = ref<any[]>([]);
 
-// Opções de modalidade formatadas em português para o select
+const extensionCategories: Record<string, number[]> = {
+  '< 50m': [0, 50],
+  '50–100m': [50, 100],
+  '100–200m': [100, 200],
+  '200–300m': [200, 300],
+  '> 300m': [300, 99999]
+};
+
+const artificialOptions = ['A0', 'A1', 'A2', 'A2+', 'A3', 'C'];
+
 const modalidadeOptions = [
   ModalidadeEscalada.TRADICIONAL,
   ModalidadeEscalada.ESPORTIVA,
@@ -333,7 +263,6 @@ const modalidadeOptions = [
   ModalidadeEscalada.PSICOBLOC
 ];
 
-// Mapa para converter enum para label em português
 const modalidadeLabels: Record<ModalidadeEscalada, string> = {
   [ModalidadeEscalada.TRADICIONAL]: 'Tradicional',
   [ModalidadeEscalada.ESPORTIVA]: 'Esportiva',
@@ -343,149 +272,151 @@ const modalidadeLabels: Record<ModalidadeEscalada, string> = {
   [ModalidadeEscalada.PSICOBLOC]: 'Psicobloc'
 };
 
-// Atualiza a lista de filtros ativos
-const updateActiveFilters = () => {
-  emitFilters();
-};
+const mountainOptions = ref<any[]>([]);
+const filteredMountains = ref<any[]>([]);
 
-// Lista de filtros ativos
-const activeFiltersList = computed(() => {
-  const filters: { label: string, key: string }[] = [];
+// --- Computed ---
 
-  // Adiciona o filtro de grau se estiver selecionado
-  if (localFilters.value.selectedDifficulty) {
-    filters.push({ label: `Grau: ${localFilters.value.selectedDifficulty}`, key: 'selectedDifficulty' });
-  }
-
-  // Adiciona o filtro de extensão se estiver selecionado
-  if (localFilters.value.selectedExtensionCategory) {
-    const extensionKey = Object.entries(extensionCategories.value).find(
-      ([, range]) => range === localFilters.value.selectedExtensionCategory
-    )?.[0];
-
-    if (extensionKey) {
-      filters.push({ label: `Extensão: ${extensionKey}`, key: 'selectedExtensionCategory' });
-    }
-  }
-
-  // Adiciona o filtro de crux se estiver selecionado
-  if (localFilters.value.selectedCrux) {
-    filters.push({ label: `Crux: ${localFilters.value.selectedCrux}`, key: 'selectedCrux' });
-  }
-
-  // Adiciona o filtro de exposição se estiver selecionado
-  if (localFilters.value.selectedExposicao) {
-    filters.push({ label: `Exposição: ${localFilters.value.selectedExposicao}`, key: 'selectedExposicao' });
-  }
-
-  // Adiciona o filtro de tipo de rocha se estiver preenchido
-  if (localFilters.value.tipo_rocha) {
-    filters.push({ label: `Tipo de Rocha: ${localFilters.value.tipo_rocha}`, key: 'tipo_rocha' });
-  }
-
-  // Adiciona o filtro de tipo de escalada se estiver preenchido
-  if (localFilters.value.tipo_escalada) {
-    filters.push({ label: `Tipo de Escalada: ${localFilters.value.tipo_escalada}`, key: 'tipo_escalada' });
-  }
-
-  // Adiciona o filtro de modalidade se estiver selecionado
-  if (localFilters.value.modalidade) {
-    const modalidadeLabel = modalidadeLabels[localFilters.value.modalidade] || localFilters.value.modalidade;
-    filters.push({ label: `Modalidade: ${modalidadeLabel}`, key: 'modalidade' });
-  }
-
-  // Adiciona o filtro de vias clássicas CERJ se estiver ativo
-  if (localFilters.value.via_cerj === true) {
-    filters.push({ label: 'Clássicas CERJ', key: 'via_cerj' });
-  }
-
-  // Adiciona o filtro de montanha se estiver selecionado
-  if (localFilters.value.selectedMountain) {
-    const montanha = mountainOptions.value.find(m => m.id === localFilters.value.selectedMountain);
-    if (montanha) {
-      filters.push({ label: `Montanha: ${montanha.nome}`, key: 'selectedMountain' });
-    }
-  }
-
-  return filters;
+const temFiltrosAtivos = computed(() => {
+  const f = localFilters.value;
+  return !!(f.grau || f.faixaExtensao || f.exposicao ||
+    f.artificial || f.modalidade ||
+    f.montanhaId || f.viaCerj === true);
 });
 
-const removeFilter = (key: string) => {
-  // Remove o filtro selecionado
-  if (key === 'selectedDifficulty') {
-    localFilters.value.selectedDifficulty = null;
-  } else if (key === 'selectedExtensionCategory') {
-    localFilters.value.selectedExtensionCategory = null;
-  } else if (key === 'selectedCrux') {
-    localFilters.value.selectedCrux = null;
-  } else if (key === 'selectedExposicao') {
-    localFilters.value.selectedExposicao = null;
-  } else if (key === 'tipo_rocha') {
-    localFilters.value.tipo_rocha = null;
-  } else if (key === 'tipo_escalada') {
-    localFilters.value.tipo_escalada = null;
-  } else if (key === 'modalidade') {
-    localFilters.value.modalidade = null;
-  } else if (key === 'selectedMountain') {
-    localFilters.value.selectedMountain = null;
-  } else if (key === 'via_cerj') {
-    localFilters.value.via_cerj = null;
+const listaFiltrosAtivos = computed(() => {
+  const tags: { label: string; key: string }[] = [];
+  const f = localFilters.value;
+
+  if (f.grau) tags.push({ label: `Grau: ${f.grau}`, key: 'grau' });
+  if (f.faixaExtensao) {
+    const nome = Object.entries(extensionCategories).find(
+      ([, range]) => JSON.stringify(range) === JSON.stringify(f.faixaExtensao)
+    )?.[0];
+    if (nome) tags.push({ label: `Extensão: ${nome}`, key: 'faixaExtensao' });
+  }
+  if (f.artificial) tags.push({ label: `Artificial: ${f.artificial}`, key: 'artificial' });
+  if (f.exposicao) tags.push({ label: `Exposição: ${f.exposicao}`, key: 'exposicao' });
+  if (f.modalidade) {
+    tags.push({ label: modalidadeLabels[f.modalidade] || String(f.modalidade), key: 'modalidade' });
+  }
+  if (f.viaCerj === true) tags.push({ label: 'Clássicas CERJ', key: 'viaCerj' });
+  if (f.montanhaId) {
+    const m = mountainOptions.value.find((m: any) => m.id === f.montanhaId);
+    if (m) tags.push({ label: `Montanha: ${m.nome}`, key: 'montanhaId' });
   }
 
-  // Atualiza a lista de filtros e emite a mudança
+  return tags;
+});
+
+// --- Ações ---
+
+function toggleChip(field: string, value: any) {
+  const current = (localFilters.value as any)[field];
+  (localFilters.value as any)[field] = current === value ? null : value;
+}
+
+function extensaoSelecionada(range: number[]): boolean {
+  return JSON.stringify(localFilters.value.faixaExtensao) === JSON.stringify(range);
+}
+
+function toggleExtensao(label: string) {
+  const range = extensionCategories[label];
+  if (extensaoSelecionada(range)) {
+    localFilters.value.faixaExtensao = null;
+  } else {
+    localFilters.value.faixaExtensao = range;
+  }
+}
+
+function removerFiltro(key: string) {
+  (localFilters.value as any)[key] = null;
   emitFilters();
-};
+}
 
-// Alternar exibição de filtros no modal
-const toggleFilterInModal = (filter: string) => {
-  showFilterInputInModal.value[filter] = !showFilterInputInModal.value[filter];
-};
+function limparFiltrosVia() {
+  localFilters.value = {
+    ...localFilters.value,
+    grau: null,
+    artificial: null,
+    faixaExtensao: null,
+    exposicao: null,
+    modalidade: null,
+    montanhaId: null,
+    viaCerj: null,
+    nomeBairro: null,
+  };
+}
 
-// Aplicar mudanças de filtros no modal
-const applyFilterChanges = () => {
+function limparTudo() {
+  localFilters.value = {
+    termoBusca: '',
+    montanhaId: null,
+    viaCerj: null,
+    nomeBairro: '',
+    exposicao: null,
+    grau: null,
+    faixaExtensao: null,
+    artificial: null,
+    modalidade: null,
+    pagina: 1,
+    itensPorPagina: localFilters.value.itensPorPagina,
+    ...props.staticFilters
+  };
   emitFilters();
-  showFilterModal.value = false;
+}
+
+function fecharPainel() {
+  emitFilters();
+  painelAberto.value = false;
+}
+
+function emitFilters() {
+  emit('applyFilters', { ...localFilters.value, ...props.staticFilters });
+}
+
+function onFilterMountains(val: string, update: (fn: () => void) => void) {
+  update(() => {
+    const needle = val.toLowerCase();
+    filteredMountains.value = needle
+      ? mountainOptions.value.filter((m: any) => m.nome.toLowerCase().includes(needle))
+      : mountainOptions.value;
+  });
+}
+
+const onInputChange = (event: KeyboardEvent) => {
+  const value = (event.target as HTMLInputElement).value;
+  if (value.length >= 2 || value.length === 0) {
+    emitFilters();
+  }
 };
 
-// Sincroniza localFilters quando filters do parent mudam (ex: vindo da Home com filterType)
+// --- Scroll lock ---
+
+watch(painelAberto, (aberto) => {
+  document.body.style.overflow = aberto ? 'hidden' : '';
+});
+
+onUnmounted(() => {
+  document.body.style.overflow = '';
+});
+
+// --- Sync de props (filtros vindos da URL) ---
+
 watch(
   () => props.filters,
   (newFilters) => {
     if (newFilters && Object.keys(newFilters).length) {
       isSyncingFromProps.value = true;
       localFilters.value = { ...localFilters.value, ...newFilters };
-      // Expande seções do modal para filtros ativos vindos da URL
-      if (newFilters.via_cerj === true) showFilterInputInModal.value.via_cerj = true;
-      if (newFilters.selectedDifficulty) showFilterInputInModal.value.selectedDifficulty = true;
-      if (newFilters.selectedExposicao) showFilterInputInModal.value.selectedExposicao = true;
-      if (newFilters.bairro) showFilterInputInModal.value.selectedMountain = true;
       nextTick(() => { isSyncingFromProps.value = false; });
     }
   },
   { immediate: true, deep: true }
 );
 
-// Inicializa as montanhas
-onMounted(async () => {
-  try {
-    mountainOptions.value = await montanhaService.getAll();
-  } catch (error) {
-    console.error('Error getting mountains:', error);
-  }
-});
+// --- Emissão automática ao mudar filtros ---
 
-// Atualiza a busca automaticamente a partir de 2 letras
-const onInputChange = (event: KeyboardEvent) => {
-  const value = (event.target as HTMLInputElement).value;
-  if (value.length >= 2) {
-    emitFilters();
-  }
-  if (value.length === 0) {
-    emitFilters();
-  }
-};
-
-// Dispara a busca ao selecionar um filtro (não emite quando sincronizando de props/URL)
 watch(
   () => localFilters.value,
   (newFilters, oldFilters) => {
@@ -497,81 +428,34 @@ watch(
   { deep: true }
 );
 
-// Verifica se há filtros ativos
-computed(() => {
-  return Object.values(activeFilters.value).some((value) => value);
+// --- Init ---
+
+onMounted(async () => {
+  try {
+    mountainOptions.value = await montanhaService.getAll();
+    filteredMountains.value = mountainOptions.value;
+  } catch (error) {
+    console.error('Erro ao carregar montanhas:', error);
+  }
 });
-// Controla a exibição dos filtros avançados
-// Limpa filtros e fecha campos
-const clearFilters = () => {
-  localFilters.value = {
-    unifiedSearch: '',
-    selectedMountain: null,
-    via_cerj: null,
-    bairro: '',
-    selectedExposicao: null,
-    selectedDifficulty: null,
-    selectedExtension: null,
-    selectedCrux: null,
-    tipo_rocha: null,
-    tipo_escalada: null,
-    modalidade: null,
-    page: 1,
-    itemsPerPage: 10,
-    ...props.staticFilters
-  };
-  Object.keys(activeFilters.value).forEach(key => {
-    activeFilters.value[key as keyof typeof activeFilters.value] = false;
-  });
-  showFilterInput.value.selectedDifficulty = false;
-  showFilterInput.value.selectedCrux = false;
-  showFilterInput.value.selectedExtension = false;
-  showFilterInput.value.selectedExposicao = false;
-  showFilterInput.value.tipo_rocha = false;
-  showFilterInput.value.tipo_escalada = false;
-  showFilterInput.value.modalidade = false;
-  showFilterInput.value.selectedMountain = false;
-  showFilterInput.value.via_cerj = false;
-  showExtensionFilters.value = false;
-  emitFilters();
-};
-
-const emitFilters = () => {
-  const filtersToEmit = {
-    ...localFilters.value,
-    ...props.staticFilters // Inclui os filtros estáticos
-  };
-  emit('applyFilters', filtersToEmit);
-};
-
-// Controla a exibição dos filtros
-/* const toggleFilter = (filter: FilterKey) => {
-  if (filter === 'selectedExtension') {
-    showExtensionFilters.value = !showExtensionFilters.value;
-  } else {
-    showFilterInput.value[filter] = !showFilterInput.value[filter];
-  }
-}; */
-
-const filterByExtension = (category: string) => {
-  const selectedRange = extensionCategories.value[category as ExtensionCategory];
-  if (selectedRange) {
-    localFilters.value.selectedExtensionCategory = selectedRange;
-    emitFilters();
-  }
-};
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
-// Input de busca unificado - igual ao PerfilEditaForm
-.custom-input {
+// ================================
+// SEARCH INPUT
+// ================================
+.busca-input-wrapper {
+  padding-top: 16px;
+}
+
+.busca-input {
   :deep(.q-field__control) {
     background-color: $offwhite !important;
     border-radius: 8px !important;
     padding: 0 !important;
-    
+
     &::before {
       border-color: $cumes-01 !important;
       border-width: 2px !important;
@@ -586,7 +470,6 @@ const filterByExtension = (category: string) => {
   }
 
   :deep(input),
-  :deep(input[type="text"]),
   :deep(.q-field__input) {
     color: $background !important;
     padding: 10px 14px !important;
@@ -610,262 +493,382 @@ const filterByExtension = (category: string) => {
       border-width: 2px !important;
     }
   }
+}
 
-  &:deep(.q-field--error) {
-    .q-field__control::before {
-      border-color: $error-color !important;
-    }
+.append-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.icone-filtro {
+  font-size: 22px !important;
+  color: rgba($background, 0.6) !important;
+  transition: all 0.2s ease;
+
+  &.ativo {
+    color: $cumes-01 !important;
   }
 
-  // Botão de filtro dentro do append
-  :deep(.q-field__append) {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-right: 8px;
-  }
-
-  :deep(.q-field__append .append-buttons) {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 100%;
-  }
-
-  :deep(.q-field__append .filter-icon) {
-    font-size: 24px !important;
-    color: $cumes-03 !important;
-    cursor: pointer;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.2s ease;
-
-    &:hover {
-      opacity: 0.8;
-      transform: scale(1.1);
-    }
-  }
-
-  :deep(.q-field__append .delete-icon) {
-    font-size: 24px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      opacity: 0.8;
-      transform: scale(1.1);
-    }
+  &:hover {
+    color: $cumes-01 !important;
+    transform: scale(1.1);
   }
 }
 
-// Modal de filtros
-.filter-modal {
-  background-color: $background !important;
-  border: 2px solid $cumes-01 !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 32px $box-shadow-dark !important;
-  max-width: 500px !important;
-  width: 92vw !important;
+.icone-limpar {
+  font-size: 20px !important;
+  color: rgba($background, 0.4) !important;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $error-color !important;
+  }
+}
+
+// ================================
+// FILTROS ATIVOS (TAGS)
+// ================================
+.filtros-ativos {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filtro-tag {
+  background: rgba($cumes-01, 0.15);
+  border: 1px solid rgba($cumes-01, 0.3);
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    color: $cumes-01 !important;
+    font-weight: 600;
+    font-size: 12px;
+  }
+}
+
+.tag-remover {
+  font-size: 14px;
+  cursor: pointer;
+  color: rgba($cumes-01, 0.6) !important;
+  transition: color 0.15s;
+
+  &:hover {
+    color: $error-color !important;
+  }
+}
+
+// ================================
+// BACKDROP
+// ================================
+.filtros-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 5999;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// ================================
+// PAINEL
+// ================================
+.filtros-painel {
+  position: fixed;
+  z-index: 6000;
+  background: $background;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba($cumes-01, 0.2);
+
+  // Mobile: bottom sheet
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 88vh;
+  border-radius: 20px 20px 0 0;
 
   @media (min-width: 768px) {
-    width: 600px !important;
-  }
-
-  @media (min-width: 1024px) {
-    width: 700px !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 400px;
+    max-height: 100vh;
+    border-radius: 0;
+    border-left: 2px solid rgba($cumes-01, 0.25);
+    border-top: none;
   }
 }
 
-.modal-header-section {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%) !important;
-  border-bottom: 3px solid $cumes-03 !important;
-  padding: 16px !important;
+// Transition: slide up (mobile) / slide right (desktop)
+.painel-enter-active,
+.painel-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.modal-header {
+.painel-enter-from,
+.painel-leave-to {
+  transform: translateY(100%);
+
+  @media (min-width: 768px) {
+    transform: translateX(100%);
+  }
+}
+
+// ================================
+// PAINEL HEADER
+// ================================
+.painel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba($offwhite, 0.08);
+  flex-shrink: 0;
+
+  // Barra de arraste visual no mobile
+  &::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba($offwhite, 0.2);
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+.header-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-icone {
+  color: $cumes-01;
+}
+
+.header-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: $offwhite;
+}
+
+.header-direita {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 24px;
+}
+
+.btn-limpar-header {
+  background: none;
+  border: none;
+  color: rgba($offwhite, 0.5);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s;
+
+  &:hover {
+    color: $error-color;
+    background: rgba($error-color, 0.1);
+  }
+}
+
+.btn-fechar {
+  color: rgba($offwhite, 0.5) !important;
+  transition: color 0.15s;
+
+  &:hover {
+    color: $offwhite !important;
+  }
+}
+
+// ================================
+// PAINEL BODY
+// ================================
+.painel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 24px;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($offwhite, 0.12);
+    border-radius: 2px;
+  }
+}
+
+// ================================
+// SEÇÕES DE FILTRO
+// ================================
+.filtro-secao {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.secao-label {
+  font-size: 11px;
   font-weight: 700;
-  color: $offwhite;
-  
-  .title-icon {
+  color: rgba($offwhite, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+// ================================
+// CHIPS
+// ================================
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  background: rgba($offwhite, 0.06);
+  border: 1.5px solid rgba($offwhite, 0.1);
+  color: rgba($offwhite, 0.7);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: rgba($cumes-01, 0.08);
+    border-color: rgba($cumes-01, 0.3);
+    color: rgba($offwhite, 0.9);
+  }
+
+  &.selected {
+    background: rgba($cumes-01, 0.2);
+    border-color: $cumes-01;
+    color: $offwhite;
+  }
+}
+
+.chip-wide {
+  padding: 7px 16px;
+}
+
+.chip-cerj {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 10px;
+
+  &.selected {
+    background: rgba($cumes-04, 0.15);
+    border-color: $cumes-04;
     color: $cumes-04;
   }
 }
 
-.modal-body-section {
-  background-color: $background;
-  padding: 20px !important;
-}
-
-.modal-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.field-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: $cumes-04;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 8px;
-}
-
-// Selects customizados
-.custom-select {
+// ================================
+// SELECT E INPUT DENTRO DO PAINEL
+// ================================
+.filtro-select {
   :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 8px !important;
-    padding: 0 !important;
-    
+    background: rgba($offwhite, 0.06) !important;
+    border-radius: 10px !important;
+
     &::before {
-      border-color: $cumes-01 !important;
-      border-width: 2px !important;
+      border-color: rgba($offwhite, 0.12) !important;
     }
   }
 
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    padding: 10px 14px !important;
+  :deep(.q-field__native),
+  :deep(.q-field__input) {
+    color: $offwhite !important;
+    font-size: 14px !important;
   }
 
-  :deep(.q-field__input) {
-    color: $background !important;
-    padding: 10px 14px !important;
+  :deep(input::placeholder) {
+    color: rgba($offwhite, 0.35) !important;
   }
 
   &:deep(.q-field--focused) {
     .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
+      border-color: rgba($cumes-01, 0.5) !important;
     }
   }
-}
 
-// Botões de extensão
-.extension-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.extension-btn {
-  background-color: $offwhite !important;
-  color: $background !important;
-  border: 2px solid $cumes-01 !important;
-  border-radius: 8px !important;
-  padding: 8px 16px !important;
-  font-weight: 600 !important;
-
-  &.selected {
-    background-color: $cumes-01 !important;
-    color: $offwhite !important;
-    border-color: $cumes-01 !important;
-  }
-
-  &:hover {
-    background-color: rgba($cumes-01, 0.1) !important;
+  :deep(.q-field__append) {
+    color: rgba($offwhite, 0.4) !important;
   }
 }
 
-// Filtros ativos
-.active-filters {
-  margin-top: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+// ================================
+// PAINEL FOOTER
+// ================================
+.painel-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba($offwhite, 0.08);
+  flex-shrink: 0;
+
+  // Padding extra no mobile para safe area
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
-.filter-tag {
-  background-color: $cumes-03;
-  padding: 6px 12px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 4px $box-shadow-light;
-
-  span {
-    color: $offwhite !important;
-    font-weight: 600;
-    font-size: 13px;
-  }
-}
-
-.remove-filter-icon {
-  font-size: 16px;
+.btn-aplicar {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: $cumes-01;
+  color: $offwhite;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  color: $offwhite !important;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  padding: 2px;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-}
-
-// Botões de filtro no modal
-.q-btn.filter-btn {
-  background-color: $offwhite !important;
-  color: $background !important;
-  border: 2px solid $cumes-01 !important;
-  border-radius: 8px !important;
-  padding: 10px 16px !important;
-  font-weight: 600 !important;
-  margin-right: 8px;
-  margin-bottom: 8px;
-
-  &:hover {
-    background-color: rgba($cumes-01, 0.1) !important;
+    background: darken($cumes-01, 8%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px $box-shadow-medium;
   }
 
-  &.active {
-    background-color: $cumes-01 !important;
-    color: $offwhite !important;
-    border-color: $cumes-01 !important;
-  }
-}
-
-// Botões do modal
-.btn-primary-custom {
-  background: $cumes-01 !important;
-  color: $offwhite !important;
-  padding: 12px 32px !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 12px $box-shadow-medium !important;
-
-  &:hover {
-    background: darken($cumes-01, 10%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 16px $box-shadow-strong !important;
-  }
-}
-
-.btn-secondary-custom {
-  background: transparent !important;
-  color: $cumes-01 !important;
-  border: 2px solid $cumes-01 !important;
-  padding: 12px 32px !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  border-radius: 8px !important;
-
-  &:hover {
-    background: rgba($cumes-01, 0.1) !important;
+  &:active {
+    transform: translateY(0);
   }
 }
 </style>

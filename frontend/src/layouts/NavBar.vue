@@ -17,8 +17,8 @@
         round
         size="md"
         icon="search"
-        @click="goTo('/busca')"
-        :class="{ 'selected-tab': isSelected('/busca') }"
+        @click="goTo('/explorar')"
+        :class="{ 'selected-tab': isSelected('/explorar') || isSelected('/busca') }"
       />
 
       <!-- Collections -->

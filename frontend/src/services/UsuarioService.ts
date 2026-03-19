@@ -88,9 +88,13 @@ class UsuarioService {
   async editarFotoPerfil (formData: FormData) {
     try {
       const response = await api.put('/perfil/foto', formData);
-      return response.data as IUsuario;
+      const usuario = response.data as IUsuario;
+      if (usuario.foto_perfil) {
+        adjustImageUrls(usuario.foto_perfil);
+      }
+      return usuario;
     } catch (error: any) {
-      handleApiError(error, 'Erro ao atualizar dados');
+      handleApiError(error, 'Erro ao atualizar foto de perfil');
     }
   }
 
@@ -106,7 +110,11 @@ class UsuarioService {
   async excluirFotoPerfil () {
     try {
       const response = await api.delete('/perfil/foto');
-      return response.data as IUsuario;
+      const usuario = response.data as IUsuario;
+      if (usuario.foto_perfil) {
+        adjustImageUrls(usuario.foto_perfil);
+      }
+      return usuario;
     } catch (error: any) {
       handleApiError(error, 'Erro ao excluir foto de perfil');
     }

@@ -37,12 +37,13 @@ export class UsuarioController {
     };
 
     editarFotoPerfil = async (req: Request, res: Response) => {
-        const usuarioId = req.user.usuarioId;
+        const usuarioId = parseInt(req.user.usuarioId);
         const file = req.file;
         UsuarioValidation.editarFoto(file);
         await this.service.atualizarFotoPerfil(usuarioId, file);
 
-        res.status(200).json({message: 'Usuário atualizado com sucesso.'});
+        const perfilAtualizado = await this.service.getPerfil(usuarioId);
+        res.status(200).json(perfilAtualizado ? new UsuarioDTO(perfilAtualizado) : {message: 'Usuário atualizado com sucesso.'});
     };
 
     delete = async (req: Request, res: Response) => {
@@ -73,6 +74,7 @@ export class UsuarioController {
         const usuarioId = parseInt(req.user.usuarioId);
         await this.service.excluirFotoPerfil(usuarioId);
 
-        res.status(200).json({message: 'Foto de perfil excluída com sucesso.'});
+        const perfilAtualizado = await this.service.getPerfil(usuarioId);
+        res.status(200).json(perfilAtualizado ? new UsuarioDTO(perfilAtualizado) : {message: 'Foto de perfil excluída com sucesso.'});
     };
 }

@@ -13,8 +13,8 @@
       <template #subHeader>
         <SubNavbar />
       </template>
-      <template #filters="{ filters }">
-        <BuscaFiltros :entity="'escalada'" :filters="filters" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Buscar Escalada" />
+      <template #filters="{ filters: filtros }">
+        <BuscaFiltros :entity="'escalada'" :filters="filtros" :enabledFilters="['searchQuery']" @applyFilters="applyFilters" unifiedSearchLabel="Buscar Escalada" />
       </template>
     </Busca>
   </q-page>

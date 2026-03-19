@@ -12,8 +12,8 @@
       ]"
       :hide-header="true"
     >
-      <template #filters="{ filters }">
-        <BuscaFiltros :entity="'via'" :filters="filters" @applyFilters="applyFilters" />
+      <template #filters="{ filters: filtros }">
+        <BuscaFiltros :entity="'via'" :filters="filtros" @applyFilters="applyFilters" />
       </template>
     </Busca>
     

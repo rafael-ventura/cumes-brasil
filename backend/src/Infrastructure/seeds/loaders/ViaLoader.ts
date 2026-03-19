@@ -12,7 +12,7 @@ const VIA_IMAGEM_DEFAULT = '/assets/vias/via-default-01.webp';
  * Campos simples da Via que são atualizados no upsert quando presentes no YAML.
  * Para adicionar um novo campo atualizável: basta incluí-lo aqui e na interface ViaYaml.
  */
-const UPSERT_FIELDS = ['via_cerj', 'historia_resumo', 'equipamentos', 'tracklog_aproximacao'] as const;
+const UPSERT_FIELDS = ['grau', 'crux', 'artificial', 'exposicao', 'via_cerj', 'historia_resumo', 'equipamentos', 'tracklog_aproximacao'] as const;
 type UpsertField = (typeof UPSERT_FIELDS)[number];
 
 interface ViaYaml {
@@ -89,7 +89,7 @@ export async function runViaLoader(
       }
     } else {
       for (const field of UPSERT_FIELDS) {
-        if (v[field] !== undefined) (ent as unknown as Record<UpsertField, ViaYaml[UpsertField]>)[field] = v[field]!;
+        (ent as unknown as Record<string, unknown>)[field] = v[field] ?? null;
       }
       await repo.save(ent);
       if (v.imagem) {

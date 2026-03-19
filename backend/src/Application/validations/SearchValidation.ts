@@ -1,21 +1,20 @@
-import ValidationBase from "./ValidationBase";
-import BadRequestError from "../errors/BadRequestError";
-import { errorsMessage } from "../errors/constants";
+import ValidationBase from './ValidationBase';
+import BadRequestError from '../errors/BadRequestError';
+import { errorsMessage } from '../errors/constants';
+
+const TIPOS_ENTIDADE_PERMITIDOS = ['via', 'colecao', 'escalada'];
 
 export default {
     body(payload: any) {
-        const allowed = ['via', 'montanha', 'colecao', 'escalada'];
-        if (!payload || !allowed.includes(payload.entityType)) {
+        if (!payload || !TIPOS_ENTIDADE_PERMITIDOS.includes(payload.tipoEntidade)) {
             throw new BadRequestError(errorsMessage.INVALID_ENTITY_TYPE);
         }
-        if (payload.page !== undefined) {
-            ValidationBase.numberParam(payload.page, 'page');
+        if (payload.pagina !== undefined) {
+            ValidationBase.numberParam(payload.pagina, 'pagina');
         }
-        if (payload.itemsPerPage !== undefined) {
-            ValidationBase.numberParam(payload.itemsPerPage, 'itemsPerPage');
+        if (payload.itensPorPagina !== undefined) {
+            ValidationBase.numberParam(payload.itensPorPagina, 'itensPorPagina');
         }
         return payload;
     }
-}
-
-
+};

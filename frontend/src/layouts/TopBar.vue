@@ -30,7 +30,7 @@ const route = useRoute();
 // Menu items
 const menuItems = [
   { path: '/', icon: 'pi-home', label: 'Home' },
-  { path: '/busca', icon: 'pi-search', label: 'Buscar' },
+  { path: '/explorar', icon: 'pi-compass', label: 'Explorar' },
   { path: '/colecoes', icon: 'pi-bookmark', label: 'Coleções' },
   { path: '/perfil', icon: 'pi-user', label: 'Perfil' }
 ];
@@ -40,6 +40,9 @@ const goTo = (path: string) => {
 };
 
 const isSelected = (path: string) => {
+  if (path === '/explorar') {
+    return route.path === '/explorar' || route.path === '/busca';
+  }
   return route.path === path || (path !== '/' && route.path.startsWith(path));
 };
 </script>

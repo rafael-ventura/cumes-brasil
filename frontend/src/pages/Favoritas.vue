@@ -17,9 +17,9 @@
         <SubNavbar />
       </template>
 
-      <template #filters="{ filters }">
+      <template #filters="{ filters: filtros }">
         <BuscaFiltros
-          :filters="filters"
+          :filters="filtros"
           :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
           :staticFilters="{ colecaoId: colecaoId }"
           @applyFilters="handleApplyFilters"

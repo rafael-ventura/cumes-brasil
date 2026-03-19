@@ -193,21 +193,23 @@ export class ViaService extends BaseService<Via, ViaRepository> {
   }
 
   async countEntities({ key, value }: { key: string; value: string }): Promise<number> {
-    const validValue = ViaValidation.validaValores(key, value);
-
     switch (key) {
       case "grau":
-        return this.repository.countByField("via.grau", validValue);
+        return this.repository.countByField("via.grau", ViaValidation.validaValores(key, value));
       case "bairro":
-        return this.repository.countByBairro(String(validValue));
+        return this.repository.countByBairro(String(ViaValidation.validaValores(key, value)));
       case "exposicao":
-        return this.repository.countByField("via.exposicao", validValue, "<=");
+        return this.repository.countByField("via.exposicao", ViaValidation.validaValores(key, value), "<=");
       case "duracao":
-        return this.repository.countByField("via.duracao", validValue, "=");
+        return this.repository.countByField("via.duracao", ViaValidation.validaValores(key, value), "=");
       case "via_cerj":
         return this.repository.countByField("via.via_cerj", true);
+      case "sem_grau":
+        return this.repository.countByField("via.grau", null, "IS NULL");
+      case "sem_localizacao":
+        return this.repository.countSemLocalizacao();
       default:
-        throw new BadRequestError("Filtro inválido. Use grau, bairro, exposicao, duracao ou via_cerj.");
+        throw new BadRequestError("Filtro inválido.");
     }
   }
 }

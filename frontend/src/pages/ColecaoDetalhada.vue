@@ -45,9 +45,9 @@
         @select="goToViaDetalhada"
         :hideHeader="true"
       >
-        <template #filters="{ filters }">
+        <template #filters="{ filters: filtros }">
           <BuscaFiltros
-            :filters="filters"
+            :filters="filtros"
             :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
             @applyFilters="applyFilters"
             :staticFilters="{ colecaoId: colecao?.id }"
