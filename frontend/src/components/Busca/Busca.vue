@@ -8,6 +8,10 @@
       <slot name="subHeader" />
     </div>
 
+    <div v-if="$slots.afterSubHeader" class="busca-after-subheader">
+      <slot name="afterSubHeader" />
+    </div>
+
     <div class="slot-container no-border">
       <slot name="filters" :filters="filtros"/>
     </div>
@@ -15,6 +19,15 @@
       :results="resultados"
       :entityType="props.entity"
       @select="selecionarItem"
+      :exibir-menu-colecao="exibirMenuColecao"
+      :modo-selecao-vias="modoSelecaoVias"
+      :vias-selecionadas-ids="viasSelecionadasIds"
+      @editar-colecao="$emit('editar-colecao', $event)"
+      @excluir-colecao="$emit('excluir-colecao', $event)"
+      @toggle-selecao-via="$emit('toggle-selecao-via', $event)"
+      :modo-selecao-escaladas="modoSelecaoEscaladas"
+      :escaladas-selecionadas-ids="escaladasSelecionadasIds"
+      @toggle-selecao-escalada="$emit('toggle-selecao-escalada', $event)"
       :enableSortOptions="enableSortOptions"
       :initialSort="filtros.campoOrdenacao && filtros.direcaoOrdenacao
         ? { field: filtros.campoOrdenacao, direction: filtros.direcaoOrdenacao === 'DESC' ? 'desc' : 'asc' }
@@ -41,18 +54,41 @@ import BuscaResultados from 'components/Busca/BuscaResultados.vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import { useRoute } from 'vue-router';
 
-const props = defineProps<{
-  entity: 'via' | 'colecao' | 'escalada';
-  initialData?: any[];
-  staticFilters?: Partial<any>;
-  hideHeader?: boolean;
-  searchHeader?: string;
-  enableSortOptions?: { field: string; label: string }[];
-  hidePagination?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    entity: 'via' | 'colecao' | 'escalada';
+    initialData?: any[];
+    staticFilters?: Partial<any>;
+    hideHeader?: boolean;
+    searchHeader?: string;
+    enableSortOptions?: { field: string; label: string }[];
+    hidePagination?: boolean;
+    /** Lista de coleções: menu ⋮ nos cards (minhas coleções). */
+    exibirMenuColecao?: boolean;
+    /** Vias dentro da coleção: modo seleção em lote. */
+    modoSelecaoVias?: boolean;
+    viasSelecionadasIds?: number[];
+    modoSelecaoEscaladas?: boolean;
+    escaladasSelecionadasIds?: number[];
+  }>(),
+  {
+    exibirMenuColecao: false,
+    modoSelecaoVias: false,
+    viasSelecionadasIds: () => [],
+    modoSelecaoEscaladas: false,
+    escaladasSelecionadasIds: () => []
+  }
+);
 
 defineOptions({ name: 'BuscaComponent' });
-const emit = defineEmits(['select', 'atualizar-results']);
+const emit = defineEmits([
+  'select',
+  'atualizar-results',
+  'editar-colecao',
+  'excluir-colecao',
+  'toggle-selecao-via',
+  'toggle-selecao-escalada'
+]);
 const route = useRoute();
 
 // ─── Itens por página salvos no localStorage ────────────────────────
@@ -96,6 +132,11 @@ function parseFiltrosDaQuery(): Partial<BuscaRequest> {
     grau: () => ({ grau: valor }),
     bairro: () => ({ nomeBairro: valor }),
     exposicao: () => ({ exposicao: valor.toUpperCase() }),
+    duracao: () => {
+      const v = String(valor).trim().toUpperCase();
+      const num = v.replace(/^D/i, '');
+      return { duracao: `D${num}` };
+    },
     modalidade: () => ({ modalidade: valor as any }),
     montanha: () => ({ montanhaId: parseInt(valor) }),
     paisId: () => ({ paisId: parseInt(valor) }),
@@ -120,6 +161,7 @@ const filtrosIniciais: BuscaRequest = {
   grau: null,
   faixaExtensao: null,
   exposicao: null,
+  duracao: null,
   modalidade: null,
   viaCerj: null,
   pagina: 1,
@@ -248,6 +290,14 @@ defineExpose({ handleApplyFilters });
 .search-header {
   text-align: center;
   margin-bottom: 16px;
+}
+
+.busca-after-subheader {
+  padding: 0 16px 8px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .slot-container {

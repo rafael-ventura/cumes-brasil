@@ -32,6 +32,25 @@ export class MulterMiddleware {
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB
   }).single('foto_perfil');
 
+  private static storageColecao = isProduction
+    ? multer.memoryStorage()
+    : multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets', 'colecoes');
+        cb(null, uploadPath);
+      },
+      filename: (req: any, file, cb) => {
+        const colecaoId = req.params?.id || 'unknown';
+        cb(null, `capa-colecao-${colecaoId}-${Date.now()}${path.extname(file.originalname)}`);
+      }
+    });
+
+  /** Campo multipart: `capa_colecao` — mesmos limites da foto de perfil. */
+  public static uploadColecaoCapa = multer({
+    storage: MulterMiddleware.storageColecao,
+    limits: { fileSize: 5 * 1024 * 1024 }
+  }).single('capa_colecao');
+
   public static handleErrors(err: any, req: Request, res: Response, next: NextFunction) {
     if (err) {
       return res.status(400).json({

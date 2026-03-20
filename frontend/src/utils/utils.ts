@@ -155,20 +155,24 @@ export function adjustImageUrls (entity: any): void {
  * @param via - Objeto Via com imagem opcional
  * @returns URL da imagem ou null se não houver imagem disponível
  */
-export function getViaImageUrl (via: { imagem?: { url?: string } | null; imagens?: { url?: string }[] } | null | undefined): string | null {
+export function getViaImageUrl (via: {
+  imagem?: { url?: string } | null;
+  imagens?: { url?: string }[];
+  viaImagens?: { imagem?: { url?: string } | null }[];
+} | null | undefined): string | null {
   if (!via) return null;
-  
-  // 1. Tentar usar imagem da via (backward compat)
+
   if (via.imagem?.url) {
     return via.imagem.url;
   }
-  
-  // 2. Tentar usar primeira imagem do array imagens
+
   if (via.imagens?.length && via.imagens[0]?.url) {
     return via.imagens[0].url;
   }
-  
-  // 3. Não há imagem disponível
+
+  const deRelacao = via.viaImagens?.map((vi) => vi.imagem?.url).find(Boolean);
+  if (deRelacao) return deRelacao;
+
   return null;
 }
 

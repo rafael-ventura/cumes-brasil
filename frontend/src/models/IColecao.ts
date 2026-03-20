@@ -6,7 +6,11 @@ export interface IColecao {
   nome: string;
   descricao?: string;
   usuario: IUsuario;
+  /** Capa salva manualmente (opcional). */
   imagem?: Imagem;
+  /** URL resolvida no backend: capa própria ou primeira foto da primeira via (data_adicao). */
+  imagemCapa?: Imagem;
+  capaPersonalizada?: boolean;
   viaColecoes?: any | null;
 }
 
@@ -16,6 +20,8 @@ export class Colecao implements IColecao {
   descricao?: string = '';
   usuario: IUsuario = new Usuario();
   imagem?: Imagem;
+  imagemCapa?: Imagem;
+  capaPersonalizada?: boolean;
   viaColecoes?: any | null = null;
 
   constructor (init?: Partial<Colecao>) {

@@ -1,6 +1,5 @@
 <template>
   <q-page :class="pageClass">
-    <template>
       <!-- Layout Mobile -->
       <div v-if="!isDesktop" class="mobile-layout">
         <div class="row q-col-gutter-none">
@@ -9,6 +8,14 @@
           </div>
           <div class="col-12">
             <PerfilGridButtons :items="items" :readonly="true" />
+          </div>
+          <div v-if="props.user?.id" class="col-12">
+            <PerfilEscaladasDestaque
+              :usuario-id="props.user.id"
+              :username="props.user.username || ''"
+              :modo-proprio="false"
+              :num-escaladas-conhecido="typeof props.user.numEscaladas === 'number' ? props.user.numEscaladas : undefined"
+            />
           </div>
         </div>
         <div class="row q-col-gutter-none">
@@ -66,6 +73,14 @@
           <PerfilGridButtons :items="items" :readonly="true" />
         </div>
 
+        <PerfilEscaladasDestaque
+          v-if="props.user?.id"
+          :usuario-id="props.user.id"
+          :username="props.user.username || ''"
+          :modo-proprio="false"
+          :num-escaladas-conhecido="typeof props.user.numEscaladas === 'number' ? props.user.numEscaladas : undefined"
+        />
+
         <div class="desktop-content">
           <div class="content-left">
             <PerfilBio :user="props.user" :readonly="true" />
@@ -75,7 +90,6 @@
           </div>
         </div>
       </div>
-    </template>
   </q-page>
 </template>
 
@@ -85,8 +99,10 @@ import PerfilBar from 'components/Perfil/PerfilBar.vue';
 import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
+import PerfilEscaladasDestaque from 'components/Perfil/PerfilEscaladasDestaque.vue';
 import ImagemService from 'src/services/ImagemService';
 import { IUsuario } from 'src/models/IUsuario';
+import { parseDataAtividade } from 'src/utils/dataAtividade';
 
 const props = defineProps<{
   user: IUsuario & { username?: string; numEscaladas?: number; numColecoes?: number; numFavoritas?: number };
@@ -107,34 +123,38 @@ const pageClass = computed(() =>
   isDesktop.value ? 'perfil-page-desktop' : 'perfil-page-mobile'
 );
 
-const items = computed(() => [
-  {
-    label: 'Coleções',
-    num: props.user?.numColecoes ?? 0,
-    icon: 'style',
-    color: '#546119',
-    to: '#'
-  },
-  {
-    label: 'Favoritas',
-    num: props.user?.numFavoritas ?? 0,
-    icon: 'star',
-    color: '#F4E285',
-    to: '#'
-  },
-  {
-    label: 'Escaladas',
-    num: props.user?.numEscaladas ?? 0,
-    icon: 'hiking',
-    color: '#F29340',
-    to: '#'
-  }
-]);
+const items = computed(() => {
+  const u = props.user?.username;
+  const linkEscaladas = u ? `/perfil/${u}/escaladas` : '#';
+  return [
+    {
+      label: 'Coleções',
+      num: props.user?.numColecoes ?? 0,
+      icon: 'style',
+      color: '#546119',
+      to: '#'
+    },
+    {
+      label: 'Favoritas',
+      num: props.user?.numFavoritas ?? 0,
+      icon: 'star',
+      color: '#F4E285',
+      to: '#'
+    },
+    {
+      label: 'Marcações',
+      num: props.user?.numEscaladas ?? 0,
+      icon: 'hiking',
+      color: '#F29340',
+      to: linkEscaladas
+    }
+  ];
+});
 
 const diasEscalados = computed(() => {
   if (!props.user?.data_atividade) return 0;
-  const partesData = props.user.data_atividade.split('/');
-  const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
+  const dataAtividade = parseDataAtividade(props.user.data_atividade);
+  if (!dataAtividade) return 0;
   const hoje = new Date();
   return Math.floor((hoje.getTime() - dataAtividade.getTime()) / (1000 * 60 * 60 * 24));
 });

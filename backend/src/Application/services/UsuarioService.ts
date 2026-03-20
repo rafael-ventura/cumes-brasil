@@ -74,8 +74,10 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         let numFavoritas = 0;
 
         if (this.escaladaRepo) {
-            const escaladas = await this.escaladaRepo.getByUsuarioId(usuario.id);
-            numEscaladas = escaladas.length;
+            const uname = usuario.username?.trim();
+            if (uname) {
+                numEscaladas = await this.escaladaRepo.getCountOndeUsuarioFoiMarcadoPublico(usuario.id, uname);
+            }
         }
         if (this.colecaoRepo) {
             const colecoes = await this.colecaoRepo.getByUsuarioId(usuario.id);

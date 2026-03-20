@@ -13,6 +13,7 @@ export interface BuscaRequest {
   faixaExtensao?: number[] | null;
   crux?: string | null;
   exposicao?: string | null;
+  duracao?: string | null;
   tipoRocha?: string | null;
   tipoEscalada?: string | null;
   modalidade?: ModalidadeEscalada | null;

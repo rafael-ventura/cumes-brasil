@@ -24,12 +24,16 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             .getOne();
     }
 
-    async getAll(limit?: number): Promise<Escalada[]> {
+    /**
+     * Lista escaladas visíveis para quem observa: autor com perfil público ou o próprio autor.
+     */
+    async getAll(limit: number | undefined, usuarioIdObservador: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
           .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
           .leftJoinAndSelect('escalada.via', 'via')
             .leftJoinAndSelect("escalada.participantes", "participante")
+            .andWhere('(usuario.perfil_publico = true OR usuario.id = :uid)', { uid: usuarioIdObservador })
             .orderBy("escalada.data", "DESC");
 
         if (limit) {
@@ -62,7 +66,59 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         return query.getMany();
     }
 
-    async getByViaId(viaId: number, limit?: number): Promise<Escalada[]> {
+    /**
+     * Escaladas em que o usuário foi marcado na cordada (username em participantes), em qualquer tipo (GUIA, PARTICIPANTE, MISTO).
+     * Exclui registros em que ele próprio é o autor.
+     * @param usuarioObservadorId quem está vendo (para regra de visibilidade do autor do registro)
+     */
+    async getOndeUsuarioFoiMarcado (
+        usuarioAlvoId: number,
+        usernameAlvo: string,
+        usuarioObservadorId: number
+    ): Promise<Escalada[]> {
+        const uname = usernameAlvo.trim().toLowerCase();
+        const query = this.repository.createQueryBuilder("escalada")
+            .distinct(true)
+            .innerJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .addSelect([...this.USER_INFO, "usuario.username"])
+            .leftJoinAndSelect("escalada.via", "via")
+            .leftJoinAndSelect("via.viaImagens", "viaImagens")
+            .leftJoinAndSelect("viaImagens.imagem", "viaImagensImagem")
+            .leftJoinAndSelect("escalada.participantes", "participante")
+            .where("escalada.usuarioId != :alvoId", { alvoId: usuarioAlvoId })
+            .andWhere("LOWER(TRIM(p_match.username)) = :uname", { uname })
+            .andWhere("p_match.username IS NOT NULL")
+            .andWhere("TRIM(p_match.username) <> ''");
+
+        const ehProprioPerfil = String(usuarioObservadorId) === String(usuarioAlvoId);
+        if (!ehProprioPerfil) {
+            query.andWhere("(usuario.perfil_publico = true OR usuario.id = :obs)", { obs: usuarioObservadorId });
+        }
+
+        query.orderBy("escalada.data", "DESC");
+        return query.getMany();
+    }
+
+    /**
+     * Contagem pública (ex.: card no GET /u/:username): só registros cujo autor tem perfil público.
+     */
+    async getCountOndeUsuarioFoiMarcadoPublico (usuarioAlvoId: number, usernameAlvo: string): Promise<number> {
+        const uname = usernameAlvo.trim().toLowerCase();
+        const raw = await this.repository.createQueryBuilder("escalada")
+            .select("COUNT(DISTINCT escalada.id)", "cnt")
+            .innerJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .where("escalada.usuarioId != :alvoId", { alvoId: usuarioAlvoId })
+            .andWhere("LOWER(TRIM(p_match.username)) = :uname", { uname })
+            .andWhere("p_match.username IS NOT NULL")
+            .andWhere("TRIM(p_match.username) <> ''")
+            .andWhere("usuario.perfil_publico = true")
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    async getByViaId(viaId: number, limit: number | undefined, usuarioIdObservador: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
           .leftJoin('escalada.usuario', 'usuario')
             .addSelect(this.USER_INFO)
@@ -70,6 +126,7 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             .addSelect(["via.id", "via.nome"])
             .leftJoinAndSelect("escalada.participantes", "participante")
             .where("escalada.viaId = :viaId", { viaId })
+            .andWhere('(usuario.perfil_publico = true OR usuario.id = :uid)', { uid: usuarioIdObservador })
             .orderBy("escalada.data", "DESC");
 
         if (limit) {

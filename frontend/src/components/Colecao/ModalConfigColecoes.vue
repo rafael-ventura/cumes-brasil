@@ -1,5 +1,5 @@
 <template>
-  <q-dialog :model-value="modelValue" @update:model-value="handleClose">
+  <q-dialog :model-value="modelValue" @update:model-value="aoAtualizarVisivel">
     <q-card class="my-card">
       <q-card-section class="card-header">
         <div class="card-title">
@@ -9,11 +9,63 @@
       </q-card-section>
 
       <q-card-section class="card-body">
-        <q-form @submit.prevent="emitEdit" class="edit-form">
+        <q-form class="edit-form" @submit.prevent="salvarMetadados">
+          <!-- Capa -->
           <div class="form-field">
-            <label class="field-label">Nome da Coleção *</label>
+            <label class="field-label">Capa</label>
+            <div class="preview-capa">
+              <q-img v-if="urlExibicao" :src="urlExibicao" alt="Capa" fit="cover" class="img-capa" />
+              <div v-else class="sem-capa">Sem imagem — usamos a foto da primeira via adicionada.</div>
+            </div>
+            <q-file
+              ref="fileCapaRef"
+              v-model="arquivoCapa"
+              class="hidden-file"
+              accept="image/jpeg,image/png,image/webp,image/*"
+              max-file-size="2097152"
+              @update:model-value="onArquivoCapaChange"
+            />
+            <div class="linha-botoes-cap">
+              <q-btn
+                unelevated
+                no-caps
+                icon="image"
+                label="Escolher imagem"
+                class="btn-secondary-custom"
+                type="button"
+                @click="abrirSeletorCapa"
+              />
+              <q-btn
+                v-if="arquivoCapa"
+                unelevated
+                no-caps
+                icon="cloud_upload"
+                label="Enviar capa"
+                class="btn-primary-custom"
+                type="button"
+                :loading="enviandoCapa"
+                @click="emitirCapa"
+              />
+              <q-btn
+                v-if="collectionData.capaPersonalizada"
+                unelevated
+                no-caps
+                icon="close"
+                label="Remover capa personalizada"
+                class="btn-secondary-custom"
+                type="button"
+                :loading="removendoCapa"
+                @click="emit('remover-capa')"
+              />
+            </div>
+            <p class="hint-capa">Enquanto não houver capa própria, exibimos a imagem da primeira via da coleção.</p>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="nome-colecao-modal">Nome da Coleção *</label>
             <q-input
-              v-model="collectionName"
+              id="nome-colecao-modal"
+              v-model="nome"
               class="custom-input"
               outlined
               dense
@@ -23,9 +75,10 @@
           </div>
 
           <div class="form-field">
-            <label class="field-label">Descrição da Coleção</label>
+            <label class="field-label" for="desc-colecao-modal">Descrição da Coleção</label>
             <q-input
-              v-model="collectionDescription"
+              id="desc-colecao-modal"
+              v-model="descricao"
               type="textarea"
               class="custom-input"
               outlined
@@ -35,69 +88,188 @@
           </div>
 
           <div class="form-actions">
-            <q-btn 
-              type="submit" 
-              label="Salvar Alterações" 
+            <q-btn
+              type="submit"
+              label="Salvar nome e descrição"
               icon="save"
               class="btn-primary-custom"
               unelevated
               no-caps
+              :loading="salvandoMetadados"
             />
-            <q-btn 
-              label="Fechar" 
+            <q-btn
+              label="Fechar"
               class="btn-secondary-custom"
               unelevated
               no-caps
-              @click="handleClose"
+              type="button"
+              @click="fechar"
             />
           </div>
         </q-form>
+
+        <div v-if="!ehFavoritos" class="zona-perigo">
+          <q-separator class="q-my-md sep-colecao" />
+          <q-btn
+            unelevated
+            no-caps
+            icon="delete"
+            label="Excluir coleção"
+            class="btn-excluir-colecao"
+            type="button"
+            @click="confirmarExcluir = true"
+          />
+        </div>
+        <p v-else class="hint-favoritos">
+          <q-icon name="star" size="18px" class="q-mr-xs" />
+          A coleção Favoritas não pode ser excluída.
+        </p>
       </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="confirmarExcluir">
+    <q-card class="my-card card-confirm">
+      <q-card-section class="card-header">
+        <div class="card-title">
+          <q-icon name="warning" size="26px" class="title-icon" />
+          <span>Excluir coleção?</span>
+        </div>
+      </q-card-section>
+      <q-card-section class="card-body">
+        <p class="texto-confirma-body">
+          As vias não são apagadas — só o vínculo com esta coleção.
+        </p>
+      </q-card-section>
+      <q-card-actions align="right" class="q-pa-md">
+        <q-btn v-close-popup flat label="Cancelar" class="btn-secondary-custom" no-caps />
+        <q-btn
+          unelevated
+          no-caps
+          icon="delete"
+          label="Excluir"
+          class="btn-excluir-colecao"
+          :loading="excluindo"
+          @click="emitirExcluir"
+        />
+      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { IColecao } from 'src/models/IColecao';
+import ImagemService from 'src/services/ImagemService';
+import { ehColecaoFavoritos } from 'src/utils/colecaoUtils';
 
-const props = defineProps({
-  modelValue: Boolean,
-  collectionData: {
-    type: Object,
-    required: true
+const props = withDefaults(
+  defineProps<{
+    modelValue: boolean;
+    collectionData: IColecao;
+    salvandoMetadados?: boolean;
+    enviandoCapa?: boolean;
+    removendoCapa?: boolean;
+    excluindo?: boolean;
+  }>(),
+  {
+    salvandoMetadados: false,
+    enviandoCapa: false,
+    removendoCapa: false,
+    excluindo: false
   }
+);
+
+const emit = defineEmits<{
+  'update:modelValue': [boolean];
+  edit: [{ nome: string; descricao: string }];
+  'capa-enviada': [File];
+  'remover-capa': [];
+  'excluir-colecao': [];
+}>();
+
+const ehFavoritos = computed(() => ehColecaoFavoritos(props.collectionData));
+
+const nome = ref('');
+const descricao = ref('');
+const arquivoCapa = ref<File | null>(null);
+const urlArquivoLocal = ref<string | null>(null);
+const fileCapaRef = ref<{ pickFiles: () => void } | null>(null);
+const confirmarExcluir = ref(false);
+
+watch(
+  () => props.collectionData,
+  (c) => {
+    if (c) {
+      nome.value = c.nome || '';
+      descricao.value = c.descricao || '';
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => props.modelValue,
+  (aberto) => {
+    if (!aberto) {
+      confirmarExcluir.value = false;
+      arquivoCapa.value = null;
+      if (urlArquivoLocal.value) {
+        URL.revokeObjectURL(urlArquivoLocal.value);
+        urlArquivoLocal.value = null;
+      }
+    }
+  }
+);
+
+function onArquivoCapaChange (f: File | File[] | null) {
+  const file = Array.isArray(f) ? f[0] : f;
+  if (urlArquivoLocal.value) {
+    URL.revokeObjectURL(urlArquivoLocal.value);
+    urlArquivoLocal.value = null;
+  }
+  if (file) {
+    urlArquivoLocal.value = URL.createObjectURL(file);
+  }
+}
+
+const urlExibicao = computed(() => {
+  if (urlArquivoLocal.value) return urlArquivoLocal.value;
+  const u = props.collectionData?.imagemCapa?.url || props.collectionData?.imagem?.url;
+  return u ? ImagemService.getFullImageUrl(u) : null;
 });
 
-const emits = defineEmits(['update:modelValue', 'edit']);
+function aoAtualizarVisivel (v: boolean) {
+  emit('update:modelValue', v);
+}
 
-const collectionName = ref(props.collectionData?.nome || '');
-const collectionDescription = ref(props.collectionData?.descricao || '');
+function fechar () {
+  emit('update:modelValue', false);
+}
 
-watch(() => props.collectionData, (newData) => {
-  if (newData) {
-    collectionName.value = newData.nome || '';
-    collectionDescription.value = newData.descricao || '';
-  }
-}, { immediate: true, deep: true });
+function abrirSeletorCapa () {
+  fileCapaRef.value?.pickFiles();
+}
 
-const handleClose = () => {
-  emits('update:modelValue', false);
-};
+function emitirCapa () {
+  const f = arquivoCapa.value;
+  if (f) emit('capa-enviada', f);
+}
 
-const emitEdit = () => {
-  if (collectionName.value.trim()) {
-    emits('edit', {
-      nome: collectionName.value,
-      descricao: collectionDescription.value
-    });
-    handleClose();
-  }
-};
+function salvarMetadados () {
+  if (!nome.value.trim()) return;
+  emit('edit', { nome: nome.value.trim(), descricao: descricao.value || '' });
+}
+
+function emitirExcluir () {
+  emit('excluir-colecao');
+}
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
+/* Mesmo padrão de AddColecaoModal / ItemSelectorModal */
 .my-card {
   min-width: 320px;
   max-width: 500px;
@@ -111,24 +283,32 @@ const emitEdit = () => {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  
+
   @media (min-width: 768px) {
     width: 600px;
     max-width: 600px;
   }
-  
+
   @media (min-width: 1024px) {
     width: 750px;
     max-width: 750px;
   }
-  
+
   @media (min-width: 1440px) {
     width: 850px;
     max-width: 850px;
   }
 }
 
-// Header do Card
+.card-confirm {
+  max-width: 440px !important;
+  width: 92vw !important;
+
+  @media (min-width: 768px) {
+    width: 420px !important;
+  }
+}
+
 .card-header {
   background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
   padding: 24px 32px;
@@ -149,7 +329,6 @@ const emitEdit = () => {
   }
 }
 
-// Body do Card
 .card-body {
   padding: 32px;
   overflow-y: auto;
@@ -166,7 +345,6 @@ const emitEdit = () => {
   gap: 16px;
 }
 
-// Form Fields
 .form-field {
   display: flex;
   flex-direction: column;
@@ -181,13 +359,72 @@ const emitEdit = () => {
   letter-spacing: 0.8px;
 }
 
-// Custom Input Styling
+.preview-capa {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba($offwhite, 0.06);
+  border: 2px solid rgba($cumes-01, 0.45);
+  min-height: 140px;
+  max-height: 220px;
+}
+
+.img-capa {
+  width: 100%;
+  min-height: 140px;
+  max-height: 220px;
+}
+
+.sem-capa {
+  padding: 24px;
+  text-align: center;
+  color: rgba($offwhite, 0.55);
+  font-size: 14px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden-file {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.linha-botoes-cap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.hint-capa {
+  font-size: 12px;
+  color: rgba($offwhite, 0.45);
+  margin: 8px 0 0;
+  line-height: 1.4;
+}
+
+.hint-favoritos {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: rgba($offwhite, 0.55);
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba($cumes-04, 0.08);
+  border: 1px solid rgba($cumes-04, 0.25);
+}
+
 .custom-input {
   :deep(.q-field__control) {
     background-color: $offwhite;
     border-radius: 8px;
     padding: 0 !important;
-    
+
     &::before {
       border-color: $cumes-01;
       border-width: 2px;
@@ -228,7 +465,6 @@ const emitEdit = () => {
   }
 }
 
-// Form Actions
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -236,9 +472,9 @@ const emitEdit = () => {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid rgba($cumes-03, 0.2);
+  flex-wrap: wrap;
 }
 
-// Custom Primary Button
 .btn-primary-custom {
   background: $cumes-01 !important;
   color: $offwhite !important;
@@ -274,5 +510,28 @@ const emitEdit = () => {
   &:hover {
     background: rgba($cumes-01, 0.1) !important;
   }
+}
+
+.zona-perigo {
+  margin-top: 8px;
+}
+
+.btn-excluir-colecao {
+  background: rgba($error-color, 0.15) !important;
+  color: lighten($error-color, 25%) !important;
+  border: 2px solid rgba($error-color, 0.5) !important;
+  font-weight: 700 !important;
+}
+
+.texto-confirma-body {
+  margin: 0;
+  line-height: 1.5;
+  color: rgba($offwhite, 0.85);
+  font-size: 15px;
+}
+
+.sep-colecao {
+  opacity: 0.35;
+  background: rgba($cumes-03, 0.5);
 }
 </style>

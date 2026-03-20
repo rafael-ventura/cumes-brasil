@@ -15,6 +15,7 @@ export class PerfilPublicoDTO {
     data_atividade?: string;
     foto_perfil?: ImagemDTO;
     via_preferida?: ViaDTO;
+    /** Registros de terceiros em que o usuário foi marcado na cordada (username; qualquer papel), com autor de perfil público. */
     numEscaladas: number;
     numColecoes: number;
     numFavoritas: number;

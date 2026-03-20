@@ -38,15 +38,16 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getAllEscalada = async (req: Request, res: Response) => {
+		const usuarioIdObservador = Number((req as any).user?.usuarioId);
 		const viaId = EscaladaValidation.queryInt(req.query.viaId, 'viaId', false);
 		const limit = EscaladaValidation.queryInt(req.query.limit, 'limit', false);
 		let escaladas;
 		const parsedLimit = limit ? Number(limit) : undefined;
 
 		if (viaId !== undefined) {
-			escaladas = await this.service.getEscaladasDaVia(viaId, parsedLimit);
+			escaladas = await this.service.getEscaladasDaVia(viaId, parsedLimit, usuarioIdObservador);
 		} else {
-			escaladas = await this.service.getAll(parsedLimit);
+			escaladas = await this.service.getAll(parsedLimit, usuarioIdObservador);
 		}
 
 		res.json(escaladas);
@@ -102,12 +103,33 @@ export class EscaladaController {
 		const viaId = EscaladaValidation.queryInt(req.query.viaId, 'viaId', false);
 		const limit = EscaladaValidation.queryInt(req.query.limit, 'limit', false);
 		const usuario = EscaladaValidation.queryInt(req.query.usuario, 'usuario', true);
+		const usuarioObservador = Number((req as any).user?.usuarioId);
+		const comoRaw = typeof req.query.como === 'string' ? req.query.como.trim().toLowerCase() : 'autor';
+		/** Registros de terceiros em que o usuário foi marcado na cordada (qualquer papel: guia, participante, misto). */
+		const comoMarcado = comoRaw === 'marcado' || comoRaw === 'participante';
+
+		if (comoMarcado && viaId !== undefined) {
+			return res.status(400).json({ error: 'Não use viaId junto com como=marcado.' });
+		}
+		if (comoRaw !== 'autor' && comoRaw !== 'marcado' && comoRaw !== 'participante') {
+			return res.status(400).json({ error: 'Parâmetro "como" deve ser autor ou marcado (participante é legado, mesmo efeito).' });
+		}
 
 		let escaladas: any[] = [];
 		if (viaId !== undefined) {
-			escaladas = await this.service.getEscaladasDaViaDoUsuario(usuario as number, viaId, limit as number | undefined);
+			escaladas = await this.service.getEscaladasDaViaDoUsuarioParaObservador(
+				usuario as number,
+				viaId,
+				limit as number | undefined,
+				usuarioObservador
+			);
+		} else if (comoMarcado) {
+			escaladas = await this.service.getEscaladasOndeUsuarioFoiMarcadoParaObservador(
+				usuario as number,
+				usuarioObservador
+			);
 		} else {
-			escaladas = await this.service.getEscaladasDoUsuario(usuario as number);
+			escaladas = await this.service.getEscaladasDoUsuarioParaObservador(usuario as number, usuarioObservador);
 		}
 
 		res.json(escaladas);
@@ -115,7 +137,8 @@ export class EscaladaController {
 
 	getByViaId = async (req: Request, res: Response) => {
 		const viaId = EscaladaValidation.idParam(req.params.id);
-		const result = await this.service.getEscaladasDaVia(viaId);
+		const usuarioObservador = Number((req as any).user?.usuarioId);
+		const result = await this.service.getEscaladasDaVia(viaId, undefined, usuarioObservador);
 		res.json(result);
 	};
 

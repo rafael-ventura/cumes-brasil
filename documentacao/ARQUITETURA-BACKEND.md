@@ -57,6 +57,12 @@ Usuario ── Colecao ── ColecaoVia ── Via
         └─ perfil_publico (boolean, default true) — perfis privados não aparecem no feed nem em GET /u/:username
 ```
 
+### Escaladas `como=marcado` (perfil)
+
+`GET /escaladas/usuario?usuario=:id&como=marcado` lista registros em que o usuário foi incluído na cordada por **username** em participantes, excluindo quando ele é o autor. A regra de visibilidade do autor (perfil público / observador) é a mesma das outras listagens de escalada.
+
+No repositório, `EscaladaRepository.getOndeUsuarioFoiMarcado` faz `leftJoinAndSelect` em `via`, `via.viaImagens` e imagens, e inclui `usuario.username` no `addSelect` do autor — permite ao frontend miniaturas e texto “por @usuário” sem N+1.
+
 **Campos importantes da Via:**
 - `grau`, `crux`, `artificial`, `duracao`, `exposicao`, `extensao`
 - `conquistadores`, `data`, `detalhes`, `historia_resumo`
@@ -72,11 +78,12 @@ Dados vivem nos YAMLs em `src/Infrastructure/data/`. O seed é **idempotente**.
 
 **Ordem de execução (dependências em cascata):**
 ```
-ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader → UsuarioLoader → EscaladaLoader
+ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader → UsuarioLoader → EscaladaLoader → ColecaoConteudoLoader
 ```
 
-- **UsuarioLoader**: cria usuário de teste (`teste@cumes.com.br` / `teste123`) se não existir, com coleção Favoritas.
-- **EscaladaLoader**: cria escaladas de exemplo para o usuário de teste a partir de `escaladas-teste.yaml`.
+- **UsuarioLoader**: lê `usuarios-teste.yaml` e cria/atualiza contas de desenvolvimento (senha comum `teste123`), cada uma com coleção Favoritas.
+- **EscaladaLoader**: `escaladas-teste.yaml` (por `username`) — escaladas de exemplo para vários usuários seed.
+- **ColecaoConteudoLoader**: `colecoes-vias-teste.yaml` — favoritos e listas personalizadas (`via_colecao`).
 
 - Utilitários compartilhados em `seeds/seedUtils.ts` (`loadYaml<T>`, `resolveLocalizacaoIds`)
 - `ViaLoader` usa `UPSERT_FIELDS` — array declarativo dos campos atualizados no re-seed

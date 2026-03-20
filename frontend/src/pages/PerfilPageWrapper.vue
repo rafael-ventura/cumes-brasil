@@ -6,13 +6,25 @@
     </div>
   </div>
 
-  <Perfil v-else-if="eProprioPerfil && usuario" :user-inicial="usuario" />
-  <PerfilPublico v-else-if="usuario" :user="usuario" />
+  <Perfil
+    v-else-if="eProprioPerfil && usuario"
+    :key="chaveRotaPerfil"
+    :user-inicial="usuario"
+  />
+  <PerfilPublico
+    v-else-if="usuario"
+    :key="chaveRotaPerfil"
+    :user="usuario"
+  />
   <div v-else-if="privado" class="perfil-estado perfil-privado">
     <i class="pi pi-lock" />
     <span class="privado-titulo">Perfil privado</span>
     <span class="privado-sub">Este escalador preferiu manter seu perfil privado.</span>
-    <q-btn unelevated no-caps label="Voltar" class="btn-voltar" @click="router.back()" />
+    <span v-if="!estaLogado" class="privado-sub">Entre na sua conta para ver o seu próprio perfil.</span>
+    <div class="row q-gutter-sm">
+      <q-btn unelevated no-caps label="Voltar" class="btn-voltar" @click="router.back()" />
+      <q-btn v-if="!estaLogado" flat no-caps label="Entrar" class="btn-secundario" :to="{ path: '/auth/login' }" />
+    </div>
   </div>
   <div v-else-if="erro" class="perfil-estado">
     <i class="pi pi-user-minus" />
@@ -27,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Perfil from 'pages/Perfil.vue';
 import PerfilPublico from 'pages/PerfilPublico.vue';
@@ -43,58 +55,109 @@ const resolvendo = ref(true);
 const privado = ref(false);
 const erro = ref(false);
 
-const usernameParam = computed(() => route.params.username as string);
+/** Username da rota (string única; evita bug com params como array). */
+const usernameParam = computed(() => {
+  const raw = route.params.username;
+  const s = Array.isArray(raw) ? raw[0] : raw;
+  return typeof s === 'string' ? s.trim() : '';
+});
+
+/** Força remount ao trocar de usuário na mesma rota (evita estado velho). */
+const chaveRotaPerfil = computed(() => usernameParam.value || 'me');
+
 const eProprioPerfil = computed(() => {
   if (!AuthenticateService.isTokenValid()) return false;
   const idAtual = localStorage.getItem('usuarioId');
   return !!idAtual && !!usuario.value && String(usuario.value.id) === idAtual;
 });
 
-async function resolverPerfil() {
-  if (!AuthenticateService.isTokenValid()) {
-    router.replace('/auth/login');
-    return;
-  }
+const estaLogado = computed(() => AuthenticateService.isTokenValid());
 
+async function resolverPerfil () {
   usuario.value = null;
   privado.value = false;
   erro.value = false;
   resolvendo.value = true;
 
-  const username = usernameParam.value;
-  if (!username) {
+  const usernameRaw = usernameParam.value;
+  if (!usernameRaw) {
     resolvendo.value = false;
     erro.value = true;
+    if (import.meta.env.DEV) {
+      console.warn('[PerfilPageWrapper] username vazio na rota', route.fullPath);
+    }
     return;
   }
 
-  if (username === 'me') {
-    try {
-      const perfil = await UserService.getPerfil();
-      if (perfil.username && !localStorage.getItem('username')) {
-        localStorage.setItem('username', perfil.username);
-      }
-      usuario.value = perfil;
-      resolvendo.value = false;
-      if (perfil.username) {
-        router.replace({ path: `/perfil/${perfil.username}` });
-      }
-      return;
-    } catch {
-      resolvendo.value = false;
-      erro.value = true;
-      return;
-    }
+  const username = usernameRaw.toLowerCase();
+  const logado = AuthenticateService.isTokenValid();
+
+  if (import.meta.env.DEV) {
+    console.debug('[PerfilPageWrapper] resolver', { username, logado, path: route.fullPath });
   }
 
-  // Se é o próprio username, busca perfil autenticado completo
-  const usernameLogado = localStorage.getItem('username');
-  if (AuthenticateService.isTokenValid() && usernameLogado && username === usernameLogado) {
+  if (usernameRaw === 'me') {
+    if (!logado) {
+      router.replace('/auth/login');
+      return;
+    }
     try {
       const perfil = await UserService.getPerfil();
-      usuario.value = perfil;
-    } catch {
+      if (!perfil) {
+        erro.value = true;
+        if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfil retornou vazio');
+      } else {
+        if (perfil.username && !localStorage.getItem('username')) {
+          localStorage.setItem('username', perfil.username);
+        }
+        usuario.value = perfil;
+        if (perfil.username) {
+          router.replace({ path: `/perfil/${perfil.username}` });
+        }
+      }
+    } catch (e) {
       erro.value = true;
+      if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfil falhou', e);
+    } finally {
+      resolvendo.value = false;
+    }
+    return;
+  }
+
+  // Visitante sem login: apenas perfis públicos via GET /u/:username
+  if (!logado) {
+    try {
+      const dados = await UserService.getPerfilPorUsername(username);
+      if (!dados) {
+        erro.value = true;
+      } else if ('privado' in dados) {
+        privado.value = true;
+      } else {
+        usuario.value = dados;
+      }
+    } catch (e) {
+      erro.value = true;
+      if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfilPorUsername (anon)', e);
+    } finally {
+      resolvendo.value = false;
+    }
+    return;
+  }
+
+  // Logado: mesmo username que a sessão → /perfil com dados completos
+  const usernameLogado = (localStorage.getItem('username') || '').toLowerCase();
+  if (usernameLogado && username === usernameLogado) {
+    try {
+      const perfil = await UserService.getPerfil();
+      if (!perfil) {
+        erro.value = true;
+        if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfil (próprio) vazio');
+      } else {
+        usuario.value = perfil;
+      }
+    } catch (e) {
+      erro.value = true;
+      if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfil (próprio) erro', e);
     } finally {
       resolvendo.value = false;
     }
@@ -108,20 +171,39 @@ async function resolverPerfil() {
     } else if ('privado' in dados) {
       privado.value = true;
     } else {
-      usuario.value = dados;
+      const meuId = localStorage.getItem('usuarioId');
+      const idAlvo = (dados as { id?: number }).id;
+      /* Conta própria sem `username` no localStorage: público DTO → perfil completo */
+      if (
+        logado &&
+        meuId &&
+        idAlvo != null &&
+        String(idAlvo) === String(meuId)
+      ) {
+        const perfil = await UserService.getPerfil();
+        usuario.value = perfil ?? (dados as IUsuario & { username?: string });
+        if (usuario.value?.username) {
+          localStorage.setItem('username', usuario.value.username);
+        }
+      } else {
+        usuario.value = dados as IUsuario & { username?: string };
+      }
     }
-  } catch {
+  } catch (e) {
     erro.value = true;
+    if (import.meta.env.DEV) console.warn('[PerfilPageWrapper] getPerfilPorUsername (visitante logado)', e);
   } finally {
     resolvendo.value = false;
   }
 }
 
-watch(() => route.params.username, () => {
-  resolverPerfil();
-}, { immediate: false });
-
-onMounted(resolverPerfil);
+watch(
+  () => [route.name, usernameParam.value] as const,
+  () => {
+    resolverPerfil();
+  },
+  { immediate: true }
+);
 </script>
 
 <style scoped lang="scss">
@@ -169,5 +251,10 @@ onMounted(resolverPerfil);
   border-radius: 8px !important;
   padding: 8px 24px !important;
   margin-top: 8px;
+}
+
+.btn-secundario {
+  color: $cumes-03 !important;
+  font-weight: 600 !important;
 }
 </style>

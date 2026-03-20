@@ -5,6 +5,7 @@ import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepo
 import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
 import SearchValidation from '../../Application/validations/SearchValidation';
 import { ViaDTO } from '../DTOs/Via/ViaDTO';
+import { ColecaoDTO } from '../DTOs/Colecao/ColecaoDTO';
 import { FiltrosBuscaBase } from '../../Domain/interfaces/models/FiltrosBusca';
 
 export class SearchController {
@@ -39,9 +40,12 @@ export class SearchController {
 		const service = this.getService(tipoEntidade);
 		const resultado = await service.search(filtros);
 
-		const itens = tipoEntidade === 'via'
-			? resultado.items.map((item: any) => new ViaDTO(item))
-			: resultado.items;
+		const itens =
+			tipoEntidade === 'via'
+				? resultado.items.map((item: any) => new ViaDTO(item))
+				: tipoEntidade === 'colecao'
+					? resultado.items.map((item: any) => new ColecaoDTO(item))
+					: resultado.items;
 
 		res.json({
 			items: itens,

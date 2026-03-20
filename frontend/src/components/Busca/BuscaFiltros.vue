@@ -13,6 +13,9 @@
         rounded
         @keydown="onInputChange"
       >
+        <template #prepend>
+          <q-icon name="search" class="icone-lupa-busca" />
+        </template>
         <template #append>
           <div class="append-actions">
             <q-icon
@@ -125,6 +128,20 @@
               </div>
             </div>
 
+            <!-- Duração (D1–D7) -->
+            <div class="filtro-secao">
+              <div class="secao-label">Duração</div>
+              <div class="chips-grid">
+                <button
+                  v-for="d in duracoes"
+                  :key="d"
+                  class="chip"
+                  :class="{ selected: localFilters.duracao === d }"
+                  @click="toggleChip('duracao', d)"
+                >{{ d }}</button>
+              </div>
+            </div>
+
             <!-- Artificial -->
             <div class="filtro-secao">
               <div class="secao-label">Artificial</div>
@@ -232,6 +249,8 @@ const localFilters = ref<BuscaRequest>({
   viaCerj: null,
   grau: null,
   faixaExtensao: null,
+  exposicao: null,
+  duracao: null,
   artificial: null,
   modalidade: null,
   pagina: 1,
@@ -243,6 +262,8 @@ const localFilters = ref<BuscaRequest>({
 const grauOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
+
+const duracoes = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
 
 const extensionCategories: Record<string, number[]> = {
   '< 50m': [0, 50],
@@ -279,7 +300,7 @@ const filteredMountains = ref<any[]>([]);
 
 const temFiltrosAtivos = computed(() => {
   const f = localFilters.value;
-  return !!(f.grau || f.faixaExtensao || f.exposicao ||
+  return !!(f.grau || f.faixaExtensao || f.exposicao || f.duracao ||
     f.artificial || f.modalidade ||
     f.montanhaId || f.viaCerj === true);
 });
@@ -297,6 +318,7 @@ const listaFiltrosAtivos = computed(() => {
   }
   if (f.artificial) tags.push({ label: `Artificial: ${f.artificial}`, key: 'artificial' });
   if (f.exposicao) tags.push({ label: `Exposição: ${f.exposicao}`, key: 'exposicao' });
+  if (f.duracao) tags.push({ label: `Duração: ${f.duracao}`, key: 'duracao' });
   if (f.modalidade) {
     tags.push({ label: modalidadeLabels[f.modalidade] || String(f.modalidade), key: 'modalidade' });
   }
@@ -341,6 +363,7 @@ function limparFiltrosVia() {
     artificial: null,
     faixaExtensao: null,
     exposicao: null,
+    duracao: null,
     modalidade: null,
     montanhaId: null,
     viaCerj: null,
@@ -355,6 +378,7 @@ function limparTudo() {
     viaCerj: null,
     nomeBairro: '',
     exposicao: null,
+    duracao: null,
     grau: null,
     faixaExtensao: null,
     artificial: null,
@@ -451,48 +475,12 @@ onMounted(async () => {
 }
 
 .busca-input {
-  :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 8px !important;
-    padding: 0 !important;
+  @include campo-busca-primario(12px, 52px);
+}
 
-    &::before {
-      border-color: $cumes-01 !important;
-      border-width: 2px !important;
-    }
-  }
-
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    padding: 10px 14px !important;
-  }
-
-  :deep(input),
-  :deep(.q-field__input) {
-    color: $background !important;
-    padding: 10px 14px !important;
-  }
-
-  :deep(input::placeholder) {
-    color: rgba($background, 0.5) !important;
-  }
-
-  :deep(.q-field__label) {
-    color: $cumes-03 !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    font-size: 13px !important;
-  }
-
-  &:deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
-    }
-  }
+.icone-lupa-busca {
+  color: $cumes-03 !important;
+  font-size: 22px !important;
 }
 
 .append-actions {

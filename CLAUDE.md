@@ -148,7 +148,8 @@ interface CardExplorar {
 - **Imagens precisam de `@JoinColumn`** — relações com `Imagem` na entidade `Usuario` usam `foto_perfilId` (com maiúscula no I)
 - **Perfil público/privado** — `Usuario.perfil_publico` (default `true`). Perfis privados: não aparecem no feed nem em `GET /u/:username` (404). Toggle em PerfilEditaForm.
 - **Rota de perfil** — `/perfil/:username` (próprio ou visitante). `/perfil` e `/perfil/me` redirecionam para o perfil do usuário logado. Guard em `PerfilPageWrapper` diferencia dono (edição) de visitante (somente leitura).
-- **Usuário de teste** — criado pelo seed: `teste@cumes.com.br` / `teste123`, username `cumes_teste`. Já vem com escaladas de exemplo (ver `escaladas-teste.yaml`).
+- **Marcações na cordada** — preview no perfil: faixa compacta com bolhas (fotos da via) e “Ver lista”; página `/perfil/:username/escaladas` (login obrigatório) usa linhas (`PerfilMarcacaoEscaladaRow`), não `EscaladaCard` em grade. API: `como=marcado`; repo carrega `viaImagens` para thumbnails.
+- **Usuários de teste** — seed (`usuarios-teste.yaml`): senha comum `teste123` — `teste@cumes.com.br` (`cumes_teste`), `maria.dev@cumes.com.br` (`maria_escaladora`), `privado.dev@cumes.com.br` (`usuario_privado`, perfil privado), `rafael.dev@cumes.com.br` (`rafael`). Escaladas e coleções: `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`.
 - **Infra AWS desativada** por falta de créditos — ver `documentacao/LEGADO-AWS.md` se precisar reativar
 
 ---

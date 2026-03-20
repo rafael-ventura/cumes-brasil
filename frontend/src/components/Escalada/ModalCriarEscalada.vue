@@ -77,7 +77,7 @@
                 <button
                   type="button"
                   :class="['modo-btn', { ativo: participante._modoUsername }]"
-                  @click="participante._modoUsername = true; participante.nome = ''; participante.username = ''; participante._usuarioEncontrado = null"
+                  @click="participante._modoUsername = true; participante.nome = ''; participante.username = ''; participante._usuarioEncontrado = null; participante._usuarioSelecionado = null"
                 >
                   <i class="pi pi-at" /> Usuário do site
                 </button>
@@ -90,28 +90,42 @@
                 </button>
               </div>
 
-              <!-- Por username -->
+              <!-- Usuário cadastrado na plataforma -->
               <div v-if="participante._modoUsername" class="form-field">
-                <label class="field-label">@Username *</label>
-                <div class="username-busca">
-                  <q-input
-                    v-model="participante.username"
-                    class="custom-input"
-                    outlined dense
-                    placeholder="ex: cumes_teste"
-                    prefix="@"
-                    @blur="buscarUsuario(participante)"
-                    @keydown.enter.prevent="buscarUsuario(participante)"
-                  />
-                  <div v-if="participante._buscando" class="busca-status buscando">
-                    <i class="pi pi-spin pi-spinner" /> buscando...
-                  </div>
-                  <div v-else-if="participante._usuarioEncontrado" class="busca-status encontrado">
-                    <i class="pi pi-check-circle" /> {{ participante._usuarioEncontrado.nome }}
-                  </div>
-                  <div v-else-if="participante._buscaFeita && !participante._usuarioEncontrado" class="busca-status nao-encontrado">
-                    <i class="pi pi-times-circle" /> Usuário não encontrado
-                  </div>
+                <label class="field-label">Usuário da plataforma *</label>
+                <q-select
+                  :model-value="participante._usuarioSelecionado"
+                  :options="opcoesUsuariosPara(index)"
+                  :loading="carregandoUsuarios"
+                  class="custom-select usuario-select"
+                  outlined
+                  dense
+                  use-input
+                  fill-input
+                  hide-selected
+                  input-debounce="0"
+                  option-value="id"
+                  :option-label="rotuloUsuarioOpcao"
+                  emit-value
+                  map-options
+                  placeholder="Digite nome ou @username"
+                  :rules="[ () => !!participante._usuarioEncontrado || 'Selecione um usuário' ]"
+                  @filter="(val, update) => filtrarUsuariosParticipante(val, update, index)"
+                  @update:model-value="(v) => aoSelecionarUsuarioPlataforma(participante, v)"
+                >
+                  <template #no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        Nenhum usuário encontrado
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <div v-if="participante._usuarioEncontrado" class="busca-status encontrado">
+                  <i class="pi pi-check-circle" /> {{ participante._usuarioEncontrado.nome }}
+                  <span v-if="participante._usuarioEncontrado.username" class="username-tag">
+                    @{{ participante._usuarioEncontrado.username }}
+                  </span>
                 </div>
               </div>
 
@@ -156,12 +170,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
 import UsuarioService from 'src/services/UsuarioService';
 import { Notify } from 'quasar';
 import AuthenticateService from 'src/services/AuthenticateService';
+import type { IUsuario } from 'src/models/IUsuario';
 
 interface ParticipanteLocal {
   tipo: string;
@@ -171,6 +186,7 @@ interface ParticipanteLocal {
   _buscando: boolean;
   _buscaFeita: boolean;
   _usuarioEncontrado: { nome: string; username: string } | null;
+  _usuarioSelecionado: number | null;
 }
 
 const props = defineProps<{ isOpen: boolean }>();
@@ -182,6 +198,72 @@ const observacao = ref('');
 const dataHora = ref(dataHoraAgora());
 const participantes = ref<ParticipanteLocal[]>([novoParticipante()]);
 const tipoOptions = ['GUIA', 'PARTICIPANTE', 'MISTO'];
+const todosUsuarios = ref<IUsuario[]>([]);
+const carregandoUsuarios = ref(false);
+/** Texto digitado no filtro do q-select por índice de participante */
+const filtroUsuarioPorParticipante = ref<Record<number, string>>({});
+
+watch(
+  () => props.isOpen,
+  async (aberto) => {
+    if (!aberto || todosUsuarios.value.length > 0) return;
+    carregandoUsuarios.value = true;
+    try {
+      todosUsuarios.value = await UsuarioService.getAll();
+    } catch {
+      todosUsuarios.value = [];
+    } finally {
+      carregandoUsuarios.value = false;
+    }
+  }
+);
+
+function rotuloUsuarioOpcao(u: IUsuario) {
+  const uName = u.username ? ` (@${u.username})` : '';
+  return `${u.nome}${uName}`;
+}
+
+function opcoesUsuariosPara(indice: number): IUsuario[] {
+  const termo = (filtroUsuarioPorParticipante.value[indice] || '').toLowerCase().trim();
+  const meuId = localStorage.getItem('usuarioId');
+  const base = todosUsuarios.value.filter((u) => !meuId || String(u.id) !== meuId);
+  if (!termo) return base.slice(0, 80);
+  return base
+    .filter((u) => {
+      const nome = (u.nome || '').toLowerCase();
+      const un = (u.username || '').toLowerCase();
+      return nome.includes(termo) || un.includes(termo);
+    })
+    .slice(0, 80);
+}
+
+function filtrarUsuariosParticipante(
+  val: string,
+  update: (fn?: () => void) => void,
+  indice: number
+) {
+  filtroUsuarioPorParticipante.value = { ...filtroUsuarioPorParticipante.value, [indice]: val };
+  update();
+}
+
+function aoSelecionarUsuarioPlataforma(p: ParticipanteLocal, usuarioId: number | null) {
+  if (usuarioId == null) {
+    p._usuarioSelecionado = null;
+    p._usuarioEncontrado = null;
+    p.nome = '';
+    p.username = '';
+    return;
+  }
+  const u = todosUsuarios.value.find((x) => x.id === usuarioId);
+  if (!u) {
+    p._usuarioEncontrado = null;
+    return;
+  }
+  p._usuarioSelecionado = usuarioId;
+  p._usuarioEncontrado = { nome: u.nome, username: u.username || '' };
+  p.nome = u.nome;
+  p.username = u.username || '';
+}
 
 function dataHoraAgora(): string {
   const agora = new Date();
@@ -190,7 +272,16 @@ function dataHoraAgora(): string {
 }
 
 function novoParticipante(): ParticipanteLocal {
-  return { tipo: '', nome: '', username: '', _modoUsername: false, _buscando: false, _buscaFeita: false, _usuarioEncontrado: null };
+  return {
+    tipo: '',
+    nome: '',
+    username: '',
+    _modoUsername: false,
+    _buscando: false,
+    _buscaFeita: false,
+    _usuarioEncontrado: null,
+    _usuarioSelecionado: null
+  };
 }
 
 const handleClose = () => emit('closeModal');
@@ -203,26 +294,6 @@ function removerParticipante(index: number) {
   participantes.value.splice(index, 1);
 }
 
-async function buscarUsuario(participante: ParticipanteLocal) {
-  const username = participante.username?.trim();
-  if (!username) return;
-  participante._buscando = true;
-  participante._buscaFeita = false;
-  participante._usuarioEncontrado = null;
-  try {
-    const usuario = await UsuarioService.getPerfilPorUsername(username);
-    if (usuario) {
-      participante._usuarioEncontrado = { nome: usuario.nome, username: usuario.username || username };
-      participante.nome = usuario.nome;
-    }
-  } catch {
-    participante._usuarioEncontrado = null;
-  } finally {
-    participante._buscando = false;
-    participante._buscaFeita = true;
-  }
-}
-
 const onSubmit = async () => {
   await AuthenticateService.redirecionaSeNaoAutenticado(router);
 
@@ -232,7 +303,9 @@ const onSubmit = async () => {
     .map(p => ({
       tipo: p.tipo,
       nome: p._modoUsername ? (p._usuarioEncontrado?.nome || p.nome) : p.nome,
-      username: p._modoUsername ? (p._usuarioEncontrado?.username || undefined) : undefined,
+      username: p._modoUsername && p._usuarioEncontrado?.username
+        ? p._usuarioEncontrado.username
+        : undefined,
     }));
 
   const escalada = {
@@ -456,10 +529,16 @@ const onReset = () => {
   align-items: center;
   gap: 6px;
   padding: 4px 0;
+  flex-wrap: wrap;
 
   &.buscando { color: rgba($offwhite, 0.5); }
   &.encontrado { color: $cumes-01; }
   &.nao-encontrado { color: $error-color; }
+}
+
+.username-tag {
+  font-weight: 600;
+  opacity: 0.85;
 }
 
 .btn-add-participante {

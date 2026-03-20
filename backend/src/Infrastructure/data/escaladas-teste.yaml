@@ -1,18 +1,41 @@
-# Escaladas para o usuário de teste (teste@cumes.com.br)
 # Nomes das vias devem existir em vias.yaml
-# Usar datetime completo (YYYY-MM-DDTHH:MM:SS) para garantir ordenação correta pelo created_at
-- via: 29 de dezembro
+# usuario = username (usuarios-teste.yaml)
+# Usar datetime completo (YYYY-MM-DDTHH:MM:SS) para ordenação no feed
+
+# --- cumes_teste ---
+- usuario: cumes_teste
+  via: 29 de dezembro
   data: '2025-03-10T08:30:00'
   observacao: 'Ótimo dia, via limpa e seca'
-- via: Fenda do Forte
+- usuario: cumes_teste
+  via: Fenda do Forte
   data: '2025-02-28T09:15:00'
-- via: Semisonic
+- usuario: cumes_teste
+  via: Semisonic
   data: '2025-02-15T07:45:00'
   observacao: 'Encordado em trio, vista incrível'
-- via: Ponto Noturno
+- usuario: cumes_teste
+  via: Ponto Noturno
   data: '2025-01-20T10:30:00'
-- via: João Belamy
+- usuario: cumes_teste
+  via: João Belamy
   data: '2024-12-01T09:00:00'
-- via: Ratos de montanha
+- usuario: cumes_teste
+  via: Ratos de montanha
   data: '2024-11-15T08:00:00'
   observacao: 'Primeira vez na via, dia memorável'
+
+# --- maria_escaladora ---
+- usuario: maria_escaladora
+  via: Semisonic
+  data: '2025-03-18T14:00:00'
+  observacao: 'Dia lindo na Pedra'
+- usuario: maria_escaladora
+  via: 29 de dezembro
+  data: '2025-02-01T09:30:00'
+
+# --- usuario_privado ---
+- usuario: usuario_privado
+  via: Fenda do Forte
+  data: '2025-01-05T11:00:00'
+  observacao: 'Escalada em conta privada — não deve aparecer para terceiros se perfil estiver privado'

@@ -18,6 +18,14 @@
         <div class="col-12">
           <PerfilGridButtons :items="items" />
         </div>
+        <div v-if="user?.id" class="col-12">
+          <PerfilEscaladasDestaque
+            :usuario-id="user.id"
+            :username="user?.username || ''"
+            modo-proprio
+            :num-escaladas-conhecido="typeof numEscaladas === 'number' ? numEscaladas : undefined"
+          />
+        </div>
       </div>
 
       <!-- PerfilBio e PerfilPredileta -->
@@ -89,6 +97,14 @@
       <div class="desktop-stats">
         <PerfilGridButtons :items="items" />
       </div>
+
+      <PerfilEscaladasDestaque
+        v-if="user?.id"
+        :usuario-id="user.id"
+        :username="user?.username || ''"
+        modo-proprio
+        :num-escaladas-conhecido="typeof numEscaladas === 'number' ? numEscaladas : undefined"
+      />
 
       <!-- Conteúdo principal em colunas -->
       <div class="desktop-content">
@@ -181,10 +197,11 @@ import PerfilBio from 'components/Perfil/PerfilBio.vue';
 import { IColecao } from 'src/models/IColecao';
 import PerfilGridButtons from 'components/Perfil/PerfilGridButtons.vue';
 import PerfilViaPredileta from 'components/Perfil/PerfilViaPredileta.vue';
+import PerfilEscaladasDestaque from 'components/Perfil/PerfilEscaladasDestaque.vue';
 import EscaladaService from 'src/services/EscaladaService';
-import { Escalada } from 'src/models/Escalada';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
 import ImagemService from 'src/services/ImagemService';
+import { parseDataAtividade } from 'src/utils/dataAtividade';
 
 const props = defineProps<{ userInicial?: IUsuario }>();
 const router = useRouter();
@@ -219,35 +236,39 @@ const pageClass = computed(() => {
   return 'perfil-page-mobile';
 });
 
-const items = computed(() => [
-  {
-    label: 'Coleções',
-    num: numColecoes.value,
-    icon: 'style',
-    color: '#546119', // $cumes-02 (action-colecoes)
-    to: '/colecoes'
-  },
-  {
-    label: 'Favoritas',
-    num: numFavoritas.value,
-    icon: 'star',
-    color: '#F4E285', // $cumes-04 (action-favoritos)
-    to: '/favoritas'
-  },
-  {
-    label: 'Escaladas',
-    num: numEscaladas.value,
-    icon: 'hiking',
-    color: '#F29340', // $cumes-03 (action-escaladas)
-    to: '/escaladas'
-  }
-]);
+const items = computed(() => {
+  const u = user.value?.username;
+  const linkParticipacoes = u ? `/perfil/${u}/escaladas` : '/perfil/me/escaladas';
+  return [
+    {
+      label: 'Coleções',
+      num: numColecoes.value,
+      icon: 'style',
+      color: '#546119', // $cumes-02 (action-colecoes)
+      to: '/colecoes'
+    },
+    {
+      label: 'Favoritas',
+      num: numFavoritas.value,
+      icon: 'star',
+      color: '#F4E285', // $cumes-04 (action-favoritos)
+      to: '/favoritas'
+    },
+    {
+      label: 'Marcações',
+      num: numEscaladas.value,
+      icon: 'hiking',
+      color: '#F29340', // $cumes-03 (action-escaladas)
+      to: linkParticipacoes
+    }
+  ];
+});
 
 // Computeds para informações de escalada
 const diasEscalados = computed(() => {
   if (!user.value?.data_atividade) return 0;
-  const partesData = user.value.data_atividade.split('/');
-  const dataAtividade = new Date(`${partesData[2]}-${partesData[1]}-${partesData[0]}`);
+  const dataAtividade = parseDataAtividade(user.value.data_atividade);
+  if (!dataAtividade) return 0;
   const hoje = new Date();
   return Math.floor((hoje.getTime() - dataAtividade.getTime()) / (1000 * 60 * 60 * 24));
 });
@@ -271,16 +292,16 @@ onMounted(async () => {
     }
     const colecoes: IColecao[] | undefined = await ColecaoService.listarColecoesPorUsuario();
     const favorita: IColecao | null = await ColecaoService.obterColecaoFavoritos();
-    const escaladas: Escalada[] = await EscaladaService.getEscaladasByUsuario();
+    if (user.value?.id) {
+      const marcacoes = await EscaladaService.listarOndeFoiMarcado(user.value.id);
+      numEscaladas.value = marcacoes.length;
+    } else {
+      numEscaladas.value = 0;
+    }
     if (favorita) {
       colecaoId.value = favorita?.id;
       numFavoritas.value = favorita.viaColecoes.length;
       numColecoes.value = colecoes?.length;
-    }
-    if (escaladas.length === 0) {
-      numEscaladas.value = 0;
-    } else {
-      numEscaladas.value = escaladas.length;
     }
   } catch (error) {
     console.error(error);

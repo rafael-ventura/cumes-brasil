@@ -86,7 +86,7 @@ Arquivo: `src/router/routes.ts`
 
 - Todas as páginas são **lazy-loaded** (`() => import('./pages/...')`)
 - Hash mode ou history mode via `VUE_ROUTER_MODE` (env)
-- Rotas principais: `/`, `/busca`, `/vias/:id`, `/colecoes`, `/colecoes/:id`, `/favoritas`, `/escaladas`, `/perfil/:username` (próprio ou visitante), `/u/:username` (redireciona para `/perfil/:username`), `/auth/*`
+- Rotas principais: `/`, `/busca`, `/vias/:id`, `/colecoes`, `/colecoes/:id`, `/favoritas`, `/escaladas`, `/perfil/:username` (próprio ou visitante), `/perfil/:username/escaladas` (lista de marcações na cordada — **requer login**), `/u/:username` (redireciona para `/perfil/:username`), `/auth/*`
 - `MainLayout` envolve todas as rotas autenticadas
 
 ---
@@ -95,8 +95,10 @@ Arquivo: `src/router/routes.ts`
 
 - URLs das imagens chegam da API com prefixo `/assets/` (ex.: `/assets/vias/foto.png`)
 - `ImagemService` reconstrói a URL completa usando `VITE_APP_ASSETS_URL`
-- `utils.ts` tem `getViaImageUrl()` e `getViaImageUrlFull()` para fallback inteligente:
+- `utils.ts` tem `getViaImageUrl()` e `getViaImageUrlFull()` para fallback inteligente (`imagem`, `imagens`, relação `viaImagens[].imagem` quando a API popula a via):
   - Via sem foto → foto da montanha → placeholder padrão
+
+**Perfil / cordada:** `PerfilEscaladasDestaque` (faixa com bolhas); `PerfilMarcacaoEscaladaRow` (linha da lista); `EscaladaService.listarOndeFoiMarcado` chama `GET /escaladas/usuario?usuario=:id&como=marcado`.
 
 ---
 

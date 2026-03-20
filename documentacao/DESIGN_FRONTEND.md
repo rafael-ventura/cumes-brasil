@@ -361,6 +361,17 @@ Ver implementação de referência em:
 
 ---
 
+## Perfil — marcações na cordada
+
+Registros em que a pessoa foi citada na cordada (guia/participante/misto) em **escaladas criadas por outros**:
+
+- **Preview no perfil** (`PerfilEscaladasDestaque`): faixa compacta — fundo `rgba(0, 0, 0, 0.14)`, borda `rgba($cumes-01, 0.2)`, título curto **Na cordada**, badge com contagem em `$cumes-03`, bolhas **circulares 44px** com foto da via (scroll horizontal), link **Ver lista** em `$action-escaladas`. Não usar card grande tipo grade 3×N no perfil.
+- **Lista autenticada** (`PerfilEscaladasLista` em `/perfil/:username/escaladas`): hero com gradiente (verde → fundo → verde escuro), ícone em caixa com borda laranja, tipografia alinhada ao restante do app; itens em **linhas** (`PerfilMarcacaoEscaladaRow`) — thumb 64px arredondado, nome da via em `$cumes-01`, meta linha com data (pt-BR) e **por @autor** quando disponível.
+
+Utilitário `getViaImageUrl` também considera relação `viaImagens` vinda da API para miniaturas consistentes.
+
+---
+
 ## 📚 Referências
 
 ### Arquivos Principais
@@ -391,5 +402,5 @@ R: Para evitar conflitos com os estilos padrão do Quasar e garantir consistênc
 
 ---
 
-*Última atualização: 2025-11-08*
-*Versão: 1.1 - Adicionada seção de Modais e Formulários*
+*Última atualização: 2026-03-19*
+*Versão: 1.2 — seção Perfil / marcações na cordada*

@@ -3,9 +3,9 @@
     <component
       v-for="(item, index) in items"
       :key="index"
-      :is="readonly ? 'div' : 'router-link'"
-      :to="readonly ? undefined : item.to"
-      :class="['stat-card', { 'stat-card-readonly': readonly }]"
+      :is="itemEhLink(item) ? 'router-link' : 'div'"
+      :to="itemEhLink(item) ? item.to : undefined"
+      :class="['stat-card', { 'stat-card-readonly': readonly && !itemEhLink(item) }]"
       :style="{ backgroundColor: item.color }"
     >
       <div class="stat-content">
@@ -23,6 +23,11 @@ defineProps<{
   items: Array<{ label: string; num: number; icon: string; color: string; to: string }>;
   readonly?: boolean;
 }>();
+
+/** Permite navegar no modo visitante quando `to` é uma rota real (ex.: escaladas públicas). */
+function itemEhLink (item: { to: string }) {
+  return item.to && item.to !== '#';
+}
 </script>
 
 <style scoped lang="scss">
@@ -57,6 +62,10 @@ defineProps<{
 
   &.stat-card-readonly {
     cursor: default;
+  }
+
+  a.stat-card {
+    cursor: pointer;
   }
   min-width: 0;
   min-height: 60px;

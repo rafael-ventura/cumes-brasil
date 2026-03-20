@@ -1,0 +1,25 @@
+# Vias por nome (mesmas chaves que em vias.yaml / ViaLoader)
+favoritos:
+  cumes_teste:
+    - 29 de dezembro
+    - Fenda do Forte
+    - Semisonic
+  maria_escaladora:
+    - Ponto Noturno
+    - João Belamy
+  usuario_privado:
+    - Ratos de montanha
+
+colecoes:
+  - username: cumes_teste
+    nome: Clássicas do CERJ
+    descricao: Referência para treino e repetição
+    vias:
+      - 29 de dezembro
+      - Fenda do Forte
+  - username: maria_escaladora
+    nome: Favoritas de inverno
+    descricao: Vias que escalo no frio
+    vias:
+      - Semisonic
+      - Ponto Noturno

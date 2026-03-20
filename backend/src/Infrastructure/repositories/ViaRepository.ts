@@ -249,6 +249,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             crux,
             faixaExtensao,
             exposicao,
+            duracao,
             artificial,
             colecaoId,
             nomeBairro,
@@ -312,6 +313,12 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         if (exposicao) {
             qb = qb.andWhere("LOWER(via.exposicao) = :exposicao", {
                 exposicao: exposicao.toLowerCase(),
+            });
+        }
+
+        if (duracao) {
+            qb = qb.andWhere("LOWER(via.duracao) = :duracaoNorm", {
+                duracaoNorm: duracao.toLowerCase(),
             });
         }
 

@@ -53,7 +53,7 @@ export class ColecaoController {
     getByUsuarioId = async (req: Request, res: Response) => {
         const usuarioId = ColecaoValidation.idParam(req.params.id);
         const colecoes = await this.service.getColecoesByUsuarioId(usuarioId);
-        res.status(200).json(colecoes);
+        res.status(200).json(colecoes.map(c => new ColecaoDTO(c)));
     };
 
 
@@ -114,7 +114,35 @@ export class ColecaoController {
             limit
         );
 
-        res.status(200).json(result);
+        const colecoesDto = result.colecoes.map(c => new ColecaoDTO(c));
+        res.status(200).json({ colecoes: colecoesDto, total: result.total });
+    };
+
+    putCapaColecao = async (req: Request, res: Response) => {
+        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const id = ColecaoValidation.idParam(req.params.id);
+        const atualizada = await this.service.atualizarCapaColecao(usuarioId, id, req.file);
+        if (!atualizada) {
+            throw new NotFoundError("Coleção não encontrada");
+        }
+        return res.status(200).json(new ColecaoDTO(atualizada));
+    };
+
+    deleteCapaColecao = async (req: Request, res: Response) => {
+        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const id = ColecaoValidation.idParam(req.params.id);
+        const atualizada = await this.service.excluirCapaColecao(usuarioId, id);
+        if (!atualizada) {
+            throw new NotFoundError("Coleção não encontrada");
+        }
+        return res.status(200).json(new ColecaoDTO(atualizada));
+    };
+
+    removerViasEmLote = async (req: Request, res: Response) => {
+        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const { colecaoId, viaIds } = ColecaoValidation.removerViasLoteBody(req.body);
+        await this.service.removerViasEmLote(usuarioId, colecaoId, viaIds);
+        res.status(200).json({ message: "Vias removidas da coleção." });
     };
 
     /**

@@ -3,18 +3,18 @@ import { Escalada } from '../../../Domain/entities/Escalada';
 import { loadYaml } from '../seedUtils';
 
 interface EscaladaTesteYaml {
+  usuario: string;
   via: string;
   data: string;
   observacao?: string;
 }
 
 /**
- * Cria ou atualiza escaladas para o usuário de teste.
- * Idempotente: busca por usuário + via + dia (ignora hora),
- * e atualiza data + created_at se o registro já existir.
+ * Cria ou atualiza escaladas a partir de `escaladas-teste.yaml`.
+ * Idempotente: usuário + via + mesmo dia.
  */
 export async function runEscaladaLoader(
-  usuarioId: number,
+  usuarioPorUsername: Map<string, number>,
   viaIds: Map<string, number>
 ): Promise<void> {
   const escaladaRepo = AppDataSource.getRepository(Escalada);
@@ -25,6 +25,12 @@ export async function runEscaladaLoader(
   let atualizadas = 0;
 
   for (const item of yamlData) {
+    const usuarioId = usuarioPorUsername.get(item.usuario);
+    if (!usuarioId) {
+      console.warn(`[EscaladaLoader] Usuário seed não encontrado: ${item.usuario}`);
+      continue;
+    }
+
     const viaId = viaIds.get(item.via);
     if (!viaId) {
       console.warn(`[EscaladaLoader] Via não encontrada: ${item.via}`);
@@ -33,7 +39,6 @@ export async function runEscaladaLoader(
 
     const dataEscalada = new Date(item.data);
 
-    // Busca por usuário + via + mesmo dia (tolerante a mudanças de hora no YAML)
     const inicioDia = new Date(dataEscalada);
     inicioDia.setHours(0, 0, 0, 0);
     const fimDia = new Date(dataEscalada);
@@ -47,7 +52,6 @@ export async function runEscaladaLoader(
       .getOne();
 
     if (existente) {
-      // Atualiza data e created_at para refletir o YAML atual
       await escaladaRepo.query(
         `UPDATE escalada SET data = $1, created_at = $1, observacao = $2 WHERE id = $3`,
         [dataEscalada, item.observacao ?? null, existente.id]
@@ -63,7 +67,6 @@ export async function runEscaladaLoader(
       via: { id: viaId } as any
     });
     const salva = await escaladaRepo.save(escalada);
-    // Alinha created_at com a data da escalada para ordenação correta no feed
     await escaladaRepo.query(
       `UPDATE escalada SET created_at = $1 WHERE id = $2`,
       [dataEscalada, salva.id]
@@ -71,6 +74,6 @@ export async function runEscaladaLoader(
     criadas++;
   }
 
-  if (criadas > 0) console.log(`[EscaladaLoader] ${criadas} escaladas criadas para o usuário de teste`);
+  if (criadas > 0) console.log(`[EscaladaLoader] ${criadas} escaladas criadas`);
   if (atualizadas > 0) console.log(`[EscaladaLoader] ${atualizadas} escaladas atualizadas`);
 }

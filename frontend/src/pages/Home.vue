@@ -177,7 +177,7 @@ const cardsExplorar = ref<CardExplorar[]>([
   { titulo: 'Vias em Copacabana', tipoFiltro: 'bairro=copacabana', icone: 'pi-sun', classeCor: 'theme-laranja', contagem: null, urlImagem: null },
   { titulo: 'Terceiro Grau', tipoFiltro: 'grau=3', icone: 'pi-chart-bar', classeCor: 'theme-amarelo', contagem: null, urlImagem: null },
   { titulo: 'Exposição até E2', tipoFiltro: 'exposicao=E2', icone: 'pi-shield', classeCor: 'theme-verde', contagem: null, urlImagem: null },
-  { titulo: 'Duração Rápida', tipoFiltro: 'duracao=d1', icone: 'pi-stopwatch', classeCor: 'theme-verde-escuro', contagem: null, urlImagem: null },
+  { titulo: 'Duração D1', tipoFiltro: 'duracao=d1', icone: 'pi-stopwatch', classeCor: 'theme-verde-escuro', contagem: null, urlImagem: null },
   { titulo: 'Vias na Urca', tipoFiltro: 'bairro=urca', icone: 'pi-map-marker', classeCor: 'theme-vermelho', contagem: null, urlImagem: null },
   { titulo: 'Clássicas CERJ', tipoFiltro: 'via_cerj=true', icone: 'pi-trophy', classeCor: 'theme-amarelo', contagem: null, urlImagem: null },
 ]);

@@ -14,6 +14,8 @@ export interface FiltrosBuscaVia extends FiltrosBuscaBase {
   grau?: string;
   crux?: string;
   exposicao?: string;
+  /** D1–D5 (normalizado no repositório) */
+  duracao?: string;
   faixaExtensao?: number[];
   tipoRocha?: string;
   tipoEscalada?: string;

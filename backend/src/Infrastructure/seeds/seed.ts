@@ -11,6 +11,7 @@ import { runCroquiLoader } from './loaders/CroquiLoader';
 import { runViaCroquiLoader } from './loaders/ViaCroquiLoader';
 import { runUsuarioLoader } from './loaders/UsuarioLoader';
 import { runEscaladaLoader } from './loaders/EscaladaLoader';
+import { runColecaoConteudoLoader } from './loaders/ColecaoConteudoLoader';
 
 async function main() {
   console.log('Iniciando seed...');
@@ -23,8 +24,9 @@ async function main() {
     const viaIds = await runViaLoader(refs, montanhaIds, faceIds);
     const croquiIds = await runCroquiLoader(refs);
     await runViaCroquiLoader(viaIds, croquiIds);
-    const { usuarioId } = await runUsuarioLoader();
-    await runEscaladaLoader(usuarioId, viaIds);
+    const { porUsername } = await runUsuarioLoader();
+    await runEscaladaLoader(porUsername, viaIds);
+    await runColecaoConteudoLoader(porUsername, viaIds);
     console.log('Seed concluído com sucesso.');
   } catch (err) {
     console.error('Erro no seed:', err);

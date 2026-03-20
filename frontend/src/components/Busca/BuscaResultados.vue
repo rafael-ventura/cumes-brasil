@@ -30,18 +30,31 @@
 
     <!-- Renderiza ViaCard se entityType for 'via' -->
     <div v-else-if="entityType === 'via' && sortedResults">
-      <ViaLista :vias="sortedResults as Via[]" />
+      <ViaLista
+        :vias="sortedResults as Via[]"
+        :modo-selecao="modoSelecaoVias"
+        :ids-selecionados="viasSelecionadasIds"
+        @toggle-selecao="$emit('toggle-selecao-via', $event)"
+      />
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
     <div v-else-if="entityType === 'colecao' && sortedResults">
-      <ColecaoLista :colecoes="sortedResults as IColecao[]" />
+      <ColecaoLista
+        :colecoes="sortedResults as IColecao[]"
+        :exibir-menu="exibirMenuColecao"
+        @editar="$emit('editar-colecao', $event)"
+        @excluir="$emit('excluir-colecao', $event)"
+      />
     </div>
     <div v-else-if="entityType === 'escalada' && sortedResults" class="escaladas-grid">
       <EscaladaCard
         v-for="escalada in sortedResults"
         :key="escalada.id"
         :escalada="escalada"
+        :modo-selecao="modoSelecaoEscaladas"
+        :selecionada="escaladasSelecionadasIds.includes(escalada.id)"
         class="escalada-card-item"
+        @toggle-selecao="$emit('toggle-selecao-escalada', escalada.id)"
       />
     </div>
     <!-- Mensagem se não houver resultados -->
@@ -107,10 +120,39 @@ const props = defineProps({
     default: false
   },
   initialSort: Object,
-  enableSortOptions: Array
+  enableSortOptions: Array,
+  exibirMenuColecao: {
+    type: Boolean,
+    default: false
+  },
+  modoSelecaoVias: {
+    type: Boolean,
+    default: false
+  },
+  viasSelecionadasIds: {
+    type: Array as () => number[],
+    default: () => []
+  },
+  modoSelecaoEscaladas: {
+    type: Boolean,
+    default: false
+  },
+  escaladasSelecionadasIds: {
+    type: Array as () => number[],
+    default: () => []
+  }
 });
 
-const emit = defineEmits(['select', 'change-sort', 'page-change', 'items-per-page-change']);
+const emit = defineEmits([
+  'select',
+  'change-sort',
+  'page-change',
+  'items-per-page-change',
+  'editar-colecao',
+  'excluir-colecao',
+  'toggle-selecao-via',
+  'toggle-selecao-escalada'
+]);
 
 // Funções de paginação
 const onPageChange = (page: number) => {

@@ -5,15 +5,17 @@
       <i class="pi pi-spin pi-spinner" />
     </div>
 
-    <!-- Não encontrada / perfil privado -->
-    <div v-else-if="naoEncontrada" class="estado-centro">
-      <i class="pi pi-lock" />
-      <span>Escalada não encontrada</span>
-      <q-btn flat label="Voltar" class="btn-voltar" @click="router.back()" />
+    <!-- Não encontrada / privada / removida -->
+    <div v-else-if="naoEncontrada" class="estado-centro estado-indisponivel">
+      <i class="pi pi-eye-slash" />
+      <span class="indisponivel-titulo">Escalada indisponível</span>
+      <span class="indisponivel-sub">Este registro não existe ou não pode ser exibido (perfil privado do autor).</span>
+      <q-btn flat no-caps label="Voltar" class="btn-voltar" @click="router.back()" />
     </div>
 
     <!-- Conteúdo -->
     <template v-else-if="escalada">
+      <div class="escalada-inner">
       <!-- Header: usuário -->
       <div class="escalada-header">
         <router-link :to="linkPerfil" class="header-usuario">
@@ -45,6 +47,21 @@
         </div>
       </div>
 
+      <div v-if="linhasSobreVia.length" class="sobre-via">
+        <h2 class="secao-titulo">Sobre a via</h2>
+        <div class="sobre-via-grid">
+          <div
+            v-for="(linha, idx) in linhasSobreVia"
+            :key="idx"
+            class="sobre-via-linha"
+          >
+            <span class="sobre-via-label">{{ linha.label }}</span>
+            <span class="sobre-via-valor">{{ linha.valor }}</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="secao-titulo secao-titulo-escalada">Registro da escalada</h2>
       <!-- Detalhes da escalada -->
       <div class="escalada-detalhes">
         <!-- Observação -->
@@ -74,6 +91,7 @@
           </div>
         </div>
       </div>
+      </div>
     </template>
 
     <div class="page-bottom-spacer" />
@@ -87,6 +105,20 @@ import EscaladaService from 'src/services/EscaladaService';
 import ImagemService from 'src/services/ImagemService';
 import { getViaImageUrlFull } from 'src/utils/utils';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
+import type { Via } from 'src/models/Via';
+
+function formatarModalidade (m: string | undefined): string | null {
+  if (!m) return null;
+  const map: Record<string, string> = {
+    TRADICIONAL: 'Tradicional',
+    ESPORTIVA: 'Esportiva',
+    BOULDER: 'Boulder',
+    BIG_WALL: 'Big wall',
+    ARTIFICIAL: 'Artificial',
+    PSICOBLOC: 'Psicobloc'
+  };
+  return map[m] || m;
+}
 
 const route = useRoute();
 const router = useRouter();
@@ -140,9 +172,69 @@ const dataCompletaFormatada = computed(() => {
   return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
 });
 
+const viaDetalhe = computed(() => escalada.value?.via as Via | undefined);
+
+const linhasSobreVia = computed(() => {
+  const v = viaDetalhe.value;
+  if (!v) return [] as { label: string; valor: string }[];
+  const linhas: { label: string; valor: string }[] = [];
+  const mont =
+    v.setor?.montanha?.nome ||
+    v.setor?.face?.montanha?.nome ||
+    v.face?.montanha?.nome ||
+    v.montanha?.nome;
+  if (mont) linhas.push({ label: 'Montanha', valor: mont });
+  const face = v.setor?.face?.nome || v.face?.nome;
+  if (face) linhas.push({ label: 'Face', valor: face });
+  if (v.setor?.nome) linhas.push({ label: 'Setor', valor: v.setor.nome });
+  const loc = v.localizacao;
+  if (loc?.cidade?.nome) {
+    const partes = [loc.cidade.nome, loc.estado?.sigla].filter(Boolean);
+    linhas.push({ label: 'Cidade', valor: partes.join(' · ') });
+  } else if (loc?.estado?.nome) {
+    linhas.push({
+      label: 'Estado',
+      valor: loc.estado.sigla
+        ? `${loc.estado.nome} (${loc.estado.sigla})`
+        : loc.estado.nome
+    });
+  }
+  if (v.extensao != null && v.extensao > 0) {
+    linhas.push({ label: 'Extensão', valor: `${v.extensao} m` });
+  }
+  const mod = formatarModalidade(v.modalidade);
+  if (mod) linhas.push({ label: 'Modalidade', valor: mod });
+  if (v.exposicao) {
+    const rawExp = String(v.exposicao).trim();
+    const expFmt = rawExp.toUpperCase().startsWith('E')
+      ? rawExp.toUpperCase()
+      : `E${rawExp.toUpperCase()}`;
+    linhas.push({ label: 'Exposição', valor: expFmt });
+  }
+  if (v.crux) linhas.push({ label: 'Crux', valor: v.crux });
+  if (v.duracao) {
+    const cod = String(v.duracao).trim();
+    const chave = cod.toUpperCase().startsWith('D') ? cod.toUpperCase() : `D${cod.toUpperCase()}`;
+    linhas.push({ label: 'Duração', valor: chave });
+  }
+  if (v.tipo_escalada) linhas.push({ label: 'Tipo de escalada', valor: v.tipo_escalada });
+  if (v.tipo_rocha) linhas.push({ label: 'Tipo de rocha', valor: v.tipo_rocha });
+  if (v.detalhes) {
+    const t =
+      v.detalhes.length > 320 ? `${v.detalhes.slice(0, 320)}…` : v.detalhes;
+    linhas.push({ label: 'Detalhes da via', valor: t });
+  }
+  return linhas;
+});
+
 const participantesFormatados = computed(() => {
   return escalada.value?.participantes
-    ?.map((p: any) => p.nome || p.usuario?.nome)
+    ?.map((p: any) => {
+      const nome = p.nome || p.usuario?.nome;
+      if (p.username && nome) return `${nome} (@${p.username})`;
+      if (p.username) return `@${p.username}`;
+      return nome;
+    })
     .filter(Boolean)
     .join(', ') || '';
 });
@@ -169,9 +261,14 @@ onMounted(async () => {
 @import 'src/css/app.scss';
 
 .escalada-page {
-  padding: 16px 16px 0;
-  max-width: 680px;
+  padding: 24px 20px 0;
+  max-width: 100%;
+}
+
+.escalada-inner {
+  max-width: 960px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .estado-centro {
@@ -185,6 +282,25 @@ onMounted(async () => {
   font-size: 16px;
 
   i { font-size: 48px; color: $cumes-03; }
+}
+
+.estado-indisponivel {
+  text-align: center;
+  padding: 0 16px;
+
+  .indisponivel-titulo {
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba($offwhite, 0.85);
+  }
+
+  .indisponivel-sub {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba($offwhite, 0.45);
+    max-width: 320px;
+    line-height: 1.4;
+  }
 }
 
 .btn-voltar { color: $cumes-01; }
@@ -252,13 +368,67 @@ onMounted(async () => {
 }
 
 // ---- Via em destaque ----
+.secao-titulo {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba($offwhite, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+}
+
+.secao-titulo-escalada {
+  margin-top: 28px;
+}
+
+.sobre-via {
+  margin-bottom: 8px;
+}
+
+.sobre-via-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 600px) {
+  .sobre-via-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.sobre-via-linha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba($offwhite, 0.03);
+  border: 1px solid rgba($offwhite, 0.07);
+}
+
+.sobre-via-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba($offwhite, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sobre-via-valor {
+  font-size: 14px;
+  color: rgba($offwhite, 0.92);
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
 .via-destaque {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   cursor: pointer;
-  min-height: 160px;
+  min-height: 200px;
   background: rgba($offwhite, 0.05);
   border: 1px solid rgba($offwhite, 0.1);
 

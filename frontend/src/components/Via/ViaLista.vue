@@ -1,6 +1,14 @@
 <template>
   <div class="via-list">
-    <ViaCard v-for="via in props.vias" :key="via.id" :via="via" @click="showDetails(via)" />
+    <ViaCard
+      v-for="via in props.vias"
+      :key="via.id"
+      :via="via"
+      :modo-selecao="modoSelecao"
+      :selecionada="idsSelecionados.includes(via.id)"
+      @toggle-selecao="emit('toggle-selecao', via.id)"
+      @click="showDetails(via)"
+    />
   </div>
 </template>
 
@@ -9,10 +17,20 @@ import { Via } from 'src/models/Via';
 import ViaCard from 'components/Via/ViaCard.vue';
 import { useRouter } from 'vue-router';
 
-const props = defineProps<{ vias: Via[] }>();
+const props = withDefaults(
+  defineProps<{
+    vias: Via[];
+    modoSelecao?: boolean;
+    idsSelecionados?: number[];
+  }>(),
+  { modoSelecao: false, idsSelecionados: () => [] }
+);
+
+const emit = defineEmits<{ 'toggle-selecao': [viaId: number] }>();
 const router = useRouter();
 
 const showDetails = (via: Via) => {
+  if (props.modoSelecao) return;
   router.push(`/vias/${via.id}`);
 };
 
