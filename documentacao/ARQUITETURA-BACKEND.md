@@ -1,131 +1,210 @@
-# Arquitetura do Backend
+# Arquitetura Backend — Cumes Brasil
 
-## Estrutura de Camadas (DDD)
+## Stack
 
-O backend segue Domain-Driven Design com 4 camadas bem definidas:
-
-```
-src/
-├── Domain/          # O quê existe no sistema
-├── Application/     # O que o sistema faz
-├── Infrastructure/  # Como o sistema persiste e se conecta
-└── Api/             # Como o sistema é acessado
-```
-
-### Domain
-- Entidades TypeORM (`Via`, `Montanha`, `Face`, `Usuario`, `Croqui`, `Imagem`, etc.)
-- Interfaces de repositório (`IViaRepository`, etc.)
-- Regras de domínio
-- Não depende de nenhuma outra camada
-
-### Application
-- Services com a lógica de negócio (`ViaService`, `UsuarioService`, etc.)
-- Injetados via **TypeDI** — usar sempre `@Service()` e `@Inject()`
-- Retornam `ServiceResponse<T>` padronizado
-- Não conhecem Express nem HTTP
-
-### Infrastructure
-- Repositórios concretos TypeORM implementando as interfaces do Domain
-- `config/db.ts` — DataSource TypeORM (único ponto de configuração do banco)
-- `migrations/` — nunca editar manualmente; gerar com `npm run migration:generate`
-- `seeds/` — carregamento de dados via YAML
-- `helpers/` — S3Helper para upload de imagens
-
-### Api
-- Controllers Express: recebem Request, chamam Services, retornam Response
-- DTOs: transformam entidades para JSON de resposta (ex.: `ViaDTO`)
-- Validação com **Zod** antes de chegar no service
-- Middleware centralizado de erros (`errorHandler`)
-- `server.ts` — ponto de entrada da aplicação
+| Tecnologia | Versão | Papel |
+|-----------|--------|-------|
+| Node.js + TypeScript | — | Runtime e linguagem |
+| Express | 5.1.0 | Framework HTTP |
+| TypeORM | 0.3.20 | ORM e migrations |
+| PostgreSQL | — | Banco de dados |
+| TypeDI | 0.10.0 | Injeção de dependência |
+| Zod | 3.x | Validação de entrada |
+| Winston | 3.x | Logs estruturados |
+| JWT + bcrypt | — | Autenticação |
+| Multer-S3 | — | Upload de arquivos |
 
 ---
 
-## Hierarquia de Entidades
+## Arquitetura DDD
+
+O backend segue Domain-Driven Design com quatro camadas:
 
 ```
-Continente → Pais → Regiao → Estado → Cidade → Bairro → Localizacao
-
-Montanha ──┐
-           ├── Via ──── ViaImagem (via_id, imagem_id)
-Face ──────┘       └── ViaCroqui (via_id, croqui_id) ──── Croqui
-
-Fonte ──── Via, Face, Croqui, Imagem
-Usuario ── Colecao ── ColecaoVia ── Via
-        └─ Escalada ── Via
-        └─ foto_perfil → Imagem
-        └─ via_predileta → Via
-        └─ perfil_publico (boolean, default true) — perfis privados não aparecem no feed nem em GET /u/:username
+Api  →  Application  →  Domain  ←  Infrastructure
 ```
 
-### Escaladas `como=marcado` (perfil)
+### 📁 Api (`backend/src/Api/`)
 
-`GET /escaladas/usuario?usuario=:id&como=marcado` lista registros em que o usuário foi incluído na cordada por **username** em participantes, excluindo quando ele é o autor. A regra de visibilidade do autor (perfil público / observador) é a mesma das outras listagens de escalada.
+Interface HTTP — recebe requests, retorna responses.
 
-No repositório, `EscaladaRepository.getOndeUsuarioFoiMarcado` faz `leftJoinAndSelect` em `via`, `via.viaImagens` e imagens, e inclui `usuario.username` no `addSelect` do autor — permite ao frontend miniaturas e texto “por @usuário” sem N+1.
+**Controllers** (`Api/Controllers/`):
+- `AuthenticateController` — login, registro, Google OAuth
+- `UsuarioController` — CRUD de usuários
+- `ViaController` — CRUD de vias
+- `ColecaoController` — coleções
+- `EscaladaController` — escaladas
+- `SearchController` — busca e filtros
+- `StatsController` — estatísticas e métricas
+- `ConquistasController` — sistema de badges
+- `SeguimentoController` — sistema social
+- `LocalizacaoController`, `MontanhaController`, `FaceController`
+- `CroquiController`, `ImagemController`, `ShareController`
 
-**Campos importantes da Via:**
-- `grau`, `crux`, `artificial`, `duracao`, `exposicao`, `extensao`
-- `conquistadores`, `data`, `detalhes`, `historia_resumo`
-- `via_cerj` (boolean) — identifica vias clássicas do CERJ
-- `equipamentos` (texto livre), `tracklog_aproximacao` (URL)
-- `viaPrincipal` (auto-referência para variantes)
+**Routes** (`Api/routes/`):
+- `routes.ts` — configuração central; um router por recurso
+
+**Middlewares** (`Api/Middlewares/`):
+- `AuthenticateMiddleware` — valida JWT
+- `ErrorRequestMiddleware` — tratamento global de erros
+- `RateLimitMiddleware` — rate limiting por IP
+- `MulterMiddleware` — upload de arquivos
+
+**DTOs** (`Api/DTOs/`):
+- Transformam entidades em JSON de resposta
+- Um subdiretório por recurso: `Usuario/`, `Via/`, `Colecao/`, etc.
+
+**Entry point**: `server.ts` — inicializa Express, CORS, Helmet, rate limiting, static assets, DB.
 
 ---
 
-## Sistema de Seed
+### 📁 Application (`backend/src/Application/`)
 
-Dados vivem nos YAMLs em `src/Infrastructure/data/`. O seed é **idempotente**.
+Lógica de negócio e orquestração.
 
-**Ordem de execução (dependências em cascata):**
+**Services** (`Application/services/`):
+
+Todos usam `@Service()` TypeDI e retornam `ServiceResponse<T>`:
+
+```typescript
+@Service()
+export class ViaService {
+  constructor(@Inject() private viaRepository: ViaRepository) {}
+
+  async buscarPorId(id: number): Promise<ServiceResponse<Via>> {
+    // lógica de negócio
+    return ServiceResponse.success(via);
+  }
+}
 ```
-ReferenciasLoader → MontanhaLoader → FacesLoader → ViaLoader → CroquiLoader → ViaCroquiLoader → UsuarioLoader → EscaladaLoader → ColecaoConteudoLoader
-```
 
-- **UsuarioLoader**: lê `usuarios-teste.yaml` e cria/atualiza contas de desenvolvimento (senha comum `teste123`), cada uma com coleção Favoritas.
-- **EscaladaLoader**: `escaladas-teste.yaml` (por `username`) — escaladas de exemplo para vários usuários seed.
-- **ColecaoConteudoLoader**: `colecoes-vias-teste.yaml` — favoritos e listas personalizadas (`via_colecao`).
+Services principais: `ViaService`, `UsuarioService`, `ColecaoService`, `EscaladaService`, `SearchService`, `StatsService`, `ConquistasService`, `SeguimentoService`, `AuthenticateService`, `GoogleAuthenticateService`, `ImagemService`, `MailService`.
 
-- Utilitários compartilhados em `seeds/seedUtils.ts` (`loadYaml<T>`, `resolveLocalizacaoIds`)
-- `ViaLoader` usa `UPSERT_FIELDS` — array declarativo dos campos atualizados no re-seed
-- Para adicionar campo simples atualizável em Via: incluir em `ViaYaml` + `UPSERT_FIELDS`
+**Validations** (`Application/validations/`):
+- Esquemas Zod por recurso: `ViaValidation`, `UsuarioValidation`, `EscaladaValidation`, etc.
+- `ValidationBase` com utilitários comuns
 
-```bash
-npm run seed         # seed incremental (idempotente, não destrói dados)
-npm run db:fresh     # drop → build → migrations → seed (reset completo)
-```
+**Errors** (`Application/errors/`):
+- `BadRequestError` (400), `UnauthorizedError` (401), `NotFoundError` (404), `InternalServerError` (500)
+- `ErrorRequestMiddleware` trata tudo centralmente
 
 ---
 
-## Sistema de Imagens
+### 📁 Domain (`backend/src/Domain/`)
 
-- Servidas pelo Express de `backend/assets/` via `/assets` (estático)
-- Todos os paths no banco começam com `/assets/` (ex.: `/assets/vias/foto.png`)
-- `ViaImagem` — permite múltiplas imagens por via
-- `ViaDTO` expõe: `imagem` (primeira, compat. legada) e `imagens` (array completo)
-- Upload para S3 via `S3Helper` (usa `aws-sdk` v2 — débito técnico, migrar para v3 futuramente)
+Regras de domínio, sem dependência de tecnologias externas.
+
+**Entities** (`Domain/entities/`):
+
+*Core*: `Via`, `Usuario`, `Escalada`, `Colecao`
+
+*Localização hierárquica*:
+`Continente → Pais → Regiao → Estado → Cidade → Bairro → Localizacao`
+e também `Montanha → Face → Setor`
+
+*Mídia*: `Imagem`, `Croqui`
+
+*Relacionamentos*: `ViaImagem`, `ViaCroqui`, `ViaColecao`, `Participante`, `UsuarioSeguindo`, `UsuarioConquista`
+
+*Base*: `BaseEntityWithTimestamps` — id, createdAt, updatedAt
+
+**Interfaces** (`Domain/interfaces/`):
+- `repositories/` — `IUsuarioRepository`, `IViaRepository`, `ICrudRepository`
+- `services/` — `IViaService`, `IFonteService`, `ISearchQuery`
+- `models/` — interfaces de domínio (`IUsuario`, `IVia`, `IColecao`, etc.)
+
+**Enums** (`Domain/enum/`):
+- `EModalidadeEscalada` — tipos de escalada
+- `EParticipanteTipo` — guia / participante / misto
+
+---
+
+### 📁 Infrastructure (`backend/src/Infrastructure/`)
+
+Persistência e integrações externas.
+
+**Config** (`Infrastructure/config/`):
+- `db.ts` — DataSource TypeORM (configuração única)
+- `logger.ts` — configuração Winston
+
+**Repositories** (`Infrastructure/repositories/`):
+
+Implementações concretas das interfaces do Domain. Todos estendem `BaseRepository`:
+`UsuarioRepository`, `ViaRepository`, `ColecaoRepository`, `EscaladaRepository`, `ImagemRepository`, `CroquiRepository`, `MontanhaRepository`, `FaceRepository`, `LocalizacaoRepository`, `UsuarioSeguindoRepository`, `UsuarioConquistaRepository`.
+
+**Seeds** (`Infrastructure/seeds/`):
+- `seed.ts` — orquestrador principal (idempotente)
+- `loaders/` — `UsuarioLoader`, `ViaLoader`, `EscaladaLoader`, etc.
+- Dados em `data/*.yaml` — **fonte da verdade** (não editar direto no banco)
+
+**Data** (`Infrastructure/data/`):
+- `usuarios-teste.yaml`, `vias.yaml`, `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`
+
+**Migrations** (`Infrastructure/migrations/`):
+- Geradas automaticamente pelo TypeORM
+- Nunca editar manualmente
+- `npm run build && npm run migration:generate` → renomear → `npm run migration:run:dev`
+
+**Helpers** (`Infrastructure/helpers/`):
+- `S3Helper.ts` — upload para AWS S3 (SDK v2 — débito técnico consciente)
+- `imageHelper.ts` — processamento de imagens
 
 ---
 
 ## Padrões de Código
 
-| Camada | Padrão |
-|--------|--------|
-| Repositories | Herdam de classe base, implementam interface do Domain |
-| Services | `@Service()` TypeDI, retornam `ServiceResponse<T>` |
-| Controllers | Validam com Zod → chamam service → retornam HTTP |
-| DTOs | Classes com construtor que mapeia entidade para JSON |
-| Erros | Middleware `errorHandler` centralizado |
-| Logs | **Winston** — não usar `console.log` em produção |
+### Controller Pattern
+
+```typescript
+export class ViaController {
+  async buscarPorId(req: Request, res: Response) {
+    const { id } = ViaIdSchema.parse(req.params);   // validação Zod
+    const result = await viaService.buscarPorId(id); // service
+    return res.json(new ViaDTO(result.data));         // DTO de resposta
+  }
+}
+```
+
+### Error Handling
+
+- Middleware centralizado em `ErrorRequestMiddleware`
+- Controllers não tratam erros individualmente — lançam para o middleware
+- Logs estruturados com Winston
+
+### Autenticação
+
+- JWT em `Authorization: Bearer <token>`
+- `AuthenticateMiddleware` valida token e popula `req.usuario`
+- Google OAuth via `GoogleAuthenticateService`
+- Senhas com bcrypt
 
 ---
 
-## Migrations
+## Comandos Essenciais
 
 ```bash
-npm run build                   # sempre antes de gerar/rodar migrations
-npm run migration:generate      # gera <timestamp>-Migration.ts — renomear depois
-npm run migration:run:dev       # aplica pendentes (dev)
-npm run migration:run           # aplica pendentes (prod, usa dist/)
+# Setup completo do zero
+npm run db:fresh           # reset + build + migration + seed
+
+# Seed incremental (idempotente)
+npm run seed
+
+# Nova migration
+npm run build && npm run migration:generate
+# → renomear arquivo gerado para algo descritivo
+npm run migration:run:dev
+
+# Dev
+npm run dev:watch          # nodemon + ts-node
 ```
 
-> O TypeORM gera o arquivo com sufixo `-Migration`. Renomeie para algo descritivo antes de commitar: ex. `1741234567890-AddCampoEquipamentos.ts`.
+---
+
+## Usuários de Teste (seed)
+
+| Username | Email | Senha | Observação |
+|----------|-------|-------|-----------|
+| `cumes_teste` | `teste@cumes.com.br` | `teste123` | — |
+| `maria_escaladora` | `maria.dev@cumes.com.br` | `teste123` | — |
+| `usuario_privado` | `privado.dev@cumes.com.br` | `teste123` | perfil privado |
+| `rafael` | `rafael.dev@cumes.com.br` | `teste123` | — |

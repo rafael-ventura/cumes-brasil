@@ -1,19 +1,19 @@
 <template>
   <div class="botoes-acao">
     <!-- Botão para registrar escalada -->
-    <q-btn @click="handleEscaladaClick" class="btn-acao registrar">
+    <q-btn @click="aoClicarEscalada" class="btn-acao registrar">
       <q-icon name="add_circle" />
       <span>Registrar Escalada</span>
     </q-btn>
 
     <!-- Botão de favoritos com ícone e texto dinâmicos -->
-    <q-btn @click="handleFavoritoClick" class="btn-acao favoritos">
+    <q-btn @click="aoClicarFavorito" class="btn-acao favoritos">
       <q-icon :name="isFavorited ? 'star' : 'star_border'" />
       <span>{{ isFavorited ? 'Remover de Favoritos' : 'Adicionar a Favoritos' }}</span>
     </q-btn>
 
     <!-- Botão para abrir o modal de coleções -->
-    <q-btn @click="handleColecaoClick" class="btn-acao colecao">
+    <q-btn @click="aoClicarColecao" class="btn-acao colecao">
       <q-icon name="style" />
       <span>Adicionar a Coleção</span>
     </q-btn>
@@ -26,7 +26,7 @@
       :addItemToTarget="adicionarViaNaColecao"
       itemType="colecao"
       @update:isOpen="showCollectionModal = $event"
-      @item-added="onColecaoAdded"
+      @item-added="aoAdicionarColecao"
     />
 
     <!-- Modal para registrar escalada -->
@@ -78,7 +78,7 @@ const checkIfFavorited = () => {
 };
 
 // Funções para emitir eventos para o componente pai
-const handleEscaladaClick = async () => {
+const aoClicarEscalada = async () => {
   if (await AuthenticateService.redirecionaSeNaoAutenticado(router)) {
     return;
   }
@@ -86,14 +86,14 @@ const handleEscaladaClick = async () => {
   toggleEscaladaModal();
 };
 
-const handleFavoritoClick = () => {
+const aoClicarFavorito = () => {
   emit('acao:favorito');
   if (props.favoriteCollectionId) {
     toggleFavoriteStatus();
   }
 };
 
-const handleColecaoClick = () => {
+const aoClicarColecao = () => {
   emit('acao:colecao');
   toggleCollectionModal();
 };
@@ -198,7 +198,7 @@ const adicionarViaNaColecao = async (colecaoId: number) => {
 };
 
 // Callback quando uma coleção é adicionada
-const onColecaoAdded = () => {
+const aoAdicionarColecao = () => {
   Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
 };
 </script>

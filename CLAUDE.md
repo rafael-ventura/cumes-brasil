@@ -47,6 +47,7 @@ npm run migration:run:dev
 
 ### Epics em andamento
 - **Vias Clássicas do CERJ** — backend e frontend concluídos (badge nos cards, filtro na busca, card na home e na explorar)
+- **Conquistas persistidas** — badges por tier calculadas no backend e salvas em `usuario_conquistas` (perfil próprio e público)
 - **Redesenho da tela de Vias/Busca** — concluído: tela Explorar com categorias, filtros avançados em painel lateral, Home com cards visuais com foto, padronização ptBR
 - **Perfil público/privado** — concluído: campo `perfil_publico` em Usuario (default true), toggle no PerfilEditaForm, feed e rota `GET /u/:username` filtram perfis privados
 - **Sistema Colaborativo de Fotos** — entidade `ViaImageSuggestion` + upload por usuários + moderação
@@ -160,6 +161,5 @@ interface CardExplorar {
 |---------|----------|
 | `documentacao/ARQUITETURA-BACKEND.md` | DDD, entidades, seed, migrations, padrões |
 | `documentacao/ARQUITETURA-FRONTEND.md` | Vue 3, serviços, roteamento, auth, componentes |
-| `documentacao/DESIGN_FRONTEND.md` | Paleta de cores, tipografia, botões, modais |
-| `documentacao/LEGADO-AWS.md` | Infra AWS antiga e como reativar |
+| `documentacao/DESIGN_FRONTEND.md` | Paleta de cores, tipografia, botões, modais, convenções CSS |
 | `backend/README.md` | Setup local, scripts, variáveis de ambiente |

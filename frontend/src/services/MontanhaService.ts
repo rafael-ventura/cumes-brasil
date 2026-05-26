@@ -11,15 +11,6 @@ export class MontanhaService {
     return this.fetchMontanhasCollection('/montanhas');
   }
 
-  async getAllName (): Promise<string[]> {
-    try {
-      const montanhas = await this.fetchMontanhasCollection('/montanhas');
-      return montanhas.map((montanha: Montanha) => montanha.nome);
-    } catch (error: any) {
-      handleApiError(error, 'Erro desconhecido ao buscar nomes de montanhas');
-    }
-  }
-
   private async fetchMontanha (url: string): Promise<Montanha> {
     try {
       const response = await api.get(url);

@@ -3,7 +3,7 @@ import { Escalada } from 'src/models/Escalada';
 import { handleApiError } from 'src/utils/utils';
 
 class EscaladaService {
-  async createEscalada (escalada: Escalada): Promise<void> {
+  async criarEscalada (escalada: Escalada): Promise<void> {
     try {
       await api.post('/escaladas/', escalada);
     } catch (error: any) {
@@ -11,7 +11,7 @@ class EscaladaService {
     }
   }
 
-  async getEscaladasByUsuario (): Promise<Escalada[]> {
+  async obterEscaladasPorUsuario (): Promise<Escalada[]> {
     try {
       const usuario = localStorage.getItem('usuarioId');
       const response = await api.get('/escaladas/usuario?usuario=' + usuario);
@@ -44,8 +44,12 @@ class EscaladaService {
   }
 
   async obterPorId (id: number): Promise<any> {
-    const response = await api.get(`/escaladas/${id}`);
-    return response.data;
+    try {
+      const response = await api.get(`/escaladas/${id}`);
+      return response.data;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar escalada');
+    }
   }
 
   async excluirPorId (id: number): Promise<void> {
@@ -57,10 +61,15 @@ class EscaladaService {
   }
 
   async obterFeed (pagina: number, itensPorPagina: number): Promise<{ items: Escalada[]; totalPages: number; totalItems: number }> {
-    const response = await api.get('/escaladas/feed', {
-      params: { pagina, itensPorPagina }
-    });
-    return response.data;
+    try {
+      const response = await api.get('/escaladas/feed', {
+        params: { pagina, itensPorPagina }
+      });
+      return response.data;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar feed de escaladas');
+      return { items: [], totalPages: 0, totalItems: 0 };
+    }
   }
 }
 

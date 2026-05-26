@@ -1,138 +1,223 @@
-# Arquitetura do Frontend
+# Arquitetura Frontend — Cumes Brasil
 
 ## Stack
 
-- **Vue 3** (Composition API com `<script setup lang="ts">`)
-- **Quasar 2** — framework UI, PWA, roteamento, notificações
-- **PrimeVue 4** — componentes UI adicionais (Paginator, etc.)
-- **Vite** — bundler
-- **Axios** — HTTP client
-- **TypeScript** em todo o projeto
+| Tecnologia | Versão | Papel |
+|-----------|--------|-------|
+| Vue 3 | 3.4.18 | Framework reativo (Composition API + `<script setup lang="ts">`) |
+| Quasar | 2.16.0 | UI base, PWA, build system, componentes `q-*` |
+| PrimeVue | 4.2.5 | Componentes complementares (Paginator, Dropdown, Button) |
+| TypeScript | — | Linguagem |
+| Vue Router | 4 | Roteamento com lazy loading |
+| Axios | 1.7.4 | Comunicação HTTP com a API |
+| @vueuse/core | — | Composables utilitários |
 
 ---
 
 ## Estrutura de Pastas
 
 ```
-src/
-├── assets/         # Imagens e arquivos estáticos
-├── boot/           # Inicialização do Quasar (axios, primevue, googleLogin, errorHandler)
-├── components/     # Componentes reutilizáveis, organizados por feature
-│   ├── Auth/
-│   ├── Busca/
-│   ├── Colecao/
-│   ├── Escalada/
-│   ├── Home/
-│   ├── Perfil/
-│   └── Via/
-├── css/            # Estilos globais (variáveis SCSS, reset)
-├── layouts/        # Layouts de página (MainLayout, NavBar, SideBar)
-├── models/         # Interfaces TypeScript (Via, IUsuario, IColecao, etc.)
-├── pages/          # Componentes de página mapeados às rotas
-│   └── Auth/
-├── router/         # Configuração do Vue Router
-├── services/       # Camada de serviços — toda comunicação com a API
-└── utils/          # Funções utilitárias (formatação, imagens, erros)
+frontend/src/
+├── boot/          # Plugins inicializados antes do app montar
+├── components/    # Componentes reutilizáveis por feature
+├── css/           # Estilos globais e variáveis SCSS
+├── layouts/       # Layouts de página
+├── models/        # Interfaces TypeScript
+├── pages/         # Views mapeadas às rotas
+├── router/        # Configuração de rotas
+├── services/      # Comunicação com a API (singletons)
+└── utils/         # Funções utilitárias
 ```
 
 ---
 
-## Gerenciamento de Estado
+## Componentes (`components/`)
 
-**Não usa Pinia nem Vuex.** Estado é local por componente via `ref()` e `reactive()`.
+Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir componente adequado.
 
-- Autenticação: `localStorage.authToken` e `localStorage.usuarioId`
-- Dados de página: carregados no `onMounted` de cada componente
-- Comunicação entre componentes: props/emits, sem estado global
+**Auth/** — `GoogleLoginButton.vue`
 
-Para features com estado compartilhado mais complexo, considerar Pinia (já está no roadmap implícito).
+**Busca/** — `Busca.vue` (container + `defineExpose({ aoAplicarFiltros })`), `BuscaFiltros.vue`, `BuscaResultados.vue`, `SearchBar.vue`
 
----
+**Colecao/** — `ColecaoCard.vue`, `ColecaoLista.vue`, `AddColecaoModal.vue`, `AddViaModal.vue`, `ItemSelectorModal.vue`, `ModalConfigColecoes.vue`
 
-## Serviços (camada de API)
+**Escalada/** — `EscaladaCard.vue`, `ModalCriarEscalada.vue`, `Observacao.vue`
 
-Cada domínio tem um service singleton em `src/services/`:
+**Explorar/** — `FilterChips.vue`, `LocationExplorer.vue`
 
-| Service | Responsabilidade |
-|---------|-----------------|
-| `AuthenticateService` | Login, registro, Google OAuth, reset de senha |
-| `ViaService` | Listagem, detalhes, favoritar vias |
-| `ColecaoService` | CRUD de coleções e favoritos |
-| `UsuarioService` | Perfil do usuário, edição (incl. toggle perfil público/privado) |
-| `EscaladaService` | Registros de escalada |
-| `SearchService` | Busca e filtros de vias |
-| `HomeService` | Stats e dados da home |
-| `CroquiService` | Croquis de vias |
-| `ImagemService` | Processamento de URLs de imagem |
-| `MontanhaService` | Dados de montanhas |
+**Home/** — `FeedEscaladaPost.vue`
 
-**Padrão:** Classe com métodos async que fazem chamadas via axios. Exportada como singleton (`export default new XxxService()`).
+**Perfil/** — `PerfilBar.vue`, `PerfilBio.vue`, `PerfilEditaForm.vue`, `PerfilEditaFormAddPrediletaModal.vue`, `PerfilEscaladasDestaque.vue`, `PerfilGridButtons.vue`, `PerfilMarcacaoEscaladaRow.vue`, `PerfilViaPredileta.vue`, `FotoPerfilUpload.vue`
+
+**Via/** — `ViaCard.vue`, `ViaCardSmall.vue`, `ViaCardSmallSmall.vue`, `ViaLista.vue`, `BotoesAcao.vue`, `BotoesAcaoMelhorado.vue`, `CardInfoPrincipal.vue`, `GrauBadge.vue`, `BadgeCerj.vue`, `SecaoCroqui.vue`, `SecaoGrau.vue`, `SecaoLocalizacao.vue`, `SecaoMaisDetalhes.vue`
+
+**Utilitários raiz** — `BotaoVoltar.vue`, `PaginacaoPadrao.vue`, `ImagePlaceholder.vue`, `ItemSugestao.vue`, `ScrolToTop.vue`, `ErrorHandler.vue`
 
 ---
 
-## Autenticação
+## Layouts (`layouts/`)
 
-- Token JWT guardado em `localStorage.authToken`
-- ID do usuário em `localStorage.usuarioId`
-- Axios interceptor (em `boot/axios.ts`) adiciona `Authorization: Bearer <token>` em todas as requests
-- Respostas 401 limpam o localStorage e redirecionam para `/auth/login`
-- Google OAuth via `boot/googleLogin.ts`
-
----
-
-## Roteamento
-
-Arquivo: `src/router/routes.ts`
-
-- Todas as páginas são **lazy-loaded** (`() => import('./pages/...')`)
-- Hash mode ou history mode via `VUE_ROUTER_MODE` (env)
-- Rotas principais: `/`, `/busca`, `/vias/:id`, `/colecoes`, `/colecoes/:id`, `/favoritas`, `/escaladas`, `/perfil/:username` (próprio ou visitante), `/perfil/:username/escaladas` (lista de marcações na cordada — **requer login**), `/u/:username` (redireciona para `/perfil/:username`), `/auth/*`
-- `MainLayout` envolve todas as rotas autenticadas
+- `MainLayout.vue` — layout principal. Renderiza `TopBar` em desktop (≥1024px) e `NavBar` em mobile. Padding-top 70px para compensar a TopBar fixa.
+- `TopBar.vue` — barra superior fixa, 70px, desktop only
+- `NavBar.vue` — barra inferior de navegação, mobile only
+- `SubNavbar.vue` — subnav contextual (busca, explorar)
 
 ---
 
-## Imagens
+## Pages (`pages/`)
 
-- URLs das imagens chegam da API com prefixo `/assets/` (ex.: `/assets/vias/foto.png`)
-- `ImagemService` reconstrói a URL completa usando `VITE_APP_ASSETS_URL`
-- `utils.ts` tem `getViaImageUrl()` e `getViaImageUrlFull()` para fallback inteligente (`imagem`, `imagens`, relação `viaImagens[].imagem` quando a API popula a via):
-  - Via sem foto → foto da montanha → placeholder padrão
-
-**Perfil / cordada:** `PerfilEscaladasDestaque` (faixa com bolhas); `PerfilMarcacaoEscaladaRow` (linha da lista); `EscaladaService.listarOndeFoiMarcado` chama `GET /escaladas/usuario?usuario=:id&como=marcado`.
+| Arquivo | Rota |
+|---------|------|
+| `Home.vue` | `/` |
+| `ExplorarVias.vue` | `/explorar` |
+| `CatalogoVias.vue` | `/busca` |
+| `ViaDetalhada.vue` | `/vias/:id` |
+| `Colecoes.vue` | `/colecoes` |
+| `ColecaoDetalhada.vue` | `/colecoes/:id` |
+| `Favoritas.vue` | `/favoritas` |
+| `Escaladas.vue` | `/escaladas` |
+| `EscaladaDetalhada.vue` | `/escaladas/:id` |
+| `PerfilPageWrapper.vue` | `/perfil/:username` (wrapper que distingue dono x visitante) |
+| `Perfil.vue` | perfil do próprio usuário (edição) |
+| `PerfilPublico.vue` | perfil de outro usuário (somente leitura) |
+| `PerfilEscaladasLista.vue` | `/perfil/:username/escaladas` |
+| `Auth/Login.vue` | `/auth/login` |
+| `Auth/Register.vue` | `/auth/register` |
+| `Auth/RedefinirSenha.vue` | `/auth/reset-password` |
+| `ErrorNotFound.vue` | 404 |
 
 ---
 
-## Padrões de Componente
+## Services (`services/`)
+
+Singletons que encapsulam todas as chamadas à API via Axios:
+
+`AuthenticateService`, `ViaService`, `ColecaoService`, `EscaladaService`, `UsuarioService`, `SearchService`, `HomeService`, `CroquiService`, `ImagemService`, `MontanhaService`, `LocalizacaoService`, `ConquistasService`, `SeguimentoService`
+
+---
+
+## CSS (`css/`)
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `app.scss` | Variáveis globais de cores, sombras, funções SCSS, classes utilitárias |
+| `quasar.variables.scss` | Variáveis do tema Quasar (`$primary`, `$dark`, dark mode) |
+| `inputs.scss` | Estilos de inputs de autenticação |
+| `lista-toolbar-acoes.scss` | Toolbar de ações (escaladas, favoritos, coleções) |
+
+Consultar `DESIGN_FRONTEND.md` para a paleta completa e regras de uso.
+
+---
+
+## State Management
+
+**Sem Pinia/Vuex** — estado local por componente:
+- `ref()` e `reactive()` (Composition API)
+- `localStorage` para autenticação: `authToken`, `usuarioId`, `username`
+- Props + emits para comunicação entre componentes pai/filho
+
+---
+
+## Boot Files (`boot/`)
+
+Executados antes do `app.mount()`:
+- `axios.ts` — instância Axios + interceptors (auth token nos headers, redirect 401)
+- `googleLogin.ts` — configuração Google OAuth
+- `primevue.ts` — registro global de componentes PrimeVue
+- `errorHandler.ts` — tratamento de erros globais
+
+---
+
+## Roteamento (`router/`)
+
+- `routes.ts` — define todas as rotas; todas com lazy loading (`() => import(...)`)
+- `index.ts` — configuração Vue Router
+
+**Guard de perfil**: `PerfilPageWrapper` verifica se o `username` da rota é o usuário logado para renderizar o perfil de edição ou o perfil público.
+
+**Rotas de perfil**:
+- `/perfil/:username` — rota principal
+- `/perfil` e `/perfil/me` → redirecionam para `/perfil/<username-logado>`
+
+---
+
+## Padrões de Código
+
+### Estrutura de componente
 
 ```vue
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{ via: Via }>();
-const emit = defineEmits<{ (e: 'close'): void }>();
+const emit = defineEmits<{ (e: 'fechar'): void }>();
 
-const loading = ref(false);
-const data = ref<Via[]>([]);
+const carregando = ref(false);
+const dados = ref<Via[]>([]);
 
-onMounted(async () => {
-  loading.value = true;
-  data.value = await viaService.list();
-  loading.value = false;
-});
+async function aoSalvar() {
+  carregando.value = true;
+  // ...
+}
 </script>
+
+<template>
+  <!-- componentes q-* (Quasar) e PrimeVue quando adequado -->
+</template>
+
+<style scoped lang="scss">
+@import 'src/css/app.scss';
+/* estilos com variáveis SCSS do design system */
+</style>
 ```
 
-- Sempre `<script setup lang="ts">`
-- Props tipadas com generics do `defineProps`
-- `q-*` para componentes Quasar, `pi pi-*` para ícones PrimeIcons
-- Notificações via `useQuasar().notify(createNotifyConfig(...))`
+### Convenções de nomenclatura
+
+| Contexto | Convenção | Exemplo |
+|----------|-----------|---------|
+| Variáveis JS/TS | ptBR camelCase | `const carregando = ref(false)` |
+| Funções / métodos | ptBR camelCase | `async function aoSalvar() {}` |
+| Event handlers | prefixo `ao*` em ptBR | `aoClicarFavorito`, `aoAplicarFiltros` |
+| Interfaces / Types | ptBR camelCase | `interface CardExplorar {}` |
+| Constantes | ptBR UPPER_SNAKE | `const DIAS_CACHE = 7` |
+| Classes CSS | English kebab-case | `.modal-card`, `.btn-primary-custom` |
+| Nomes de libs/frameworks | Mantêm original | `useRouter`, `ref`, `onMounted` |
+
+### Notificações
+
+```typescript
+import { useQuasar } from 'quasar';
+const $q = useQuasar();
+$q.notify({ type: 'positive', message: '...', position: 'top-right' });
+```
+
+### Acesso a método exposto via ref (Busca.vue)
+
+Busca.vue expõe `aoAplicarFiltros` via `defineExpose`. Pages acessam assim:
+
+```typescript
+const searchEntityRef = ref();
+// No template: <Busca ref="searchEntityRef" ... />
+searchEntityRef.value?.aoAplicarFiltros({ page: 1 });
+```
 
 ---
 
-## Design System
+## Models (`models/`)
 
-Ver `documentacao/DESIGN_FRONTEND.md` para:
-- Paleta de cores (variáveis SCSS `$cumes-01` a `$cumes-05`)
-- Regras de uso de cores em cards, botões, textos
-- Padrões de modais e formulários
+Interfaces TypeScript que espelham os DTOs da API:
+
+**Core**: `Via`, `Escalada`, `IColecao`, `IUsuario`
+
+**Suporte**: `Croqui`, `Imagem`, `Face`, `Fonte`, `Montanha`, `Localizacao`, `Participante`, `ModalidadeEscalada`, `SearchResult`, `BuscaRequest`, `IConquistas`
+
+---
+
+## Utils (`utils/`)
+
+- `utils.ts` — utilitários gerais, `getViaImageUrl` (resolve thumbnail de via)
+- `colecaoUtils.ts` — funções de coleções
+- `dataAtividade.ts` — formatação de datas em pt-BR
+- `escalaDuracao.ts` — formatação de duração de escaladas
+- `buscaOrdenacao.ts` — ordenação de resultados de busca
+- `share.ts` — geração de URLs compartilháveis

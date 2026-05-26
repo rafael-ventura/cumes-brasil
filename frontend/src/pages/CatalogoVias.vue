@@ -36,10 +36,10 @@ defineOptions({
 });
 
 const applyFilters = (filters: any) => {
-  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
-    searchEntityRef.value.handleApplyFilters(filters);
+  if (searchEntityRef.value && searchEntityRef.value.aoAplicarFiltros) {
+    searchEntityRef.value.aoAplicarFiltros(filters);
   } else {
-    console.error('Busca ref not found or handleApplyFilters not defined');
+    console.error('Busca ref not found or aoAplicarFiltros not defined');
   }
 };
 

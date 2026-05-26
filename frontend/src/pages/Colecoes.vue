@@ -1,13 +1,18 @@
 <template>
   <q-page class="colecoes-page">
-    <div class="colecoes-hero">
-      <i class="pi pi-bookmark colecoes-hero-icon" />
-      <h1 class="colecoes-hero-title">Minhas coleções</h1>
-      <p class="colecoes-hero-sub">Organize vias em listas — capas e favoritos em um só lugar</p>
+    <div class="colecoes-header-compacto">
+      <h1 class="colecoes-header-titulo">Minhas coleções</h1>
+      <Button
+        class="btn-nova-colecao"
+        icon="pi pi-plus"
+        label="+ Nova coleção"
+        @click="abrirModalAdicao"
+      />
     </div>
     <Busca
       ref="searchEntityRef"
       entity="colecao"
+      layout-compact
       @select="goToColecaoDetalhada"
       :exibir-menu-colecao="true"
       :enable-sort-options="[{ field: 'nome', label: 'Nome' }, { field: 'updated_at', label: 'Data de Modificação' }]"
@@ -20,13 +25,16 @@
       </template>
 
       <template #filters="{ filters: filtros }">
-        <BuscaFiltros :entity="'colecao'" :filters="filtros" :enabledFilters="['searchQuery']"
-                      @applyFilters="handleApplyFilters" unifiedSearchLabel="Nome da Coleção" />
+        <BuscaFiltros
+          compact
+          :entity="'colecao'"
+          :filters="filtros"
+          :enabledFilters="['searchQuery']"
+          @applyFilters="aoAplicarFiltros"
+          unifiedSearchLabel="Nome da Coleção"
+        />
       </template>
     </Busca>
-
-    <!-- Botão de Adicionar -->
-    <BotaoAdicionar @add="abrirModalAdicao" />
 
     <AddColecaoModal
       :isOpen="isAddColecaoModalOpen"
@@ -93,9 +101,9 @@ import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
 import AddColecaoModal from 'components/Colecao/AddColecaoModal.vue';
 import ModalConfigColecoes from 'components/Colecao/ModalConfigColecoes.vue';
-import BotaoAdicionar from 'components/BotaoAdicionar.vue'; // Importa o botão
 import { Notify } from 'quasar';
 import { ehColecaoFavoritos } from 'src/utils/colecaoUtils';
+import Button from 'primevue/button';
 
 const searchEntityRef = ref();
 const router = useRouter();
@@ -121,7 +129,7 @@ const addColecao = async (colecaoPreenchida: IColecao) => {
     await ColecaoService.criarColecao(colecaoPreenchida);
     colecoes.value = await ColecaoService.listarColecoesPorUsuario();
     isAddColecaoModalOpen.value = false;
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch (error) {
     console.error('Erro ao adicionar coleção:', error);
   }
@@ -135,11 +143,11 @@ onMounted(async () => {
   await AuthenticateService.redirecionaSeNaoAutenticado(router);
 });
 
-const handleApplyFilters = (filters: any) => {
-  if (searchEntityRef.value && searchEntityRef.value.handleApplyFilters) {
-    searchEntityRef.value.handleApplyFilters(filters);
+const aoAplicarFiltros = (filters: any) => {
+  if (searchEntityRef.value && searchEntityRef.value.aoAplicarFiltros) {
+    searchEntityRef.value.aoAplicarFiltros(filters);
   } else {
-    console.error('Busca ref not found or handleApplyFilters not defined');
+    console.error('Busca ref not found or aoAplicarFiltros not defined');
   }
 };
 
@@ -175,7 +183,7 @@ async function confirmarExcluirColecaoLista () {
     Notify.create({ type: 'positive', message: 'Coleção excluída.', position: 'top-right', timeout: 2200 });
     dialogExcluirAberto.value = false;
     colecaoParaExcluir.value = null;
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({ type: 'negative', message: 'Não foi possível excluir.', position: 'top-right', timeout: 3200 });
   } finally {
@@ -191,7 +199,7 @@ async function aoSalvarEdicaoLista (dados: { nome: string; descricao: string }) 
     colecaoEditando.value = { ...colecaoEditando.value, ...dados };
     Notify.create({ type: 'positive', message: 'Coleção atualizada.', position: 'top-right', timeout: 2600 });
     modalEditarAberto.value = false;
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({ type: 'negative', message: 'Erro ao salvar.', position: 'top-right', timeout: 3200 });
   } finally {
@@ -206,7 +214,7 @@ async function aoCapaLista (arquivo: File) {
     const atualizada = await ColecaoService.enviarCapaColecao(colecaoEditando.value.id, arquivo);
     if (atualizada) colecaoEditando.value = { ...colecaoEditando.value, ...atualizada };
     Notify.create({ type: 'positive', message: 'Capa atualizada.', position: 'top-right', timeout: 2200 });
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({ type: 'negative', message: 'Falha ao enviar capa.', position: 'top-right', timeout: 3200 });
   } finally {
@@ -221,7 +229,7 @@ async function aoRemoverCapaLista () {
     const atualizada = await ColecaoService.excluirCapaColecao(colecaoEditando.value.id);
     if (atualizada) colecaoEditando.value = { ...colecaoEditando.value, ...atualizada };
     Notify.create({ type: 'positive', message: 'Capa personalizada removida.', position: 'top-right', timeout: 2200 });
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({ type: 'negative', message: 'Não foi possível remover a capa.', position: 'top-right', timeout: 3200 });
   } finally {
@@ -246,7 +254,7 @@ async function aoExcluirPeloModalLista () {
     Notify.create({ type: 'positive', message: 'Coleção excluída.', position: 'top-right', timeout: 2200 });
     modalEditarAberto.value = false;
     colecaoEditando.value = null;
-    handleApplyFilters({ page: 1 });
+    aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({ type: 'negative', message: 'Não foi possível excluir.', position: 'top-right', timeout: 3200 });
   } finally {
@@ -268,43 +276,47 @@ async function aoExcluirPeloModalLista () {
   }
 }
 
-.colecoes-hero {
-  text-align: center;
-  padding: 28px 0 8px;
+.colecoes-header-compacto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 0 8px;
 
   @media (max-width: 768px) {
-    padding: 20px 0 4px;
+    padding: 14px 0 6px;
   }
 }
 
-.colecoes-hero-icon {
-  font-size: 44px;
-  color: $action-colecoes;
-  display: block;
-  margin: 0 auto 12px;
-  filter: drop-shadow(0 2px 8px rgba($action-colecoes, 0.3));
+.colecoes-header-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: $offwhite;
+  margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.colecoes-hero-title {
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  font-weight: 800;
-  color: $cumes-01;
-  margin: 0 0 8px;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.btn-nova-colecao {
+  background: $cumes-03 !important;
+  border: 1px solid rgba($cumes-03, 0.9) !important;
+  color: $offwhite !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 10px 14px !important;
+
+  :deep(.p-button-icon) {
+    font-size: 14px;
+  }
+
+  &:hover {
+    background: rgba($cumes-03, 0.88) !important;
+  }
 
   @media (max-width: 768px) {
-    font-size: 1.65rem;
+    width: 100%;
+    justify-content: center;
   }
-}
-
-.colecoes-hero-sub {
-  font-size: 14px;
-  color: rgba($offwhite, 0.48);
-  font-weight: 500;
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.45;
 }
 
 .page-bottom-spacer {
@@ -333,7 +345,7 @@ async function aoExcluirPeloModalLista () {
 }
 
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 22px 26px;
   border-bottom: 3px solid $cumes-03;
 }

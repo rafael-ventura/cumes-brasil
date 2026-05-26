@@ -1,14 +1,12 @@
 <template>
   <q-page class="escaladas-page">
-    <div class="escaladas-hero">
-      <i class="pi pi-bolt escaladas-hero-icon" />
-      <h1 class="escaladas-hero-title">Minhas escaladas</h1>
-      <p class="escaladas-hero-sub">Registre e revise suas ascensões — selecione várias para excluir de uma vez</p>
-    </div>
-
     <Busca
+      :key="`busca-escaladas-${filtroAtivo}`"
       ref="searchEntityRef"
       entity="escalada"
+      layout-compact
+      layout-variant="escaladas"
+      :staticFilters="filtrosBuscaEscaladas"
       @atualizar-results="aoAtualizarResultadosEscaladas"
       :hideHeader="true"
       :enableSortOptions="[{ field: 'data', label: 'Data' }]"
@@ -21,22 +19,53 @@
       </template>
 
       <template #afterSubHeader>
-        <div class="lista-toolbar lista-toolbar--escaladas">
-          <div class="lista-toolbar__left">
-            <i class="pi pi-list lista-toolbar__icon" />
-            <span class="lista-toolbar__title">Suas escaladas</span>
+        <div class="escaladas-controles-cabecalho">
+          <div class="filtros-perfil-wrap filtros-perfil-wrap--com-acao">
+            <button
+              type="button"
+              class="filtro-pill"
+              :class="{ ativo: filtroAtivo === 'todas' }"
+              @click="aoAlterarFiltro('todas')"
+            >
+              <i class="pi pi-th-large filtro-pill__icone" aria-hidden="true" />
+              <span class="filtro-pill__titulo">Todas</span>
+              <span class="filtro-pill__count">{{ totalTodas }}</span>
+            </button>
+            <button
+              type="button"
+              class="filtro-pill"
+              :class="{ ativo: filtroAtivo === 'autor' }"
+              @click="aoAlterarFiltro('autor')"
+            >
+              <i class="pi pi-pencil filtro-pill__icone" aria-hidden="true" />
+              <span class="filtro-pill__titulo">Por mim</span>
+              <span class="filtro-pill__count">{{ totalAutor }}</span>
+            </button>
+            <button
+              type="button"
+              class="filtro-pill"
+              :class="{ ativo: filtroAtivo === 'marcado' }"
+              @click="aoAlterarFiltro('marcado')"
+            >
+              <i class="pi pi-user-plus filtro-pill__icone" aria-hidden="true" />
+              <span class="filtro-pill__titulo">Me marcaram</span>
+              <span class="filtro-pill__count">{{ totalMarcado }}</span>
+            </button>
           </div>
-          <div class="lista-toolbar__acoes">
+          <div class="escaladas-controles-cabecalho__acoes">
             <q-btn
               v-if="!modoSelecao"
+              round
+              dense
               outline
-              no-caps
               icon="check_box"
-              label="Selecionar escaladas"
-              class="lista-toolbar__btn-primario"
+              class="escaladas-btn-selecionar"
+              aria-label="Selecionar escaladas"
               @click="modoSelecao = true"
-            />
-            <template v-else>
+            >
+              <q-tooltip anchor="bottom middle" self="top middle">Selecionar escaladas</q-tooltip>
+            </q-btn>
+            <div v-else class="escaladas-controles-cabecalho__acoes-modo-selecao">
               <span class="lista-toolbar__chip">{{ escaladasSelecionadasIds.length }} selecionada(s)</span>
               <q-btn
                 flat
@@ -75,13 +104,14 @@
                 class="btn-toolbar-remover-esc"
                 @click="dialogExcluirAberto = true"
               />
-            </template>
+            </div>
           </div>
         </div>
       </template>
 
       <template #filters="{ filters: filtros }">
         <BuscaFiltros
+          compact
           :entity="'escalada'"
           :filters="filtros"
           :enabledFilters="['searchQuery']"
@@ -124,23 +154,40 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import SubNavbar from 'src/layouts/SubNavbar.vue';
 import Busca from 'components/Busca/Busca.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import type { Escalada } from 'src/models/Escalada';
 import AuthenticateService from 'src/services/AuthenticateService';
 import EscaladaService from 'src/services/EscaladaService';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { Notify } from 'quasar';
+import type { BuscaRequest } from 'src/models/BuscaRequest';
 
 const router = useRouter();
+const route = useRoute();
 const searchEntityRef = ref();
 const modoSelecao = ref(false);
 const escaladasSelecionadasIds = ref<number[]>([]);
 const escaladasResultadoAtual = ref<Escalada[]>([]);
 const dialogExcluirAberto = ref(false);
 const excluindoLote = ref(false);
+type FiltroEscaladas = 'todas' | 'autor' | 'marcado';
+const filtroAtivo = ref<FiltroEscaladas>('autor');
+const totalAutor = ref(0);
+const totalMarcado = ref(0);
+const totalTodas = ref(0);
+
+function normalizarFiltro(valor: unknown): FiltroEscaladas {
+  const v = String(valor || '').toLowerCase().trim();
+  if (v === 'todas' || v === 'marcado' || v === 'autor') return v;
+  return 'autor';
+}
+
+const filtrosBuscaEscaladas = computed<Partial<BuscaRequest>>(() => ({
+  comoPerfil: filtroAtivo.value
+}));
 
 const escaladasIdsNaPagina = computed(() =>
   escaladasResultadoAtual.value.map((e) => e.id).filter((id): id is number => id != null)
@@ -152,13 +199,48 @@ const temSelecaoNaPagina = computed(() =>
 
 onMounted(async () => {
   await AuthenticateService.redirecionaSeNaoAutenticado(router);
+  filtroAtivo.value = normalizarFiltro(route.query.filtro);
+  await carregarContagens();
 });
 
+watch(
+  () => route.query.filtro,
+  (novo) => {
+    filtroAtivo.value = normalizarFiltro(novo);
+  }
+);
+
 const applyFilters = (filters: any) => {
-  if (searchEntityRef.value?.handleApplyFilters) {
-    searchEntityRef.value.handleApplyFilters(filters);
+  if (searchEntityRef.value?.aoAplicarFiltros) {
+    searchEntityRef.value.aoAplicarFiltros(filters);
   }
 };
+
+async function carregarContagens() {
+  const usuarioId = Number(localStorage.getItem('usuarioId') || 0);
+  if (!usuarioId) {
+    totalAutor.value = 0;
+    totalMarcado.value = 0;
+    totalTodas.value = 0;
+    return;
+  }
+
+  const [autorLista, marcadoLista] = await Promise.all([
+    EscaladaService.listarPorUsuarioId(usuarioId, 'autor'),
+    EscaladaService.listarOndeFoiMarcado(usuarioId)
+  ]);
+
+  totalAutor.value = (autorLista ?? []).length;
+  totalMarcado.value = (marcadoLista ?? []).length;
+  const ids = new Set([...(autorLista ?? []).map((e) => e.id), ...(marcadoLista ?? []).map((e) => e.id)]);
+  totalTodas.value = ids.size;
+}
+
+function aoAlterarFiltro(novoFiltro: FiltroEscaladas) {
+  if (filtroAtivo.value === novoFiltro) return;
+  filtroAtivo.value = novoFiltro;
+  router.replace({ path: '/escaladas', query: { ...route.query, filtro: novoFiltro } });
+}
 
 function aoAtualizarResultadosEscaladas (rows: unknown[]) {
   escaladasResultadoAtual.value = rows as Escalada[];
@@ -201,7 +283,7 @@ async function executarExcluirLote () {
     });
     dialogExcluirAberto.value = false;
     cancelarSelecao();
-    searchEntityRef.value?.handleApplyFilters({ page: 1 });
+    searchEntityRef.value?.aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({
       type: 'negative',
@@ -238,39 +320,104 @@ defineOptions({
   }
 }
 
-.escaladas-hero {
-  text-align: center;
-  padding: 28px 0 8px;
-
-  @media (max-width: 768px) {
-    padding: 20px 0 4px;
-  }
-}
-
-.escaladas-hero-icon {
-  font-size: 44px;
-  color: $action-escaladas;
-  display: block;
-  margin: 0 auto 12px;
-  filter: drop-shadow(0 2px 8px rgba($action-escaladas, 0.35));
-}
-
-.escaladas-hero-title {
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  font-weight: 800;
-  color: $cumes-01;
-  margin: 0 0 8px;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.escaladas-hero-sub {
-  font-size: 14px;
-  color: rgba($offwhite, 0.48);
-  font-weight: 500;
-  max-width: 480px;
+.escaladas-controles-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  max-width: 1200px;
   margin: 0 auto;
-  line-height: 1.45;
+  width: 100%;
+}
+
+.filtros-perfil-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 auto 8px;
+  max-width: 760px;
+  width: 100%;
+}
+
+.filtros-perfil-wrap--com-acao {
+  flex: 1 1 min(760px, 100%);
+  margin: 0;
+  max-width: none;
+}
+
+.escaladas-controles-cabecalho__acoes {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.escaladas-controles-cabecalho__acoes-modo-selecao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+  max-width: min(100vw - 32px, 720px);
+}
+
+.escaladas-btn-selecionar {
+  border-color: rgba($cumes-01, 0.65) !important;
+  color: $cumes-01 !important;
+}
+
+.filtro-pill {
+  appearance: none;
+  border: 1px solid rgba($offwhite, 0.14);
+  background: rgba($offwhite, 0.02);
+  border-radius: 12px;
+  color: rgba($offwhite, 0.86);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.filtro-pill.ativo {
+  color: $offwhite;
+}
+
+.filtro-pill:nth-child(1).ativo {
+  border-color: rgba($cumes-03, 0.75);
+  background: rgba($cumes-03, 0.14);
+}
+
+.filtro-pill:nth-child(2).ativo {
+  border-color: rgba($cumes-01, 0.78);
+  background: rgba($cumes-01, 0.14);
+}
+
+.filtro-pill:nth-child(3).ativo {
+  border-color: rgba($action-escaladas, 0.8);
+  background: rgba($action-escaladas, 0.14);
+}
+
+.filtro-pill__icone {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.filtro-pill__titulo {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.filtro-pill__count {
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba($offwhite, 0.82);
 }
 
 .btn-toolbar-remover-esc {
@@ -299,7 +446,7 @@ defineOptions({
 }
 
 .card-header-esc {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 20px 24px;
   border-bottom: 3px solid $action-escaladas;
 }

@@ -1,30 +1,30 @@
 <template>
   <div class="topbar">
-    <!-- Logo/Header -->
-    <div class="logo-container" @click="goTo('/')">
-      <i class="pi pi-map logo-icon"></i>
-      <span class="logo-text">Cumes Brasil</span>
-    </div>
+    <div class="topbar-inner">
+      <div class="logo-container" @click="goTo('/')">
+        <i class="pi pi-map logo-icon"></i>
+        <span class="logo-text">Cumes Brasil</span>
+      </div>
 
-    <!-- Menu Items -->
-    <nav class="topbar-menu">
-      <div
-        v-for="item in menuItems"
-        :key="item.path"
-        @click="goTo(item.path)"
-        :class="['menu-item', { 'menu-item-active': isSelected(item.path) }]"
-      >
-        <i :class="`pi ${item.icon} menu-icon`"></i>
-        <span class="menu-label">{{ item.label }}</span>
-      </div>
-      <div
-        @click="irParaPerfil"
-        :class="['menu-item', { 'menu-item-active': isSelected('/perfil') }]"
-      >
-        <i class="pi pi-user menu-icon"></i>
-        <span class="menu-label">Perfil</span>
-      </div>
-    </nav>
+      <nav class="topbar-menu">
+        <div
+          v-for="item in menuItems"
+          :key="item.path"
+          @click="goTo(item.path)"
+          :class="['menu-item', { 'menu-item-active': isSelected(item.path) }]"
+        >
+          <i :class="`pi ${item.icon} menu-icon`"></i>
+          <span class="menu-label">{{ item.label }}</span>
+        </div>
+        <div
+          @click="irParaPerfil"
+          :class="['menu-item', { 'menu-item-active': isSelected('/perfil') }]"
+        >
+          <i class="pi pi-user menu-icon"></i>
+          <span class="menu-label">Perfil</span>
+        </div>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -70,128 +70,129 @@ const isSelected = (path: string) => {
   left: 0;
   right: 0;
   height: 70px;
-  background: $cumes-01;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  background: rgba($background, 0.84);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba($cumes-01, 0.22);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
+  justify-content: center;
+  padding: 0 20px;
   z-index: 1000;
 }
 
-// ============================================
-// LOGO
-// ============================================
+.topbar-inner {
+  width: 100%;
+  max-width: 1120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
   &:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+    opacity: 0.92;
+    transform: translateY(-1px);
   }
-  
+
   .logo-icon {
-    font-size: 28px;
-    color: $cumes-04;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    font-size: 22px;
+    color: $cumes-01;
   }
-  
+
   .logo-text {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: $offwhite;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     white-space: nowrap;
   }
 }
 
-// ============================================
-// MENU
-// ============================================
 .topbar-menu {
   display: flex;
   align-items: center;
-  gap: 8px;
-  
+  gap: 6px;
+
   .menu-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
+    gap: 7px;
+    padding: 9px 14px;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
-    
+
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
+      background: rgba($offwhite, 0.07);
+      border-color: rgba($offwhite, 0.12);
+      transform: translateY(-1px);
     }
-    
+
     .menu-icon {
-      font-size: 18px;
-      color: rgba(255, 255, 255, 0.85);
-      transition: all 0.3s ease;
-    }
-    
-    .menu-label {
       font-size: 14px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
-      transition: all 0.3s ease;
+      color: rgba($offwhite, 0.65);
+      transition: color 0.2s ease;
     }
-    
+
+    .menu-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba($offwhite, 0.8);
+      transition: color 0.2s ease;
+    }
+
     &.menu-item-active {
-      background: linear-gradient(135deg, 
-        rgba($cumes-04, 0.3) 0%, 
-        rgba($cumes-04, 0.15) 100%
-      );
-      box-shadow: 0 2px 10px rgba($cumes-04, 0.3);
-      
+      background: rgba($cumes-01, 0.2);
+      border-color: rgba($cumes-01, 0.55);
+
       .menu-icon {
         color: $cumes-04;
-        transform: scale(1.1);
       }
-      
+
       .menu-label {
         color: $offwhite;
-        font-weight: 600;
+        font-weight: 700;
       }
     }
   }
 }
 
-// ============================================
-// RESPONSIVIDADE
-// ============================================
 @media (max-width: 768px) {
   .topbar {
-    padding: 0 20px;
+    padding: 0 16px;
     height: 60px;
+  }
+
+  .topbar-inner {
+    max-width: 100%;
   }
 
   .logo-container {
     .logo-icon {
-      font-size: 24px;
+      font-size: 20px;
     }
-    
+
     .logo-text {
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 
   .topbar-menu {
     gap: 4px;
-    
+
     .menu-item {
-      padding: 8px 12px;
-      
+      padding: 8px 10px;
+
       .menu-label {
-        display: none; // Esconder labels no mobile
+        display: none;
       }
     }
   }

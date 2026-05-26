@@ -1,20 +1,16 @@
 <template>
   <q-page class="favoritas-page">
-    <div class="favoritas-hero">
-      <i class="pi pi-star favoritas-hero-icon" />
-      <h1 class="favoritas-hero-title">Vias favoritas</h1>
-      <p class="favoritas-hero-sub">Suas vias salvas em um só lugar — selecione várias para remover de uma vez</p>
-    </div>
-
     <Busca
       v-if="colecaoId"
       ref="searchEntityRef"
       entity="via"
+      layout-compact
       :enableSortOptions="[{ field: 'nome', label: 'Nome' }]"
       :staticFilters="{ colecaoId: colecaoId }"
       :hideHeader="true"
       :modo-selecao-vias="modoSelecao"
       :vias-selecionadas-ids="viasSelecionadasIds"
+      :ocultar-total-resultados="true"
       @select="goToViaDetalhada"
       @toggle-selecao-via="aoToggleSelecaoVia"
       @atualizar-results="aoAtualizarResultadosVias"
@@ -24,21 +20,30 @@
       </template>
 
       <template #afterSubHeader>
-        <div class="lista-toolbar lista-toolbar--favoritas">
+        <div class="lista-toolbar lista-toolbar--compacto lista-toolbar--favoritas">
           <div class="lista-toolbar__left">
             <i class="pi pi-star lista-toolbar__icon" />
             <span class="lista-toolbar__title">Vias favoritas</span>
           </div>
           <div class="lista-toolbar__acoes">
-            <q-btn
-              v-if="!modoSelecao"
-              outline
-              no-caps
-              icon="check_box"
-              label="Selecionar vias"
-              class="lista-toolbar__btn-primario"
-              @click="modoSelecao = true"
-            />
+            <template v-if="!modoSelecao">
+              <q-btn
+                outline
+                no-caps
+                icon="add"
+                label="Adicionar via"
+                class="lista-toolbar__btn-primario"
+                @click="openAddViaModal"
+              />
+              <q-btn
+                outline
+                no-caps
+                icon="check_box"
+                label="Selecionar vias"
+                class="lista-toolbar__btn-primario"
+                @click="modoSelecao = true"
+              />
+            </template>
             <template v-else>
               <span class="lista-toolbar__chip">{{ viasSelecionadasIds.length }} selecionada(s)</span>
               <q-btn
@@ -85,17 +90,17 @@
 
       <template #filters="{ filters: filtros }">
         <BuscaFiltros
+          compact
           :filters="filtros"
           :enabledFilters="['unifiedSearch', 'selectedDifficulty']"
           :staticFilters="{ colecaoId: colecaoId }"
-          @applyFilters="handleApplyFilters"
+          @applyFilters="aoAplicarFiltros"
           unifiedSearchLabel="Buscar Via"
           :entity="'via'"
         />
       </template>
     </Busca>
 
-    <BotaoAdicionar @add="openAddViaModal" />
     <AddViaModal
       :isOpen="isAddViaModalOpen"
       :colecaoId="colecaoId ?? 0"
@@ -143,7 +148,6 @@ import AddViaModal from 'components/Colecao/AddViaModal.vue';
 import Busca from 'components/Busca/Busca.vue';
 import BuscaFiltros from 'components/Busca/BuscaFiltros.vue';
 import SubNavbar from 'layouts/SubNavbar.vue';
-import BotaoAdicionar from 'components/BotaoAdicionar.vue';
 import { Notify } from 'quasar';
 import type { Via } from 'src/models/Via';
 
@@ -180,7 +184,7 @@ async function fetchFavoritasColecao () {
     const colecao = await ColecaoService.obterColecaoFavoritos();
     if (colecao?.id) {
       colecaoId.value = colecao.id;
-      await handleApplyFilters({ colecaoId: colecao.id });
+      await aoAplicarFiltros({ colecaoId: colecao.id });
     } else {
       colecaoId.value = null;
     }
@@ -193,9 +197,9 @@ onMounted(async () => {
   await fetchFavoritasColecao();
 });
 
-const handleApplyFilters = (filters: any) => {
-  if (searchEntityRef.value?.handleApplyFilters) {
-    searchEntityRef.value.handleApplyFilters(filters);
+const aoAplicarFiltros = (filters: any) => {
+  if (searchEntityRef.value?.aoAplicarFiltros) {
+    searchEntityRef.value.aoAplicarFiltros(filters);
   }
 };
 
@@ -208,7 +212,7 @@ const openAddViaModal = () => {
 };
 
 const viaAdded = () => {
-  searchEntityRef.value?.handleApplyFilters({ page: 1 });
+  searchEntityRef.value?.aoAplicarFiltros({ page: 1 });
 };
 
 function aoAtualizarResultadosVias (rows: unknown[]) {
@@ -251,7 +255,7 @@ async function executarRemoverLote () {
     });
     dialogRemoverLoteAberto.value = false;
     cancelarSelecao();
-    searchEntityRef.value?.handleApplyFilters({ page: 1 });
+    searchEntityRef.value?.aoAplicarFiltros({ page: 1 });
   } catch {
     Notify.create({
       type: 'negative',
@@ -277,41 +281,6 @@ async function executarRemoverLote () {
   @media (min-width: 768px) {
     padding: 0 24px 32px;
   }
-}
-
-.favoritas-hero {
-  text-align: center;
-  padding: 28px 0 8px;
-
-  @media (max-width: 768px) {
-    padding: 20px 0 4px;
-  }
-}
-
-.favoritas-hero-icon {
-  font-size: 44px;
-  color: $action-favoritos;
-  display: block;
-  margin: 0 auto 12px;
-  filter: drop-shadow(0 2px 8px rgba($action-favoritos, 0.35));
-}
-
-.favoritas-hero-title {
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  font-weight: 800;
-  color: $cumes-01;
-  margin: 0 0 8px;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.favoritas-hero-sub {
-  font-size: 14px;
-  color: rgba($offwhite, 0.48);
-  font-weight: 500;
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.45;
 }
 
 .btn-toolbar-remover-fav {
@@ -340,7 +309,7 @@ async function executarRemoverLote () {
 }
 
 .card-header-fav {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 20px 24px;
   border-bottom: 3px solid $action-favoritos;
 }

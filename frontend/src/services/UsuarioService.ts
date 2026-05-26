@@ -146,9 +146,6 @@ class UsuarioService {
     }
   }
 
-  logout (): void {
-    localStorage.removeItem('authToken');
-  }
 }
 
 export default new UsuarioService();

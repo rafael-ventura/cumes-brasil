@@ -1,4 +1,7 @@
-class ImageService {
+import { api } from 'boot/axios';
+import { handleApiError } from 'src/utils/utils';
+
+class ImagemService {
   private readonly assetsUrl: string;
 
   constructor() {
@@ -12,7 +15,7 @@ class ImageService {
     }
   }
 
-  getFullImageUrl(relativePath: string): string {
+  obterUrlCompleta(relativePath: string): string {
     if (!relativePath) return '';
     if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
       return relativePath;
@@ -21,10 +24,14 @@ class ImageService {
     return `${this.assetsUrl}/${cleanPath}`;
   }
 
-  async getImageById(id: number): Promise<any> {
-    const response = await api.get(`/imagens/${id}`);
-    return response.data;
+  async obterPorId(id: number): Promise<any> {
+    try {
+      const response = await api.get(`/imagens/${id}`);
+      return response.data;
+    } catch (error: any) {
+      handleApiError(error, 'Erro ao buscar imagem');
+    }
   }
 }
 
-export default new ImageService();
+export default new ImagemService();

@@ -1,5 +1,11 @@
 <template>
-  <div>
+  <div
+    class="busca-root"
+    :class="{
+      'busca-root--compacta': layoutCompact,
+      'busca-root--escaladas': layoutVariant === 'escaladas',
+    }"
+  >
     <div class="q-pt-md search-header" v-if="!hideHeader">
       <div class="text-h4 text-orange-4" v-text="searchHeader != null ? searchHeader : 'Busca'" />
     </div>
@@ -12,10 +18,35 @@
       <slot name="afterSubHeader" />
     </div>
 
-    <div class="slot-container no-border">
-      <slot name="filters" :filters="filtros"/>
+    <div v-if="layoutVariant === 'escaladas'" class="busca-escaladas-linha-busca-sort">
+      <div class="busca-escaladas-linha-busca-sort__busca">
+        <slot name="filters" :filters="filtros" />
+      </div>
+      <div class="busca-escaladas-linha-busca-sort__meta">
+        <span v-if="totalItens" class="busca-escaladas-contagem">
+          {{ totalItens > 1 ? `${totalItens} resultados` : `${totalItens} resultado` }}
+        </span>
+        <q-select
+          v-model="ordenacaoEscaladas"
+          :options="opcoesOrdenacaoFiltradas"
+          option-value="value"
+          option-label="label"
+          label="Ordenar"
+          dense
+          outlined
+          map-options
+          emit-value
+          class="busca-escaladas-select"
+        />
+      </div>
+    </div>
+    <div v-else class="slot-container no-border">
+      <slot name="filters" :filters="filtros" />
     </div>
     <BuscaResultados
+      :compact="layoutCompact"
+      :hide-order-bar="layoutVariant === 'escaladas'"
+      :ocultar-total-resultados="props.ocultarTotalResultados"
       :results="resultados"
       :entityType="props.entity"
       @select="selecionarItem"
@@ -29,9 +60,7 @@
       :escaladas-selecionadas-ids="escaladasSelecionadasIds"
       @toggle-selecao-escalada="$emit('toggle-selecao-escalada', $event)"
       :enableSortOptions="enableSortOptions"
-      :initialSort="filtros.campoOrdenacao && filtros.direcaoOrdenacao
-        ? { field: filtros.campoOrdenacao, direction: filtros.direcaoOrdenacao === 'DESC' ? 'desc' : 'asc' }
-        : undefined"
+      :initialSort="initialSortParaResultados"
       @change-sort="atualizarOrdenacao"
       :totalItems="totalItens"
       :totalPages="totalPaginas"
@@ -48,11 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import searchService from 'src/services/SearchService';
 import BuscaResultados from 'components/Busca/BuscaResultados.vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import { useRoute } from 'vue-router';
+import { filtrarOpcoesOrdenacao, type ValorOrdenacao } from 'src/utils/buscaOrdenacao';
 
 const props = withDefaults(
   defineProps<{
@@ -60,9 +90,15 @@ const props = withDefaults(
     initialData?: any[];
     staticFilters?: Partial<any>;
     hideHeader?: boolean;
+    /** Lista em coleções/favoritas/escaladas: barras de busca, ordenação e paginação mais densas */
+    layoutCompact?: boolean;
+    /** Minhas escaladas: busca + contagem + ordenação na mesma linha; barra de ordenação oculta em BuscaResultados */
+    layoutVariant?: 'default' | 'escaladas';
     searchHeader?: string;
     enableSortOptions?: { field: string; label: string }[];
     hidePagination?: boolean;
+    /** Oculta o texto "X resultados" na barra de ordenação/paginação. */
+    ocultarTotalResultados?: boolean;
     /** Lista de coleções: menu ⋮ nos cards (minhas coleções). */
     exibirMenuColecao?: boolean;
     /** Vias dentro da coleção: modo seleção em lote. */
@@ -72,8 +108,11 @@ const props = withDefaults(
     escaladasSelecionadasIds?: number[];
   }>(),
   {
+    layoutCompact: false,
+    layoutVariant: 'default',
     exibirMenuColecao: false,
     modoSelecaoVias: false,
+    ocultarTotalResultados: false,
     viasSelecionadasIds: () => [],
     modoSelecaoEscaladas: false,
     escaladasSelecionadasIds: () => []
@@ -145,6 +184,7 @@ function parseFiltrosDaQuery(): Partial<BuscaRequest> {
     bairroId: () => ({ bairroId: parseInt(valor) }),
     sem_grau: () => ({ semGrau: true }),
     sem_localizacao: () => ({ semLocalizacao: true }),
+    com_croqui: () => valor === 'true' ? { comCroqui: true } : {},
     sort: () => valor === 'created_at_desc' ? { campoOrdenacao: 'created_at', direcaoOrdenacao: 'DESC' } : {},
   };
 
@@ -172,6 +212,15 @@ const filtrosIniciais: BuscaRequest = {
   ...filtrosDaQuery,
 };
 
+if (
+  props.entity === 'escalada' &&
+  props.layoutVariant === 'escaladas' &&
+  !filtrosDaQuery.campoOrdenacao
+) {
+  filtrosIniciais.campoOrdenacao = 'data';
+  filtrosIniciais.direcaoOrdenacao = 'DESC';
+}
+
 if (route.query.itemsPerPage) {
   const queryIpp = parseInt(route.query.itemsPerPage as string, 10);
   if ([10, 25, 50, 100].includes(queryIpp)) {
@@ -185,6 +234,31 @@ const resultados = ref<any[]>([]);
 const totalItens = ref(0);
 const totalPaginas = ref(1);
 const carregando = ref(false);
+
+const opcoesOrdenacaoFiltradas = computed(() => filtrarOpcoesOrdenacao(props.enableSortOptions));
+
+const initialSortParaResultados = computed(() => {
+  const c = filtros.value.campoOrdenacao;
+  const d = filtros.value.direcaoOrdenacao;
+  if (!c || !d) return undefined;
+  const asc = String(d).toLowerCase() === 'asc';
+  return { field: c, direction: asc ? ('asc' as const) : ('desc' as const) };
+});
+
+const ordenacaoEscaladas = computed({
+  get(): ValorOrdenacao {
+    const c = filtros.value.campoOrdenacao;
+    const d = filtros.value.direcaoOrdenacao;
+    if (c && d) {
+      const asc = String(d).toLowerCase() === 'asc';
+      return { field: c, direction: asc ? 'asc' : 'desc' };
+    }
+    return opcoesOrdenacaoFiltradas.value[0]?.value ?? { field: 'data', direction: 'desc' };
+  },
+  set(v: ValorOrdenacao) {
+    atualizarOrdenacao(v);
+  },
+});
 
 // ─── Lifecycle ──────────────────────────────────────────────────────
 
@@ -253,7 +327,7 @@ function onItemsPerPageChange(novosItensPorPagina: number) {
 
 // ─── Filtros ────────────────────────────────────────────────────────
 
-function handleApplyFilters(novosFiltros: BuscaRequest) {
+function aoAplicarFiltros(novosFiltros: BuscaRequest) {
   filtros.value = {
     ...filtros.value,
     ...props.staticFilters,
@@ -281,7 +355,7 @@ function selecionarItem(item: any) {
   emit('select', item);
 }
 
-defineExpose({ handleApplyFilters });
+defineExpose({ aoAplicarFiltros });
 </script>
 
 <style scoped lang="scss">
@@ -303,6 +377,95 @@ defineExpose({ handleApplyFilters });
 .slot-container {
   padding: 16px;
   background-color: $background;
+}
+
+.busca-root--compacta {
+  .busca-after-subheader {
+    padding: 0 12px 4px;
+  }
+
+  .slot-container {
+    padding: 6px 12px 4px;
+  }
+}
+
+.busca-root--escaladas {
+  .busca-after-subheader {
+    padding: 0 12px 6px;
+  }
+}
+
+.busca-escaladas-linha-busca-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  padding: 6px 12px 6px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: $background;
+}
+
+.busca-escaladas-linha-busca-sort__busca {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.busca-escaladas-linha-busca-sort__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+  flex: 0 1 auto;
+  justify-content: flex-end;
+}
+
+.busca-escaladas-contagem {
+  color: $cumes-01;
+  font-size: 12px;
+  font-weight: 600;
+  padding-bottom: 2px;
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+.busca-escaladas-select {
+  width: auto !important;
+  min-width: 160px !important;
+  max-width: min(260px, 100%);
+
+  :deep(.q-field__control) {
+    background-color: rgba($surface, 0.75) !important;
+    min-height: 38px !important;
+
+    &::before {
+      border-color: rgba($cumes-01, 0.35) !important;
+      border-width: 1px !important;
+    }
+  }
+
+  :deep(.q-field__native),
+  :deep(.q-field__input) {
+    color: $offwhite !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+
+  :deep(.q-field__label) {
+    color: rgba($offwhite, 0.55) !important;
+    font-size: 10px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  &:deep(.q-field--focused) .q-field__control::before {
+    border-color: rgba($cumes-01, 0.65) !important;
+  }
+
+  :deep(.q-field__marginal) {
+    height: 38px;
+  }
 }
 
 .busca-bottom-spacer {
