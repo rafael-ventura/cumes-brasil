@@ -22,6 +22,7 @@ export interface FiltrosBuscaVia extends FiltrosBuscaBase {
   modalidade?: ModalidadeEscalada;
   artificial?: string;
   viaCerj?: boolean;
+  comCroqui?: boolean;
   semGrau?: boolean;
   semLocalizacao?: boolean;
   nomeBairro?: string;
@@ -41,6 +42,7 @@ export interface FiltrosBuscaColecao extends FiltrosBuscaBase {
 
 export interface FiltrosBuscaEscalada extends FiltrosBuscaBase {
   termoBusca?: string;
+  comoPerfil?: 'autor' | 'marcado' | 'todas';
 }
 
 export type FiltrosBusca = FiltrosBuscaVia | FiltrosBuscaColecao | FiltrosBuscaEscalada;

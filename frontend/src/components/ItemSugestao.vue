@@ -16,19 +16,14 @@
       <q-item v-for="item in filteredItems" :key="item.id" clickable class="item-card">
         <q-item-section avatar>
           <div class="item-avatar-container">
-            <q-img 
-              v-if="itemType === 'via' && item.imagem?.url" 
-              :src="item.imagem.url" 
-              class="item-image"
-            />
-            <ImagePlaceholder 
-              v-else-if="itemType === 'colecao'"
-              fillColor="#8CB369"
+            <ImagePlaceholder
+              v-if="itemType === 'colecao'"
+              fillColor="#F29340"
               class="item-placeholder"
             />
-            <q-img 
+            <q-img
               v-else-if="itemType === 'via'"
-              :src="placeholderImage" 
+              :src="viaImageItem(item)"
               class="item-image"
             />
           </div>
@@ -67,6 +62,7 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue';
 import ImagePlaceholder from 'components/ImagePlaceholder.vue';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
 interface Item {
   id: number;
@@ -92,8 +88,17 @@ const emit = defineEmits(['add-item']);
 
 // Estados locais
 const unifiedSearch = ref('');
-const placeholderImage = props.placeholderImage || import.meta.env.VITE_APP_SERVER_IP + '/assets/via-default-01.jpg';
 const loadingMore = ref(false);
+
+const viaImageItem = (item: Item): string => {
+  if (props.placeholderImage) {
+    return getViaImageUrlComFallbackFull({
+      ...(item as any),
+      imagem: (item as any)?.imagem || { url: props.placeholderImage }
+    });
+  }
+  return getViaImageUrlComFallbackFull(item as any);
+};
 
 // Lógica de filtragem unificada
 const filteredItems = computed(() => {

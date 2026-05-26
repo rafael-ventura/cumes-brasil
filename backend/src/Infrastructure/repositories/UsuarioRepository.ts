@@ -116,7 +116,7 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
 
     async getPerfilPublicoPorUsername(username: string): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida'])
+            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.via_preferida', 'usuario.link_externo', 'usuario.conquistas_publico'])
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
             .leftJoinAndSelect('via_preferida.setor', 'setor')
             .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
@@ -153,7 +153,7 @@ export class UsuarioRepository extends BaseRepository<Usuario> implements ICrudR
 
     async getPerfilSemHash(id: number): Promise<Usuario | null> {
         return this.repository.createQueryBuilder("usuario")
-            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.perfil_publico', 'usuario.via_preferida'])
+            .select(['usuario.id', 'usuario.nome', 'usuario.username', 'usuario.email', 'usuario.foto_perfil', 'usuario.data_atividade', 'usuario.clube_organizacao', 'usuario.localizacao', 'usuario.biografia', 'usuario.perfil_publico', 'usuario.via_preferida', 'usuario.link_externo', 'usuario.conquistas_publico'])
             .leftJoinAndSelect('usuario.via_preferida', 'via_preferida')
             // Localização através de Setor
             .leftJoinAndSelect('via_preferida.setor', 'setor')

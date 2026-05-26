@@ -38,7 +38,8 @@ async function garantirColecaoFavoritas(usuario: Usuario, colecaoRepo: Repositor
 
 /**
  * Cria ou atualiza usuários de desenvolvimento a partir de `usuarios-teste.yaml`.
- * Idempotente por email. Senha só é definida na criação.
+ * Idempotente por email. Em contas já existentes, a senha é re-sincronizada com o YAML
+ * a cada seed (evita “Credenciais inválidas” após registro manual ou hash antigo).
  */
 export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
   const lista = loadYaml<UsuarioYaml[]>('usuarios-teste.yaml');
@@ -51,7 +52,12 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
   const porUsername = new Map<string, number>();
 
   for (const u of lista) {
+    // Idempotência primária por `email`. Como `username` é único, também tentamos
+    // reaproveitar um usuário já existente caso o `username` já esteja na base.
     let usuario = await usuarioRepo.findOne({ where: { email: u.email } });
+    if (!usuario) {
+      usuario = await usuarioRepo.findOne({ where: { username: u.username } });
+    }
 
     if (!usuario) {
       const senhaHash = await bcrypt.hash(u.senha, 10);
@@ -71,6 +77,13 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
       console.log(`[UsuarioLoader] Criado: ${u.email} (username: ${u.username}, senha: ${u.senha})`);
     } else {
       let atualizado = false;
+      // Atualiza campos básicos caso a execução anterior tenha criado o usuário
+      // por outro `email` (ou por outro lote de seed).
+      if (usuario.email !== u.email) {
+        usuario.email = u.email;
+        atualizado = true;
+      }
+
       if (!usuario.username) {
         usuario.username = u.username;
         atualizado = true;
@@ -79,6 +92,14 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
         usuario.perfil_publico = u.perfil_publico;
         atualizado = true;
       }
+
+      const hashAtual = usuario.password_hash;
+      const senhaConfere = hashAtual ? await bcrypt.compare(u.senha, hashAtual) : false;
+      if (!senhaConfere) {
+        usuario.password_hash = await bcrypt.hash(u.senha, 10);
+        atualizado = true;
+      }
+
       if (atualizado) {
         await usuarioRepo.save(usuario);
         console.log(`[UsuarioLoader] Atualizado: ${u.email}`);

@@ -76,7 +76,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         if (this.escaladaRepo) {
             const uname = usuario.username?.trim();
             if (uname) {
-                numEscaladas = await this.escaladaRepo.getCountOndeUsuarioFoiMarcadoPublico(usuario.id, uname);
+                numEscaladas = await this.escaladaRepo.getCountOndeUsuarioParticipaPublico(usuario.id, uname);
             }
         }
         if (this.colecaoRepo) {
@@ -109,6 +109,14 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         usuario.clube_organizacao = usuarioDados.clube_organizacao || usuario.clube_organizacao;
         usuario.localizacao = usuarioDados.localizacao || usuario.localizacao;
         usuario.biografia = usuarioDados.biografia || usuario.biografia;
+        if (usuarioDados.link_externo !== undefined) {
+            const linkTrimmed = String(usuarioDados.link_externo).trim();
+            usuario.link_externo = linkTrimmed ? linkTrimmed : undefined;
+        }
+
+        if (usuarioDados.conquistas_publico !== undefined) {
+            usuario.conquistas_publico = usuarioDados.conquistas_publico === true || usuarioDados.conquistas_publico === 'true';
+        }
 
         if (usuarioDados.perfil_publico !== undefined) {
             usuario.perfil_publico = usuarioDados.perfil_publico === true || usuarioDados.perfil_publico === 'true';

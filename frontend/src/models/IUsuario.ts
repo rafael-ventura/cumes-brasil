@@ -14,6 +14,8 @@ export interface IUsuario {
   clube_organizacao?: string | null;
   localizacao?: string | null;
   biografia?: string | null;
+  link_externo?: string | null;
+  conquistas_publico?: boolean;
   perfil_publico?: boolean;
   via_preferida?: Via | null;
   foto_perfil: Imagem;
@@ -30,6 +32,8 @@ export class Usuario implements IUsuario {
   clube_organizacao?: string | null;
   localizacao?: string | null;
   biografia?: string | null;
+  link_externo?: string | null;
+  conquistas_publico?: boolean;
   perfil_publico?: boolean;
   via_preferida?: Via | null;
   foto_perfil: Imagem;

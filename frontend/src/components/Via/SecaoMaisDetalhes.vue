@@ -265,7 +265,7 @@ const badgeColors = ['cumes-01', 'cumes-03', 'primary', 'secondary'];
   text-decoration: underline;
 
   &:hover {
-    color: darken($cumes-04, 10%);
+    color: cumesDarken($cumes-04, 10%);
   }
 }
 </style>

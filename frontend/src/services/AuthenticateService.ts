@@ -22,7 +22,7 @@ class AuthenticateService {
     }
   }
 
-  async authenticateWithGoogle (authorizationCode: string) {
+  async autenticarComGoogle (authorizationCode: string) {
     try {
       const response = await api.post('/auth/google-login', { authorizationCode });
       this.saveToken(response.data);

@@ -139,24 +139,24 @@ const onDialogShow = async () => {
   flex-direction: column;
   
   @media (min-width: 768px) {
-    width: 600px;
-    max-width: 600px;
+    width: 720px;
+    max-width: 720px;
   }
   
   @media (min-width: 1024px) {
-    width: 750px;
-    max-width: 750px;
+    width: 920px;
+    max-width: 920px;
   }
   
   @media (min-width: 1440px) {
-    width: 850px;
-    max-width: 850px;
+    width: 1050px;
+    max-width: 1050px;
   }
 }
 
 // Header do Card
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 24px 32px;
   border-bottom: 3px solid $cumes-03;
 }

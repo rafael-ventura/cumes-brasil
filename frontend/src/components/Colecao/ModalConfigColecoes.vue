@@ -236,7 +236,7 @@ function onArquivoCapaChange (f: File | File[] | null) {
 const urlExibicao = computed(() => {
   if (urlArquivoLocal.value) return urlArquivoLocal.value;
   const u = props.collectionData?.imagemCapa?.url || props.collectionData?.imagem?.url;
-  return u ? ImagemService.getFullImageUrl(u) : null;
+  return u ? ImagemService.obterUrlCompleta(u) : null;
 });
 
 function aoAtualizarVisivel (v: boolean) {
@@ -310,7 +310,7 @@ function emitirExcluir () {
 }
 
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 24px 32px;
   border-bottom: 3px solid $cumes-03;
 }
@@ -487,7 +487,7 @@ function emitirExcluir () {
   box-shadow: 0 4px 12px $box-shadow-medium !important;
 
   &:hover {
-    background: darken($cumes-01, 10%) !important;
+    background: cumesDarken($cumes-01, 10%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px $box-shadow-strong !important;
   }
@@ -518,7 +518,7 @@ function emitirExcluir () {
 
 .btn-excluir-colecao {
   background: rgba($error-color, 0.15) !important;
-  color: lighten($error-color, 25%) !important;
+  color: cumesLighten($error-color, 25%) !important;
   border: 2px solid rgba($error-color, 0.5) !important;
   font-weight: 700 !important;
 }

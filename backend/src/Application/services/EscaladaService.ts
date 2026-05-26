@@ -45,7 +45,7 @@ export class EscaladaService {
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
-			participante.tipo = p.tipo;
+			participante.tipo = p.tipo.trim().toUpperCase();
 			if (p.email) {
 				participante.email = p.email;
 			}
@@ -82,7 +82,7 @@ export class EscaladaService {
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
-			participante.tipo = p.tipo;
+			participante.tipo = p.tipo.trim().toUpperCase();
 			if (p.email) {
 				participante.email = p.email;
 			}

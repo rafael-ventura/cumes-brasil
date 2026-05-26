@@ -24,9 +24,28 @@
         </div>
       </div>
       <div class="user-details">
-        <div class="user-name">{{ props.user?.nome }}</div>
+        <div class="user-name">
+          {{ props.user?.nome }}
+          <span v-if="props.user?.username" class="user-username">@{{ props.user.username }}</span>
+        </div>
         <div class="user-location">{{ props.user?.localizacao }}</div>
         <div class="user-club" v-if="props.user?.clube_organizacao">{{ props.user.clube_organizacao }}</div>
+          <a
+            v-if="props.user?.link_externo"
+            :href="props.user.link_externo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="user-external-link"
+          >
+            <i class="pi pi-external-link" /> {{ props.user.link_externo }}
+          </a>
+          <Button
+            v-if="props.user?.username && !readonly"
+            icon="pi pi-share-alt"
+            aria-label="Compartilhar"
+            class="share-profile-btn"
+            @click="compartilharPerfil"
+          />
       </div>
     </div>
     <q-dialog v-model="isImageModalOpen">
@@ -36,6 +55,11 @@
         </template>
       </q-img>
     </q-dialog>
+
+    <ModalCompartilhamento
+      v-model="isModalCompartilhamentoAberto"
+      :dados-compartilhamento="dadosCompartilhamento"
+    />
   </div>
 </template>
 
@@ -44,6 +68,9 @@ import { computed, ref, watch } from 'vue';
 import FotoPerfilUpload from 'components/Perfil/FotoPerfilUpload.vue';
 import ImagemService from 'src/services/ImagemService';
 import { IUsuario } from 'src/models/IUsuario';
+import { obterUrlCompartilhavel } from 'src/utils/share';
+import Button from 'primevue/button';
+import ModalCompartilhamento from 'components/Compartilhamento/ModalCompartilhamento.vue';
 
 const props = defineProps<{ user: IUsuario | undefined; readonly?: boolean }>();
 const emits = defineEmits(['submit']);
@@ -51,10 +78,11 @@ const emits = defineEmits(['submit']);
 const localUser = ref<IUsuario | undefined>(props.user);
 const isImageModalOpen = ref(false);
 const expandedImageUrl = ref<string | undefined>(undefined);
+const isModalCompartilhamentoAberto = ref(false);
 
 function urlFotoPerfil(user: IUsuario | undefined): string {
   const url = user?.foto_perfil?.url;
-  return url ? ImagemService.getFullImageUrl(url) : 'https://via.placeholder.com/150';
+  return url ? ImagemService.obterUrlCompleta(url) : 'https://via.placeholder.com/150';
 }
 
 watch(
@@ -106,6 +134,27 @@ const dataFormatada = computed(() => {
   });
   return dataString.charAt(0).toUpperCase() + dataString.slice(1);
 });
+
+const sharePreviewUrl = computed(() => {
+  const u = props.user?.username;
+  if (!u) return '';
+  return obterUrlCompartilhavel(`/share/perfil/${u}`);
+});
+
+const dadosCompartilhamento = computed(() => {
+  if (!props.user?.username) return null;
+  return {
+    titulo: `Perfil de @${props.user.username}`,
+    texto: 'Veja o perfil no Cumes Brasil.',
+    url: sharePreviewUrl.value
+  };
+});
+
+function compartilharPerfil () {
+  if (!props.user?.username) return;
+  if (!dadosCompartilhamento.value?.url) return;
+  isModalCompartilhamentoAberto.value = true;
+}
 </script>
 
 <style scoped lang="scss">
@@ -129,6 +178,25 @@ const dataFormatada = computed(() => {
     width: 100%;
     border-radius: 0 0 24px 24px;
   }
+}
+
+.share-profile-btn {
+  margin-top: 12px;
+  background: transparent !important;
+  border: 1px solid rgba($cumes-03, 0.45) !important;
+  color: $cumes-03 !important;
+  width: 38px;
+  height: 38px;
+  min-width: 38px !important;
+  padding: 0 !important;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-profile-btn :deep(.p-button-icon) {
+  font-size: 16px;
 }
 
 .profile-header {
@@ -216,10 +284,56 @@ const dataFormatada = computed(() => {
   }
 }
 
+.user-username {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  color: $offwhite;
+  background: rgba($background, 0.45);
+  border: 1px solid rgba($offwhite, 0.18);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+
+  @media (min-width: 1024px) {
+    font-size: 14px;
+  }
+}
+
 .user-location,
 .user-club {
   font-size: 16px;
   color: $cumes-04;
+
+  @media (min-width: 1024px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+  }
+}
+
+.user-external-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: $cumes-04;
+  text-decoration: none;
+  word-break: break-word;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  i {
+    font-size: 16px;
+  }
 
   @media (min-width: 1024px) {
     font-size: 18px;

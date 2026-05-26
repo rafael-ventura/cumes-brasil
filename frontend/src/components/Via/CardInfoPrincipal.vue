@@ -2,9 +2,8 @@
   <div class="card-info-principal">
     <!-- Imagem com Botão Sobreposto -->
     <q-img
-      v-if="viaImageUrl"
       :src="viaImageUrl"
-      :alt="via.nome"
+      :alt="via?.nome || 'Imagem da via'"
       class="card-imagem"
       loading="lazy"
     >
@@ -18,10 +17,6 @@
         </div>
       </template>
     </q-img>
-    <div v-else class="card-imagem-placeholder">
-      <q-icon name="image" size="64px" />
-      <div class="text-body2 q-mt-sm">Sem imagem</div>
-    </div>
 
     <div class="via-nome-row" v-if="via?.nome && via.nome !== 'N/A'">
       <h2 class="via-nome">{{ via.nome }}</h2>
@@ -56,7 +51,7 @@ import { Via } from 'src/models/Via';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import BadgeCerj from 'src/components/Via/BadgeCerj.vue';
 import BotaoVoltar from 'components/BotaoVoltar.vue';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
 const props = defineProps({
   via: {
@@ -66,7 +61,7 @@ const props = defineProps({
 });
 
 const showGrauInfo = ref(false);
-const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
+const viaImageUrl = computed(() => getViaImageUrlComFallbackFull(props.via));
 
 </script>
 
@@ -86,7 +81,7 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 .card-imagem {
   width: 100%;
-  height: 250px;
+  aspect-ratio: 16 / 7;
   border-radius: 10px 10px 0 0;
   object-fit: cover;
   position: relative;
@@ -94,7 +89,7 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 .card-imagem-placeholder {
   width: 100%;
-  height: 250px;
+  aspect-ratio: 16 / 7;
   border-radius: 10px 10px 0 0;
   display: flex;
   flex-direction: column;
@@ -145,10 +140,6 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
 
 // Desktop
 @media (min-width: 768px) {
-  .card-imagem {
-    height: 350px;
-  }
-  
   .via-nome {
     font-size: 42px;
     margin: 24px 0 12px 0;

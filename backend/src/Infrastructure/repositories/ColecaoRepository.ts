@@ -15,6 +15,27 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         super(Colecao);
     }
 
+    async contarColecoesPorUsuarioId(usuarioId: number): Promise<number> {
+        const raw = await this.repository
+            .createQueryBuilder("colecao")
+            .select("COUNT(colecao.id)", "cnt")
+            .leftJoin("colecao.usuario", "usuario")
+            .where("usuario.id = :usuarioId", { usuarioId })
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    async contarViasFavoritasPorUsuarioId(usuarioId: number): Promise<number> {
+        const raw = await this.repository
+            .createQueryBuilder("colecao")
+            .select("COUNT(viaColecao.id)", "cnt")
+            .leftJoin("colecao.viaColecoes", "viaColecao")
+            .leftJoin("colecao.usuario", "usuario")
+            .where("usuario.id = :usuarioId AND colecao.nome = :nome", { usuarioId, nome: "Favoritas" })
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
     async getById(id: number, relations?: string[]): Promise<Colecao | null> {
         return this.repository.createQueryBuilder("colecao")
           .leftJoinAndSelect('colecao.usuario', 'usuario')

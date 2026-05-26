@@ -19,6 +19,8 @@ export interface BuscaRequest {
   modalidade?: ModalidadeEscalada | null;
   artificial?: string | null;
   viaCerj?: boolean | null;
+  comCroqui?: boolean | null;
+  comoPerfil?: 'autor' | 'marcado' | 'todas' | null;
   semGrau?: boolean | null;
   semLocalizacao?: boolean | null;
   pagina: number;

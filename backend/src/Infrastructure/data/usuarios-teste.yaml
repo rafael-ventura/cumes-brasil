@@ -36,3 +36,30 @@
   localizacao: Rio de Janeiro, RJ
   data_atividade: '2024-01-15'
   biografia: Conta seed para desenvolvimento (username rafael).
+
+- email: elmin.dev@cumes.com.br
+  username: elmin
+  senha: teste123
+  nome: Elmo Sampaio
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2024-05-20'
+  biografia: Conta seed para testar conquistas e interações no perfil do escalador Elmo.
+
+- email: vitin.dev@cumes.com.br
+  username: vitin
+  senha: teste123
+  nome: Vitin Souza
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2023-08-10'
+  biografia: Conta seed para testes de feed, marcações e exibição de conquistas no perfil.
+
+- email: mohammed.dev@cumes.com.br
+  username: mohammed
+  senha: teste123
+  nome: Mohammed Abdalla
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2022-11-05'
+  biografia: Conta seed mock para explorar a área social com dados suficientes para debug.

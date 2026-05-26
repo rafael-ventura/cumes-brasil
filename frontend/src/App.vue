@@ -5,9 +5,13 @@
 <script setup lang="ts">
 </script>
 
-<style>
-html, body, #q-app {
+<style lang="scss">
+@import 'src/css/app.scss';
+
+html,
+body,
+#q-app {
   height: 100%;
-  background-color: #2c2c2c;
+  background-color: $background;
 }
 </style>

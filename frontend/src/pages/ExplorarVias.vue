@@ -4,7 +4,7 @@
     <div class="explorar-hero">
       <i class="pi pi-compass hero-icon" />
       <h1 class="hero-title">Explorar</h1>
-      <p class="hero-subtitle">Categorias, localização, dificuldade, exposição e duração</p>
+      <p class="hero-subtitle">Categorias, localização, dificuldade, modalidade e croquis</p>
     </div>
 
     <!-- Search bar -->
@@ -85,28 +85,17 @@
           <i class="pi pi-arrow-down card-arrow" />
         </div>
 
-        <!-- Por Exposição -->
-        <div class="category-card card-exposicao" @click="rolarParaSecao('exposicao')">
+        <!-- Vias com Croqui -->
+        <div class="category-card card-croqui" @click="navegarPara('/busca', { filterType: 'com_croqui=true' })">
           <div class="card-icon-area">
-            <i class="pi pi-exclamation-triangle card-main-icon" />
+            <i class="pi pi-images card-main-icon" />
           </div>
           <div class="card-text">
-            <span class="card-title">Por Exposição</span>
-            <span class="card-desc">Filtre pelo nível de risco</span>
+            <span class="card-title">Vias com Croqui</span>
+            <span class="card-count" v-if="contagemComCroqui !== null">{{ contagemComCroqui }} vias</span>
+            <span class="card-count" v-else><i class="pi pi-spin pi-spinner" /></span>
           </div>
-          <i class="pi pi-arrow-down card-arrow" />
-        </div>
-
-        <!-- Por Duração -->
-        <div class="category-card card-duracao" @click="rolarParaSecao('duracao')">
-          <div class="card-icon-area">
-            <i class="pi pi-clock card-main-icon" />
-          </div>
-          <div class="card-text">
-            <span class="card-title">Por Duração</span>
-            <span class="card-desc">D1–D7</span>
-          </div>
-          <i class="pi pi-arrow-down card-arrow" />
+          <i class="pi pi-arrow-right card-arrow" />
         </div>
       </div>
     </section>
@@ -186,6 +175,8 @@
         >
           <i :class="`pi ${mod.icone} modalidade-icon`" />
           <span class="modalidade-label">{{ mod.rotulo }}</span>
+          <span class="modalidade-count" v-if="mod.contagem !== null">{{ mod.contagem }} vias</span>
+          <span class="modalidade-count" v-else><i class="pi pi-spin pi-spinner" /></span>
         </div>
       </div>
     </section>
@@ -205,6 +196,8 @@
           @click="navegarPara('/busca', { filterType: `exposicao=${exp.valor}` })"
         >
           <span class="exposure-level">{{ exp.valor.toUpperCase() }}</span>
+          <span class="exposure-count" v-if="exp.contagem !== null">{{ exp.contagem }} vias</span>
+          <span class="exposure-count" v-else><i class="pi pi-spin pi-spinner" /></span>
         </div>
       </div>
     </section>
@@ -250,8 +243,9 @@ const router = useRouter();
 const textoBusca = ref('');
 
 // Estatísticas
-const estatisticas = ref({ vias: 0, montanhas: 0, usuarios: 0 });
+const estatisticas = ref({ vias: 0, montanhas: 0, croquis: 0, usuarios: 0 });
 const contagemCerj = ref<number | null>(null);
+const contagemComCroqui = ref<number | null>(null);
 
 // Localização
 const hierarquia = ref<LocationNode[]>([]);
@@ -269,10 +263,10 @@ const duracaoRef = ref<HTMLElement | null>(null);
 
 // Cards de grau
 const cardsGrau = ref([
-  { rotulo: '1°', valor: '1', cor: '#8CB369', contagem: null as number | null },
+  { rotulo: '1°', valor: '1', cor: '#F29340', contagem: null as number | null },
   { rotulo: '2°', valor: '2', cor: '#a4c77d', contagem: null as number | null },
   { rotulo: '3°', valor: '3', cor: '#F4E285', contagem: null as number | null },
-  { rotulo: '4°', valor: '4', cor: '#F29340', contagem: null as number | null },
+  { rotulo: '4°', valor: '4', cor: '#8CB369', contagem: null as number | null },
   { rotulo: '5°', valor: '5', cor: '#e8733a', contagem: null as number | null },
   { rotulo: '6°', valor: '6', cor: '#BC4B51', contagem: null as number | null },
   { rotulo: '7°', valor: '7', cor: '#9b3a3f', contagem: null as number | null },
@@ -281,23 +275,23 @@ const contagemSemGrau = ref<number | null>(null);
 const contagemSemLocalizacao = ref<number | null>(null);
 
 // Modalidades
-const modalidades = [
-  { valor: 'TRADICIONAL', rotulo: 'Tradicional', icone: 'pi-shield' },
-  { valor: 'ESPORTIVA', rotulo: 'Esportiva', icone: 'pi-bolt' },
-  { valor: 'BOULDER', rotulo: 'Boulder', icone: 'pi-circle' },
-  { valor: 'BIG_WALL', rotulo: 'Big Wall', icone: 'pi-building' },
-  { valor: 'ARTIFICIAL', rotulo: 'Artificial', icone: 'pi-wrench' },
-  { valor: 'PSICOBLOC', rotulo: 'Psicobloc', icone: 'pi-sun' },
-];
+const modalidades = ref([
+  { valor: 'TRADICIONAL', rotulo: 'Tradicional', icone: 'pi-shield', contagem: null as number | null },
+  { valor: 'ESPORTIVA', rotulo: 'Esportiva', icone: 'pi-bolt', contagem: null as number | null },
+  { valor: 'BOULDER', rotulo: 'Boulder', icone: 'pi-circle', contagem: null as number | null },
+  { valor: 'BIG_WALL', rotulo: 'Big Wall', icone: 'pi-building', contagem: null as number | null },
+  { valor: 'ARTIFICIAL', rotulo: 'Artificial', icone: 'pi-wrench', contagem: null as number | null },
+  { valor: 'PSICOBLOC', rotulo: 'Psicobloc', icone: 'pi-sun', contagem: null as number | null },
+]);
 
 // Exposição (E1–E5): só código na UI; cores alinhadas à gradação de risco
-const cardsExposicao = [
-  { valor: 'e1', cor: '#8CB369' },
-  { valor: 'e2', cor: '#a4c77d' },
-  { valor: 'e3', cor: '#F4E285' },
-  { valor: 'e4', cor: '#F29340' },
-  { valor: 'e5', cor: '#BC4B51' },
-];
+const cardsExposicao = ref([
+  { valor: 'e1', cor: '#F29340', contagem: null as number | null },
+  { valor: 'e2', cor: '#a4c77d', contagem: null as number | null },
+  { valor: 'e3', cor: '#F4E285', contagem: null as number | null },
+  { valor: 'e4', cor: '#8CB369', contagem: null as number | null },
+  { valor: 'e5', cor: '#BC4B51', contagem: null as number | null },
+]);
 
 const cardsDuracao = ref(
   listaCardsDuracao().map((c) => ({ ...c, contagem: null as number | null }))
@@ -352,6 +346,7 @@ onMounted(async () => {
   const [
     resultadoStats,
     resultadoCerj,
+    resultadoComCroqui,
     resultadoHierarquia,
     resultadoSemGrau,
     resultadoSemLoc,
@@ -359,6 +354,7 @@ onMounted(async () => {
   ] = await Promise.all([
     HomeService.obterEstatisticas(),
     HomeService.obterContagem('via_cerj=true'),
+    HomeService.obterContagem('com_croqui=true'),
     localizacaoService.getLocationHierarchy().catch(() => []),
     HomeService.obterContagem('sem_grau'),
     HomeService.obterContagem('sem_localizacao'),
@@ -372,8 +368,23 @@ onMounted(async () => {
     c.contagem = contagensDuracao[i];
   });
 
+  const contagensModalidade = await Promise.all(
+    modalidades.value.map((m) => HomeService.obterContagem(`modalidade=${m.valor}`))
+  );
+  modalidades.value.forEach((m, i) => {
+    m.contagem = contagensModalidade[i];
+  });
+
+  const contagensExposicao = await Promise.all(
+    cardsExposicao.value.map((e) => HomeService.obterContagem(`exposicao=${e.valor}`))
+  );
+  cardsExposicao.value.forEach((e, i) => {
+    e.contagem = contagensExposicao[i];
+  });
+
   estatisticas.value = resultadoStats;
   contagemCerj.value = resultadoCerj;
+  contagemComCroqui.value = resultadoComCroqui;
   hierarquia.value = resultadoHierarquia;
   carregandoHierarquia.value = false;
   contagemSemGrau.value = resultadoSemGrau;
@@ -538,18 +549,10 @@ onMounted(async () => {
   &:hover { border-color: $cumes-05; }
 }
 
-.card-exposicao {
-  background: linear-gradient(135deg, rgba($cumes-02, 0.15), rgba($cumes-02, 0.05));
-  border-color: rgba($cumes-02, 0.25);
-  .card-icon-area { background: rgba($cumes-02, 0.2); }
-  .card-main-icon { color: lighten($cumes-02, 20%); }
-  &:hover { border-color: $cumes-02; }
-}
-
-.card-duracao {
-  background: linear-gradient(135deg, rgba($cumes-03, 0.12), rgba($cumes-03, 0.04));
-  border-color: rgba($cumes-03, 0.22);
-  .card-icon-area { background: rgba($cumes-03, 0.18); }
+.card-croqui {
+  background: linear-gradient(135deg, rgba($cumes-03, 0.14), rgba($cumes-03, 0.05));
+  border-color: rgba($cumes-03, 0.24);
+  .card-icon-area { background: rgba($cumes-03, 0.2); }
   .card-main-icon { color: $cumes-03; }
   &:hover { border-color: $cumes-03; }
 }
@@ -756,6 +759,12 @@ onMounted(async () => {
   text-align: center;
 }
 
+.modalidade-count {
+  font-size: 11px;
+  color: rgba($offwhite, 0.4);
+  font-weight: 600;
+}
+
 // ================================
 // EXPOSURE CARDS
 // ================================
@@ -796,6 +805,14 @@ onMounted(async () => {
   font-weight: 800;
   color: var(--exp-color);
   letter-spacing: 0.02em;
+}
+
+.exposure-count {
+  font-size: 11px;
+  color: rgba($offwhite, 0.4);
+  font-weight: 600;
+  margin-top: 4px;
+  text-align: center;
 }
 
 // ================================

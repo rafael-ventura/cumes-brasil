@@ -15,10 +15,10 @@ export const TEXTO_DURACAO: Record<'D1' | 'D2' | 'D3' | 'D4' | 'D5' | 'D6' | 'D7
 };
 
 const CORES_DURACAO = [
-  '#8CB369',
+  '#F29340',
   '#a4c77d',
   '#F4E285',
-  '#F29340',
+  '#8CB369',
   '#e8733a',
   '#BC4B51',
   '#7a2d32',

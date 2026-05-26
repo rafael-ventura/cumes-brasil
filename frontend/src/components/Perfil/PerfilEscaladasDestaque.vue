@@ -8,17 +8,13 @@
           <span v-if="total > 0 && !precisaLogin" class="cordada-strip__badge">{{ total }}</span>
         </div>
       </div>
-      <q-btn
+      <router-link
         v-if="podeVerLista && total > 0"
-        flat
-        dense
-        no-caps
         class="cordada-strip__link"
         :to="linkVerTodas"
       >
-        Ver lista
-        <i class="pi pi-angle-right" style="margin-left: 2px; font-size: 0.85em" />
-      </q-btn>
+        Ver lista <i class="pi pi-angle-right" style="font-size: 0.8em" />
+      </router-link>
     </div>
 
     <p v-if="!precisaLogin" class="cordada-strip__hint">
@@ -26,15 +22,13 @@
     </p>
 
     <div v-if="precisaLogin" class="cordada-strip__anon">
-      <q-icon name="lock" size="18px" />
+      <i class="pi pi-lock" />
       <span>Incluído em registros de outros (guia, participante ou misto). <strong>Entre</strong> para ver.</span>
-      <q-btn flat dense no-caps class="cordada-strip__login" :to="{ path: '/auth/login' }">
-        Entrar
-      </q-btn>
+      <router-link class="cordada-strip__login" :to="{ path: '/auth/login' }">Entrar</router-link>
     </div>
 
     <div v-else-if="carregando" class="cordada-strip__loading">
-      <q-spinner color="primary" size="22px" />
+      <i class="pi pi-spin pi-spinner" style="font-size: 20px; color: var(--q-primary, #F29340)" />
     </div>
 
     <div v-else-if="!total" class="cordada-strip__vazio">
@@ -49,7 +43,7 @@
           :key="esc.id"
           class="cordada-strip__bubble"
           :title="tituloBolha(esc)"
-          :to="{ name: 'EscaladaDetalhada', params: { id: String(esc.id) } }"
+          :to="linkVerTodas"
         >
           <img
             v-if="urlThumb(esc)"
@@ -58,7 +52,7 @@
             class="cordada-strip__bubble-img"
           />
           <div v-else class="cordada-strip__bubble-ph">
-            <q-icon name="terrain" size="20px" />
+            <i class="pi pi-image" style="font-size: 16px" />
           </div>
         </router-link>
         <router-link
@@ -75,10 +69,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { RouteLocationRaw } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
 import AuthenticateService from 'src/services/AuthenticateService';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 import type { Escalada } from 'src/models/Escalada';
 import type { Via } from 'src/models/Via';
 
@@ -110,18 +103,7 @@ const total = computed(() => {
   return lista.value.length;
 });
 
-const linkVerTodas = computed((): RouteLocationRaw => {
-  if (props.modoProprio && props.username) {
-    return { name: 'PerfilEscaladas', params: { username: props.username } };
-  }
-  if (props.modoProprio) {
-    return { path: '/perfil/me/escaladas' };
-  }
-  if (props.username) {
-    return { name: 'PerfilEscaladas', params: { username: props.username } };
-  }
-  return { path: '/perfil/me' };
-});
+const linkVerTodas = computed(() => '/escaladas?filtro=marcado');
 
 const textoSubtitulo = computed(() => {
   if (!total.value) {
@@ -142,10 +124,10 @@ const previewsOrdenadas = computed(() => {
   return copia.slice(0, MAX_THUMB);
 });
 
-function urlThumb (esc: Escalada): string | null {
+function urlThumb (esc: Escalada): string {
   const via = esc.via as Via | undefined;
-  if (!via || typeof via !== 'object') return null;
-  return getViaImageUrlFull(via);
+  if (!via || typeof via !== 'object') return getViaImageUrlComFallbackFull(null);
+  return getViaImageUrlComFallbackFull(via);
 }
 
 function tituloBolha (esc: Escalada): string {
@@ -242,9 +224,18 @@ onMounted(() => {
 }
 
 .cordada-strip__link {
-  color: $action-escaladas !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  color: $action-escaladas;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .cordada-strip__hint {
@@ -266,8 +257,14 @@ onMounted(() => {
 }
 
 .cordada-strip__login {
-  color: $cumes-03 !important;
-  font-weight: 700 !important;
+  color: $cumes-03;
+  font-weight: 700;
+  font-size: 12px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .cordada-strip__loading {
@@ -292,15 +289,6 @@ onMounted(() => {
   gap: 8px;
   overflow-x: auto;
   padding: 4px 4px 6px;
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba($cumes-01, 0.35);
-    border-radius: 4px;
-  }
 }
 
 .cordada-strip__bubble {

@@ -2,15 +2,11 @@
   <q-card-section v-if="props.via" class="card-info">
     <div class="left-section">
       <div class="imagem-container">
-        <img 
-          v-if="viaImageUrl" 
-          :src="viaImageUrl" 
+        <img
+          :src="viaImageUrl"
           class="imagem-via" 
           alt="via image"
         />
-        <div v-else class="imagem-placeholder">
-          <q-icon name="image" size="32px" />
-        </div>
       </div>
     </div>
     <div class="right-section">
@@ -34,11 +30,11 @@ import { computed } from 'vue';
 import { Via } from 'src/models/Via';
 import GrauBadge from 'components/Via/GrauBadge.vue';
 import BadgeCerj from 'components/Via/BadgeCerj.vue';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
 const props = defineProps<{ via: Via }>();
 
-const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
+const viaImageUrl = computed(() => getViaImageUrlComFallbackFull(props.via));
 
 </script>
 
@@ -50,7 +46,7 @@ const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 5%) 100%);
   border-radius: 16px;
   box-shadow: 0 4px 12px $box-shadow-medium;
   border: 2px solid rgba($cumes-01, 0.3);

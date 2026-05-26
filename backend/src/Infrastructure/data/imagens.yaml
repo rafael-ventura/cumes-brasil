@@ -10,10 +10,6 @@
   descricao: Foto Default para Usuário
   fonte: Deus Ex Machina
   tipo_entidade: usuario
-- url: /assets/vias/via-default-01.webp
-  descricao: Foto Default para Via
-  fonte: Deus Ex Machina
-  tipo_entidade: via
 - url: /assets/croquis/croqui_01.webp
   descricao: Croquis da Anibal - Mapa Desenhado
   fonte: André Ilha; Kika Bradford

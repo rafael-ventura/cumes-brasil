@@ -27,6 +27,12 @@
           </div>
         </router-link>
         <span class="header-data">{{ dataFormatada }}</span>
+        <Button
+          icon="pi pi-share-alt"
+          aria-label="Compartilhar"
+          class="share-btn"
+          @click.stop.prevent="abrirModalCompartilhamento"
+        />
       </div>
 
       <!-- Via em destaque -->
@@ -96,6 +102,11 @@
 
     <div class="page-bottom-spacer" />
   </q-page>
+
+  <ModalCompartilhamento
+    v-model="isModalCompartilhamentoAberto"
+    :dados-compartilhamento="dadosCompartilhamento"
+  />
 </template>
 
 <script setup lang="ts">
@@ -103,9 +114,12 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EscaladaService from 'src/services/EscaladaService';
 import ImagemService from 'src/services/ImagemService';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import type { Via } from 'src/models/Via';
+import { obterUrlCompartilhavel } from 'src/utils/share';
+import Button from 'primevue/button';
+import ModalCompartilhamento from 'components/Compartilhamento/ModalCompartilhamento.vue';
 
 function formatarModalidade (m: string | undefined): string | null {
   if (!m) return null;
@@ -126,26 +140,47 @@ const router = useRouter();
 const escalada = ref<any>(null);
 const carregando = ref(true);
 const naoEncontrada = ref(false);
+const isModalCompartilhamentoAberto = ref(false);
 
 const avatarUrl = computed(() => {
   const url = escalada.value?.usuario?.foto_perfil?.url;
-  return url ? ImagemService.getFullImageUrl(url) : null;
+  return url ? ImagemService.obterUrlCompleta(url) : null;
 });
 
 const viaImageUrl = computed(() => {
   const via = escalada.value?.via;
-  if (!via) return null;
+  if (!via) return '';
   const viaParaImagem = {
     imagem: via.imagem ?? via.viaImagens?.[0]?.imagem,
     imagens: via.imagens ?? via.viaImagens?.map((vi: any) => vi.imagem).filter(Boolean)
   };
-  return getViaImageUrlFull(viaParaImagem);
+  return getViaImageUrlComFallbackFull(viaParaImagem);
 });
 
 const linkPerfil = computed(() => {
   const username = escalada.value?.usuario?.username;
   return username ? `/perfil/${username}` : '/perfil';
 });
+
+const sharePreviewUrl = computed(() => {
+  if (!escalada.value?.id) return '';
+  return obterUrlCompartilhavel(`/share/escalada/${escalada.value.id}`);
+});
+
+const dadosCompartilhamento = computed(() => {
+  const viaNome = escalada.value?.via?.nome || 'Via';
+  const autor = escalada.value?.usuario?.nome || escalada.value?.usuario?.username || 'um escalador';
+  return {
+    titulo: `${viaNome} • registro de ${autor}`,
+    texto: `Veja o registro de ${viaNome} no Cumes Brasil.`,
+    url: sharePreviewUrl.value
+  };
+});
+
+function abrirModalCompartilhamento () {
+  if (!dadosCompartilhamento.value?.url) return;
+  isModalCompartilhamentoAberto.value = true;
+}
 
 function parsearData(data: string | Date): Date {
   if (typeof data === 'string') {
@@ -528,6 +563,24 @@ onMounted(async () => {
   color: $offwhite;
   margin: 0;
   line-height: 1.5;
+}
+
+.share-btn {
+  background: transparent !important;
+  border: 1px solid rgba($cumes-03, 0.45) !important;
+  color: $cumes-03 !important;
+  width: 38px;
+  height: 38px;
+  min-width: 38px !important;
+  padding: 0 !important;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-btn :deep(.p-button-icon) {
+  font-size: 16px;
 }
 
 .page-bottom-spacer { height: 100px; }

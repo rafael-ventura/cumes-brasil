@@ -486,7 +486,7 @@ defineExpose({ setFilters });
 
 .popover-panel {
   margin-top: 12px;
-  background: lighten($background, 6%);
+  background: cumesLighten($background, 6%);
   border: 1px solid rgba($cumes-01, 0.2);
   border-radius: 16px;
   overflow: hidden;

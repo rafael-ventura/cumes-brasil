@@ -6,21 +6,18 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import UserService from 'src/services/UsuarioService';
 
 defineOptions({ name: 'PerfilMeEscaladasRedirect' });
 
 const router = useRouter();
+const route = useRoute();
 
 onMounted(async () => {
   try {
-    const perfil = await UserService.getPerfil();
-    if (perfil?.username) {
-      await router.replace({ name: 'PerfilEscaladas', params: { username: perfil.username } });
-    } else {
-      await router.replace({ name: 'PerfilMe' });
-    }
+    await UserService.getPerfil();
+    await router.replace({ path: '/escaladas', query: route.query });
   } catch {
     await router.replace({ name: 'PerfilMe' });
   }

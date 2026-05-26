@@ -10,6 +10,8 @@ export class PerfilPublicoDTO {
     nome: string;
     username: string;
     biografia?: string;
+    link_externo?: string | null;
+    conquistas_publico?: boolean;
     clube_organizacao?: string;
     localizacao?: string;
     data_atividade?: string;
@@ -30,6 +32,8 @@ export class PerfilPublicoDTO {
         this.nome = entity.nome;
         this.username = entity.username ?? '';
         this.biografia = entity.biografia ?? undefined;
+        this.link_externo = entity.link_externo ?? undefined;
+        this.conquistas_publico = entity.conquistas_publico;
         this.clube_organizacao = entity.clube_organizacao ?? undefined;
         this.localizacao = entity.localizacao ?? undefined;
         this.data_atividade = entity.data_atividade ?? undefined;

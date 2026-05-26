@@ -7,35 +7,137 @@
   via: 29 de dezembro
   data: '2025-03-10T08:30:00'
   observacao: 'Ótimo dia, via limpa e seca'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Maria Escaladora'
+      username: maria_escaladora
 - usuario: cumes_teste
   via: Fenda do Forte
   data: '2025-02-28T09:15:00'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Rafael Ventura'
+      username: rafael
 - usuario: cumes_teste
   via: Semisonic
   data: '2025-02-15T07:45:00'
   observacao: 'Encordado em trio, vista incrível'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Conta Privada Seed'
+      username: usuario_privado
 - usuario: cumes_teste
   via: Ponto Noturno
   data: '2025-01-20T10:30:00'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Elmo Sampaio'
+      username: elmin
 - usuario: cumes_teste
   via: João Belamy
   data: '2024-12-01T09:00:00'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Vitin Souza'
+      username: vitin
 - usuario: cumes_teste
   via: Ratos de montanha
   data: '2024-11-15T08:00:00'
   observacao: 'Primeira vez na via, dia memorável'
+  participantes:
+    - tipo: GUIA
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+    - tipo: PARTICIPANTE
+      nome: 'Mohammed Abdalla'
+      username: mohammed
 
 # --- maria_escaladora ---
 - usuario: maria_escaladora
   via: Semisonic
   data: '2025-03-18T14:00:00'
   observacao: 'Dia lindo na Pedra'
+  participantes:
+    - tipo: GUIA
+      nome: 'Maria Escaladora'
+      username: maria_escaladora
+    - tipo: PARTICIPANTE
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
 - usuario: maria_escaladora
   via: 29 de dezembro
   data: '2025-02-01T09:30:00'
+  participantes:
+    - tipo: GUIA
+      nome: 'Maria Escaladora'
+      username: maria_escaladora
+    - tipo: PARTICIPANTE
+      nome: 'Mohammed Abdalla'
+      username: mohammed
 
 # --- usuario_privado ---
 - usuario: usuario_privado
   via: Fenda do Forte
   data: '2025-01-05T11:00:00'
   observacao: 'Escalada em conta privada — não deve aparecer para terceiros se perfil estiver privado'
+  participantes:
+    - tipo: GUIA
+      nome: 'Conta Privada Seed'
+      username: usuario_privado
+    - tipo: PARTICIPANTE
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste
+
+# --- elmin ---
+- usuario: elmin
+  via: Semisonic
+  data: '2025-03-19T09:00:00'
+  observacao: 'Elmo aproveitando o dia para consolidar técnicas.'
+  participantes:
+    - tipo: GUIA
+      nome: 'Elmo Sampaio'
+      username: elmin
+    - tipo: PARTICIPANTE
+      nome: 'Vitin Souza'
+      username: vitin
+
+# --- vitin ---
+- usuario: vitin
+  via: 29 de dezembro
+  data: '2025-03-19T11:15:00'
+  observacao: 'Vitin anotando dicas de movimentação e repetição.'
+  participantes:
+    - tipo: GUIA
+      nome: 'Vitin Souza'
+      username: vitin
+    - tipo: PARTICIPANTE
+      nome: 'Elmo Sampaio'
+      username: elmin
+
+# --- mohammed ---
+- usuario: mohammed
+  via: Fenda do Forte
+  data: '2025-03-19T13:30:00'
+  observacao: 'Mohammed registrando uma subida consistente no CERJ.'
+  participantes:
+    - tipo: GUIA
+      nome: 'Mohammed Abdalla'
+      username: mohammed
+    - tipo: PARTICIPANTE
+      nome: 'Usuário Teste Cumes'
+      username: cumes_teste

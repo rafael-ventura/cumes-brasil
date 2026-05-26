@@ -17,6 +17,25 @@
   border: 1px solid rgba($offwhite, 0.08);
 }
 
+.lista-toolbar--compacto {
+  padding: 8px 12px 9px;
+  gap: 10px 14px;
+  border-radius: 10px;
+
+  .lista-toolbar__icon {
+    font-size: 18px;
+  }
+
+  .lista-toolbar__title {
+    font-size: 14px;
+  }
+
+  .lista-toolbar__chip {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
 .lista-toolbar__left {
   display: flex;
   align-items: center;
@@ -40,7 +59,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   justify-content: flex-end;
 }
 

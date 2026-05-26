@@ -27,6 +27,8 @@ import { ImagemRepository } from '../../Infrastructure/repositories/ImagemReposi
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
+import SeguimentoRouter from './SeguimentoRouter';
+import ConquistasRouter from './ConquistasRouter';
 
 // TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
 // TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
@@ -74,5 +76,11 @@ routes.use("/perfil", authenticateToken, PerfilRouter);
 
 // Rota de busca com autenticação opcional
 routes.use("/search", optionalAuthenticateToken, SearchRouter);
+
+// Rede social (seguir / seguidores)
+routes.use("/seguimentos", SeguimentoRouter);
+
+// Conquistas (badges por tier)
+routes.use("/conquistas", ConquistasRouter);
 
 export default routes;

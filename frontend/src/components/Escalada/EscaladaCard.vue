@@ -132,7 +132,7 @@ import { Escalada } from 'src/models/Escalada';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
 const props = withDefaults(
   defineProps<{
@@ -153,7 +153,7 @@ const dropdownOpen = ref(false);
 const observacaoExpandida = ref(false);
 const observacaoDropdownOpen = ref(true); // Começa aberto por padrão
 
-const viaImageUrl = computed(() => getViaImageUrlFull(via.value));
+const viaImageUrl = computed(() => getViaImageUrlComFallbackFull(via.value));
 
 // Observa mudanças na prop escalada
 watch(() => props.escalada, (newEscalada) => {
@@ -233,7 +233,7 @@ function toggleObservacaoDropdown () {
 @import 'src/css/app.scss';
 .imagem-container {
   width: 100%;
-  height: 240px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -298,7 +298,7 @@ function toggleObservacaoDropdown () {
 
 .escalada-card {
   width: 100%;
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 5%) 100%);
   padding: 20px;
   box-sizing: border-box;
   
@@ -342,7 +342,7 @@ function toggleObservacaoDropdown () {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, $cumes-04 0%, darken($cumes-04, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-04 0%, cumesDarken($cumes-04, 10%) 100%);
   color: $background;
   font-size: 14px;
   font-weight: 700;
@@ -386,7 +386,7 @@ function toggleObservacaoDropdown () {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $cumes-03 0%, darken($cumes-03, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-03 0%, cumesDarken($cumes-03, 10%) 100%);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -508,7 +508,7 @@ function toggleObservacaoDropdown () {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $cumes-02 0%, darken($cumes-02, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-02 0%, cumesDarken($cumes-02, 10%) 100%);
   border-radius: 50%;
   color: $offwhite;
   font-size: 20px;

@@ -247,12 +247,12 @@ const deleteFoto = async () => {
   top: 12px;
   right: 12px;
   z-index: 10;
-  background-color: darken($error-color, 0.9);
+  background-color: cumesDarken($error-color, 0.9);
   color: $offwhite;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: darken($error-color, 10%);
+    background-color: cumesDarken($error-color, 10%);
     transform: scale(1.1);
   }
 
@@ -271,7 +271,7 @@ const deleteFoto = async () => {
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: darken($cumes-01, 10%);
+    background-color: cumesDarken($cumes-01, 10%);
     transform: scale(1.1);
   }
 
@@ -289,7 +289,7 @@ const deleteFoto = async () => {
   box-shadow: 0 2px 8px $box-shadow-medium;
 
   &:hover {
-    background-color: darken($cumes-01, 10%);
+    background-color: cumesDarken($cumes-01, 10%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px $box-shadow-strong;
   }
@@ -402,7 +402,7 @@ const deleteFoto = async () => {
   border-radius: 8px;
 
   &:hover {
-    background-color: darken($error-color, 10%);
+    background-color: cumesDarken($error-color, 10%);
   }
 }
 </style>

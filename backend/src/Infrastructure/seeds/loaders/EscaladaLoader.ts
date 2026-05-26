@@ -1,12 +1,21 @@
 import { AppDataSource } from '../../config/db';
 import { Escalada } from '../../../Domain/entities/Escalada';
+import { Participante } from '../../../Domain/entities/Participante';
 import { loadYaml } from '../seedUtils';
+
+interface ParticipanteTesteYaml {
+  tipo: string;
+  nome: string;
+  email?: string;
+  username?: string;
+}
 
 interface EscaladaTesteYaml {
   usuario: string;
   via: string;
   data: string;
   observacao?: string;
+  participantes?: ParticipanteTesteYaml[];
 }
 
 /**
@@ -18,6 +27,7 @@ export async function runEscaladaLoader(
   viaIds: Map<string, number>
 ): Promise<void> {
   const escaladaRepo = AppDataSource.getRepository(Escalada);
+  const participanteRepo = AppDataSource.getRepository(Participante);
   const yamlData = loadYaml<EscaladaTesteYaml[]>('escaladas-teste.yaml');
   if (!yamlData || yamlData.length === 0) return;
 
@@ -56,6 +66,25 @@ export async function runEscaladaLoader(
         `UPDATE escalada SET data = $1, created_at = $1, observacao = $2 WHERE id = $3`,
         [dataEscalada, item.observacao ?? null, existente.id]
       );
+
+      if (item.participantes?.length) {
+        // Recria participantes para garantir consistência no re-seed.
+        await AppDataSource.manager.query(
+          `DELETE FROM participante WHERE "escaladaId" = $1`,
+          [existente.id]
+        );
+
+        for (const p of item.participantes) {
+          await participanteRepo.save({
+            tipo: p.tipo.trim().toUpperCase(),
+            nome: p.nome,
+            email: p.email ?? undefined,
+            username: p.username ?? undefined,
+            escalada: { id: existente.id } as any
+          });
+        }
+      }
+
       atualizadas++;
       continue;
     }
@@ -64,7 +93,13 @@ export async function runEscaladaLoader(
       data: dataEscalada,
       observacao: item.observacao || undefined,
       usuario: { id: usuarioId } as any,
-      via: { id: viaId } as any
+      via: { id: viaId } as any,
+      participantes: item.participantes?.map(p => ({
+        tipo: p.tipo.trim().toUpperCase(),
+        nome: p.nome,
+        email: p.email ?? undefined,
+        username: p.username ?? undefined
+      })) ?? []
     });
     const salva = await escaladaRepo.save(escalada);
     await escaladaRepo.query(

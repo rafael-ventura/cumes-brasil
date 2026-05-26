@@ -41,7 +41,7 @@ const extensaoValida = computed(() => {
   max-width: 800px;
   padding: 8px 16px;
   border-radius: 12px;
-  background: linear-gradient(135deg, $cumes-04 0%, darken($cumes-04, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-04 0%, cumesDarken($cumes-04, 10%) 100%);
   color: $background;
   font-size: 14px;
   font-weight: 700;

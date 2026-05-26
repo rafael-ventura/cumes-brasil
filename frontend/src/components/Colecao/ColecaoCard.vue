@@ -58,17 +58,9 @@
           <div class="text-subtitle1" v-if="colecao.descricao">{{ colecao.descricao }}</div>
         </div>
 
-        <div class="badge-container">
-          <q-badge
-            v-if="viasCarregadas !== null"
-            class="badge-custom"
-          >
-            <span class="badge-label">Vias na coleção:</span>
-            <span class="badge-value">{{ viasCarregadas }}</span>
-          </q-badge>
-          <q-badge v-else class="badge-custom badge-loading">
-            <span class="badge-label">Carregando...</span>
-          </q-badge>
+        <div class="vias-count">
+          <span v-if="viasCarregadas !== null" class="vias-count__texto">{{ viasCarregadas }} vias</span>
+          <span v-else class="vias-count__texto vias-count__texto--loading">Carregando...</span>
         </div>
       </div>
     </q-card-section>
@@ -96,7 +88,7 @@ const ehFavoritos = computed(() => ehColecaoFavoritos(props.colecao));
 
 const urlCapa = computed(() => {
   const url = props.colecao.imagemCapa?.url || props.colecao.imagem?.url;
-  return url ? ImagemService.getFullImageUrl(url) : null;
+  return url ? ImagemService.obterUrlCompleta(url) : null;
 });
 
 function irDetalhe () {
@@ -129,30 +121,26 @@ onMounted(() => {
 .colecao-card {
   width: 100%;
   height: 100%;
-  min-height: 150px;
+  min-height: 120px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow:
-    0 4px 12px $box-shadow-medium,
-    0 1px 0 rgba($offwhite, 0.06) inset;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px $box-shadow-soft;
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba($cumes-01, 0.95) 0%, darken($cumes-01, 6%) 100%);
-  border: 1px solid rgba($offwhite, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: visible;
   display: flex;
   flex-direction: column;
   position: relative;
 
   &:hover {
-    transform: translateY(-6px);
-    box-shadow:
-      0 12px 28px $box-shadow-strong,
-      0 1px 0 rgba($offwhite, 0.08) inset;
-    border-color: rgba($cumes-03, 0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px $box-shadow-medium;
+    border-color: rgba($cumes-01, 0.35);
   }
 
   @media (max-width: 768px) {
-    min-height: 130px;
+    min-height: 100px;
   }
 }
 
@@ -208,17 +196,17 @@ onMounted(() => {
 }
 
 .colecao-image {
-  width: 120px;
-  min-width: 120px;
-  height: 120px;
-  border-radius: 12px;
+  width: 80px;
+  min-width: 80px;
+  height: 80px;
+  border-radius: 8px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba($offwhite, 0.12);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  background-color: rgba($offwhite, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: all 0.25s ease;
   flex-shrink: 0;
 
   .q-img {
@@ -234,9 +222,9 @@ onMounted(() => {
   }
 
   @media (max-width: 768px) {
-    width: 85px;
-    min-width: 85px;
-    height: 85px;
+    width: 64px;
+    min-width: 64px;
+    height: 64px;
   }
 }
 
@@ -244,15 +232,15 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  color: $background;
+  color: $offwhite;
   flex-grow: 1;
   min-width: 0;
-  gap: 12px;
-  height: 120px;
+  gap: 8px;
+  height: 80px;
   position: relative;
 
   @media (max-width: 768px) {
-    height: 85px;
+    height: 64px;
   }
 }
 
@@ -274,15 +262,14 @@ onMounted(() => {
 .text-h6 {
   margin: 0;
   color: $offwhite;
-  font-size: 20px;
-  font-weight: 800;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  font-size: 16px;
+  font-weight: 700;
   line-height: 1.3;
   word-wrap: break-word;
   overflow-wrap: break-word;
 
   @media (max-width: 768px) {
-    font-size: 18px;
+    font-size: 15px;
   }
 }
 
@@ -300,62 +287,17 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.badge-container {
-  display: flex;
-  align-items: center;
+.vias-count {
   margin-top: auto;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 
-.badge-custom {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: $background;
-  background: rgba($offwhite, 0.22);
-  border: 1px solid rgba($offwhite, 0.35);
-  font-size: 14px;
-  font-weight: 700;
-  padding: 10px 18px;
-  border-radius: 10px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-
-  &.badge-loading {
-    opacity: 0.7;
-  }
-
-  .colecao-card:hover & {
-    background: rgba($offwhite, 0.28);
-    border-color: rgba($offwhite, 0.45);
-  }
-
-  @media (max-width: 768px) {
-    font-size: 13px;
-    padding: 8px 16px;
-  }
-}
-
-.badge-label {
+.vias-count__texto {
+  font-size: 12px;
+  color: rgba($offwhite, 0.45);
   font-weight: 600;
-  color: $offwhite;
-}
 
-.badge-value {
-  font-weight: 800;
-  font-size: 16px;
-  color: $cumes-04;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  margin-left: 6px;
-
-  @media (max-width: 768px) {
-    font-size: 15px;
+  &--loading {
+    opacity: 0.6;
   }
 }
 </style>

@@ -18,7 +18,7 @@ const router = useRouter();
 const loginWithGoogle = async () => {
   try {
     const response = await googleAuthCodeLogin();
-    await AuthenticateService.authenticateWithGoogle(response.code);
+    await AuthenticateService.autenticarComGoogle(response.code);
 
     Notify.create(createNotifyConfig('positive', 'Login realizado com sucesso', 'top'));
     await router.push('/');

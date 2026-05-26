@@ -3,6 +3,8 @@ import { Escalada } from '../../Domain/entities/Escalada';
 import { ISearchResult } from '../../Domain/interfaces/models/ISearchResult';
 import { ISearchRepository } from '../../Domain/interfaces/repositories/ISearchRepository';
 import { FiltrosBuscaEscalada } from '../../Domain/interfaces/models/FiltrosBusca';
+import { ModalidadeEscalada } from '../../Domain/enum/EModalidadeEscalada';
+import { Usuario } from '../../Domain/entities/Usuario';
 
 export class EscaladaRepository implements ISearchRepository<Escalada> {
     private repository = AppDataSource.getRepository(Escalada);
@@ -118,6 +120,169 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
         return Number(raw?.cnt ?? 0);
     }
 
+    /**
+     * Contagem pública (ex.: card no GET /u/:username): escaladas em que o usuário participou
+     * (como autor ou incluído na cordada), considerando apenas autor com perfil público quando
+     * a escalada não pertence ao próprio usuário.
+     */
+    async getCountOndeUsuarioParticipaPublico (usuarioAlvoId: number, usernameAlvo: string): Promise<number> {
+        const uname = usernameAlvo.trim().toLowerCase();
+
+        const raw = await this.repository.createQueryBuilder("escalada")
+            .leftJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .select("COUNT(DISTINCT escalada.id)", "cnt")
+            .where(
+                `(
+                  escalada.usuarioId = :alvoId
+                  OR (
+                    p_match.username IS NOT NULL
+                    AND TRIM(p_match.username) <> ''
+                    AND LOWER(TRIM(p_match.username)) = :uname
+                  )
+                )`,
+                { alvoId: usuarioAlvoId, uname }
+            )
+            .andWhere("(escalada.usuarioId = :alvoId OR usuario.perfil_publico = true)", { alvoId: usuarioAlvoId })
+            .getRawOne();
+
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Contagem do número de escaladas em que o usuário foi marcado,
+     * considerando qualquer visibilidade do autor.
+     *
+     * Obs.: exclui escaladas em que o usuário é o autor.
+     */
+    async getCountOndeUsuarioFoiMarcado (usuarioAlvoId: number, usernameAlvo: string): Promise<number> {
+        const uname = usernameAlvo.trim().toLowerCase();
+        const raw = await this.repository.createQueryBuilder("escalada")
+            .select("COUNT(DISTINCT escalada.id)", "cnt")
+            .innerJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .where("escalada.usuarioId != :alvoId", { alvoId: usuarioAlvoId })
+            .andWhere("LOWER(TRIM(p_match.username)) = :uname", { uname })
+            .andWhere("p_match.username IS NOT NULL")
+            .andWhere("TRIM(p_match.username) <> ''")
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Contagem de marcações em vias do CERJ.
+     */
+    async getCountOndeUsuarioFoiMarcadoViasCERJ (
+        usuarioAlvoId: number,
+        usernameAlvo: string,
+        somentePublico: boolean
+    ): Promise<number> {
+        const uname = usernameAlvo.trim().toLowerCase();
+        const query = this.repository.createQueryBuilder("escalada")
+            .select("COUNT(DISTINCT escalada.id)", "cnt")
+            .innerJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .leftJoin("escalada.via", "via")
+            .where("escalada.usuarioId != :alvoId", { alvoId: usuarioAlvoId })
+            .andWhere("LOWER(TRIM(p_match.username)) = :uname", { uname })
+            .andWhere("p_match.username IS NOT NULL")
+            .andWhere("TRIM(p_match.username) <> ''")
+            .andWhere("via.via_cerj = true");
+
+        if (somentePublico) {
+            query.andWhere("usuario.perfil_publico = true");
+        }
+
+        const raw = await query.getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Contagem de marcações em vias do CERJ por modalidade (Tradicional / Esportiva).
+     */
+    async getCountOndeUsuarioFoiMarcadoViasCERJPorModalidade (
+        usuarioAlvoId: number,
+        usernameAlvo: string,
+        modalidade: ModalidadeEscalada,
+        somentePublico: boolean
+    ): Promise<number> {
+        const uname = usernameAlvo.trim().toLowerCase();
+        const query = this.repository.createQueryBuilder("escalada")
+            .select("COUNT(DISTINCT escalada.id)", "cnt")
+            .innerJoin("escalada.participantes", "p_match")
+            .leftJoin("escalada.usuario", "usuario")
+            .leftJoin("escalada.via", "via")
+            .where("escalada.usuarioId != :alvoId", { alvoId: usuarioAlvoId })
+            .andWhere("LOWER(TRIM(p_match.username)) = :uname", { uname })
+            .andWhere("p_match.username IS NOT NULL")
+            .andWhere("TRIM(p_match.username) <> ''")
+            .andWhere("via.via_cerj = true")
+            .andWhere("via.modalidade = :modalidade", { modalidade });
+
+        if (somentePublico) {
+            query.andWhere("usuario.perfil_publico = true");
+        }
+
+        const raw = await query.getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Métrica base para conquistas persistidas:
+     * quantidade de vias distintas escaladas pelo usuário (como autor).
+     */
+    async contarViasEscaladasPorUsuario (usuarioId: number): Promise<number> {
+        const raw = await this.repository.createQueryBuilder('escalada')
+            .leftJoin('escalada.via', 'via')
+            .select('COUNT(DISTINCT via.id)', 'cnt')
+            .where('escalada.usuarioId = :usuarioId', { usuarioId })
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Quantidade de graus distintos presentes nas vias escaladas pelo usuário (como autor).
+     */
+    async contarGrausDiferentesPorUsuario (usuarioId: number): Promise<number> {
+        const raw = await this.repository.createQueryBuilder('escalada')
+            .leftJoin('escalada.via', 'via')
+            .select('COUNT(DISTINCT via.grau)', 'cnt')
+            .where('escalada.usuarioId = :usuarioId', { usuarioId })
+            .andWhere('via.grau IS NOT NULL')
+            .andWhere("TRIM(via.grau) <> ''")
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Quantidade de bairros distintos (vias com setor->localizacao->bairro) escalados pelo usuário (como autor).
+     */
+    async contarBairrosDiferentesPorUsuario (usuarioId: number): Promise<number> {
+        const raw = await this.repository.createQueryBuilder('escalada')
+            .leftJoin('escalada.via', 'via')
+            .leftJoin('via.setor', 'setor')
+            .leftJoin('setor.localizacoes', 'localizacoes')
+            .leftJoin('localizacoes.bairro', 'bairro')
+            .select('COUNT(DISTINCT bairro.id)', 'cnt')
+            .where('escalada.usuarioId = :usuarioId', { usuarioId })
+            .andWhere('bairro.id IS NOT NULL')
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    /**
+     * Soma total de extensão (metros) nas vias escaladas pelo usuário (como autor).
+     */
+    async somarExtensaoViasPorUsuario (usuarioId: number): Promise<number> {
+        const raw = await this.repository.createQueryBuilder('escalada')
+            .leftJoin('escalada.via', 'via')
+            .select('COALESCE(SUM(COALESCE(via.extensao, 0)), 0)', 'soma')
+            .where('escalada.usuarioId = :usuarioId', { usuarioId })
+            .getRawOne();
+
+        return Number(raw?.soma ?? 0);
+    }
+
     async getByViaId(viaId: number, limit: number | undefined, usuarioIdObservador: number): Promise<Escalada[]> {
         const query = this.repository.createQueryBuilder("escalada")
           .leftJoin('escalada.usuario', 'usuario')
@@ -160,9 +325,11 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             termoBusca,
             pagina = 1,
             usuarioId,
+            comoPerfil = 'autor',
             itensPorPagina = 10
         } = filtros;
         let qb = this.repository.createQueryBuilder("escalada")
+            .distinct(true)
             .leftJoinAndSelect("escalada.usuario", "usuario")
             .leftJoinAndSelect("escalada.via", "via")
             .leftJoinAndSelect("via.viaImagens", "viaImagens")
@@ -171,9 +338,32 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             .leftJoinAndSelect("escalada.participantes", "participante")
             .orderBy("escalada.data", "DESC");
 
-        // Filtro default pelo ID do usuário logado
+        const modo = (comoPerfil === 'marcado' || comoPerfil === 'todas' || comoPerfil === 'autor')
+            ? comoPerfil
+            : 'autor';
+        const usuarioIdNum = Number(usuarioId || 0);
+        const repoUsuario = AppDataSource.getRepository(Usuario);
+        const usuarioAlvo = usuarioIdNum ? await repoUsuario.findOne({ where: { id: usuarioIdNum } }) : null;
+        const usernameAlvo = String(usuarioAlvo?.username || '').trim().toLowerCase();
 
-        qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId });
+        if (modo === 'marcado' && usernameAlvo) {
+            qb = qb.andWhere('escalada.usuario.id != :usuarioId', { usuarioId: usuarioIdNum })
+                .andWhere('participante.username IS NOT NULL')
+                .andWhere("TRIM(participante.username) <> ''")
+                .andWhere("LOWER(TRIM(participante.username)) = :usernameAlvo", { usernameAlvo });
+        } else if (modo === 'todas' && usernameAlvo) {
+            qb = qb.andWhere(`(
+                escalada.usuario.id = :usuarioId
+                OR (
+                    escalada.usuario.id != :usuarioId
+                    AND participante.username IS NOT NULL
+                    AND TRIM(participante.username) <> ''
+                    AND LOWER(TRIM(participante.username)) = :usernameAlvo
+                )
+            )`, { usuarioId: usuarioIdNum, usernameAlvo });
+        } else {
+            qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId: usuarioIdNum });
+        }
         // Filtrar por nome da via (se necessário)
         if (termoBusca) {
             qb = qb.andWhere("via.nome LIKE :termo", { termo: `%${termoBusca}%` });

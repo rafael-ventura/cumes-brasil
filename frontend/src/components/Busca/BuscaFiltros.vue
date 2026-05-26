@@ -1,15 +1,18 @@
 <template>
-  <div class="busca-filtros">
+  <div class="busca-filtros" :class="{ 'busca-filtros--compacto': compact }">
     <!-- Campo de busca unificado -->
     <div class="busca-input-wrapper">
       <q-input
         v-model="localFilters.termoBusca"
-        :label="unifiedSearchLabel || 'Buscar por nome, bairro ou localização'"
+        :label="compact ? undefined : (unifiedSearchLabel || 'Buscar por nome, bairro ou localização')"
+        :placeholder="compact ? (unifiedSearchLabel || 'Buscar…') : undefined"
         debounce="300"
         outlined
         color="secondary"
         label-color="secondary"
         class="busca-input"
+        :dense="compact"
+        hide-bottom-space
         rounded
         @keydown="onInputChange"
       >
@@ -93,7 +96,7 @@
                 <button
                   v-for="g in grauOptions"
                   :key="'grau-' + g"
-                  class="chip"
+                  class="chip chip-grau"
                   :class="{ selected: localFilters.grau === g }"
                   @click="toggleChip('grau', g)"
                 >{{ g }}</button>
@@ -223,18 +226,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
-const props = defineProps<{
-  entity: string;
-  filters?: Partial<BuscaRequest>;
-  staticFilters?: Partial<any>;
-  unifiedSearchLabel?: string;
-  enabledFilters?: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    entity: string;
+    filters?: Partial<BuscaRequest>;
+    staticFilters?: Partial<any>;
+    unifiedSearchLabel?: string;
+    enabledFilters?: string[];
+    /** Barras mais baixas e integradas ao tema escuro (coleções, favoritas, escaladas) */
+    compact?: boolean;
+  }>(),
+  { compact: false }
+);
 
 const emit = defineEmits(['applyFilters']);
 
@@ -474,13 +482,51 @@ onMounted(async () => {
   padding-top: 16px;
 }
 
+.busca-filtros--compacto .busca-input-wrapper {
+  padding-top: 0;
+}
+
 .busca-input {
   @include campo-busca-primario(12px, 52px);
+}
+
+.busca-filtros--compacto .busca-input {
+  :deep(.q-field__control) {
+    min-height: 40px !important;
+    background-color: rgba($surface, 0.72) !important;
+    border-radius: 10px !important;
+
+    &::before {
+      border-color: rgba($cumes-01, 0.3) !important;
+      border-width: 1px !important;
+    }
+  }
+
+  :deep(.q-field__native),
+  :deep(.q-field__input) {
+    color: $offwhite !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 6px 8px 4px !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($offwhite, 0.42) !important;
+  }
+
+  &:deep(.q-field--focused) .q-field__control::before {
+    border-color: rgba($cumes-01, 0.55) !important;
+  }
 }
 
 .icone-lupa-busca {
   color: $cumes-03 !important;
   font-size: 22px !important;
+}
+
+.busca-filtros--compacto .icone-lupa-busca {
+  color: $cumes-01 !important;
+  font-size: 20px !important;
 }
 
 .append-actions {
@@ -702,20 +748,6 @@ onMounted(async () => {
   flex: 1;
   overflow-y: auto;
   padding: 16px 20px 24px;
-
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba($offwhite, 0.12);
-    border-radius: 2px;
-  }
 }
 
 // ================================
@@ -761,6 +793,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  justify-content: center;
 
   &:hover {
     background: rgba($cumes-01, 0.08);
@@ -773,6 +806,16 @@ onMounted(async () => {
     border-color: $cumes-01;
     color: $offwhite;
   }
+}
+
+.chip-grau {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
 .chip-wide {
@@ -850,7 +893,7 @@ onMounted(async () => {
   transition: all 0.2s ease;
 
   &:hover {
-    background: darken($cumes-01, 8%);
+    background: cumesDarken($cumes-01, 8%);
     transform: translateY(-1px);
     box-shadow: 0 4px 16px $box-shadow-medium;
   }

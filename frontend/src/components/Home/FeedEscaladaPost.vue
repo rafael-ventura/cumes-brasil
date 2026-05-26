@@ -70,7 +70,7 @@ const linkPerfil = computed(() => {
 
 const avatarUrl = computed(() => {
   const url = usuario.value?.foto_perfil?.url;
-  return url ? ImagemService.getFullImageUrl(url) : null;
+  return url ? ImagemService.obterUrlCompleta(url) : null;
 });
 
 function parsearData(data: string | Date): Date {

@@ -1350,6 +1350,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Os Amanayés
@@ -1360,6 +1361,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Noite e dia
@@ -1370,6 +1372,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Sulamita
@@ -1380,6 +1383,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Livrai-me de mim mesmo
@@ -1390,6 +1394,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Retinha do Graal
@@ -1400,6 +1405,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: As bolas do Wilson
@@ -1410,6 +1416,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: 23 de abril
@@ -1420,6 +1427,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Vovô Abílio foi às compras
@@ -1430,6 +1438,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Sônia Trote
@@ -1440,6 +1449,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Saidinha de banco
@@ -1450,6 +1460,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: 30 de setembro
@@ -1460,6 +1471,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: 13 de outubro
@@ -1470,6 +1482,7 @@
   montanha: Pedreira da Rua Aníbal Moreira
   face: Campo Escola de Escalada da Aníbal Moreira
   via_cerj: false
+  modalidade: ESPORTIVA
   fonte: Pedro Bugim
   viaPrincipal: Fenda do Forte
 - nome: Cariocando
@@ -1835,6 +1848,7 @@
 # --- Vias Clássicas do CERJ ---
 - nome: Artificial da Caixa de Fósforos
   artificial: A1
+  modalidade: ARTIFICIAL
   extensao: 20
   conquistadores: Sylvio Joaquim Mendes; Índio do Brasil Luz; Jahir Leopoldino da Costa
   data: '1944-02-03'

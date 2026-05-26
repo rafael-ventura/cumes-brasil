@@ -4,12 +4,14 @@ import { StatsService } from '../../Application/services/StatsService';
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { MontanhaRepository } from '../../Infrastructure/repositories/MontanhaRepository';
 import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepository';
+import { CroquiRepository } from '../../Infrastructure/repositories/CroquiRepository';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 
 const statsService = new StatsService(
     new ViaRepository(),
     new MontanhaRepository(),
-    new UsuarioRepository()
+    new UsuarioRepository(),
+    new CroquiRepository()
 );
 const statsController = new StatsController(statsService);
 

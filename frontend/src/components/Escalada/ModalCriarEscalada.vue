@@ -317,7 +317,7 @@ const onSubmit = async () => {
   };
 
   try {
-    await EscaladaService.createEscalada(escalada as any);
+    await EscaladaService.criarEscalada(escalada as any);
     onReset();
     Notify.create({ type: 'positive', message: 'Escalada registrada com sucesso!', position: 'top-right', timeout: 3000 });
     emit('closeModal');
@@ -355,7 +355,7 @@ const onReset = () => {
 }
 
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 20px 28px;
   border-bottom: 3px solid $cumes-03;
   flex-shrink: 0;
@@ -582,7 +582,7 @@ const onReset = () => {
   border-radius: 8px !important;
   min-height: 36px !important;
   box-shadow: 0 4px 12px $box-shadow-medium !important;
-  &:hover { background: darken($cumes-01, 10%) !important; }
+  &:hover { background: cumesDarken($cumes-01, 10%) !important; }
 }
 
 .btn-secondary-custom {
