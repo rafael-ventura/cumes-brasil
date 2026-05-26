@@ -70,47 +70,7 @@ const clearSearch = () => {
 }
 
 .search-input {
-  :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 16px !important;
-    padding: 0 4px !important;
-    height: 52px;
-
-    &::before {
-      border-color: rgba($cumes-01, 0.4) !important;
-      border-width: 2px !important;
-      border-radius: 16px !important;
-    }
-  }
-
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    padding: 10px 8px !important;
-  }
-
-  :deep(input),
-  :deep(.q-field__input) {
-    color: $background !important;
-  }
-
-  :deep(input::placeholder) {
-    color: rgba($background, 0.45) !important;
-  }
-
-  :deep(.q-field__label) {
-    color: rgba($background, 0.6) !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-  }
-
-  &:deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
-    }
-  }
+  @include campo-busca-primario(16px, 52px);
 }
 
 .search-icon {

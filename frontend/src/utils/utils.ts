@@ -3,6 +3,7 @@ import { Via } from 'src/models/Via';
 import ImagemService from 'src/services/ImagemService';
 
 type ViaKey = keyof Via;
+const VIA_IMAGEM_FALLBACK = '/assets/vias/via-padrao.png';
 
 // --- Funções de Conversão entre Numerais Romanos e Arábicos ---
 export function romanToInt (roman: string): number {
@@ -75,9 +76,9 @@ export function formatarGrau (grau: string | number): string {
 
   // Se já contém formatação (grau, sup, a, b, c, etc), retornar como está
   const grauStr = String(grau).trim();
-  if (grauStr.includes('°') || 
-      grauStr.includes('sup') || 
-      /[abc]$/i.test(grauStr) || 
+  if (grauStr.includes('°') ||
+      grauStr.includes('sup') ||
+      /[abc]$/i.test(grauStr) ||
       /^[IVXLCDM]+[abc]?$/i.test(grauStr)) {
     return grauStr;
   }
@@ -104,10 +105,10 @@ export function formatVia (via: Via): Via {
   const formattedVia = { ...via };
 
   // Formatação do Grau (só formata se não for vazio/null/undefined)
-  if (formattedVia.grau && 
-      formattedVia.grau !== 'N/A' && 
-      formattedVia.grau !== '' && 
-      formattedVia.grau !== null && 
+  if (formattedVia.grau &&
+      formattedVia.grau !== 'N/A' &&
+      formattedVia.grau !== '' &&
+      formattedVia.grau !== null &&
       formattedVia.grau !== undefined) {
     formattedVia.grau = formatarGrau(formattedVia.grau);
   }
@@ -143,7 +144,7 @@ export function formatVia (via: Via): Via {
 // --- Manipulação de URLs de Imagens ---
 export function adjustImageUrls (entity: any): void {
   if (entity !== null && entity !== undefined) {
-    entity.url = ImagemService.getFullImageUrl(entity.url);
+    entity.url = ImagemService.obterUrlCompleta(entity.url);
   }
 }
 
@@ -151,39 +152,57 @@ export function adjustImageUrls (entity: any): void {
  * Obtém a URL da imagem de uma via:
  * 1. Se a via tem imagem, retorna a URL da imagem da via
  * 2. Se não tem, retorna null (para usar placeholder)
- * 
+ *
  * @param via - Objeto Via com imagem opcional
  * @returns URL da imagem ou null se não houver imagem disponível
  */
-export function getViaImageUrl (via: { imagem?: { url?: string } | null; imagens?: { url?: string }[] } | null | undefined): string | null {
+export function getViaImageUrl (via: {
+  imagem?: { url?: string } | null;
+  imagens?: { url?: string }[];
+  viaImagens?: { imagem?: { url?: string } | null }[];
+} | null | undefined): string | null {
   if (!via) return null;
-  
-  // 1. Tentar usar imagem da via (backward compat)
+
   if (via.imagem?.url) {
     return via.imagem.url;
   }
-  
-  // 2. Tentar usar primeira imagem do array imagens
+
   if (via.imagens?.length && via.imagens[0]?.url) {
     return via.imagens[0].url;
   }
-  
-  // 3. Não há imagem disponível
+
+  const deRelacao = via.viaImagens?.map((vi) => vi.imagem?.url).find(Boolean);
+  if (deRelacao) return deRelacao;
+
   return null;
 }
 
 /**
  * Obtém a URL da imagem de uma via e aplica o ajuste de URL completo.
  * Esta função combina getViaImageUrl com o ajuste de URL do ImagemService.
- * 
+ *
  * @param via - Objeto Via com imagem opcional
  * @returns URL completa da imagem ou null se não houver imagem disponível
  */
 export function getViaImageUrlFull (via: { imagem?: { url?: string } | null } | null | undefined): string | null {
   const imageUrl = getViaImageUrl(via);
   if (!imageUrl) return null;
-  
-  return ImagemService.getFullImageUrl(imageUrl);
+
+  return ImagemService.obterUrlCompleta(imageUrl);
+}
+
+/**
+ * Obtém a URL da imagem da via com fallback visual padrão.
+ * Prioridade:
+ * 1. imagem principal da via
+ * 2. primeira imagem disponível em `imagens`/`viaImagens`
+ * 3. SVG padrão de via
+ */
+export function getViaImageUrlComFallbackFull (
+  via: { imagem?: { url?: string } | null; imagens?: { url?: string }[]; viaImagens?: { imagem?: { url?: string } | null }[] } | null | undefined
+): string {
+  const imageUrl = getViaImageUrl(via);
+  return ImagemService.obterUrlCompleta(imageUrl || VIA_IMAGEM_FALLBACK);
 }
 
 // --- Tratamento de Erros de API ---

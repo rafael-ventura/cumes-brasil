@@ -1,26 +1,28 @@
 <template>
   <div>
-    <div class="order-container">
-      <div class="total-results" v-if="totalItems">
+    <div
+      v-if="!hideOrderBar"
+      class="order-container"
+      :class="{ 'order-container--compacto': compact }"
+    >
+      <div class="total-results" v-if="totalItems && !ocultarTotalResultados">
         {{ totalItems > 1 ? `${totalItems} resultados` : `${totalItems} resultado` }}
       </div>
-      <q-select
-        v-model="currentSortOption"
-        :options="filteredSortOptions"
-        option-value="value"
-        option-label="label"
-        label="Ordenar por"
-        label-color="secondary"
-        class="q-select-custom custom-select"
-        outlined
-        dense
-        map-options
-        @update:model-value="changeSorting"
-      />
+      <div class="ordenacao-container" :class="{ 'ordenacao-container--compacto': compact }">
+        <span class="ordenacao-label">Ordenar</span>
+        <Select
+          v-model="ordenacaoAtual"
+          :options="opcoesOrdenacaoFiltradas"
+          option-label="label"
+          option-value="value"
+          class="ordenacao-select"
+          @change="(evento) => aoMudarOrdenacao(evento.value)"
+        />
+      </div>
     </div>
 
-    <!-- Skeleton Loading -->
-    <div v-if="loading" class="skeleton-container">
+    <!-- Skeleton Loading (apenas quando realmente não existe conteúdo ainda) -->
+    <div v-if="loading && (!results || results.length === 0)" class="skeleton-container">
       <div v-for="i in itemsPerPage" :key="i" class="skeleton-card">
         <q-skeleton type="rect" height="200px" />
         <q-skeleton type="text" width="80%" class="q-mt-sm" />
@@ -30,18 +32,35 @@
 
     <!-- Renderiza ViaCard se entityType for 'via' -->
     <div v-else-if="entityType === 'via' && sortedResults">
-      <ViaLista :vias="sortedResults as Via[]" />
+      <ViaLista
+        :vias="sortedResults as Via[]"
+        :modo-selecao="modoSelecaoVias"
+        :ids-selecionados="viasSelecionadasIds"
+        @toggle-selecao="$emit('toggle-selecao-via', $event)"
+      />
     </div>
     <!-- Renderiza ColecaoCard se entityType for 'colecao' -->
     <div v-else-if="entityType === 'colecao' && sortedResults">
-      <ColecaoLista :colecoes="sortedResults as IColecao[]" />
+      <ColecaoLista
+        :colecoes="sortedResults as IColecao[]"
+        :exibir-menu="exibirMenuColecao"
+        @editar="$emit('editar-colecao', $event)"
+        @excluir="$emit('excluir-colecao', $event)"
+      />
     </div>
-    <div v-else-if="entityType === 'escalada' && sortedResults" class="escaladas-grid">
+    <div
+      v-else-if="entityType === 'escalada' && sortedResults"
+      class="escaladas-grid"
+      :class="{ 'escaladas-grid--compacto': compact }"
+    >
       <EscaladaCard
         v-for="escalada in sortedResults"
         :key="escalada.id"
         :escalada="escalada"
+        :modo-selecao="modoSelecaoEscaladas"
+        :selecionada="escaladasSelecionadasIds.includes(escalada.id)"
         class="escalada-card-item"
+        @toggle-selecao="$emit('toggle-selecao-escalada', escalada.id)"
       />
     </div>
     <!-- Mensagem se não houver resultados -->
@@ -50,9 +69,9 @@
     </div>
 
     <!-- Controles de Paginação -->
-    <div class="pagination-wrapper">
+    <div class="pagination-wrapper" :class="{ 'pagination-wrapper--compacto': compact }">
       <PaginacaoPadrao
-        v-if="!loading && totalPages && totalPages > 0 && !hidePagination"
+        v-if="totalPages && totalPages > 0 && !hidePagination"
         :current-page="currentPage || 1"
         :total-pages="totalPages"
         :items-per-page="itemsPerPage || 20"
@@ -74,6 +93,8 @@ import { Via } from 'src/models/Via';
 import { IColecao } from 'src/models/IColecao';
 import EscaladaCard from 'components/Escalada/EscaladaCard.vue';
 import PaginacaoPadrao from 'components/PaginacaoPadrao.vue';
+import { filtrarOpcoesOrdenacao, type ValorOrdenacao } from 'src/utils/buscaOrdenacao';
+import Select from 'primevue/select';
 
 // Use defineProps without the type argument
 const props = defineProps({
@@ -106,11 +127,52 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  compact: {
+    type: Boolean,
+    default: false
+  },
+  hideOrderBar: {
+    type: Boolean,
+    default: false
+  },
+  ocultarTotalResultados: {
+    type: Boolean,
+    default: false
+  },
   initialSort: Object,
-  enableSortOptions: Array
+  enableSortOptions: Array,
+  exibirMenuColecao: {
+    type: Boolean,
+    default: false
+  },
+  modoSelecaoVias: {
+    type: Boolean,
+    default: false
+  },
+  viasSelecionadasIds: {
+    type: Array as () => number[],
+    default: () => []
+  },
+  modoSelecaoEscaladas: {
+    type: Boolean,
+    default: false
+  },
+  escaladasSelecionadasIds: {
+    type: Array as () => number[],
+    default: () => []
+  }
 });
 
-const emit = defineEmits(['select', 'change-sort', 'page-change', 'items-per-page-change']);
+const emit = defineEmits([
+  'select',
+  'change-sort',
+  'page-change',
+  'items-per-page-change',
+  'editar-colecao',
+  'excluir-colecao',
+  'toggle-selecao-via',
+  'toggle-selecao-escalada'
+]);
 
 // Funções de paginação
 const onPageChange = (page: number) => {
@@ -121,36 +183,20 @@ const onItemsPerPageChange = (newItemsPerPage: number) => {
   emit('items-per-page-change', newItemsPerPage);
 };
 
-// Opções padrão de ordenação
-const defaultSortOptions = ref([
-  { label: 'Nome (A-Z)', value: { field: 'nome', direction: 'asc' } },
-  { label: 'Nome (Z-A)', value: { field: 'nome', direction: 'desc' } },
-  { label: 'Mais recente', value: { field: 'created_at', direction: 'desc' } },
-  { label: 'Mais antiga', value: { field: 'created_at', direction: 'asc' } },
-  { label: 'Última modificação', value: { field: 'updated_at', direction: 'desc' } }
-]);
-
-// Filtrar as opções de ordenação com base na configuração do componente pai
-const filteredSortOptions = computed(() => {
-  if (!props.enableSortOptions) {
-    // Se não houver configuração de opções, usar todas as opções padrão
-    return defaultSortOptions.value;
-  }
-
-  // Filtrar as opções com base nas permitidas pelo componente pai
-  return defaultSortOptions.value.filter(option => props.enableSortOptions?.some((sortOption: any) => sortOption.field === option.value.field));
-});
+const opcoesOrdenacaoFiltradas = computed(() =>
+  filtrarOpcoesOrdenacao(props.enableSortOptions as { field: string; label: string }[] | undefined)
+);
 
 // Ordenação atual (sincroniza com initialSort da URL)
-const currentSortOption = ref(
-  props.initialSort ? props.initialSort : filteredSortOptions.value[0]?.value
+const ordenacaoAtual = ref<ValorOrdenacao | null>(
+  props.initialSort ? props.initialSort : opcoesOrdenacaoFiltradas.value[0]?.value
 );
 
 watch(
   () => props.initialSort,
   (newSort) => {
     if (newSort && newSort.field && newSort.direction) {
-      currentSortOption.value = newSort;
+      ordenacaoAtual.value = newSort;
     }
   },
   { immediate: true }
@@ -163,10 +209,10 @@ const sortedResults: any = computed(() => {
   // Copia os resultados para não alterar a prop original
   const resultsCopy = [...props.results];
 
-  if (!currentSortOption.value) return resultsCopy;
+  if (!ordenacaoAtual.value) return resultsCopy;
   return resultsCopy.sort((a: any, b: any) => {
-    const field = currentSortOption.value.field;
-    const direction = currentSortOption.value.direction;
+    const field = ordenacaoAtual.value.field;
+    const direction = ordenacaoAtual.value.direction;
 
     // Ordenação por nome
     if (field === 'nome' && a.nome && b.nome) {
@@ -185,15 +231,34 @@ const sortedResults: any = computed(() => {
         : dateB.getTime() - dateA.getTime();
     }
 
+    // Data da escalada (campo `data` no modelo)
+    if (field === 'data') {
+      const dateA = new Date(a.data || '');
+      const dateB = new Date(b.data || '');
+      if (Number.isNaN(dateA.getTime()) || Number.isNaN(dateB.getTime())) return 0;
+      return direction === 'asc'
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
+    }
+
+    if (field === 'created_at' || field === 'updated_at') {
+      const dateA = new Date(a[field] || '');
+      const dateB = new Date(b[field] || '');
+      if (Number.isNaN(dateA.getTime()) || Number.isNaN(dateB.getTime())) return 0;
+      return direction === 'asc'
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
+    }
+
     return 0;
   });
 });
 
-// Atualiza a ordenação quando o usuário muda a opção de ordenação
-const changeSorting = (sortOption: any) => {
-  currentSortOption.value = sortOption.value;
-  emit('change-sort', { field: sortOption.value.field, direction: sortOption.value.direction });
-};
+function aoMudarOrdenacao(v: ValorOrdenacao | null) {
+  if (!v?.field) return;
+  ordenacaoAtual.value = v;
+  emit('change-sort', { field: v.field, direction: v.direction });
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
 const selectItem = (item: Via | IColecao | any) => {
@@ -205,62 +270,114 @@ const selectItem = (item: Via | IColecao | any) => {
 @import 'src/css/app.scss';
 .order-container {
   margin-bottom: 16px;
-  margin-right: 16px;
+  margin-right: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0 12px;
+}
+
+.order-container--compacto {
+  margin-bottom: 8px;
+  margin-top: 2px;
+  gap: 8px 12px;
+  padding: 0 12px;
+  align-items: flex-end;
 }
 
 .total-results {
-  color: $cumes-03;
-  font-size: 14px;
+  color: $cumes-01;
+  font-size: 13px;
   font-weight: 600;
   margin-right: auto;
-  margin-left: 16px;
+  margin-left: 0;
+  opacity: 0.92;
 }
 
-.custom-select {
-  width: 40%;
-  min-width: 200px;
+.order-container--compacto .total-results {
+  font-size: 12px;
+  padding-bottom: 2px;
+}
 
-  :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 8px !important;
-    padding: 0 !important;
-    
-    &::before {
-      border-color: $cumes-01 !important;
-      border-width: 2px !important;
-    }
-  }
+// Ordenação (PrimeVue Select)
+.ordenacao-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
 
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    padding: 8px 14px !important;
-  }
+.ordenacao-container--compacto {
+  gap: 6px;
+}
 
-  :deep(.q-field__input) {
-    color: $background !important;
-    padding: 8px 14px !important;
-  }
+.ordenacao-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba($offwhite, 0.6);
+}
 
-  :deep(.q-field__label) {
-    color: $cumes-03 !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    font-size: 13px !important;
-  }
+.ordenacao-select {
+  min-width: 170px;
+}
 
-  &:deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
-    }
-  }
+:global(.ordenacao-select.p-select) {
+  background-color: rgba($background, 0.15) !important;
+  border: 1px solid rgba($cumes-01, 0.28) !important;
+  border-radius: 12px !important;
+  min-height: 34px !important;
+  box-shadow: none !important;
+  padding: 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+:global(.ordenacao-select .p-select-label) {
+  color: $offwhite !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  line-height: 34px !important;
+  padding: 0 !important;
+}
+
+:global(.ordenacao-select .p-select-dropdown) {
+  width: 18px !important;
+  height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:global(.ordenacao-select .p-select-dropdown-icon) {
+  color: rgba($offwhite, 0.9) !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+:global(.ordenacao-select .p-select-overlay) {
+  background-color: $background !important;
+  border: 1px solid rgba($cumes-01, 0.25) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+:global(.ordenacao-select .p-select-option) {
+  color: $offwhite !important;
+  font-weight: 600 !important;
+}
+
+:global(.ordenacao-select .p-select-option:hover) {
+  background-color: rgba($cumes-01, 0.12) !important;
+}
+
+:global(.ordenacao-select .p-select-option.p-select-option-selected) {
+  background-color: rgba($cumes-01, 0.2) !important;
 }
 
 .via-list {
@@ -287,6 +404,12 @@ const selectItem = (item: Via | IColecao | any) => {
     box-sizing: border-box;
     max-width: 100%;
   }
+}
+
+.escaladas-grid--compacto {
+  gap: 16px;
+  padding: 0 12px;
+  margin-top: 4px;
 }
 
 .escalada-card-item {
@@ -324,6 +447,21 @@ const selectItem = (item: Via | IColecao | any) => {
     margin-top: 16px;
     margin-bottom: 16px;
     padding: 0 8px;
+  }
+}
+
+.pagination-wrapper--compacto {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 0 12px 0 0;
+
+  :deep(.paginacao-container) {
+    margin-top: 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  :deep(.paginacao-content) {
+    padding: 6px 8px !important;
   }
 }
 </style>

@@ -2,6 +2,7 @@ import {UsuarioService} from '../../Application/services/UsuarioService';
 import {Request, Response} from 'express';
 import {Usuario} from '../../Domain/entities/Usuario';
 import {UsuarioDTO} from "../DTOs/Usuario/UsuarioDTO";
+import {PerfilPublicoDTO} from "../DTOs/Usuario/PerfilPublicoDTO";
 import { NotFoundError } from '../../Application/errors';
 import UsuarioValidation from '../../Application/validations/UsuarioValidation';
 
@@ -76,5 +77,26 @@ export class UsuarioController {
 
         const perfilAtualizado = await this.service.getPerfil(usuarioId);
         res.status(200).json(perfilAtualizado ? new UsuarioDTO(perfilAtualizado) : {message: 'Foto de perfil excluída com sucesso.'});
+    };
+
+    getPerfilPorUsername = async (req: Request, res: Response) => {
+        const username = req.params.username;
+        if (!username) {
+            throw new NotFoundError('Username não informado.');
+        }
+        const resultado = await this.service.getPerfilPorUsername(username);
+        if (!resultado) {
+            throw new NotFoundError('Perfil não encontrado.');
+        }
+        if (!resultado.usuario.perfil_publico) {
+            return res.status(403).json({ error: 'Perfil privado', privado: true });
+        }
+        const dto = new PerfilPublicoDTO(
+            resultado.usuario,
+            resultado.numEscaladas,
+            resultado.numColecoes,
+            resultado.numFavoritas
+        );
+        res.json(dto);
     };
 }

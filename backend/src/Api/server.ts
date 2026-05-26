@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({path: `.env.${process.env.NODE_ENV || "development"}`});
 import helmet from 'helmet';
 import routes from './routes/routes';
+import ShareRouter from './routes/ShareRouter';
 import 'reflect-metadata';
 import {AppDataSource} from '../Infrastructure/config/db';
 import path from 'path';
@@ -98,6 +99,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Rotas principais da API
 app.use('/api', routes);
+// Rotas públicas para preview de compartilhamento (Open Graph / WhatsApp)
+app.use('/share', ShareRouter);
 
 // Middleware para rotas inexistentes
 app.use(notFoundMiddleware);

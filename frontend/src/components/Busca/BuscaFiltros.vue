@@ -1,18 +1,24 @@
 <template>
-  <div class="busca-filtros">
+  <div class="busca-filtros" :class="{ 'busca-filtros--compacto': compact }">
     <!-- Campo de busca unificado -->
     <div class="busca-input-wrapper">
       <q-input
         v-model="localFilters.termoBusca"
-        :label="unifiedSearchLabel || 'Buscar por nome, bairro ou localização'"
+        :label="compact ? undefined : (unifiedSearchLabel || 'Buscar por nome, bairro ou localização')"
+        :placeholder="compact ? (unifiedSearchLabel || 'Buscar…') : undefined"
         debounce="300"
         outlined
         color="secondary"
         label-color="secondary"
         class="busca-input"
+        :dense="compact"
+        hide-bottom-space
         rounded
         @keydown="onInputChange"
       >
+        <template #prepend>
+          <q-icon name="search" class="icone-lupa-busca" />
+        </template>
         <template #append>
           <div class="append-actions">
             <q-icon
@@ -90,7 +96,7 @@
                 <button
                   v-for="g in grauOptions"
                   :key="'grau-' + g"
-                  class="chip"
+                  class="chip chip-grau"
                   :class="{ selected: localFilters.grau === g }"
                   @click="toggleChip('grau', g)"
                 >{{ g }}</button>
@@ -122,6 +128,20 @@
                   :class="{ selected: localFilters.exposicao === e }"
                   @click="toggleChip('exposicao', e)"
                 >{{ e.toUpperCase() }}</button>
+              </div>
+            </div>
+
+            <!-- Duração (D1–D7) -->
+            <div class="filtro-secao">
+              <div class="secao-label">Duração</div>
+              <div class="chips-grid">
+                <button
+                  v-for="d in duracoes"
+                  :key="d"
+                  class="chip"
+                  :class="{ selected: localFilters.duracao === d }"
+                  @click="toggleChip('duracao', d)"
+                >{{ d }}</button>
               </div>
             </div>
 
@@ -206,18 +226,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue';
 import { BuscaRequest } from 'src/models/BuscaRequest';
 import montanhaService from 'src/services/MontanhaService';
 import { ModalidadeEscalada } from 'src/models/ModalidadeEscalada';
 
-const props = defineProps<{
-  entity: string;
-  filters?: Partial<BuscaRequest>;
-  staticFilters?: Partial<any>;
-  unifiedSearchLabel?: string;
-  enabledFilters?: string[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    entity: string;
+    filters?: Partial<BuscaRequest>;
+    staticFilters?: Partial<any>;
+    unifiedSearchLabel?: string;
+    enabledFilters?: string[];
+    /** Barras mais baixas e integradas ao tema escuro (coleções, favoritas, escaladas) */
+    compact?: boolean;
+  }>(),
+  { compact: false }
+);
 
 const emit = defineEmits(['applyFilters']);
 
@@ -232,6 +257,8 @@ const localFilters = ref<BuscaRequest>({
   viaCerj: null,
   grau: null,
   faixaExtensao: null,
+  exposicao: null,
+  duracao: null,
   artificial: null,
   modalidade: null,
   pagina: 1,
@@ -243,6 +270,8 @@ const localFilters = ref<BuscaRequest>({
 const grauOptions = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 const exposures = ['e1', 'e2', 'e3', 'e4', 'e5'];
+
+const duracoes = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'];
 
 const extensionCategories: Record<string, number[]> = {
   '< 50m': [0, 50],
@@ -279,7 +308,7 @@ const filteredMountains = ref<any[]>([]);
 
 const temFiltrosAtivos = computed(() => {
   const f = localFilters.value;
-  return !!(f.grau || f.faixaExtensao || f.exposicao ||
+  return !!(f.grau || f.faixaExtensao || f.exposicao || f.duracao ||
     f.artificial || f.modalidade ||
     f.montanhaId || f.viaCerj === true);
 });
@@ -297,6 +326,7 @@ const listaFiltrosAtivos = computed(() => {
   }
   if (f.artificial) tags.push({ label: `Artificial: ${f.artificial}`, key: 'artificial' });
   if (f.exposicao) tags.push({ label: `Exposição: ${f.exposicao}`, key: 'exposicao' });
+  if (f.duracao) tags.push({ label: `Duração: ${f.duracao}`, key: 'duracao' });
   if (f.modalidade) {
     tags.push({ label: modalidadeLabels[f.modalidade] || String(f.modalidade), key: 'modalidade' });
   }
@@ -341,6 +371,7 @@ function limparFiltrosVia() {
     artificial: null,
     faixaExtensao: null,
     exposicao: null,
+    duracao: null,
     modalidade: null,
     montanhaId: null,
     viaCerj: null,
@@ -355,6 +386,7 @@ function limparTudo() {
     viaCerj: null,
     nomeBairro: '',
     exposicao: null,
+    duracao: null,
     grau: null,
     faixaExtensao: null,
     artificial: null,
@@ -450,49 +482,51 @@ onMounted(async () => {
   padding-top: 16px;
 }
 
+.busca-filtros--compacto .busca-input-wrapper {
+  padding-top: 0;
+}
+
 .busca-input {
+  @include campo-busca-primario(12px, 52px);
+}
+
+.busca-filtros--compacto .busca-input {
   :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 8px !important;
-    padding: 0 !important;
+    min-height: 40px !important;
+    background-color: rgba($surface, 0.72) !important;
+    border-radius: 10px !important;
 
     &::before {
-      border-color: $cumes-01 !important;
-      border-width: 2px !important;
+      border-color: rgba($cumes-01, 0.3) !important;
+      border-width: 1px !important;
     }
   }
 
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    padding: 10px 14px !important;
-  }
-
-  :deep(input),
+  :deep(.q-field__native),
   :deep(.q-field__input) {
-    color: $background !important;
-    padding: 10px 14px !important;
+    color: $offwhite !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 8px 6px 8px 4px !important;
   }
 
   :deep(input::placeholder) {
-    color: rgba($background, 0.5) !important;
+    color: rgba($offwhite, 0.42) !important;
   }
 
-  :deep(.q-field__label) {
-    color: $cumes-03 !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    font-size: 13px !important;
+  &:deep(.q-field--focused) .q-field__control::before {
+    border-color: rgba($cumes-01, 0.55) !important;
   }
+}
 
-  &:deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
-    }
-  }
+.icone-lupa-busca {
+  color: $cumes-03 !important;
+  font-size: 22px !important;
+}
+
+.busca-filtros--compacto .icone-lupa-busca {
+  color: $cumes-01 !important;
+  font-size: 20px !important;
 }
 
 .append-actions {
@@ -714,20 +748,6 @@ onMounted(async () => {
   flex: 1;
   overflow-y: auto;
   padding: 16px 20px 24px;
-
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba($offwhite, 0.12);
-    border-radius: 2px;
-  }
 }
 
 // ================================
@@ -773,6 +793,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  justify-content: center;
 
   &:hover {
     background: rgba($cumes-01, 0.08);
@@ -785,6 +806,16 @@ onMounted(async () => {
     border-color: $cumes-01;
     color: $offwhite;
   }
+}
+
+.chip-grau {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
 .chip-wide {
@@ -862,7 +893,7 @@ onMounted(async () => {
   transition: all 0.2s ease;
 
   &:hover {
-    background: darken($cumes-01, 8%);
+    background: cumesDarken($cumes-01, 8%);
     transform: translateY(-1px);
     box-shadow: 0 4px 16px $box-shadow-medium;
   }

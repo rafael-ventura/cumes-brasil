@@ -22,6 +22,8 @@ import {Cidade} from '../../Domain/entities/Cidade';
 import {Bairro} from '../../Domain/entities/Bairro';
 import {Setor} from '../../Domain/entities/Setor';
 import {Localizacao} from '../../Domain/entities/Localizacao';
+import { UsuarioSeguindo } from '../../Domain/entities/UsuarioSeguindo';
+import { UsuarioConquista } from '../../Domain/entities/UsuarioConquista';
 
 
 export const AppDataSource = new DataSource({
@@ -43,6 +45,8 @@ export const AppDataSource = new DataSource({
         Imagem,
         Montanha,
         Usuario,
+        UsuarioSeguindo,
+        UsuarioConquista,
         Via,
         Participante,
         ViaColecao,

@@ -1,0 +1,127 @@
+@import './app.scss';
+
+/** Toolbar de lista (vias / escaladas) alinhada às cores das abas Coleções · Favoritas · Escaladas */
+.lista-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 14px;
+  padding: 12px 16px 14px;
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: rgba($offwhite, 0.03);
+  border: 1px solid rgba($offwhite, 0.08);
+}
+
+.lista-toolbar--compacto {
+  padding: 8px 12px 9px;
+  gap: 10px 14px;
+  border-radius: 10px;
+
+  .lista-toolbar__icon {
+    font-size: 18px;
+  }
+
+  .lista-toolbar__title {
+    font-size: 14px;
+  }
+
+  .lista-toolbar__chip {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
+.lista-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lista-toolbar__icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.lista-toolbar__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba($offwhite, 0.9);
+  letter-spacing: -0.02em;
+}
+
+.lista-toolbar__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.lista-toolbar__chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba($offwhite, 0.15);
+  color: rgba($offwhite, 0.85);
+  background: rgba($offwhite, 0.05);
+}
+
+@mixin btn-toolbar-primario($accent) {
+  color: $accent !important;
+  border: 2px solid rgba($accent, 0.75) !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  padding: 6px 14px !important;
+  background: rgba($accent, 0.06) !important;
+
+  &:hover {
+    background: rgba($accent, 0.12) !important;
+  }
+
+  &.lista-toolbar__btn--ativo {
+    background: rgba($accent, 0.22) !important;
+    border-color: rgba($accent, 0.95) !important;
+  }
+}
+
+.lista-toolbar--colecoes {
+  .lista-toolbar__icon {
+    color: $action-colecoes;
+    filter: drop-shadow(0 1px 4px rgba($action-colecoes, 0.3));
+  }
+  :deep(.lista-toolbar__btn-primario) {
+    @include btn-toolbar-primario($action-colecoes);
+  }
+}
+
+.lista-toolbar--favoritas {
+  .lista-toolbar__icon {
+    color: $action-favoritos;
+    filter: drop-shadow(0 1px 4px rgba($action-favoritos, 0.35));
+  }
+  :deep(.lista-toolbar__btn-primario) {
+    @include btn-toolbar-primario($action-favoritos);
+  }
+}
+
+.lista-toolbar--escaladas {
+  .lista-toolbar__icon {
+    color: $action-escaladas;
+    filter: drop-shadow(0 1px 4px rgba($action-escaladas, 0.3));
+  }
+  :deep(.lista-toolbar__btn-primario) {
+    @include btn-toolbar-primario($action-escaladas);
+  }
+}
+
+.lista-toolbar__btn-sec {
+  color: rgba($offwhite, 0.78) !important;
+  font-weight: 600 !important;
+}

@@ -13,11 +13,14 @@ export interface BuscaRequest {
   faixaExtensao?: number[] | null;
   crux?: string | null;
   exposicao?: string | null;
+  duracao?: string | null;
   tipoRocha?: string | null;
   tipoEscalada?: string | null;
   modalidade?: ModalidadeEscalada | null;
   artificial?: string | null;
   viaCerj?: boolean | null;
+  comCroqui?: boolean | null;
+  comoPerfil?: 'autor' | 'marcado' | 'todas' | null;
   semGrau?: boolean | null;
   semLocalizacao?: boolean | null;
   pagina: number;

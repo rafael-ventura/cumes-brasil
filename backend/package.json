@@ -4,7 +4,7 @@
   "description": "Backend do projeto Cume Brasil",
   "main": "dist/Api/server.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node src/Api/server.ts",
+    "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--max-old-space-size=4096 ts-node --transpile-only src/Api/server.ts",
     "dev:watch": "cross-env NODE_ENV=development nodemon",
     "build": "tsc",
     "start": "node dist/Api/server.js",
@@ -17,7 +17,6 @@
     "db:fresh": "npm run db:reset && npm run build && npm run migration:run:dev && npm run seed"
   },
   "dependencies": {
-    "aws-sdk": "^2.1692.0",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

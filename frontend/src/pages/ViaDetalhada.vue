@@ -1,16 +1,28 @@
 <template>
   <q-page>
     <!-- Componente Principal com Botão no Topo -->
-    <CardInfoPrincipal :via="via!" />
+    <CardInfoPrincipal v-if="via" :via="via" />
+    <div v-else class="estado-carregando-via">
+      <i class="pi pi-spin pi-spinner" />
+    </div>
+
+    <div class="via-share">
+      <Button
+        icon="pi pi-share-alt"
+        aria-label="Compartilhar"
+        class="via-share__btn"
+        @click="abrirModalCompartilhamento"
+      />
+    </div>
 
     <!-- Botões de Ação -->
     <BotoesAcao
       :via="via"
       :favoriteCollectionId="favoriteCollectionId"
       @atualizar:isFavorited="isFavorited = $event"
-      @acao:escalada="handleAcaoEscalada"
-      @acao:favorito="handleAcaoFavorito"
-      @acao:colecao="handleAcaoColecao"
+      @acao:escalada="aoAcionarEscalada"
+      @acao:favorito="aoAcionarFavorito"
+      @acao:colecao="aoAcionarColecao"
     />
 
     <!-- Lista com Croqui e Detalhes -->
@@ -21,10 +33,15 @@
       <SecaoMaisDetalhes v-if="via" :via="via" />
     </q-list>
   </q-page>
+
+  <ModalCompartilhamento
+    v-model="isModalCompartilhamentoAberto"
+    :dados-compartilhamento="dadosCompartilhamento"
+  />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ViaService from 'src/services/ViaService';
 import ColecaoService from 'src/services/ColecaoService';
@@ -35,12 +52,16 @@ import SecaoMaisDetalhes from 'components/Via/SecaoMaisDetalhes.vue';
 import AuthenticateService from 'src/services/AuthenticateService';
 import SecaoGrau from 'components/Via/SecaoGrau.vue';
 import SecaoLocalizacao from 'components/Via/SecaoLocalizacao.vue';
+import { obterUrlCompartilhavel } from 'src/utils/share';
+import Button from 'primevue/button';
+import ModalCompartilhamento from 'components/Compartilhamento/ModalCompartilhamento.vue';
 
 const route = useRoute();
 const router = useRouter();
 const via = ref();
 const favoriteCollectionId = ref();
 const isFavorited = ref(false);
+const isModalCompartilhamentoAberto = ref(false);
 
 // Carregar apenas a via, sem dados que exigem autenticação
 onMounted(async () => {
@@ -74,17 +95,36 @@ const carregarDadosAutenticados = async () => {
 };
 
 // Manipuladores de eventos para as ações
-const handleAcaoEscalada = async () => {
+const aoAcionarEscalada = async () => {
   await carregarDadosAutenticados();
 };
 
-const handleAcaoFavorito = async () => {
+const aoAcionarFavorito = async () => {
   await carregarDadosAutenticados();
 };
 
-const handleAcaoColecao = async () => {
+const aoAcionarColecao = async () => {
   await carregarDadosAutenticados();
 };
+
+const sharePreviewUrl = computed(() => {
+  if (!via.value?.id) return '';
+  return obterUrlCompartilhavel(`/share/via/${via.value.id}`);
+});
+
+const dadosCompartilhamento = computed(() => {
+  if (!via.value?.id) return null;
+  return {
+    titulo: via.value?.nome || 'Via no Cumes Brasil',
+    texto: 'Veja a via no Cumes Brasil.',
+    url: sharePreviewUrl.value
+  };
+});
+
+function abrirModalCompartilhamento () {
+  if (!dadosCompartilhamento.value?.url) return;
+  isModalCompartilhamentoAberto.value = true;
+}
 </script>
 
 <style scoped lang="scss">
@@ -95,6 +135,45 @@ const handleAcaoColecao = async () => {
   border: 1px solid $primary;
   padding: 16px;
   margin-top: 16px;
+}
+
+.via-share {
+  display: flex;
+  justify-content: flex-end;
+  margin: 6px 0 10px;
+  padding: 0 16px;
+}
+
+.via-share__btn {
+  background: transparent !important;
+  border: 1px solid rgba($cumes-03, 0.45) !important;
+  color: $cumes-03 !important;
+  width: 38px;
+  height: 38px;
+  min-width: 38px !important;
+  padding: 0 !important;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.via-share__btn :deep(.p-button-icon) {
+  font-size: 16px;
+}
+
+.estado-carregando-via {
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba($offwhite, 0.55);
+
+  i {
+    font-size: 28px;
+    color: $cumes-03;
+  }
 }
 
 // Desktop

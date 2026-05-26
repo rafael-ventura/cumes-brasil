@@ -92,12 +92,14 @@ const formattedArtificial = computed(() => {
 
 const formattedExposicao = computed(() => {
   if (!props.via.exposicao || props.via.exposicao === 'N/A' || props.via.exposicao === 'NA') return '-';
-  return `E${props.via.exposicao}`;
+  const raw = String(props.via.exposicao).trim();
+  return raw.toUpperCase().startsWith('E') ? raw.toUpperCase() : `E${raw.toUpperCase()}`;
 });
 
 const formattedDuracao = computed(() => {
   if (!props.via.duracao || props.via.duracao === 'N/A' || props.via.duracao === 'NA') return '-';
-  return `D${props.via.duracao}`;
+  const raw = String(props.via.duracao).trim();
+  return raw.toUpperCase().startsWith('D') ? raw.toUpperCase() : `D${raw.toUpperCase()}`;
 });
 
 // Outros dados permanecem os mesmos

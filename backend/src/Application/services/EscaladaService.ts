@@ -31,8 +31,8 @@ export class EscaladaService {
 		return await this.repository.getById(id);
 	}
 
-	async getAll(limit?: number | undefined): Promise<Escalada[] | null> {
-		return await this.repository.getAll(limit);
+	async getAll(limit: number | undefined, usuarioIdObservador: number): Promise<Escalada[] | null> {
+		return await this.repository.getAll(limit, usuarioIdObservador);
 	}
 
 	async create(escalada: Escalada): Promise<Escalada> {
@@ -45,9 +45,12 @@ export class EscaladaService {
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
-			participante.tipo = p.tipo;
+			participante.tipo = p.tipo.trim().toUpperCase();
 			if (p.email) {
 				participante.email = p.email;
+			}
+			if ((p as any).username) {
+				participante.username = (p as any).username;
 			}
 			return participante;
 		}) || [];
@@ -79,9 +82,12 @@ export class EscaladaService {
 		const participantesData = escalada.participantes?.map(p => {
 			const participante = new Participante();
 			participante.nome = p.nome;
-			participante.tipo = p.tipo;
+			participante.tipo = p.tipo.trim().toUpperCase();
 			if (p.email) {
 				participante.email = p.email;
+			}
+			if ((p as any).username) {
+				participante.username = (p as any).username;
 			}
 			return participante;
 		}) || [];
@@ -110,13 +116,41 @@ export class EscaladaService {
 		return this.repository.getByUsuarioId(usuario_id);
 	}
 
-	async getEscaladasDaVia(via_id: number, limit?: number): Promise<ObjectLiteral[]> {
+	async getEscaladasDaVia(via_id: number, limit: number | undefined, usuarioIdObservador: number): Promise<ObjectLiteral[]> {
 		if (!via_id) {
 			throw new BadRequestError("ID da via não fornecido");
 		} else if (isNaN(via_id)) {
 			throw new BadRequestError("ID da via inválido");
 		}
-		return this.repository.getByViaId(via_id, limit);
+		return this.repository.getByViaId(via_id, limit, usuarioIdObservador);
+	}
+
+	/** Escaladas de um usuário: dono vê tudo; terceiros só se o alvo for perfil público. */
+	async getEscaladasDoUsuarioParaObservador(usuarioAlvoId: number, usuarioObservadorId: number): Promise<ObjectLiteral[]> {
+		if (String(usuarioAlvoId) === String(usuarioObservadorId)) {
+			return this.repository.getByUsuarioId(usuarioAlvoId);
+		}
+		const alvo = await this.usuarioService.getUsuarioById(usuarioAlvoId);
+		if (!alvo?.perfil_publico) {
+			return [];
+		}
+		return this.repository.getByUsuarioId(usuarioAlvoId);
+	}
+
+	async getEscaladasDaViaDoUsuarioParaObservador(
+		usuarioAlvoId: number,
+		via_id: number,
+		limit: number | undefined,
+		usuarioObservadorId: number
+	): Promise<ObjectLiteral[]> {
+		if (String(usuarioAlvoId) === String(usuarioObservadorId)) {
+			return this.repository.getByViaIdAndByUser(usuarioAlvoId, via_id, limit);
+		}
+		const alvo = await this.usuarioService.getUsuarioById(usuarioAlvoId);
+		if (!alvo?.perfil_publico) {
+			return [];
+		}
+		return this.repository.getByViaIdAndByUser(usuarioAlvoId, via_id, limit);
 	}
 
 	async getEscaladasDaViaDoUsuario(usuario_id: number, via_id: number, limit?: number): Promise<ObjectLiteral[]> {
@@ -130,5 +164,30 @@ export class EscaladaService {
 			throw new BadRequestError("ID do usuário inválido");
 		}
 		return this.repository.getByViaIdAndByUser(usuario_id, via_id, limit);
+	}
+
+	/**
+	 * Registros de terceiros em que o usuário alvo foi marcado na cordada (por username), em qualquer papel (guia, participante, misto).
+	 * Mesma regra de privacidade do perfil que getEscaladasDoUsuarioParaObservador.
+	 */
+	async getEscaladasOndeUsuarioFoiMarcadoParaObservador (
+		usuarioAlvoId: number,
+		usuarioObservadorId: number
+	): Promise<ObjectLiteral[]> {
+		const alvo = await this.usuarioService.getUsuarioById(usuarioAlvoId);
+		if (!alvo) {
+			return [];
+		}
+		if (String(usuarioAlvoId) !== String(usuarioObservadorId) && !alvo.perfil_publico) {
+			return [];
+		}
+		if (!alvo.username?.trim()) {
+			return [];
+		}
+		return this.repository.getOndeUsuarioFoiMarcado(usuarioAlvoId, alvo.username, usuarioObservadorId);
+	}
+
+	async getFeed(pagina: number, itensPorPagina: number): Promise<{ items: Escalada[]; totalPages: number; totalItems: number }> {
+		return this.repository.getFeed(pagina, itensPorPagina);
 	}
 }

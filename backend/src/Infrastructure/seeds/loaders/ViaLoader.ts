@@ -5,8 +5,7 @@ import { Montanha } from '../../../Domain/entities/Montanha';
 import { Face } from '../../../Domain/entities/Face';
 import { ReferenciasIds } from './ReferenciasLoader';
 import { loadYaml } from '../seedUtils';
-
-const VIA_IMAGEM_DEFAULT = '/assets/vias/via-default-01.webp';
+import { ModalidadeEscalada } from '../../../Domain/enum/EModalidadeEscalada';
 
 /**
  * Campos simples da Via que são atualizados no upsert quando presentes no YAML.
@@ -27,6 +26,8 @@ interface ViaYaml {
   detalhes?: string;
   historia_resumo?: string;
   via_cerj?: boolean;
+  // Não vem no YAML atual, mas mantemos o campo para compatibilidade futura.
+  modalidade?: ModalidadeEscalada;
   equipamentos?: string;
   tracklog_aproximacao?: string;
   data?: string;
@@ -35,6 +36,35 @@ interface ViaYaml {
   fonte: string;
   viaPrincipal?: string;
   imagem?: string;
+}
+
+function artificialPreenchido(v: ViaYaml): boolean {
+  if (v.artificial == null) return false;
+  const s = String(v.artificial).trim();
+  if (!s) return false;
+  const sUpper = s.toUpperCase();
+  if (['N/A', 'NA', 'NULL'].includes(sUpper)) return false;
+  return true;
+}
+
+function contemCampoEscola(v: ViaYaml): boolean {
+  const texto = `${v.historia_resumo ?? ''} ${v.detalhes ?? ''}`.toLowerCase();
+  return texto.includes('campo escola');
+}
+
+function inferirModalidade(v: ViaYaml): ModalidadeEscalada {
+  if (v.modalidade) return v.modalidade;
+
+  // Regra baseada na lógica observada do CERJ:
+  // - vias CERJ com `artificial` (A0/A1/...) ou que mencionam "campo escola" são tratadas como "Esportiva"
+  // - demais vias CERJ são tratadas como "Tradicional"
+  // - fora do CERJ, default para "Tradicional" (por enquanto).
+  if (v.via_cerj) {
+    if (artificialPreenchido(v) || contemCampoEscola(v)) return ModalidadeEscalada.Esportiva;
+    return ModalidadeEscalada.Tradicional;
+  }
+
+  return ModalidadeEscalada.Tradicional;
 }
 
 export async function runViaLoader(
@@ -46,7 +76,6 @@ export async function runViaLoader(
   const repo = AppDataSource.getRepository(Via);
   const viaImagemRepo = AppDataSource.getRepository(ViaImagem);
   const data = loadYaml<ViaYaml[]>('vias.yaml');
-  const imagemId = refs.imagens.get(VIA_IMAGEM_DEFAULT);
 
   for (const v of data) {
     const montanhaId = montanhaIds.get(v.montanha);
@@ -55,6 +84,8 @@ export async function runViaLoader(
     if (!faceId) throw new Error(`Face não encontrada: ${v.montanha}|${v.face}`);
     const fonteId = refs.fonteByAutor.get(v.fonte);
     if (!fonteId) throw new Error(`Fonte não encontrada: ${v.fonte}`);
+
+    const modalidadeFinal = inferirModalidade(v);
 
     let ent = await repo.findOne({
       where: { nome: v.nome, montanha: { id: montanhaId }, face: { id: faceId } }
@@ -76,14 +107,18 @@ export async function runViaLoader(
         equipamentos: v.equipamentos,
         tracklog_aproximacao: v.tracklog_aproximacao,
         data: v.data,
+        modalidade: modalidadeFinal,
         montanha: { id: montanhaId } as Montanha,
         face: { id: faceId } as Face,
         fonte: fonteId,
         viaPrincipal: viaPrincipalId
       });
       await repo.save(ent);
-      const imgId = v.imagem ? refs.imagens.get(v.imagem) : imagemId;
-      if (imgId) {
+      if (v.imagem) {
+        const imgId = refs.imagens.get(v.imagem);
+        if (!imgId) {
+          throw new Error(`Imagem não encontrada para via "${v.nome}": ${v.imagem}`);
+        }
         const vi = viaImagemRepo.create({ via: ent, imagem: { id: imgId } as any });
         await viaImagemRepo.save(vi);
       }
@@ -91,6 +126,10 @@ export async function runViaLoader(
       for (const field of UPSERT_FIELDS) {
         (ent as unknown as Record<string, unknown>)[field] = v[field] ?? null;
       }
+
+      // Mesmo para registros já existentes, garantimos que a modalidade seja sincronizada
+      // com a regra de inferência (evita ficar tudo `NULL` no banco).
+      ent.modalidade = modalidadeFinal;
       await repo.save(ent);
       if (v.imagem) {
         const imgId = refs.imagens.get(v.imagem);
@@ -104,6 +143,13 @@ export async function runViaLoader(
             await viaImagemRepo.save(vi);
           }
         }
+      } else if (!v.via_cerj) {
+        // Limpa imagens legadas (default antiga) de vias não-CERJ.
+        await viaImagemRepo
+          .createQueryBuilder()
+          .delete()
+          .where('"viaId" = :viaId', { viaId: ent.id })
+          .execute();
       }
     }
     ids.set(v.nome, ent.id);

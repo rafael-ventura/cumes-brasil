@@ -47,7 +47,9 @@ npm run migration:run:dev
 
 ### Epics em andamento
 - **Vias Clássicas do CERJ** — backend e frontend concluídos (badge nos cards, filtro na busca, card na home e na explorar)
+- **Conquistas persistidas** — badges por tier calculadas no backend e salvas em `usuario_conquistas` (perfil próprio e público)
 - **Redesenho da tela de Vias/Busca** — concluído: tela Explorar com categorias, filtros avançados em painel lateral, Home com cards visuais com foto, padronização ptBR
+- **Perfil público/privado** — concluído: campo `perfil_publico` em Usuario (default true), toggle no PerfilEditaForm, feed e rota `GET /u/:username` filtram perfis privados
 - **Sistema Colaborativo de Fotos** — entidade `ViaImageSuggestion` + upload por usuários + moderação
 - **Imagem em Coleção** — adicionar campo de imagem na entidade `Colecao`
 
@@ -145,6 +147,10 @@ interface CardExplorar {
 - **`aws-sdk` v2** no `S3Helper` — débito técnico consciente, migração para v3 está pendente
 - **YAMLs são a fonte de verdade dos dados** — não editar diretamente no banco; sempre via `src/Infrastructure/data/*.yaml` + `npm run seed`
 - **Imagens precisam de `@JoinColumn`** — relações com `Imagem` na entidade `Usuario` usam `foto_perfilId` (com maiúscula no I)
+- **Perfil público/privado** — `Usuario.perfil_publico` (default `true`). Perfis privados: não aparecem no feed nem em `GET /u/:username` (404). Toggle em PerfilEditaForm.
+- **Rota de perfil** — `/perfil/:username` (próprio ou visitante). `/perfil` e `/perfil/me` redirecionam para o perfil do usuário logado. Guard em `PerfilPageWrapper` diferencia dono (edição) de visitante (somente leitura).
+- **Marcações na cordada** — preview no perfil: faixa compacta com bolhas (fotos da via) e “Ver lista”; página `/perfil/:username/escaladas` (login obrigatório) usa linhas (`PerfilMarcacaoEscaladaRow`), não `EscaladaCard` em grade. API: `como=marcado`; repo carrega `viaImagens` para thumbnails.
+- **Usuários de teste** — seed (`usuarios-teste.yaml`): senha comum `teste123` — `teste@cumes.com.br` (`cumes_teste`), `maria.dev@cumes.com.br` (`maria_escaladora`), `privado.dev@cumes.com.br` (`usuario_privado`, perfil privado), `rafael.dev@cumes.com.br` (`rafael`). Escaladas e coleções: `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`.
 - **Infra AWS desativada** por falta de créditos — ver `documentacao/LEGADO-AWS.md` se precisar reativar
 
 ---
@@ -155,6 +161,5 @@ interface CardExplorar {
 |---------|----------|
 | `documentacao/ARQUITETURA-BACKEND.md` | DDD, entidades, seed, migrations, padrões |
 | `documentacao/ARQUITETURA-FRONTEND.md` | Vue 3, serviços, roteamento, auth, componentes |
-| `documentacao/DESIGN_FRONTEND.md` | Paleta de cores, tipografia, botões, modais |
-| `documentacao/LEGADO-AWS.md` | Infra AWS antiga e como reativar |
+| `documentacao/DESIGN_FRONTEND.md` | Paleta de cores, tipografia, botões, modais, convenções CSS |
 | `backend/README.md` | Setup local, scripts, variáveis de ambiente |

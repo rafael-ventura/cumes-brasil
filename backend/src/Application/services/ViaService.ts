@@ -204,6 +204,10 @@ export class ViaService extends BaseService<Via, ViaRepository> {
         return this.repository.countByField("via.duracao", ViaValidation.validaValores(key, value), "=");
       case "via_cerj":
         return this.repository.countByField("via.via_cerj", true);
+      case "com_croqui":
+        return this.repository.countComCroqui();
+      case "modalidade":
+        return this.repository.countByField("via.modalidade", ViaValidation.validaValores(key, value));
       case "sem_grau":
         return this.repository.countByField("via.grau", null, "IS NULL");
       case "sem_localizacao":

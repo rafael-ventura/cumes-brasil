@@ -222,7 +222,7 @@ const onResetPassword = async () => {
 
 // Header do Card
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 24px 32px;
   border-bottom: 3px solid $cumes-03;
 }
@@ -345,7 +345,7 @@ const onResetPassword = async () => {
   box-shadow: 0 4px 12px $box-shadow-medium !important;
 
   &:hover {
-    background: darken($cumes-01, 10%) !important;
+    background: cumesDarken($cumes-01, 10%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px $box-shadow-strong !important;
   }

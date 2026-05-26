@@ -20,9 +20,11 @@ const goBack = () => {
 </script>
 
 <style scoped lang="scss">
+@import 'src/css/app.scss';
+
 .q-btn.btn-back {
   background-color: rgba(0, 0, 0, 0.6);
-  color: #8CB369;
+  color: $cumes-01;
   z-index: 999; // Abaixo da TopBar (z-index: 1000)
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   border-radius: 50%;

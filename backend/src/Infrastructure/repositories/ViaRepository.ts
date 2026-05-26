@@ -249,6 +249,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             crux,
             faixaExtensao,
             exposicao,
+            duracao,
             artificial,
             colecaoId,
             nomeBairro,
@@ -256,6 +257,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             tipoEscalada,
             modalidade,
             viaCerj,
+            comCroqui,
             semGrau,
             semLocalizacao,
             paisId,
@@ -300,6 +302,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         if (crux)           qb = qb.andWhere("via.crux = :crux", { crux });
         if (modalidade)     qb = qb.andWhere("via.modalidade = :modalidade", { modalidade });
         if (viaCerj)        qb = qb.andWhere("via.via_cerj = :viaCerj", { viaCerj: true });
+        if (comCroqui)      qb = qb.andWhere("viaCroquis.id IS NOT NULL");
         if (semGrau)        qb = qb.andWhere("via.grau IS NULL");
 
         if (faixaExtensao) {
@@ -312,6 +315,12 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         if (exposicao) {
             qb = qb.andWhere("LOWER(via.exposicao) = :exposicao", {
                 exposicao: exposicao.toLowerCase(),
+            });
+        }
+
+        if (duracao) {
+            qb = qb.andWhere("LOWER(via.duracao) = :duracaoNorm", {
+                duracaoNorm: duracao.toLowerCase(),
             });
         }
 
@@ -400,6 +409,13 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             this.repository.createQueryBuilder("via")
         )
             .where(CONDICAO_BAIRRO, { nomeBairro: bairro.toLowerCase() })
+            .getCount();
+    }
+
+    async countComCroqui(): Promise<number> {
+        return this.repository
+            .createQueryBuilder("via")
+            .innerJoin("via.viaCroquis", "viaCroquis")
             .getCount();
     }
 }

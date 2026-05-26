@@ -4,7 +4,7 @@
     <div class="explorar-hero">
       <i class="pi pi-compass hero-icon" />
       <h1 class="hero-title">Explorar</h1>
-      <p class="hero-subtitle">Descubra vias por categoria, localização e dificuldade</p>
+      <p class="hero-subtitle">Categorias, localização, dificuldade, modalidade e croquis</p>
     </div>
 
     <!-- Search bar -->
@@ -85,16 +85,17 @@
           <i class="pi pi-arrow-down card-arrow" />
         </div>
 
-        <!-- Por Exposição -->
-        <div class="category-card card-exposicao" @click="rolarParaSecao('exposicao')">
+        <!-- Vias com Croqui -->
+        <div class="category-card card-croqui" @click="navegarPara('/busca', { filterType: 'com_croqui=true' })">
           <div class="card-icon-area">
-            <i class="pi pi-exclamation-triangle card-main-icon" />
+            <i class="pi pi-images card-main-icon" />
           </div>
           <div class="card-text">
-            <span class="card-title">Por Exposição</span>
-            <span class="card-desc">Filtre pelo nível de risco</span>
+            <span class="card-title">Vias com Croqui</span>
+            <span class="card-count" v-if="contagemComCroqui !== null">{{ contagemComCroqui }} vias</span>
+            <span class="card-count" v-else><i class="pi pi-spin pi-spinner" /></span>
           </div>
-          <i class="pi pi-arrow-down card-arrow" />
+          <i class="pi pi-arrow-right card-arrow" />
         </div>
       </div>
     </section>
@@ -174,6 +175,8 @@
         >
           <i :class="`pi ${mod.icone} modalidade-icon`" />
           <span class="modalidade-label">{{ mod.rotulo }}</span>
+          <span class="modalidade-count" v-if="mod.contagem !== null">{{ mod.contagem }} vias</span>
+          <span class="modalidade-count" v-else><i class="pi pi-spin pi-spinner" /></span>
         </div>
       </div>
     </section>
@@ -193,7 +196,29 @@
           @click="navegarPara('/busca', { filterType: `exposicao=${exp.valor}` })"
         >
           <span class="exposure-level">{{ exp.valor.toUpperCase() }}</span>
-          <span class="exposure-desc">{{ exp.rotulo }}</span>
+          <span class="exposure-count" v-if="exp.contagem !== null">{{ exp.contagem }} vias</span>
+          <span class="exposure-count" v-else><i class="pi pi-spin pi-spinner" /></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção: Por Duração (D1–D7) -->
+    <section class="section" ref="duracaoRef">
+      <div class="section-header">
+        <i class="pi pi-clock section-icon" />
+        <span class="section-title">Por Duração</span>
+      </div>
+      <div class="duration-grid">
+        <div
+          v-for="d in cardsDuracao"
+          :key="d.valor"
+          class="duration-card"
+          :style="{ '--dur-color': d.cor }"
+          @click="navegarPara('/busca', { filterType: `duracao=${d.valor}` })"
+        >
+          <span class="duration-level">{{ d.valor.toUpperCase() }}</span>
+          <span v-if="d.contagem !== null" class="duration-count">{{ d.contagem }} vias</span>
+          <span v-else class="duration-count"><i class="pi pi-spin pi-spinner" /></span>
         </div>
       </div>
     </section>
@@ -210,6 +235,7 @@ import LocationExplorer from 'components/Explorar/LocationExplorer.vue';
 import localizacaoService from 'src/services/LocalizacaoService';
 import type { LocationNode } from 'src/services/LocalizacaoService';
 import HomeService from 'src/services/HomeService';
+import { listaCardsDuracao } from 'src/utils/escalaDuracao';
 
 defineOptions({ name: 'ExplorarViasPage' });
 
@@ -217,8 +243,9 @@ const router = useRouter();
 const textoBusca = ref('');
 
 // Estatísticas
-const estatisticas = ref({ vias: 0, montanhas: 0, usuarios: 0 });
+const estatisticas = ref({ vias: 0, montanhas: 0, croquis: 0, usuarios: 0 });
 const contagemCerj = ref<number | null>(null);
+const contagemComCroqui = ref<number | null>(null);
 
 // Localização
 const hierarquia = ref<LocationNode[]>([]);
@@ -232,13 +259,14 @@ const dificuldadeRef = ref<HTMLElement | null>(null);
 const localizacaoRef = ref<HTMLElement | null>(null);
 const modalidadeRef = ref<HTMLElement | null>(null);
 const exposicaoRef = ref<HTMLElement | null>(null);
+const duracaoRef = ref<HTMLElement | null>(null);
 
 // Cards de grau
 const cardsGrau = ref([
-  { rotulo: '1°', valor: '1', cor: '#8CB369', contagem: null as number | null },
+  { rotulo: '1°', valor: '1', cor: '#F29340', contagem: null as number | null },
   { rotulo: '2°', valor: '2', cor: '#a4c77d', contagem: null as number | null },
   { rotulo: '3°', valor: '3', cor: '#F4E285', contagem: null as number | null },
-  { rotulo: '4°', valor: '4', cor: '#F29340', contagem: null as number | null },
+  { rotulo: '4°', valor: '4', cor: '#8CB369', contagem: null as number | null },
   { rotulo: '5°', valor: '5', cor: '#e8733a', contagem: null as number | null },
   { rotulo: '6°', valor: '6', cor: '#BC4B51', contagem: null as number | null },
   { rotulo: '7°', valor: '7', cor: '#9b3a3f', contagem: null as number | null },
@@ -247,23 +275,27 @@ const contagemSemGrau = ref<number | null>(null);
 const contagemSemLocalizacao = ref<number | null>(null);
 
 // Modalidades
-const modalidades = [
-  { valor: 'TRADICIONAL', rotulo: 'Tradicional', icone: 'pi-shield' },
-  { valor: 'ESPORTIVA', rotulo: 'Esportiva', icone: 'pi-bolt' },
-  { valor: 'BOULDER', rotulo: 'Boulder', icone: 'pi-circle' },
-  { valor: 'BIG_WALL', rotulo: 'Big Wall', icone: 'pi-building' },
-  { valor: 'ARTIFICIAL', rotulo: 'Artificial', icone: 'pi-wrench' },
-  { valor: 'PSICOBLOC', rotulo: 'Psicobloc', icone: 'pi-sun' },
-];
+const modalidades = ref([
+  { valor: 'TRADICIONAL', rotulo: 'Tradicional', icone: 'pi-shield', contagem: null as number | null },
+  { valor: 'ESPORTIVA', rotulo: 'Esportiva', icone: 'pi-bolt', contagem: null as number | null },
+  { valor: 'BOULDER', rotulo: 'Boulder', icone: 'pi-circle', contagem: null as number | null },
+  { valor: 'BIG_WALL', rotulo: 'Big Wall', icone: 'pi-building', contagem: null as number | null },
+  { valor: 'ARTIFICIAL', rotulo: 'Artificial', icone: 'pi-wrench', contagem: null as number | null },
+  { valor: 'PSICOBLOC', rotulo: 'Psicobloc', icone: 'pi-sun', contagem: null as number | null },
+]);
 
-// Exposição
-const cardsExposicao = [
-  { valor: 'e1', rotulo: 'Sem risco', cor: '#8CB369' },
-  { valor: 'e2', rotulo: 'Pouco exposta', cor: '#a4c77d' },
-  { valor: 'e3', rotulo: 'Exposição moderada', cor: '#F4E285' },
-  { valor: 'e4', rotulo: 'Muito exposta', cor: '#F29340' },
-  { valor: 'e5', rotulo: 'Risco extremo', cor: '#BC4B51' },
-];
+// Exposição (E1–E5): só código na UI; cores alinhadas à gradação de risco
+const cardsExposicao = ref([
+  { valor: 'e1', cor: '#F29340', contagem: null as number | null },
+  { valor: 'e2', cor: '#a4c77d', contagem: null as number | null },
+  { valor: 'e3', cor: '#F4E285', contagem: null as number | null },
+  { valor: 'e4', cor: '#8CB369', contagem: null as number | null },
+  { valor: 'e5', cor: '#BC4B51', contagem: null as number | null },
+]);
+
+const cardsDuracao = ref(
+  listaCardsDuracao().map((c) => ({ ...c, contagem: null as number | null }))
+);
 
 // Navegação
 function navegarPara(caminho: string, query?: Record<string, string>) {
@@ -284,6 +316,7 @@ function rolarParaSecao(secao: string) {
     localizacao: localizacaoRef,
     modalidade: modalidadeRef,
     exposicao: exposicaoRef,
+    duracao: duracaoRef,
   };
   const elemento = mapaRefs[secao]?.value;
   if (elemento) {
@@ -313,6 +346,7 @@ onMounted(async () => {
   const [
     resultadoStats,
     resultadoCerj,
+    resultadoComCroqui,
     resultadoHierarquia,
     resultadoSemGrau,
     resultadoSemLoc,
@@ -320,14 +354,37 @@ onMounted(async () => {
   ] = await Promise.all([
     HomeService.obterEstatisticas(),
     HomeService.obterContagem('via_cerj=true'),
+    HomeService.obterContagem('com_croqui=true'),
     localizacaoService.getLocationHierarchy().catch(() => []),
     HomeService.obterContagem('sem_grau'),
     HomeService.obterContagem('sem_localizacao'),
     ...cardsGrau.value.map(g => HomeService.obterContagem(`grau=${g.valor}`))
   ]);
 
+  const contagensDuracao = await Promise.all(
+    cardsDuracao.value.map((d) => HomeService.obterContagem(`duracao=${d.valor}`))
+  );
+  cardsDuracao.value.forEach((c, i) => {
+    c.contagem = contagensDuracao[i];
+  });
+
+  const contagensModalidade = await Promise.all(
+    modalidades.value.map((m) => HomeService.obterContagem(`modalidade=${m.valor}`))
+  );
+  modalidades.value.forEach((m, i) => {
+    m.contagem = contagensModalidade[i];
+  });
+
+  const contagensExposicao = await Promise.all(
+    cardsExposicao.value.map((e) => HomeService.obterContagem(`exposicao=${e.valor}`))
+  );
+  cardsExposicao.value.forEach((e, i) => {
+    e.contagem = contagensExposicao[i];
+  });
+
   estatisticas.value = resultadoStats;
   contagemCerj.value = resultadoCerj;
+  contagemComCroqui.value = resultadoComCroqui;
   hierarquia.value = resultadoHierarquia;
   carregandoHierarquia.value = false;
   contagemSemGrau.value = resultadoSemGrau;
@@ -492,12 +549,12 @@ onMounted(async () => {
   &:hover { border-color: $cumes-05; }
 }
 
-.card-exposicao {
-  background: linear-gradient(135deg, rgba($cumes-02, 0.15), rgba($cumes-02, 0.05));
-  border-color: rgba($cumes-02, 0.25);
-  .card-icon-area { background: rgba($cumes-02, 0.2); }
-  .card-main-icon { color: lighten($cumes-02, 20%); }
-  &:hover { border-color: $cumes-02; }
+.card-croqui {
+  background: linear-gradient(135deg, rgba($cumes-03, 0.14), rgba($cumes-03, 0.05));
+  border-color: rgba($cumes-03, 0.24);
+  .card-icon-area { background: rgba($cumes-03, 0.2); }
+  .card-main-icon { color: $cumes-03; }
+  &:hover { border-color: $cumes-03; }
 }
 
 .card-icon-area {
@@ -555,8 +612,11 @@ onMounted(async () => {
 // ================================
 .grade-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 10px;
+  @media (min-width: 1100px) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 8px;
@@ -699,15 +759,21 @@ onMounted(async () => {
   text-align: center;
 }
 
+.modalidade-count {
+  font-size: 11px;
+  color: rgba($offwhite, 0.4);
+  font-weight: 600;
+}
+
 // ================================
 // EXPOSURE CARDS
 // ================================
 .exposure-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  @media (max-width: 520px) {
     gap: 8px;
   }
 }
@@ -717,8 +783,8 @@ onMounted(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 20px 16px;
+  min-height: 72px;
+  padding: 16px 8px;
   border-radius: 14px;
   cursor: pointer;
   background: color-mix(in srgb, var(--exp-color) 8%, transparent);
@@ -735,15 +801,79 @@ onMounted(async () => {
 }
 
 .exposure-level {
-  font-size: 22px;
+  font-size: clamp(18px, 2.8vw, 24px);
   font-weight: 800;
   color: var(--exp-color);
+  letter-spacing: 0.02em;
 }
 
-.exposure-desc {
-  font-size: 12px;
+.exposure-count {
+  font-size: 11px;
+  color: rgba($offwhite, 0.4);
   font-weight: 600;
-  color: rgba($offwhite, 0.5);
+  margin-top: 4px;
+  text-align: center;
+}
+
+// ================================
+// DURAÇÃO (D1–D7)
+// ================================
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+.duration-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 88px;
+  padding: 14px 8px;
+  border-radius: 14px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--dur-color) 8%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--dur-color) 25%, transparent);
+  transition: all 0.25s ease;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--dur-color);
+    background: color-mix(in srgb, var(--dur-color) 15%, transparent);
+    box-shadow: 0 6px 20px $box-shadow-medium;
+  }
+}
+
+.duration-level {
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-weight: 800;
+  color: var(--dur-color);
+  letter-spacing: 0.02em;
+}
+
+.duration-count {
+  font-size: 11px;
+  color: rgba($offwhite, 0.38);
+  font-weight: 600;
+  margin-top: auto;
+  align-self: center;
+  width: 100%;
+  text-align: center;
+
+  .pi-spinner {
+    font-size: 11px;
+  }
 }
 
 // ================================

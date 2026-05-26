@@ -189,7 +189,17 @@ export async function runReferenciasLoader(): Promise<ReferenciasIds> {
   for (const img of imagens) {
     const fonteId = ids.fonteByAutor.get(img.fonte);
     if (!fonteId) throw new Error(`Fonte não encontrada: ${img.fonte}`);
+
+    // Busca primeiro pela URL exata; se não achar, busca pelo nome do arquivo
+    // para corrigir registros com path de subpasta errado (ex: /assets/foo.webp → /assets/pasta/foo.webp)
+    const nomeArquivo = img.url.split('/').pop()!;
     let ent = await repoImagem.findOne({ where: { url: img.url } });
+    if (!ent) {
+      ent = await repoImagem.createQueryBuilder('i')
+        .where('i.url LIKE :pattern', { pattern: `%/${nomeArquivo}` })
+        .getOne();
+    }
+
     if (!ent) {
       ent = repoImagem.create({
         url: img.url,
@@ -198,7 +208,11 @@ export async function runReferenciasLoader(): Promise<ReferenciasIds> {
         tipo_entidade: img.tipo_entidade
       });
       await repoImagem.save(ent);
+    } else if (ent.url !== img.url) {
+      ent.url = img.url;
+      await repoImagem.save(ent);
     }
+
     ids.imagens.set(img.url, ent.id);
   }
 

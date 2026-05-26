@@ -7,12 +7,16 @@ import { Imagem } from 'src/models/Imagem';
 export interface IUsuario {
   id: number;
   nome: string;
+  username?: string;
   email: string;
   password_hash: string;
   data_atividade?: string | null; // Data opcional
   clube_organizacao?: string | null;
   localizacao?: string | null;
   biografia?: string | null;
+  link_externo?: string | null;
+  conquistas_publico?: boolean;
+  perfil_publico?: boolean;
   via_preferida?: Via | null;
   foto_perfil: Imagem;
   colecoes?: Colecao[] | null;
@@ -28,6 +32,9 @@ export class Usuario implements IUsuario {
   clube_organizacao?: string | null;
   localizacao?: string | null;
   biografia?: string | null;
+  link_externo?: string | null;
+  conquistas_publico?: boolean;
+  perfil_publico?: boolean;
   via_preferida?: Via | null;
   foto_perfil: Imagem;
   colecoes?: IColecao[] | null;
@@ -41,6 +48,7 @@ export class Usuario implements IUsuario {
     this.clube_organizacao = null;
     this.localizacao = null;
     this.biografia = null;
+    this.perfil_publico = true;
     this.via_preferida = null;
     this.foto_perfil = new Imagem();
     this.colecoes = null;

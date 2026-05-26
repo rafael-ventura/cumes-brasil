@@ -238,12 +238,7 @@ export class ViaDTO {
             .filter((img: any) => img && typeof img === 'object' && img.url);
 
         this.imagens = imagensObjetos.map((img: any) => new ImagemDTO(img));
-        this.imagem = this.imagens.length > 0 ? this.imagens[0] : new ImagemDTO({
-            id: 4,
-            url: "/assets/vias/via-default-01.webp",
-            descricao: "Foto Default para Via",
-            tipo_entidade: "via"
-        } as any);
+        this.imagem = this.imagens.length > 0 ? this.imagens[0] : undefined;
 
         this.fonte = entity.fonte && typeof entity.fonte === 'object'
             ? new FonteDTO(entity.fonte as any) 

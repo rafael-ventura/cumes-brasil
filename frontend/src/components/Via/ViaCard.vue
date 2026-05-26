@@ -1,18 +1,21 @@
 <template>
   <div v-if="via">
-    <q-card class="card-item" @click="emitClick">
+    <q-card
+      class="card-item"
+      :class="{ 'card-item--selecionada': modoSelecao && selecionada }"
+      @click="emitClick"
+    >
       <div class="card-image-container">
+        <div v-if="modoSelecao" class="selecao-check" aria-hidden="true">
+          <i :class="selecionada ? 'pi pi-check-circle' : 'pi pi-circle'" />
+        </div>
         <BadgeCerj v-if="via.via_cerj" :via="via" class="badge-cerj-overlay" />
-        <img 
-          v-if="viaImageUrl" 
-          :src="viaImageUrl" 
+        <img
+          :src="viaImageUrl"
           class="card-image" 
           alt="via image"
           loading="lazy"
         />
-        <div v-else class="card-image-placeholder">
-          <q-icon name="image" size="48px" />
-        </div>
       </div>
       <q-card-section class="card-info">
         <div class="via-nome">{{ via.nome }}</div>
@@ -35,16 +38,26 @@ import { computed } from 'vue';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
 import BadgeCerj from 'src/components/Via/BadgeCerj.vue';
 import { Via } from 'src/models/Via';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
-const props = defineProps<{ via: Via }>();
-const emits = defineEmits(['click']);
+const props = withDefaults(
+  defineProps<{
+    via: Via;
+    modoSelecao?: boolean;
+    selecionada?: boolean;
+  }>(),
+  { modoSelecao: false, selecionada: false }
+);
+const emits = defineEmits(['click', 'toggle-selecao']);
 
-const viaImageUrl = computed(() => getViaImageUrlFull(props.via));
+const viaImageUrl = computed(() => getViaImageUrlComFallbackFull(props.via));
 
 const emitClick = () => {
-  props.via.nome &&
-  emits('click');
+  if (props.modoSelecao) {
+    emits('toggle-selecao');
+    return;
+  }
+  if (props.via.nome) emits('click');
 };
 </script>
 
@@ -60,11 +73,38 @@ const emitClick = () => {
   box-shadow: 0 2px 8px $box-shadow-soft;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   overflow: hidden;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px $box-shadow-strong;
   }
+
+  &--selecionada {
+    box-shadow:
+      0 0 0 2px rgba($cumes-03, 0.95),
+      0 10px 28px rgba($cumes-03, 0.18);
+    background: linear-gradient(180deg, rgba($cumes-03, 0.06) 0%, $background 100%);
+  }
+}
+
+.selecao-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  color: $offwhite;
+  background: rgba($cumes-01, 0.88);
+  border: 2px solid rgba($offwhite, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
 }
 
 .card-image-container {
@@ -103,7 +143,7 @@ const emitClick = () => {
 }
 
 .card-info {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 5%) 100%);
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
@@ -111,10 +151,11 @@ const emitClick = () => {
 }
 
 .via-nome {
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 900;
   color: $offwhite;
   line-height: 1.3;
+  letter-spacing: -0.01em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

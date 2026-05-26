@@ -1,7 +1,14 @@
 <template>
   <div>
     <div class="colecao-list">
-      <ColecaoCard v-for="colecao in props.colecoes" :key="colecao.id" :colecao="colecao" @click="showDetails(colecao)" />
+      <ColecaoCard
+        v-for="colecao in colecoes"
+        :key="colecao.id"
+        :colecao="colecao"
+        :exibir-menu="exibirMenu"
+        @editar="$emit('editar', $event)"
+        @excluir="$emit('excluir', $event)"
+      />
     </div>
   </div>
 </template>
@@ -9,15 +16,20 @@
 <script setup lang="ts">
 import ColecaoCard from 'components/Colecao/ColecaoCard.vue';
 import { IColecao } from 'src/models/IColecao';
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
+withDefaults(
+  defineProps<{
+    colecoes: IColecao[];
+    /** Menu ⋮ (editar / excluir). Desligar em listagens públicas. */
+    exibirMenu?: boolean;
+  }>(),
+  { exibirMenu: false }
+);
 
-const props = defineProps<{ colecoes: IColecao[] }>();
-
-const showDetails = (colecao: IColecao) => {
-  router.push(`/colecoes/${colecao.id}`);
-};
+defineEmits<{
+  editar: [IColecao];
+  excluir: [IColecao];
+}>();
 </script>
 
 <style scoped lang="scss">

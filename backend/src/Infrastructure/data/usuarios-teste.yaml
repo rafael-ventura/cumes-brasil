@@ -1,0 +1,65 @@
+# Contas de desenvolvimento (senha comum: teste123)
+# Usadas pelo seed idempotente — não editar usuários direto no banco.
+- email: teste@cumes.com.br
+  username: cumes_teste
+  senha: teste123
+  nome: Usuário Teste Cumes
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2025-03-15'
+  biografia: Perfil de teste para desenvolvimento do Cumes Brasil. Use para explorar o feed, escaladas e funcionalidades.
+
+- email: maria.dev@cumes.com.br
+  username: maria_escaladora
+  senha: teste123
+  nome: Maria Escaladora
+  perfil_publico: true
+  localizacao: Niterói, RJ
+  data_atividade: '2020-06-01'
+  biografia: Conta seed para testar feed e perfil público com mais de um usuário.
+
+- email: privado.dev@cumes.com.br
+  username: usuario_privado
+  senha: teste123
+  nome: Conta Privada Seed
+  perfil_publico: false
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2024-01-10'
+  biografia: Perfil privado para testar 403 em /u e listagens de escalada.
+
+# Conta local (mesmo username que costuma existir no ambiente de dev)
+- email: rafael.dev@cumes.com.br
+  username: rafael
+  senha: teste123
+  nome: Rafael Ventura
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2024-01-15'
+  biografia: Conta seed para desenvolvimento (username rafael).
+
+- email: elmin.dev@cumes.com.br
+  username: elmin
+  senha: teste123
+  nome: Elmo Sampaio
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2024-05-20'
+  biografia: Conta seed para testar conquistas e interações no perfil do escalador Elmo.
+
+- email: vitin.dev@cumes.com.br
+  username: vitin
+  senha: teste123
+  nome: Vitin Souza
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2023-08-10'
+  biografia: Conta seed para testes de feed, marcações e exibição de conquistas no perfil.
+
+- email: mohammed.dev@cumes.com.br
+  username: mohammed
+  senha: teste123
+  nome: Mohammed Abdalla
+  perfil_publico: true
+  localizacao: Rio de Janeiro, RJ
+  data_atividade: '2022-11-05'
+  biografia: Conta seed mock para explorar a área social com dados suficientes para debug.

@@ -1,0 +1,65 @@
+# Vias por nome (mesmas chaves que em vias.yaml / ViaLoader)
+favoritos:
+  cumes_teste:
+    - 29 de dezembro
+    - Fenda do Forte
+    - Semisonic
+  maria_escaladora:
+    - Ponto Noturno
+    - João Belamy
+  usuario_privado:
+    - Ratos de montanha
+  elmin:
+    - 29 de dezembro
+    - Fenda do Forte
+    - Semisonic
+    - Ponto Noturno
+    - João Belamy
+    - Ratos de montanha
+  vitin:
+    - 29 de dezembro
+    - Fenda do Forte
+    - Semisonic
+    - Ponto Noturno
+    - João Belamy
+  mohammed:
+    - 29 de dezembro
+    - Fenda do Forte
+    - Semisonic
+    - Ratos de montanha
+    - Ponto Noturno
+
+colecoes:
+  - username: cumes_teste
+    nome: Clássicas do CERJ
+    descricao: Referência para treino e repetição
+    vias:
+      - 29 de dezembro
+      - Fenda do Forte
+  - username: maria_escaladora
+    nome: Favoritas de inverno
+    descricao: Vias que escalo no frio
+    vias:
+      - Semisonic
+      - Ponto Noturno
+  - username: elmin
+    nome: Treino do Elmo
+    descricao: Lista mock para revisar movimentos e memórias do dia.
+    vias:
+      - 29 de dezembro
+      - João Belamy
+      - Ponto Noturno
+  - username: vitin
+    nome: Ritmo e Repetição
+    descricao: Coleção mock focada em repetir seções-chave.
+    vias:
+      - Semisonic
+      - Fenda do Forte
+      - Ratos de montanha
+  - username: mohammed
+    nome: Consistência no CERJ
+    descricao: Coleção mock para registrar evolução em vias do CERJ.
+    vias:
+      - 29 de dezembro
+      - Fenda do Forte
+      - Semisonic

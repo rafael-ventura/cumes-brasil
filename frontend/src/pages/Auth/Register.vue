@@ -33,6 +33,29 @@
               </q-input>
             </div>
 
+            <!-- Campo Username -->
+            <div class="form-field">
+              <label class="field-label">Username *</label>
+              <q-input
+                id="username"
+                v-model="username"
+                type="text"
+                placeholder="ex: joao_escalador"
+                :rules="[
+                  val => !!val || 'Campo obrigatório',
+                  val => !val || /^[a-z0-9_]{3,30}$/.test(val.toLowerCase()) || 'Apenas letras minúsculas, números e _ (3-30 caracteres)'
+                ]"
+                outlined
+                dense
+                class="custom-input"
+                @blur="username = username ? username.trim().toLowerCase() : ''"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="alternate_email" />
+                </template>
+              </q-input>
+            </div>
+
             <!-- Campo Email -->
             <div class="form-field">
               <label class="field-label">Email *</label>
@@ -132,6 +155,7 @@ defineOptions({
 })
 
 const nome = ref('')
+const username = ref('')
 const email = ref('')
 const senha = ref('')
 const confirmPassword = ref('')
@@ -139,8 +163,18 @@ const loading = ref(false)
 const router = useRouter()
 
 const onSignUp = async () => {
-  if (!nome.value || !email.value || !senha.value || !confirmPassword.value) {
+  if (!nome.value || !username.value || !email.value || !senha.value || !confirmPassword.value) {
     Notify.create(createNotifyConfig('negative', 'Preencha todos os campos', 'top'))
+    return
+  }
+
+  const usernameFormatado = username.value.trim().toLowerCase()
+  if (usernameFormatado.length < 3 || usernameFormatado.length > 30) {
+    Notify.create(createNotifyConfig('negative', 'Username deve ter entre 3 e 30 caracteres', 'top'))
+    return
+  }
+  if (!/^[a-z0-9_]+$/.test(usernameFormatado)) {
+    Notify.create(createNotifyConfig('negative', 'Username deve conter apenas letras minúsculas, números e underscore', 'top'))
     return
   }
 
@@ -157,7 +191,7 @@ const onSignUp = async () => {
   loading.value = true
 
   try {
-    await AuthenticateService.register(nome.value, email.value, senha.value)
+    await AuthenticateService.register(nome.value, email.value, senha.value, usernameFormatado)
     Notify.create(createNotifyConfig('positive', 'Cadastro realizado com sucesso! Faça login para continuar.', 'top'))
     await router.push('/auth/login')
   } catch (error: any) {
@@ -237,7 +271,7 @@ const goToLogin = () => {
 
 // Header do Card
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 24px 32px;
   border-bottom: 3px solid $cumes-03;
 }
@@ -356,7 +390,7 @@ const goToLogin = () => {
   box-shadow: 0 4px 12px $box-shadow-medium !important;
 
   &:hover {
-    background: darken($cumes-01, 10%) !important;
+    background: cumesDarken($cumes-01, 10%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px $box-shadow-strong !important;
   }

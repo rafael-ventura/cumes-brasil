@@ -39,7 +39,7 @@
     <ModalCriarEscalada
       v-model="showEscaladaModal"
       :via="props.via"
-      @escalada-criada="onEscaladaCriada"
+      @escalada-criada="aoEscaladaCriada"
     />
 
     <!-- Modal de Coleções -->
@@ -48,7 +48,7 @@
       title="Adicionar à Coleção"
       :fetch-items="fetchColecoesSemVia"
       :add-item="adicionarViaNaColecao"
-      @item-added="onColecaoAdded"
+      @item-added="aoAdicionarColecao"
     />
   </div>
 </template>
@@ -183,12 +183,12 @@ const adicionarViaNaColecao = async (colecaoId: number) => {
 };
 
 // Callback quando uma escalada é criada
-const onEscaladaCriada = () => {
+const aoEscaladaCriada = () => {
   Notify.create(createNotifyConfig('positive', 'Escalada criada com sucesso!', 'top-right'));
 };
 
 // Callback quando uma coleção é adicionada
-const onColecaoAdded = () => {
+const aoAdicionarColecao = () => {
   Notify.create(createNotifyConfig('positive', 'Via adicionada à coleção com sucesso!', 'top-right'));
 };
 </script>

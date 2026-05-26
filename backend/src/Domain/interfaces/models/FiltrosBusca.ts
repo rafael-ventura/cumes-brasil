@@ -14,12 +14,15 @@ export interface FiltrosBuscaVia extends FiltrosBuscaBase {
   grau?: string;
   crux?: string;
   exposicao?: string;
+  /** D1–D5 (normalizado no repositório) */
+  duracao?: string;
   faixaExtensao?: number[];
   tipoRocha?: string;
   tipoEscalada?: string;
   modalidade?: ModalidadeEscalada;
   artificial?: string;
   viaCerj?: boolean;
+  comCroqui?: boolean;
   semGrau?: boolean;
   semLocalizacao?: boolean;
   nomeBairro?: string;
@@ -39,6 +42,7 @@ export interface FiltrosBuscaColecao extends FiltrosBuscaBase {
 
 export interface FiltrosBuscaEscalada extends FiltrosBuscaBase {
   termoBusca?: string;
+  comoPerfil?: 'autor' | 'marcado' | 'todas';
 }
 
 export type FiltrosBusca = FiltrosBuscaVia | FiltrosBuscaColecao | FiltrosBuscaEscalada;

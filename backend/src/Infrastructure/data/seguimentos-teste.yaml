@@ -1,0 +1,18 @@
+# seguidor / seguido (usernames do `usuarios-teste.yaml`)
+# Seed idempotente (não duplica relacionamentos).
+
+- seguidor: rafael
+  seguido: maria_escaladora
+
+- seguidor: rafael
+  seguido: cumes_teste
+
+- seguidor: maria_escaladora
+  seguido: rafael
+
+- seguidor: cumes_teste
+  seguido: rafael
+
+- seguidor: usuario_privado
+  seguido: rafael
+

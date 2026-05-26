@@ -2,8 +2,9 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/**/*.spec.ts", "node_modules"],
-  "exec": "ts-node src/Api/server.ts",
+  "exec": "ts-node --transpile-only src/Api/server.ts",
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "NODE_OPTIONS": "--max-old-space-size=4096"
   }
 }

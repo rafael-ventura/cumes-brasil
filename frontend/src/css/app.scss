@@ -1,13 +1,25 @@
+@use 'sass:color';
+
+// Canvas / superfície — declarados antes do body (evita variável indefinida)
+$background: #1a1d22;
+$surface: #22262c;
+$offwhite: #ffffe4;
+
 // ============================================
 // TIPOGRAFIA - INTER FONT
 // ============================================
-// Aplicar fonte Inter apenas no body, deixando herdar naturalmente
-// Os ícones serão protegidos pelas regras específicas abaixo
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: $background;
+}
+
+#q-app,
+.q-layout,
+.q-page-container {
+  background-color: $background;
 }
 
 // Garantir que ícones do Quasar (Material Icons) mantenham sua fonte original
@@ -25,16 +37,14 @@ i[class*="pi-"] {
 // PALETA DE CORES - CUMES BRASIL
 // ============================================
 
-// Cores principais da marca
-$cumes-01: #8CB369; // Verde principal (identidade da marca)
+// Cores principais da marca ($cumes-01 = laranja identidade; $cumes-03 = verde acento)
+$cumes-01: #F29340; // Laranja principal (identidade / mais presente no UI)
 $cumes-02: #546119; // Verde escuro
-$cumes-03: #F29340; // Laranja (ação/energia)
+$cumes-03: #8CB369; // Verde (contraste / natureza / acentos secundários)
 $cumes-04: #F4E285; // Amarelo (destaque)
 $cumes-05: #BC4B51; // Vermelho/bordô (destaque alternativo)
 
-// Cores de fundo e texto
-$background: #2c2c2c; // Fundo escuro / texto principal em fundos claros
-$offwhite: #ffffe4; // Branco suave (melhor que white puro)
+// Cores de fundo já definidas no topo ($background, $surface, $offwhite)
 
 // Cores de feedback
 $error-color: #e74c3c; // Vermelho para erros
@@ -42,7 +52,7 @@ $error-color: #e74c3c; // Vermelho para erros
 // ============================================
 // VARIAVEIS SEMANTICAS - AÇÕES DO USUARIO
 // ============================================
-$action-escaladas: $cumes-03; // Laranja - ação, movimento, energia
+$action-escaladas: $cumes-01; // Laranja - ação, movimento, energia
 $action-favoritos: $cumes-04; // Amarelo - estrela, destaque
 $action-colecoes: $cumes-02; // Verde escuro - organização, categorização
 
@@ -68,6 +78,23 @@ $c-color-pink: #EF9D9D;
 $c-color-orange: #fcbd7b;
 $c-color-brown: #e4a16a;
 $c-color-grey: #757575;
+
+// ============================================
+// FUNCOES MODERNAS (Substituem lighten/darken)
+// ============================================
+@function cumesLighten($cor, $percentagem) {
+  @if unitless($percentagem) {
+    $percentagem: $percentagem * 1%;
+  }
+  @return color.adjust($cor, $lightness: $percentagem);
+}
+
+@function cumesDarken($cor, $percentagem) {
+  @if unitless($percentagem) {
+    $percentagem: $percentagem * 1%;
+  }
+  @return color.adjust($cor, $lightness: -$percentagem);
+}
 
 // ============================================
 // CLASSES UTILITÁRIAS
@@ -163,57 +190,35 @@ $c-color-grey: #757575;
 }
 
 .btn{
-  color: $cumes-03;
+  color: $cumes-01;
   font-weight: bold;
-  border: $cumes-03 1px solid;
+  border: $cumes-01 1px solid;
   border-radius: 10px;
 }
 
 .btn-primary{
-  color: $cumes-03;
+  color: $cumes-01;
   font-weight: bold;
-  border: $cumes-03 1px solid;
+  border: $cumes-01 1px solid;
   border-radius: 10px;
   box-shadow: 0 2px 2px $box-shadow-dark;
 
   &:hover {
-    background-color: $cumes-03;
+    background-color: $cumes-01;
+    color: $offwhite;
   }
 }
 
 .btn-secondary{
-  color: $cumes-03;
+  color: $cumes-01;
   font-weight: bold;
-  border: $cumes-03 1px solid;
+  border: $cumes-01 1px solid;
   border-radius: 10px;
   box-shadow: 0 2px 2px $box-shadow-dark;
 
   &:hover {
-    background-color: $cumes-03;
-  }
-}
-
-.btn-dark{
-  color: $background;
-  font-weight: bold;
-  border: $background 1px solid;
-  border-radius: 10px;
-}
-
-.btn-red{
-  color: $error-color;
-  font-weight: bold;
-  border: $error-color 1px solid;
-  border-radius: 10px;
-  box-shadow: 0 2px 2px $box-shadow-dark;
-}
-
-.btn-text-black{
-  color: $background !important;
-  font-weight: bold;
-
-  &:hover {
-    background-color: lighten($background, 60%);
+    background-color: $cumes-01;
+    color: $offwhite;
   }
 }
 
@@ -223,13 +228,13 @@ $c-color-grey: #757575;
   opacity: 0.6;
 
   &:hover {
-    background-color: lighten($background, 20%);
+    background-color: cumesLighten($background, 20%);
   }
 }
 
 .btn-close {
   &:hover {
-    background-color: darken($error-color, 10%);
+    background-color: cumesDarken($error-color, 10%);
   }
 }
 
@@ -248,26 +253,6 @@ $c-color-grey: #757575;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px $box-shadow-soft;
-}
-
-.shadow-item {
-  box-shadow: 0 4px 8px $box-shadow-dark;
-}
-
-.top-margem {
-  margin-top: 8px;
-}
-
-.bottom-margem {
-  margin-bottom: 8px;
-}
-
-.left-margem {
-  margin-left: 8px;
-}
-
-.right-margem {
-  margin-right: 8px;
 }
 
 .large-icon {
@@ -296,6 +281,7 @@ $c-color-grey: #757575;
 
 .q-field__control {
   border-radius: 20px;
+  padding-left: 16px;
 }
 
 .q-field__label {
@@ -304,11 +290,6 @@ $c-color-grey: #757575;
 
 .q-field {
   border-radius: 20px;
-}
-
-.q-field__control {
-  border-radius: 20px;
-  padding-left: 16px;
 }
 
 .q-field__native {
@@ -345,5 +326,79 @@ $c-color-grey: #757575;
 .text-10{
   font-size: 8px;
   font-weight: bold;
+}
+
+// ============================================
+// Campo de busca primário (Explorar + catálogo)
+// ============================================
+@mixin campo-busca-primario($raio: 12px, $altura-min: 52px) {
+  :deep(.q-field__control) {
+    background-color: $offwhite !important;
+    border-radius: $raio !important;
+    padding: 0 4px !important;
+    min-height: $altura-min;
+
+    &::before {
+      border-color: rgba($cumes-01, 0.45) !important;
+      border-width: 2px !important;
+      border-radius: $raio !important;
+    }
+  }
+
+  :deep(.q-field__native) {
+    color: $background !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    padding: 10px 8px !important;
+  }
+
+  :deep(input),
+  :deep(.q-field__input) {
+    color: $background !important;
+  }
+
+  :deep(input::placeholder) {
+    color: rgba($background, 0.45) !important;
+  }
+
+  :deep(.q-field__label) {
+    color: rgba($background, 0.6) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+  }
+
+  &:deep(.q-field--focused) .q-field__control::before {
+    border-color: $cumes-01 !important;
+    border-width: 2px !important;
+  }
+}
+
+// ============================================
+// BARRAS DE ROLAGEM — tema escuro (Firefox + WebKit)
+// Aplica em qualquer área com overflow rolável.
+// ============================================
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($cumes-01, 0.55) rgba($background, 0.4);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba($background, 0.35);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba($cumes-01, 0.72), rgba($cumes-03, 0.42));
+  border-radius: 999px;
+  border: 1px solid rgba($background, 0.5);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba($cumes-01, 0.88), rgba($cumes-03, 0.55));
 }
 

@@ -1,7 +1,17 @@
 <template>
-  <div class="escalada-card-container">
+  <div
+    class="escalada-card-container"
+    :class="{ 'escalada-card-container--selecionada': modoSelecao && selecionada }"
+    role="button"
+    tabindex="0"
+    @click="onCardClick"
+    @keydown.enter.prevent="onCardClick"
+  >
     <!-- Imagem da Via -->
     <div class="imagem-container">
+      <div v-if="modoSelecao" class="selecao-check" aria-hidden="true">
+        <i :class="selecionada ? 'pi pi-check-circle' : 'pi pi-circle'" />
+      </div>
       <img
         v-if="viaImageUrl"
         :src="viaImageUrl"
@@ -39,7 +49,7 @@
 
           <!-- Participantes - Layout Moderno -->
           <div class="participantes-section">
-            <div class="section-header" @click="toggleDropdown">
+            <div class="section-header" @click.stop="toggleDropdown">
               <div class="section-title">
                 <q-icon name="people" class="section-icon" />
                 <span class="section-label">Participantes</span>
@@ -83,7 +93,7 @@
 
           <!-- Observação - Layout Moderno -->
           <div v-if="escaladaLocal.observacao" class="observacao-section">
-            <div class="section-header" @click="toggleObservacaoDropdown">
+            <div class="section-header" @click.stop="toggleObservacaoDropdown">
               <div class="section-title">
                 <q-icon name="note" class="section-icon" />
                 <span class="section-label">Observação</span>
@@ -105,7 +115,7 @@
                 :label="observacaoExpandida ? 'Ver menos' : 'Ver mais'"
                 :icon="observacaoExpandida ? 'expand_less' : 'expand_more'"
                 class="btn-ver-mais"
-                @click.stop="toggleObservacao"
+                @click.stop.prevent="toggleObservacao"
               />
             </div>
           </div>
@@ -117,18 +127,25 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { Escalada } from 'src/models/Escalada';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
 import GrauBadge from 'src/components/Via/GrauBadge.vue';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
-const props = defineProps({
-  escalada: {
-    type: Object as () => Escalada,
-    required: true
-  }
-});
+const props = withDefaults(
+  defineProps<{
+    escalada: Escalada;
+    modoSelecao?: boolean;
+    selecionada?: boolean;
+  }>(),
+  { modoSelecao: false, selecionada: false }
+);
+
+const emit = defineEmits<{ 'toggle-selecao': [] }>();
+
+const router = useRouter();
 
 const escaladaLocal = ref({ ...props.escalada });
 const via = ref<Via | null>(null);
@@ -136,7 +153,7 @@ const dropdownOpen = ref(false);
 const observacaoExpandida = ref(false);
 const observacaoDropdownOpen = ref(true); // Começa aberto por padrão
 
-const viaImageUrl = computed(() => getViaImageUrlFull(via.value));
+const viaImageUrl = computed(() => getViaImageUrlComFallbackFull(via.value));
 
 // Observa mudanças na prop escalada
 watch(() => props.escalada, (newEscalada) => {
@@ -148,25 +165,24 @@ watch(() => props.escalada, (newEscalada) => {
 }, { immediate: true, deep: true });
 
 onMounted(async () => {
-  // Garante que participantes seja um array
   if (!escaladaLocal.value.participantes) {
     escaladaLocal.value.participantes = [];
   }
-  
-  // Debug: verificar se participantes estão vindo
-  console.log('Escalada recebida:', escaladaLocal.value);
-  console.log('Participantes:', escaladaLocal.value.participantes);
-  
-  // Buscar via corretamente
+
   if (escaladaLocal.value.via && typeof escaladaLocal.value.via === 'object' && escaladaLocal.value.via.id) {
     via.value = await ViaService.getViaById(escaladaLocal.value.via.id);
   } else if (escaladaLocal.value.via && typeof escaladaLocal.value.via === 'number') {
     via.value = await ViaService.getViaById(escaladaLocal.value.via);
-  } else if (escaladaLocal.value.id) {
-    // Se não tiver via, tenta buscar pela escalada (isso não faz sentido, mas mantém compatibilidade)
-    console.warn('Escalada sem via definida, tentando buscar via pelo id da escalada');
   }
 });
+
+function onCardClick () {
+  if (props.modoSelecao) {
+    emit('toggle-selecao');
+    return;
+  }
+  router.push({ name: 'EscaladaDetalhada', params: { id: String(props.escalada.id) } });
+}
 
 function formatDateToDDMMYY (date: string | Date): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
@@ -217,7 +233,7 @@ function toggleObservacaoDropdown () {
 @import 'src/css/app.scss';
 .imagem-container {
   width: 100%;
-  height: 240px; /* Altura aumentada para dar mais destaque */
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -251,16 +267,38 @@ function toggleObservacaoDropdown () {
   overflow: hidden;
   box-shadow: 0 4px 12px $box-shadow-medium;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
+  cursor: pointer;
+  outline: none;
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 20px $box-shadow-strong;
+  }
+
+  &--selecionada {
+    box-shadow:
+      0 0 0 2px rgba($cumes-03, 0.95),
+      0 10px 28px rgba($cumes-03, 0.18);
+  }
+}
+
+.selecao-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  font-size: 1.5rem;
+  color: $offwhite;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+
+  .pi-check-circle {
+    color: $cumes-03;
   }
 }
 
 .escalada-card {
   width: 100%;
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 5%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 5%) 100%);
   padding: 20px;
   box-sizing: border-box;
   
@@ -304,7 +342,7 @@ function toggleObservacaoDropdown () {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, $cumes-04 0%, darken($cumes-04, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-04 0%, cumesDarken($cumes-04, 10%) 100%);
   color: $background;
   font-size: 14px;
   font-weight: 700;
@@ -348,7 +386,7 @@ function toggleObservacaoDropdown () {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $cumes-03 0%, darken($cumes-03, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-03 0%, cumesDarken($cumes-03, 10%) 100%);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -470,7 +508,7 @@ function toggleObservacaoDropdown () {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, $cumes-02 0%, darken($cumes-02, 10%) 100%);
+  background: linear-gradient(135deg, $cumes-02 0%, cumesDarken($cumes-02, 10%) 100%);
   border-radius: 50%;
   color: $offwhite;
   font-size: 20px;

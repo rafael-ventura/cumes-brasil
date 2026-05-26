@@ -2,7 +2,7 @@
   <div class="div-externa">
     <div class="title-box">
       <div class="titulo">Via Predileta</div>
-      <q-icon name="edit" size="20px" class="icon" @click="toggleEditMode"/>
+      <i v-if="!readonly" class="pi pi-pencil icon" @click="toggleEditMode" />
     </div>
 
     <!-- Exibição dos detalhes da via favorita -->
@@ -11,12 +11,13 @@
         <ViaCardSmall :via="viaPreferida" @click="goToViaDetalhada" />
       </div>
       <div v-else class="empty-state">
-        <q-icon name="favorite_border" size="48px" color="grey-6" />
+        <i class="pi pi-heart empty-icon" />
         <div class="empty-text">Nenhuma predileta adicionada.</div>
       </div>
     </div>
     
     <PerfilEditaFormAddPrediletaModal 
+      v-if="!readonly"
       v-model="isModalSelect"
       :viaPreferidaId="viaPreferidaId || ''" 
       @viaPreferidaUpdate="viaPreferidaUpdate" 
@@ -35,7 +36,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const props = defineProps<{ user?: IUsuario | null }>();
+const props = defineProps<{ user?: IUsuario | null; readonly?: boolean }>();
 const emits = defineEmits(['submit', 'waiting']);
 
 const localUser = ref<IUsuario | null>(props.user ? { ...props.user } : null);
@@ -109,27 +110,29 @@ const savePreferida = async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 8px 0;
+  padding: 0 0 4px 0;
   background-color: transparent;
   height: auto;
   width: 100%;
-  border-bottom: 2px solid rgba($cumes-01, 0.3);
-  margin-bottom: 12px;
+  border-bottom: 1px solid rgba($cumes-01, 0.25);
+  margin-bottom: 6px;
 }
 .titulo {
   color: $cumes-01;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 13px;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  letter-spacing: 0.02em;
 }
-.icon{
+.icon {
+  font-size: 16px;
   color: $cumes-01;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     color: $cumes-03;
     transform: scale(1.15);
@@ -155,6 +158,8 @@ const savePreferida = async () => {
 .via-card-wrapper {
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
+  min-width: 0;
   
   &:hover {
     transform: scale(1.02);
@@ -163,25 +168,25 @@ const savePreferida = async () => {
 
 .empty-state {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  gap: 12px;
+  justify-content: flex-start;
+  padding: 8px 0;
+  gap: 10px;
   min-height: auto;
-  flex: 1;
-  
-  .q-icon {
-    color: $cumes-01;
-    opacity: 0.5;
-  }
+}
+
+.empty-icon {
+  font-size: 22px;
+  color: $cumes-01;
+  opacity: 0.4;
+  flex-shrink: 0;
 }
 
 .empty-text {
-  color: $offwhite;
-  font-size: 15px;
-  opacity: 0.7;
-  text-align: center;
+  color: rgba($offwhite, 0.55);
+  font-size: 13px;
+  text-align: left;
 }
 
 .actions-wrapper {
@@ -198,7 +203,7 @@ const savePreferida = async () => {
     padding: 8px 20px !important;
     
     &:hover {
-      background: darken($cumes-01, 10%) !important;
+      background: cumesDarken($cumes-01, 10%) !important;
     }
   }
   
@@ -254,25 +259,68 @@ const savePreferida = async () => {
 // Mobile: Ajustar padding e proporções
 @media (max-width: 1023px) {
   .div-externa {
-    padding: 4px 0;
+    padding: 2px 0;
   }
 
   .title-box {
-    padding: 0 0 10px 0;
-    margin-bottom: 12px;
+    padding: 0 0 4px 0;
+    margin-bottom: 6px;
   }
 
   .empty-state {
-    padding: 20px 12px;
-    gap: 10px;
+    padding: 6px 0;
+    gap: 6px;
   }
 
   .empty-text {
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .content-wrapper {
+    min-width: 0;
+  }
+
+  .via-card-wrapper {
+    width: 100%;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  :deep(.card-info) {
+    gap: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    align-items: flex-start;
+  }
+
+  :deep(.left-section) {
+    flex: 0 0 78px;
+  }
+
+  :deep(.imagem-container) {
+    width: 78px;
+    height: 78px;
+    border-radius: 10px;
+  }
+
+  :deep(.right-section) {
+    min-width: 0;
+    gap: 5px;
+  }
+
+  :deep(.via-nome) {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  :deep(.montanha-info) {
+    font-size: 12px;
   }
 
   .actions-wrapper {
-    margin-top: 12px;
+    margin-top: 8px;
   }
 }
 </style>

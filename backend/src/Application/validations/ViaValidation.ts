@@ -1,5 +1,6 @@
 import ValidationBase from "./ValidationBase";
 import BadRequestError from "../errors/BadRequestError";
+import { ModalidadeEscalada } from "../../Domain/enum/EModalidadeEscalada";
 
 export default {
   validaController(filter: string): { key: string; value: string } {
@@ -18,7 +19,15 @@ export default {
       throw new BadRequestError('Filtro inválido. Use o formato /count/:filter (ex: /count/bairro=copacabana).');
     }
 
-    const filtrosValidos = ['grau', 'bairro', 'exposicao', 'duracao', 'via_cerj'];
+    const filtrosValidos = [
+      'grau',
+      'bairro',
+      'exposicao',
+      'duracao',
+      'via_cerj',
+      'com_croqui',
+      'modalidade',
+    ];
     if (!filtrosValidos.includes(key)) {
       throw new BadRequestError('Filtro inválido.');
     }
@@ -53,15 +62,15 @@ export default {
       case 'bairro':
         return value.trim().toLowerCase();
       case 'exposicao': {
-        const validExposicoes = ['E1', 'E2', 'E3', 'E4'];
+        const validExposicoes = ['E1', 'E2', 'E3', 'E4', 'E5'];
         if (!validExposicoes.includes(value.toUpperCase())) {
-          throw new BadRequestError('O parâmetro "exposicao" deve ser um dos valores válidos: E1, E2, E3, E4.');
+          throw new BadRequestError('O parâmetro "exposicao" deve ser um dos valores válidos: E1, E2, E3, E4, E5.');
         }
         return value.trim().toUpperCase();
       }
       case 'duracao': {
-        if (!['D1', 'D2', 'D3', 'D4', 'D5'].includes(value.toUpperCase())) {
-          throw new BadRequestError('O parâmetro "duracao" deve ser D1, D2, D3, D4 ou D5.');
+        if (!['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7'].includes(value.toUpperCase())) {
+          throw new BadRequestError('O parâmetro "duracao" deve ser D1 a D7.');
         }
         return value.trim().toUpperCase();
       }
@@ -70,6 +79,22 @@ export default {
           throw new BadRequestError('O parâmetro "via_cerj" deve ser true.');
         }
         return true;
+      }
+      case 'com_croqui': {
+        if (value.toLowerCase() !== 'true') {
+          throw new BadRequestError('O parâmetro "com_croqui" deve ser true.');
+        }
+        return true;
+      }
+      case 'modalidade': {
+        const valoresPermitidos = Object.values(ModalidadeEscalada) as string[];
+        const normalizado = value.trim().toUpperCase();
+        if (!valoresPermitidos.includes(normalizado)) {
+          throw new BadRequestError(
+            `O parâmetro "modalidade" deve ser um dos valores: ${valoresPermitidos.join(', ')}.`
+          );
+        }
+        return normalizado;
       }
       default:
         throw new BadRequestError('Filtro inválido.');

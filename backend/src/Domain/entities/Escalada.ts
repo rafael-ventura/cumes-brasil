@@ -9,7 +9,7 @@ export class Escalada extends BaseEntityWithTimestamps {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false, type: "date" })
+  @Column({ nullable: false, type: "timestamp without time zone" })
   data: Date;
 
   @Column({ nullable: true })

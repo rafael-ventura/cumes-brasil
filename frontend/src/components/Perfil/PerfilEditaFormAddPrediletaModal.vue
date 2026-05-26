@@ -37,7 +37,7 @@
         >
           <q-item-section avatar>
             <q-avatar square size="60px" class="custom-avatar">
-              <q-img :src="getViaImageUrlFull(via) || 'https://via.placeholder.com/60'" />
+              <q-img :src="getViaImageUrlComFallbackFull(via)" />
             </q-avatar>
           </q-item-section>
           <q-item-section>
@@ -109,7 +109,7 @@
 import { ref, watch, computed } from 'vue';
 import { Via } from 'src/models/Via';
 import ViaService from 'src/services/ViaService';
-import { getViaImageUrlFull } from 'src/utils/utils';
+import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
 const props = defineProps<{
   viaPreferidaId: string;
@@ -230,7 +230,7 @@ const onDialogShow = async () => {
 
 // Header do Card
 .card-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
   padding: 24px 32px;
   border-bottom: 3px solid $cumes-03;
 }

@@ -15,12 +15,35 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         super(Colecao);
     }
 
+    async contarColecoesPorUsuarioId(usuarioId: number): Promise<number> {
+        const raw = await this.repository
+            .createQueryBuilder("colecao")
+            .select("COUNT(colecao.id)", "cnt")
+            .leftJoin("colecao.usuario", "usuario")
+            .where("usuario.id = :usuarioId", { usuarioId })
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
+    async contarViasFavoritasPorUsuarioId(usuarioId: number): Promise<number> {
+        const raw = await this.repository
+            .createQueryBuilder("colecao")
+            .select("COUNT(viaColecao.id)", "cnt")
+            .leftJoin("colecao.viaColecoes", "viaColecao")
+            .leftJoin("colecao.usuario", "usuario")
+            .where("usuario.id = :usuarioId AND colecao.nome = :nome", { usuarioId, nome: "Favoritas" })
+            .getRawOne();
+        return Number(raw?.cnt ?? 0);
+    }
+
     async getById(id: number, relations?: string[]): Promise<Colecao | null> {
         return this.repository.createQueryBuilder("colecao")
           .leftJoinAndSelect('colecao.usuario', 'usuario')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.viaImagens', 'viaImagensCapa')
+          .leftJoinAndSelect('viaImagensCapa.imagem', 'viaImagemCapa')
           .leftJoinAndSelect('vias.montanha', 'montanha')
           .leftJoinAndSelect('vias.face', 'face')
           .leftJoinAndSelect('vias.setor', 'setor')
@@ -61,6 +84,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.viaImagens', 'viaImagensCapa')
+          .leftJoinAndSelect('viaImagensCapa.imagem', 'viaImagemCapa')
           .leftJoinAndSelect('vias.montanha', 'montanha')
           .leftJoinAndSelect('vias.face', 'face')
           .leftJoinAndSelect('vias.setor', 'setor')
@@ -100,6 +125,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'vias')
+          .leftJoinAndSelect('vias.viaImagens', 'viaImagensCapa')
+          .leftJoinAndSelect('viaImagensCapa.imagem', 'viaImagemCapa')
           .leftJoinAndSelect('vias.montanha', 'montanha')
           .leftJoinAndSelect('vias.face', 'face')
           .leftJoinAndSelect('vias.setor', 'setor')
@@ -193,6 +220,9 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecoes')
+          .leftJoinAndSelect('viaColecoes.via', 'vias')
+          .leftJoinAndSelect('vias.viaImagens', 'viaImagensCapa')
+          .leftJoinAndSelect('viaImagensCapa.imagem', 'viaImagemCapa')
           .where('colecao.usuario.id = :usuarioId', { usuarioId })
           .andWhere(`colecao.id NOT IN (${subQuery.getQuery()})`)
           .setParameters(subQuery.getParameters())
@@ -223,6 +253,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         let qb = this.repository.createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
+          .leftJoinAndSelect('via.viaImagens', 'viaImagensSearch')
+          .leftJoinAndSelect('viaImagensSearch.imagem', 'viaImagemSearch')
           .leftJoinAndSelect('via.montanha', 'montanha')
           .leftJoinAndSelect('via.face', 'face')
           .leftJoinAndSelect('via.setor', 'setor')

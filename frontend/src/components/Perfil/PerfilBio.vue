@@ -2,61 +2,28 @@
   <div class="div-externa">
     <div class="title-box">
       <div class="titulo">Bio</div>
-      <q-icon name="edit" size="20px" class="icon" @click="toggleEditMode" />
+      <i v-if="!readonly" class="pi pi-pencil icon" @click="toggleEditMode" />
     </div>
     <div class="content-wrapper">
-      <div v-if="!isEditing" class="bio-content">
-        <div 
-          ref="bioTextRef" 
+      <div v-if="!isEditing || readonly" class="bio-content">
+        <div
+          ref="bioTextRef"
           class="descricao-bio"
-          :class="{ 'has-overflow': shouldShowVerMais }"
+          :class="{ 'has-overflow': shouldShowVerMais && !bioExpandida, 'bio-expandida': bioExpandida }"
         >
           {{ fullBio }}
         </div>
-        <q-btn
-          v-if="shouldShowVerMais"
-          flat
-          dense
-          no-caps
-          label="Ver mais"
-          icon="expand_more"
-          class="btn-ver-mais"
-          @click="toggleModal"
-        />
+        <button v-if="shouldShowVerMais" class="btn-ver-mais" @click="toggleExpandirBio">
+          <i :class="bioExpandida ? 'pi pi-angle-up' : 'pi pi-angle-down'" />
+          {{ bioExpandida ? 'Ver menos' : 'Ver mais' }}
+        </button>
       </div>
-      <q-input v-else v-model="newBio" type="textarea" class="custom-input" outlined/>
+      <textarea v-else v-model="newBio" class="bio-textarea" rows="4" placeholder="Escreva sua bio..." />
     </div>
-    <div v-if="isEditing" class="actions-wrapper">
-      <q-btn flat label="Cancelar" class="btn-secondary" @click="cancelEdit" />
-      <q-btn flat label="Salvar" class="btn-primary" @click="saveBio" />
+    <div v-if="isEditing && !readonly" class="actions-wrapper">
+      <Button label="Cancelar" class="btn-secondary" text @click="cancelEdit" />
+      <Button label="Salvar" class="btn-primary" @click="saveBio" />
     </div>
-
-    <!-- Modal para Bio Completa -->
-    <q-dialog v-model="isModalOpen" @hide="isModalOpen = false">
-      <q-card class="bio-modal-card">
-        <q-card-section class="bio-modal-header">
-          <div class="bio-modal-title">
-            <q-icon name="person" size="24px" class="title-icon" />
-            <span>Biografia</span>
-          </div>
-        </q-card-section>
-
-        <q-card-section class="bio-modal-body">
-          <div class="bio-modal-text">{{ fullBio }}</div>
-        </q-card-section>
-
-        <q-card-actions align="right" class="bio-modal-actions">
-          <q-btn
-            flat
-            label="Fechar"
-            class="btn-close-modal"
-            v-close-popup
-            unelevated
-            no-caps
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
@@ -64,15 +31,16 @@
 import { computed, ref, onMounted, onUpdated, watch, nextTick } from 'vue';
 import UserService from 'src/services/UsuarioService';
 import { IUsuario } from 'src/models/IUsuario';
+import Button from 'primevue/button';
 
-const props = defineProps<{ user?: IUsuario | null }>();
+const props = defineProps<{ user?: IUsuario | null; readonly?: boolean }>();
 const emits = defineEmits(['bio-updated']);
 
 const isEditing = ref(false);
 const newBio = ref<string>(props.user?.biografia || '');
-const isModalOpen = ref(false);
 const bioTextRef = ref<HTMLElement | null>(null);
 const shouldShowVerMais = ref(false);
+const bioExpandida = ref(false);
 
 const fullBio = computed(() => props.user?.biografia || 'Nenhuma biografia disponível.');
 
@@ -94,6 +62,7 @@ onUpdated(() => {
 });
 
 watch(() => props.user?.biografia, () => {
+  bioExpandida.value = false;
   checkIfTextOverflows();
 });
 
@@ -107,7 +76,7 @@ const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
   if (isEditing.value) {
     newBio.value = props.user?.biografia || '';
-    isModalOpen.value = false; // Fecha modal se estiver aberto
+    bioExpandida.value = false;
   }
 };
 
@@ -127,8 +96,8 @@ const saveBio = async () => {
   }
 };
 
-const toggleModal = () => {
-  isModalOpen.value = !isModalOpen.value;
+const toggleExpandirBio = () => {
+  bioExpandida.value = !bioExpandida.value;
 };
 </script>
 
@@ -138,23 +107,25 @@ const toggleModal = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 8px 0;
+  padding: 0 0 4px 0;
   background-color: transparent;
   height: auto;
   width: 100%;
-  border-bottom: 2px solid rgba($cumes-03, 0.3);
-  margin-bottom: 12px;
+  border-bottom: 1px solid rgba($cumes-03, 0.25);
+  margin-bottom: 6px;
 }
 .titulo {
   color: $cumes-03;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 13px;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  letter-spacing: 0.02em;
 }
-.icon{
+.icon {
+  font-size: 16px;
   color: $cumes-03;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -166,22 +137,22 @@ const toggleModal = () => {
 }
 .descricao-bio{
   padding: 0;
-  border-radius: 12px;
-  color: $offwhite;
+  border-radius: 0;
+  color: rgba($offwhite, 0.88);
   background-color: transparent;
   border: none;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.5;
   min-height: auto;
   text-align: left;
-  max-height: 120px; // Limita altura para ocupar espaço do card
+  max-height: 54px;
   overflow: hidden;
   position: relative;
   word-wrap: break-word;
-  
-  // Desktop: altura maior para ocupar mais espaço
+
   @media (min-width: 1024px) {
-    max-height: 150px;
+    max-height: 66px;
+    font-size: 13px;
   }
   
   // Gradiente no final quando há overflow para indicar que há mais texto
@@ -202,50 +173,37 @@ const toggleModal = () => {
   &.has-overflow::after {
     opacity: 1;
   }
+
+  &.bio-expandida {
+    max-height: none;
+    overflow: visible;
+
+    &::after {
+      opacity: 0 !important;
+    }
+  }
 }
-.custom-input{
-  background-color: transparent;
+.bio-textarea {
+  width: 100%;
+  background: transparent;
   border: 2px solid $cumes-01;
   border-radius: 12px;
-  width: 100%;
+  color: $offwhite;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  font-family: inherit;
 
-  :deep(.q-field__control) {
-    background-color: transparent;
-    padding: 0 !important;
-    min-height: auto;
+  &::placeholder {
+    color: rgba($offwhite, 0.45);
   }
 
-  :deep(.q-field__native) {
-    color: $offwhite;
-    font-size: 15px;
-    font-weight: 500;
-    min-height: 80px;
-    padding: 12px !important;
-    text-align: left !important;
-    background-color: transparent;
-  }
-
-  :deep(textarea) {
-    color: $offwhite;
-    line-height: 1.6;
-    padding: 12px !important;
-    text-align: left !important;
-    width: 100%;
-    resize: vertical;
-    background-color: transparent;
-  }
-
-  :deep(textarea::placeholder) {
-    color: rgba($offwhite, 0.5);
-    text-align: left !important;
-  }
-
-  &:deep(.q-field--focused) {
+  &:focus {
     border-color: $cumes-03;
-
-    .q-field__control {
-      background-color: transparent;
-    }
   }
 }
 
@@ -274,153 +232,65 @@ const toggleModal = () => {
 }
 
 .btn-ver-mais {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   align-self: flex-start;
-  color: $cumes-03 !important;
+  background: transparent;
+  border: none;
+  color: $cumes-03;
   font-weight: 600;
   font-size: 12px;
-  padding: 2px 6px;
-  margin-top: 0;
-  min-height: auto;
-  height: auto;
-  
-  :deep(.q-btn__content) {
-    gap: 3px;
-    padding: 0;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 6px;
+
+  i {
+    font-size: 14px;
   }
-  
-  :deep(.q-icon) {
-    color: $cumes-03 !important;
-    font-size: 16px;
-  }
-  
-  :deep(.q-btn__label) {
-    font-size: 12px;
-  }
-  
+
   &:hover {
     background: rgba($cumes-03, 0.1);
-  }
-  
-  // Desktop: ainda menor
-  @media (min-width: 1024px) {
-    font-size: 13px;
-    padding: 3px 8px;
-    
-    :deep(.q-icon) {
-      font-size: 18px;
-    }
-    
-    :deep(.q-btn__label) {
-      font-size: 13px;
-    }
-  }
-}
-
-// Modal de Bio
-.bio-modal-card {
-  min-width: 320px;
-  max-width: 600px;
-  width: 90vw;
-  border-radius: 16px;
-  background-color: $background;
-  border: 2px solid $cumes-03;
-  box-shadow: 0 8px 32px $box-shadow-dark;
-  overflow: hidden;
-  
-  @media (min-width: 768px) {
-    width: 500px;
-    max-width: 500px;
-  }
-}
-
-.bio-modal-header {
-  background: linear-gradient(135deg, $cumes-03 0%, darken($cumes-03, 8%) 100%);
-  padding: 20px 24px;
-  border-bottom: 3px solid $cumes-01;
-}
-
-.bio-modal-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  font-weight: 700;
-  color: $offwhite;
-  text-shadow: 0 2px 4px $text-shadow-default;
-  
-  .title-icon {
-    color: $cumes-04;
-  }
-}
-
-.bio-modal-body {
-  padding: 24px;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-.bio-modal-text {
-  color: $offwhite;
-  font-size: 15px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.bio-modal-actions {
-  padding: 16px 24px;
-  border-top: 1px solid rgba($cumes-03, 0.3);
-}
-
-.btn-close-modal {
-  background: $cumes-03 !important;
-  color: $offwhite !important;
-  font-weight: 700 !important;
-  border-radius: 8px !important;
-  padding: 8px 20px !important;
-  
-  &:hover {
-    background: darken($cumes-03, 10%) !important;
   }
 }
 
 .actions-wrapper {
-  margin-top: 16px;
+  margin-top: 12px;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  
+  gap: 8px;
+
   .btn-primary {
     background: $cumes-03 !important;
     color: $offwhite !important;
     font-weight: 700 !important;
     border-radius: 8px !important;
-    padding: 8px 20px !important;
-    
+    padding: 7px 18px !important;
+    font-size: 14px !important;
+    border: none !important;
+
     &:hover {
-      background: darken($cumes-03, 10%) !important;
+      opacity: 0.88;
     }
   }
-  
+
   .btn-secondary {
-    background: transparent !important;
     color: $cumes-03 !important;
-    border: 2px solid $cumes-03 !important;
     font-weight: 600 !important;
-    border-radius: 8px !important;
-    padding: 8px 20px !important;
-    
+    font-size: 14px !important;
+    padding: 7px 12px !important;
+
     &:hover {
-      background: rgba($cumes-03, 0.1) !important;
+      background: rgba($cumes-03, 0.08) !important;
     }
   }
 }
 
-// Desktop: Centralizar melhor e reduzir altura
+// Desktop
 @media (min-width: 1024px) {
   .div-externa {
-    justify-content: center;
-    padding: 2px 0;
+    justify-content: flex-start;
+    padding: 0;
   }
 
   .content-wrapper {
@@ -445,49 +315,30 @@ const toggleModal = () => {
     margin-top: 8px;
   }
 
-  .custom-input {
+  .bio-textarea {
     width: 100%;
-    
-    :deep(.q-field__control) {
-      width: 100%;
-      background-color: transparent;
-    }
-
-    :deep(.q-field__native) {
-      min-height: 70px;
-      padding: 10px 12px !important;
-      text-align: left !important;
-      width: 100%;
-      background-color: transparent;
-    }
-
-    :deep(textarea) {
-      padding: 10px 12px !important;
-      text-align: left !important;
-      width: 100%;
-      background-color: transparent;
-    }
+    min-height: 70px;
   }
 }
 
 // Mobile: Ajustar padding e proporções
 @media (max-width: 1023px) {
   .div-externa {
-    padding: 4px 0;
+    padding: 2px 0;
   }
 
   .title-box {
-    padding: 0 0 10px 0;
-    margin-bottom: 12px;
+    padding: 0 0 4px 0;
+    margin-bottom: 6px;
   }
 
   .descricao-bio {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.45;
   }
 
   .actions-wrapper {
-    margin-top: 12px;
+    margin-top: 8px;
   }
 }
 </style>

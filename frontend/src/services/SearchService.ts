@@ -14,7 +14,7 @@ class SearchService {
       resultado.items = resultado.items.map((item: any) => {
         const via = formatVia(item as Via);
         if (via.imagem?.url) {
-          via.imagem.url = ImagemService.getFullImageUrl(via.imagem.url);
+          via.imagem.url = ImagemService.obterUrlCompleta(via.imagem.url);
         }
         return via;
       });

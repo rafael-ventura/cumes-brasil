@@ -7,28 +7,27 @@
           <span class="label-full">Itens por página</span>
           <span class="label-short">Itens/pág</span>
         </span>
-        <q-select
-          v-model="localItemsPerPage"
-          :options="itemsPerPageOptions"
-          class="custom-select items-per-page-select"
-          dense
-          outlined
-          @update:model-value="onItemsPerPageChange"
+        <Dropdown
+          v-model="localItensPorPagina"
+          :options="opcoesItensPorPagina"
+          option-label="label"
+          option-value="value"
+          class="itens-por-pagina-dropdown"
+          @change="(evento) => aoMudarItensPorPagina(Number(evento.value))"
         />
       </div>
 
       <!-- Paginação com PrimeVue Paginator -->
       <div v-if="totalPages > 1" class="paginator-wrapper">
         <Paginator
-          v-model:first="localFirst"
-          :rows="localItemsPerPage"
-          :totalRecords="totalRecords"
-          :pageLinkSize="computedMaxPages"
+          v-model:first="localIndicePrimeiraPagina"
+          :rows="localItensPorPagina"
+          :totalRecords="totalRegistros"
+          :pageLinkSize="numeroMaximoDeLinksDePagina"
           template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
           class="custom-pagination"
-          :class="`paginator-page-${localCurrentPage}`"
-          @page="onPageChange"
-          ref="paginatorRef"
+          :class="`paginator-page-${localPaginaAtual}`"
+          @page="aoMudarPagina"
         />
       </div>
       <div v-else class="spacer"></div>
@@ -37,8 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, nextTick, onMounted, onUpdated } from 'vue';
+import { ref, watch, computed } from 'vue';
 import Paginator from 'primevue/paginator';
+import Dropdown from 'primevue/dropdown';
 
 const props = withDefaults(defineProps<{
   currentPage: number;
@@ -55,61 +55,48 @@ const props = withDefaults(defineProps<{
   variant: 'page'
 });
 
-// Computed para adaptar conforme o contexto
-const maxPages = computed(() => {
-  if (props.variant === 'modal') {
-    return 3; // Modais menores: menos páginas visíveis
-  } else if (props.variant === 'mobile') {
-    return 3; // Mobile: menos páginas
-  }
-  // Desktop (page): 5 páginas visíveis (1, 2, 3, 4, 5, ..., última)
-  // O Quasar vai adaptar automaticamente para mobile via CSS
-  return 5;
-});
-
-const paginationSize = computed(() => {
-  if (props.variant === 'modal') {
-    return 'xs';
-  } else if (props.variant === 'mobile') {
-    return 'sm';
-  }
-  return props.size || 'sm';
-});
-
 const emit = defineEmits<{
   'page-change': [page: number];
   'items-per-page-change': [itemsPerPage: number];
 }>();
 
 // Refs locais - inicializar com props
-const localCurrentPage = ref(props.currentPage || 1);
-const localItemsPerPage = ref(props.itemsPerPage || props.itemsPerPageOptions[0]);
-const localFirst = ref((props.currentPage - 1) * (props.itemsPerPage || props.itemsPerPageOptions[0]));
-const paginatorRef = ref();
+const localPaginaAtual = ref(props.currentPage || 1);
+const localItensPorPagina = ref(props.itemsPerPage || props.itemsPerPageOptions[0]);
+const localIndicePrimeiraPagina = ref((props.currentPage - 1) * (props.itemsPerPage || props.itemsPerPageOptions[0]));
+const paginaEmitidaUltima = ref(props.currentPage || 1);
+
+const opcoesItensPorPagina = computed(() => {
+  return (props.itemsPerPageOptions || []).map((valor) => ({
+    label: `${valor}`,
+    value: valor
+  }));
+});
 
 // Sincronizar props com refs locais - com immediate para garantir sincronização inicial
 watch(() => props.currentPage, (newVal) => {
   if (newVal !== undefined && newVal !== null) {
     // Sempre atualizar, mesmo se for o mesmo valor, para garantir sincronização
-    localCurrentPage.value = newVal;
+    localPaginaAtual.value = newVal;
+    paginaEmitidaUltima.value = newVal;
     // Atualizar localFirst também
-    localFirst.value = (newVal - 1) * localItemsPerPage.value;
+    localIndicePrimeiraPagina.value = (newVal - 1) * localItensPorPagina.value;
   }
 }, { immediate: true });
 
-watch(() => localItemsPerPage.value, (newVal) => {
+watch(() => localItensPorPagina.value, (newVal) => {
   // Quando itemsPerPage muda, atualizar localFirst
-  localFirst.value = (localCurrentPage.value - 1) * newVal;
+  localIndicePrimeiraPagina.value = (localPaginaAtual.value - 1) * newVal;
 });
 
 watch(() => props.itemsPerPage, (newVal) => {
-  if (newVal !== undefined && newVal !== null && newVal !== localItemsPerPage.value) {
-    localItemsPerPage.value = newVal;
+  if (newVal !== undefined && newVal !== null && newVal !== localItensPorPagina.value) {
+    localItensPorPagina.value = newVal;
   }
 }, { immediate: true });
 
 // Computed para max-pages baseado na variante
-const computedMaxPages = computed(() => {
+const numeroMaximoDeLinksDePagina = computed(() => {
   if (props.variant === 'page') {
     return 5; // Desktop: 5 páginas
   } else if (props.variant === 'modal') {
@@ -119,7 +106,7 @@ const computedMaxPages = computed(() => {
 });
 
 // Computed para totalRecords (usar totalRecords se fornecido, senão calcular)
-const totalRecords = computed(() => {
+const totalRegistros = computed(() => {
   if (props.totalRecords && props.totalRecords > 0) {
     return props.totalRecords;
   }
@@ -129,84 +116,46 @@ const totalRecords = computed(() => {
 
 
 // Handlers
-const onPageChange = (event: any) => {
+const aoMudarPagina = (event: any) => {
   // PrimeVue Paginator retorna um objeto com first, rows, page, pageCount
-  const newPage = (event.first / event.rows) + 1;
-  
-  // Atualizar localmente
-  localCurrentPage.value = newPage;
-  localFirst.value = event.first;
+  const pageIndex =
+    typeof event.page === 'number'
+      ? event.page
+      : Math.floor(event.first / event.rows);
+  const newPage = pageIndex + 1;
+
+  // Evita disparar a mesma página duas vezes (o PrimeVue pode emitir em sequência rápida).
+  if (newPage === paginaEmitidaUltima.value) return;
+  paginaEmitidaUltima.value = newPage;
+
+  localPaginaAtual.value = newPage;
+  localIndicePrimeiraPagina.value = event.first;
   
   // Emitir evento de mudança de página
   emit('page-change', newPage);
 };
 
-const onItemsPerPageChange = (newItemsPerPage: number) => {
-  localItemsPerPage.value = newItemsPerPage;
-  emit('items-per-page-change', newItemsPerPage);
+const aoMudarItensPorPagina = (newItemsPorPagina: number) => {
+  if (newItemsPorPagina !== localItensPorPagina.value) {
+    localItensPorPagina.value = newItemsPorPagina;
+  }
+  // Ao mudar a quantidade por página, voltamos para a primeira página visualmente.
+  localPaginaAtual.value = 1;
+  localIndicePrimeiraPagina.value = 0;
+  emit('items-per-page-change', newItemsPorPagina);
 };
-
-// Função para aplicar highlight manualmente
-const applyHighlight = () => {
-  nextTick(() => {
-    if (!paginatorRef.value) return;
-    
-    const paginatorEl = paginatorRef.value.$el || paginatorRef.value;
-    if (!paginatorEl) return;
-    
-    // Remover highlight de todos os botões
-    const allPages = paginatorEl.querySelectorAll('.p-paginator-page');
-    allPages.forEach((page: HTMLElement) => {
-      page.classList.remove('p-highlight', 'active-page');
-      page.removeAttribute('aria-current');
-    });
-    
-    // Calcular qual botão deve estar ativo
-    const currentPageIndex = localCurrentPage.value;
-    const pageButtons = Array.from(allPages) as HTMLElement[];
-    
-    // Encontrar o botão que corresponde à página atual
-    pageButtons.forEach((button: HTMLElement) => {
-      const buttonText = button.textContent?.trim();
-      const buttonPage = parseInt(buttonText || '0', 10);
-      
-      if (buttonPage === currentPageIndex) {
-        button.classList.add('p-highlight', 'active-page');
-        button.setAttribute('aria-current', 'page');
-      }
-    });
-  });
-};
-
-// Aplicar highlight quando a página mudar
-watch(() => localCurrentPage.value, () => {
-  applyHighlight();
-});
-
-watch(() => localFirst.value, () => {
-  applyHighlight();
-});
-
-onMounted(() => {
-  applyHighlight();
-});
-
-onUpdated(() => {
-  applyHighlight();
-});
 </script>
 
 <style scoped lang="scss">
 @import 'src/css/app.scss';
 
 .paginacao-container {
-  margin-top: 48px;
-  margin-bottom: 32px;
-  padding: 16px;
+  margin-top: 28px;
+  margin-bottom: 24px;
+  padding: 0;
   background-color: transparent;
-  border: 2px solid $cumes-01;
-  border-radius: 8px;
-  transition: border-color 0.2s ease;
+  border: none;
+  transition: none;
   max-width: 100%;
   box-sizing: border-box;
   width: 100%;
@@ -214,27 +163,24 @@ onUpdated(() => {
   z-index: 1;
   
   @media (max-width: 768px) {
-    margin-top: 32px;
+    margin-top: 20px;
     margin-bottom: 150px; /* Espaço para botões flutuantes (BotaoAdicionar ~100px + altura + NavBar ~80px) */
-    padding: 8px;
   }
-}
-
-// Variante page - borda mais destacada
-.paginacao-page {
-  border-color: $cumes-01;
 }
 
 .paginacao-content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
   max-width: 100%;
   flex-wrap: nowrap;
   justify-content: space-between;
   box-sizing: border-box;
   overflow: hidden;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background-color: transparent;
 
   @media (max-width: 768px) {
     flex-direction: row;
@@ -242,6 +188,7 @@ onUpdated(() => {
     gap: 4px;
     flex-wrap: nowrap;
     justify-content: space-between;
+    padding: 8px 8px;
   }
 }
 
@@ -258,11 +205,11 @@ onUpdated(() => {
   }
 
   .field-label {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     color: $cumes-03;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
     white-space: nowrap;
     opacity: 1;
     
@@ -272,7 +219,7 @@ onUpdated(() => {
     
     @media (max-width: 768px) {
       font-size: 9px;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.35px;
       
       .label-full {
         display: none;
@@ -284,13 +231,13 @@ onUpdated(() => {
     }
   }
 
-  .items-per-page-select {
-    width: 120px;
-    min-width: 120px;
+  .itens-por-pagina-dropdown {
+    width: 64px;
+    min-width: 64px;
     
     @media (max-width: 768px) {
-      width: 65px;
-      min-width: 65px;
+      width: 46px;
+      min-width: 46px;
     }
   }
 }
@@ -299,96 +246,90 @@ onUpdated(() => {
   flex: 1;
 }
 
-// Custom Select Styling - Seguindo padrão dos modais
-.custom-select {
-  :deep(.q-field__control) {
-    background-color: $offwhite !important;
-    border-radius: 8px !important;
-    padding: 0 !important;
-    min-height: 40px !important;
-    
-    &::before {
-      border-color: $cumes-01 !important;
-      border-width: 2px !important;
-    }
-  }
+// Dropdown (PrimeVue v4 Select) - sem fundo branco (tema escuro do projeto)
+// Obs: `Dropdown` estende `Select` no PrimeVue v4 (classes: p-select, p-select-label, p-select-dropdown...)
+:global(.itens-por-pagina-dropdown.p-select) {
+  background-color: rgba($background, 0.15) !important;
+  border: 1px solid rgba($cumes-03, 0.45) !important;
+  border-radius: 999px !important;
+  min-height: 26px !important;
+  box-shadow: none !important;
+  padding: 0 8px 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0 !important;
+}
 
-  :deep(.q-field__native) {
-    color: $background !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    padding: 10px 14px !important;
-    min-height: 40px !important;
-  }
+:global(.itens-por-pagina-dropdown .p-select-label) {
+  color: $offwhite !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 26px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
 
-  :deep(.q-field__input) {
-    color: $background !important;
-    padding: 10px 14px !important;
-    min-height: 40px !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-  }
+:global(.itens-por-pagina-dropdown .p-select-dropdown) {
+  color: rgba($offwhite, 0.9) !important;
+  background: transparent !important;
+  width: 18px !important;
+  height: 100% !important;
+  border-left: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  margin-left: 0 !important;
+}
 
-  :deep(.q-field__label) {
-    color: $cumes-03 !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.8px !important;
-    font-size: 13px !important;
-  }
+:global(.itens-por-pagina-dropdown .p-select-dropdown-icon) {
+  color: $offwhite !important;
+}
 
-  :deep(.q-field__append) {
-    padding-right: 12px;
-  }
+:global(.itens-por-pagina-dropdown .p-select-dropdown-icon),
+:global(.itens-por-pagina-dropdown .p-select-dropdown svg) {
+  width: 12px !important;
+  height: 12px !important;
+}
 
-  &:deep(.q-field--focused) {
-    .q-field__control::before {
-      border-color: $cumes-03 !important;
-      border-width: 2px !important;
-    }
+:global(.itens-por-pagina-dropdown .p-select-overlay) {
+  background-color: $background !important;
+  border: 1px solid rgba($cumes-03, 0.35) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+:global(.itens-por-pagina-dropdown .p-select-list) {
+  padding: 0;
+}
+
+:global(.itens-por-pagina-dropdown .p-select-option) {
+  color: $offwhite !important;
+  font-weight: 600 !important;
+
+  &:hover {
+    background-color: rgba($cumes-03, 0.15) !important;
   }
-  
-  // Menu do dropdown - simples e próximo ao campo
-  :deep(.q-menu) {
-    background-color: $offwhite !important;
-    border: 2px solid $cumes-01 !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px $box-shadow-medium !important;
-    min-width: 120px !important;
-    max-width: 120px !important;
-    
-    @media (max-width: 768px) {
-      min-width: 70px !important;
-      max-width: 70px !important;
-    }
-    
-    .q-item {
-      color: $background !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      padding: 10px 14px !important;
-      min-height: 40px !important;
-      
-      &:hover {
-        background-color: rgba($cumes-01, 0.1) !important;
-      }
-      
-      &.q-item--active {
-        background-color: $cumes-01 !important;
-        color: $offwhite !important;
-        font-weight: 700 !important;
-      }
-    }
-  }
+}
+
+:global(.itens-por-pagina-dropdown .p-select-option.p-select-option-selected) {
+  background-color: rgba($cumes-03, 0.25) !important;
+  color: $offwhite !important;
 }
 
 // Wrapper do paginator
 .paginator-wrapper {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  justify-content: flex-end;
+  gap: 6px;
   flex-wrap: nowrap;
   min-width: 0;
   overflow: hidden;
@@ -402,31 +343,41 @@ onUpdated(() => {
 
 // Custom Pagination - PrimeVue Paginator
 .custom-pagination {
-  flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   min-width: 0;
   overflow: hidden;
+  background-color: transparent;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  gap: 4px;
+
+  // Garante que as setas/ícones fiquem brancas
+  :deep(.p-button-icon),
+  :deep(.pi) {
+    color: $offwhite !important;
+  }
 
   // Botões de navegação (First, Prev, Next, Last)
   :deep(.p-paginator-prev),
   :deep(.p-paginator-next),
   :deep(.p-paginator-first),
   :deep(.p-paginator-last) {
-    color: $cumes-01 !important;
+    color: rgba($offwhite, 0.95) !important;
     background-color: transparent !important;
-    border: 1px solid rgba($cumes-01, 0.3) !important;
-    border-radius: 6px !important;
-    font-weight: 700 !important;
-    font-size: 14px !important;
-    min-width: 33px;
-    height: 33px;
-    margin: 0 4px;
+    border: 1px solid rgba($cumes-03, 0.35) !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    min-width: 32px;
+    height: 32px;
+    margin: 0 3px;
     
     &:hover:not(:disabled) {
-      background-color: rgba($cumes-01, 0.15) !important;
-      border-color: rgba($cumes-01, 0.5) !important;
+      background-color: rgba($cumes-03, 0.12) !important;
+      border-color: rgba($cumes-03, 0.7) !important;
     }
     
     &:disabled {
@@ -437,16 +388,16 @@ onUpdated(() => {
 
   // Botões de página (números)
   :deep(.p-paginator-page) {
-    color: $cumes-01 !important;
+    color: rgba($offwhite, 0.95) !important;
     background-color: transparent !important;
-    border: 1px solid rgba($cumes-01, 0.3) !important;
-    border-radius: 6px !important;
-    font-weight: 700 !important;
-    font-size: 14px !important;
-    min-width: 33px;
-    height: 33px;
-    margin: 0 4px;
-    transition: all 0.2s ease !important;
+    border: 1px solid rgba($cumes-03, 0.35) !important;
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    min-width: 32px;
+    height: 32px;
+    margin: 0 3px;
+    transition: transform 0.1s ease, background-color 0.15s ease !important;
   }
   
   // Highlight usando múltiplos seletores para garantir que funcione - mais discreto
@@ -454,32 +405,22 @@ onUpdated(() => {
   :deep(.p-paginator-page.active-page),
   :deep(.p-paginator-page[aria-current="page"]),
   :deep(.p-paginator-page.p-highlight[aria-current="page"]) {
-    background-color: $cumes-01 !important;
+    background-color: $cumes-03 !important;
     color: $offwhite !important;
-    border-color: $cumes-01 !important;
-    border-width: 2px !important;
-    font-weight: 800 !important;
-    font-size: 15px !important;
-    box-shadow: 0 2px 8px rgba($cumes-01, 0.4) !important;
+    border: 1px solid rgba($cumes-03, 1) !important;
+    font-weight: 900 !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
     transform: none !important;
     position: relative !important;
     z-index: 1 !important;
-    min-width: 35px !important;
-    height: 35px !important;
+    min-width: 36px !important;
+    height: 36px !important;
   }
 
   :deep(.p-paginator-page:hover:not(.p-highlight):not([aria-current="page"])) {
-    background-color: rgba($cumes-01, 0.15) !important;
-    border-color: rgba($cumes-01, 0.5) !important;
-  }
-  
-  @keyframes pulse {
-    0%, 100% {
-      box-shadow: 0 8px 20px rgba($cumes-01, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.2);
-    }
-    50% {
-      box-shadow: 0 8px 24px rgba($cumes-01, 1), inset 0 2px 4px rgba(255, 255, 255, 0.3);
-    }
+    background-color: rgba($cumes-03, 0.12) !important;
+    border-color: rgba($cumes-03, 0.7) !important;
   }
 
 }
@@ -487,19 +428,18 @@ onUpdated(() => {
 // Variante page (desktop) - botões maiores
 .paginacao-page .custom-pagination {
   :deep(.p-paginator-page) {
-    min-width: 54px !important;
+    min-width: 32px !important;
     height: 32px !important;
-    margin: 0 14px !important;
-    padding: 0 16px !important;
+    margin: 0 2px !important;
+    padding: 0 0 !important;
     
     &.p-highlight {
-      min-width: 58px !important;
-      height: 36px !important;
-      font-size: 15px !important;
-      font-weight: 800 !important;
-      border-width: 2px !important;
-      border-color: $cumes-01 !important;
-      box-shadow: 0 2px 8px rgba($cumes-01, 0.4) !important;
+      min-width: 32px !important;
+      height: 32px !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      border: 1px solid rgba($cumes-03, 1) !important;
+      box-shadow: none !important;
       transform: none !important;
     }
   }
@@ -508,9 +448,9 @@ onUpdated(() => {
   :deep(.p-paginator-next),
   :deep(.p-paginator-first),
   :deep(.p-paginator-last) {
-    min-width: 54px !important;
+    min-width: 32px !important;
     height: 32px !important;
-    margin: 0 14px !important;
+    margin: 0 2px !important;
   }
 }
 
@@ -531,9 +471,9 @@ onUpdated(() => {
     }
   }
   
-  .items-per-page-select {
-    width: 70px !important;
-    min-width: 70px !important;
+  .itens-por-pagina-dropdown {
+    width: 60px !important;
+    min-width: 60px !important;
   }
   
   .paginator-wrapper {
@@ -543,15 +483,15 @@ onUpdated(() => {
   
   .custom-pagination {
     :deep(.p-paginator-page) {
-      min-width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      height: 30px !important;
       margin: 0 2px !important;
       font-size: 12px !important;
       
       &.p-highlight,
       &.active-page {
-        min-width: 30px !important;
-        height: 30px !important;
+        min-width: 32px !important;
+        height: 32px !important;
         font-size: 13px !important;
       }
     }
@@ -560,8 +500,8 @@ onUpdated(() => {
     :deep(.p-paginator-next),
     :deep(.p-paginator-first),
     :deep(.p-paginator-last) {
-      min-width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      height: 30px !important;
       margin: 0 2px !important;
       font-size: 12px !important;
     }
@@ -572,19 +512,18 @@ onUpdated(() => {
 @media (max-width: 768px) {
   .custom-pagination {
     :deep(.p-paginator-page) {
-      min-width: 28px !important;
-      width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      width: 30px !important;
+      height: 30px !important;
       font-size: 11px !important;
       margin: 0 1px !important;
-      padding: 0 2px !important;
-      border-width: 1px !important;
+      padding: 0 !important;
       
       &.p-highlight,
       &.active-page {
-        min-width: 30px !important;
-        width: 30px !important;
-        height: 30px !important;
+        min-width: 32px !important;
+        width: 32px !important;
+        height: 32px !important;
         font-size: 12px !important;
       }
     }
@@ -593,30 +532,29 @@ onUpdated(() => {
     :deep(.p-paginator-next),
     :deep(.p-paginator-first),
     :deep(.p-paginator-last) {
-      min-width: 28px !important;
-      width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      width: 30px !important;
+      height: 30px !important;
       font-size: 11px !important;
       margin: 0 1px !important;
-      padding: 0 2px !important;
-      border-width: 1px !important;
+      padding: 0 !important;
     }
   }
   
   .paginacao-page .custom-pagination {
     :deep(.p-paginator-page) {
-      min-width: 28px !important;
-      width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      width: 30px !important;
+      height: 30px !important;
       font-size: 11px !important;
       margin: 0 1px !important;
-      padding: 0 2px !important;
+      padding: 0 !important;
       
       &.p-highlight,
       &.active-page {
-        min-width: 30px !important;
-        width: 30px !important;
-        height: 30px !important;
+        min-width: 32px !important;
+        width: 32px !important;
+        height: 32px !important;
         font-size: 12px !important;
       }
     }
@@ -625,32 +563,26 @@ onUpdated(() => {
     :deep(.p-paginator-next),
     :deep(.p-paginator-first),
     :deep(.p-paginator-last) {
-      min-width: 28px !important;
-      width: 28px !important;
-      height: 28px !important;
+      min-width: 30px !important;
+      width: 30px !important;
+      height: 30px !important;
       font-size: 11px !important;
       margin: 0 1px !important;
     }
   }
   
   .paginacao-container {
-    padding: 8px;
     margin-top: 24px;
     margin-bottom: 150px; /* Espaço para botões flutuantes */
   }
   
-  // Ajustar select no mobile
-  .items-per-page-control {
-    :deep(.custom-select) {
-      :deep(.q-field__control) {
-        min-height: 32px !important;
-      }
-      
-      :deep(.q-field__native) {
-        font-size: 12px !important;
-        padding: 6px 8px !important;
-        min-height: 32px !important;
-      }
+  .itens-por-pagina-dropdown {
+    :deep(.p-select) {
+      min-height: 30px !important;
+    }
+
+    :deep(.p-select-label) {
+      line-height: 30px !important;
     }
   }
 }

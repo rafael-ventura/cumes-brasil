@@ -48,16 +48,16 @@ const pageContainerClass = computed(() => {
 });
 
 // Listener para resize
-const handleResize = () => {
+const aoRedimensionar = () => {
   windowWidth.value = window.innerWidth;
 };
 
 onMounted(() => {
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', aoRedimensionar);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
+  window.removeEventListener('resize', aoRedimensionar);
 });
 </script>
 

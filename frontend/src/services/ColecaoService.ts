@@ -53,6 +53,44 @@ class ColecaoService {
     }
   }
 
+  async enviarCapaColecao (colecaoId: number, arquivo: File): Promise<IColecao | null> {
+    try {
+      const formData = new FormData();
+      formData.append('capa_colecao', arquivo);
+      const resposta = await api.put(`/colecoes/${colecaoId}/capa`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      const c = resposta.data as IColecao;
+      if (c.imagem) adjustImageUrls(c.imagem);
+      if (c.imagemCapa) adjustImageUrls(c.imagemCapa);
+      return c;
+    } catch (erro) {
+      handleApiError(erro, 'Erro ao enviar capa da coleção.');
+      return null;
+    }
+  }
+
+  async excluirCapaColecao (colecaoId: number): Promise<IColecao | null> {
+    try {
+      const resposta = await api.delete(`/colecoes/${colecaoId}/capa`);
+      const c = resposta.data as IColecao;
+      if (c.imagem) adjustImageUrls(c.imagem);
+      if (c.imagemCapa) adjustImageUrls(c.imagemCapa);
+      return c;
+    } catch (erro) {
+      handleApiError(erro, 'Erro ao remover capa da coleção.');
+      return null;
+    }
+  }
+
+  async removerViasEmLote (colecaoId: number, viaIds: number[]): Promise<void> {
+    try {
+      await api.post('/colecoes/remover-vias-lote', { colecaoId, viaIds });
+    } catch (erro) {
+      handleApiError(erro, 'Erro ao remover vias da coleção.');
+    }
+  }
+
   async excluirColecao (id: number): Promise<void> {
     try {
       await api.delete(`/colecoes/${id}`);
@@ -146,7 +184,10 @@ class ColecaoService {
         }
       });
 
-      resposta.data.colecoes.forEach(adjustImageUrls);
+      resposta.data.colecoes.forEach((c: IColecao) => {
+        if (c.imagem) adjustImageUrls(c.imagem);
+        if (c.imagemCapa) adjustImageUrls(c.imagemCapa);
+      });
       return resposta.data;
     } catch (erro) {
       handleApiError(erro, 'Erro ao listar coleções sem a via.');
@@ -162,6 +203,7 @@ class ColecaoService {
       const resposta = await api.get(url);
       const colecao = resposta.data;
       if (colecao.imagem) adjustImageUrls(colecao.imagem);
+      if (colecao.imagemCapa) adjustImageUrls(colecao.imagemCapa);
       return colecao;
     } catch (erro) {
       handleApiError(erro, 'Erro ao buscar coleção.');
@@ -173,7 +215,10 @@ class ColecaoService {
     try {
       const resposta = await api.get(url);
       const colecoes = resposta.data;
-      colecoes.forEach((c: IColecao) => c.imagem && adjustImageUrls(c.imagem));
+      colecoes.forEach((c: IColecao) => {
+        if (c.imagem) adjustImageUrls(c.imagem);
+        if (c.imagemCapa) adjustImageUrls(c.imagemCapa);
+      });
       return colecoes;
     } catch (erro) {
       handleApiError(erro, 'Erro ao buscar coleções.');

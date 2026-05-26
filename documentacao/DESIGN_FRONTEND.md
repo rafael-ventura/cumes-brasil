@@ -4,14 +4,23 @@ Documentação completa das regras de cores, tipografia e componentes do fronten
 
 ---
 
+## Preferências de Interface (Quasar e PrimeVue)
+- O Quasar é o framework base para estrutura, Progressive Web App (PWA), layout e componentes `q-*`.
+- A PrimeVue deve ser priorizada quando existir equivalente adequado para o requisito e quando for possível aplicar as regras de estilo deste documento.
+- Ao criar novos componentes, respeitar simultaneamente as regras de cores e contraste em tema escuro e o padrão de modais e formulários descritos neste arquivo.
+- Ao sobrescrever estilos de componentes externos, aplicar `!important` quando necessário para garantir consistência visual.
+- Ao estilizar internos de componentes em `<style scoped>`, usar `:deep(...)`.
+
+---
+
 ## 📐 Paleta de Cores
 
 ### Cores Principais da Marca
 
 ```scss
-$cumes-01: #8CB369  // Verde principal (identidade da marca)
+$cumes-01: #F29340  // Laranja principal (identidade da marca — cor mais presente no UI)
 $cumes-02: #546119  // Verde escuro
-$cumes-03: #F29340  // Laranja (ação/energia)
+$cumes-03: #8CB369  // Verde (contraste / natureza / acentos secundários)
 $cumes-04: #F4E285  // Amarelo (destaque)
 $cumes-05: #BC4B51  // Vermelho/bordô (destaque alternativo)
 ```
@@ -19,8 +28,9 @@ $cumes-05: #BC4B51  // Vermelho/bordô (destaque alternativo)
 ### Cores de Fundo e Texto
 
 ```scss
-$background: #2c2c2c  // Fundo escuro / texto principal em fundos claros
-$offwhite: #ffffe4   // Branco suave (preferível ao white puro)
+$background: #1a1d22  // Fundo escuro principal (body, páginas)
+$surface: #22262c     // Fundo de superfícies elevadas (cards, modais, topbar)
+$offwhite: #ffffe4    // Branco suave (preferível ao white puro)
 ```
 
 ### Cores de Feedback
@@ -32,7 +42,7 @@ $error-color: #e74c3c  // Vermelho para erros/deletar
 ### Variáveis Semânticas - Ações do Usuário
 
 ```scss
-$action-escaladas: $cumes-03  // Laranja - movimento, energia
+$action-escaladas: $cumes-01  // Laranja - ação, movimento, energia
 $action-favoritos: $cumes-04  // Amarelo - estrela, destaque
 $action-colecoes: $cumes-02   // Verde escuro - organização
 ```
@@ -95,7 +105,8 @@ $action-colecoes: $cumes-02   // Verde escuro - organização
 
 | Tipo | Cor | Uso |
 |------|-----|-----|
-| Informativos | `$cumes-03` | Ícones gerais, informações |
+| Informativos | `$cumes-01` | Ícones gerais, informações, ações |
+| Acento natureza | `$cumes-03` | Ícones relacionados a trilhas, vegetação, ambiente |
 | Destaque | `$cumes-04` | Elementos que precisam chamar atenção |
 | Status/Grau | Variável | Ver seção de Graus |
 
@@ -169,6 +180,14 @@ Ao criar um novo componente, verifique:
 
 ---
 
+## Componentes PrimeVue (principalmente em tema escuro)
+- Paginação: preferir o padrão do componente `frontend/src/components/PaginacaoPadrao.vue`, que usa `Paginator` e `Dropdown` da PrimeVue.
+- Dropdown: quando o tema deixar componentes com aparência branca, sobrescrever `p-dropdown`, `p-inputtext`, `p-dropdown-label`, `p-dropdown-trigger`, `p-dropdown-panel` e `p-dropdown-item` para usar `$background`, `$offwhite` e bordas com `$cumes-03`.
+- Paginator: aplicar estilo em `p-paginator-page`, `p-paginator-prev`, `p-paginator-next`, `p-paginator-first` e `p-paginator-last`, usando `!important` quando necessário.
+- Em estilos `scoped`, todas as seleções internas de componentes PrimeVue devem ser feitas com `:deep(...)`.
+
+---
+
 ## 🎭 Modais e Formulários
 
 ### Estrutura Padrão de Modais
@@ -176,76 +195,89 @@ Ao criar um novo componente, verifique:
 Todos os modais devem seguir esta estrutura:
 
 ```vue
-<q-card class="modal-card">
-  <!-- Header com gradiente -->
-  <q-card-section class="modal-header">
-    <div class="modal-title">
-      <q-icon name="icon_name" size="28px" class="title-icon" />
-      <span>Título do Modal</span>
-    </div>
-  </q-card-section>
+<q-dialog v-model="isOpen" @hide="handleHide">
+  <q-card class="modal-card">
+    <q-card-section class="modal-header">
+      <div class="modal-title">
+        <q-icon name="icon_name" size="28px" class="title-icon" />
+        <span>Título do Modal</span>
+      </div>
+    </q-card-section>
 
-  <!-- Body com fundo escuro -->
-  <q-card-section class="modal-body">
-    <!-- Conteúdo aqui -->
-  </q-card-section>
+    <q-card-section class="modal-body">
+      <q-form class="modal-form">
+        <div class="form-field">
+          <label class="field-label">Nome *</label>
+          <q-input
+            v-model="valor"
+            outlined
+            dense
+            class="custom-input"
+          />
+        </div>
+      </q-form>
+    </q-card-section>
 
-  <!-- Actions (opcional) -->
-  <q-card-actions class="modal-actions">
-    <!-- Botões aqui -->
-  </q-card-actions>
-</q-card>
+    <q-card-actions align="right" class="modal-actions">
+      <q-btn label="Cancelar" class="btn-secondary-custom" v-close-popup unelevated no-caps />
+      <q-btn label="Salvar" class="btn-primary-custom" unelevated no-caps />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
 ```
+
+### Layout de Body e Ações
+
+- `modal-card` deve ser um container flex em coluna.
+- `modal-body` deve ocupar o espaço disponível e permitir scroll quando o conteúdo crescer.
+- `modal-actions` deve ficar visível mesmo com scroll quando o modal tiver conteúdo longo (preferir `position: sticky` no rodapé da área de ações).
 
 ### Cores de Modais
 
 ```scss
-// Card principal
 .modal-card {
-  background-color: $background;  // Fundo escuro
-  border: 2px solid $cumes-01;    // Borda verde
+  background-color: $background;
+  border: 2px solid $cumes-01;
   border-radius: 16px;
   box-shadow: 0 8px 32px $box-shadow-dark;
 }
 
-// Header com gradiente
 .modal-header {
   background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
   border-bottom: 3px solid $cumes-03;
 }
 
-// Título
 .modal-title {
-  color: $offwhite;  // Texto branco suave
-  
+  color: $offwhite;
+
   .title-icon {
-    color: $cumes-04;  // Ícone amarelo
+    color: $cumes-04;
   }
 }
 ```
 
 ### Inputs em Formulários
 
-**REGRA IMPORTANTE**: Inputs sempre com fundo claro em modais escuros.
+**REGRA IMPORTANTE**: `q-input` em modais deve usar fundo claro com classe `custom-input`, para manter contraste em tema escuro.
 
 ```scss
 .custom-input {
   :deep(.q-field__control) {
-    background-color: $offwhite;  // Fundo claro
+    background-color: $offwhite;
     border-radius: 8px;
-    padding: 0 !important;  // Remove padding do container
-    
+    padding: 0 !important;
+
     &::before {
-      border-color: $cumes-01;  // Borda verde
+      border-color: $cumes-01;
       border-width: 2px;
     }
   }
 
   :deep(.q-field__native) {
-    color: $background;  // Texto escuro sobre fundo claro
+    color: $background;
     font-size: 15px;
     font-weight: 500;
-    padding: 10px 14px !important;  // Padding controlado
+    padding: 10px 14px !important;
   }
 
   :deep(input) {
@@ -253,18 +285,16 @@ Todos os modais devem seguir esta estrutura:
   }
 
   :deep(input::placeholder) {
-    color: rgba($background, 0.5);  // Placeholder translúcido
+    color: rgba($background, 0.5);
   }
 
-  // Estado focused
   &:deep(.q-field--focused) {
     .q-field__control::before {
-      border-color: $cumes-03;  // Muda para laranja
+      border-color: $cumes-03;
       border-width: 2px;
     }
   }
 
-  // Estado de erro
   &:deep(.q-field--error) {
     .q-field__control::before {
       border-color: $error-color;
@@ -275,17 +305,29 @@ Todos os modais devem seguir esta estrutura:
 
 ### Labels de Formulário
 
+Regras para `label` e campos obrigatórios:
+
+- `label` deve usar a classe `field-label`.
+- Campos obrigatórios devem seguir o padrão `Campo *` (com asterisco separado por espaço).
+- O texto do label deve estar em pt-BR e sem abreviações.
+
 ```scss
 .field-label {
   font-size: 13px;
   font-weight: 700;
-  color: $cumes-04;  // Amarelo - destaca sobre fundo escuro
+  color: $cumes-04;
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
 ```
 
 ### Botões em Modais
+
+Regras para botões:
+
+- Botão primário deve usar `btn-primary-custom`.
+- Botão secundário deve usar `btn-secondary-custom`.
+- Em ações de fechar/cancelar, quando o modal for controlado por `q-dialog`, preferir `v-close-popup` no botão secundário.
 
 #### Botão Primário (Salvar, Confirmar)
 
@@ -325,21 +367,17 @@ Todos os modais devem seguir esta estrutura:
 ### Tamanhos de Modais
 
 ```scss
-// Mobile
 width: 92vw;
 max-width: 500px;
 
-// Tablet
 @media (min-width: 768px) {
   width: 600px;
 }
 
-// Desktop
 @media (min-width: 1024px) {
   width: 700px;
 }
 
-// Large Desktop
 @media (min-width: 1440px) {
   width: 800px;
 }
@@ -361,6 +399,17 @@ Ver implementação de referência em:
 
 ---
 
+## Perfil — marcações na cordada
+
+Registros em que a pessoa foi citada na cordada (guia/participante/misto) em **escaladas criadas por outros**:
+
+- **Preview no perfil** (`PerfilEscaladasDestaque`): faixa compacta — fundo `rgba(0, 0, 0, 0.14)`, borda `rgba($cumes-01, 0.2)`, título curto **Na cordada**, badge com contagem em `$cumes-03`, bolhas **circulares 44px** com foto da via (scroll horizontal), link **Ver lista** em `$action-escaladas`. Não usar card grande tipo grade 3×N no perfil.
+- **Lista autenticada** (`PerfilEscaladasLista` em `/perfil/:username/escaladas`): hero com gradiente (verde → fundo → verde escuro), ícone em caixa com borda laranja, tipografia alinhada ao restante do app; itens em **linhas** (`PerfilMarcacaoEscaladaRow`) — thumb 64px arredondado, nome da via em `$cumes-01`, meta linha com data (pt-BR) e **por @autor** quando disponível.
+
+Utilitário `getViaImageUrl` também considera relação `viaImagens` vinda da API para miniaturas consistentes.
+
+---
+
 ## 📚 Referências
 
 ### Arquivos Principais
@@ -372,7 +421,7 @@ Ver implementação de referência em:
 ## 🆘 Dúvidas Comuns
 
 **P: Quando usar `$cumes-01` vs `$cumes-03`?**
-R: `$cumes-01` (verde) é para identidade/primário. `$cumes-03` (laranja) é para ações/secundário.
+R: `$cumes-01` (laranja) é a cor de identidade — navbar, botões primários, links ativos. `$cumes-03` (verde) é acento de natureza — ícones ambientais, acentos secundários.
 
 **P: Posso usar `white`?**
 R: Não! Use `$offwhite` que é mais suave e agradável aos olhos.
@@ -391,5 +440,32 @@ R: Para evitar conflitos com os estilos padrão do Quasar e garantir consistênc
 
 ---
 
-*Última atualização: 2025-11-08*
-*Versão: 1.1 - Adicionada seção de Modais e Formulários*
+---
+
+## 🏷️ Convenção de Nomenclatura
+
+### JavaScript / TypeScript (variáveis, funções, interfaces)
+- **ptBR camelCase** obrigatório: `carregando`, `totalVias`, `aoClicarEscalada`
+- Nomes de frameworks e libs mantêm originais: `useRouter`, `ref`, `onMounted`
+- Constantes: `UPPER_SNAKE_CASE` em ptBR: `CHAVE_CACHE`, `DIAS_CACHE`
+- Event handlers: prefixo **`ao*`** em ptBR: `aoSalvar`, `aoEditar`, `aoClicarFavorito`
+
+### CSS (classes, IDs)
+- **English kebab-case** é padrão web e deve ser mantido: `.modal-card`, `.btn-primary-custom`, `.field-label`
+- Não renomear classes CSS existentes para ptBR (causaria breaking change e vai contra o padrão web)
+- Novas classes também devem seguir English kebab-case
+
+### Resumo da regra
+| Contexto | Convenção | Exemplo |
+|----------|-----------|---------|
+| Variáveis JS/TS | ptBR camelCase | `const carregando = ref(false)` |
+| Funções JS/TS | ptBR camelCase | `function aoSalvarPerfil() {}` |
+| Interfaces/Types | ptBR camelCase | `interface CardExplorar {}` |
+| Constantes | ptBR UPPER_SNAKE | `const DIAS_CACHE = 7` |
+| Classes CSS | English kebab-case | `.modal-card`, `.via-card` |
+| IDs CSS | English kebab-case | `#topbar-inner` |
+
+---
+
+*Última atualização: 2026-05-25*
+*Versão: 1.3 — paleta sincronizada com código, $surface adicionada, convenções de nomenclatura*

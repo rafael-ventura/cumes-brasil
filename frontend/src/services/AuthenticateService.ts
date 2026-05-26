@@ -22,7 +22,7 @@ class AuthenticateService {
     }
   }
 
-  async authenticateWithGoogle (authorizationCode: string) {
+  async autenticarComGoogle (authorizationCode: string) {
     try {
       const response = await api.post('/auth/google-login', { authorizationCode });
       this.saveToken(response.data);
@@ -32,12 +32,13 @@ class AuthenticateService {
     }
   }
 
-    async register (nome: string, email: string, senha: string) {
+    async register (nome: string, email: string, senha: string, username?: string) {
     try {
       const response = await api.post('/auth/register', {
         nome,
         email,
-        senha
+        senha,
+        username
       });
       this.saveToken(response.data);
       return response;
@@ -102,17 +103,25 @@ class AuthenticateService {
     }
   }
 
+  getUsername (): string | null {
+    return localStorage.getItem('username');
+  }
+
   logout (): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('usuarioId');
+    localStorage.removeItem('username');
   }
 
-  private saveToken (token: { token: string; usuarioId: string } | string): void {
+  private saveToken (token: { token: string; usuarioId: string; username?: string } | string): void {
     if (typeof token === 'string') {
       localStorage.setItem('authToken', token);
     } else {
       localStorage.setItem('authToken', token.token);
       localStorage.setItem('usuarioId', token.usuarioId);
+      if (token.username) {
+        localStorage.setItem('username', token.username);
+      }
     }
   }
 }

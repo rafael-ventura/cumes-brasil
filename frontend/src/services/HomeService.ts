@@ -6,6 +6,7 @@ import { getViaImageUrlFull } from 'src/utils/utils';
 export interface IEstatisticas {
   vias: number;
   montanhas: number;
+  croquis: number;
   usuarios: number;
 }
 
@@ -48,7 +49,7 @@ class HomeService {
       return resposta.data;
     } catch (erro: any) {
       console.error('Erro ao obter estatísticas:', erro);
-      return { vias: 0, montanhas: 0, usuarios: 0 };
+      return { vias: 0, montanhas: 0, croquis: 0, usuarios: 0 };
     }
   }
 
