@@ -18,6 +18,7 @@ import ImagemRouter from './ImagemRouter';
 import SearchRouter from './SearchRouter';
 import PerfilRouter from "./PerfilRouter";
 import { authRateLimiter, uploadRateLimiter, createContentRateLimiter } from '../Middlewares/RateLimitMiddleware';
+import { MulterMiddleware } from '../Middlewares/MulterMiddleware';
 import { asyncErrorHandler } from '../Middlewares/ErrorRequestMiddleware';
 import { UsuarioController } from '../Controllers/UsuarioController';
 import { UsuarioService } from '../../Application/services/UsuarioService';
@@ -29,6 +30,9 @@ import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRe
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import SeguimentoRouter from './SeguimentoRouter';
 import ConquistasRouter from './ConquistasRouter';
+import AdminRouter from './AdminRouter';
+import { ViaImageSugestaoController } from '../Controllers/Admin/ViaImageSugestaoController';
+import { requireAdmin } from '../Middlewares/AdminMiddleware';
 
 // TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
 // TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
@@ -82,5 +86,13 @@ routes.use("/seguimentos", SeguimentoRouter);
 
 // Conquistas (badges por tier)
 routes.use("/conquistas", ConquistasRouter);
+
+// Painel de administração (autenticação obrigatória + requireAdmin)
+routes.use("/admin", authenticateToken, requireAdmin, AdminRouter);
+
+// Sugestão de imagem de via por usuário autenticado
+const sugestaoCtrl = new ViaImageSugestaoController();
+routes.post("/vias/:viaId/imagens/sugerir", authenticateToken, uploadRateLimiter, MulterMiddleware.uploadViaImagem, asyncErrorHandler(sugestaoCtrl.submeter));
+routes.get("/vias/:viaId/imagens/aprovadas", asyncErrorHandler(sugestaoCtrl.listarAprovadaPorVia));
 
 export default routes;

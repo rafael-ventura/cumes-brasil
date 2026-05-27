@@ -13,6 +13,7 @@ interface UsuarioYaml {
   senha: string;
   nome: string;
   perfil_publico: boolean;
+  is_admin?: boolean;
   localizacao?: string;
   data_atividade?: string;
   biografia?: string;
@@ -68,6 +69,7 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
         password_hash: senhaHash,
         foto_perfil: { id: IMAGEM_PADRAO_ID } as any,
         perfil_publico: u.perfil_publico,
+        is_admin: u.is_admin ?? false,
         localizacao: u.localizacao,
         data_atividade: u.data_atividade,
         biografia: u.biografia
@@ -90,6 +92,11 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
       }
       if (usuario.perfil_publico !== u.perfil_publico) {
         usuario.perfil_publico = u.perfil_publico;
+        atualizado = true;
+      }
+      const isAdminEsperado = u.is_admin ?? false;
+      if (usuario.is_admin !== isAdminEsperado) {
+        usuario.is_admin = isAdminEsperado;
         atualizado = true;
       }
 

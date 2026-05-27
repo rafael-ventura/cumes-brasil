@@ -27,12 +27,13 @@
   data_atividade: '2024-01-10'
   biografia: Perfil privado para testar 403 em /u e listagens de escalada.
 
-# Conta local (mesmo username que costuma existir no ambiente de dev)
+# Conta local (mesmo username que costuma existir no ambiente de dev) — admin de desenvolvimento
 - email: rafael.dev@cumes.com.br
   username: rafael
   senha: teste123
   nome: Rafael Ventura
   perfil_publico: true
+  is_admin: true
   localizacao: Rio de Janeiro, RJ
   data_atividade: '2024-01-15'
   biografia: Conta seed para desenvolvimento (username rafael).

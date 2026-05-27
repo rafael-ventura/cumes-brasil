@@ -46,6 +46,9 @@ export class Usuario extends BaseEntityWithTimestamps {
   @Column({ default: true })
   conquistas_publico: boolean;
 
+  @Column({ default: false })
+  is_admin: boolean;
+
   @ManyToOne(() => Via, { nullable: true })
   @JoinColumn({ name: "via_preferida" })
   via_preferida: Via;

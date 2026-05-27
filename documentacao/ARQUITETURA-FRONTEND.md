@@ -84,6 +84,9 @@ Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir compo
 | `Auth/Login.vue` | `/auth/login` |
 | `Auth/Register.vue` | `/auth/register` |
 | `Auth/RedefinirSenha.vue` | `/auth/reset-password` |
+| **`Admin/AdminDashboard.vue`** | `/admin` (requer `is_admin`) |
+| **`Admin/AdminSugestoesImagens.vue`** | `/admin/sugestoes` — moderar fotos |
+| **`Admin/AdminVias.vue`** | `/admin/vias` — CRUD de vias |
 | `ErrorNotFound.vue` | 404 |
 
 ---
@@ -92,7 +95,7 @@ Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir compo
 
 Singletons que encapsulam todas as chamadas à API via Axios:
 
-`AuthenticateService`, `ViaService`, `ColecaoService`, `EscaladaService`, `UsuarioService`, `SearchService`, `HomeService`, `CroquiService`, `ImagemService`, `MontanhaService`, `LocalizacaoService`, `ConquistasService`, `SeguimentoService`
+`AuthenticateService` (inclui `isAdmin()`), `ViaService`, `ColecaoService`, `EscaladaService`, `UsuarioService`, `SearchService`, `HomeService`, `CroquiService`, `ImagemService`, `MontanhaService`, `LocalizacaoService`, `ConquistasService`, `SeguimentoService`, **`ViaImageSugestaoService`** (submissão e moderação de fotos)
 
 ---
 

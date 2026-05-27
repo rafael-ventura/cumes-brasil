@@ -107,13 +107,18 @@ class AuthenticateService {
     return localStorage.getItem('username');
   }
 
+  isAdmin (): boolean {
+    return localStorage.getItem('is_admin') === 'true';
+  }
+
   logout (): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('usuarioId');
     localStorage.removeItem('username');
+    localStorage.removeItem('is_admin');
   }
 
-  private saveToken (token: { token: string; usuarioId: string; username?: string } | string): void {
+  private saveToken (token: { token: string; usuarioId: string; username?: string; is_admin?: boolean } | string): void {
     if (typeof token === 'string') {
       localStorage.setItem('authToken', token);
     } else {
@@ -122,6 +127,7 @@ class AuthenticateService {
       if (token.username) {
         localStorage.setItem('username', token.username);
       }
+      localStorage.setItem('is_admin', String(token.is_admin ?? false));
     }
   }
 }

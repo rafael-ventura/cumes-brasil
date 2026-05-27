@@ -79,6 +79,18 @@ const routes: RouteRecordRaw[] = [
         redirect: (to) => ({ path: `/perfil/${to.params.username}` })
       },
       {
+        path: 'admin',
+        component: () => import('pages/Admin/AdminDashboard.vue')
+      },
+      {
+        path: 'admin/sugestoes',
+        component: () => import('pages/Admin/AdminSugestoesImagens.vue')
+      },
+      {
+        path: 'admin/vias',
+        component: () => import('pages/Admin/AdminVias.vue')
+      },
+      {
         path: 'auth',
         children: [
           {

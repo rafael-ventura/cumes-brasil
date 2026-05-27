@@ -31,6 +31,18 @@
         :class="{ 'selected-tab': estaSelecionado('/colecoes') }"
       />
 
+      <!-- Admin (só para admins) -->
+      <q-btn
+        v-if="eAdmin"
+        flat
+        round
+        size="md"
+        icon="admin_panel_settings"
+        @click="irPara('/admin')"
+        :class="{ 'selected-tab': estaSelecionado('/admin') }"
+        style="color: #BC4B51"
+      />
+
       <!-- Perfil -->
       <q-btn
         flat
@@ -60,6 +72,7 @@ import AuthenticateService from 'src/services/AuthenticateService';
 
 const router = useRouter();
 const route = useRoute();
+const eAdmin = AuthenticateService.isAdmin();
 
 const irPara = (caminho: string) => {
   router.push(caminho);

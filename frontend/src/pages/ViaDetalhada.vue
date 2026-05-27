@@ -6,14 +6,31 @@
       <i class="pi pi-spin pi-spinner" />
     </div>
 
-    <div class="via-share">
+    <div class="via-acoes-topo">
       <Button
         icon="pi pi-share-alt"
         aria-label="Compartilhar"
         class="via-share__btn"
         @click="abrirModalCompartilhamento"
       />
+      <q-btn
+        v-if="estaAutenticado"
+        unelevated
+        no-caps
+        icon="add_photo_alternate"
+        label="Adicionar foto"
+        class="btn-sugerir-foto"
+        @click="modalSugestaoAberto = true"
+      />
     </div>
+
+    <!-- Carrossel de fotos colaborativas -->
+    <CarrosselFotosVia
+      v-if="via"
+      ref="carrosselRef"
+      :via-id="via.id"
+      class="via-carrossel"
+    />
 
     <!-- Botões de Ação -->
     <BotoesAcao
@@ -38,6 +55,13 @@
     v-model="isModalCompartilhamentoAberto"
     :dados-compartilhamento="dadosCompartilhamento"
   />
+
+  <ModalSugestaoMelhoria
+    v-if="via"
+    v-model="modalSugestaoAberto"
+    :via-id="via.id"
+    @enviado="carrosselRef?.recarregar()"
+  />
 </template>
 
 <script setup lang="ts">
@@ -55,6 +79,8 @@ import SecaoLocalizacao from 'components/Via/SecaoLocalizacao.vue';
 import { obterUrlCompartilhavel } from 'src/utils/share';
 import Button from 'primevue/button';
 import ModalCompartilhamento from 'components/Compartilhamento/ModalCompartilhamento.vue';
+import ModalSugestaoMelhoria from 'components/Via/ModalSugestaoMelhoria.vue';
+import CarrosselFotosVia from 'components/Via/CarrosselFotosVia.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -62,6 +88,9 @@ const via = ref();
 const favoriteCollectionId = ref();
 const isFavorited = ref(false);
 const isModalCompartilhamentoAberto = ref(false);
+const modalSugestaoAberto = ref(false);
+const carrosselRef = ref<InstanceType<typeof CarrosselFotosVia> | null>(null);
+const estaAutenticado = AuthenticateService.isTokenValid();
 
 // Carregar apenas a via, sem dados que exigem autenticação
 onMounted(async () => {
@@ -137,6 +166,20 @@ function abrirModalCompartilhamento () {
   margin-top: 16px;
 }
 
+.via-acoes-topo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 6px 0 10px;
+  padding: 0 16px;
+}
+
+.via-carrossel {
+  margin: 0 16px 12px;
+}
+
+// mantido como alias para compatibilidade
 .via-share {
   display: flex;
   justify-content: flex-end;
@@ -160,6 +203,17 @@ function abrirModalCompartilhamento () {
 
 .via-share__btn :deep(.p-button-icon) {
   font-size: 16px;
+}
+
+.btn-sugerir-foto {
+  background: rgba($cumes-03, 0.15) !important;
+  border: 1px solid rgba($cumes-03, 0.5) !important;
+  color: $cumes-03 !important;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 14px !important;
+  height: 38px;
 }
 
 .estado-carregando-via {

@@ -57,7 +57,7 @@ class AuthService {
             const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, imagem, usernameFinal);
             await this.createDefaultCollections(user);
             const token = this.generateToken(user.id.toString());
-            return { token, usuarioId: user.id, username: user.username, auth: true };
+            return { token, usuarioId: user.id, username: user.username, is_admin: false, auth: true };
         }
         throw new BadRequestError('Erro ao criar usuário: imagem padrão não encontrada');
     }
@@ -73,7 +73,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, usuarioId: user.id, username: user.username, auth: true };
+        return { token, usuarioId: user.id, username: user.username, is_admin: user.is_admin ?? false, auth: true };
     }
 
     async googleLogin(authorizationCode: string): Promise<any> {
@@ -126,7 +126,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, usuarioId: user.id, username: user.username, auth: true };
+        return { token, usuarioId: user.id, username: user.username, is_admin: (user as any).is_admin ?? false, auth: true };
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {

@@ -17,6 +17,14 @@
           <span class="menu-label">{{ item.label }}</span>
         </div>
         <div
+          v-if="eAdmin"
+          @click="goTo('/admin')"
+          :class="['menu-item', 'menu-item-admin', { 'menu-item-active': isSelected('/admin') }]"
+        >
+          <i class="pi pi-shield menu-icon"></i>
+          <span class="menu-label">Admin</span>
+        </div>
+        <div
           @click="irParaPerfil"
           :class="['menu-item', { 'menu-item-active': isSelected('/perfil') }]"
         >
@@ -31,6 +39,8 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
+
+const eAdmin = AuthenticateService.isAdmin();
 
 const router = useRouter();
 const route = useRoute();
@@ -161,6 +171,14 @@ const isSelected = (path: string) => {
         color: $offwhite;
         font-weight: 700;
       }
+    }
+
+    &.menu-item-admin {
+      border-color: rgba($cumes-05, 0.3);
+      .menu-icon { color: $cumes-05; }
+      .menu-label { color: rgba($offwhite, 0.75); }
+      &:hover { background: rgba($cumes-05, 0.1); border-color: rgba($cumes-05, 0.5); }
+      &.menu-item-active { background: rgba($cumes-05, 0.15); border-color: $cumes-05; .menu-icon { color: $cumes-05; } }
     }
   }
 }

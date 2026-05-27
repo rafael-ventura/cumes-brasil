@@ -40,15 +40,20 @@ Interface HTTP — recebe requests, retorna responses.
 - `SeguimentoController` — sistema social
 - `LocalizacaoController`, `MontanhaController`, `FaceController`
 - `CroquiController`, `ImagemController`, `ShareController`
+- **`Admin/ViaImageSugestaoController`** — submissão (usuários) + moderação (admins)
+- **`Admin/AdminViaController`** — CRUD de vias via painel admin
+- **`Admin/AdminUsuarioController`** — listagem e toggle de admin
 
 **Routes** (`Api/routes/`):
 - `routes.ts` — configuração central; um router por recurso
+- **`AdminRouter.ts`** — `/admin/*` (requer `authenticateToken` + `requireAdmin`)
 
 **Middlewares** (`Api/Middlewares/`):
 - `AuthenticateMiddleware` — valida JWT
+- **`AdminMiddleware`** — verifica `is_admin` no banco para rotas `/admin/*`
 - `ErrorRequestMiddleware` — tratamento global de erros
 - `RateLimitMiddleware` — rate limiting por IP
-- `MulterMiddleware` — upload de arquivos
+- `MulterMiddleware` — upload de arquivos (inclui `uploadViaImagem` para `assets/vias/`)
 
 **DTOs** (`Api/DTOs/`):
 - Transformam entidades em JSON de resposta
@@ -78,7 +83,7 @@ export class ViaService {
 }
 ```
 
-Services principais: `ViaService`, `UsuarioService`, `ColecaoService`, `EscaladaService`, `SearchService`, `StatsService`, `ConquistasService`, `SeguimentoService`, `AuthenticateService`, `GoogleAuthenticateService`, `ImagemService`, `MailService`.
+Services principais: `ViaService`, `UsuarioService`, `ColecaoService`, `EscaladaService`, `SearchService`, `StatsService`, `ConquistasService`, `SeguimentoService`, `AuthenticateService`, `GoogleAuthenticateService`, `ImagemService`, `MailService`, **`ViaImageSugestaoService`**.
 
 **Validations** (`Application/validations/`):
 - Esquemas Zod por recurso: `ViaValidation`, `UsuarioValidation`, `EscaladaValidation`, etc.
@@ -104,7 +109,7 @@ e também `Montanha → Face → Setor`
 
 *Mídia*: `Imagem`, `Croqui`
 
-*Relacionamentos*: `ViaImagem`, `ViaCroqui`, `ViaColecao`, `Participante`, `UsuarioSeguindo`, `UsuarioConquista`
+*Relacionamentos*: `ViaImagem`, `ViaCroqui`, `ViaColecao`, `Participante`, `UsuarioSeguindo`, `UsuarioConquista`, **`ViaImageSugestao`**
 
 *Base*: `BaseEntityWithTimestamps` — id, createdAt, updatedAt
 

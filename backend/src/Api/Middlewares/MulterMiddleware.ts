@@ -51,6 +51,29 @@ export class MulterMiddleware {
     limits: { fileSize: 5 * 1024 * 1024 }
   }).single('capa_colecao');
 
+  private static storageVia = isProduction
+    ? multer.memoryStorage()
+    : multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadPath = path.resolve(__dirname, '..', '..', '..', 'assets', 'vias');
+        cb(null, uploadPath);
+      },
+      filename: (req: any, file, cb) => {
+        crypto.randomBytes(16, (err, hash) => {
+          if (err) return cb(err, '');
+          const viaId = req.params?.viaId || 'unknown';
+          const fileName = `sugestao-via-${viaId}-${Date.now()}${path.extname(file.originalname)}`;
+          cb(null, fileName);
+        });
+      }
+    });
+
+  /** Campo multipart: `foto_via` — para sugestões de imagem de via. */
+  public static uploadViaImagem = multer({
+    storage: MulterMiddleware.storageVia,
+    limits: { fileSize: 5 * 1024 * 1024 }
+  }).single('foto_via');
+
   public static handleErrors(err: any, req: Request, res: Response, next: NextFunction) {
     if (err) {
       return res.status(400).json({

@@ -24,6 +24,7 @@ import {Setor} from '../../Domain/entities/Setor';
 import {Localizacao} from '../../Domain/entities/Localizacao';
 import { UsuarioSeguindo } from '../../Domain/entities/UsuarioSeguindo';
 import { UsuarioConquista } from '../../Domain/entities/UsuarioConquista';
+import { ViaImageSugestao } from '../../Domain/entities/ViaImageSugestao';
 
 
 export const AppDataSource = new DataSource({
@@ -48,6 +49,7 @@ export const AppDataSource = new DataSource({
         UsuarioSeguindo,
         UsuarioConquista,
         Via,
+        ViaImageSugestao,
         Participante,
         ViaColecao,
         ViaCroqui,
