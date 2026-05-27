@@ -1,5 +1,8 @@
 import { AppDataSource } from '../config/db';
 import { ViaImageSugestao, StatusSugestao } from '../../Domain/entities/ViaImageSugestao';
+import { ViaImagem } from '../../Domain/entities/ViaImagem';
+import { Via } from '../../Domain/entities/Via';
+import { Imagem } from '../../Domain/entities/Imagem';
 
 export class ViaImageSugestaoRepository {
   private repo = AppDataSource.getRepository(ViaImageSugestao);
@@ -45,5 +48,15 @@ export class ViaImageSugestaoRepository {
 
   async contarPorStatus (status: StatusSugestao): Promise<number> {
     return this.repo.count({ where: { status } });
+  }
+
+  async criarViaImagem (via: Via, imagem: Imagem): Promise<void> {
+    const viaImagemRepo = AppDataSource.getRepository(ViaImagem);
+    const jaExiste = await viaImagemRepo.findOne({
+      where: { via: { id: via.id }, imagem: { id: imagem.id } }
+    });
+    if (!jaExiste) {
+      await viaImagemRepo.save(viaImagemRepo.create({ via, imagem }));
+    }
   }
 }

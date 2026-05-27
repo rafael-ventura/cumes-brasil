@@ -69,25 +69,31 @@ Lógica de negócio e orquestração.
 
 **Services** (`Application/services/`):
 
-Todos usam `@Service()` TypeDI e retornam `ServiceResponse<T>`:
+Parte dos services usa `@Service()` TypeDI (aqueles que precisam de injeção via `Container.get()`); os demais recebem dependências via constructor. Services retornam tipos de domínio concretos — não há `ServiceResponse<T>`.
 
 ```typescript
-@Service()
-export class ViaService {
-  constructor(@Inject() private viaRepository: ViaRepository) {}
+// Padrão predominante — constructor injection manual
+export class ViaService extends BaseService<Via, ViaRepository> {
+  constructor(viaRepo: ViaRepository) {
+    super(viaRepo);
+  }
 
-  async buscarPorId(id: number): Promise<ServiceResponse<Via>> {
-    // lógica de negócio
-    return ServiceResponse.success(via);
+  async getViaById(id: number): Promise<Via> {
+    const via = await this.repository.getById(id);
+    if (!via) throw new NotFoundError('Via não encontrada');
+    return via;
   }
 }
 ```
 
+Services que usam `@Service()` (TypeDI): `UsuarioService`, `MailService`, `ResetUserPasswordTokenService`, `ConquistasService`, `LocalizacaoService`, `SeguimentoService`, `ColecaoRepository`, `UsuarioConquistaRepository`.
+
 Services principais: `ViaService`, `UsuarioService`, `ColecaoService`, `EscaladaService`, `SearchService`, `StatsService`, `ConquistasService`, `SeguimentoService`, `AuthenticateService`, `GoogleAuthenticateService`, `ImagemService`, `MailService`, **`ViaImageSugestaoService`**.
 
 **Validations** (`Application/validations/`):
-- Esquemas Zod por recurso: `ViaValidation`, `UsuarioValidation`, `EscaladaValidation`, etc.
-- `ValidationBase` com utilitários comuns
+- Objetos com **métodos estáticos** por recurso: `ViaValidation`, `UserValidation`, `EscaladaValidation`, etc.
+- `ValidationBase` com utilitários comuns (`idParam`, `pagination`, `requireObject`)
+- Lançam `BadRequestError` diretamente — **não usam Zod** (migração futura pendente)
 
 **Errors** (`Application/errors/`):
 - `BadRequestError` (400), `UnauthorizedError` (401), `NotFoundError` (404), `InternalServerError` (500)
@@ -114,9 +120,9 @@ e também `Montanha → Face → Setor`
 *Base*: `BaseEntityWithTimestamps` — id, createdAt, updatedAt
 
 **Interfaces** (`Domain/interfaces/`):
-- `repositories/` — `IUsuarioRepository`, `IViaRepository`, `ICrudRepository`
-- `services/` — `IViaService`, `IFonteService`, `ISearchQuery`
-- `models/` — interfaces de domínio (`IUsuario`, `IVia`, `IColecao`, etc.)
+- `repositories/` — `ICrudRepository` (implementada por `BaseRepository`), `ISearchRepository` (implementada por `ViaRepository`, `ColecaoRepository`). `IUsuarioRepository` e `IViaRepository` existem mas são vazias.
+- `services/` — `IViaService`, `IFonteService`, `ISearchQuery` — **arquivos vazios, não usados**
+- `models/` — interfaces de domínio (`IUsuario`, `IVia`, `IColecao`, `IFiltrosBusca`, etc.) — usadas como tipos nos services e DTOs
 
 **Enums** (`Domain/enum/`):
 - `EModalidadeEscalada` — tipos de escalada

@@ -1,6 +1,4 @@
-import { AppDataSource } from '../../Infrastructure/config/db';
 import { ViaImageSugestao } from '../../Domain/entities/ViaImageSugestao';
-import { ViaImagem } from '../../Domain/entities/ViaImagem';
 import { ViaImageSugestaoRepository } from '../../Infrastructure/repositories/ViaImageSugestaoRepository';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
@@ -54,16 +52,7 @@ export class ViaImageSugestaoService {
       reviewed_at: new Date()
     });
 
-    // Cria o vínculo definitivo via_imagem
-    const viaImagemRepo = AppDataSource.getRepository(ViaImagem);
-    const jaExiste = await viaImagemRepo.findOne({
-      where: { via: { id: sugestao.via.id }, imagem: { id: sugestao.imagem.id } }
-    });
-    if (!jaExiste) {
-      await viaImagemRepo.save(
-        viaImagemRepo.create({ via: sugestao.via, imagem: sugestao.imagem })
-      );
-    }
+    await this.sugestaoRepo.criarViaImagem(sugestao.via, sugestao.imagem);
 
     safeLogger.info('Sugestão de imagem aprovada', { sugestaoId: id, adminId, viaId: sugestao.via.id });
 
