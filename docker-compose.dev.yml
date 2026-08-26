@@ -1,3 +1,4 @@
+# Local development compose file — see README.md "Running It Locally" for the full setup.
 version: '3.8'
 
 services:

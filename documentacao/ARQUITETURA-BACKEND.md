@@ -244,4 +244,6 @@ The app ran in production for a while before this project was archived. For anyo
 - **Images**: S3 + CloudFront (bucket `cumes-brasil-images`)
 - **Deploy**: GitHub Actions + CodeDeploy (push to `main` → automatic deploy)
 
+The GitHub Actions workflows, `appspec.yml`, and the `scripts/start_services.sh` / `stop_services.sh` CodeDeploy hooks that drove this pipeline were removed from the repo during archival — they hardcoded a now-inactive AWS account, S3 buckets, and CloudFront distribution IDs, and could no longer run. `docker-compose.yml` (the production-shaped compose file, as opposed to `docker-compose.dev.yml`) was left in place — rebuilding a deploy pipeline around it is straightforward if this is ever revived.
+
 To bring it back: review current AWS pricing/plans, check `backend/src/Infrastructure/helpers/S3Helper.ts`, and update environment variables to point at CloudFront URLs again.
