@@ -181,7 +181,7 @@ I put off writing this section for a long time, because finishing this project m
 
 Cumes Brasil was never just a CRUD app with a climbing theme on top. It was the excuse I needed to actually learn how software runs in the real world — not just "it works on my machine," but AWS, production deploys, nginx, domains, CI/CD pipelines, load balancers, CloudFront, and reading logs at odd hours trying to figure out why something broke. Every one of those lessons came with a scar, and I'd take every one of them again.
 
-More than that, it was an excuse to build something with my friends. Since this project started, one of us made senior, one is finishing his thesis, and one became a father. Life moves fast, and it's rare to get a shared project that follows you through years like that.
+More than that, it was an excuse to build something with my friends. Since this project started, two of us made senior, one is finishing his thesis, and one became a father. Life moves fast, and it's rare to get a shared project that follows you through years like that.
 
 So, thank you:
 
