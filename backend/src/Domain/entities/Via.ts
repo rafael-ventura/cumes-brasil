@@ -110,14 +110,14 @@ export class Via extends BaseEntityWithTimestamps {
   })
   modalidade: ModalidadeEscalada;
 
-  @ManyToOne(() => Via, via => via.variantes)
-  viaPrincipal: number;
+  @ManyToOne(() => Via, via => via.variantes, { nullable: true })
+  viaPrincipal: Via | null;
 
   @OneToMany(() => Via, via => via.viaPrincipal)
   variantes: Via[];
 
-  @ManyToOne(() => Fonte, fonte => fonte.vias)
-  fonte: number;
+  @ManyToOne(() => Fonte, fonte => fonte.vias, { nullable: true })
+  fonte: Fonte | null;
 
   @OneToMany(() => ViaImagem, vi => vi.via, { cascade: true })
   viaImagens: ViaImagem[];

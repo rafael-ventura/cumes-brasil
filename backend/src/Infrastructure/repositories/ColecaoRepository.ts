@@ -116,6 +116,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('montanhaLocalizacoes.estado', 'montanhaEstado')
           .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
           .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
+          .orderBy('colecao.created_at', 'ASC')
+          .addOrderBy('colecao.id', 'ASC')
           .getMany();
     }
 
@@ -158,6 +160,8 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
           .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .where('usuario.id = :usuario_id', { usuario_id })
+          .orderBy('colecao.created_at', 'ASC')
+          .addOrderBy('colecao.id', 'ASC')
           .getMany();
     }
 
@@ -191,6 +195,20 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
         // Salvar a relação usando o repositório de ViaColecao
         const viaColecaoRepository = AppDataSource.getRepository(ViaColecao);
         await viaColecaoRepository.save(viaColecao);
+    }
+
+    async atualizarImagem (id: number, imagem: import('../../Domain/entities/Imagem').Imagem): Promise<void> {
+        const ent = await this.repository.findOne({ where: { id } as any });
+        if (!ent) return;
+        (ent as any).imagem = imagem;
+        await this.repository.save(ent);
+    }
+
+    async excluirImagem (id: number): Promise<void> {
+        const ent = await this.repository.findOne({ where: { id } as any });
+        if (!ent) return;
+        (ent as any).imagem = null;
+        await this.repository.save(ent);
     }
 
     async delete (id: number): Promise<void> {
@@ -242,15 +260,60 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
             colecaoId,
             usuarioId,
             nomeVia,
-            nomeMontanha,
             campoOrdenacao,
             direcaoOrdenacao,
             pagina = 1,
             itensPorPagina = 10
         } = filtros;
 
-        // Ajuste das junções
-        let qb = this.repository.createQueryBuilder('colecao')
+        const direcao = (direcaoOrdenacao?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC') as 'ASC' | 'DESC';
+
+        // 1) IDs paginados: query enxuta só para descobrir quais coleções entram nesta página.
+        //    Evita o problema de paginação com OneToMany e o sort-em-memória.
+        const idsQb = this.repository.createQueryBuilder('colecao')
+          .select('colecao.id', 'id')
+          .andWhere('colecao.usuario.id = :usuarioId', { usuarioId });
+
+        if (colecaoId) {
+            idsQb.andWhere('colecao.id = :colecaoId', { colecaoId });
+        }
+        if (termoBusca) {
+            idsQb.andWhere('colecao.nome ILIKE :termoBusca', { termoBusca: `%${termoBusca}%` });
+        }
+        if (nomeVia) {
+            idsQb
+              .innerJoin('colecao.viaColecoes', 'viaColecaoFiltro')
+              .innerJoin('viaColecaoFiltro.via', 'viaFiltro')
+              .andWhere('viaFiltro.nome ILIKE :nomeVia', { nomeVia: `%${nomeVia}%` })
+              .groupBy('colecao.id');
+        }
+
+        // Ordenação:
+        //  - updated_at: max(via_colecao.created_at) via subquery correlacionada, em SQL
+        //  - demais: orderBy direto na própria coleção
+        if (campoOrdenacao === 'updated_at') {
+            idsQb.addSelect(
+              '(SELECT MAX(vc.created_at) FROM via_colecao vc WHERE vc."colecaoId" = colecao.id)',
+              'colecao_updated_at'
+            );
+            idsQb.orderBy('colecao_updated_at', direcao, direcao === 'DESC' ? 'NULLS LAST' : 'NULLS FIRST');
+        } else if (campoOrdenacao) {
+            idsQb.orderBy(`colecao.${campoOrdenacao}`, direcao);
+        }
+
+        const totalItems = await idsQb.getCount();
+        const idsRaw = await idsQb
+          .offset((pagina - 1) * itensPorPagina)
+          .limit(itensPorPagina)
+          .getRawMany<{ id: number }>();
+        const idsPagina = idsRaw.map(r => r.id);
+
+        if (idsPagina.length === 0) {
+            return { items: [], totalPages: Math.ceil(totalItems / itensPorPagina), totalItems };
+        }
+
+        // 2) Hidrata as coleções da página com todas as relações pesadas.
+        const itemsQb = this.repository.createQueryBuilder('colecao')
           .leftJoinAndSelect('colecao.viaColecoes', 'viaColecao')
           .leftJoinAndSelect('viaColecao.via', 'via')
           .leftJoinAndSelect('via.viaImagens', 'viaImagensSearch')
@@ -258,7 +321,6 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('via.montanha', 'montanha')
           .leftJoinAndSelect('via.face', 'face')
           .leftJoinAndSelect('via.setor', 'setor')
-          // Localização através de Setor
           .leftJoinAndSelect('setor.localizacoes', 'setorLocalizacoes')
           .leftJoinAndSelect('setorLocalizacoes.continente', 'setorContinente')
           .leftJoinAndSelect('setorLocalizacoes.pais', 'setorPais')
@@ -268,7 +330,6 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('setorLocalizacoes.bairro', 'setorBairro')
           .leftJoinAndSelect('setor.face', 'setorFace')
           .leftJoinAndSelect('setor.montanha', 'setorMontanha')
-          // Localização através de Face
           .leftJoinAndSelect('face.localizacoes', 'faceLocalizacoes')
           .leftJoinAndSelect('faceLocalizacoes.continente', 'faceContinente')
           .leftJoinAndSelect('faceLocalizacoes.pais', 'facePais')
@@ -277,7 +338,6 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('faceLocalizacoes.cidade', 'faceCidade')
           .leftJoinAndSelect('faceLocalizacoes.bairro', 'faceBairro')
           .leftJoinAndSelect('face.montanha', 'faceMontanha')
-          // Localização através de Montanha
           .leftJoinAndSelect('montanha.localizacoes', 'montanhaLocalizacoes')
           .leftJoinAndSelect('montanhaLocalizacoes.continente', 'montanhaContinente')
           .leftJoinAndSelect('montanhaLocalizacoes.pais', 'montanhaPais')
@@ -286,98 +346,25 @@ export class ColecaoRepository extends BaseRepository<Colecao> implements ISearc
           .leftJoinAndSelect('montanhaLocalizacoes.cidade', 'montanhaCidade')
           .leftJoinAndSelect('montanhaLocalizacoes.bairro', 'montanhaBairro')
           .leftJoinAndSelect('colecao.imagem', 'imagem')
-          .leftJoinAndSelect('colecao.usuario', 'usuario');
+          .leftJoinAndSelect('colecao.usuario', 'usuario')
+          .whereInIds(idsPagina);
 
-        // Filtro default pelo ID do usuário logado
-        qb = qb.andWhere('colecao.usuario.id = :usuarioId', { usuarioId });
-
-        // Filtro por ID da coleção
-        if (colecaoId) {
-            qb = qb.andWhere('colecao.id = :colecaoId', { colecaoId });
+        // Reaplica a ordenação para que a página venha na ordem certa.
+        if (campoOrdenacao === 'updated_at') {
+            itemsQb.addSelect(
+              '(SELECT MAX(vc.created_at) FROM via_colecao vc WHERE vc."colecaoId" = colecao.id)',
+              'colecao_updated_at'
+            );
+            itemsQb.orderBy('colecao_updated_at', direcao, direcao === 'DESC' ? 'NULLS LAST' : 'NULLS FIRST');
+        } else if (campoOrdenacao) {
+            itemsQb.orderBy(`colecao.${campoOrdenacao}`, direcao);
         }
 
-        // Filtro por nome da coleção
-        if (termoBusca) {
-            qb = qb.andWhere('colecao.nome LIKE :termoBusca', { termoBusca: `%${termoBusca}%` });
-        }
-
-        // Filtro por nome da via (caso queira buscar por vias dentro da coleção)
-        if (nomeVia) {
-            qb = qb.andWhere('via.nome LIKE :nomeVia', { nomeVia: `%${nomeVia}%` });
-        }
-
-        // Filtro por nome da montanha - removido pois não temos mais relação direta via -> montanha
-        // TODO: Implementar busca por montanha através de localização se necessário
-        if (nomeMontanha) {
-            // Por enquanto, busca desabilitada
-        }
-
-        // Aplicação da ordenação dinâmica (exceto updated_at que será tratado em memória)
-        const isUpdatedAtSort = campoOrdenacao === 'updated_at';
-        
-        if (campoOrdenacao && direcaoOrdenacao && !isUpdatedAtSort) {
-            qb = qb.orderBy(`colecao.${campoOrdenacao}`, direcaoOrdenacao.toUpperCase() as 'ASC' | 'DESC');
-        }
-
-        // Contar o total de itens (coleções) correspondentes
-        const totalItems = await qb.getCount();
-
-        // Buscar coleções (sem paginação se precisar ordenar por updated_at)
-        let items: Colecao[];
-        
-        if (isUpdatedAtSort) {
-            // Buscar todas as coleções do usuário para ordenar em memória
-            items = await qb.getMany();
-            
-            // Buscar a data mais recente de via adicionada para cada coleção
-            const colecaoIds = items.map(c => c.id);
-            
-            if (colecaoIds.length > 0) {
-                const maxDates = await AppDataSource
-                  .getRepository(ViaColecao)
-                  .createQueryBuilder('vc')
-                  .select('vc.colecaoId', 'colecaoId')
-                  .addSelect('MAX(vc.created_at)', 'maxCreatedAt')
-                  .where('vc.colecaoId IN (:...colecaoIds)', { colecaoIds })
-                  .groupBy('vc.colecaoId')
-                  .getRawMany();
-
-                // Criar mapa de colecaoId -> maxCreatedAt
-                const maxDateMap = new Map<number, Date | null>();
-                for (const row of maxDates) {
-                    maxDateMap.set(row.colecaoId, row.maxCreatedAt ? new Date(row.maxCreatedAt) : null);
-                }
-
-                // Ordenar em memória
-                items.sort((a, b) => {
-                    const dateA = maxDateMap.get(a.id);
-                    const dateB = maxDateMap.get(b.id);
-                    
-                    // Coleções sem vias vão para o final (DESC) ou início (ASC)
-                    if (!dateA && !dateB) return 0;
-                    if (!dateA) return direcaoOrdenacao?.toUpperCase() === 'DESC' ? 1 : -1;
-                    if (!dateB) return direcaoOrdenacao?.toUpperCase() === 'DESC' ? -1 : 1;
-                    
-                    const diff = dateA.getTime() - dateB.getTime();
-                    return direcaoOrdenacao?.toUpperCase() === 'DESC' ? -diff : diff;
-                });
-            }
-            
-            // Aplicar paginação em memória
-            const inicio = (pagina - 1) * itensPorPagina;
-            items = items.slice(inicio, inicio + itensPorPagina);
-        } else {
-            items = await qb
-              .skip((pagina - 1) * itensPorPagina)
-              .take(itensPorPagina)
-              .getMany();
-        }
-
-        const totalPages = Math.ceil(totalItems / itensPorPagina);
+        const items = await itemsQb.getMany();
 
         return {
             items,
-            totalPages,
+            totalPages: Math.ceil(totalItems / itensPorPagina),
             totalItems
         };
     }

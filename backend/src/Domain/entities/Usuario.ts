@@ -4,6 +4,7 @@ import { Imagem } from "./Imagem";
 import { Escalada } from "./Escalada";
 import { Via } from "./Via";
 import { BaseEntityWithTimestamps } from "./BaseEntityWithTimestamps";
+import { PapelUsuario } from "../enum/EPapelUsuario";
 
 @Entity()
 export class Usuario extends BaseEntityWithTimestamps {
@@ -46,8 +47,17 @@ export class Usuario extends BaseEntityWithTimestamps {
   @Column({ default: true })
   conquistas_publico: boolean;
 
-  @Column({ default: false })
-  is_admin: boolean;
+  @Column({ type: "enum", enum: PapelUsuario, default: PapelUsuario.Usuario })
+  role: PapelUsuario;
+
+  /**
+   * Compatibilidade: `is_admin` é derivado de `role` (não é coluna).
+   * `role` é a única fonte de verdade da autorização. Mantido para o front
+   * (DTO/login) que ainda consome `is_admin` como dica de UI.
+   */
+  get is_admin(): boolean {
+    return this.role === PapelUsuario.Admin;
+  }
 
   @ManyToOne(() => Via, { nullable: true })
   @JoinColumn({ name: "via_preferida" })

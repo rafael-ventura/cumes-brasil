@@ -1,6 +1,7 @@
 import { AppDataSource } from '../../config/db';
 import { Usuario } from '../../../Domain/entities/Usuario';
 import { Colecao } from '../../../Domain/entities/Colecao';
+import { PapelUsuario, ehPapelValido } from '../../../Domain/enum/EPapelUsuario';
 import bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { loadYaml } from '../seedUtils';
@@ -13,10 +14,19 @@ interface UsuarioYaml {
   senha: string;
   nome: string;
   perfil_publico: boolean;
+  /** Papel explícito (usuario | moderador | admin). Tem prioridade sobre is_admin. */
+  role?: string;
+  /** Compat retro do YAML: is_admin: true equivale a role: admin. */
   is_admin?: boolean;
   localizacao?: string;
   data_atividade?: string;
   biografia?: string;
+}
+
+/** Resolve o papel esperado do YAML: `role` explícito tem prioridade; senão deriva de is_admin. */
+function resolverPapel (u: UsuarioYaml): PapelUsuario {
+  if (u.role && ehPapelValido(u.role)) return u.role;
+  return u.is_admin ? PapelUsuario.Admin : PapelUsuario.Usuario;
 }
 
 export interface UsuarioSeedResult {
@@ -53,6 +63,8 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
   const porUsername = new Map<string, number>();
 
   for (const u of lista) {
+    const papelEsperado = resolverPapel(u);
+
     // Idempotência primária por `email`. Como `username` é único, também tentamos
     // reaproveitar um usuário já existente caso o `username` já esteja na base.
     let usuario = await usuarioRepo.findOne({ where: { email: u.email } });
@@ -69,7 +81,7 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
         password_hash: senhaHash,
         foto_perfil: { id: IMAGEM_PADRAO_ID } as any,
         perfil_publico: u.perfil_publico,
-        is_admin: u.is_admin ?? false,
+        role: papelEsperado,
         localizacao: u.localizacao,
         data_atividade: u.data_atividade,
         biografia: u.biografia
@@ -94,9 +106,8 @@ export async function runUsuarioLoader(): Promise<UsuarioSeedResult> {
         usuario.perfil_publico = u.perfil_publico;
         atualizado = true;
       }
-      const isAdminEsperado = u.is_admin ?? false;
-      if (usuario.is_admin !== isAdminEsperado) {
-        usuario.is_admin = isAdminEsperado;
+      if (usuario.role !== papelEsperado) {
+        usuario.role = papelEsperado;
         atualizado = true;
       }
 

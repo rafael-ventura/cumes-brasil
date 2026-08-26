@@ -39,7 +39,7 @@ Para usar o banco via Docker, defina `DB_HOST=db` e suba com `docker-compose up 
 
 | Comando | O que faz |
 |---------|-----------|
-| `npm run dev` | Sobe a API em modo desenvolvimento com ts-node |
+| `npm run dev` | Sobe a API em modo desenvolvimento (aplica **migrations pendentes** automaticamente; **não** roda seed) |
 | `npm run dev:watch` | Igual ao `dev`, com hot-reload via nodemon |
 | `npm run build` | Compila TypeScript para `dist/` |
 | `npm run seed` | Popula o banco a partir dos YAMLs em `src/Infrastructure/data/` |
@@ -53,7 +53,14 @@ Para usar o banco via Docker, defina `DB_HOST=db` e suba com `docker-compose up 
 ```bash
 npm install
 npm run db:fresh   # cria banco, roda migrations e seed
-npm run dev
+npm run dev        # em dev, migrations pendentes rodam ao subir; seed é separado (npm run seed)
+```
+
+Após mudar estrutura (entidades) ou `usuarios-teste.yaml`:
+
+```bash
+npm run build && npm run migration:run:dev   # se preferir aplicar migrations manualmente
+npm run seed                                 # sincroniza usuários de teste (senha, is_admin, etc.)
 ```
 
 ### Gerar uma nova migração

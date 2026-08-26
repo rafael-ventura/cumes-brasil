@@ -5,6 +5,7 @@ import {UsuarioDTO} from "../DTOs/Usuario/UsuarioDTO";
 import {PerfilPublicoDTO} from "../DTOs/Usuario/PerfilPublicoDTO";
 import { NotFoundError } from '../../Application/errors';
 import UsuarioValidation from '../../Application/validations/UsuarioValidation';
+import { obterUsuarioIdAutenticado } from '../utils/usuarioRequisicao';
 
 export class UsuarioController {
     private service: UsuarioService;
@@ -38,7 +39,7 @@ export class UsuarioController {
     };
 
     editarFotoPerfil = async (req: Request, res: Response) => {
-        const usuarioId = parseInt(req.user.usuarioId);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const file = req.file;
         UsuarioValidation.editarFoto(file);
         await this.service.atualizarFotoPerfil(usuarioId, file);
@@ -54,7 +55,7 @@ export class UsuarioController {
     };
 
     getPerfil = async (req: Request, res: Response) => {
-        const usuarioId = parseInt(req.user.usuarioId);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const resultado = await this.service.getPerfil(usuarioId);
         if (!resultado) {
             throw new NotFoundError('Perfil não encontrado.');
@@ -63,7 +64,7 @@ export class UsuarioController {
     };
 
     editarDados = async (req: Request, res: Response) => {
-        const usuarioId = parseInt(req.user.usuarioId);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const usuarioDados: any = req.body;
         UsuarioValidation.editarDados(usuarioDados);
         await this.service.editarDados(usuarioId, usuarioDados);
@@ -72,7 +73,7 @@ export class UsuarioController {
     };
 
     excluirFotoPerfil = async (req: Request, res: Response) => {
-        const usuarioId = parseInt(req.user.usuarioId);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         await this.service.excluirFotoPerfil(usuarioId);
 
         const perfilAtualizado = await this.service.getPerfil(usuarioId);

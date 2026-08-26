@@ -31,15 +31,8 @@ import type { Escalada } from 'src/models/Escalada';
 import type { Via } from 'src/models/Via';
 import { getViaImageUrlComFallbackFull } from 'src/utils/utils';
 
-type UsuarioResumo = { nome?: string; username?: string };
-
-type EscaladaComRelacoes = Escalada & {
-  usuario?: number | UsuarioResumo;
-  via?: number | Via;
-};
-
 const props = defineProps<{
-  escalada: EscaladaComRelacoes;
+  escalada: Escalada;
 }>();
 
 const viaObj = computed((): Via | null => {

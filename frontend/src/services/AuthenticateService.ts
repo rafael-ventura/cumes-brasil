@@ -97,28 +97,68 @@ class AuthenticateService {
     }
   }
 
-  async redirecionaSeNaoAutenticado (router: Router): Promise<void> {
+  /** Redireciona para o login se não autenticado. Retorna true se redirecionou (caller deve abortar a ação). */
+  async redirecionaSeNaoAutenticado (router: Router): Promise<boolean> {
     if (!this.isTokenValid()) {
       await router.push('/auth/login');
+      return true;
     }
+    return false;
   }
 
   getUsername (): string | null {
     return localStorage.getItem('username');
   }
 
+  /** Papel do usuário logado (dica de UI; a autorização real é sempre no backend). */
+  getRole (): string {
+    return localStorage.getItem('role') || 'usuario';
+  }
+
+  /** True se o papel atual for um dos informados. Ex.: temPapel('admin', 'moderador'). */
+  temPapel (...papeis: string[]): boolean {
+    return papeis.includes(this.getRole());
+  }
+
   isAdmin (): boolean {
-    return localStorage.getItem('is_admin') === 'true';
+    // is_admin (compat) ou role === admin — qualquer um basta como dica de UI.
+    return localStorage.getItem('is_admin') === 'true' || this.getRole() === 'admin';
+  }
+
+  isModerador (): boolean {
+    return this.temPapel('moderador', 'admin');
+  }
+
+  /**
+   * Atualiza role/is_admin (e username) no localStorage a partir de GET /perfil.
+   * Necessário após seed ou mudança de permissão sem novo login.
+   */
+  async sincronizarPrivilegiosSessao (): Promise<void> {
+    if (!this.isTokenValid()) return;
+    try {
+      const response = await api.get('/perfil');
+      const dados = response.data;
+      if (dados?.username) {
+        localStorage.setItem('username', dados.username);
+      }
+      if (dados?.role) {
+        localStorage.setItem('role', String(dados.role));
+      }
+      localStorage.setItem('is_admin', String(Boolean(dados?.is_admin)));
+    } catch {
+      // Mantém valores atuais se a API falhar
+    }
   }
 
   logout (): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('usuarioId');
     localStorage.removeItem('username');
+    localStorage.removeItem('role');
     localStorage.removeItem('is_admin');
   }
 
-  private saveToken (token: { token: string; usuarioId: string; username?: string; is_admin?: boolean } | string): void {
+  private saveToken (token: { token: string; usuarioId: string; username?: string; role?: string; is_admin?: boolean } | string): void {
     if (typeof token === 'string') {
       localStorage.setItem('authToken', token);
     } else {
@@ -127,6 +167,7 @@ class AuthenticateService {
       if (token.username) {
         localStorage.setItem('username', token.username);
       }
+      localStorage.setItem('role', String(token.role ?? 'usuario'));
       localStorage.setItem('is_admin', String(token.is_admin ?? false));
     }
   }

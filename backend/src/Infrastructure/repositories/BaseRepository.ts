@@ -48,6 +48,10 @@ export default abstract class BaseRepository<T extends ObjectLiteral> implements
     async delete(id: number): Promise<void> {
         await this.repository.delete(id as any);
     }
+
+    async count(): Promise<number> {
+        return this.repository.count();
+    }
 }
 
 

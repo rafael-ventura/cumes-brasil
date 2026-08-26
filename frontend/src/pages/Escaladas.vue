@@ -194,7 +194,7 @@ const escaladasIdsNaPagina = computed(() =>
 );
 
 const temSelecaoNaPagina = computed(() =>
-  escaladasResultadoAtual.value.some((e) => escaladasSelecionadasIds.value.includes(e.id))
+  escaladasResultadoAtual.value.some((e) => e.id != null && escaladasSelecionadasIds.value.includes(e.id))
 );
 
 onMounted(async () => {

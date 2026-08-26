@@ -1,6 +1,8 @@
 import { EscaladaService } from '../../Application/services/EscaladaService';
 import { Request, Response } from 'express';
 import EscaladaValidation from '../../Application/validations/EscaladaValidation';
+import { EscaladaBuscaDTO } from '../DTOs/Escalada/EscaladaBuscaDTO';
+import { obterUsuarioIdOpcional } from '../utils/usuarioRequisicao';
 
 export class EscaladaController {
 	private service: EscaladaService;
@@ -18,16 +20,12 @@ export class EscaladaController {
 	 */
 	getEscaladaById = async (req: Request, res: Response) => {
 		const id = EscaladaValidation.idParam(req.params.id);
-		const escalada = await this.service.getById(id);
+		const usuarioIdObservador = obterUsuarioIdOpcional(req);
+		const escalada = await this.service.getByIdParaObservador(id, usuarioIdObservador);
 		if (!escalada) {
 			return res.status(404).json({ error: 'Escalada não encontrada' });
 		}
-		const usuarioIdRequisicao = (req as any).user?.usuarioId;
-		const ehDono = usuarioIdRequisicao && String(escalada.usuario?.id) === String(usuarioIdRequisicao);
-		if (!escalada.usuario?.perfil_publico && !ehDono) {
-			return res.status(404).json({ error: 'Escalada não encontrada' });
-		}
-		return res.json(escalada);
+		return res.json(new EscaladaBuscaDTO(escalada));
 	};
 
 	/**
@@ -38,7 +36,7 @@ export class EscaladaController {
 	 * @returns {Error} 500 - Erro desconhecido
 	 */
 	getAllEscalada = async (req: Request, res: Response) => {
-		const usuarioIdObservador = Number((req as any).user?.usuarioId);
+		const usuarioIdObservador = obterUsuarioIdOpcional(req) ?? 0;
 		const viaId = EscaladaValidation.queryInt(req.query.viaId, 'viaId', false);
 		const limit = EscaladaValidation.queryInt(req.query.limit, 'limit', false);
 		let escaladas;
@@ -50,7 +48,7 @@ export class EscaladaController {
 			escaladas = await this.service.getAll(parsedLimit, usuarioIdObservador);
 		}
 
-		res.json(escaladas);
+		res.json((escaladas ?? []).map(e => new EscaladaBuscaDTO(e as any)));
 	}
 
 	/**
@@ -87,7 +85,7 @@ export class EscaladaController {
 	 * @returns {object} 404 - Escalada não encontrada
 	 */
 	deleteEscalada = async (req: Request, res: Response) => {
-		const id = parseInt(req.params.id);
+		const id = EscaladaValidation.idParam(req.params.id);
 		await this.service.delete(id);
 		res.status(200).json({ message: "Escalada deletada com sucesso" });
 	};
@@ -103,17 +101,11 @@ export class EscaladaController {
 		const viaId = EscaladaValidation.queryInt(req.query.viaId, 'viaId', false);
 		const limit = EscaladaValidation.queryInt(req.query.limit, 'limit', false);
 		const usuario = EscaladaValidation.queryInt(req.query.usuario, 'usuario', true);
-		const usuarioObservador = Number((req as any).user?.usuarioId);
-		const comoRaw = typeof req.query.como === 'string' ? req.query.como.trim().toLowerCase() : 'autor';
+		const usuarioObservador = obterUsuarioIdOpcional(req) ?? 0;
+		const como = EscaladaValidation.queryComoPerfil(req.query.como);
+		EscaladaValidation.validaConflitosQuery(como, viaId);
 		/** Registros de terceiros em que o usuário foi marcado na cordada (qualquer papel: guia, participante, misto). */
-		const comoMarcado = comoRaw === 'marcado' || comoRaw === 'participante';
-
-		if (comoMarcado && viaId !== undefined) {
-			return res.status(400).json({ error: 'Não use viaId junto com como=marcado.' });
-		}
-		if (comoRaw !== 'autor' && comoRaw !== 'marcado' && comoRaw !== 'participante') {
-			return res.status(400).json({ error: 'Parâmetro "como" deve ser autor ou marcado (participante é legado, mesmo efeito).' });
-		}
+		const comoMarcado = como === 'marcado' || como === 'participante';
 
 		let escaladas: any[] = [];
 		if (viaId !== undefined) {
@@ -132,20 +124,23 @@ export class EscaladaController {
 			escaladas = await this.service.getEscaladasDoUsuarioParaObservador(usuario as number, usuarioObservador);
 		}
 
-		res.json(escaladas);
+		res.json((escaladas ?? []).map(e => new EscaladaBuscaDTO(e as any)));
 	};
 
 	getByViaId = async (req: Request, res: Response) => {
 		const viaId = EscaladaValidation.idParam(req.params.id);
-		const usuarioObservador = Number((req as any).user?.usuarioId);
+		const usuarioObservador = obterUsuarioIdOpcional(req) ?? 0;
 		const result = await this.service.getEscaladasDaVia(viaId, undefined, usuarioObservador);
-		res.json(result);
+		res.json((result ?? []).map(e => new EscaladaBuscaDTO(e as any)));
 	};
 
 	getFeed = async (req: Request, res: Response) => {
 		const pagina = EscaladaValidation.queryInt(req.query.pagina, 'pagina', false) ?? 1;
 		const itensPorPagina = EscaladaValidation.queryInt(req.query.itensPorPagina, 'itensPorPagina', false) ?? 15;
 		const result = await this.service.getFeed(pagina, itensPorPagina);
-		res.json(result);
+		res.json({
+			...result,
+			items: (result.items ?? []).map(e => new EscaladaBuscaDTO(e as any))
+		});
 	};
 }

@@ -33,8 +33,8 @@ export function compartilhar (dados: DadosCompartilhamento): Promise<void> {
   const texto = dados.texto;
   const url = dados.url;
 
-  // @ts-expect-error - navigator.share não existe em todos os navegadores
-  const shareFn = navigator?.share as undefined | ((data: any) => Promise<void>);
+  // navigator.share pode não existir em todos os navegadores
+  const shareFn = (navigator as any)?.share as undefined | ((data: any) => Promise<void>);
 
   if (shareFn) {
     return shareFn({ title: titulo, text: texto, url });

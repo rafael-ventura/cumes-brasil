@@ -20,13 +20,13 @@ export class ViaImageSugestao extends BaseEntityWithTimestamps {
   @ManyToOne(() => Usuario, { onDelete: 'SET NULL', nullable: true })
   usuario: Usuario | null;
 
-  @Column({ default: 'pendente' })
+  @Column({ type: 'varchar', default: 'pendente' })
   status: StatusSugestao;
 
-  @Column({ nullable: true, length: 255 })
+  @Column({ type: 'varchar', nullable: true, length: 255 })
   creditos: string | null;
 
-  @Column({ nullable: true, length: 500 })
+  @Column({ type: 'varchar', nullable: true, length: 500 })
   motivo_rejeicao: string | null;
 
   @ManyToOne(() => Usuario, { onDelete: 'SET NULL', nullable: true })

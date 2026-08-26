@@ -1,6 +1,7 @@
 import {ImagemDTO} from "../Imagem/ImagemDTO";
 import {Usuario} from "../../../Domain/entities/Usuario";
 import {ViaDTO} from "../Via/ViaDTO";
+import {PapelUsuario} from "../../../Domain/enum/EPapelUsuario";
 
 export class UsuarioDTO {
     id: number;
@@ -14,6 +15,8 @@ export class UsuarioDTO {
   localizacao?: string;
   perfil_publico?: boolean;
   conquistas_publico?: boolean;
+  role?: PapelUsuario;
+  is_admin?: boolean;
   data_atividade?: string;
     foto_perfil?: ImagemDTO;
     via_preferida?: ViaDTO;
@@ -30,6 +33,8 @@ export class UsuarioDTO {
         this.localizacao = entity.localizacao;
         this.perfil_publico = entity.perfil_publico;
         this.conquistas_publico = entity.conquistas_publico;
+        this.role = entity.role ?? PapelUsuario.Usuario;
+        this.is_admin = entity.is_admin ?? false;
         this.data_atividade = entity.data_atividade;
 
         this.foto_perfil = entity.foto_perfil

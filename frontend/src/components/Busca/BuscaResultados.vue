@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type PropType } from 'vue';
 import ViaLista from 'components/Via/ViaLista.vue';
 import ColecaoLista from 'components/Colecao/ColecaoLista.vue';
 import { Via } from 'src/models/Via';
@@ -139,7 +139,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  initialSort: Object,
+  initialSort: Object as PropType<ValorOrdenacao>,
   enableSortOptions: Array,
   exibirMenuColecao: {
     type: Boolean,
@@ -209,10 +209,11 @@ const sortedResults: any = computed(() => {
   // Copia os resultados para não alterar a prop original
   const resultsCopy = [...props.results];
 
-  if (!ordenacaoAtual.value) return resultsCopy;
+  const ordenacao = ordenacaoAtual.value;
+  if (!ordenacao) return resultsCopy;
   return resultsCopy.sort((a: any, b: any) => {
-    const field = ordenacaoAtual.value.field;
-    const direction = ordenacaoAtual.value.direction;
+    const field = ordenacao.field;
+    const direction = ordenacao.direction;
 
     // Ordenação por nome
     if (field === 'nome' && a.nome && b.nome) {

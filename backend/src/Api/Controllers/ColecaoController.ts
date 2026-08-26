@@ -4,6 +4,7 @@ import {Request, Response} from 'express';
 import {ColecaoDTO} from "../DTOs/Colecao/ColecaoDTO";
 import { NotFoundError } from '../../Application/errors';
 import ColecaoValidation from '../../Application/validations/ColecaoValidation';
+import { obterUsuarioIdAutenticado } from '../utils/usuarioRequisicao';
 
 export class ColecaoController {
     private service: ColecaoService;
@@ -119,7 +120,7 @@ export class ColecaoController {
     };
 
     putCapaColecao = async (req: Request, res: Response) => {
-        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const id = ColecaoValidation.idParam(req.params.id);
         const atualizada = await this.service.atualizarCapaColecao(usuarioId, id, req.file);
         if (!atualizada) {
@@ -129,7 +130,7 @@ export class ColecaoController {
     };
 
     deleteCapaColecao = async (req: Request, res: Response) => {
-        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const id = ColecaoValidation.idParam(req.params.id);
         const atualizada = await this.service.excluirCapaColecao(usuarioId, id);
         if (!atualizada) {
@@ -139,7 +140,7 @@ export class ColecaoController {
     };
 
     removerViasEmLote = async (req: Request, res: Response) => {
-        const usuarioId = parseInt((req as any).user.usuarioId, 10);
+        const usuarioId = obterUsuarioIdAutenticado(req);
         const { colecaoId, viaIds } = ColecaoValidation.removerViasLoteBody(req.body);
         await this.service.removerViasEmLote(usuarioId, colecaoId, viaIds);
         res.status(200).json({ message: "Vias removidas da coleção." });

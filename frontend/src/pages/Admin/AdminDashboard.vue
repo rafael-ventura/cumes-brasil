@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 import ViaImageSugestaoService from 'src/services/ViaImageSugestaoService';
@@ -38,6 +38,7 @@ const username = AuthenticateService.getUsername() ?? 'admin';
 const pendentes = ref(0);
 
 onMounted(async () => {
+  await AuthenticateService.sincronizarPrivilegiosSessao();
   if (!AuthenticateService.isAdmin()) {
     router.push('/');
     return;

@@ -158,15 +158,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         return { items: vias, total, totalPages: Math.ceil(total / limite) };
     }
 
-    async getAllWithoutPagination(): Promise<{ items: Via[]; total: number; totalPages: number }> {
-        const [vias, total] = await this.todasRelacoes(
-            this.repository.createQueryBuilder("via")
-        ).getManyAndCount();
-
-        return { items: vias, total, totalPages: 1 };
-    }
-
-    async getRandom(): Promise<Via | null> {
+    async aleatoria(): Promise<Via | null> {
         return this.todasRelacoes(
             this.repository.createQueryBuilder("via").orderBy("RANDOM()")
         ).getOne();
@@ -178,7 +170,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         return this.getById(id) as Promise<Via>;
     }
 
-    async updateVia(id: number, dados: Partial<Via>): Promise<Via | null> {
+    async atualizar(id: number, dados: Partial<Via>): Promise<Via | null> {
         await this.repository.update(id, dados);
         return this.getById(id);
     }
@@ -189,7 +181,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
 
     // ─── Coleção ────────────────────────────────────────────────────────
 
-    async getViasByColecaoId(colecaoId: number, pagina: number, limite: number): Promise<{
+    async listarPorColecao(colecaoId: number, pagina: number, limite: number): Promise<{
         items: Via[];
         total: number;
         totalPages: number;
@@ -211,7 +203,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         return { items: vias, total, totalPages: Math.ceil(total / limite) };
     }
 
-    async getViasNotInColecaoForUser(colecaoId: number, usuarioId: number, pagina: number, limite: number): Promise<{
+    async listarForaDeColecao(colecaoId: number, usuarioId: number, pagina: number, limite: number): Promise<{
         items: Via[];
         total: number;
         totalPages: number;
@@ -352,6 +344,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             itensPorPagina = 10,
             campoOrdenacao,
             direcaoOrdenacao,
+            colecaoId,
         } = filtros;
 
         let qb = this.construirQueryBusca(filtros);
@@ -362,25 +355,35 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             qb = qb.orderBy("via.nome", "ASC");
         }
 
-        const totalItens = await qb.getCount();
+        qb = qb.skip((pagina - 1) * itensPorPagina).take(itensPorPagina);
 
-        const resultado = await qb
-            .skip((pagina - 1) * itensPorPagina)
-            .take(itensPorPagina)
-            .getRawAndEntities();
+        // Quando há colecaoId precisamos do select extra data_adicao (raw + entities).
+        // Sem colecaoId, getManyAndCount() é uma round-trip a menos.
+        if (colecaoId) {
+            const total = await qb.getCount();
+            const { entities, raw } = await qb.getRawAndEntities();
+            const itens = entities.map((entidade, idx) => ({
+                ...entidade,
+                data_adicao: raw[idx]?.data_adicao || null
+            }));
+            return {
+                items: itens,
+                totalPages: Math.ceil(total / itensPorPagina),
+                totalItems: total
+            };
+        }
 
-        const itens = resultado.entities.map((entidade, indice) => {
-            const dadosBrutos = resultado.raw[indice];
-            return { ...entidade, data_adicao: dadosBrutos?.data_adicao || null };
-        });
-
-        const totalPaginas = Math.ceil(totalItens / itensPorPagina);
-        return { items: itens, totalPages: totalPaginas, totalItems: totalItens };
+        const [itens, total] = await qb.getManyAndCount();
+        return {
+            items: itens,
+            totalPages: Math.ceil(total / itensPorPagina),
+            totalItems: total
+        };
     }
 
     // ─── Contagens ──────────────────────────────────────────────────────
 
-    async countByField(campo: string, valor: any, operador: string = "="): Promise<number> {
+    async contarPorCampo(campo: string, valor: any, operador: string = "="): Promise<number> {
         const qb = this.repository.createQueryBuilder("via");
 
         if (campo === "via.exposicao" || campo === "via.duracao") {
@@ -396,7 +399,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
         return qb.getCount();
     }
 
-    async countSemLocalizacao(): Promise<number> {
+    async contarSemLocalizacao(): Promise<number> {
         return this.repository.createQueryBuilder("via")
             .where("via.montanhaId IS NULL")
             .andWhere("via.faceId IS NULL")
@@ -404,7 +407,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .getCount();
     }
 
-    async countByBairro(bairro: string): Promise<number> {
+    async contarPorBairro(bairro: string): Promise<number> {
         return this.joinsBairroParaContagem(
             this.repository.createQueryBuilder("via")
         )
@@ -412,7 +415,7 @@ export class ViaRepository extends BaseRepository<Via> implements ISearchReposit
             .getCount();
     }
 
-    async countComCroqui(): Promise<number> {
+    async contarComCroqui(): Promise<number> {
         return this.repository
             .createQueryBuilder("via")
             .innerJoin("via.viaCroquis", "viaCroquis")

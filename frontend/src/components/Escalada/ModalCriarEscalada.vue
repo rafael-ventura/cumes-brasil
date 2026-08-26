@@ -239,11 +239,12 @@ function opcoesUsuariosPara(indice: number): IUsuario[] {
 
 function filtrarUsuariosParticipante(
   val: string,
-  update: (fn?: () => void) => void,
+  update: (callbackFn: () => void, afterFn?: (ref: unknown) => void) => void,
   indice: number
 ) {
   filtroUsuarioPorParticipante.value = { ...filtroUsuarioPorParticipante.value, [indice]: val };
-  update();
+  // As opções são filtradas reativamente; só sinalizamos ao QSelect que terminou.
+  update(() => { /* noop */ });
 }
 
 function aoSelecionarUsuarioPlataforma(p: ParticipanteLocal, usuarioId: number | null) {

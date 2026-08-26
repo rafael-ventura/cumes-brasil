@@ -61,3 +61,7 @@ package-lock.json
 *.db
 .vercel
 backend/.env.development
+
+# Local tool configs (personal, not project-wide)
+.claude/settings.local.json
+.serena/

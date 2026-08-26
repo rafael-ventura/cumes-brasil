@@ -171,6 +171,23 @@ async function initializeDatabase() {
         // Depois, inicializar o AppDataSource
         await AppDataSource.initialize();
         safeLogger.info('Conexão com o banco de dados estabelecida com sucesso');
+
+        if (isDev) {
+            try {
+                const migrationsAplicadas = await AppDataSource.runMigrations({ transaction: 'each' });
+                if (migrationsAplicadas.length > 0) {
+                    safeLogger.info('Migrations pendentes aplicadas na inicialização', {
+                        quantidade: migrationsAplicadas.length,
+                        nomes: migrationsAplicadas.map((m) => m.name)
+                    });
+                }
+            } catch (migrationError: any) {
+                safeLogger.warn(
+                    'Não foi possível aplicar migrations na inicialização (rode: npm run build && npm run migration:run:dev)',
+                    { error: migrationError?.message }
+                );
+            }
+        }
         
         const viaRepository = AppDataSource.getRepository(Via);
         const count = await viaRepository.count();

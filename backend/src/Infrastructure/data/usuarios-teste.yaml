@@ -1,10 +1,12 @@
 # Contas de desenvolvimento (senha comum: teste123)
 # Usadas pelo seed idempotente — não editar usuários direto no banco.
+# Admins de dev (painel /admin): cumes_teste e rafael (+ rafael@gmail.com se existir localmente).
 - email: teste@cumes.com.br
   username: cumes_teste
   senha: teste123
   nome: Usuário Teste Cumes
   perfil_publico: true
+  is_admin: true
   localizacao: Rio de Janeiro, RJ
   data_atividade: '2025-03-15'
   biografia: Perfil de teste para desenvolvimento do Cumes Brasil. Use para explorar o feed, escaladas e funcionalidades.
@@ -27,7 +29,7 @@
   data_atividade: '2024-01-10'
   biografia: Perfil privado para testar 403 em /u e listagens de escalada.
 
-# Conta local (mesmo username que costuma existir no ambiente de dev) — admin de desenvolvimento
+# Conta seed principal (admin) — login: rafael.dev@cumes.com.br / teste123 / username rafael
 - email: rafael.dev@cumes.com.br
   username: rafael
   senha: teste123
@@ -36,7 +38,17 @@
   is_admin: true
   localizacao: Rio de Janeiro, RJ
   data_atividade: '2024-01-15'
+  role: admin
   biografia: Conta seed para desenvolvimento (username rafael).
+
+# Conta criada manualmente em alguns ambientes locais — seed sincroniza senha e is_admin
+- email: rafael@gmail.com
+  username: username1
+  senha: teste123
+  nome: rafa
+  perfil_publico: true
+  is_admin: true
+  localizacao: Rio de Janeiro, RJ
 
 - email: elmin.dev@cumes.com.br
   username: elmin

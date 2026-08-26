@@ -29,21 +29,11 @@ export class StatsService {
     }
 
     async getGeneralStats(): Promise<IStats> {
-        // Busca os totais diretamente dos repositórios usando TypeORM
-        // @ts-ignore - Acessa propriedade protegida do BaseRepository
-        const viaRepo = this.viaRepository.repository;
-        // @ts-ignore
-        const montanhaRepo = this.montanhaRepository.repository;
-        // @ts-ignore
-        const usuarioRepo = this.usuarioRepository.repository;
-        // @ts-ignore
-        const croquiRepo = this.croquiRepository.repository;
-
         const [vias, montanhas, usuarios, croquis] = await Promise.all([
-            viaRepo.count(),
-            montanhaRepo.count(),
-            usuarioRepo.count(),
-            croquiRepo.count()
+            this.viaRepository.count(),
+            this.montanhaRepository.count(),
+            this.usuarioRepository.count(),
+            this.croquiRepository.count()
         ]);
 
         return {

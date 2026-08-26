@@ -20,6 +20,7 @@ import { useRoute } from 'vue-router';
 import NavBar from 'layouts/NavBar.vue';
 import TopBar from 'layouts/TopBar.vue';
 import ScrollToTop from 'components/ScrolToTop.vue';
+import AuthenticateService from 'src/services/AuthenticateService';
 
 const windowWidth = ref(window.innerWidth);
 const route = useRoute();
@@ -54,6 +55,9 @@ const aoRedimensionar = () => {
 
 onMounted(() => {
   window.addEventListener('resize', aoRedimensionar);
+  if (AuthenticateService.isTokenValid()) {
+    void AuthenticateService.sincronizarPrivilegiosSessao();
+  }
 });
 
 onUnmounted(() => {

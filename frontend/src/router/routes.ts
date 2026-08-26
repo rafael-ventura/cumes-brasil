@@ -91,6 +91,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/Admin/AdminVias.vue')
       },
       {
+        path: 'admin/usuarios',
+        component: () => import('pages/Admin/AdminUsuarios.vue')
+      },
+      {
         path: 'auth',
         children: [
           {

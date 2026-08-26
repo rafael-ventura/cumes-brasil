@@ -110,8 +110,8 @@ export async function runViaLoader(
         modalidade: modalidadeFinal,
         montanha: { id: montanhaId } as Montanha,
         face: { id: faceId } as Face,
-        fonte: fonteId,
-        viaPrincipal: viaPrincipalId
+        fonte: fonteId ? { id: fonteId } as any : null,
+        viaPrincipal: viaPrincipalId ? { id: viaPrincipalId } as Via : null
       });
       await repo.save(ent);
       if (v.imagem) {

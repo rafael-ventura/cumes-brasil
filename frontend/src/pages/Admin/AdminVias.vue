@@ -1,58 +1,58 @@
 <template>
   <q-page class="admin-page">
     <div class="page-header">
-      <q-btn flat round icon="arrow_back" class="btn-voltar" @click="$router.push('/admin')" />
-      <q-icon name="terrain" size="26px" class="page-icon" />
+      <Button icon="pi pi-arrow-left" text rounded class="btn-voltar" aria-label="Voltar" @click="$router.push('/admin')" />
+      <i class="pi pi-map page-icon" />
       <h1 class="page-titulo">Gerenciar Vias</h1>
-      <q-space />
-      <q-btn
-        icon="add"
-        label="Nova via"
-        class="btn-nova-via"
-        unelevated no-caps
-        @click="abrirNova"
-      />
+      <div class="header-spacer" />
+      <Button icon="pi pi-plus" label="Nova via" class="btn-nova-via" @click="abrirNova" />
     </div>
 
-    <!-- Busca rápida -->
-    <q-input
-      v-model="busca"
-      outlined
-      dense
-      placeholder="Buscar via por nome..."
-      class="campo-busca"
-      clearable
+    <DataTable
+      :value="viasFiltradas"
+      :loading="carregando"
+      paginator
+      :rows="15"
+      :rows-per-page-options="[15, 30, 50]"
+      data-key="id"
+      removable-sort
+      class="tabela-vias"
     >
-      <template #prepend><q-icon name="search" color="orange-5" /></template>
-    </q-input>
-
-    <div v-if="carregando" class="estado-carregando">
-      <q-spinner size="40px" color="orange" />
-    </div>
-
-    <div v-else class="vias-lista">
-      <div v-for="via in viasFiltradas" :key="via.id" class="via-row">
-        <div class="via-info">
-          <span class="via-nome">{{ via.nome }}</span>
-          <span class="via-meta">ID {{ via.id }}</span>
+      <template #header>
+        <div class="tabela-busca">
+          <i class="pi pi-search" />
+          <InputText v-model="busca" placeholder="Buscar via por nome..." class="campo-busca" />
         </div>
-        <div class="via-acoes">
-          <q-btn flat round icon="edit" class="btn-editar" @click="abrirEdicao(via)" />
+      </template>
+
+      <template #empty>
+        <div class="estado-vazio">
+          <i class="pi pi-search" />
+          <span>Nenhuma via encontrada</span>
         </div>
-      </div>
+      </template>
 
-      <div v-if="viasFiltradas.length === 0 && !carregando" class="estado-vazio">
-        <q-icon name="search_off" size="36px" />
-        <span>Nenhuma via encontrada</span>
-      </div>
-    </div>
+      <Column field="nome" header="Via" sortable>
+        <template #body="{ data }">
+          <span class="via-nome">{{ data.nome }}</span>
+        </template>
+      </Column>
 
-    <!-- Modal criar/editar via (campos principais) -->
+      <Column field="id" header="ID" sortable class="col-id" />
+
+      <Column header="Ações" class="col-acao">
+        <template #body="{ data }">
+          <Button icon="pi pi-pencil" text rounded class="btn-editar" aria-label="Editar" @click="abrirEdicao(data)" />
+        </template>
+      </Column>
+    </DataTable>
+
+    <!-- Modal criar/editar via — q-dialog (shell de overlay) + widgets PrimeVue dentro -->
     <q-dialog v-model="modalAberto" @hide="aoFecharModal">
       <q-card class="modal-card">
         <q-card-section class="modal-header">
           <div class="modal-title">
-            <q-icon name="terrain" size="24px" class="title-icon" />
+            <i class="pi pi-map title-icon" />
             <span>{{ modoEdicao ? 'Editar Via' : 'Nova Via' }}</span>
           </div>
           <q-btn flat round icon="close" class="btn-fechar" v-close-popup />
@@ -62,35 +62,34 @@
           <div class="form-grid">
             <div class="form-field">
               <label class="field-label">Nome *</label>
-              <q-input v-model="form.nome" outlined dense class="custom-input" />
+              <InputText v-model="form.nome" class="campo-form" />
             </div>
             <div class="form-field">
               <label class="field-label">Grau</label>
-              <q-input v-model="form.grau" outlined dense class="custom-input" />
+              <InputText v-model="form.grau" class="campo-form" />
             </div>
             <div class="form-field form-field--full">
               <label class="field-label">Historia / Resumo</label>
-              <q-input v-model="form.historia_resumo" outlined dense autogrow class="custom-input" />
+              <Textarea v-model="form.historia_resumo" auto-resize rows="3" class="campo-form" />
             </div>
             <div class="form-field">
               <label class="field-label">Extensão (m)</label>
-              <q-input v-model.number="form.extensao" type="number" outlined dense class="custom-input" />
+              <InputNumber v-model="form.extensao" :use-grouping="false" class="campo-form" />
             </div>
             <div class="form-field">
               <label class="field-label">Numero de Vias</label>
-              <q-input v-model.number="form.numero_de_vias" type="number" outlined dense class="custom-input" />
+              <InputNumber v-model="form.numero_de_vias" :use-grouping="false" class="campo-form" />
             </div>
           </div>
         </q-card-section>
 
         <q-card-actions align="right" class="modal-actions">
-          <q-btn label="Cancelar" class="btn-secondary-custom" v-close-popup unelevated no-caps />
-          <q-btn
+          <Button label="Cancelar" class="btn-secondary-custom" text v-close-popup />
+          <Button
             :label="modoEdicao ? 'Salvar alterações' : 'Criar via'"
             class="btn-primary-custom"
-            unelevated no-caps
             :loading="salvando"
-            :disable="!form.nome?.trim()"
+            :disabled="!form.nome?.trim()"
             @click="salvar"
           />
         </q-card-actions>
@@ -102,6 +101,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import InputNumber from 'primevue/inputnumber';
 import { api } from 'boot/axios';
 import { handleApiError } from 'src/utils/utils';
 
@@ -180,65 +185,111 @@ function aoFecharModal () {
 
 .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .btn-voltar { color: rgba($offwhite, 0.7) !important; }
-.page-icon { color: $cumes-01; }
-.page-titulo { font-size: 20px; font-weight: 800; color: $offwhite; margin: 0; flex: 1; }
-.btn-nova-via { background: $cumes-01 !important; color: $offwhite !important; border-radius: 10px !important; font-weight: 700 !important; }
-
-.campo-busca {
-  margin-bottom: 16px;
-  :deep(.q-field__control) { background: rgba($offwhite, 0.05); border-radius: 10px; &::before { border-color: rgba($cumes-01, 0.3); } }
-  :deep(.q-field__native) { color: $offwhite; }
-  :deep(input::placeholder) { color: rgba($offwhite, 0.4); }
+.page-icon { color: $cumes-01; font-size: 24px; }
+.page-titulo { font-size: 20px; font-weight: 800; color: $offwhite; margin: 0; }
+.header-spacer { flex: 1; }
+.btn-nova-via {
+  background: $cumes-01 !important;
+  border-color: $cumes-01 !important;
+  color: $offwhite !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
 }
 
-.estado-carregando, .estado-vazio { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 40px; color: rgba($offwhite, 0.4); }
-
-.vias-lista { display: flex; flex-direction: column; gap: 8px; }
-
-.via-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: rgba($surface, 0.7);
-  border: 1px solid rgba($cumes-01, 0.12);
-  border-radius: 12px;
-  transition: background 0.15s;
-  &:hover { background: rgba($cumes-01, 0.05); }
+.tabela-busca {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  .pi-search { color: rgba($offwhite, 0.5); }
 }
-.via-info { flex: 1; }
-.via-nome { display: block; font-size: 14px; font-weight: 700; color: $offwhite; }
-.via-meta { font-size: 11px; color: rgba($offwhite, 0.4); }
-.via-acoes { display: flex; gap: 4px; }
+.campo-busca { flex: 1; }
+.via-nome { font-size: 14px; font-weight: 700; color: $offwhite; }
+.col-id { color: rgba($offwhite, 0.5); }
 .btn-editar { color: $cumes-03 !important; }
 
-// Modal
+.estado-vazio {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 32px; color: rgba($offwhite, 0.4);
+  .pi { font-size: 32px; }
+}
+
+/* ── DataTable tema escuro (mesmo padrão de AdminUsuarios) ── */
+.tabela-vias {
+  :deep(.p-datatable-header) { background: transparent; border: none; padding: 0 0 14px; }
+  :deep(.p-datatable-table) { border-collapse: separate; border-spacing: 0 8px; }
+  :deep(.p-datatable-thead > tr > th) {
+    background: transparent; color: $cumes-04; font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.6px; border: none; padding: 6px 16px;
+  }
+  :deep(.p-datatable-tbody > tr) { background: rgba($surface, 0.7); }
+  :deep(.p-datatable-tbody > tr > td) {
+    background: inherit; border: none;
+    border-top: 1px solid rgba($cumes-01, 0.12); border-bottom: 1px solid rgba($cumes-01, 0.12);
+    padding: 12px 16px;
+    &:first-child { border-left: 1px solid rgba($cumes-01, 0.12); border-radius: 12px 0 0 12px; }
+    &:last-child  { border-right: 1px solid rgba($cumes-01, 0.12); border-radius: 0 12px 12px 0; }
+  }
+  :deep(.p-datatable-tbody > tr:hover > td) { background: rgba($cumes-01, 0.05); }
+  :deep(.p-sortable-column.p-highlight), :deep(.p-sortable-column:hover) { color: $cumes-01; }
+  :deep(.p-sortable-column-icon) { color: $cumes-03; }
+  :deep(.p-datatable-loading-overlay) { background: rgba($background, 0.6); }
+  :deep(.p-datatable-loading-icon), :deep(.p-icon) { color: $cumes-01; }
+
+  :deep(.p-paginator) {
+    background: transparent; margin-top: 12px;
+    .p-paginator-page, .p-paginator-prev, .p-paginator-next, .p-paginator-first, .p-paginator-last {
+      color: rgba($offwhite, 0.95); border: 1px solid rgba($cumes-03, 0.35);
+      border-radius: 10px; min-width: 32px; height: 32px; margin: 0 2px;
+    }
+    .p-paginator-page.p-paginator-page-selected, .p-paginator-page.p-highlight {
+      background: $cumes-03; color: $offwhite; border-color: $cumes-03;
+    }
+  }
+}
+
+// InputText (busca) — tema escuro
+:deep(.campo-busca.p-inputtext) {
+  width: 100%; background: rgba($offwhite, 0.05); border: 1px solid rgba($cumes-01, 0.3);
+  border-radius: 10px; color: $offwhite; padding: 8px 12px;
+  &::placeholder { color: rgba($offwhite, 0.4); }
+  &:focus { border-color: $cumes-03; box-shadow: none; }
+}
+
+/* ── Modal (q-dialog shell) ── */
 .modal-card {
-  background-color: $background;
-  border: 2px solid $cumes-01;
-  border-radius: 16px;
-  width: 92vw;
-  max-width: 580px;
+  background-color: $background; border: 2px solid $cumes-01; border-radius: 16px;
+  width: 92vw; max-width: 580px;
   @media (min-width: 768px) { width: 580px; }
 }
 .modal-header {
-  background: linear-gradient(135deg, $cumes-01 0%, darken($cumes-01, 8%) 100%);
-  border-radius: 14px 14px 0 0;
-  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, $cumes-01 0%, cumesDarken($cumes-01, 8%) 100%);
+  border-radius: 14px 14px 0 0; display: flex; align-items: center; justify-content: space-between;
 }
 .modal-title { display: flex; align-items: center; gap: 10px; color: $offwhite; font-size: 16px; font-weight: 700; }
-.title-icon { color: $cumes-04; }
+.title-icon { color: $cumes-04; font-size: 22px; }
 .btn-fechar { color: $offwhite !important; }
 .modal-body { padding: 20px; }
-.modal-actions { padding: 12px 20px; border-top: 1px solid rgba($cumes-01, 0.2); }
+.modal-actions { padding: 12px 20px; border-top: 1px solid rgba($cumes-01, 0.2); display: flex; gap: 8px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-field { display: flex; flex-direction: column; gap: 6px; &--full { grid-column: 1 / -1; } }
 .field-label { font-size: 12px; font-weight: 700; color: $cumes-04; text-transform: uppercase; letter-spacing: 0.8px; }
-.custom-input {
-  :deep(.q-field__control) { background-color: $offwhite; border-radius: 8px; padding: 0 !important; &::before { border-color: $cumes-01; border-width: 2px; } }
-  :deep(.q-field__native) { color: $background; padding: 10px 14px !important; }
-  :deep(input) { padding: 10px 14px !important; }
+
+// Inputs PrimeVue dentro do modal — fundo claro (contraste no tema escuro)
+.campo-form {
+  width: 100%;
+  :deep(.p-inputtext), &:deep(.p-inputtext) {
+    width: 100%; background: $offwhite; color: $background; border: 2px solid $cumes-01;
+    border-radius: 8px; padding: 10px 14px;
+    &:focus { border-color: $cumes-03; box-shadow: none; }
+  }
+  // InputNumber embrulha um p-inputtext
+  :deep(.p-inputnumber) { width: 100%; }
 }
-.btn-primary-custom { background: $cumes-01 !important; color: $offwhite !important; border-radius: 8px !important; font-weight: 700 !important; padding: 10px 24px !important; &:disabled { opacity: 0.4 !important; } }
-.btn-secondary-custom { background: transparent !important; color: $cumes-01 !important; border: 2px solid $cumes-01 !important; border-radius: 8px !important; padding: 10px 24px !important; }
+
+.btn-primary-custom {
+  background: $cumes-01 !important; border-color: $cumes-01 !important; color: $offwhite !important;
+  border-radius: 8px !important; font-weight: 700 !important; padding: 10px 24px !important;
+  &:disabled { opacity: 0.4 !important; }
+}
+.btn-secondary-custom {
+  color: $cumes-01 !important; border-radius: 8px !important; padding: 10px 24px !important;
+}
 </style>

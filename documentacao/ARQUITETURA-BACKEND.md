@@ -50,7 +50,7 @@ Interface HTTP — recebe requests, retorna responses.
 
 **Middlewares** (`Api/Middlewares/`):
 - `AuthenticateMiddleware` — valida JWT
-- **`AdminMiddleware`** — verifica `is_admin` no banco para rotas `/admin/*`
+- **`AdminMiddleware`** — autorização por papel (`role`). Expõe `requireRole(...papeis)` (factory) e `requireAdmin` (= `requireRole(PapelUsuario.Admin)`). Relê o `role` no banco a cada request (rotas `/admin/*`)
 - `ErrorRequestMiddleware` — tratamento global de erros
 - `RateLimitMiddleware` — rate limiting por IP
 - `MulterMiddleware` — upload de arquivos (inclui `uploadViaImagem` para `assets/vias/`)
@@ -153,8 +153,15 @@ Implementações concretas das interfaces do Domain. Todos estendem `BaseReposit
 
 **Migrations** (`Infrastructure/migrations/`):
 - Geradas automaticamente pelo TypeORM
-- Nunca editar manualmente
+- Nunca editar manualmente (salvo backfill de dados, que o `generate` não cria)
 - `npm run build && npm run migration:generate` → renomear → `npm run migration:run:dev`
+
+**Convenção de nomes — por que tem timestamp:**
+O sufixo numérico no nome da classe (`AddRoleToUsuario1766100000000`) é **obrigatório** do TypeORM: é a chave de ordenação e de idempotência (a tabela `migrations` registra esse número; é assim que o ORM sabe o que já rodou e em que ordem). **Não dá para remover.** O que mantém isso são-organizado:
+- **Sempre use `migration:generate`** — ele carimba o timestamp real (`Date.now()`), que é único e codifica a data de criação. **Nunca** escolha números redondos à mão (ex.: `1766000000000`) — foi assim que nasceu uma colisão de timestamp entre duas migrations.
+- **Nome descritivo em PascalCase** após o timestamp, no padrão `<Verbo><Alvo>`: `AddRoleToUsuario`, `CriarViaImageSugestao`, `ChangeEscaladaDataToTimestamp`.
+- **Uma migration = uma mudança lógica.** O nome do arquivo (`<timestamp>-<Nome>.ts`) deve bater com a classe.
+- Para ler o histórico de forma humana: `npx typeorm migration:show -d ./dist/Infrastructure/config/db.js` lista tudo em ordem com `[X]`/`[ ]`.
 
 **Helpers** (`Infrastructure/helpers/`):
 - `S3Helper.ts` — upload para AWS S3 (SDK v2 — débito técnico consciente)

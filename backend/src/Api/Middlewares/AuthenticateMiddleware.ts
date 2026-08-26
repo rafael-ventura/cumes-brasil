@@ -2,20 +2,8 @@
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { OAuth2Client } from 'google-auth-library';
 import { safeLogger } from '../../Infrastructure/config/logger';
 import { UnauthorizedError } from '../../Application/errors';
-
-// Adiciona uma propriedade personalizada 'user' à definição de tipo_entidade 'Request'
-declare global {
-    namespace Express {
-        interface Request {
-            user: any;
-        }
-    }
-}
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Função para validar se o token JWT é válido
 function isTokenExpired(token: string): boolean {
@@ -50,26 +38,16 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
             throw new UnauthorizedError('Erro de configuração do servidor');
         }
 
-        // Tente verificar com a chave secreta primeiro
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (!err) {
-                req.user = decoded;
-                return next();
-            }
-
-            // Se falhar, tente verificar como um ID Token do Google
-            client.verifyIdToken({
-                idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            }).then((ticket) => {
-                const payload = ticket.getPayload();
-                req.user = payload;
-                next();
-            }).catch((error) => {
-                safeLogger.error('Erro na verificação do token Google', { error: error.message });
-                throw new UnauthorizedError('Token inválido');
-            });
-        });
+        const decoded = jwt.verify(token, secretKey);
+        if (!decoded || typeof decoded !== 'object' || !('usuarioId' in decoded)) {
+            throw new UnauthorizedError('Token inválido');
+        }
+        req.user = {
+            usuarioId: String(decoded.usuarioId),
+            iat: decoded.iat,
+            exp: decoded.exp
+        };
+        return next();
     } catch (error) {
         if (error instanceof UnauthorizedError) {
             return res.status(401).json({ 
@@ -107,24 +85,15 @@ export async function optionalAuthenticateToken(req: Request, res: Response, nex
             return next(); // Continua sem autenticação
         }
 
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (!err) {
-                req.user = decoded;
-                return next();
-            }
-
-            // Tenta verificar como token Google
-            client.verifyIdToken({
-                idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            }).then((ticket) => {
-                const payload = ticket.getPayload();
-                req.user = payload;
-                next();
-            }).catch(() => {
-                next(); // Continua sem autenticação
-            });
-        });
+        const decoded = jwt.verify(token, secretKey);
+        if (decoded && typeof decoded === 'object' && ('usuarioId' in decoded)) {
+            req.user = {
+                usuarioId: String(decoded.usuarioId),
+                iat: decoded.iat,
+                exp: decoded.exp
+            };
+        }
+        return next();
     } catch (error: any) {
         next(); // Continua sem autenticação
     }

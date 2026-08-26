@@ -7,7 +7,6 @@ import BaseService from './BaseService';
 import { ImagemService } from './ImagemService';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import { Imagem } from '../../Domain/entities/Imagem';
-import { AppDataSource } from '../../Infrastructure/config/db';
 import S3Helper from '../../Infrastructure/helpers/S3Helper';
 import path from 'path';
 
@@ -134,11 +133,7 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
       descricao: `Capa da coleção ${colecao.nome} (${colecao.id})`
     });
 
-    const repo = AppDataSource.getRepository(Colecao);
-    const ent = await repo.findOne({ where: { id: colecaoId } });
-    if (!ent) throw new NotFoundError('Coleção não encontrada');
-    ent.imagem = novaImagem;
-    await repo.save(ent);
+    await this.repository.atualizarImagem(colecaoId, novaImagem);
 
     return this.repository.getById(colecaoId);
   }
@@ -161,11 +156,7 @@ export class ColecaoService extends BaseService<Colecao, ColecaoRepository> {
       await this.imagemService.delete(imagemAntiga.id);
     }
 
-    const repo = AppDataSource.getRepository(Colecao);
-    const ent = await repo.findOne({ where: { id: colecaoId } });
-    if (!ent) throw new NotFoundError('Coleção não encontrada');
-    ent.imagem = undefined as any;
-    await repo.save(ent);
+    await this.repository.excluirImagem(colecaoId);
 
     return this.repository.getById(colecaoId);
   }

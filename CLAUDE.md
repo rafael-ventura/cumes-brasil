@@ -25,8 +25,10 @@ Stack: **Vue 3 + Quasar** (frontend) · **Node.js + Express + TypeORM** (backend
 # Setup completo do zero
 cd backend && npm run db:fresh && npm run dev
 
-# Só seed (incremental, idempotente)
+# Só seed (incremental, idempotente) — sincroniza usuarios-teste.yaml (senha, is_admin)
 npm run seed
+
+# Em dev, `npm run dev` aplica migrations pendentes ao subir; seed continua manual
 
 # Nova migration (sempre fazer build antes)
 npm run build && npm run migration:generate
@@ -41,9 +43,12 @@ npm run migration:run:dev
 > Rastreamento detalhado no Trello. Aqui ficam apenas itens que dão contexto relevante para o código atual.
 
 ### Bugs ativos
-- **Filtro de montanha na busca desabilitado** — foi removido durante refatoração de localização, precisa ser reimplementado via nova estrutura `setor/face/montanha`
-- **Ordenação de coleções** — falta ordenar por data de criação no `ColecaoRepository`
-- **Modal de foto do perfil** — modal de atualização/remoção precisa de melhoria
+- _(nenhum no momento — ver "Bugs resolvidos recentemente")_
+
+### Bugs resolvidos recentemente
+- **Ordenação de coleções** — resolvido: `ColecaoRepository.getByUsuarioId`/`getAll` agora ordenam por `created_at ASC` (antes vinham em ordem arbitrária do `getMany()`)
+- **Modal de foto do perfil** — resolvido em `FotoPerfilUpload.vue`: preview agora usa `ref` com `URL.revokeObjectURL` (antes era `computed` que vazava blob a cada render), `q-file` usa `@update:model-value` + `pickFiles()` (idiom Quasar 2), botões "Cancelar"/"Salvar" no padrão do design system, e estado inicial com call-to-action claro
+- **Filtro de montanha na busca** — verificado resolvido (estava como bug ativo por nota desatualizada). Wiring completo ponta a ponta: front (`BuscaFiltros.vue` → `localFilters.montanhaId` → `emitFilters` → `Busca.aoAplicarFiltros` → payload) e back (`FiltrosBuscaVia.montanhaId` → `BuscaValidation` → `BuscaViaService` → `ViaRepository.construirQueryBusca`/`CONDICAO_MONTANHA` via `setor/face/montanha`). Recomendado um smoke-test manual na tela de busca.
 
 ### Epics em andamento
 - **Vias Clássicas do CERJ** — backend e frontend concluídos (badge nos cards, filtro na busca, card na home e na explorar)
@@ -144,10 +149,13 @@ interface CardExplorar {
 ## Decisões e Contexto que não ficam óbvios no código
 
 - **Sem Pinia/Vuex** — estado é local por componente. Para estado compartilhado, discutir antes de implementar.
+- **UI: PrimeVue-first, Quasar na base** — componentes novos preferem PrimeVue (mais configurável); Quasar permanece como shell (build, PWA, roteamento, layouts `q-layout`/`q-page`). Não remover o Quasar do projeto. Migração de `q-*` existentes é incremental, por área. Detalhes em `DESIGN_FRONTEND.md`.
+- **Type-check do frontend limpo** — `npx vue-tsc --noEmit` deve ficar em **0 erros** (`skipLibCheck: true` no `tsconfig.json` ignora `.d.ts` de terceiros). Mantenha assim ao mexer no front.
 - **`aws-sdk` v2** no `S3Helper` — débito técnico consciente, migração para v3 está pendente
 - **YAMLs são a fonte de verdade dos dados** — não editar diretamente no banco; sempre via `src/Infrastructure/data/*.yaml` + `npm run seed`
 - **Imagens precisam de `@JoinColumn`** — relações com `Imagem` na entidade `Usuario` usam `foto_perfilId` (com maiúscula no I)
 - **Perfil público/privado** — `Usuario.perfil_publico` (default `true`). Perfis privados: não aparecem no feed nem em `GET /u/:username` (404). Toggle em PerfilEditaForm.
+- **Autorização por papel (`role`)** — `Usuario.role` (enum `PapelUsuario`: `usuario`/`moderador`/`admin`, default `usuario`) é a **única fonte de verdade** da autorização no backend. `is_admin` virou **getter derivado** (`role === admin`), sem coluna no banco — usado só como dica de UI no front (login/DTO/localStorage). Backend autoriza via `requireRole(...papeis)`/`requireAdmin`, que relê `role` no banco a cada request (alterar localStorage no cliente não concede acesso real). Seed: YAML aceita `role:` explícito ou `is_admin: true` (compat → `admin`). Painel: `PATCH /admin/usuarios/:id/papel` (definir papel) e `.../toggle-admin` (compat).
 - **Rota de perfil** — `/perfil/:username` (próprio ou visitante). `/perfil` e `/perfil/me` redirecionam para o perfil do usuário logado. Guard em `PerfilPageWrapper` diferencia dono (edição) de visitante (somente leitura).
 - **Marcações na cordada** — preview no perfil: faixa compacta com bolhas (fotos da via) e “Ver lista”; página `/perfil/:username/escaladas` (login obrigatório) usa linhas (`PerfilMarcacaoEscaladaRow`), não `EscaladaCard` em grade. API: `como=marcado`; repo carrega `viaImagens` para thumbnails.
 - **Usuários de teste** — seed (`usuarios-teste.yaml`): senha comum `teste123` — `teste@cumes.com.br` (`cumes_teste`), `maria.dev@cumes.com.br` (`maria_escaladora`), `privado.dev@cumes.com.br` (`usuario_privado`, perfil privado), `rafael.dev@cumes.com.br` (`rafael`). Escaladas e coleções: `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`.

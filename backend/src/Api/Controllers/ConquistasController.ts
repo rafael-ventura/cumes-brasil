@@ -4,6 +4,7 @@ import { UsuarioRepository } from '../../Infrastructure/repositories/UsuarioRepo
 import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
 import { UsuarioConquistaRepository } from '../../Infrastructure/repositories/UsuarioConquistaRepository';
 import { ConquistasService } from '../../Application/services/ConquistasService';
+import { obterUsuarioIdAutenticado, obterUsuarioIdOpcional } from '../utils/usuarioRequisicao';
 
 export class ConquistasController {
   private service: ConquistasService;
@@ -16,10 +17,7 @@ export class ConquistasController {
   }
 
   obterConquistasMe = async (req: Request, res: Response) => {
-    const usuarioIdAtual = parseInt(req.user.usuarioId, 10);
-    if (!usuarioIdAtual || Number.isNaN(usuarioIdAtual)) {
-      throw new NotFoundError('Usuário não autenticado');
-    }
+    const usuarioIdAtual = obterUsuarioIdAutenticado(req);
 
     const conquistas = await this.service.obterConquistasMe(usuarioIdAtual);
     return res.status(200).json(conquistas);
@@ -29,9 +27,7 @@ export class ConquistasController {
     const username = String(req.params.username || '').trim().toLowerCase();
     if (!username) throw new NotFoundError('Username inválido');
 
-    const usuarioIdAtual = req.user?.usuarioId
-      ? parseInt(req.user.usuarioId, 10)
-      : null;
+    const usuarioIdAtual = obterUsuarioIdOpcional(req) ?? null;
 
     const conquistas = await this.service.obterConquistasPorUsername(username, usuarioIdAtual);
     if (!conquistas) return res.status(404).json({ error: 'Conquistas indisponíveis' });

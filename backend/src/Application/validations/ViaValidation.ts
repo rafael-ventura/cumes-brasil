@@ -45,6 +45,7 @@ export default {
 
   createBody(via: any) {
     ValidationBase.requireObject(via);
+    if (!via.nome?.trim()) throw new BadRequestError('Nome da via é obrigatório');
   },
 
   updateBody(via: any) {

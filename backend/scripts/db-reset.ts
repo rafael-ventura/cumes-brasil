@@ -31,7 +31,7 @@ async function reset() {
     await admin.query(`DROP DATABASE IF EXISTS "${dbName}"`);
     console.log(`Banco "${dbName}" dropado.`);
 
-    await admin.query(`CREATE DATABASE "${dbName}"`);
+    await admin.query(`CREATE DATABASE "${dbName}" WITH TEMPLATE template0`);
     console.log(`Banco "${dbName}" criado.`);
   } finally {
     await admin.end();

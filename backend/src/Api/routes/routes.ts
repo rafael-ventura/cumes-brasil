@@ -15,7 +15,7 @@ import { AppDataSource } from '../../Infrastructure/config/db';
 import AuthenticateRouter from './AuthenticateRouter';
 import { authenticateToken, optionalAuthenticateToken } from '../Middlewares/AuthenticateMiddleware';
 import ImagemRouter from './ImagemRouter';
-import SearchRouter from './SearchRouter';
+import BuscaRouter from './BuscaRouter';
 import PerfilRouter from "./PerfilRouter";
 import { authRateLimiter, uploadRateLimiter, createContentRateLimiter } from '../Middlewares/RateLimitMiddleware';
 import { MulterMiddleware } from '../Middlewares/MulterMiddleware';
@@ -33,10 +33,6 @@ import ConquistasRouter from './ConquistasRouter';
 import AdminRouter from './AdminRouter';
 import { ViaImageSugestaoController } from '../Controllers/Admin/ViaImageSugestaoController';
 import { requireAdmin } from '../Middlewares/AdminMiddleware';
-
-// TODO: GARANTIR QUE OS MIDDLEWARES ESTAO SENDO APLICADOS NA ORDEM CORRETA.
-// TODO: VERIFICAR SE ROTAS SEGUEM PADRAO REST.
-// TODO: VERIFIQUE A NECESSIDADE DE CRIAR METODOS E ISOLAR TRECHOS DE CODIGO COMUM.
 
 const routes = Router();
 const conexaoController = new ConexaoController(new ConexaoService(AppDataSource));
@@ -79,7 +75,9 @@ routes.use('/colecoes', authenticateToken, createContentRateLimiter, ColecaoRout
 routes.use("/perfil", authenticateToken, PerfilRouter);
 
 // Rota de busca com autenticação opcional
-routes.use("/search", optionalAuthenticateToken, SearchRouter);
+routes.use("/busca", optionalAuthenticateToken, BuscaRouter);
+// Compat: mantém /search apontando para o mesmo router
+routes.use("/search", optionalAuthenticateToken, BuscaRouter);
 
 // Rede social (seguir / seguidores)
 routes.use("/seguimentos", SeguimentoRouter);

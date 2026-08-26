@@ -4,10 +4,8 @@ import { ViaRepository } from '../../Infrastructure/repositories/ViaRepository';
 import { EscaladaRepository } from '../../Infrastructure/repositories/EscaladaRepository';
 import { ColecaoRepository } from '../../Infrastructure/repositories/ColecaoRepository';
 import { Service } from 'typedi';
-import { Imagem } from '../../Domain/entities/Imagem';
 import { ImagemService } from './ImagemService';
 import path from 'path';
-import * as fs from 'node:fs';
 import BadRequestError from '../errors/BadRequestError';
 import { ImagemRepository } from '../../Infrastructure/repositories/ImagemRepository';
 import S3Helper from '../../Infrastructure/helpers/S3Helper';
@@ -164,8 +162,7 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
 
         // Remover a imagem antiga do S3, se existir e não for a padrão (ID 3)
         if (imagemAtual && imagemAtual.id !== 3 && process.env.CLOUDFRONT_URL) {
-            console.log(`🗑️ Removendo imagem antiga do S3: ${imagemAtual.url}`); // TODO: Adicionar logger
-            const fileName = imagemAtual.url.split('/').pop(); // Pega o nome do arquivo
+            const fileName = imagemAtual.url.split('/').pop();
             if (fileName) {
                 await this.s3Service.deleteFileS3(fileName);
             }
@@ -228,7 +225,6 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
         // Remover a imagem antiga do S3 ou do sistema de arquivos, se existir e não for a default
         if (imagemAtual && imagemAtual.id !== 3) {
             if (process.env.CLOUDFRONT_URL) {
-                console.log(`:lata_de_lixo: Removendo imagem antiga do S3: ${imagemAtual.url}`);
                 const fileName = imagemAtual.url.split('/').pop();
                 if (fileName) {
                     await this.s3Service.deleteFileS3(fileName);
@@ -241,54 +237,6 @@ export class UsuarioService extends BaseService<Usuario, UsuarioRepository> {
                 await this.repository.updateFotoPerfil(usuario.id, imagemDefault.id);
                 await this.imagemService.delete(imagemAtual.id);
             }
-        }else {
-            console.log("Nunca vai conseguir excluir essa otários!")
         }
     }
-
-    // TODO- REVISAR
-    /*
-    private async removerFotoPerfil(usuario: Usuario) {
-        const imagemAtual = await this.imagemService.getByUsuarioId(usuario.id);
-
-        // Define a foto default
-        await this.repository.update(usuario.id, usuario);
-
-        // Remove a imagem antiga, se não for a default
-        if (imagemAtual) {
-            await this.excluirImagemAntiga(imagemAtual);
-        }
-    }
-
-    private async excluirImagemAntiga(imagemAtual: Imagem) {
-        const defaultImageUrl = '/assets/usuarios/usuario-default-01.jpg';
-
-        if (imagemAtual.url !== defaultImageUrl) {
-            const oldImagePath = path.resolve(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                'assets',
-                imagemAtual.url.replace('/assets/', '')
-            );
-
-            // Verifica se o caminho da imagem existe antes de tentar deletá-la
-            fs.access(oldImagePath, fs.constants.F_OK, (err) => {
-                if (err) {
-                    console.error('Imagem não encontrada no sistema de arquivos:', err);
-                } else {
-                    fs.unlink(oldImagePath, (unlinkErr) => {
-                        if (unlinkErr) {
-                            console.error('Erro ao apagar imagem antiga:', unlinkErr);
-                        }
-                    });
-                }
-            });
-
-            // Remove a entrada da imagem no banco
-            await this.imagemService.delete(imagemAtual.id);
-        }
-    }
-    */
 }

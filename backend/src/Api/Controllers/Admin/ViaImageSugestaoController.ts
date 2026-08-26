@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ViaImageSugestaoService } from '../../../Application/services/ViaImageSugestaoService';
 import { ImagemRepository } from '../../../Infrastructure/repositories/ImagemRepository';
+import { obterUsuarioIdAutenticado } from '../../utils/usuarioRequisicao';
 
 const service = new ViaImageSugestaoService();
 const imagemRepo = new ImagemRepository();
@@ -8,7 +9,7 @@ const imagemRepo = new ImagemRepository();
 export class ViaImageSugestaoController {
   submeter = async (req: Request, res: Response) => {
     const viaId = Number(req.params.viaId);
-    const usuarioId = Number(req.user.usuarioId);
+    const usuarioId = obterUsuarioIdAutenticado(req);
     const { creditos } = req.body;
 
     const file = req.file;
@@ -49,14 +50,14 @@ export class ViaImageSugestaoController {
 
   aprovar = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const adminId = Number(req.user.usuarioId);
+    const adminId = obterUsuarioIdAutenticado(req);
     const sugestao = await service.aprovar(id, adminId);
     return res.json(sugestao);
   };
 
   rejeitar = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const adminId = Number(req.user.usuarioId);
+    const adminId = obterUsuarioIdAutenticado(req);
     const { motivo } = req.body;
     const sugestao = await service.rejeitar(id, adminId, motivo);
     return res.json(sugestao);

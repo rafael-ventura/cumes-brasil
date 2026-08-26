@@ -584,10 +584,12 @@ onMounted(async () => {
         EscaladaService.listarPorUsuarioId(user.value.id, 'autor'),
         EscaladaService.listarOndeFoiMarcado(user.value.id)
       ]);
-      const identificadoresUnicos = new Set<number>([
-        ...(listaComoAutor ?? []).map(e => e.id),
-        ...(listaComeMarcado ?? []).map(e => e.id)
-      ]);
+      const identificadoresUnicos = new Set<number>(
+        [
+          ...(listaComoAutor ?? []).map(e => e.id),
+          ...(listaComeMarcado ?? []).map(e => e.id)
+        ].filter((id): id is number => typeof id === 'number')
+      );
       numEscaladas.value = identificadoresUnicos.size;
       numeroDeMarcados.value = (listaComeMarcado ?? []).length;
     } else {
@@ -687,7 +689,7 @@ const atualizarBiografia = (novaBio: string) => {
 };
 
 const sair = () => {
-  UserService.logout();
+  AuthenticateService.logout();
   router.push('/auth/login');
 };
 

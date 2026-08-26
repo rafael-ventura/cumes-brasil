@@ -1,9 +1,8 @@
 import { Service } from "typedi";
 import nodemailer, { Transporter } from "nodemailer";
 import { google } from "googleapis";
-import { OAuth2Client } from "google-auth-library";
 import InternalServerError from "../errors/InternalServerError";
-import { errorsMessage, successMessage } from "../errors/constants";
+import { errorsMessage, successMessage } from "../errors";
 import fs from "fs";
 import Handlebars from "handlebars";
 import path from "path";
@@ -13,7 +12,7 @@ export class MailService {
     private transporter: Transporter;
     private transporterConfigOptions: any;
     private mailOptions: any;
-    private oauth2Client: OAuth2Client;
+    private oauth2Client: any;
 
     constructor() { }
 

@@ -49,7 +49,7 @@ Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir compo
 
 **Perfil/** — `PerfilBar.vue`, `PerfilBio.vue`, `PerfilEditaForm.vue`, `PerfilEditaFormAddPrediletaModal.vue`, `PerfilEscaladasDestaque.vue`, `PerfilGridButtons.vue`, `PerfilMarcacaoEscaladaRow.vue`, `PerfilViaPredileta.vue`, `FotoPerfilUpload.vue`
 
-**Via/** — `ViaCard.vue`, `ViaCardSmall.vue`, `ViaCardSmallSmall.vue`, `ViaLista.vue`, `BotoesAcao.vue`, `BotoesAcaoMelhorado.vue`, `CardInfoPrincipal.vue`, `GrauBadge.vue`, `BadgeCerj.vue`, `SecaoCroqui.vue`, `SecaoGrau.vue`, `SecaoLocalizacao.vue`, `SecaoMaisDetalhes.vue`
+**Via/** — `ViaCard.vue`, `ViaCardSmall.vue`, `ViaCardSmallSmall.vue`, `ViaLista.vue`, `BotoesAcao.vue`, `CardInfoPrincipal.vue`, `GrauBadge.vue`, `BadgeCerj.vue`, `SecaoCroqui.vue`, `SecaoGrau.vue`, `SecaoLocalizacao.vue`, `SecaoMaisDetalhes.vue`
 
 **Utilitários raiz** — `BotaoVoltar.vue`, `PaginacaoPadrao.vue`, `ImagePlaceholder.vue`, `ItemSugestao.vue`, `ScrolToTop.vue`, `ErrorHandler.vue`
 
@@ -87,6 +87,7 @@ Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir compo
 | **`Admin/AdminDashboard.vue`** | `/admin` (requer `is_admin`) |
 | **`Admin/AdminSugestoesImagens.vue`** | `/admin/sugestoes` — moderar fotos |
 | **`Admin/AdminVias.vue`** | `/admin/vias` — CRUD de vias |
+| **`Admin/AdminUsuarios.vue`** | `/admin/usuarios` — listar usuários e definir papel (`usuario`/`moderador`/`admin`) via `PATCH /admin/usuarios/:id/papel` |
 | `ErrorNotFound.vue` | 404 |
 
 ---
@@ -95,7 +96,7 @@ Organizados por feature. Quasar (`q-*`) como base; PrimeVue quando existir compo
 
 Singletons que encapsulam todas as chamadas à API via Axios:
 
-`AuthenticateService` (inclui `isAdmin()`), `ViaService`, `ColecaoService`, `EscaladaService`, `UsuarioService`, `SearchService`, `HomeService`, `CroquiService`, `ImagemService`, `MontanhaService`, `LocalizacaoService`, `ConquistasService`, `SeguimentoService`, **`ViaImageSugestaoService`** (submissão e moderação de fotos)
+`AuthenticateService` (inclui `getRole()`, `temPapel(...)`, `isModerador()`, `isAdmin()` — papel em `localStorage` como dica de UI; autorização real é no backend), `ViaService`, `ColecaoService`, `EscaladaService`, `UsuarioService`, `SearchService`, `HomeService`, `CroquiService`, `ImagemService`, `MontanhaService`, `LocalizacaoService`, `ConquistasService`, `SeguimentoService`, **`ViaImageSugestaoService`** (submissão e moderação de fotos)
 
 ---
 

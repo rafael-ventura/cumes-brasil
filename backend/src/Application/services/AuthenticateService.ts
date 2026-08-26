@@ -13,10 +13,10 @@ import GoogleAuthenticateService from "./GoogleAuthenticateService";
 import { Imagem } from "../../Domain/entities/Imagem";
 import { ImagemRepository } from "../../Infrastructure/repositories/ImagemRepository";
 import { Usuario } from "../../Domain/entities/Usuario";
+import { PapelUsuario } from "../../Domain/enum/EPapelUsuario";
 import { Colecao } from "../../Domain/entities/Colecao";
 import { Container } from "typedi";
 import { ColecaoRepository } from "../../Infrastructure/repositories/ColecaoRepository";
-import TokenValidation from "../validations/TokenValidation";
 import { ResetUserPasswordTokenService } from "./ResetUserPasswordTokenService";
 import { MailService } from "./MailService";
 
@@ -37,7 +37,6 @@ class AuthService {
     }
 
     async register(nome: string, email: string, senha: string, username?: string): Promise<any> {
-        UserValidation.registerValidation(nome, email, senha, username);
         const existingUser = await this.usuarioRepository.findByEmail(email);
         if (existingUser != null) {
             throw new BadRequestError(errorsMessage.USER_ALREADY_EXISTS);
@@ -57,14 +56,12 @@ class AuthService {
             const user = await this.usuarioRepository.createUsuario(nome, email, senhaHash, imagem, usernameFinal);
             await this.createDefaultCollections(user);
             const token = this.generateToken(user.id.toString());
-            return { token, usuarioId: user.id, username: user.username, is_admin: false, auth: true };
+            return { token, usuarioId: user.id, username: user.username, role: PapelUsuario.Usuario, is_admin: false, auth: true };
         }
         throw new BadRequestError('Erro ao criar usuário: imagem padrão não encontrada');
     }
 
     async login(email: string, password: string): Promise<any> {
-        UserValidation.authenticateValidation(email, password);
-
         const user: ObjectLiteral | null | undefined = await this.usuarioRepository.findByEmail(email);
         if (!user) throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
 
@@ -73,7 +70,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, usuarioId: user.id, username: user.username, is_admin: user.is_admin ?? false, auth: true };
+        return { token, usuarioId: user.id, username: user.username, role: user.role ?? PapelUsuario.Usuario, is_admin: user.is_admin ?? false, auth: true };
     }
 
     async googleLogin(authorizationCode: string): Promise<any> {
@@ -126,7 +123,7 @@ class AuthService {
 
         const token = this.generateToken(user.id.toString());
 
-        return { token, usuarioId: user.id, username: user.username, is_admin: (user as any).is_admin ?? false, auth: true };
+        return { token, usuarioId: user.id, username: user.username, role: (user as any).role ?? PapelUsuario.Usuario, is_admin: (user as any).is_admin ?? false, auth: true };
     }
 
     private async createDefaultCollections(user: Usuario): Promise<void> {
@@ -146,8 +143,6 @@ class AuthService {
     }
 
     async createResetUserPassword(email: string) {
-        UserValidation.generateResetPasswordValidation(email);
-
         const user = await this.usuarioRepository.findByEmail(email);
         if (!user) {
             throw new NotFoundError(errorsMessage.USER_MAIL_NOT_FOUND);
@@ -182,9 +177,6 @@ class AuthService {
     }
 
     async updateUserPassword(pass: string, passRepeated: string, token: string) {
-        UserValidation.resetPasswordValidation(pass, passRepeated);
-        TokenValidation.resetUserPasswordToken(token);
-
         const user = await this.usuarioRepository.findByResetPasswordUrl(token);
         if (!user) {
             throw new BadRequestError(errorsMessage.USER_NOT_FOUND);

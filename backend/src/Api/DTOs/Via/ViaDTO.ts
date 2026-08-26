@@ -93,7 +93,7 @@ export class ViaDTO {
     // Arrays de IDs para relações de muitos-para-muitos
     variantesIds?: number[];
     viaCroquisIds?: number[];
-    viaColacoesIds?: number[];
+    viaColecoesIds?: number[];
     escaladasIds?: number[];
 
     constructor(entity: Via) {
@@ -122,7 +122,7 @@ export class ViaDTO {
 
         // Montanha (se via está diretamente na montanha)
         if (entity.montanha && typeof entity.montanha === 'object') {
-            const montanha = entity.montanha as any;
+            const montanha = entity.montanha as typeof entity.montanha & { localizacoes?: any[] };
             this.montanha = {
                 id: montanha.id,
                 nome: montanha.nome,
@@ -240,24 +240,23 @@ export class ViaDTO {
         this.imagens = imagensObjetos.map((img: any) => new ImagemDTO(img));
         this.imagem = this.imagens.length > 0 ? this.imagens[0] : undefined;
 
-        this.fonte = entity.fonte && typeof entity.fonte === 'object'
-            ? new FonteDTO(entity.fonte as any) 
+        this.fonte = entity.fonte
+            ? new FonteDTO(entity.fonte as any)
             : undefined;
 
         // Via principal simplificada (apenas info básica para evitar recursão)
         if (entity.viaPrincipal) {
-            const vp = entity.viaPrincipal as any;
             this.via_principal = {
-                id: vp.id,
-                nome: vp.nome,
-                grau: vp.grau
+                id: entity.viaPrincipal.id,
+                nome: entity.viaPrincipal.nome,
+                grau: entity.viaPrincipal.grau
             };
         }
 
         // Arrays de relações (apenas IDs)
         this.variantesIds = entity.variantes?.map(v => v.id);
-        this.viaCroquisIds = entity.viaCroquis?.map(vc => vc.id);
-        this.viaColacoesIds = entity.viaColecoes?.map(vc => vc.id);
+        this.viaCroquisIds = entity.viaCroquis?.map(vc => (vc as any).croqui?.id).filter(Boolean);
+        this.viaColecoesIds = entity.viaColecoes?.map(vc => vc.id);
         this.escaladasIds = entity.escaladas?.map(e => e.id);
     }
 }

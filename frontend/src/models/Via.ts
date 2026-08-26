@@ -33,6 +33,7 @@ export interface Via {
     latitude?: number;
     longitude?: number;
     localizacoes?: Localizacao[];
+    imagem?: Imagem;
   };
   face?: {
     id: number;

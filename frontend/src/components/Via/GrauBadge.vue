@@ -7,9 +7,18 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Via } from 'src/models/Via';
 
-const props = defineProps<{ via: Via }>();
+// Aceita qualquer objeto com os campos de grau (Via completa ou resumos parciais).
+interface ViaGrau {
+  grau?: string;
+  crux?: string;
+  artificial?: string;
+  exposicao?: string;
+  duracao?: string;
+  extensao?: number;
+}
+
+const props = defineProps<{ via: ViaGrau }>();
 
 // Função de validação
 const isValid = (value: any) => value != null && value !== 'N/A';

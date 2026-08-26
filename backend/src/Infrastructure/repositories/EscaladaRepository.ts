@@ -328,65 +328,73 @@ export class EscaladaRepository implements ISearchRepository<Escalada> {
             comoPerfil = 'autor',
             itensPorPagina = 10
         } = filtros;
-        let qb = this.repository.createQueryBuilder("escalada")
-            .distinct(true)
-            .leftJoinAndSelect("escalada.usuario", "usuario")
-            .leftJoinAndSelect("escalada.via", "via")
-            .leftJoinAndSelect("via.viaImagens", "viaImagens")
-            .leftJoinAndSelect("viaImagens.imagem", "viaImagensImagem")
-            //acessar tambem os participantes
-            .leftJoinAndSelect("escalada.participantes", "participante")
-            .orderBy("escalada.data", "DESC");
 
-        const modo = (comoPerfil === 'marcado' || comoPerfil === 'todas' || comoPerfil === 'autor')
-            ? comoPerfil
-            : 'autor';
+        const modo: 'autor' | 'marcado' | 'todas' =
+            comoPerfil === 'marcado' || comoPerfil === 'todas' ? comoPerfil : 'autor';
+
         const usuarioIdNum = Number(usuarioId || 0);
-        const repoUsuario = AppDataSource.getRepository(Usuario);
-        const usuarioAlvo = usuarioIdNum ? await repoUsuario.findOne({ where: { id: usuarioIdNum } }) : null;
+        const precisaUsername = modo === 'marcado' || modo === 'todas';
+        const usuarioAlvo = usuarioIdNum && precisaUsername
+            ? await AppDataSource.getRepository(Usuario).findOne({ where: { id: usuarioIdNum } })
+            : null;
         const usernameAlvo = String(usuarioAlvo?.username || '').trim().toLowerCase();
 
+        // 1) Pass 1: descobrir os IDs paginados com query enxuta.
+        const idsQb = this.repository.createQueryBuilder('escalada')
+            .select('escalada.id', 'id')
+            .addSelect('escalada.data', 'data')
+            .orderBy('escalada.data', 'DESC');
+
         if (modo === 'marcado' && usernameAlvo) {
-            qb = qb.andWhere('escalada.usuario.id != :usuarioId', { usuarioId: usuarioIdNum })
-                .andWhere('participante.username IS NOT NULL')
-                .andWhere("TRIM(participante.username) <> ''")
+            idsQb
+                .innerJoin('escalada.participantes', 'participante')
+                .andWhere('escalada.usuario.id != :usuarioId', { usuarioId: usuarioIdNum })
                 .andWhere("LOWER(TRIM(participante.username)) = :usernameAlvo", { usernameAlvo });
         } else if (modo === 'todas' && usernameAlvo) {
-            qb = qb.andWhere(`(
-                escalada.usuario.id = :usuarioId
-                OR (
-                    escalada.usuario.id != :usuarioId
-                    AND participante.username IS NOT NULL
-                    AND TRIM(participante.username) <> ''
-                    AND LOWER(TRIM(participante.username)) = :usernameAlvo
-                )
-            )`, { usuarioId: usuarioIdNum, usernameAlvo });
+            idsQb
+                .leftJoin('escalada.participantes', 'participante')
+                .andWhere(`(
+                    escalada.usuario.id = :usuarioId
+                    OR LOWER(TRIM(participante.username)) = :usernameAlvo
+                )`, { usuarioId: usuarioIdNum, usernameAlvo });
         } else {
-            qb = qb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId: usuarioIdNum });
+            idsQb.andWhere('escalada.usuario.id = :usuarioId', { usuarioId: usuarioIdNum });
         }
-        // Filtrar por nome da via (se necessário)
+
         if (termoBusca) {
-            qb = qb.andWhere("via.nome LIKE :termo", { termo: `%${termoBusca}%` });
+            idsQb
+                .innerJoin('escalada.via', 'viaFiltro')
+                .andWhere('viaFiltro.nome ILIKE :termo', { termo: `%${termoBusca}%` });
         }
 
-        // Não temos suporte a ordenação por campo em Escalada
-        /*if (sortField && sortOrder) {
-            qb = qb.orderBy(`escalada.${sortField}`, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
-        }*/
+        // DISTINCT em escalada.id evita duplicação quando JOIN com participantes traz N linhas.
+        idsQb.groupBy('escalada.id');
 
-        // Total de escaladas que correspondem aos filtros
-        const totalItems = await qb.getCount();
+        const totalItems = await idsQb.getCount();
+        const idsRaw = await idsQb
+            .offset((pagina - 1) * itensPorPagina)
+            .limit(itensPorPagina)
+            .getRawMany<{ id: number }>();
+        const idsPagina = idsRaw.map(r => r.id);
 
-        const items = await qb
-            .skip((pagina - 1) * itensPorPagina)
-            .take(itensPorPagina)
+        if (idsPagina.length === 0) {
+            return { items: [], totalPages: Math.ceil(totalItems / itensPorPagina), totalItems };
+        }
+
+        // 2) Pass 2: hidrata as escaladas da página com todas as relações.
+        const items = await this.repository.createQueryBuilder('escalada')
+            .leftJoinAndSelect('escalada.usuario', 'usuario')
+            .leftJoinAndSelect('escalada.via', 'via')
+            .leftJoinAndSelect('via.viaImagens', 'viaImagens')
+            .leftJoinAndSelect('viaImagens.imagem', 'viaImagensImagem')
+            .leftJoinAndSelect('escalada.participantes', 'participante')
+            .whereInIds(idsPagina)
+            .orderBy('escalada.data', 'DESC')
             .getMany();
-
-        const totalPages = Math.ceil(totalItems / itensPorPagina);
 
         return {
             items,
-            totalPages,
+            totalPages: Math.ceil(totalItems / itensPorPagina),
             totalItems
         };
     }

@@ -67,12 +67,20 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AuthenticateService from 'src/services/AuthenticateService';
 
 const router = useRouter();
 const route = useRoute();
-const eAdmin = AuthenticateService.isAdmin();
+const eAdmin = ref(AuthenticateService.isAdmin());
+
+onMounted(async () => {
+  if (AuthenticateService.isTokenValid()) {
+    await AuthenticateService.sincronizarPrivilegiosSessao();
+    eAdmin.value = AuthenticateService.isAdmin();
+  }
+});
 
 const irPara = (caminho: string) => {
   router.push(caminho);

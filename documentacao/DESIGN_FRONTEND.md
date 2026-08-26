@@ -5,8 +5,16 @@ Documentação completa das regras de cores, tipografia e componentes do fronten
 ---
 
 ## Preferências de Interface (Quasar e PrimeVue)
-- O Quasar é o framework base para estrutura, Progressive Web App (PWA), layout e componentes `q-*`.
-- A PrimeVue deve ser priorizada quando existir equivalente adequado para o requisito e quando for possível aplicar as regras de estilo deste documento.
+
+**Direção: PrimeVue-first para componentes de UI; Quasar fica na base (shell).** O Quasar **não** sai do projeto — ele é o build system, PWA, roteamento/scaffolding e os layouts (`q-layout`, `q-page`, `MainLayout`/`TopBar`/`NavBar`). Trocar essa base seria reescrever o app inteiro, sem ganho pro usuário. O que muda é a preferência por **componentes de widget**:
+
+| Camada | Tecnologia | Exemplos |
+|--------|-----------|----------|
+| Shell / build / PWA / layout | **Quasar** (manter) | `q-layout`, `q-page`, `q-dialog` estrutural, boot files, `quasar.config` |
+| Widgets de UI (formulários, tabelas, selects, botões) | **PrimeVue** (preferir) | `Select`, `DataTable`, `Paginator`, `Button`, `InputText` |
+
+- **Componentes novos**: usar PrimeVue quando houver equivalente adequado (PrimeVue v4 + PassThrough `pt` é bem mais configurável que `q-*` para customização visual — daí a preferência). Quando não houver, usar `q-*`.
+- **Migração de existentes é incremental**: ao mexer numa área (feature), migre os `q-*` daquela área para PrimeVue de forma consistente — evite deixar a mesma tela meio Quasar, meio PrimeVue.
 - Ao criar novos componentes, respeitar simultaneamente as regras de cores e contraste em tema escuro e o padrão de modais e formulários descritos neste arquivo.
 - Ao sobrescrever estilos de componentes externos, aplicar `!important` quando necessário para garantir consistência visual.
 - Ao estilizar internos de componentes em `<style scoped>`, usar `:deep(...)`.
@@ -181,10 +189,17 @@ Ao criar um novo componente, verifique:
 ---
 
 ## Componentes PrimeVue (principalmente em tema escuro)
-- Paginação: preferir o padrão do componente `frontend/src/components/PaginacaoPadrao.vue`, que usa `Paginator` e `Dropdown` da PrimeVue.
-- Dropdown: quando o tema deixar componentes com aparência branca, sobrescrever `p-dropdown`, `p-inputtext`, `p-dropdown-label`, `p-dropdown-trigger`, `p-dropdown-panel` e `p-dropdown-item` para usar `$background`, `$offwhite` e bordas com `$cumes-03`.
-- Paginator: aplicar estilo em `p-paginator-page`, `p-paginator-prev`, `p-paginator-next`, `p-paginator-first` e `p-paginator-last`, usando `!important` quando necessário.
-- Em estilos `scoped`, todas as seleções internas de componentes PrimeVue devem ser feitas com `:deep(...)`.
+
+> **PrimeVue v4** (sem preset de tema): os componentes são importados por arquivo e estilizados manualmente. Atenção às **classes v4** — `Dropdown` virou `Select` (`p-select`, `p-select-label`, `p-select-dropdown`, `p-select-option`, `p-select-overlay`). As classes v3 (`p-dropdown*`) não existem mais.
+
+**Implementações de referência (copiar o padrão de estilo):**
+- **Tabelas / painéis admin** → `frontend/src/pages/Admin/AdminUsuarios.vue` (PrimeVue `DataTable` + `Column` + `Select` + `Tag` + `Button` + `InputText`, todos com overrides de tema escuro).
+- **Paginação** → `frontend/src/components/PaginacaoPadrao.vue` (`Paginator` + `Select`).
+
+- Select: quando o tema deixar o componente com aparência branca, sobrescrever `p-select`, `p-inputtext`, `p-select-label`, `p-select-dropdown`, `p-select-overlay` e `p-select-option` para usar `$background`/`$offwhite` e bordas `$cumes-03`.
+- Paginator: estilizar `p-paginator-page`, `p-paginator-prev/next/first/last` (página ativa = `p-paginator-page-selected` no v4), com `!important` quando necessário.
+- **Overlays** (`p-select-overlay`, menus que renderizam no `body`) precisam de `:global(...)`, não `:deep(...)`.
+- Em estilos `scoped`, demais seleções internas de componentes PrimeVue devem usar `:deep(...)`.
 
 ---
 

@@ -12,15 +12,15 @@ export class ViaController {
 		this.service = service;
 	}
 
-	getViaById = async (req: Request, res: Response) => {
+	buscarPorId = async (req: Request, res: Response) => {
 		const id = ViaValidation.idParam(req.params.id);
-		const via = await this.service.getViaById(id);
+		const via = await this.service.buscarPorId(id);
 		return res.status(200).json(new ViaDTO(via));
 	};
 
-	getAllVia = async (req: Request, res: Response) => {
+	listar = async (req: Request, res: Response) => {
 		const { page, limit } = ViaValidation.pagination(req.query.page, req.query.limit);
-		const result = await this.service.getVias(page, limit);
+		const result = await this.service.listar(page, limit);
 
 		return res.status(200).json({
 			items: result.items.map(v => new ViaDTO(v)),
@@ -29,38 +29,38 @@ export class ViaController {
 		});
 	};
 
-	getRandomVia = async (_: Request, res: Response) => {
-		const via = await this.service.getRandomVia();
+	aleatoria = async (_: Request, res: Response) => {
+		const via = await this.service.aleatoria();
 		return res.status(200).json(new ViaDTO(via));
 	};
 
-	createVia = async (req: Request, res: Response) => {
+	criar = async (req: Request, res: Response) => {
 		const via: Via = req.body;
 		ViaValidation.createBody(via);
-		const createdVia = await this.service.createVia(via);
-		return res.status(201).json(new ViaDTO(createdVia));
+		const criada = await this.service.criar(via);
+		return res.status(201).json(new ViaDTO(criada));
 	};
 
-	updateVia = async (req: Request, res: Response) => {
+	atualizar = async (req: Request, res: Response) => {
 		const via: Via = req.body;
 		ViaValidation.updateBody(via);
-		const updatedVia = await this.service.updateVia(via.id, via);
-		if (!updatedVia) throw new NotFoundError("Via não encontrada");
+		const atualizada = await this.service.atualizar(via.id, via);
+		if (!atualizada) throw new NotFoundError("Via não encontrada");
 
-		return res.status(200).json(new ViaDTO(updatedVia));
+		return res.status(200).json(new ViaDTO(atualizada));
 	};
 
-	deleteVia = async (req: Request, res: Response) => {
+	deletar = async (req: Request, res: Response) => {
 		const id = ViaValidation.idParam(req.params.id);
-		await this.service.deleteVia(id);
+		await this.service.deletar(id);
 		res.status(200).json({ message: "Via deletada com sucesso" });
 	};
 
-	getViasInColecao = async (req: Request, res: Response) => {
+	listarPorColecao = async (req: Request, res: Response) => {
 		const colecaoId = ViaValidation.idParam(req.params.id);
 		const { page = 1, limit = 10 } = ViaValidation.pagination(req.query.page, req.query.limit);
 
-	 const result = await this.service.getViasIdByColecaoId(colecaoId, page, limit);
+		const result = await this.service.listarPorColecao(colecaoId, page, limit);
 
 		return res.status(200).json({
 			items: result.items.map(v => new ViaDTO(v)),
@@ -69,12 +69,12 @@ export class ViaController {
 		});
 	};
 
-	getViasNotInColecao = async (req: Request, res: Response) => {
+	listarForaDeColecao = async (req: Request, res: Response) => {
 		const colecaoId = ViaValidation.idParam(req.params.id);
 		const usuarioId = ViaValidation.idParam(req.query.usuarioId as string);
 		const { page = 1, limit = 10 } = ViaValidation.pagination(req.query.page, req.query.limit);
 
-		const result = await this.service.getViasNotInColecaoForUser(colecaoId, usuarioId, page, limit);
+		const result = await this.service.listarForaDeColecao(colecaoId, usuarioId, page, limit);
 
 		return res.status(200).json({
 			items: result.items.map(v => new ViaDTO(v)),
@@ -83,9 +83,9 @@ export class ViaController {
 		});
 	};
 
-	countEntities = async (req: Request, res: Response) => {
+	contarPorFiltro = async (req: Request, res: Response) => {
 		const { key, value } = ViaValidation.validaController(req.params.filter);
-		const totalCount = await this.service.countEntities({ key, value });
+		const totalCount = await this.service.contarPorFiltro({ key, value });
 		res.status(200).json({ total: totalCount });
 	};
 }

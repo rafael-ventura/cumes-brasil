@@ -25,7 +25,8 @@ AdminRouter.delete('/vias/:id',   asyncErrorHandler(viaCtrl.deletar));
 
 // Usuários
 AdminRouter.get('/usuarios',                     asyncErrorHandler(usuarioCtrl.listar));
-AdminRouter.patch('/usuarios/:id/toggle-admin',  asyncErrorHandler(usuarioCtrl.toggleAdmin));
 AdminRouter.get('/usuarios/estatisticas',        asyncErrorHandler(usuarioCtrl.estatisticas));
+AdminRouter.patch('/usuarios/:id/toggle-admin',  asyncErrorHandler(usuarioCtrl.toggleAdmin));
+AdminRouter.patch('/usuarios/:id/papel',         asyncErrorHandler(usuarioCtrl.definirPapel));
 
 export default AdminRouter;

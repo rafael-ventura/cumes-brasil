@@ -1,10 +1,8 @@
-// controllers/auth.controller.ts
-
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../../Application/services/AuthenticateService';
-import HandleErrors from '../../Application/errors/HandleErrors';
 import UserValidation from '../../Application/validations/UserValidation';
 import TokenValidation from '../../Application/validations/TokenValidation';
+import { BadRequestError } from '../../Application/errors';
 
 class AuthController {
     private authService: AuthService;
@@ -26,7 +24,7 @@ class AuthController {
     async googleLogin(req: Request, res: Response, next: NextFunction) {
         const { authorizationCode } = req.body;
         if (!authorizationCode) {
-            UserValidation.generateResetPasswordValidation(authorizationCode as any);
+            throw new BadRequestError('authorizationCode obrigatório');
         }
         const result = await this.authService.googleLogin(authorizationCode);
         res.json(result);

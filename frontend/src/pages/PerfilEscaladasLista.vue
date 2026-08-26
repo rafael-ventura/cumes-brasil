@@ -153,10 +153,12 @@ async function carregar () {
 
     totalAutor.value = (autorLista ?? []).length;
     totalMarcado.value = (marcadoLista ?? []).length;
-    totalTodas.value = new Set<number>([
-      ...(autorLista ?? []).map(e => e.id),
-      ...(marcadoLista ?? []).map(e => e.id)
-    ]).size;
+    totalTodas.value = new Set<number>(
+      [
+        ...(autorLista ?? []).map(e => e.id),
+        ...(marcadoLista ?? []).map(e => e.id)
+      ].filter((id): id is number => typeof id === 'number')
+    ).size;
 
     if (filtroAtual === 'autor') {
       escaladas.value = Array.isArray(autorLista) ? autorLista : [];
@@ -164,8 +166,8 @@ async function carregar () {
       escaladas.value = Array.isArray(marcadoLista) ? marcadoLista : [];
     } else {
       const mapa = new Map<number, Escalada>();
-      for (const e of (autorLista ?? [])) mapa.set(e.id, e);
-      for (const e of (marcadoLista ?? [])) mapa.set(e.id, e);
+      for (const e of (autorLista ?? [])) { if (e.id != null) mapa.set(e.id, e); }
+      for (const e of (marcadoLista ?? [])) { if (e.id != null) mapa.set(e.id, e); }
       escaladas.value = Array.from(mapa.values());
     }
 

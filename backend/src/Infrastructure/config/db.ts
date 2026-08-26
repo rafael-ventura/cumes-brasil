@@ -26,7 +26,6 @@ import { UsuarioSeguindo } from '../../Domain/entities/UsuarioSeguindo';
 import { UsuarioConquista } from '../../Domain/entities/UsuarioConquista';
 import { ViaImageSugestao } from '../../Domain/entities/ViaImageSugestao';
 
-
 export const AppDataSource = new DataSource({
     schema: 'public',
     type: 'postgres',
