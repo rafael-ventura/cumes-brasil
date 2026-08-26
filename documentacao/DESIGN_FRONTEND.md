@@ -1,145 +1,145 @@
 # 🎨 Design System - Cumes Brasil Frontend
 
-Documentação completa das regras de cores, tipografia e componentes do frontend. Peça para sua IA consultar essas informações ao fazer alterações visuais.
+Full documentation of color rules, typography, and component conventions for the frontend. Point your AI assistant at this file when making visual changes.
 
 ---
 
-## Preferências de Interface (Quasar e PrimeVue)
+## UI Preferences (Quasar and PrimeVue)
 
-**Direção: PrimeVue-first para componentes de UI; Quasar fica na base (shell).** O Quasar **não** sai do projeto — ele é o build system, PWA, roteamento/scaffolding e os layouts (`q-layout`, `q-page`, `MainLayout`/`TopBar`/`NavBar`). Trocar essa base seria reescrever o app inteiro, sem ganho pro usuário. O que muda é a preferência por **componentes de widget**:
+**Direction: PrimeVue-first for UI components; Quasar stays as the base (shell).** Quasar was **never** meant to leave the project — it's the build system, PWA layer, routing/scaffolding, and the layouts (`q-layout`, `q-page`, `MainLayout`/`TopBar`/`NavBar`). Swapping that base out would mean rewriting the whole app, with no real benefit to the user. What changes is the preference for **widget-level components**:
 
-| Camada | Tecnologia | Exemplos |
-|--------|-----------|----------|
-| Shell / build / PWA / layout | **Quasar** (manter) | `q-layout`, `q-page`, `q-dialog` estrutural, boot files, `quasar.config` |
-| Widgets de UI (formulários, tabelas, selects, botões) | **PrimeVue** (preferir) | `Select`, `DataTable`, `Paginator`, `Button`, `InputText` |
+| Layer | Technology | Examples |
+|-------|-----------|----------|
+| Shell / build / PWA / layout | **Quasar** (keep) | `q-layout`, `q-page`, structural `q-dialog`, boot files, `quasar.config` |
+| UI widgets (forms, tables, selects, buttons) | **PrimeVue** (prefer) | `Select`, `DataTable`, `Paginator`, `Button`, `InputText` |
 
-- **Componentes novos**: usar PrimeVue quando houver equivalente adequado (PrimeVue v4 + PassThrough `pt` é bem mais configurável que `q-*` para customização visual — daí a preferência). Quando não houver, usar `q-*`.
-- **Migração de existentes é incremental**: ao mexer numa área (feature), migre os `q-*` daquela área para PrimeVue de forma consistente — evite deixar a mesma tela meio Quasar, meio PrimeVue.
-- Ao criar novos componentes, respeitar simultaneamente as regras de cores e contraste em tema escuro e o padrão de modais e formulários descritos neste arquivo.
-- Ao sobrescrever estilos de componentes externos, aplicar `!important` quando necessário para garantir consistência visual.
-- Ao estilizar internos de componentes em `<style scoped>`, usar `:deep(...)`.
-
----
-
-## 📐 Paleta de Cores
-
-### Cores Principais da Marca
-
-```scss
-$cumes-01: #F29340  // Laranja principal (identidade da marca — cor mais presente no UI)
-$cumes-02: #546119  // Verde escuro
-$cumes-03: #8CB369  // Verde (contraste / natureza / acentos secundários)
-$cumes-04: #F4E285  // Amarelo (destaque)
-$cumes-05: #BC4B51  // Vermelho/bordô (destaque alternativo)
-```
-
-### Cores de Fundo e Texto
-
-```scss
-$background: #1a1d22  // Fundo escuro principal (body, páginas)
-$surface: #22262c     // Fundo de superfícies elevadas (cards, modais, topbar)
-$offwhite: #ffffe4    // Branco suave (preferível ao white puro)
-```
-
-### Cores de Feedback
-
-```scss
-$error-color: #e74c3c  // Vermelho para erros/deletar
-```
-
-### Variáveis Semânticas - Ações do Usuário
-
-```scss
-$action-escaladas: $cumes-01  // Laranja - ação, movimento, energia
-$action-favoritos: $cumes-04  // Amarelo - estrela, destaque
-$action-colecoes: $cumes-02   // Verde escuro - organização
-```
-
-**Onde usar:**
-
-- **Escaladas**: Botões de registrar escalada, cards de escaladas
-- **Favoritos**: Botão de estrela, cards de favoritos
-- **Coleções**: Botão de adicionar a coleção, cards de coleções
+- **New components**: use PrimeVue when a suitable equivalent exists (PrimeVue v4 + PassThrough `pt` is much more configurable than `q-*` for visual customization — hence the preference). Fall back to `q-*` when there's no equivalent.
+- **Migrating existing components is incremental**: when touching an area (a feature), migrate that area's `q-*` components to PrimeVue consistently — avoid leaving the same screen half Quasar, half PrimeVue.
+- New components must respect both the dark-theme color/contrast rules and the modal/form patterns described in this file.
+- When overriding external component styles, use `!important` where necessary for visual consistency.
+- When styling internals of components in `<style scoped>`, use `:deep(...)`.
 
 ---
 
-## 🎯 Regras de Uso das Cores
+## 📐 Color Palette
+
+### Primary Brand Colors
+
+```scss
+$cumes-01: #F29340  // Main orange — brand identity, the most-used color in the UI
+$cumes-02: #546119  // Dark green
+$cumes-03: #8CB369  // Green (contrast / nature / secondary accents)
+$cumes-04: #F4E285  // Yellow (highlight)
+$cumes-05: #BC4B51  // Red/maroon (alternative highlight)
+```
+
+### Background & Text Colors
+
+```scss
+$background: #1a1d22  // Main dark background (body, pages)
+$surface: #22262c     // Elevated surfaces (cards, modals, top bar)
+$offwhite: #ffffe4    // Soft white (preferred over pure white)
+```
+
+### Feedback Colors
+
+```scss
+$error-color: #e74c3c  // Red for errors/delete actions
+```
+
+### Semantic Variables — User Actions
+
+```scss
+$action-escaladas: $cumes-01  // Orange — action, movement, energy
+$action-favoritos: $cumes-04  // Yellow — star, highlight
+$action-colecoes: $cumes-02   // Dark green — organization
+```
+
+**Where to use them:**
+
+- **Climbs (Escaladas)**: log-a-climb buttons, climb cards
+- **Favorites**: star button, favorite cards
+- **Collections**: add-to-collection button, collection cards
+
+---
+
+## 🎯 Color Usage Rules
 
 ### 1. Backgrounds
 
-| Elemento | Cor | Exemplo |
-|----------|-----|---------|
-| Cards principais | `$cumes-01` | ViaCard, ColecaoCard, navbar |
-| Cards secundários/informativos | `$offwhite` | Cards de estatísticas, modais |
-| Fundo geral da página | `$background` | Body, páginas |
+| Element | Color | Example |
+|---------|-------|---------|
+| Primary cards | `$cumes-01` | ViaCard, ColecaoCard, navbar |
+| Secondary/informational cards | `$offwhite` | Stat cards, modals |
+| General page background | `$background` | Body, pages |
 
-### 2. Textos
+### 2. Text
 
-| Contexto | Cor | Quando usar |
-|----------|-----|-------------|
-| Sobre fundo escuro/verde | `$offwhite` | Texto em navbar, hero sections |
-| Sobre fundo claro | `$background` | Texto em cards brancos, modais |
-| Títulos destaque (hero) | `$cumes-04` | Títulos grandes em hero sections |
-| Títulos de páginas | `$cumes-01` | H2, H3 em páginas |
+| Context | Color | When to use |
+|---------|-------|-------------|
+| On dark/green background | `$offwhite` | Text on navbar, hero sections |
+| On light background | `$background` | Text on white cards, modals |
+| Highlight titles (hero) | `$cumes-04` | Large titles in hero sections |
+| Page titles | `$cumes-01` | H2, H3 on pages |
 
-### 3. Botões
+### 3. Buttons
 
-#### Botão Primário
+#### Primary Button
 
 - **Background**: `$cumes-01`
-- **Texto**: `$offwhite`
-- **Uso**: Ações principais (Salvar, Criar, Entrar, Confirmar)
+- **Text**: `$offwhite`
+- **Use**: primary actions (Save, Create, Log in, Confirm)
 
-#### Botão Secundário
+#### Secondary Button
 
 - **Background**: `$cumes-03`
-- **Texto**: `$offwhite`
-- **Uso**: Ações secundárias (Ver mais, Filtrar, Editar)
+- **Text**: `$offwhite`
+- **Use**: secondary actions (See more, Filter, Edit)
 
-#### Botão Terciário
+#### Tertiary Button
 
-- **Background**: `$offwhite` ou transparente
-- **Borda**: `1px solid $cumes-01`
-- **Texto**: `$cumes-01`
-- **Uso**: Cancelar, Voltar
+- **Background**: `$offwhite` or transparent
+- **Border**: `1px solid $cumes-01`
+- **Text**: `$cumes-01`
+- **Use**: Cancel, Back
 
-#### Botão Perigo
+#### Danger Button
 
 - **Background**: `$error-color`
-- **Texto**: `$offwhite`
-- **Uso**: Deletar, Sair, Remover
+- **Text**: `$offwhite`
+- **Use**: Delete, Log out, Remove
 
-### 4. Ícones e Badges
+### 4. Icons & Badges
 
-| Tipo | Cor | Uso |
-|------|-----|-----|
-| Informativos | `$cumes-01` | Ícones gerais, informações, ações |
-| Acento natureza | `$cumes-03` | Ícones relacionados a trilhas, vegetação, ambiente |
-| Destaque | `$cumes-04` | Elementos que precisam chamar atenção |
-| Status/Grau | Variável | Ver seção de Graus |
+| Type | Color | Use |
+|------|-------|-----|
+| Informational | `$cumes-01` | General icons, information, actions |
+| Nature accent | `$cumes-03` | Icons related to trails, vegetation, environment |
+| Highlight | `$cumes-04` | Elements that need to grab attention |
+| Status/Grade | Varies | See the Grades section |
 
 ---
 
-## 🎨 Transparências Padronizadas
+## 🎨 Standardized Transparencies
 
-Evite usar `rgba()` diretamente. Use as variáveis:
+Avoid using `rgba()` directly. Use these variables instead:
 
 ```scss
-$overlay-light: rgba(255, 255, 255, 0.08)   // Overlay claro
-$overlay-dark: rgba(0, 0, 0, 0.05)          // Overlay escuro
-$text-shadow-default: rgba(0, 0, 0, 0.2)   // Sombra de texto padrão
-$box-shadow-soft: rgba(0, 0, 0, 0.08)      // Sombra suave
-$box-shadow-light: rgba(0, 0, 0, 0.12)     // Sombra leve
-$box-shadow-medium: rgba(0, 0, 0, 0.15)    // Sombra média
-$box-shadow-strong: rgba(0, 0, 0, 0.2)     // Sombra forte
-$box-shadow-dark: rgba(0, 0, 0, 0.3)       // Sombra escura
+$overlay-light: rgba(255, 255, 255, 0.08)   // Light overlay
+$overlay-dark: rgba(0, 0, 0, 0.05)          // Dark overlay
+$text-shadow-default: rgba(0, 0, 0, 0.2)   // Default text shadow
+$box-shadow-soft: rgba(0, 0, 0, 0.08)      // Soft shadow
+$box-shadow-light: rgba(0, 0, 0, 0.12)     // Light shadow
+$box-shadow-medium: rgba(0, 0, 0, 0.15)    // Medium shadow
+$box-shadow-strong: rgba(0, 0, 0, 0.2)     // Strong shadow
+$box-shadow-dark: rgba(0, 0, 0, 0.3)       // Dark shadow
 ```
 
 ---
 
-## 🏔️ Cores de Grau/Dificuldade
+## 🏔️ Grade/Difficulty Colors
 
-Usadas nos badges de dificuldade das vias:
+Used on route difficulty badges:
 
 ```scss
 $c-color-yellow: #fffd5e
@@ -155,59 +155,59 @@ $c-color-grey: #757575
 
 ---
 
-## 📏 Regra do 60-30-10
+## 📏 The 60-30-10 Rule
 
-Princípio fundamental de design aplicado:
+The core design principle applied throughout:
 
-- **60%**: Cor dominante (fundo, espaços neutros - geralmente `$background` ou `$offwhite`)
-- **30%**: Cor primária (`$cumes-01` - verde principal)
-- **10%**: Cores secundárias/terciárias para acentos (`$cumes-03`, `$cumes-04`)
+- **60%**: dominant color (background, neutral space — usually `$background` or `$offwhite`)
+- **30%**: primary color (`$cumes-01` — main brand color)
+- **10%**: secondary/tertiary accent colors (`$cumes-03`, `$cumes-04`)
 
 ---
 
-## 📱 Responsividade
+## 📱 Responsiveness
 
 - **Mobile**: < 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: >= 1024px
+- **Tablet**: 768px – 1024px
+- **Desktop**: ≥ 1024px
 
 ---
 
-## 🚀 Checklist de Implementação
+## 🚀 Implementation Checklist
 
-Ao criar um novo componente, verifique:
+When building a new component, check:
 
-- [ ] Usa variáveis de cor do `app.scss` (nunca hardcoded)
-- [ ] Usa `$offwhite` ao invés de `white`
-- [ ] Usa variáveis de sombra ao invés de `rgba()` direto
-- [ ] Segue a regra 60-30-10
-- [ ] Tem contraste adequado entre texto e fundo
-- [ ] É consistente com outros componentes similares
-- [ ] Funciona em mobile e desktop
-- [ ] Usa variáveis semânticas quando aplicável (`$action-*`)
-
----
-
-## Componentes PrimeVue (principalmente em tema escuro)
-
-> **PrimeVue v4** (sem preset de tema): os componentes são importados por arquivo e estilizados manualmente. Atenção às **classes v4** — `Dropdown` virou `Select` (`p-select`, `p-select-label`, `p-select-dropdown`, `p-select-option`, `p-select-overlay`). As classes v3 (`p-dropdown*`) não existem mais.
-
-**Implementações de referência (copiar o padrão de estilo):**
-- **Tabelas / painéis admin** → `frontend/src/pages/Admin/AdminUsuarios.vue` (PrimeVue `DataTable` + `Column` + `Select` + `Tag` + `Button` + `InputText`, todos com overrides de tema escuro).
-- **Paginação** → `frontend/src/components/PaginacaoPadrao.vue` (`Paginator` + `Select`).
-
-- Select: quando o tema deixar o componente com aparência branca, sobrescrever `p-select`, `p-inputtext`, `p-select-label`, `p-select-dropdown`, `p-select-overlay` e `p-select-option` para usar `$background`/`$offwhite` e bordas `$cumes-03`.
-- Paginator: estilizar `p-paginator-page`, `p-paginator-prev/next/first/last` (página ativa = `p-paginator-page-selected` no v4), com `!important` quando necessário.
-- **Overlays** (`p-select-overlay`, menus que renderizam no `body`) precisam de `:global(...)`, não `:deep(...)`.
-- Em estilos `scoped`, demais seleções internas de componentes PrimeVue devem usar `:deep(...)`.
+- [ ] Uses color variables from `app.scss` (never hardcoded)
+- [ ] Uses `$offwhite` instead of `white`
+- [ ] Uses shadow variables instead of raw `rgba()`
+- [ ] Follows the 60-30-10 rule
+- [ ] Has adequate text/background contrast
+- [ ] Is consistent with similar existing components
+- [ ] Works on both mobile and desktop
+- [ ] Uses semantic variables where applicable (`$action-*`)
 
 ---
 
-## 🎭 Modais e Formulários
+## PrimeVue Components (mostly dark theme)
 
-### Estrutura Padrão de Modais
+> **PrimeVue v4** (no theme preset): components are imported per-file and styled manually. Watch for **v4 class names** — `Dropdown` became `Select` (`p-select`, `p-select-label`, `p-select-dropdown`, `p-select-option`, `p-select-overlay`). The v3 classes (`p-dropdown*`) don't exist anymore.
 
-Todos os modais devem seguir esta estrutura:
+**Reference implementations (copy the styling pattern from these):**
+- **Tables / admin panels** → `frontend/src/pages/Admin/AdminUsuarios.vue` (PrimeVue `DataTable` + `Column` + `Select` + `Tag` + `Button` + `InputText`, all with dark-theme overrides).
+- **Pagination** → `frontend/src/components/PaginacaoPadrao.vue` (`Paginator` + `Select`).
+
+- Select: when the theme makes the component look washed-out white, override `p-select`, `p-inputtext`, `p-select-label`, `p-select-dropdown`, `p-select-overlay`, and `p-select-option` to use `$background`/`$offwhite` with `$cumes-03` borders.
+- Paginator: style `p-paginator-page`, `p-paginator-prev/next/first/last` (the active page is `p-paginator-page-selected` in v4), with `!important` where needed.
+- **Overlays** (`p-select-overlay`, menus rendered on `body`) need `:global(...)`, not `:deep(...)`.
+- In `scoped` styles, all other internal PrimeVue component selectors should use `:deep(...)`.
+
+---
+
+## 🎭 Modals & Forms
+
+### Standard Modal Structure
+
+Every modal should follow this structure:
 
 ```vue
 <q-dialog v-model="isOpen" @hide="handleHide">
@@ -215,14 +215,14 @@ Todos os modais devem seguir esta estrutura:
     <q-card-section class="modal-header">
       <div class="modal-title">
         <q-icon name="icon_name" size="28px" class="title-icon" />
-        <span>Título do Modal</span>
+        <span>Modal Title</span>
       </div>
     </q-card-section>
 
     <q-card-section class="modal-body">
       <q-form class="modal-form">
         <div class="form-field">
-          <label class="field-label">Nome *</label>
+          <label class="field-label">Name *</label>
           <q-input
             v-model="valor"
             outlined
@@ -234,20 +234,20 @@ Todos os modais devem seguir esta estrutura:
     </q-card-section>
 
     <q-card-actions align="right" class="modal-actions">
-      <q-btn label="Cancelar" class="btn-secondary-custom" v-close-popup unelevated no-caps />
-      <q-btn label="Salvar" class="btn-primary-custom" unelevated no-caps />
+      <q-btn label="Cancel" class="btn-secondary-custom" v-close-popup unelevated no-caps />
+      <q-btn label="Save" class="btn-primary-custom" unelevated no-caps />
     </q-card-actions>
   </q-card>
 </q-dialog>
 ```
 
-### Layout de Body e Ações
+### Body & Actions Layout
 
-- `modal-card` deve ser um container flex em coluna.
-- `modal-body` deve ocupar o espaço disponível e permitir scroll quando o conteúdo crescer.
-- `modal-actions` deve ficar visível mesmo com scroll quando o modal tiver conteúdo longo (preferir `position: sticky` no rodapé da área de ações).
+- `modal-card` should be a flex column container.
+- `modal-body` should fill the available space and scroll once content grows.
+- `modal-actions` should stay visible while scrolling for modals with long content (prefer `position: sticky` at the bottom of the actions area).
 
-### Cores de Modais
+### Modal Colors
 
 ```scss
 .modal-card {
@@ -271,9 +271,9 @@ Todos os modais devem seguir esta estrutura:
 }
 ```
 
-### Inputs em Formulários
+### Form Inputs
 
-**REGRA IMPORTANTE**: `q-input` em modais deve usar fundo claro com classe `custom-input`, para manter contraste em tema escuro.
+**IMPORTANT RULE**: `q-input` inside modals must use a light background via the `custom-input` class, to keep contrast readable on the dark theme.
 
 ```scss
 .custom-input {
@@ -318,13 +318,13 @@ Todos os modais devem seguir esta estrutura:
 }
 ```
 
-### Labels de Formulário
+### Form Labels
 
-Regras para `label` e campos obrigatórios:
+Rules for `label`s and required fields:
 
-- `label` deve usar a classe `field-label`.
-- Campos obrigatórios devem seguir o padrão `Campo *` (com asterisco separado por espaço).
-- O texto do label deve estar em pt-BR e sem abreviações.
+- Labels should use the `field-label` class.
+- Required fields follow the `Field *` pattern (asterisk separated by a space).
+- Label text should read naturally, without unnecessary abbreviations.
 
 ```scss
 .field-label {
@@ -336,15 +336,15 @@ Regras para `label` e campos obrigatórios:
 }
 ```
 
-### Botões em Modais
+### Modal Buttons
 
-Regras para botões:
+Button rules:
 
-- Botão primário deve usar `btn-primary-custom`.
-- Botão secundário deve usar `btn-secondary-custom`.
-- Em ações de fechar/cancelar, quando o modal for controlado por `q-dialog`, preferir `v-close-popup` no botão secundário.
+- Primary buttons use `btn-primary-custom`.
+- Secondary buttons use `btn-secondary-custom`.
+- For close/cancel actions on a `q-dialog`-controlled modal, prefer `v-close-popup` on the secondary button.
 
-#### Botão Primário (Salvar, Confirmar)
+#### Primary Button (Save, Confirm)
 
 ```scss
 .btn-primary-custom {
@@ -364,7 +364,7 @@ Regras para botões:
 }
 ```
 
-#### Botão Secundário (Cancelar)
+#### Secondary Button (Cancel)
 
 ```scss
 .btn-secondary-custom {
@@ -379,7 +379,7 @@ Regras para botões:
 }
 ```
 
-### Tamanhos de Modais
+### Modal Sizes
 
 ```scss
 width: 92vw;
@@ -398,89 +398,87 @@ max-width: 500px;
 }
 ```
 
-### ⚠️ Regras Importantes
+### ⚠️ Important Rules
 
-1. **Sempre use `!important`** em estilos de inputs e botões para evitar conflitos com o Quasar
-2. **Padding controlado**: `padding: 0 !important` no container, `10px 14px` no input
-3. **Contraste**: Fundo escuro (`$background`) + inputs claros (`$offwhite`)
-4. **Labels**: Use `$cumes-04` (amarelo) para máxima visibilidade
-5. **Borders**: `2px solid $cumes-01`, muda para `$cumes-03` no focus
+1. **Always use `!important`** on input and button styles to avoid conflicts with Quasar's defaults
+2. **Controlled padding**: `padding: 0 !important` on the container, `10px 14px` on the input
+3. **Contrast**: dark background (`$background`) + light inputs (`$offwhite`)
+4. **Labels**: use `$cumes-04` (yellow) for maximum visibility
+5. **Borders**: `2px solid $cumes-01`, switching to `$cumes-03` on focus
 
-### Exemplo Completo
+### Full Example
 
-Ver implementação de referência em:
+See reference implementations at:
 - `frontend/src/components/Perfil/PerfilEditaForm.vue`
 - `frontend/src/components/Perfil/PerfilEditaFormAddPrediletaModal.vue`
 
 ---
 
-## Perfil — marcações na cordada
+## Profile — "On the Rope" Mentions
 
-Registros em que a pessoa foi citada na cordada (guia/participante/misto) em **escaladas criadas por outros**:
+Records where a person was mentioned in the rope team (guide/participant/mixed) in **climbs logged by other people**:
 
-- **Preview no perfil** (`PerfilEscaladasDestaque`): faixa compacta — fundo `rgba(0, 0, 0, 0.14)`, borda `rgba($cumes-01, 0.2)`, título curto **Na cordada**, badge com contagem em `$cumes-03`, bolhas **circulares 44px** com foto da via (scroll horizontal), link **Ver lista** em `$action-escaladas`. Não usar card grande tipo grade 3×N no perfil.
-- **Lista autenticada** (`PerfilEscaladasLista` em `/perfil/:username/escaladas`): hero com gradiente (verde → fundo → verde escuro), ícone em caixa com borda laranja, tipografia alinhada ao restante do app; itens em **linhas** (`PerfilMarcacaoEscaladaRow`) — thumb 64px arredondado, nome da via em `$cumes-01`, meta linha com data (pt-BR) e **por @autor** quando disponível.
+- **Profile preview** (`PerfilEscaladasDestaque`): a compact strip — background `rgba(0, 0, 0, 0.14)`, border `rgba($cumes-01, 0.2)`, short title **On the Rope**, count badge in `$cumes-03`, **44px circular** bubbles with the route's photo (horizontal scroll), a **See list** link in `$action-escaladas`. Don't use a large 3×N grid card on the profile for this.
+- **Authenticated list** (`PerfilEscaladasLista` at `/perfil/:username/escaladas`): a hero with a gradient (green → background → dark green), an icon in a box with an orange border, typography matching the rest of the app; items shown as **rows** (`PerfilMarcacaoEscaladaRow`) — a rounded 64px thumbnail, route name in `$cumes-01`, a meta line with the date (localized) and **by @author** when available.
 
-Utilitário `getViaImageUrl` também considera relação `viaImagens` vinda da API para miniaturas consistentes.
-
----
-
-## 📚 Referências
-
-### Arquivos Principais
-
-- `frontend/src/css/app.scss` - Variáveis globais e classes utilitárias
+The `getViaImageUrl` utility also considers the `viaImagens` relation coming from the API for consistent thumbnails.
 
 ---
 
-## 🆘 Dúvidas Comuns
+## 📚 References
 
-**P: Quando usar `$cumes-01` vs `$cumes-03`?**
-R: `$cumes-01` (laranja) é a cor de identidade — navbar, botões primários, links ativos. `$cumes-03` (verde) é acento de natureza — ícones ambientais, acentos secundários.
+### Main Files
 
-**P: Posso usar `white`?**
-R: Não! Use `$offwhite` que é mais suave e agradável aos olhos.
-
-**P: Como escolher a sombra correta?**
-R: Soft para cards sutis, Light para elevação leve, Medium para destaque, Strong/Dark para modais.
-
-**P: Onde usar as variáveis `$action-*`?**
-R: Em qualquer elemento relacionado às 3 ações principais do usuário: Escaladas, Favoritos, Coleções.
-
-**P: Como estilizar inputs em modais?**
-R: Sempre use fundo `$offwhite` com texto `$background`. Ver seção "Modais e Formulários" para código completo.
-
-**P: Por que usar `!important` nos inputs?**
-R: Para evitar conflitos com os estilos padrão do Quasar e garantir consistência visual.
+- `frontend/src/css/app.scss` - global variables and utility classes
 
 ---
 
+## 🆘 Common Questions
+
+**Q: When should I use `$cumes-01` vs. `$cumes-03`?**
+A: `$cumes-01` (orange) is the identity color — navbar, primary buttons, active links. `$cumes-03` (green) is the nature accent — environmental icons, secondary accents.
+
+**Q: Can I use `white`?**
+A: No! Use `$offwhite`, which is softer and easier on the eyes.
+
+**Q: How do I pick the right shadow?**
+A: Soft for subtle cards, Light for slight elevation, Medium for emphasis, Strong/Dark for modals.
+
+**Q: Where should I use the `$action-*` variables?**
+A: On any element tied to the app's three main user actions: Climbs, Favorites, Collections.
+
+**Q: How do I style inputs inside modals?**
+A: Always use an `$offwhite` background with `$background` text. See the "Modals & Forms" section for the full code.
+
+**Q: Why use `!important` on inputs?**
+A: To avoid conflicts with Quasar's default styles and keep visual consistency.
+
 ---
 
-## 🏷️ Convenção de Nomenclatura
+## 🏷️ Naming Conventions
 
-### JavaScript / TypeScript (variáveis, funções, interfaces)
-- **ptBR camelCase** obrigatório: `carregando`, `totalVias`, `aoClicarEscalada`
-- Nomes de frameworks e libs mantêm originais: `useRouter`, `ref`, `onMounted`
-- Constantes: `UPPER_SNAKE_CASE` em ptBR: `CHAVE_CACHE`, `DIAS_CACHE`
-- Event handlers: prefixo **`ao*`** em ptBR: `aoSalvar`, `aoEditar`, `aoClicarFavorito`
+### JavaScript / TypeScript (variables, functions, interfaces)
+- **pt-BR camelCase** is mandatory: `carregando`, `totalVias`, `aoClicarEscalada`
+- Framework and library names keep their originals: `useRouter`, `ref`, `onMounted`
+- Constants: `UPPER_SNAKE_CASE` in pt-BR: `CHAVE_CACHE`, `DIAS_CACHE`
+- Event handlers: pt-BR **`ao*`** prefix: `aoSalvar`, `aoEditar`, `aoClicarFavorito`
 
 ### CSS (classes, IDs)
-- **English kebab-case** é padrão web e deve ser mantido: `.modal-card`, `.btn-primary-custom`, `.field-label`
-- Não renomear classes CSS existentes para ptBR (causaria breaking change e vai contra o padrão web)
-- Novas classes também devem seguir English kebab-case
+- **English kebab-case** is the web standard and is kept as such: `.modal-card`, `.btn-primary-custom`, `.field-label`
+- Existing CSS classes are never renamed to Portuguese (that would be a breaking change and go against web convention)
+- New classes also follow English kebab-case
 
-### Resumo da regra
-| Contexto | Convenção | Exemplo |
-|----------|-----------|---------|
-| Variáveis JS/TS | ptBR camelCase | `const carregando = ref(false)` |
-| Funções JS/TS | ptBR camelCase | `function aoSalvarPerfil() {}` |
-| Interfaces/Types | ptBR camelCase | `interface CardExplorar {}` |
-| Constantes | ptBR UPPER_SNAKE | `const DIAS_CACHE = 7` |
-| Classes CSS | English kebab-case | `.modal-card`, `.via-card` |
-| IDs CSS | English kebab-case | `#topbar-inner` |
+### Convention summary
+| Context | Convention | Example |
+|---------|-----------|---------|
+| JS/TS variables | pt-BR camelCase | `const carregando = ref(false)` |
+| JS/TS functions | pt-BR camelCase | `function aoSalvarPerfil() {}` |
+| Interfaces/types | pt-BR camelCase | `interface CardExplorar {}` |
+| Constants | pt-BR UPPER_SNAKE | `const DIAS_CACHE = 7` |
+| CSS classes | English kebab-case | `.modal-card`, `.via-card` |
+| CSS IDs | English kebab-case | `#topbar-inner` |
 
 ---
 
-*Última atualização: 2026-05-25*
-*Versão: 1.3 — paleta sincronizada com código, $surface adicionada, convenções de nomenclatura*
+*Last updated: 2026-08-25*
+*Version: 2.0 — translated to English for the project's archival; content otherwise unchanged from v1.3*

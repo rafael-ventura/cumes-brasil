@@ -1,29 +1,29 @@
 # Backend — Cumes Brasil
 
-API REST em Node.js + TypeScript com Express, TypeORM e PostgreSQL.
+REST API in Node.js + TypeScript, with Express, TypeORM, and PostgreSQL.
 
 ---
 
-## Pré-requisitos
+## Requirements
 
 - Node.js 20+
-- PostgreSQL 14+ (local ou via Docker)
-- Arquivo `.env.development` configurado (ver abaixo)
+- PostgreSQL 14+ (local or via Docker)
+- A configured `.env.development` file (see below)
 
 ---
 
-## Variáveis de Ambiente
+## Environment Variables
 
-Crie `backend/.env.development` com:
+Create `backend/.env.development` with:
 
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
 DB_NAME=cumes-brasil
 
-JWT_SECRET=seu_jwt_secret
+JWT_SECRET=your_jwt_secret
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
@@ -31,95 +31,95 @@ AWS_S3_BUCKET_NAME=...
 CLOUDFRONT_URL=...
 ```
 
-Para usar o banco via Docker, defina `DB_HOST=db` e suba com `docker-compose up -d db` na raiz do projeto.
+To run the database via Docker, set `DB_HOST=db` and start it with `docker-compose up -d db` from the project root.
 
 ---
 
-## Scripts Principais
+## Main Scripts
 
-| Comando | O que faz |
-|---------|-----------|
-| `npm run dev` | Sobe a API em modo desenvolvimento (aplica **migrations pendentes** automaticamente; **não** roda seed) |
-| `npm run dev:watch` | Igual ao `dev`, com hot-reload via nodemon |
-| `npm run build` | Compila TypeScript para `dist/` |
-| `npm run seed` | Popula o banco a partir dos YAMLs em `src/Infrastructure/data/` |
-| `npm run db:reset` | Dropa e recria o banco PostgreSQL |
-| `npm run db:fresh` | Reset completo: drop → build → migrations → seed |
-| `npm run migration:run:dev` | Executa migrações pendentes (requer build prévio) |
-| `npm run migration:generate` | Gera nova migração com base nas entidades (requer build prévio) |
+| Command | What it does |
+|---------|---------------|
+| `npm run dev` | Starts the API in development mode (applies **pending migrations** automatically; **does not** run the seed) |
+| `npm run dev:watch` | Same as `dev`, with hot-reload via nodemon |
+| `npm run build` | Compiles TypeScript to `dist/` |
+| `npm run seed` | Populates the database from the YAMLs in `src/Infrastructure/data/` |
+| `npm run db:reset` | Drops and recreates the PostgreSQL database |
+| `npm run db:fresh` | Full reset: drop → build → migrations → seed |
+| `npm run migration:run:dev` | Runs pending migrations (requires a prior build) |
+| `npm run migration:generate` | Generates a new migration from the entities (requires a prior build) |
 
-### Fluxo típico do zero
+### Typical flow from scratch
 
 ```bash
 npm install
-npm run db:fresh   # cria banco, roda migrations e seed
-npm run dev        # em dev, migrations pendentes rodam ao subir; seed é separado (npm run seed)
+npm run db:fresh   # creates the database, runs migrations and the seed
+npm run dev        # in dev, pending migrations run on startup; the seed is separate (npm run seed)
 ```
 
-Após mudar estrutura (entidades) ou `usuarios-teste.yaml`:
+After changing the entity structure or `usuarios-teste.yaml`:
 
 ```bash
-npm run build && npm run migration:run:dev   # se preferir aplicar migrations manualmente
-npm run seed                                 # sincroniza usuários de teste (senha, is_admin, etc.)
+npm run build && npm run migration:run:dev   # if you'd rather apply migrations manually
+npm run seed                                 # syncs test users (password, role, etc.)
 ```
 
-### Gerar uma nova migração
+### Generating a new migration
 
 ```bash
 npm run build
 npm run migration:generate
-# TypeORM cria src/Infrastructure/migrations/<timestamp>-Migration.ts
-# Renomeie o arquivo para algo descritivo, ex: <timestamp>-AddCampoXyz.ts
+# TypeORM creates src/Infrastructure/migrations/<timestamp>-Migration.ts
+# Rename the file to something descriptive, e.g. <timestamp>-AddXyzField.ts
 npm run migration:run:dev
 ```
 
-> O nome `Migration` no script é apenas o sufixo base — TypeORM sempre prefixa com o timestamp. Renomeie o arquivo gerado antes de commitar.
+> `Migration` in the script name is just the base suffix — TypeORM always prefixes it with the timestamp. Rename the generated file before committing.
 
 ---
 
-## Estrutura de Camadas
+## Layer Structure
 
-O backend segue DDD com 4 camadas:
+The backend follows DDD across four layers:
 
 ```
 src/
-├── Domain/          # Entidades TypeORM e interfaces de repositório
-├── Application/     # Services (lógica de negócio)
-├── Infrastructure/  # Repositórios, config do BD, migrations, seeds
-│   ├── config/      # DataSource TypeORM (db.ts)
-│   ├── data/        # Arquivos YAML — fonte de dados do seed
-│   ├── migrations/  # Migrations TypeORM
-│   ├── seeds/       # Orquestrador e loaders do seed
+├── Domain/          # TypeORM entities and repository interfaces
+├── Application/     # Services (business logic)
+├── Infrastructure/  # Repositories, DB config, migrations, seeds
+│   ├── config/      # TypeORM DataSource (db.ts)
+│   ├── data/         # YAML files — the seed's data source
+│   ├── migrations/  # TypeORM migrations
+│   ├── seeds/        # Seed orchestrator and loaders
 │   └── repositories/
-└── Api/             # Controllers, DTOs, rotas, server.ts
+└── Api/             # Controllers, DTOs, routes, server.ts
 ```
 
 ---
 
-## Sistema de Seed
+## Seed System
 
-O seed carrega dados dos arquivos `src/Infrastructure/data/*.yaml` para o banco, em ordem de dependência:
+The seed loads data from `src/Infrastructure/data/*.yaml` into the database, in dependency order:
 
 ```
 ReferenciasLoader → … → ViaLoader → … → UsuarioLoader → EscaladaLoader → ColecaoConteudoLoader
 ```
 
-- Os YAMLs são a **fonte de verdade** dos dados
-- **Usuários de desenvolvimento** (`usuarios-teste.yaml`, senha comum `teste123`):
-  - `teste@cumes.com.br` / username `cumes_teste` (perfil público)
-  - `maria.dev@cumes.com.br` / `maria_escaladora` (perfil público)
-  - `privado.dev@cumes.com.br` / `usuario_privado` (perfil privado — para testar bloqueios)
-  - `rafael.dev@cumes.com.br` / `rafael` (perfil público)
-- Escaladas e vínculos em coleções: `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`
-- O seed é **idempotente**: pode ser re-executado sem duplicar dados
-- Para adicionar um campo simples atualizável em Via: inclua na interface `ViaYaml` e no array `UPSERT_FIELDS` em `ViaLoader.ts`
-- Utilitários compartilhados do seed ficam em `seeds/seedUtils.ts`
+- YAML files are the **source of truth** for the data
+- **Development users** (`usuarios-teste.yaml`, shared password `teste123`):
+  - `teste@cumes.com.br` / username `cumes_teste` (public profile)
+  - `maria.dev@cumes.com.br` / `maria_escaladora` (public profile)
+  - `privado.dev@cumes.com.br` / `usuario_privado` (private profile — for testing visibility restrictions)
+  - `rafael.dev@cumes.com.br` / `rafael` (public profile)
+- Climbs and collection links: `escaladas-teste.yaml`, `colecoes-vias-teste.yaml`
+- The seed is **idempotent**: it can be re-run without duplicating data
+- To add a simple updatable field on `Via`: include it in the `ViaYaml` interface and the `UPSERT_FIELDS` array in `ViaLoader.ts`
+- Shared seed utilities live in `seeds/seedUtils.ts`
 
 ---
 
-## Sistema de Imagens
+## Image System
 
-- Imagens são servidas pelo Express a partir de `backend/assets/`
-- Todos os paths no banco devem começar com `/assets/` (ex.: `/assets/vias/foto.png`)
-- O frontend remove o prefixo `/assets/` e reconstrói a URL com `VITE_APP_ASSETS_URL`
-- A entidade `ViaImagem` permite múltiplas imagens por via; o `ViaDTO` expõe `imagem` (primeira) e `imagens` (array)
+- Images are served by Express from `backend/assets/`
+- Every path stored in the database must start with `/assets/` (e.g. `/assets/vias/photo.png`)
+- The frontend strips the `/assets/` prefix and rebuilds the URL using `VITE_APP_ASSETS_URL`
+- The `ViaImagem` entity allows multiple images per route; `ViaDTO` exposes both `imagem` (the first one) and `imagens` (the full array)
